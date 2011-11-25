@@ -33,9 +33,6 @@ public class PropertyLoader
 	{
 		final File file = new File(filename);
 		
-		if (file.exists())
-			return;
-	
 		try
 		{
 			file.createNewFile();
@@ -83,6 +80,22 @@ public class PropertyLoader
 			}
 		
 		return instance;
+	}
+	
+	public void setProperty(Properties prop)
+	{
+		this.properties = prop;
+		
+		push();
+	}
+	
+	public void reset()
+	{
+		final File file = new File(filename);
+		
+		file.delete();
+		
+		properties = new Properties();
 	}
 
 	public Properties getProperties()

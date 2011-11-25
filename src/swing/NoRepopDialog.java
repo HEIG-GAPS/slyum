@@ -24,10 +24,6 @@ import javax.swing.border.LineBorder;
 
 public class NoRepopDialog extends JDialog
 {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 9004532439553406805L;
 	private JCheckBox chckbxDontShowThis;
 	private final JPanel contentPanel = new JPanel();

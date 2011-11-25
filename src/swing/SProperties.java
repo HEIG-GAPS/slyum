@@ -45,6 +45,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import utility.PersonnalizedIcon;
+import utility.SMessageDialog;
 import utility.Utility;
 
 public class SProperties extends JDialog
@@ -65,6 +66,10 @@ public class SProperties extends JDialog
 	private JCheckBox chckbxUseSmallIcons;
 	private JCheckBox chckbxDisableErrorMessage;
 	private JCheckBox chckbxDisableCrossPopup;
+	private JButton btnBackgroundColor;
+	private JButton btnDefaultClassColor;
+	private JCheckBox ckbBackgroundGradient;
+	private JCheckBox chckbxUseCtrlFor;
 
 	/**
 	 * Create the dialog.
@@ -79,15 +84,11 @@ public class SProperties extends JDialog
 		properties = PropertyLoader.getInstance().getProperties();
 
 		setTitle("Slyum - Properties");
-		setBounds(100, 100, 553, 393);
+		setBounds(100, 100, 554, 430);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new BorderLayout(0, 0));
-		final JButton btnDefaultClassColor;
-		final JButton btnBackgroundColor;
-		final JCheckBox ckbBackgroundGradient;
-		final JCheckBox chckbxUseCtrlFor;
 
 		{
 			final JTabbedPane tabbedPane = new JTabbedPane(SwingConstants.TOP);
@@ -143,7 +144,6 @@ public class SProperties extends JDialog
 
 						}
 					});
-					btnBackgroundColor.setBackground(GraphicView.getBasicColor());
 					{
 						ckbBackgroundGradient = new JCheckBox("Background gradient");
 						final GridBagConstraints gbc_ckbBackgroundGradient = new GridBagConstraints();
@@ -151,7 +151,6 @@ public class SProperties extends JDialog
 						gbc_ckbBackgroundGradient.gridx = 0;
 						gbc_ckbBackgroundGradient.gridy = 2;
 						panel.add(ckbBackgroundGradient, gbc_ckbBackgroundGradient);
-						ckbBackgroundGradient.setSelected(GraphicView.getBackgroundGradient());
 					}
 					{
 						final JPanel panel_1 = new JPanel();
@@ -170,7 +169,6 @@ public class SProperties extends JDialog
 						panel_1.setLayout(gbl_panel_1);
 						{
 							chckbxOpacityGrid = new JCheckBox("Opacity");
-							chckbxOpacityGrid.setSelected(GraphicView.isGridOpacityEnable());
 							chckbxOpacityGrid.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent arg0)
 								{
@@ -203,7 +201,6 @@ public class SProperties extends JDialog
 							sliderGridPoint.setValue(200);
 							sliderGridPoint.setMaximum(255);
 							sliderGridPoint.setBorder(null);
-							sliderGridPoint.setValue(GraphicView.getGridOpacity());
 						}
 
 						final ButtonGroup bgBackgroundGrid = new ButtonGroup();
@@ -256,14 +253,12 @@ public class SProperties extends JDialog
 											public void stateChanged(ChangeEvent arg0)
 											{
 												btnColor.setEnabled(rdbtnSelectedColor.isSelected());
-												GraphicView.setAutomaticGridColor(!rdbtnSelectedColor.isSelected());
 											}
 										});
 										bgBackgroundGrid.add(rdbtnSelectedColor);
 									}
 									{
 										btnColor = new JButton("Color");
-										btnColor.setBackground(new Color(GraphicView.getGridColor()));
 										panel_3.add(btnColor);
 										btnColor.addActionListener(new ActionListener() {
 											public void actionPerformed(ActionEvent arg0)
@@ -272,10 +267,8 @@ public class SProperties extends JDialog
 												scc.setVisible(true);
 
 												if (scc.isAccepted())
-												{
-													GraphicView.setGridColor(scc.getColor().getRGB());
-													btnColor.setBackground(new Color(GraphicView.getGridColor()));
-												}
+												
+													btnColor.setBackground(scc.getColor());
 											}
 										});
 									}
@@ -455,21 +448,6 @@ public class SProperties extends JDialog
 							gbc_rdbtnMax.gridy = 0;
 							panel_1.add(rdbtnMax, gbc_rdbtnMax);
 						}
-
-						switch (Utility.getGraphicQualityType())
-						{
-							case LOW:
-								rdbtnLow.setSelected(true);
-								break;
-
-							case MEDIUM:
-								rdbtnMedium.setSelected(true);
-								break;
-
-							case MAX:
-								rdbtnMax.setSelected(true);
-								break;
-						}
 					}
 					{
 						final JPanel panel_1 = new JPanel();
@@ -511,7 +489,6 @@ public class SProperties extends JDialog
 					panel.setLayout(gbl_panel);
 					{
 						chckbxUseCtrlFor = new JCheckBox("Use Ctrl for adding grips in relations");
-						chckbxUseCtrlFor.setSelected(Boolean.parseBoolean((String) properties.get("ctrlForGrip")));
 						chckbxUseCtrlFor.setToolTipText("By default, a simple clic adds a new grip on a relation and Ctrl+clic moves the relation. Inverse it by checking this option.");
 						final GridBagConstraints gbc_chckbxUseCtrlFor = new GridBagConstraints();
 						gbc_chckbxUseCtrlFor.anchor = GridBagConstraints.WEST;
@@ -522,7 +499,6 @@ public class SProperties extends JDialog
 					}
 					{
 						chckbxUseSmallIcons = new JCheckBox("Use small icons (need restart application)");
-						chckbxUseSmallIcons.setSelected(Slyum.getSmallIcons());
 						GridBagConstraints gbc_chckbxUseSmallIcons = new GridBagConstraints();
 						gbc_chckbxUseSmallIcons.insets = new Insets(0, 0, 5, 0);
 						gbc_chckbxUseSmallIcons.anchor = GridBagConstraints.WEST;
@@ -538,7 +514,6 @@ public class SProperties extends JDialog
 						gbc_chckbxDisableErrorMessage.gridx = 0;
 						gbc_chckbxDisableErrorMessage.gridy = 2;
 						panel.add(chckbxDisableErrorMessage, gbc_chckbxDisableErrorMessage);
-						chckbxDisableErrorMessage.setSelected(Slyum.isShowErrorMessage());
 					}
 					{
 						chckbxDisableCrossPopup = new JCheckBox("Show cross popup menu when components are selected");
@@ -547,22 +522,24 @@ public class SProperties extends JDialog
 						gbc_chckbxDisableCrossPopup.gridx = 0;
 						gbc_chckbxDisableCrossPopup.gridy = 3;
 						panel.add(chckbxDisableCrossPopup, gbc_chckbxDisableCrossPopup);
-						chckbxDisableCrossPopup.setSelected(Slyum.isShowCrossMenu());
 					}
 					tabbedPane.setDisabledIconAt(2, null);
 				}
 			}
 		}
 
-		if (GraphicView.isAutomatiqueGridColor())
-			rdbtnAutomaticcolor.setSelected(true);
-		else
-			rdbtnSelectedColor.setSelected(true);
-
 		{
 			final JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			buttonPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
+			{
+				GridBagLayout gbl_buttonPane = new GridBagLayout();
+				gbl_buttonPane.columnWidths = new int[]{327, 75, 54, 81, 0};
+				gbl_buttonPane.rowHeights = new int[]{25, 0};
+				gbl_buttonPane.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+				gbl_buttonPane.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+				buttonPane.setLayout(gbl_buttonPane);
+			}
 			{
 				final JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
@@ -595,8 +572,8 @@ public class SProperties extends JDialog
 							properties.put("FontPolice", String.valueOf(listName.getSelectedValue()));
 							properties.put("FontSize", String.valueOf(listSize.getSelectedValue()));
 
-							properties.put("AutomaticGridColor", String.valueOf(GraphicView.isAutomatiqueGridColor()));
-							properties.put("GridColor", String.valueOf(GraphicView.getGridColor()));
+							properties.put("AutomaticGridColor", String.valueOf(rdbtnAutomaticcolor.isSelected()));
+							properties.put("GridColor", String.valueOf(btnColor.getBackground().getRGB()));
 
 							PropertyLoader.getInstance().push();
 						}
@@ -610,26 +587,90 @@ public class SProperties extends JDialog
 					}
 
 				});
+				{
+					JButton btnReset = new JButton("Reset");
+					btnReset.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							
+							Properties prop = (Properties) PropertyLoader.getInstance().getProperties().clone();
+							PropertyLoader.getInstance().reset();
+							
+							init();
+							
+							PropertyLoader.getInstance().setProperty(prop);
+						}
+					});
+					GridBagConstraints gbc_btnReset = new GridBagConstraints();
+					gbc_btnReset.anchor = GridBagConstraints.NORTHWEST;
+					gbc_btnReset.insets = new Insets(0, 0, 0, 5);
+					gbc_btnReset.gridx = 0;
+					gbc_btnReset.gridy = 0;
+					buttonPane.add(btnReset, gbc_btnReset);
+				}
 				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
+				GridBagConstraints gbc_okButton = new GridBagConstraints();
+				gbc_okButton.anchor = GridBagConstraints.NORTHWEST;
+				gbc_okButton.insets = new Insets(0, 0, 0, 5);
+				gbc_okButton.gridx = 2;
+				gbc_okButton.gridy = 0;
+				buttonPane.add(okButton, gbc_okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
-			{
-				final JButton cancelButton = new JButton("Cancel");
-				cancelButton.addActionListener(new ActionListener() {
+			final JButton cancelButton = new JButton("Cancel");
+			cancelButton.addActionListener(new ActionListener() {
 
-					public void actionPerformed(ActionEvent e)
-					{
-						setVisible(false);
-					}
+				public void actionPerformed(ActionEvent e)
+				{
+					setVisible(false);
+				}
 
-				});
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
-			}
+			});
+			cancelButton.setActionCommand("Cancel");
+			GridBagConstraints gbc_cancelButton = new GridBagConstraints();
+			gbc_cancelButton.anchor = GridBagConstraints.NORTHWEST;
+			gbc_cancelButton.gridx = 3;
+			gbc_cancelButton.gridy = 0;
+			buttonPane.add(cancelButton, gbc_cancelButton);
 		}
 		setLocationRelativeTo(Slyum.getInstance());
+		init();
 		setVisible(true);
+	}
+	
+	private void init()
+	{
+		btnBackgroundColor.setBackground(GraphicView.getBasicColor());
+		btnDefaultClassColor.setBackground(EntityView.getBasicColor());
+		ckbBackgroundGradient.setSelected(GraphicView.getBackgroundGradient());
+		chckbxOpacityGrid.setSelected(GraphicView.isGridOpacityEnable());
+		sliderGridPoint.setValue(GraphicView.getGridOpacity());
+		sliderGridPoint.setEnabled(chckbxOpacityGrid.isSelected());
+		btnColor.setBackground(new Color(GraphicView.getGridColor()));
+		listName.setSelectedValue(TextBox.getFontName(), true);
+		listSize.setSelectedValue(TextBox.getFontSize(), true);
+		chckbxUseCtrlFor.setSelected(GraphicView.isCtrlForGrip());
+		switch (Utility.getGraphicQualityType())
+		{
+			case LOW:
+				rdbtnLow.setSelected(true);
+				break;
+
+			case MEDIUM:
+				rdbtnMedium.setSelected(true);
+				break;
+
+			case MAX:
+				rdbtnMax.setSelected(true);
+				break;
+		}
+		chckbxDisableErrorMessage.setSelected(Slyum.isShowErrorMessage());
+		chckbxDisableCrossPopup.setSelected(Slyum.isShowCrossMenu());
+		chckbxUseSmallIcons.setSelected(Slyum.getSmallIcons());
+
+		if (GraphicView.isAutomatiqueGridColor())
+			rdbtnAutomaticcolor.setSelected(true);
+		else
+			rdbtnSelectedColor.setSelected(true);
 	}
 
 	private void showOpacityWarning()

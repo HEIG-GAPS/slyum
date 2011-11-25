@@ -51,13 +51,8 @@ public class Slyum extends JFrame implements ActionListener
 	public final static boolean SHOW_CROSS_MENU = true;
 	public final static boolean SHOW_ERRORS_MESSAGES = true;
 	public final static boolean SHOW_OPENJDK_WARNING = true;
-	private static boolean showCrossMenu = true;
-
-	private static boolean showErrorMessage = true;
-
-	private static boolean showOpenJDKWarning = true;
 	public final static boolean SMALL_ICON = false;
-	private static boolean smallIcons = false;
+	
 	private static JMenuItem undo, redo;
 
 	public static final float version = 1.3f;
@@ -126,7 +121,7 @@ public class Slyum extends JFrame implements ActionListener
 		return fileName;
 	}
 
-	public static boolean getShowOpenJDKWarning()
+	public static boolean isShowOpenJDKWarning()
 	{
 		final String prop = PropertyLoader.getInstance().getProperties().getProperty("showOpenJDKWarning");
 		boolean enable = SHOW_OPENJDK_WARNING;
@@ -227,7 +222,7 @@ public class Slyum extends JFrame implements ActionListener
 
 	private static void showWarningForOpenJDK()
 	{
-		final boolean show = Boolean.parseBoolean(PropertyLoader.getInstance().getProperties().getProperty("showOpenJDKWarning"));
+		final boolean show = isShowOpenJDKWarning();
 
 		if (show && OSValidator.isUnix())
 
