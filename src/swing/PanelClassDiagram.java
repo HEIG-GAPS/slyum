@@ -466,18 +466,8 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 	 */
 	public void newProject()
 	{
-		switch (askSavingCurrentProject())
-		{
-			case JOptionPane.CANCEL_OPTION:
-				return;
-
-			case JOptionPane.YES_OPTION:
-				saveToXML(false);
-				break;
-
-			case JOptionPane.NO_OPTION:
-				break;
-		}
+		if (!askForSave())
+			return;
 
 		classDiagram.removeAll();
 		graphicView.removeAll();
@@ -492,24 +482,92 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		Slyum.updateWindowTitle(currentFile);
 		Slyum.setCurrentDirectoryFileChooser(file.getParent());
 	}
+	
+	public boolean askForSave()
+	{
+		switch (askSavingCurrentProject())
+		{
+			case JOptionPane.CANCEL_OPTION:
+				return false;
+	
+			case JOptionPane.YES_OPTION:
+				saveToXML(false);
+				break;
+	
+			case JOptionPane.NO_OPTION:
+				break;
+		}
+		
+		return true;
+	}
+	
+	public void openFromXML(final File file)
+	{
+		if (!askForSave())
+			return;
+
+		final String extension = Utility.getExtension(file);
+
+		if (!file.exists())
+		{
+			JOptionPane.showMessageDialog(this, "File not found. Please select an existing file...", "Slyum", JOptionPane.ERROR_MESSAGE, PersonnalizedIcon.getErrorIcon());
+			return;
+		}
+
+		if (extension == null || !extension.equals("sly"))
+		{
+			JOptionPane.showMessageDialog(this, "Invalide file format. Only \".sly\" files are accepted.", "Slyum", JOptionPane.ERROR_MESSAGE, PersonnalizedIcon.getErrorIcon());
+			return;
+		}
+
+		final SAXParserFactory factory = SAXParserFactory.newInstance();
+		final SAXParser parser;
+		graphicView.setVisible(false);
+		try
+		{
+			parser = factory.newSAXParser();
+
+			final DefaultHandler handler = new XMLParser(classDiagram, graphicView);
+			
+			
+			new Thread(new Runnable() {
+
+				@Override
+				public void run()
+				{
+					try
+					{
+						Change.setBlocked(true);
+						
+						parser.parse(file, handler);
+						
+						Change.setBlocked(false);
+						
+					} catch (final Exception e)
+					{
+						showErrorImportationMessage(e);
+					} finally
+					{
+						graphicView.setVisible(true);
+					}
+				}
+			}).start();
+
+			setCurrentFile(file);
+			Change.setHasChange(false);
+		} catch (final Exception e)
+		{
+			showErrorImportationMessage(e);
+		}
+	}
 
 	/**
 	 * Open a new project.
 	 */
 	public void openFromXML()
 	{
-		switch (askSavingCurrentProject())
-		{
-			case JOptionPane.CANCEL_OPTION:
-				return;
-
-			case JOptionPane.YES_OPTION:
-				saveToXML(false);
-				break;
-
-			case JOptionPane.NO_OPTION:
-				break;
-		}
+		if (!askForSave())
+			return;
 		
 		final JFileChooser fc = new JFileChooser(Slyum.getCurrentDirectoryFileChooser());
 		fc.setAcceptAllFileFilterUsed(false);
@@ -541,63 +599,9 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		final int result = fc.showOpenDialog(this);
 
 		if (result == JFileChooser.APPROVE_OPTION)
-		{
-			final File file = fc.getSelectedFile();
-
-			final String extension = Utility.getExtension(file);
-
-			if (!file.exists())
-			{
-				JOptionPane.showMessageDialog(this, "File not found. Please select an existing file...", "Slyum", JOptionPane.ERROR_MESSAGE, PersonnalizedIcon.getErrorIcon());
-				return;
-			}
-
-			if (extension == null || !extension.equals("sly"))
-			{
-				JOptionPane.showMessageDialog(this, "Invalide file format. Only \".sly\" files are accepted.", "Slyum", JOptionPane.ERROR_MESSAGE, PersonnalizedIcon.getErrorIcon());
-				return;
-			}
-
-			final SAXParserFactory factory = SAXParserFactory.newInstance();
-			final SAXParser parser;
-			graphicView.setVisible(false);
-			try
-			{
-				parser = factory.newSAXParser();
-
-				final DefaultHandler handler = new XMLParser(classDiagram, graphicView);
-				
-				
-				new Thread(new Runnable() {
-
-					@Override
-					public void run()
-					{
-						try
-						{
-							Change.setBlocked(true);
-							
-							parser.parse(file, handler);
-							
-							Change.setBlocked(false);
-							
-						} catch (final Exception e)
-						{
-							showErrorImportationMessage(e);
-						} finally
-						{
-							graphicView.setVisible(true);
-						}
-					}
-				}).start();
-
-				setCurrentFile(file);
-				Change.setHasChange(false);
-			} catch (final Exception e)
-			{
-				showErrorImportationMessage(e);
-			}
-		}
+		
+			openFromXML(fc.getSelectedFile());
+		
 	}
 
 	/**

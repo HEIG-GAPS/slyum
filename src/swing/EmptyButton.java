@@ -55,7 +55,7 @@ public class EmptyButton extends JButton implements MouseListener
 		
 		Graphics2D g2 = (Graphics2D)g;
 
-		if (isMouseHover || isMouseClicked)
+		if (isEnabled() && (isMouseHover || isMouseClicked))
 		{
 			g2.setColor(themeColor);
 			g2.fillRect(0, 0, getWidth()-1, getHeight()-1);
@@ -75,9 +75,9 @@ public class EmptyButton extends JButton implements MouseListener
 				GradientPaint gp;
 				
 				if (isMouseClicked)
-					gp = new GradientPaint(new Point(1, 1), color2, new Point(1, getHeight() - 2), color1);
-				else
-					gp = new GradientPaint(new Point(1, 1), color1, new Point(1, getHeight() - 2), color2);
+						gp = new GradientPaint(new Point(1, 1), color2, new Point(1, getHeight() - 2), color1); 
+					else
+						gp = new GradientPaint(new Point(1, 1), color1, new Point(1, getHeight() - 2), color2);
 				
 				g2.setPaint(gp);
 				g2.fill(rect);
@@ -88,8 +88,6 @@ public class EmptyButton extends JButton implements MouseListener
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

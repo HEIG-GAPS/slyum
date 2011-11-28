@@ -1,6 +1,15 @@
 refaire les classes internes proprement
+
 tableaux
+
 undo / redo
+
 font
-vue des propriété des association : mettre les JPanelRounded
-ajouter des tooltip au boutons
+
+ajouter des tooltip au boutons + raccourcis clavier
+
+ajouter arg pour .sly (glisser deposer un fichier directement
+
+ajouter les bouton z-index dans barre de menu
+
+drag and dropd des classes et des fichiers
