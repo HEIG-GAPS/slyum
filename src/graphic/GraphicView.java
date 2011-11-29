@@ -40,7 +40,6 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.util.Iterator;
 import java.util.LinkedList;
-
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
 import javax.swing.JMenu;
@@ -304,6 +303,19 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	private final JScrollPane scrollPane;
 
 	private float zoom = 1.0f;
+	private double scale = 1.0;
+	
+	
+	public void setScale(double scale)
+	{
+		this.scale = scale;
+		repaint();
+	}
+	
+	public double getScale()
+	{
+		return scale;
+	}
 
 	/**
 	 * Create a new graphic view representing the class diagram given. The new
@@ -345,13 +357,24 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		};
 
 		// Disable scrolling with wheel !
-		// scene.addMouseWheelListener(this);
+		scene.addMouseWheelListener(this);
 		scene.addKeyListener(this);
 		scene.addMouseMotionListener(this);
 		scene.addMouseListener(this);
 
 		scrollPane = new JScrollPane(scene);
-
+		
+		/* TODO
+		TransformUtils tu = new TransformUtils();
+		
+		JXLayer<JComponent> panelTransform = tu.createTransformJXLayer(scene, 5.0);
+		scrollPane = new JScrollPane(scene);
+		scrollPane.setBackground(Color.BLACK);
+		scrollPane.setBorder(BorderFactory.createLineBorder(Color.GREEN, 5));
+		panelTransform.doLayout();
+		
+		*/
+		
 		saveComponentMouseHover = this;
 
 		classDiagram.addComponentsObserver(this);
@@ -1402,6 +1425,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
+		e = adapteMouseEvent(e);
 		GraphicComponent component;
 
 		if (currentFactory != null)
@@ -1417,6 +1441,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	@Override
 	public void mouseDragged(MouseEvent e)
 	{
+		e = adapteMouseEvent(e);
 		GraphicComponent component;
 
 		if (currentFactory != null)
@@ -1429,23 +1454,27 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		componentMousePressed.gMouseDragged(e);
 
 		saveComponentMouseHover = component;
+		
+		// TODO
+		repaint();
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e)
 	{
-		// this event, in Slyum, is call manually whene mouseMove is called.
+		// this event, in Slyum, is call manually when mouseMove is called.
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e)
 	{
-		// this event, in Slyum, is call manually whene mouseMove is called.
+		// this event, in Slyum, is call manually when mouseMove is called.
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e)
 	{
+		e = adapteMouseEvent(e);
 		GraphicComponent component;
 
 		if (currentFactory != null)
@@ -1456,17 +1485,20 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		// Compute mouseEntered and mouseExited event.
 		computeComponentEventEnter(component, saveComponentMouseHover, e);
 		
-		
 		component.gMouseMoved(e);
 
 		// Save the last component mouse hovered. Usefull for compute
 		// mouseEntered and mouseExited event.
 		saveComponentMouseHover = component;
+		
+		// TODO
+		repaint();
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
+		e = adapteMouseEvent(e);
 		scene.requestFocusInWindow(); // get the focus
 
 		mousePressedLocation = e.getPoint();
@@ -1481,11 +1513,16 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		// Save the last component mouse pressed.
 		componentMousePressed = component;
 		component.gMousePressed(e);
+		
+		// TODO
+		repaint();
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e)
 	{
+		e = adapteMouseEvent(e);
+		
 		componentMousePressed.gMouseReleased(e);
 		getScene().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
@@ -1494,8 +1531,31 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	public void mouseWheelMoved(MouseWheelEvent e)
 	{
 		if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL)
+			
 			if (e.isControlDown())
-				changeSizeText(1.0f / -e.getUnitsToScroll());
+				
+				setScale(getScale() + (-e.getUnitsToScroll()/100.0));
+	}
+	
+	protected MouseEvent adapteMouseEvent(MouseEvent e)
+	{
+		return  new MouseEvent(e.getComponent(),
+				e.getID(),
+				e.getWhen(),
+				e.getModifiers(),
+				(int)(e.getX() * getInversedScale()),
+				(int)(e.getY() * getInversedScale()),
+				e.getXOnScreen(),
+				e.getYOnScreen(),
+				e.getClickCount(),
+				e.isPopupTrigger(),
+				e.getButton()
+			);
+	}
+
+	private double getInversedScale()
+	{
+		return 1 / getScale();
 	}
 
 	/**
@@ -1588,7 +1648,11 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		paintBackground(getGridSize(), getBasicColor(), g2);
 
 		Utility.setRenderQuality(g2);
+
+		double scale = getScale();
+		double inversedScale = getInversedScale();
 		
+		g2.scale(scale, scale);
 
 		if (!isVisible())
 			return;
@@ -1596,7 +1660,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		// Paint components
 		for (final GraphicComponent c : getAllComponents())
 			c.paintComponent(g2);
-
+		
 		for (final GraphicComponent c : getSelectedComponents())
 			c.drawSelectedEffect(g2);
 
@@ -1608,6 +1672,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		final Color rubberBandColor = new Color(grayLevel, grayLevel, grayLevel);
 
 		paintRubberBand(rubberBand, isAutomatiqueGridColor() ? rubberBandColor : new Color(getGridColor()), g2);
+		g2.scale(inversedScale, inversedScale);
 	}
 
 	@Override
