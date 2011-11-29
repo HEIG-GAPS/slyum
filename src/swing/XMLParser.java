@@ -174,17 +174,18 @@ public class XMLParser extends DefaultHandler
 
 	private class UMLView
 	{
-		int bgColor = 0;
 		@SuppressWarnings("unused")
 		LinkedList<ComponentView> componentView = new LinkedList<XMLParser.ComponentView>();
+		
 		int grid = 0;
+		
 		@SuppressWarnings("unused")
 		String name = null;
 
 		LinkedList<Note> notes = new LinkedList<XMLParser.Note>();
+		
 		@SuppressWarnings("unused")
 		LinkedList<RelationView> relationView = new LinkedList<XMLParser.RelationView>();
-		float textSize = 0.0f;
 	}
 
 	// UML STRUCTURE
@@ -349,8 +350,6 @@ public class XMLParser extends DefaultHandler
 		graphicView.removeAll();
 
 		graphicView.setGridSize(uMLClassDiagram.uMLView.getFirst().grid);
-		graphicView.setZoom(uMLClassDiagram.uMLView.getFirst().textSize);
-		graphicView.setColor(uMLClassDiagram.uMLView.getFirst().bgColor);
 
 		// Don't change methods call order !!
 		importClassesAndInterfaces(); // <- need nothing :D
@@ -941,8 +940,6 @@ public class XMLParser extends DefaultHandler
 				uMLClassDiagram.uMLView.add(new UMLView());
 				uMLClassDiagram.uMLView.getLast().name = attributes.getValue("name");
 				uMLClassDiagram.uMLView.getLast().grid = Integer.parseInt(attributes.getValue("grid"));
-				uMLClassDiagram.uMLView.getLast().textSize = Float.parseFloat(attributes.getValue("textSize"));
-				uMLClassDiagram.uMLView.getLast().bgColor = Integer.parseInt(attributes.getValue("bgColor"));
 			} catch (final Exception e)
 			{
 				throw new SAXException(e);

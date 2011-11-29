@@ -23,7 +23,6 @@ import java.awt.event.ActionListener;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
@@ -83,11 +82,6 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 
 		// Create new graphiView, contain class diagram.
 		graphicView = new GraphicView(getClassDiagram());
-
-		String small = "";
-		
-		if (Boolean.parseBoolean(PropertyLoader.getInstance().getProperties().getProperty("SmallIcon")))
-			small = "16";
 		
 		//Personnalized ToolBar Layout
 		JPanel panelToolBar = new JPanel();
@@ -194,12 +188,6 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 
 		else if ("redo".equals(e.getActionCommand()))
 			Change.redo();
-
-		else if ("zoom+".equals(e.getActionCommand()))
-			graphicView.changeSizeText(0.2f);
-
-		else if ("zoom-".equals(e.getActionCommand()))
-			graphicView.changeSizeText(-0.2f);
 
 		else if ("NoGrid".equals(e.getActionCommand()))
 			spinnerGridSize.setValue(1);
@@ -479,6 +467,10 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 	{
 		currentFile = file;
 		Change.setHasChange(false);
+		
+		if (file == null)
+			return;
+		
 		Slyum.updateWindowTitle(currentFile);
 		Slyum.setCurrentDirectoryFileChooser(file.getParent());
 	}

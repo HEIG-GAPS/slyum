@@ -53,6 +53,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.TransferHandler;
 
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
+
 import swing.PanelClassDiagram;
 import swing.PropertyLoader;
 import swing.Slyum;
@@ -954,6 +956,12 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	{
 		return classDiagram;
 	}
+	
+	@Override
+	public Color getColor()
+	{
+		return getBasicColor();
+	}
 
 	/**
 	 * Search a component in the graphic view who are at the given location.
@@ -1444,7 +1452,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	@Override
 	public void mouseMoved(MouseEvent e)
-	{
+	{		
 		GraphicComponent component;
 
 		if (currentFactory != null)
@@ -1454,12 +1462,15 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		// Compute mouseEntered and mouseExited event.
 		computeComponentEventEnter(component, saveComponentMouseHover, e);
-
+		
+		
 		component.gMouseMoved(e);
 
 		// Save the last component mouse hovered. Usefull for compute
 		// mouseEntered and mouseExited event.
 		saveComponentMouseHover = component;
+		
+		repaint();
 	}
 
 	@Override
@@ -1586,13 +1597,18 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		paintBackground(getGridSize(), getBasicColor(), g2);
 
 		Utility.setRenderQuality(g2);
+		
 
 		if (!isVisible())
 			return;
 
+		//TODO
+		g2.scale(2.0, 2.0);
 		// Paint components
 		for (final GraphicComponent c : getAllComponents())
 			c.paintComponent(g2);
+
+		g2.scale(0.5, 0.5);
 
 		for (final GraphicComponent c : getSelectedComponents())
 			c.drawSelectedEffect(g2);
@@ -1600,7 +1616,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		if (currentFactory != null)
 			currentFactory.paintComponent(g2);
 
-		// Paint rubberBand.
+		// Paint rubberBand
 		final int grayLevel = Utility.getGrayLevel(getColor());
 		final Color rubberBandColor = new Color(grayLevel, grayLevel, grayLevel);
 
@@ -1696,6 +1712,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	public void setColor(Color color)
 	{
 		setBasicColor(color);
+		
+		repaint();
 	}
 
 	/**
@@ -1949,9 +1967,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		String xml = tab + "<umlView name=\"" + getName() + "\" ";
 
-		xml += "grid=\"" + getGridSize() + "\" ";
-		xml += "textSize=\"" + getZoom() + "\" ";
-		xml += "bgColor=\"" + getColor().getRGB() + "\">\n";
+		xml += "grid=\"" + getGridSize() + "\">\n";
 
 		for (final GraphicComponent c : getAllComponents())
 			xml += c.toXML(depth + 1);
@@ -1960,7 +1976,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	}
 
 	/**
-	 * Compute a new preferred size for the scrollPane. Calls whene graphic
+	 * Compute a new preferred size for the scrollPane. Calls when graphic
 	 * component is resized or moved.
 	 */
 	public void updatePreferredSize()

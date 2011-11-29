@@ -286,35 +286,6 @@ public class Slyum extends JFrame implements ActionListener
 				exit();
 			}
 		});
-		
-		setTransferHandler(new TransferHandler() {
-			
-			@Override
-			public boolean canImport(TransferSupport support)
-			{
-				return support.getDataFlavors()[0].isFlavorTextType();
-			}
-			
-			@Override
-			public boolean importData(TransferSupport support)
-			{
-				System.out.println("test");
-				try
-				{
-					URI uri = new URI((String) support.getTransferable().getTransferData(DataFlavor.stringFlavor));
-					File file = new File(uri);
-					if (file.exists())
-						
-						PanelClassDiagram.getInstance().openFromXML(file);
-					
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-				}
-				return super.importData(support);
-			}
-		});
 
 		setVisible(true);
 		setExtendedState(MAXIMIZED_BOTH);
@@ -460,16 +431,6 @@ public class Slyum extends JFrame implements ActionListener
 		// Menu item Redo
 		menuItem = redo = createMenuItem("Redo", "redo16", KeyEvent.VK_R, "ctrl Y", "redo");
 		menuItem.setEnabled(false);
-		menu.add(menuItem);
-
-		menu.addSeparator();
-
-		// Menu item align top
-		menuItem = createMenuItem("Zoom +", "growText16", KeyEvent.VK_G, "ctrl PLUS", "zoom+");
-		menu.add(menuItem);
-
-		// Menu item align top
-		menuItem = createMenuItem("Zoom -", "shrinkText16", KeyEvent.VK_S, "ctrl MINUS", "zoom-");
 		menu.add(menuItem);
 
 		menu.addSeparator();

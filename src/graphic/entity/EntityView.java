@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
@@ -582,7 +583,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 	{
 		if (bounds == null)
 			bounds = new Rectangle();
-
+		
 		return new Rectangle(bounds);
 	}
 
@@ -670,7 +671,11 @@ public abstract class EntityView extends MovableComponent implements Observer
 	@Override
 	public boolean isAtPosition(Point mouse)
 	{
-		return bounds.contains(mouse);
+		Rectangle2D rect = new Rectangle2D.Double(bounds.getX()*2.0, bounds.getY()*2.0, bounds.getWidth()*2.0, bounds.getHeight()*2.0);
+		
+		return rect.contains(mouse);
+		
+		//return bounds.contains(moouse);
 	}
 
 	/**
