@@ -93,9 +93,6 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		add(panelToolBar, BorderLayout.PAGE_START);
 
 		final SSplitPane mainSplitPane = new SSplitPane(JSplitPane.VERTICAL_SPLIT, graphicView.getScrollPane(), PropretiesChanger.getInstance());
-		// Work on Linux not on Windows
-		// mainSplitPane.setDividerLocation(Toolkit.getDefaultToolkit().getScreenSize().height
-		// - 350);
 
 		mainSplitPane.setResizeWeight(1.0);
 

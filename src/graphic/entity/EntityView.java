@@ -671,11 +671,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 	@Override
 	public boolean isAtPosition(Point mouse)
 	{
-		Rectangle2D rect = new Rectangle2D.Double(bounds.getX()*2.0, bounds.getY()*2.0, bounds.getWidth()*2.0, bounds.getHeight()*2.0);
-		
-		return rect.contains(mouse);
-		
-		//return bounds.contains(moouse);
+		return bounds.contains(mouse);
 	}
 
 	/**
@@ -1167,7 +1163,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 		parent.getScene().paintImmediately(repaintBounds);
 
-		setBounds(getBounds()); // set new height compute while repainting.
+		setBounds(new Rectangle(bounds)); // set new height compute while repainting.
 
 		parent.getScene().repaint(repaintBounds);
 

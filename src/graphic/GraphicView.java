@@ -26,8 +26,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -45,17 +43,12 @@ import java.util.LinkedList;
 
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
-import javax.swing.JComponent;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.TransferHandler;
 
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
-
-import swing.PanelClassDiagram;
 import swing.PropertyLoader;
 import swing.Slyum;
 import swing.SlyumColorChooser;
@@ -1452,7 +1445,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	@Override
 	public void mouseMoved(MouseEvent e)
-	{		
+	{
 		GraphicComponent component;
 
 		if (currentFactory != null)
@@ -1469,8 +1462,6 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		// Save the last component mouse hovered. Usefull for compute
 		// mouseEntered and mouseExited event.
 		saveComponentMouseHover = component;
-		
-		repaint();
 	}
 
 	@Override
@@ -1602,13 +1593,9 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		if (!isVisible())
 			return;
 
-		//TODO
-		g2.scale(2.0, 2.0);
 		// Paint components
 		for (final GraphicComponent c : getAllComponents())
 			c.paintComponent(g2);
-
-		g2.scale(0.5, 0.5);
 
 		for (final GraphicComponent c : getSelectedComponents())
 			c.drawSelectedEffect(g2);
