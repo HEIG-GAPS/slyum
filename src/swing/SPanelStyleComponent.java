@@ -8,6 +8,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 
 import utility.PersonnalizedIcon;
+import utility.SSlider;
 
 public class SPanelStyleComponent extends JPanelRounded
 {
