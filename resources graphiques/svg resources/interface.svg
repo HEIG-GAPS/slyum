@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="38.75"
+   height="30"
+   id="svg2985"
+   version="1.1"
+   inkscape:version="0.48.1 "
+   sodipodi:docname="interface.svg"
+   inkscape:export-filename="D:\Documents\workspace\Slyum\resources\icon\interface.png"
+   inkscape:export-xdpi="71.976685"
+   inkscape:export-ydpi="71.976685">
+  <defs
+     id="defs2987">
+    <linearGradient
+       id="linearGradient5143">
+      <stop
+         style="stop-color:#ff6a00;stop-opacity:1;"
+         offset="0"
+         id="stop5145" />
+      <stop
+         id="stop5151"
+         offset="0.5"
+         style="stop-color:#ffa900;stop-opacity:0.49803922;" />
+      <stop
+         style="stop-color:#ff6a00;stop-opacity:1;"
+         offset="1"
+         id="stop5147" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4672">
+      <stop
+         style="stop-color:#ff7a00;stop-opacity:1;"
+         offset="0"
+         id="stop4674" />
+      <stop
+         style="stop-color:#ff7a00;stop-opacity:0;"
+         offset="1"
+         id="stop4676" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4662">
+      <stop
+         style="stop-color:#ff9900;stop-opacity:1;"
+         offset="0"
+         id="stop4664" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop4666" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4608">
+      <stop
+         style="stop-color:#cf52a9;stop-opacity:1;"
+         offset="0"
+         id="stop4610" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="1"
+         id="stop4612" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3920">
+      <stop
+         style="stop-color:#f09f00;stop-opacity:1;"
+         offset="0"
+         id="stop3922" />
+      <stop
+         style="stop-color:#ffffdb;stop-opacity:1;"
+         offset="1"
+         id="stop3924" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3772">
+      <stop
+         style="stop-color:#e4ff71;stop-opacity:1;"
+         offset="0"
+         id="stop3774" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0;"
+         offset="1"
+         id="stop3776" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3920-5"
+       id="linearGradient3926-1"
+       x1="255"
+       y1="271.25"
+       x2="-107.5"
+       y2="-126.25"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.58368,0,0,0.58368,-17.471536,158.97597)" />
+    <linearGradient
+       id="linearGradient3920-5">
+      <stop
+         style="stop-color:#f09f00;stop-opacity:1;"
+         offset="0"
+         id="stop3922-9" />
+      <stop
+         style="stop-color:#ffffdb;stop-opacity:1;"
+         offset="1"
+         id="stop3924-5" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4662-7">
+      <stop
+         style="stop-color:#ff9900;stop-opacity:1;"
+         offset="0"
+         id="stop4664-2" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop4666-4" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4705">
+      <stop
+         style="stop-color:#ff9900;stop-opacity:1;"
+         offset="0"
+         id="stop4707" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop4709" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4662-6">
+      <stop
+         style="stop-color:#ff9900;stop-opacity:1;"
+         offset="0"
+         id="stop4664-0" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop4666-0" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4787">
+      <stop
+         style="stop-color:#ff9900;stop-opacity:1;"
+         offset="0"
+         id="stop4789" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop4791" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4662-7-2">
+      <stop
+         style="stop-color:#ff9900;stop-opacity:1;"
+         offset="0"
+         id="stop4664-2-3" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop4666-4-7" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4798">
+      <stop
+         style="stop-color:#ff9900;stop-opacity:1;"
+         offset="0"
+         id="stop4800" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop4802" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4662-77">
+      <stop
+         style="stop-color:#ff9900;stop-opacity:1;"
+         offset="0"
+         id="stop4664-1" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop4666-49" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4908">
+      <stop
+         style="stop-color:#ff9900;stop-opacity:1;"
+         offset="0"
+         id="stop4910" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop4912" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4662-7-3">
+      <stop
+         style="stop-color:#ff9900;stop-opacity:1;"
+         offset="0"
+         id="stop4664-2-4" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop4666-4-0" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4919">
+      <stop
+         style="stop-color:#ff9900;stop-opacity:1;"
+         offset="0"
+         id="stop4921" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop4923" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4662-4"
+       id="linearGradient4688-6"
+       x1="196.22212"
+       y1="160.54205"
+       x2="130.10765"
+       y2="78.871223"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       id="linearGradient4662-4">
+      <stop
+         style="stop-color:#ff9900;stop-opacity:1;"
+         offset="0"
+         id="stop4664-6" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop4666-9" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4662-4"
+       id="linearGradient4678-9"
+       x1="410.18066"
+       y1="137.37477"
+       x2="412.82776"
+       y2="184.46387"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       id="linearGradient5066">
+      <stop
+         style="stop-color:#ff9900;stop-opacity:1;"
+         offset="0"
+         id="stop5068" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop5070" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4662-7-37"
+       id="linearGradient4688-3-2"
+       x1="196.22212"
+       y1="160.54205"
+       x2="130.10765"
+       y2="78.871223"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       id="linearGradient4662-7-37">
+      <stop
+         style="stop-color:#ff9900;stop-opacity:1;"
+         offset="0"
+         id="stop4664-2-8" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop4666-4-9" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4662-7-37"
+       id="linearGradient4678-0-3"
+       x1="410.18066"
+       y1="137.37477"
+       x2="412.82776"
+       y2="184.46387"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       id="linearGradient5077">
+      <stop
+         style="stop-color:#ff9900;stop-opacity:1;"
+         offset="0"
+         id="stop5079" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop5081" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="16"
+     inkscape:cx="9.504406"
+     inkscape:cy="10.755772"
+     inkscape:document-units="pt"
+     inkscape:current-layer="layer5"
+     id="namedview2989"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1018"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     showguides="false"
+     inkscape:snap-global="false"
+     units="pt">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3862"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata2991">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer6"
+     inkscape:label="lien"
+     transform="translate(0,-395)">
+    <g
+       id="g4983"
+       transform="matrix(0.95719134,0,1.2196353,0.44092449,-321.30123,331.16166)"
+       style="opacity:0.44186048;fill:#000000;fill-opacity:1;stroke:none">
+      <g
+         id="g5000"
+         transform="matrix(0.97423298,0,-1.1029065,0.9365878,260.74916,-11.647412)">
+        <rect
+           style="fill:#000000;fill-opacity:1;stroke:none"
+           id="rect4741-0"
+           width="16.303772"
+           height="1.3400362"
+           x="78.922653"
+           y="225.64047"
+           inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\interface.png"
+           inkscape:export-xdpi="71.976685"
+           inkscape:export-ydpi="71.976685" />
+        <path
+           sodipodi:type="arc"
+           style="fill:#000000;fill-opacity:1;stroke:none"
+           id="path4586-8"
+           sodipodi:cx="298"
+           sodipodi:cy="198"
+           sodipodi:rx="87"
+           sodipodi:ry="85"
+           d="m 385,198 c 0,46.9442 -38.95123,85 -87,85 -48.04877,0 -87,-38.0558 -87,-85 0,-46.9442 38.95123,-85 87,-85 48.04877,0 87,38.0558 87,85 z"
+           transform="matrix(0.11166968,0,0,0.11166968,68.482831,205.07628)"
+           inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\interface.png"
+           inkscape:export-xdpi="71.976685"
+           inkscape:export-ydpi="71.976685" />
+        <path
+           transform="matrix(0.00189875,0.04295545,-0.04295545,0.00189875,84.320028,213.06101)"
+           sodipodi:type="arc"
+           style="fill:#000000;fill-opacity:1;stroke:none"
+           id="path4586-2-1"
+           sodipodi:cx="298"
+           sodipodi:cy="198"
+           sodipodi:rx="87"
+           sodipodi:ry="85"
+           d="m 385,198 c 0,46.9442 -38.95123,85 -87,85 -48.04877,0 -87,-38.0558 -87,-85 0,-46.9442 38.95123,-85 87,-85 48.04877,0 87,38.0558 87,85 z"
+           inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\interface.png"
+           inkscape:export-xdpi="71.976685"
+           inkscape:export-ydpi="71.976685" />
+        <path
+           sodipodi:type="arc"
+           style="opacity:0.81395353;fill:#000000;fill-opacity:1;stroke:none"
+           id="path4588-0-0-1"
+           sodipodi:cx="404.625"
+           sodipodi:cy="152.625"
+           sodipodi:rx="39.875"
+           sodipodi:ry="15.875"
+           d="m 444.5,152.625 c 0,8.76752 -17.85265,15.875 -39.875,15.875 -22.02235,0 -39.875,-7.10748 -39.875,-15.875 0,-8.76752 17.85265,-15.875 39.875,-15.875 22.02235,0 39.875,7.10748 39.875,15.875 z"
+           transform="matrix(0.01674208,0.01701513,-0.01559902,0.01766661,69.859866,218.82028)"
+           inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\interface.png"
+           inkscape:export-xdpi="71.976685"
+           inkscape:export-ydpi="71.976685" />
+        <path
+           sodipodi:type="arc"
+           style="opacity:0.81395353;fill:#000000;fill-opacity:1;stroke:none"
+           id="path4680-1-1"
+           sodipodi:cx="175.53926"
+           sodipodi:cy="138.62175"
+           sodipodi:rx="57.805981"
+           sodipodi:ry="57.629204"
+           d="m 233.34524,138.62175 c 0,31.82773 -25.88062,57.6292 -57.80598,57.6292 -31.92536,0 -57.80598,-25.80147 -57.80598,-57.6292 0,-31.82773 25.88062,-57.629204 57.80598,-57.629204 31.92536,0 57.80598,25.801474 57.80598,57.629204 z"
+           transform="matrix(-0.00118828,0.04392391,-0.04241976,3.6992591e-4,83.217116,217.84944)"
+           inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\interface.png"
+           inkscape:export-xdpi="71.976685"
+           inkscape:export-ydpi="71.976685" />
+        <path
+           sodipodi:type="arc"
+           style="opacity:0.81395353;fill:#000000;fill-opacity:1;stroke:none"
+           id="path4588-0-5"
+           sodipodi:cx="404.625"
+           sodipodi:cy="152.625"
+           sodipodi:rx="39.875"
+           sodipodi:ry="15.875"
+           d="m 444.5,152.625 c 0,8.76752 -17.85265,15.875 -39.875,15.875 -22.02235,0 -39.875,-7.10748 -39.875,-15.875 0,-8.76752 17.85265,-15.875 39.875,-15.875 22.02235,0 39.875,7.10748 39.875,15.875 z"
+           transform="matrix(0.04606744,-0.04148744,0.04404864,0.04249926,81.767402,243.25504)"
+           inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\interface.png"
+           inkscape:export-xdpi="71.976685"
+           inkscape:export-ydpi="71.976685" />
+        <path
+           sodipodi:type="arc"
+           style="opacity:0.81395353;fill:#000000;fill-opacity:1;stroke:none"
+           id="path4680-9"
+           sodipodi:cx="175.53926"
+           sodipodi:cy="138.62175"
+           sodipodi:rx="57.805981"
+           sodipodi:ry="57.629204"
+           d="m 233.34524,138.62175 c 0,31.82773 -25.88062,57.6292 -57.80598,57.6292 -31.92536,0 -57.80598,-25.80147 -57.80598,-57.6292 0,-31.82773 25.88062,-57.629204 57.80598,-57.629204 31.92536,0 57.80598,25.801474 57.80598,57.629204 z"
+           transform="matrix(0.11382839,0.00812065,-0.00390524,0.11010443,80.780381,208.48707)"
+           inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\interface.png"
+           inkscape:export-xdpi="71.976685"
+           inkscape:export-ydpi="71.976685" />
+      </g>
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="bouledroite"
+     transform="translate(0,-395)" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer5"
+     inkscape:label="reflets"
+     transform="translate(0,-395)">
+    <rect
+       style="fill:#ff9000;fill-opacity:1;stroke:#000000;stroke-width:0.98533052;stroke-opacity:1"
+       id="rect4741"
+       width="15.725867"
+       height="1.7528515"
+       x="6.7182393"
+       y="409.81494"
+       inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\interface.png"
+       inkscape:export-xdpi="71.976685"
+       inkscape:export-ydpi="71.976685" />
+    <rect
+       style="fill:#ffbe42;fill-opacity:1;stroke:none"
+       id="rect4741-6"
+       width="15.725867"
+       height="0.3849453"
+       x="5.6895351"
+       y="410.19421"
+       inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\interface.png"
+       inkscape:export-xdpi="71.976685"
+       inkscape:export-ydpi="71.976685" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#ff9500;fill-opacity:1;stroke:#000000;stroke-width:10.05706882;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path4586"
+       sodipodi:cx="298"
+       sodipodi:cy="198"
+       sodipodi:rx="87"
+       sodipodi:ry="85"
+       d="m 385,198 a 87,85 0 1 1 -174,0 87,85 0 1 1 174,0 z"
+       transform="matrix(0.10771142,0,0,0.10980072,-3.3515181,389.65712)"
+       inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\interface.png"
+       inkscape:export-xdpi="71.976685"
+       inkscape:export-ydpi="71.976685" />
+    <path
+       transform="matrix(0.00183144,0.04223652,-0.04143284,0.00186697,11.924316,397.5082)"
+       sodipodi:type="arc"
+       style="fill:#ff9500;fill-opacity:1;stroke:#000000;stroke-width:21.58975601;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path4586-2"
+       sodipodi:cx="298"
+       sodipodi:cy="198"
+       sodipodi:rx="87"
+       sodipodi:ry="85"
+       d="m 385,198 a 87,85 0 1 1 -174,0 87,85 0 1 1 174,0 z"
+       inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\interface.png"
+       inkscape:export-xdpi="71.976685"
+       inkscape:export-ydpi="71.976685" />
+    <path
+       sodipodi:type="arc"
+       style="opacity:0.81395353;fill:url(#linearGradient4678-0-3);fill-opacity:1;stroke:none"
+       id="path4588-0-0"
+       sodipodi:cx="404.625"
+       sodipodi:cy="152.625"
+       sodipodi:rx="39.875"
+       sodipodi:ry="15.875"
+       d="m 444.5,152.625 a 39.875,15.875 0 1 1 -79.75,0 39.875,15.875 0 1 1 79.75,0 z"
+       transform="matrix(0.01614863,0.01673036,-0.0150461,0.01737092,-1.7793206,402.98456)"
+       inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\interface.png"
+       inkscape:export-xdpi="71.976685"
+       inkscape:export-ydpi="71.976685" />
+    <path
+       sodipodi:type="arc"
+       style="opacity:0.81395353;fill:url(#linearGradient4688-3-2);fill-opacity:1;stroke:none"
+       id="path4680-1"
+       sodipodi:cx="175.53926"
+       sodipodi:cy="138.62175"
+       sodipodi:rx="57.805981"
+       sodipodi:ry="57.629204"
+       d="m 233.34524,138.62175 a 57.805981,57.629204 0 1 1 -115.61196,0 57.805981,57.629204 0 1 1 115.61196,0 z"
+       transform="matrix(-0.00114616,0.04318878,-0.04091614,3.6373466e-4,10.616512,402.46524)"
+       inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\interface.png"
+       inkscape:export-xdpi="71.976685"
+       inkscape:export-ydpi="71.976685" />
+    <path
+       sodipodi:type="arc"
+       style="opacity:0.81395353;fill:url(#linearGradient4678-9);fill-opacity:1;stroke:none"
+       id="path4588-0"
+       sodipodi:cx="404.625"
+       sodipodi:cy="152.625"
+       sodipodi:rx="39.875"
+       sodipodi:ry="15.875"
+       d="m 444.5,152.625 a 39.875,15.875 0 1 1 -79.75,0 39.875,15.875 0 1 1 79.75,0 z"
+       transform="matrix(0.04443453,-0.04079307,0.04248728,0.04178797,9.4621662,427.19692)"
+       inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\interface.png"
+       inkscape:export-xdpi="71.976685"
+       inkscape:export-ydpi="71.976685" />
+    <path
+       sodipodi:type="arc"
+       style="opacity:0.81395353;fill:url(#linearGradient4688-6);fill-opacity:1;stroke:none"
+       id="path4680"
+       sodipodi:cx="175.53926"
+       sodipodi:cy="138.62175"
+       sodipodi:rx="57.805981"
+       sodipodi:ry="57.629204"
+       d="m 233.34524,138.62175 a 57.805981,57.629204 0 1 1 -115.61196,0 57.805981,57.629204 0 1 1 115.61196,0 z"
+       transform="matrix(0.1097936,0.00798475,-0.00376681,0.10826168,8.6931154,393.25955)"
+       inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\interface.png"
+       inkscape:export-xdpi="71.976685"
+       inkscape:export-ydpi="71.976685" />
+  </g>
+</svg>
