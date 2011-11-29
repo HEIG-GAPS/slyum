@@ -15,6 +15,7 @@ import graphic.factory.MultiFactory;
 import graphic.factory.NoteFactory;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -45,6 +46,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.PropretiesChanger;
 import utility.PersonnalizedIcon;
+import utility.SSlider;
 import utility.Utility;
 import change.Change;
 import classDiagram.ClassDiagram;
@@ -89,6 +91,7 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 
 		panelToolBar.add(new SPanelFileComponent());
 		panelToolBar.add(panelStyle = new SPanelStyleComponent());
+		panelToolBar.add(new SSlider(Color.YELLOW));
 		
 		add(panelToolBar, BorderLayout.PAGE_START);
 
