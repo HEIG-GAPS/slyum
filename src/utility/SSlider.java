@@ -32,14 +32,12 @@ import swing.Slyum;
 
 public class SSlider extends JPanelRounded implements MouseListener
 {
-	
 	private static final long serialVersionUID = 1L;
 	private static final String TOOL_TIP_MESSAGE = "Zoom (Ctrl+MouseWheel)(Right click : 100)";
-	public final static double SLIDER_HEIGHT = 6.0;
+	public final static double SLIDER_HEIGHT = 4.0;
 	private final static int ROUDING_SLIDER = 0;
 	private final static int MARGIN = 15;
 
-	private Color color;
 	private int value;
 	private int maxValue;
 	private STicker ticker;
@@ -48,7 +46,7 @@ public class SSlider extends JPanelRounded implements MouseListener
 	{
 		private static final long serialVersionUID = 3620432451573178768L;
 		private static final int TICKER_WIDTH = 10;
-		private static final int TICKER_HEIGHT = 22;
+		private static final int TICKER_HEIGHT = 20;
 		private final static int ROUDING_TICKER = 0;
 		
 		private SSlider sslider;
@@ -95,7 +93,7 @@ public class SSlider extends JPanelRounded implements MouseListener
 			else
 				gp = new GradientPaint(gpPoint1, gpColor1, gpPoint2, gpColor2);
 			
-			g2.setStroke(new BasicStroke(1.5f));
+			g2.setStroke(new BasicStroke(1.3f));
 			g2.setPaint(gp);
 			g2.fill(ticker);
 			
@@ -190,7 +188,6 @@ public class SSlider extends JPanelRounded implements MouseListener
 	
 	public SSlider(Color color, int value)
 	{
-		this.color = color;
 		this.maxValue = value;
 		this.value = maxValue / 2;
 		
@@ -226,13 +223,13 @@ public class SSlider extends JPanelRounded implements MouseListener
 		
 		double x = MARGIN, y = (bounds.getHeight() - SLIDER_HEIGHT) / 2.0, width = bounds.getWidth() - MARGIN * 2, height = SLIDER_HEIGHT;
 		
-		RoundRectangle2D slider = new RoundRectangle2D.Double(x, y, width, height, ROUDING_SLIDER, ROUDING_SLIDER);
-		GradientPaint gpBackground = new GradientPaint(new Point((int)x, (int)y-2), Color.DARK_GRAY, new Point((int)x, (int)(y + height)), Utility.getAlphaColor(Color.YELLOW, 100));
+		RoundRectangle2D slider = new RoundRectangle2D.Double(x, y - 6.0, width, height, ROUDING_SLIDER, ROUDING_SLIDER);
+		GradientPaint gpBackground = new GradientPaint(new Point((int)x, (int)y-11), Color.DARK_GRAY, new Point((int)x, (int)(y + height)), Utility.getAlphaColor(Color.YELLOW, 100));
 
 		g2.setPaint(gpBackground);
 		g2.fill(slider);
 		
-		g2.setStroke(new BasicStroke(1.5f));
+		g2.setStroke(new BasicStroke(1.3f));
 		g2.setColor(Color.GRAY);
 		g2.draw(slider);
 		
