@@ -13,7 +13,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -24,42 +26,45 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import swing.JPanelRounded;
+import swing.PanelClassDiagram;
 import swing.PropertyLoader;
 import swing.Slyum;
 
-public class SSlider extends JPanelRounded
+public class SSlider extends JPanelRounded implements MouseListener
 {
+	
+	private static final long serialVersionUID = 1L;
+	private static final String TOOL_TIP_MESSAGE = "Zoom (Ctrl+MouseWheel)(Right click : 100)";
 	public final static double SLIDER_HEIGHT = 6.0;
 	private final static int ROUDING_SLIDER = 0;
 	private final static int MARGIN = 15;
-	
-	private static final long serialVersionUID = 1L;
 
 	private Color color;
 	private int value;
+	private int maxValue;
+	private STicker ticker;
 	
 	private class STicker extends JPanel implements MouseListener, MouseMotionListener
 	{
-		private static final int TICKER_WIDTH = 11;
-		private static final int TICKER_HEIGHT = 30;
+		private static final long serialVersionUID = 3620432451573178768L;
+		private static final int TICKER_WIDTH = 10;
+		private static final int TICKER_HEIGHT = 22;
 		private final static int ROUDING_TICKER = 0;
 		
-		private int value;
 		private SSlider sslider;
 		
 		private boolean isMouseHover = false;
 		private boolean isMousePressed = false;
 		private int mousePressedX;
-		
-		public STicker(SSlider sslider, int value)
+
+		public STicker(SSlider sslider)
 		{
 			setOpaque(false);
 			this.sslider = sslider;
-			this.value = value;
 			setBorder(null);
 			
 			Dimension sbDim = sslider.getMaximumSize();
-			setBounds((sbDim.width - TICKER_WIDTH) / 2, (sbDim.height - TICKER_HEIGHT) / 2, TICKER_WIDTH, TICKER_HEIGHT);
+			setBounds((sbDim.width - TICKER_WIDTH) / 2, /*(sbDim.height - TICKER_HEIGHT) / 2*/ 9, TICKER_WIDTH, TICKER_HEIGHT);
 			
 			addMouseListener(this);
 			addMouseMotionListener(this);
@@ -123,7 +128,9 @@ public class SSlider extends JPanelRounded
 		@Override
 		public void mouseClicked(MouseEvent arg0)
 		{
-			
+			if (arg0.getButton() == MouseEvent.BUTTON3)
+				
+				setValue(100);
 		}
 
 
@@ -161,6 +168,7 @@ public class SSlider extends JPanelRounded
 		public void mouseDragged(MouseEvent arg0)
 		{
 			setLocation(getX() + arg0.getX() - mousePressedX, getY());
+			sslider.setValue((getX() * maxValue) / (sslider.getWidth() - 10));
 		}
 		
 		@Override
@@ -168,7 +176,7 @@ public class SSlider extends JPanelRounded
 		{
 			if (x > sslider.getWidth() - TICKER_WIDTH*2 || x < TICKER_WIDTH)
 				return;
-			
+
 			super.setLocation(x, y);
 		}
 
@@ -183,7 +191,8 @@ public class SSlider extends JPanelRounded
 	public SSlider(Color color, int value)
 	{
 		this.color = color;
-		this.value = value;
+		this.maxValue = value;
+		this.value = maxValue / 2;
 		
 		setLayout(new GridLayout(1, 7, 5, 5));
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 7));
@@ -194,7 +203,13 @@ public class SSlider extends JPanelRounded
 
 		setLayout(null);
 		
-		add(new STicker(this, value));
+		add(ticker = new STicker(this));
+		
+		setValue(this.value);
+		
+		addMouseListener(this);
+		
+		setToolTipText(TOOL_TIP_MESSAGE);
 	}
 	
 	@Override
@@ -227,14 +242,70 @@ public class SSlider extends JPanelRounded
 		
 		FontMetrics fmValue = g.getFontMetrics(valueFont);
 		
-		text = String.valueOf(value);
+		text = String.valueOf(maxValue);
 		int textwidth = fmValue.stringWidth(text);
 		
 		g2.drawString(text, (float)(x + width - textwidth/2 - 4.0), (float)(height + y + 12.0));
 		
-		text = String.valueOf(value/2);
+		text = String.valueOf(maxValue/2);
 		textwidth = fmValue.stringWidth(text);
 		
 		g2.drawString(text, (float)(x + width/2 - textwidth/2), (float)(height + y + 12.0));
+	}
+	
+	public void setValue(int value)
+	{
+		setScale((double)value / 100.0);
+
+		if (PanelClassDiagram.getInstance() == null)
+			return;
+		
+		GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+		gv.setScale((double)value / 100.0);
+	}
+	
+	public void setScale(double scale)
+	{
+		int value = (int)(scale * 100.0);
+		
+		if (value < 11 || value > maxValue - 11)
+			return;
+		
+		this.value = value;
+		
+		ticker.setLocation((int)(((float)value / (float)maxValue) * ((float)getWidth()-10)), ticker.getY());
+	}
+	
+	public int getValue()
+	{
+		return value;
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e)
+	{
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e)
+	{
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e)
+	{
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e)
+	{
+		if (e.getButton() == MouseEvent.BUTTON3)
+			
+			setValue(100);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e)
+	{
 	}
 }

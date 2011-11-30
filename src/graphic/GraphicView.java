@@ -48,10 +48,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import swing.PanelClassDiagram;
 import swing.PropertyLoader;
 import swing.Slyum;
 import swing.SlyumColorChooser;
 import utility.PersonnalizedIcon;
+import utility.SSlider;
 import utility.Utility;
 import change.Change;
 import classDiagram.ClassDiagram;
@@ -309,6 +311,9 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	public void setScale(double scale)
 	{
 		this.scale = scale;
+		
+		PanelClassDiagram.getInstance().getsSlider().setScale(scale);
+		
 		repaint();
 	}
 	
@@ -1409,7 +1414,6 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 					Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new Utility.ImageSelection(getSelectedScreen()), null);
 					break;
 			}
-
 	}
 
 	@Override
@@ -1487,7 +1491,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		
 		component.gMouseMoved(e);
 
-		// Save the last component mouse hovered. Usefull for compute
+		// Save the last component mouse hovered. Useful for compute
 		// mouseEntered and mouseExited event.
 		saveComponentMouseHover = component;
 		
@@ -1533,8 +1537,10 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL)
 			
 			if (e.isControlDown())
-				
-				setScale(getScale() + (-e.getUnitsToScroll()/100.0));
+			{
+				SSlider ss = PanelClassDiagram.getInstance().getsSlider();
+				ss.setValue((int)(ss.getValue() - (float)e.getUnitsToScroll()));
+			}
 	}
 	
 	protected MouseEvent adapteMouseEvent(MouseEvent e)
