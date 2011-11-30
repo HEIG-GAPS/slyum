@@ -490,4 +490,9 @@ public class Utility
 
 		return text;
 	}
+
+	protected static Color getAlphaColor(Color color, int alpha)
+	{
+		return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+	}
 }
