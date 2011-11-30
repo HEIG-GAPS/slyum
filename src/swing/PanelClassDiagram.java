@@ -77,6 +77,7 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 	private final JSpinner spinnerGridSize = new JSpinner();
 	
 	private SPanelStyleComponent panelStyle;
+	private SSlider sSlider;
 
 	private PanelClassDiagram()
 	{
@@ -85,13 +86,13 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		// Create new graphiView, contain class diagram.
 		graphicView = new GraphicView(getClassDiagram());
 		
-		//Personnalized ToolBar Layout
+		// Personnalized ToolBar Layout
 		JPanel panelToolBar = new JPanel();
 		panelToolBar.setLayout(new BoxLayout(panelToolBar, BoxLayout.LINE_AXIS));
 
 		panelToolBar.add(new SPanelFileComponent());
 		panelToolBar.add(panelStyle = new SPanelStyleComponent());
-		panelToolBar.add(new SSlider(Color.YELLOW, 500));
+		panelToolBar.add(sSlider = new SSlider(Color.YELLOW, 200));
 		
 		add(panelToolBar, BorderLayout.PAGE_START);
 
@@ -310,6 +311,11 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 	public JSpinner getSpinnerGridSize()
 	{
 		return spinnerGridSize;
+	}
+	
+	public SSlider getsSlider()
+	{
+		return sSlider;
 	}
 
 	/**
