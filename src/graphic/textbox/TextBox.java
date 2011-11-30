@@ -125,11 +125,12 @@ public abstract class TextBox extends GraphicComponent
 	public void editing()
 	{
 		stopEditing();
-
 		setVisible(false);
+		
 		final Rectangle bounds = getBounds();
 
 		textField = new JTextField(getText()) {
+			
 			@Override
 			public void paintComponent(Graphics g)
 			{
@@ -140,9 +141,10 @@ public abstract class TextBox extends GraphicComponent
 		};
 
 		textField.setBackground(new Color(255, 255, 255));
-		textField.setFont(effectivFont);
+		textField.setFont(effectivFont.deriveFont((float)parent.getScale() * (float)getFont().getSize()));
 		textField.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-		textField.setBounds(new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height));
+		double scale = parent.getScale();
+		textField.setBounds(new Rectangle((int)(bounds.x*scale), (int)(bounds.y*scale), (int)(bounds.width*scale), (int)(bounds.height*scale)));
 		textField.selectAll();
 
 		parent.getScene().add(textField);

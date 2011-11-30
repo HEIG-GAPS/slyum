@@ -1553,7 +1553,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 			);
 	}
 
-	private double getInversedScale()
+	public double getInversedScale()
 	{
 		return 1 / getScale();
 	}
@@ -1635,7 +1635,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	}
 
 	/**
-	 * Paint the scene. Same has paintComponent, but different name beacause
+	 * Paint the scene. Same has paintComponent, but different name because
 	 * paintComponent is already use by the parent GraphicComponent.
 	 * 
 	 * @param g2
@@ -1648,9 +1648,9 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		paintBackground(getGridSize(), getBasicColor(), g2);
 
 		Utility.setRenderQuality(g2);
-
-		double scale = getScale();
-		double inversedScale = getInversedScale();
+		
+		double scale = getScale(),
+		inversedScale = getInversedScale();
 		
 		g2.scale(scale, scale);
 
@@ -1672,6 +1672,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		final Color rubberBandColor = new Color(grayLevel, grayLevel, grayLevel);
 
 		paintRubberBand(rubberBand, isAutomatiqueGridColor() ? rubberBandColor : new Color(getGridColor()), g2);
+		
 		g2.scale(inversedScale, inversedScale);
 	}
 
