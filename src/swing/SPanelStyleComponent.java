@@ -7,7 +7,7 @@ import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
 import utility.SSlider;
 
 public class SPanelStyleComponent extends JPanelRounded
@@ -23,15 +23,15 @@ public class SPanelStyleComponent extends JPanelRounded
 		setBackground(/*Color.WHITE*/ new Color(0, 255,0, 10));
 		setForeground(Color.GRAY);
 
-		add(undo = new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/undo.png"), "undo", Color.GREEN));
-		add(redo = new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/redo.png"), "redo", Color.GREEN));
+		add(undo = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/undo.png"), "undo", Color.GREEN));
+		add(redo = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/redo.png"), "redo", Color.GREEN));
 
-		add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/alignTop.png"), "alignTop", Color.GREEN));
-		add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/alignBottom.png"), "alignBottom", Color.GREEN));
-		add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/alignRight.png"), "alignRight", Color.GREEN));
-		add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/alignLeft.png"), "alignLeft", Color.GREEN));
+		add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/alignTop.png"), "alignTop", Color.GREEN));
+		add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/alignBottom.png"), "alignBottom", Color.GREEN));
+		add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/alignRight.png"), "alignRight", Color.GREEN));
+		add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/alignLeft.png"), "alignLeft", Color.GREEN));
 		
-		add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/adjustWidth.png"), "adjustWidth", Color.GREEN));
+		add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/adjustWidth.png"), "adjustWidth", Color.GREEN));
 		
 		setMaximumSize(new Dimension(43 * ((GridLayout)getLayout()).getColumns(), 50));
 	}

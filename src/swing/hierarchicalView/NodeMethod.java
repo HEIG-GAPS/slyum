@@ -9,7 +9,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Method;
@@ -63,7 +63,7 @@ public class NodeMethod extends DefaultMutableTreeNode implements Observer, ICla
 	@Override
 	public ImageIcon getCustomizedIcon()
 	{
-		return PersonnalizedIcon.createImageIcon("resources/icon/method.png");
+		return PersonalizedIcon.createImageIcon("resources/icon/method.png");
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
 import utility.Utility;
 
 /**
@@ -54,7 +54,7 @@ public class RelationGrip extends SquareGrip implements ActionListener
 
 		popupMenu = new JPopupMenu();
 
-		final ImageIcon imgIcon = PersonnalizedIcon.createImageIcon("resources/icon/delete16.png");
+		final ImageIcon imgIcon = PersonalizedIcon.createImageIcon("resources/icon/delete16.png");
 
 		menuItemDelete = new JMenuItem("Delete", imgIcon);
 		menuItemDelete.setActionCommand("delete");

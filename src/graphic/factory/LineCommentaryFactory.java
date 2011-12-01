@@ -9,7 +9,7 @@ import java.awt.BasicStroke;
 
 import javax.swing.JOptionPane;
 
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 
 import classDiagram.ClassDiagram;

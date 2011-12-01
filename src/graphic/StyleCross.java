@@ -13,7 +13,7 @@ import java.util.TimerTask;
 import change.Change;
 
 import swing.Slyum;
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
 import utility.Utility;
 
 public class StyleCross extends GraphicComponent
@@ -34,7 +34,7 @@ public class StyleCross extends GraphicComponent
 		if (!Slyum.isShowCrossMenu())
 			return;
 		
-		btnCross[0] = new ButtonCross(parent, PersonnalizedIcon.createImageIcon(paths[0])){
+		btnCross[0] = new ButtonCross(parent, PersonalizedIcon.createImageIcon(paths[0])){
 			
 			@Override
 			public void mouseClick()
@@ -43,7 +43,7 @@ public class StyleCross extends GraphicComponent
 			}
 		};
 		
-		btnCross[1] = new ButtonCross(parent, PersonnalizedIcon.createImageIcon(paths[1])){
+		btnCross[1] = new ButtonCross(parent, PersonalizedIcon.createImageIcon(paths[1])){
 					
 			@Override
 			public void mouseClick()
@@ -52,7 +52,7 @@ public class StyleCross extends GraphicComponent
 			}
 		};
 				
-		btnCross[2] = new ButtonCross(parent, PersonnalizedIcon.createImageIcon(paths[2])){
+		btnCross[2] = new ButtonCross(parent, PersonalizedIcon.createImageIcon(paths[2])){
 					
 			@Override
 			public void mouseClick()
@@ -61,7 +61,7 @@ public class StyleCross extends GraphicComponent
 			}
 		};
 				
-		btnCross[3] = new ButtonCross(parent, PersonnalizedIcon.createImageIcon(paths[3])){
+		btnCross[3] = new ButtonCross(parent, PersonalizedIcon.createImageIcon(paths[3])){
 					
 			@Override
 			public void mouseClick()
@@ -70,7 +70,7 @@ public class StyleCross extends GraphicComponent
 			}
 		};
 				
-		btnCross[4] = new ButtonCross(parent, PersonnalizedIcon.createImageIcon(paths[4])){
+		btnCross[4] = new ButtonCross(parent, PersonalizedIcon.createImageIcon(paths[4])){
 			
 			@Override
 			public void mouseClick()

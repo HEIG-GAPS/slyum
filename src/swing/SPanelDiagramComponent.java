@@ -19,7 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
 
 public class SPanelDiagramComponent extends JPanelRounded
 {
@@ -43,21 +43,21 @@ public class SPanelDiagramComponent extends JPanelRounded
 		labelTitle.setFont(TextBox.getFont());
 		panelTop.add(labelTitle);
 
-		panelBottom.add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/class.png"), "newClass", Color.RED));
-		panelBottom.add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/interface.png"), "newInterface", Color.RED));
-		panelBottom.add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/classAssoc.png"), "newClassAssoc", Color.RED));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/class.png"), "newClass", Color.RED));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/interface.png"), "newInterface", Color.RED));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/classAssoc.png"), "newClassAssoc", Color.RED));
 		
-		panelBottom.add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/generalize.png"), "newGeneralize", Color.RED));
-		panelBottom.add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/dependency.png"), "newDependency", Color.RED));
-		panelBottom.add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/innerClass.png"), "newInnerClass", Color.RED));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/generalize.png"), "newGeneralize", Color.RED));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/dependency.png"), "newDependency", Color.RED));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/innerClass.png"), "newInnerClass", Color.RED));
 		
-		panelBottom.add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/association.png"), "newAssociation", Color.RED));
-		panelBottom.add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/aggregation.png"), "newAggregation", Color.RED));
-		panelBottom.add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/composition.png"), "newComposition", Color.RED));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/association.png"), "newAssociation", Color.RED));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/aggregation.png"), "newAggregation", Color.RED));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/composition.png"), "newComposition", Color.RED));
 		
-		panelBottom.add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/multi.png"), "newMulti", Color.RED));
-		panelBottom.add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/note.png"), "newNote", Color.RED));
-		panelBottom.add(new EmptyButton(PersonnalizedIcon.createImageIcon("resources/icon/linkNote.png"), "linkNote", Color.RED));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/multi.png"), "newMulti", Color.RED));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/note.png"), "newNote", Color.RED));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/linkNote.png"), "linkNote", Color.RED));
 		
 		setMaximumSize(new Dimension(200, 150));
 		

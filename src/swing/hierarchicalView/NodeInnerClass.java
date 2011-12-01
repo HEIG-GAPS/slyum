@@ -4,7 +4,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
 import classDiagram.relationships.Inheritance;
 
 public class NodeInnerClass extends NodeInheritance
@@ -23,7 +23,7 @@ public class NodeInnerClass extends NodeInheritance
 	@Override
 	public ImageIcon getCustomizedIcon()
 	{
-		return PersonnalizedIcon.createImageIcon("resources/icon/innerClass16.png");
+		return PersonalizedIcon.createImageIcon("resources/icon/innerClass16.png");
 	}
 
 }

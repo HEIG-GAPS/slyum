@@ -41,7 +41,7 @@ import javax.swing.table.TableModel;
 
 import swing.JPanelRounded;
 import swing.Slyum;
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
 import utility.Utility;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Attribute;
@@ -790,21 +790,21 @@ public class EntityPropreties extends GlobalPropreties
 		if (Slyum.getSmallIcons())
 			small = "_small.png";
 			
-		btnAddParameters = new JButton(PersonnalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small));
-		btnRemoveMethod = new JButton(PersonnalizedIcon.createImageIcon("resources/icon/button_red_delete" + small));
-		btnRemoveAttribute = new JButton(PersonnalizedIcon.createImageIcon("resources/icon/button_red_delete" + small));
-		btnUpAttribute = new JButton(PersonnalizedIcon.createImageIcon("resources/icon/button_violet_up" + small));
-		btnDownAttribute = new JButton(PersonnalizedIcon.createImageIcon("resources/icon/button_violet_down" + small));
-		btnUpMethod = new JButton(PersonnalizedIcon.createImageIcon("resources/icon/button_violet_up" + small));
-		btnDownMethod = new JButton(PersonnalizedIcon.createImageIcon("resources/icon/button_violet_down" + small));
-		btnRemoveParameters = new JButton(PersonnalizedIcon.createImageIcon("resources/icon/button_red_delete" + small));
-		btnRightParameters = new JButton(PersonnalizedIcon.createImageIcon("resources/icon/button_violet_right" + small));
-		btnLeftParameters = new JButton(PersonnalizedIcon.createImageIcon("resources/icon/button_violet_left" + small));
+		btnAddParameters = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small));
+		btnRemoveMethod = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small));
+		btnRemoveAttribute = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small));
+		btnUpAttribute = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_up" + small));
+		btnDownAttribute = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_down" + small));
+		btnUpMethod = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_up" + small));
+		btnDownMethod = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_down" + small));
+		btnRemoveParameters = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small));
+		btnRightParameters = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_right" + small));
+		btnLeftParameters = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_left" + small));
 		
-		imgNoAttribute = new JLabel(PersonnalizedIcon.createImageIcon("resources/icon/empty_attribute.png"));
-		imgNoMethod = new JLabel(PersonnalizedIcon.createImageIcon("resources/icon/empty_method.png"));
-		imgMethodSelected = new JLabel(PersonnalizedIcon.createImageIcon("resources/icon/select_method.png"));
-		imgNoParameter = new JLabel(PersonnalizedIcon.createImageIcon("resources/icon/empty_parameter.png"));
+		imgNoAttribute = new JLabel(PersonalizedIcon.createImageIcon("resources/icon/empty_attribute.png"));
+		imgNoMethod = new JLabel(PersonalizedIcon.createImageIcon("resources/icon/empty_method.png"));
+		imgMethodSelected = new JLabel(PersonalizedIcon.createImageIcon("resources/icon/select_method.png"));
+		imgNoParameter = new JLabel(PersonalizedIcon.createImageIcon("resources/icon/empty_parameter.png"));
 
 		imgNoMethod.setAlignmentX(CENTER_ALIGNMENT);
 		imgNoAttribute.setAlignmentX(CENTER_ALIGNMENT);
@@ -914,7 +914,7 @@ public class EntityPropreties extends GlobalPropreties
 		panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.PAGE_AXIS));
 
 		{
-			final JButton button = new JButton(PersonnalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small));
+			final JButton button = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small));
 			button.setBorderPainted(false);
 			button.setContentAreaFilled(false);
 			button.setAlignmentX(CENTER_ALIGNMENT);
@@ -1041,7 +1041,7 @@ public class EntityPropreties extends GlobalPropreties
 		panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.PAGE_AXIS));
 		panelButton.setOpaque(false);
 		{
-			final JButton button = new JButton(PersonnalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small));
+			final JButton button = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small));
 			button.setBorderPainted(false);
 			button.setContentAreaFilled(false);
 			button.setAlignmentX(CENTER_ALIGNMENT);

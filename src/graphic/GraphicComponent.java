@@ -18,8 +18,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
+import swing.Slyum;
 import swing.SlyumColorChooser;
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
 import change.BufferCreation;
 import change.Change;
 import classDiagram.IDiagramComponent;
@@ -370,7 +371,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 	 */
 	public JMenuItem makeMenuItem(String name, String action, String imgIcon)
 	{
-		final ImageIcon img = PersonnalizedIcon.createImageIcon("resources/icon/" + imgIcon + ".png");
+		final ImageIcon img = PersonalizedIcon.createImageIcon("resources/icon/" + imgIcon + ".png");
 
 		final JMenuItem menuItem = new JMenuItem(name, img);
 		menuItem.setActionCommand(action);
