@@ -16,10 +16,18 @@ drag and dropd des classes
 
 faire du float / double
 
-zoom
+zoom - redessiner correctement (repaint())
 
 ajouter barres d'outils
 
 viewport avec ascenceur plus rapide
 
 taille de la grille dans les paramètres (enlever menu)
+
+onglets projet
+
+onglets inter-projet
+
+bug 
+
+deux demande de sauvegarder le projet courant lors de l'ouverture / sauvegarde(?) d'un nouveau projet
