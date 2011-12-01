@@ -312,6 +312,7 @@ public class Slyum extends JFrame implements ActionListener
 		UIManager.put("MenuItem.font", f);
 		UIManager.put("ComboBox.font", f);
 		UIManager.put("Table.font", f);
+		UIManager.put("TextField.font", f);
 		UIManager.put("OptionPane.informationIcon", PersonalizedIcon.getInfoIcon());
 		UIManager.put("OptionPane.errorIcon", PersonalizedIcon.getErrorIcon());
 		UIManager.put("OptionPane.warningIcon", PersonalizedIcon.getWarningIcon());
