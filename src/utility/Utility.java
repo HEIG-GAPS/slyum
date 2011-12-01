@@ -458,13 +458,17 @@ public class Utility
 
 	}
 	
-	public static void setRootPaneExitOnEsc(JRootPane rp, AbstractAction ac)
+	/**
+	 * Set the AbstractAction for the RootPane when ESC key is pressed.
+	 * @param rp the RootPane
+	 * @param ac the AbstractAction
+	 */
+	public static void setRootPaneActionOnEsc(JRootPane rp, AbstractAction ac)
 	{
-		// on ESC key close frame
 		rp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
-            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Cancel");
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESC");
         
-		rp.getActionMap().put("Cancel", ac);
+		rp.getActionMap().put("ESC", ac);
 	}
 
 	/**

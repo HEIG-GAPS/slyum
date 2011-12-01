@@ -268,8 +268,8 @@ public class Slyum extends JFrame implements ActionListener
 		panel = PanelClassDiagram.getInstance();
 
 		setUIProperties();
-		setFrameProperties();
 		createJMenuBar();
+		setFrameProperties();
 
 		addWindowListener(new WindowAdapter() {
 

@@ -9,14 +9,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
 import java.util.Properties;
 
 import javax.swing.AbstractAction;
@@ -25,20 +23,18 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
-import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -50,9 +46,6 @@ import javax.swing.event.ListSelectionListener;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.Utility;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import javax.swing.border.CompoundBorder;
 
 public class SProperties extends JDialog
 {
@@ -81,8 +74,8 @@ public class SProperties extends JDialog
 	 * Create the dialog.
 	 */
 	public SProperties()
-	{     
-        Utility.setRootPaneExitOnEsc(getRootPane(), new AbstractAction() {
+	{
+        Utility.setRootPaneActionOnEsc(getRootPane(), new AbstractAction() {
 		
             public void actionPerformed(ActionEvent e)
             {
@@ -95,7 +88,6 @@ public class SProperties extends JDialog
 		setMinimumSize(new Dimension(600, 420));
 		setModalityType(ModalityType.APPLICATION_MODAL);
 		setFocusable(true);
-		setBounds(100, 100, 600, 400);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -480,10 +472,11 @@ public class SProperties extends JDialog
 						panel_1.setLayout(gbl_panel_1);
 						{
 							final JButton btnNewButton = new JButton("Custom...");
+							final SProperties link = this;
 							btnNewButton.addActionListener(new ActionListener() {
 								public void actionPerformed(ActionEvent arg0)
 								{
-									SMessageDialog.showInformationMessage("This will be implemented in futur update.");
+									SMessageDialog.showInformationMessage("This will be implemented in futur update.", link);
 								}
 							});
 							final GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
@@ -692,7 +685,7 @@ public class SProperties extends JDialog
 
 	private void showOpacityWarning()
 	{
-		SMessageDialog.showWarningMessage("This option can decrease performance.");
+		SMessageDialog.showWarningMessage("This option can decrease performance.", this);
 	}
 
 }
