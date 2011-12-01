@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.SystemColor;
@@ -1339,7 +1338,7 @@ public class EntityPropreties extends GlobalPropreties
 	public JLabel createTitleLabel(String text)
 	{
 		final JLabel label = new JLabel(text);
-		label.setFont(new Font("Ubuntu Light", 0, 20));
+		label.setFont(label.getFont().deriveFont(20.0f));
 		label.setAlignmentX(CENTER_ALIGNMENT);
 
 		return label;
@@ -1377,9 +1376,7 @@ public class EntityPropreties extends GlobalPropreties
 
 		textName.setText(entity.getName());
 		checkBoxAbstract.setSelected(entity.isAbstract());
-
 		checkBoxAbstract.setEnabled(currentObject.getClass() != InterfaceEntity.class);
-
 		comboBox.setSelectedItem(entity.getVisibility());
 
 		modelAttributes.clearAll();

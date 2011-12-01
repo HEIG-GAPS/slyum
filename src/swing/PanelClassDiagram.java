@@ -18,7 +18,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.print.PrinterException;
@@ -26,16 +25,13 @@ import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.SAXParser;
@@ -384,51 +380,6 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		runner.start();
 	}
 
-	/**
-	 * Create a new JButton for the JToolBar.
-	 * 
-	 * @param text
-	 *            the text in the button
-	 * @param imgName
-	 *            the path of the image
-	 * @param actionCommand
-	 *            the action command
-	 * @param toolTipText
-	 *            the tool tip text
-	 * @param altText
-	 *            the alt text
-	 * @return the new JButton created
-	 */
-	protected JButton makeToolBarButton(String text, String imgName, String actionCommand, String toolTipText, String altText)
-	{
-		final String imgLocation = "resources/icon/" + imgName + ".png";
-
-		final URL imageURL = Slyum.class.getResource(imgLocation);
-
-		final JButton button = new JButton(/* text */);
-		/*
-		 * button.setVerticalTextPosition(JButton.BOTTOM);
-		 * button.setHorizontalTextPosition(JButton.CENTER);
-		 */
-		button.setOpaque(false);
-		button.setBorderPainted(false);
-		button.setActionCommand(actionCommand);
-		button.setToolTipText(toolTipText);
-		button.addActionListener(this);
-		button.setFont(new Font("Ubuntu", Font.PLAIN, 16));
-
-		if (imageURL != null)
-
-			button.setIcon(new ImageIcon(imageURL, altText));
-
-		else
-		{
-			button.setText(altText);
-			System.err.println("Resource not found: " + imgLocation);
-		}
-
-		return button;
-	}
 
 	/**
 	 * Create a new project. Ask user to save current project.

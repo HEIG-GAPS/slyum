@@ -25,6 +25,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 
 import swing.PropertyLoader;
+import swing.Slyum;
 import utility.Utility;
 
 /**
@@ -37,7 +38,7 @@ import utility.Utility;
  */
 public abstract class TextBox extends GraphicComponent
 {
-	public final static String FONT_NAME = "Ubuntu";
+	public final static String FONT_NAME = Slyum.getInstance().defaultFont.getFamily();
 	public final static int FONT_SIZE = 12;
 
 	public static Font getFont()

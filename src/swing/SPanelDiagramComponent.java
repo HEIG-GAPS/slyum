@@ -4,18 +4,10 @@ import graphic.textbox.TextBox;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.Icon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -23,6 +15,7 @@ import utility.PersonalizedIcon;
 
 public class SPanelDiagramComponent extends JPanelRounded
 {
+	private static final String TITLE = "Class diagram";
 	private static final long serialVersionUID = -8198486630670114549L;
 
 	public SPanelDiagramComponent()
@@ -39,8 +32,7 @@ public class SPanelDiagramComponent extends JPanelRounded
 		panelBottom.setLayout(new GridLayout(4, 3));
 		panelBottom.setOpaque(false);
 		
-		JLabel labelTitle = new JLabel("UML components");
-		labelTitle.setFont(TextBox.getFont());
+		JLabel labelTitle = new JLabel(TITLE);
 		panelTop.add(labelTitle);
 
 		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/class.png"), "newClass", Color.RED));
