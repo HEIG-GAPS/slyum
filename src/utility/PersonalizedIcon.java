@@ -6,7 +6,7 @@ import javax.swing.ImageIcon;
 
 import swing.Slyum;
 
-public class PersonnalizedIcon
+public class PersonalizedIcon
 {
 	public final static String PATH_ICON = "resources/icon/";
 	public final static String PATH_WARNING_ICON = PATH_ICON + "warning.png";
@@ -50,6 +50,11 @@ public class PersonnalizedIcon
 	public static ImageIcon getInfoIcon()
 	{
 		return createImageIcon(PATH_INFO_ICON);
+	}
+	
+	public static ImageIcon getLogo()
+	{
+		return createImageIcon("resources/icon/logo32.png");
 	}
 
 }
