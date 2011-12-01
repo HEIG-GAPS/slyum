@@ -1,33 +1,33 @@
-refaire les classes internes proprement
+Note de patch 1.3 :
 
-tableaux
+ - Refonte des classes internes
 
-undo / redo
+ - Support des tableaux et des Listes
 
-font
+ - Intégration du Annuler / Refaire
 
-ajouter des tooltip au boutons + raccourcis clavier
+ - Unification des polices d'écritures
 
-ajouter arg pour .sly (glisser deposer un fichier directement
+ - Ajout de tooltip pour les boutons des menus (et affichage des raccourcis clavier dans ceux-ci).
 
-ajouter les bouton z-index dans barre de menu
+ - Ajout des boutons permettant la modification du z-index dans les barres d'outils.
 
-drag and dropd des classes
+ - Permetttre d'effectuer des zoom du diagramme de classes.
 
-faire du float / double
+ - Ascenceur plus rapide et réagissant à la roulette de la souris.
 
-zoom - redessiner correctement (repaint())
+ - Modifier la taille de la grille dans les paramètres (et l'enlever du menu).
 
-ajouter barres d'outils
+ - Correction du bug qui demande plusieurs fois à l'utilisateur de sauvegarder son projet lors de l'ouverture ou de la sauvegarde d'un projet existant.
 
-viewport avec ascenceur plus rapide
+Futures implémentations :
 
-taille de la grille dans les paramètres (enlever menu)
+ - Permettre de glisser et déposer les classes de la vue hiérarchique sur le diagramme de classes.
 
-onglets projet
+ - Utiliser une précision en float (ou double) au lieu de int pour le dessin.
 
-onglets inter-projet
+ - Ajouter d'autres barres d'outils.
 
-bug 
+ - Pouvoir ouvrir plusieurs projets.
 
-deux demande de sauvegarder le projet courant lors de l'ouverture / sauvegarde(?) d'un nouveau projet
+ - Pouvoir ouvrir plusieurs diagrammes de classes dans un même projet.
