@@ -1,12 +1,9 @@
 package swing;
 
-import graphic.textbox.TextBox;
-
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -20,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -34,7 +30,6 @@ import javax.swing.UIManager;
 import utility.OSValidator;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
-import utility.Utility;
 
 /**
  * Main class! Create a new Instance of Slyum and display it. Create menu.
@@ -264,10 +259,9 @@ public class Slyum extends JFrame implements ActionListener
 		{
 			e.printStackTrace();
 		}
-		
-		panel = PanelClassDiagram.getInstance();
 
 		setUIProperties();
+		panel = PanelClassDiagram.getInstance();
 		createJMenuBar();
 		setFrameProperties();
 
@@ -316,6 +310,8 @@ public class Slyum extends JFrame implements ActionListener
 		UIManager.put("List.font", f);
 		UIManager.put("Menu.font", f);
 		UIManager.put("MenuItem.font", f);
+		UIManager.put("ComboBox.font", f);
+		UIManager.put("Table.font", f);
 		UIManager.put("OptionPane.informationIcon", PersonalizedIcon.getInfoIcon());
 		UIManager.put("OptionPane.errorIcon", PersonalizedIcon.getErrorIcon());
 		UIManager.put("OptionPane.warningIcon", PersonalizedIcon.getWarningIcon());

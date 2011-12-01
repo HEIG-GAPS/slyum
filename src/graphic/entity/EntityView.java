@@ -3,7 +3,6 @@ package graphic.entity;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.MovableComponent;
-import graphic.relations.LineView;
 import graphic.textbox.TextBox;
 import graphic.textbox.TextBoxAttribute;
 import graphic.textbox.TextBoxEntityName;
@@ -24,7 +23,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
@@ -38,6 +36,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 
 import swing.PropertyLoader;
+import swing.Slyum;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.Utility;
@@ -203,7 +202,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 	protected GraphicComponent saveTextBoxMouseHover;
 
-	private final Font stereotypeFontBasic = new Font("Ubuntu", 0, 11);
+	private static final Font stereotypeFontBasic = new Font(Slyum.getInstance().defaultFont.getFamily(), 0, 11); // TODO
 	private Font stereotypeFont = stereotypeFontBasic;
 
 	public EntityView(final GraphicView parent, Entity component)

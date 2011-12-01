@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
+import swing.Slyum;
 import utility.PersonalizedIcon;
 import classDiagram.IComponentsObserver;
 import classDiagram.IDiagramComponent;
@@ -62,6 +63,7 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 		noComponentLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		noComponentLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
 		noComponentLabel.setOpaque(false);
+		noComponentLabel.setFont(noComponentLabel.getFont().deriveFont(16.0f));
 		getViewport().setBackground(Color.WHITE);
 
 		setViewportView(noComponentLabel);
@@ -152,7 +154,7 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 	@Override
 	public void removeComponent(IDiagramComponent component)
 	{
-		// no save of component in this view
+		// no components saving in this view
 	}
 
 	@Override
