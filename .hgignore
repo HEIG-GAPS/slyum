@@ -2,3 +2,6 @@ syntax: glob
 .classpath
 bin
 .project
+build
+src/swing/JPanelRounded.java.orig
+src/graphic/GraphicView.java.orig
