@@ -31,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -38,6 +39,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
+import swing.EmptyButton;
 import swing.JPanelRounded;
 import swing.Slyum;
 import utility.PersonalizedIcon;
@@ -789,16 +791,16 @@ public class EntityPropreties extends GlobalPropreties
 		if (Slyum.getSmallIcons())
 			small = "_small.png";
 			
-		btnAddParameters = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small));
-		btnRemoveMethod = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small));
-		btnRemoveAttribute = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small));
-		btnUpAttribute = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_up" + small));
-		btnDownAttribute = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_down" + small));
-		btnUpMethod = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_up" + small));
-		btnDownMethod = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_down" + small));
-		btnRemoveParameters = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small));
-		btnRightParameters = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_right" + small));
-		btnLeftParameters = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_left" + small));
+		btnAddParameters = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE);
+		btnRemoveMethod = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED);
+		btnRemoveAttribute = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED);
+		btnUpAttribute = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_up" + small), null,Color.MAGENTA);
+		btnDownAttribute = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_down" + small), null,Color.MAGENTA);
+		btnUpMethod = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_up" + small), null,Color.MAGENTA);
+		btnDownMethod = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_down" + small), null,Color.MAGENTA);
+		btnRemoveParameters = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED);
+		btnRightParameters = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_right" + small), null,Color.MAGENTA);
+		btnLeftParameters = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_left" + small), null,Color.MAGENTA);
 		
 		imgNoAttribute = new JLabel(PersonalizedIcon.createImageIcon("resources/icon/empty_attribute.png"));
 		imgNoMethod = new JLabel(PersonalizedIcon.createImageIcon("resources/icon/empty_method.png"));
@@ -898,7 +900,7 @@ public class EntityPropreties extends GlobalPropreties
 		p.setBorder(BorderFactory.createEmptyBorder(9, 9, 9, 9));
 		p.setLayout(new BorderLayout());
 		JPanel panel = createWhitePanel();
-		panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 0));
+		panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 		JScrollPane scrollPane = scrollPaneAttributes = new JScrollPane(attributesTable);
 		scrollPane.getViewport().setOpaque(false);
 		scrollPane.setBorder(new LineBorder(Color.GRAY, 1, true));
@@ -913,7 +915,7 @@ public class EntityPropreties extends GlobalPropreties
 		panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.PAGE_AXIS));
 
 		{
-			final JButton button = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small));
+			final JButton button = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE);
 			button.setBorderPainted(false);
 			button.setContentAreaFilled(false);
 			button.setAlignmentX(CENTER_ALIGNMENT);
@@ -931,8 +933,6 @@ public class EntityPropreties extends GlobalPropreties
 		}
 
 		{
-			btnUpAttribute.setBorderPainted(false);
-			btnUpAttribute.setContentAreaFilled(false);
 			btnUpAttribute.setAlignmentX(CENTER_ALIGNMENT);
 			btnUpAttribute.setEnabled(false);
 			btnUpAttribute.addActionListener(new ActionListener() {
@@ -954,8 +954,6 @@ public class EntityPropreties extends GlobalPropreties
 			panelButton.add(btnUpAttribute);
 		}
 		{
-			btnDownAttribute.setBorderPainted(false);
-			btnDownAttribute.setContentAreaFilled(false);
 			btnDownAttribute.setAlignmentX(CENTER_ALIGNMENT);
 			btnDownAttribute.setEnabled(false);
 			btnDownAttribute.addActionListener(new ActionListener() {
@@ -978,8 +976,6 @@ public class EntityPropreties extends GlobalPropreties
 		}
 
 		{
-			btnRemoveAttribute.setBorderPainted(false);
-			btnRemoveAttribute.setContentAreaFilled(false);
 			btnRemoveAttribute.setAlignmentX(CENTER_ALIGNMENT);
 			btnRemoveAttribute.setEnabled(false);
 			btnRemoveAttribute.addActionListener(new ActionListener() {
@@ -1026,7 +1022,7 @@ public class EntityPropreties extends GlobalPropreties
 		p.setBorder(BorderFactory.createEmptyBorder(9, 9, 9, 9));
 		p.setLayout(new BorderLayout());
 		panel = createWhitePanel();
-		panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 0));
+		panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
 		scrollPane = scrollPaneMethods = new JScrollPane(methodsTable);
 		scrollPane.getViewport().setOpaque(false);
 		scrollPane.setBorder(new LineBorder(Color.GRAY, 1, true));
@@ -1040,7 +1036,7 @@ public class EntityPropreties extends GlobalPropreties
 		panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.PAGE_AXIS));
 		panelButton.setOpaque(false);
 		{
-			final JButton button = new JButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small));
+			final JButton button = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE);
 			button.setBorderPainted(false);
 			button.setContentAreaFilled(false);
 			button.setAlignmentX(CENTER_ALIGNMENT);
@@ -1059,8 +1055,6 @@ public class EntityPropreties extends GlobalPropreties
 		}
 
 		{
-			btnUpMethod.setBorderPainted(false);
-			btnUpMethod.setContentAreaFilled(false);
 			btnUpMethod.setAlignmentX(CENTER_ALIGNMENT);
 			btnUpMethod.setEnabled(false);
 			btnUpMethod.addActionListener(new ActionListener() {
@@ -1083,8 +1077,6 @@ public class EntityPropreties extends GlobalPropreties
 			panelButton.add(btnUpMethod);
 		}
 		{
-			btnDownMethod.setBorderPainted(false);
-			btnDownMethod.setContentAreaFilled(false);
 			btnDownMethod.setAlignmentX(CENTER_ALIGNMENT);
 			btnDownMethod.setEnabled(false);
 			btnDownMethod.addActionListener(new ActionListener() {
@@ -1108,8 +1100,6 @@ public class EntityPropreties extends GlobalPropreties
 		}
 
 		{
-			btnRemoveMethod.setBorderPainted(false);
-			btnRemoveMethod.setContentAreaFilled(false);
 			btnRemoveMethod.setAlignmentX(CENTER_ALIGNMENT);
 			btnRemoveMethod.setEnabled(false);
 			btnRemoveMethod.addActionListener(new ActionListener() {
@@ -1168,16 +1158,12 @@ public class EntityPropreties extends GlobalPropreties
 		final JPanel btnPanel = new JPanel();
 		btnPanel.setLayout(new BoxLayout(btnPanel, BoxLayout.LINE_AXIS));
 
-		btnAddParameters.setBorderPainted(false);
-		btnAddParameters.setContentAreaFilled(false);
 		btnAddParameters.setAlignmentX(CENTER_ALIGNMENT);
 		btnAddParameters.setBorder(null);
 		btnAddParameters.setEnabled(false);
 		btnAddParameters.addActionListener((ParametersTableModel) parametersTable.getModel());
 		btnPanel.add(btnAddParameters);
 
-		btnLeftParameters.setBorderPainted(false);
-		btnLeftParameters.setContentAreaFilled(false);
 		btnLeftParameters.setAlignmentX(CENTER_ALIGNMENT);
 		btnLeftParameters.setBorder(null);
 		btnLeftParameters.setEnabled(false);
@@ -1206,8 +1192,6 @@ public class EntityPropreties extends GlobalPropreties
 		});
 		btnPanel.add(btnLeftParameters);
 
-		btnRightParameters.setBorderPainted(false);
-		btnRightParameters.setContentAreaFilled(false);
 		btnRightParameters.setAlignmentX(CENTER_ALIGNMENT);
 		btnRightParameters.setBorder(null);
 		btnRightParameters.setEnabled(false);
@@ -1236,8 +1220,6 @@ public class EntityPropreties extends GlobalPropreties
 		});
 		btnPanel.add(btnRightParameters);
 
-		btnRemoveParameters.setBorderPainted(false);
-		btnRemoveParameters.setContentAreaFilled(false);
 		btnRemoveParameters.setAlignmentX(CENTER_ALIGNMENT);
 		btnRemoveParameters.setBorder(null);
 		btnRemoveParameters.setEnabled(false);
