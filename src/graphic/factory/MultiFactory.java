@@ -23,7 +23,7 @@ import java.util.LinkedList;
 
 import javax.swing.JButton;
 
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
 import utility.Utility;
 import classDiagram.ClassDiagram;
 import classDiagram.components.ClassEntity;
@@ -82,7 +82,7 @@ public class MultiFactory extends CreateComponent
 			}
 		};
 
-		buttons[0] = new JButton(PersonnalizedIcon.createImageIcon("resources/icon/tick.png"));
+		buttons[0] = new JButton(PersonalizedIcon.createImageIcon("resources/icon/tick.png"));
 		buttons[0].setBounds(10, 10, 66, 42);
 		buttons[0].addMouseListener(ma);
 		buttons[0].setEnabled(false);
@@ -96,7 +96,7 @@ public class MultiFactory extends CreateComponent
 		});
 		parent.getScene().add(buttons[0]);
 
-		buttons[1] = new JButton(PersonnalizedIcon.createImageIcon("resources/icon/delete.png"));
+		buttons[1] = new JButton(PersonalizedIcon.createImageIcon("resources/icon/delete.png"));
 		buttons[1].setBounds(buttons[0].getX() + buttons[0].getWidth() + 10, 10, 66, 42);
 		buttons[1].addMouseListener(ma);
 		buttons[1].addActionListener(new ActionListener() {

@@ -18,7 +18,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import swing.JPanelRounded;
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
 import classDiagram.ClassDiagram;
 import classDiagram.IComponentsObserver;
 import classDiagram.IDiagramComponent;
@@ -115,13 +115,13 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 	 */
 	public void addAssociation(Association component, String imgPath)
 	{
-		addNode(new NodeAssociation(component, treeModel, PersonnalizedIcon.createImageIcon(imgPath), tree), associationsNode);
+		addNode(new NodeAssociation(component, treeModel, PersonalizedIcon.createImageIcon(imgPath), tree), associationsNode);
 	}
 
 	@Override
 	public void addAssociationClass(AssociationClass component)
 	{
-		addNode(new NodeEntity(component, treeModel, tree, PersonnalizedIcon.createImageIcon("resources/icon/classAssoc16.png")), entitiesNode);
+		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon("resources/icon/classAssoc16.png")), entitiesNode);
 	}
 
 	@Override
@@ -133,7 +133,7 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 	@Override
 	public void addClass(ClassEntity component)
 	{
-		addNode(new NodeEntity(component, treeModel, tree, PersonnalizedIcon.createImageIcon("resources/icon/class16.png")), entitiesNode);
+		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon("resources/icon/class16.png")), entitiesNode);
 	}
 
 	@Override
@@ -164,7 +164,7 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 	@Override
 	public void addInterface(InterfaceEntity component)
 	{
-		addNode(new NodeEntity(component, treeModel, tree, PersonnalizedIcon.createImageIcon("resources/icon/interface16.png")), entitiesNode);
+		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon("resources/icon/interface16.png")), entitiesNode);
 	}
 
 	@Override

@@ -5,16 +5,16 @@ import java.awt.Component;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
 
 @SuppressWarnings("serial")
 public class TreeRenderer extends DefaultTreeCellRenderer
 {
 	public TreeRenderer()
 	{
-		setLeafIcon(PersonnalizedIcon.createImageIcon("resources/icon/boxOpen.png"));
-		setClosedIcon(PersonnalizedIcon.createImageIcon("resources/icon/boxClose.png"));
-		setOpenIcon(PersonnalizedIcon.createImageIcon("resources/icon/boxOpen.png"));
+		setLeafIcon(PersonalizedIcon.createImageIcon("resources/icon/boxOpen.png"));
+		setClosedIcon(PersonalizedIcon.createImageIcon("resources/icon/boxClose.png"));
+		setOpenIcon(PersonalizedIcon.createImageIcon("resources/icon/boxOpen.png"));
 	}
 
 	@Override
@@ -24,7 +24,7 @@ public class TreeRenderer extends DefaultTreeCellRenderer
 		super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
 		if (row == 0) // root
-			setIcon(PersonnalizedIcon.createImageIcon("resources/icon/diagramIcon.png"));
+			setIcon(PersonalizedIcon.createImageIcon("resources/icon/diagramIcon.png"));
 
 		else if (value instanceof ICustomizedIconNode)
 

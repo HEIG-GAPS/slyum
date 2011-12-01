@@ -28,6 +28,19 @@ public class EmptyButton extends JButton implements MouseListener
 	public EmptyButton(Icon icon, String action, Color color)
 	{
 		super(icon);
+		
+		init(action, color);
+	}
+	
+	public EmptyButton(String text, String action, Color color)
+	{
+		super(text);
+		init(action, color);
+		init(action, color);
+	}
+	
+	private void init(String action, Color color)
+	{
 		setActionCommand(action);
 		addActionListener(new ActionListener() {
 			

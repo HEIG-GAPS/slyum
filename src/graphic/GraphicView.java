@@ -52,7 +52,8 @@ import swing.PanelClassDiagram;
 import swing.PropertyLoader;
 import swing.Slyum;
 import swing.SlyumColorChooser;
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
+import utility.SMessageDialog;
 import utility.SSlider;
 import utility.Utility;
 import change.Change;
@@ -369,17 +370,6 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		scrollPane = new JScrollPane(scene);
 		
-		/* TODO
-		TransformUtils tu = new TransformUtils();
-		
-		JXLayer<JComponent> panelTransform = tu.createTransformJXLayer(scene, 5.0);
-		scrollPane = new JScrollPane(scene);
-		scrollPane.setBackground(Color.BLACK);
-		scrollPane.setBorder(BorderFactory.createLineBorder(Color.GREEN, 5));
-		panelTransform.doLayout();
-		
-		*/
-		
 		saveComponentMouseHover = this;
 
 		classDiagram.addComponentsObserver(this);
@@ -387,34 +377,6 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		setColor(getBasicColor());
 
 		JMenuItem menuItem;
-
-		// Submenu Grid
-		final JMenu submenu = new JMenu("Grid");
-		popupMenu.add(submenu);
-
-		// Menu item no grid
-		menuItem = makeMenuItem("No Grid", "NoGrid", "");
-		submenu.add(menuItem);
-
-		// Menu item no grid
-		menuItem = makeMenuItem("10", "grid10", "");
-		submenu.add(menuItem);
-
-		// Menu item no grid
-		menuItem = makeMenuItem("15", "grid15", "");
-		submenu.add(menuItem);
-
-		// Menu item no grid
-		menuItem = makeMenuItem("20", "grid20", "");
-		submenu.add(menuItem);
-
-		// Menu item no grid
-		menuItem = makeMenuItem("25", "grid25", "");
-		submenu.add(menuItem);
-
-		// Menu item no grid
-		menuItem = makeMenuItem("30", "grid30", "");
-		submenu.add(menuItem);
 
 		popupMenu.addSeparator();
 
@@ -1393,7 +1355,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		{
 			final LinkedList<GraphicComponent> selected = getSelectedComponents();
 
-			if (selected.size() == 0 || JOptionPane.showConfirmDialog(parent.getScene(), "Are you sur to delete this component and all its associated components?", "Slyum", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, PersonnalizedIcon.getWarningIcon()) == JOptionPane.NO_OPTION)
+			if (selected.size() == 0 || SMessageDialog.showQuestionMessageYesNo("Are you sur to delete this component and all its associated components?") == JOptionPane.NO_OPTION)
 
 				return;
 

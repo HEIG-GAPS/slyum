@@ -1,5 +1,7 @@
 package swing;
 
+import graphic.textbox.TextBox;
+
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -27,9 +29,10 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import javax.swing.UIManager;
 
 import utility.OSValidator;
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.Utility;
 
@@ -42,25 +45,31 @@ import utility.Utility;
 @SuppressWarnings("serial")
 public class Slyum extends JFrame implements ActionListener
 {
-	public final static String APP_DIR_NAME = "Slyum";
-	// Default JFrame size
+	private static final String APP_NAME = "Slyum";
+	public static final float version = 1.3f;
+	public final static String APP_DIR_NAME = APP_NAME;
+	public final static String FILE_SEPARATOR = System.getProperty("file.separator");
 	public final static Point DEFAULT_SIZE = new Point(1024, 760);
 
-	public final static String FILE_SEPARATOR = System.getProperty("file.separator");
-	private static Slyum instance;
+	public final static String DEFAULT_FONT_NAME = "DejaVuSans";
+	public final static String DEFAULT_FONT_PATH = "resources/fonts/DejaVu/" + DEFAULT_FONT_NAME;
+	public final static int DEFAULT_FONT_SIZE = 12;
+	
+	// Properties
 	public final static boolean SHOW_CROSS_MENU = true;
 	public final static boolean SHOW_ERRORS_MESSAGES = true;
 	public final static boolean SHOW_OPENJDK_WARNING = true;
 	public final static boolean SMALL_ICON = false;
-	
+
+	private static Slyum instance;
 	private static JMenuItem undo, redo;
 
-	public static final float version = 1.3f;
+	private static String windowTitle = APP_NAME;
 
-	public final static String WINDOW_TITLE = "Slyum";
-
-	private static String windowTitle = WINDOW_TITLE;
-
+	/**
+	 * Create the application directory.
+	 * @param path the path where create the application directory.
+	 */
 	public static void createAppDir(String path)
 	{
 		final File appDir = new File(path);
@@ -72,7 +81,7 @@ public class Slyum extends JFrame implements ActionListener
 		else
 		{
 			System.err.println("Application directory not created.");
-			SMessageDialog.showErrorMessage("Impossible to create application directory.\nYour preferences won't be saved.");
+			SMessageDialog.showErrorMessage("Error to create application directory.");
 		}
 	}
 
@@ -231,12 +240,12 @@ public class Slyum extends JFrame implements ActionListener
 
 	public static void updateWindowTitle(File projectName)
 	{
-		windowTitle = WINDOW_TITLE + (projectName == null ? "" : " - " + projectName.getPath());
+		windowTitle = APP_NAME + (projectName == null ? "" : " - " + projectName.getPath());
 	}
 
 	private final PanelClassDiagram panel;
 
-	public Font ubuntuFont;
+	public Font defaultFont;
 
 	/**
 	 * Create a new JFrame with Slyum :D !
@@ -245,32 +254,21 @@ public class Slyum extends JFrame implements ActionListener
 	{
 		try
 		{
-			ubuntuFont = new Font(Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("resources/Ubuntu-M.ttf")).getFamily(), Font.PLAIN, 13);
-		} catch (final FontFormatException e)
-		{
-			e.printStackTrace();
-		} catch (final IOException e)
+			defaultFont = new Font(Font.createFont(
+					Font.TRUETYPE_FONT,
+					getClass().getResourceAsStream(DEFAULT_FONT_PATH + ".ttf")).getFamily(),
+					Font.PLAIN,
+					DEFAULT_FONT_SIZE);
+		}
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-
-		// Initialize main window.
-		setTitle("Slyum");
-
+		
 		panel = PanelClassDiagram.getInstance();
 
-		final URL imageURL = Slyum.class.getResource("resources/icon/logo32.png");
-
-		if (imageURL != null)
-			setIconImage(new ImageIcon(imageURL, "Application icon").getImage());
-		else
-			System.err.println("application icon resource not found");
-
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setSize(DEFAULT_SIZE.x, DEFAULT_SIZE.y);
-		setMinimumSize(new Dimension(400, 400));
-		setContentPane(panel);
-		setLocationRelativeTo(null);
+		setUIProperties();
+		setFrameProperties();
 		createJMenuBar();
 
 		addWindowListener(new WindowAdapter() {
@@ -281,9 +279,47 @@ public class Slyum extends JFrame implements ActionListener
 				exit();
 			}
 		});
-
+	}
+	
+	/**
+	 * Initialize the properties of the frame.
+	 */
+	public void setFrameProperties()
+	{
+		setName(APP_NAME);
+		setTitle(getName());
+		setIconImage(PersonalizedIcon.getLogo().getImage());
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setSize(DEFAULT_SIZE.x, DEFAULT_SIZE.y);
+		setMinimumSize(new Dimension(400, 400));
+		setContentPane(panel);
+		setLocationRelativeTo(null);
 		setVisible(true);
 		setExtendedState(MAXIMIZED_BOTH);
+	}
+	
+	/**
+	 * Initialize the properties of Slyum.
+	 */
+	public void setUIProperties()
+	{
+		System.setProperty("awt.useSystemAAFontSettings", "on");
+		System.setProperty("swing.aatext", "true");
+		
+		Font f = defaultFont.deriveFont(13.0f);
+		UIManager.put("Button.font", f);
+		UIManager.put("Label.font", f);
+		UIManager.put("CheckBox.font", f);
+		UIManager.put("RadioButton.font", f);
+		UIManager.put("TabbedPane.font", f);
+		UIManager.put("TitledBorder.font", f);
+		UIManager.put("List.font", f);
+		UIManager.put("Menu.font", f);
+		UIManager.put("MenuItem.font", f);
+		UIManager.put("OptionPane.informationIcon", PersonalizedIcon.getInfoIcon());
+		UIManager.put("OptionPane.errorIcon", PersonalizedIcon.getErrorIcon());
+		UIManager.put("OptionPane.warningIcon", PersonalizedIcon.getWarningIcon());
+		UIManager.put("OptionPane.questionIcon", PersonalizedIcon.getQuestionIcon());
 	}
 
 	@Override
@@ -327,8 +363,6 @@ public class Slyum extends JFrame implements ActionListener
 			@Override
 			public void paintComponent(Graphics g)
 			{
-				Utility.setRenderQuality(g);
-
 				final Graphics2D g2 = (Graphics2D) g;
 				final int w = getWidth();
 				final int h = getHeight();
@@ -353,7 +387,6 @@ public class Slyum extends JFrame implements ActionListener
 
 		// Menu file
 		menu = new JMenu("File");
-		menu.setFont(ubuntuFont);
 		menu.setMnemonic(KeyEvent.VK_F);
 		menuBar.add(menu);
 
@@ -414,7 +447,6 @@ public class Slyum extends JFrame implements ActionListener
 
 		// Menu edit
 		menu = new JMenu("Edit");
-		menu.setFont(ubuntuFont);
 		menu.setMnemonic(KeyEvent.VK_E);
 		menuBar.add(menu);
 
@@ -452,39 +484,8 @@ public class Slyum extends JFrame implements ActionListener
 
 		// Menu Diagram
 		menu = new JMenu("Diagram");
-		menu.setFont(ubuntuFont);
 		menu.setMnemonic(KeyEvent.VK_D);
 		menuBar.add(menu);
-
-		// Submenu Grid
-		final JMenu submenu = new JMenu("Grid");
-		menu.add(submenu);
-
-		// Menu item no grid
-		menuItem = createMenuItem("No Grid", "", KeyEvent.VK_N, "", "NoGrid");
-		submenu.add(menuItem);
-
-		// Menu item no grid
-		menuItem = createMenuItem("10", "", KeyEvent.VK_1, "", "grid10");
-		submenu.add(menuItem);
-
-		// Menu item no grid
-		menuItem = createMenuItem("15", "", KeyEvent.VK_5, "", "grid15");
-		submenu.add(menuItem);
-
-		// Menu item no grid
-		menuItem = createMenuItem("20", "", KeyEvent.VK_0, "", "grid20");
-		submenu.add(menuItem);
-
-		// Menu item no grid
-		menuItem = createMenuItem("25", "", KeyEvent.VK_2, "", "grid25");
-		submenu.add(menuItem);
-
-		// Menu item no grid
-		menuItem = createMenuItem("30", "", KeyEvent.VK_3, "", "grid30");
-		submenu.add(menuItem);
-
-		menu.addSeparator();
 
 		// Menu item add class
 		menuItem = createMenuItem("Add Class", "class16", KeyEvent.VK_C, "ctrl shift C", "newClass");
@@ -545,7 +546,6 @@ public class Slyum extends JFrame implements ActionListener
 
 		// Menu Help
 		menu = new JMenu("Help");
-		menu.setFont(ubuntuFont);
 		menu.setMnemonic(KeyEvent.VK_H);
 		menuBar.add(menu);
 
@@ -587,17 +587,9 @@ public class Slyum extends JFrame implements ActionListener
 
 		final String imgLocation = "resources/icon/" + iconName + ".png";
 
-		final ImageIcon icon = PersonnalizedIcon.createImageIcon(imgLocation);
+		final ImageIcon icon = PersonalizedIcon.createImageIcon(imgLocation);
 
-		item = new JMenuItem(text, icon) {
-			@Override
-			protected void paintComponent(Graphics g)
-			{
-				Utility.setRenderQuality(g);
-				super.paintComponent(g);
-			}
-		};
-		item.setFont(ubuntuFont);
+		item = new JMenuItem(text, icon);
 		item.setMnemonic(mnemonic);
 		item.setActionCommand(actionCommand);
 		item.setAccelerator(KeyStroke.getKeyStroke(accelerator));
@@ -641,11 +633,11 @@ public class Slyum extends JFrame implements ActionListener
 					Desktop.getDesktop().open(pdfFile);
 
 				else
-					JOptionPane.showMessageDialog(this, "Cannot open help file!\nTry manually in help folder.", "Slyum", JOptionPane.ERROR_MESSAGE, PersonnalizedIcon.getErrorIcon());
+					SMessageDialog.showErrorMessage("Cannot open help file!\nTry manually in help folder.");
 
 			}
 			else
-				JOptionPane.showMessageDialog(this, "Help file not found!\nTry to re-download Slyum.", "Slyum", JOptionPane.ERROR_MESSAGE, PersonnalizedIcon.getErrorIcon());
+				SMessageDialog.showErrorMessage("Help file not found!\nTry to re-download Slyum.");
 
 		} catch (final Exception ex)
 		{

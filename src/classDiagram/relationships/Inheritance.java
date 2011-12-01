@@ -5,7 +5,8 @@ import java.util.Observable;
 import javax.swing.JOptionPane;
 
 import swing.OverridesAndImplementationsDialog;
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
+import utility.SMessageDialog;
 import utility.Utility;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
@@ -34,7 +35,7 @@ public class Inheritance extends Observable implements IDiagramComponent
 			valide &= !parent.equals(e);
 
 		if (!valide)
-			JOptionPane.showMessageDialog(null, "Error in hierarchical class structure.\nImpossible to create inheritance association.", "Slyum", JOptionPane.ERROR_MESSAGE, utility.PersonnalizedIcon.getErrorIcon());
+			SMessageDialog.showErrorMessage("Error in hierarchical class structure.\nImpossible to create inheritance association.");
 
 		return valide;
 	}
@@ -181,7 +182,7 @@ public class Inheritance extends Observable implements IDiagramComponent
 
 	private void showDeAbstractMessage()
 	{
-		JOptionPane.showMessageDialog(null, "Child class is not abstract.\nAbstract methods have been de-abstracted.", "Slyum", JOptionPane.INFORMATION_MESSAGE, PersonnalizedIcon.getInfoIcon());
+		SMessageDialog.showInformationMessage("Child class is not abstract.\nAbstract methods have been de-abstracted.");
 	}
 
 	@Override

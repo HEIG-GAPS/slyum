@@ -6,7 +6,8 @@ import java.util.Observer;
 
 import javax.swing.JOptionPane;
 
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
+import utility.SMessageDialog;
 import utility.Utility;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
@@ -200,7 +201,7 @@ public class Method extends Observable implements IDiagramComponent, Observer
 	{
 		if (isAbstract && !entity.isAbstract())
 		{
-			JOptionPane.showMessageDialog(null, "Class must be abstract.", "Slyum", JOptionPane.ERROR_MESSAGE, PersonnalizedIcon.getErrorIcon());
+			SMessageDialog.showErrorMessage("Class must be abstract.");
 			return;
 		}
 

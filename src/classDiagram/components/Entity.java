@@ -5,7 +5,9 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import utility.PersonnalizedIcon;
+import swing.Slyum;
+import utility.PersonalizedIcon;
+import utility.SMessageDialog;
 import utility.Utility;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.Role;
@@ -406,7 +408,7 @@ public abstract class Entity extends Type
 	public void setAbstract(boolean isAbstract)
 	{
 		if (hasAbstractMethods())
-			if (JOptionPane.showConfirmDialog(null, "Class has abstract methods.\nDe-abstract all methods?", "Slyum", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, PersonnalizedIcon.getQuestionIcon()) == JOptionPane.NO_OPTION)
+			if (SMessageDialog.showQuestionMessageYesNo("Class has abstract methods.\nDe-abstract all methods?") == JOptionPane.NO_OPTION)
 
 				isAbstract = true;
 

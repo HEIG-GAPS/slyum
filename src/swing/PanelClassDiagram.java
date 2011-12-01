@@ -45,7 +45,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.PropretiesChanger;
-import utility.PersonnalizedIcon;
+import utility.SMessageDialog;
 import utility.SSlider;
 import utility.Utility;
 import change.Change;
@@ -73,8 +73,6 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 	private File currentFile = null;
 
 	private final GraphicView graphicView;
-
-	private final JSpinner spinnerGridSize = new JSpinner();
 	
 	private SPanelStyleComponent panelStyle;
 	private SSlider sSlider;
@@ -86,7 +84,7 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		// Create new graphiView, contain class diagram.
 		graphicView = new GraphicView(getClassDiagram());
 		
-		// Personnalized ToolBar Layout
+		// Personalized ToolBar Layout
 		JPanel panelToolBar = new JPanel();
 		panelToolBar.setLayout(new BoxLayout(panelToolBar, BoxLayout.LINE_AXIS));
 
@@ -190,24 +188,6 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		else if ("redo".equals(e.getActionCommand()))
 			Change.redo();
 
-		else if ("NoGrid".equals(e.getActionCommand()))
-			spinnerGridSize.setValue(1);
-
-		else if ("grid10".equals(e.getActionCommand()))
-			spinnerGridSize.setValue(10);
-
-		else if ("grid15".equals(e.getActionCommand()))
-			spinnerGridSize.setValue(15);
-
-		else if ("grid20".equals(e.getActionCommand()))
-			spinnerGridSize.setValue(20);
-
-		else if ("grid25".equals(e.getActionCommand()))
-			spinnerGridSize.setValue(25);
-
-		else if ("grid30".equals(e.getActionCommand()))
-			spinnerGridSize.setValue(30);
-
 		else if ("linkNote".equals(e.getActionCommand()))
 			graphicView.initNewComponent(new LineCommentaryFactory(graphicView, classDiagram));
 	}
@@ -220,7 +200,7 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		if (!Change.hasChange())
 			return JOptionPane.NO_OPTION;
 		else
-			return JOptionPane.showConfirmDialog(this, "Save current project ?", "Slyum", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, PersonnalizedIcon.createImageIcon("resources/icon/question.png"));
+			return SMessageDialog.showQuestionMessageYesNoCancel("Save current project ?");
 	}
 
 	/**
@@ -262,7 +242,7 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 
 			if (file.exists())
 			{
-				final int answer = JOptionPane.showConfirmDialog(this, file + " already exists. Overwrite?", "Slyum", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, PersonnalizedIcon.getWarningIcon());
+				final int answer = SMessageDialog.showQuestionMessageOkCancel(file + " already exists. Overwrite?");
 
 				if (answer == JOptionPane.OK_OPTION)
 					saveImageTo(file);
@@ -306,11 +286,6 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 	public GraphicView getCurrentGraphicView()
 	{
 		return graphicView;
-	}
-
-	public JSpinner getSpinnerGridSize()
-	{
-		return spinnerGridSize;
 	}
 	
 	public SSlider getsSlider()
@@ -368,7 +343,7 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 
 			if (file.exists())
 			{
-				final int answer = JOptionPane.showConfirmDialog(this, file + " already exists. Overwrite?", "Slyum", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, PersonnalizedIcon.getWarningIcon());
+				final int answer = SMessageDialog.showQuestionMessageOkCancel(file + " already exists. Overwrite?");
 
 				if (answer == JOptionPane.CANCEL_OPTION)
 					return false;
@@ -508,13 +483,13 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 
 		if (!file.exists())
 		{
-			JOptionPane.showMessageDialog(this, "File not found. Please select an existing file...", "Slyum", JOptionPane.ERROR_MESSAGE, PersonnalizedIcon.getErrorIcon());
+			SMessageDialog.showErrorMessage("File not found. Please select an existing file...");
 			return;
 		}
 
 		if (extension == null || !extension.equals("sly"))
 		{
-			JOptionPane.showMessageDialog(this, "Invalide file format. Only \".sly\" files are accepted.", "Slyum", JOptionPane.ERROR_MESSAGE, PersonnalizedIcon.getErrorIcon());
+			SMessageDialog.showErrorMessage("Invalide file format. Only \".sly\" files are accepted.");
 			return;
 		}
 
@@ -622,9 +597,8 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 			prnJob.print();
 
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-
-			JOptionPane.showMessageDialog(this, "Printing completed successfully", "Slyum", JOptionPane.INFORMATION_MESSAGE, PersonnalizedIcon.getErrorIcon());
-
+			
+			SMessageDialog.showInformationMessage("Printing completed successfully");
 		}
 
 		catch (final PrinterException e)
@@ -659,10 +633,10 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 
 			else
 
-				JOptionPane.showConfirmDialog(this, "Extension \"." + extension + "\" not supported.\nSupported extensions : png, jpg, gif.", "Slyum", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE, PersonnalizedIcon.getErrorIcon());
+				SMessageDialog.showErrorMessage("Extension \"." + extension + "\" not supported.\nSupported extensions : png, jpg, gif.");
 		} catch (final Exception e)
 		{
-			JOptionPane.showConfirmDialog(this, "Class diagram is empty. Empty class diagramm can't be export.", "Slyum", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE, PersonnalizedIcon.getErrorIcon());
+			SMessageDialog.showErrorMessage("Class diagram is empty. Empty class diagramm can't be export.");
 		}
 	}
 
@@ -704,8 +678,8 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 
 	private void showErrorImportationMessage(Exception e)
 	{
-		JOptionPane.showMessageDialog(null, "Cannot open projet. Error reading from file.\nMessage : " + e.getMessage(), "Slyum", JOptionPane.ERROR_MESSAGE, PersonnalizedIcon.getErrorIcon());
-
+		SMessageDialog.showErrorMessage("Cannot open projet. Error reading from file.\nMessage : " + e.getMessage());
+		
 		e.printStackTrace();
 
 		classDiagram.removeAll();

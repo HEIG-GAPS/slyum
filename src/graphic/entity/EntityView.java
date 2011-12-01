@@ -38,7 +38,8 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 
 import swing.PropertyLoader;
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
+import utility.SMessageDialog;
 import utility.Utility;
 import change.BufferCreation;
 import change.Change;
@@ -236,7 +237,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 		popupMenu.addSeparator();
 
 		JMenu subMenu = new JMenu("View");
-		subMenu.setIcon(PersonnalizedIcon.createImageIcon("resources/icon/visibility.png"));
+		subMenu.setIcon(PersonalizedIcon.createImageIcon("resources/icon/visibility.png"));
 		ButtonGroup group = new ButtonGroup();
 
 		JRadioButtonMenuItem rbMenuItem = makeRadioButtonMenuItem("All", "ViewAll", group);
@@ -255,7 +256,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 		popupMenu.add(subMenu);
 
 		subMenu = new JMenu("Methods View");
-		subMenu.setIcon(PersonnalizedIcon.createImageIcon("resources/icon/visibility.png"));
+		subMenu.setIcon(PersonalizedIcon.createImageIcon("resources/icon/visibility.png"));
 		group = new ButtonGroup();
 
 		rbMenuItem = makeRadioButtonMenuItem("Type and Name", "ViewTypeAndName", group);
@@ -305,7 +306,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 		else if ("Delete".equals(e.getActionCommand()))
 		{
-			if (JOptionPane.showConfirmDialog(parent.getScene(), "Are you sur to delete this component and all its associated components?", "Slyum", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, PersonnalizedIcon.getWarningIcon()) == JOptionPane.NO_OPTION)
+			if (SMessageDialog.showQuestionMessageYesNo("Are you sur to delete this component and all its associated components?") == JOptionPane.NO_OPTION)
 
 				return;
 

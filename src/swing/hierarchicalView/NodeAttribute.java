@@ -9,7 +9,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Attribute;
@@ -63,7 +63,7 @@ public class NodeAttribute extends DefaultMutableTreeNode implements ICustomized
 	@Override
 	public ImageIcon getCustomizedIcon()
 	{
-		return PersonnalizedIcon.createImageIcon("resources/icon/attribute.png");
+		return PersonalizedIcon.createImageIcon("resources/icon/attribute.png");
 	}
 
 	@Override

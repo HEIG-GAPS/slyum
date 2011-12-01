@@ -22,7 +22,8 @@ import javax.swing.JOptionPane;
 
 import classDiagram.relationships.Aggregation;
 
-import utility.PersonnalizedIcon;
+import utility.PersonalizedIcon;
+import utility.SMessageDialog;
 import utility.Utility;
 
 /**
@@ -130,7 +131,7 @@ public abstract class LineView extends GraphicComponent
 
 		if ("Delete".equals(e.getActionCommand()))
 		{
-			if (JOptionPane.showConfirmDialog(parent.getScene(), "Are you sur to delete this component and all its associated components?", "Slyum", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, PersonnalizedIcon.getWarningIcon()) == JOptionPane.NO_OPTION)
+			if (SMessageDialog.showQuestionMessageYesNo("Are you sur to delete this component and all its associated components?") == JOptionPane.NO_OPTION)
 
 				return;
 

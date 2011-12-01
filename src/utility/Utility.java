@@ -13,6 +13,7 @@ import java.awt.RenderingHints;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
@@ -22,10 +23,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import javax.swing.AbstractAction;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JRootPane;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.plaf.RootPaneUI;
 
+import sun.swing.SwingUtilities2;
 import swing.PropertyLoader;
 
 import classDiagram.components.Visibility;
@@ -426,7 +434,7 @@ public class Utility
 	}
 
 	/**
-	 * Activate all renderhint used in Slyum for the graphic context given.
+	 * Enable RenderingHint used in Slyum for the graphic context.
 	 * 
 	 * @param g
 	 *            the graphic context
@@ -443,11 +451,20 @@ public class Utility
 
 		if (getGraphicQualityType().equals(GraphicQualityType.MEDIUM))
 			return;
-
+		
 		g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
 
+	}
+	
+	public static void setRootPaneExitOnEsc(JRootPane rp, AbstractAction ac)
+	{
+		// on ESC key close frame
+		rp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+            KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "Cancel");
+        
+		rp.getActionMap().put("Cancel", ac);
 	}
 
 	/**
