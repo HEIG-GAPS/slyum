@@ -63,6 +63,7 @@ public class Slyum extends JFrame implements ActionListener
 	public final static String KEY_SAVE = "ctrl S";
 	public final static String KEY_SAVE_AS = "ctrl shift S";
 	public final static String KEY_EXPORT = "ctrl E";
+	public final static String KEY_KLIPPER = "ctrl C";
 	public final static String KEY_PRINT = "ctrl P";
 	public final static String KEY_PROPERTIES = "alt ENTER";
 	public final static String KEY_EXIT = "alt F4";
