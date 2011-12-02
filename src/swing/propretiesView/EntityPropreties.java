@@ -31,7 +31,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -89,7 +88,7 @@ public class EntityPropreties extends GlobalPropreties
 			fireTableDataChanged();
 		}
 
-		@SuppressWarnings( { "unchecked", "rawtypes" })
+		@SuppressWarnings( { "unchecked"})
 		@Override
 		public Class getColumnClass(int c)
 		{
@@ -301,7 +300,7 @@ public class EntityPropreties extends GlobalPropreties
 			fireTableDataChanged();
 		}
 
-		@SuppressWarnings( { "unchecked", "rawtypes" })
+		@SuppressWarnings( { "unchecked" })
 		@Override
 		public Class getColumnClass(int c)
 		{
@@ -514,7 +513,7 @@ public class EntityPropreties extends GlobalPropreties
 			fireTableDataChanged();
 		}
 
-		@SuppressWarnings( { "unchecked", "rawtypes" })
+		@SuppressWarnings( { "unchecked" })
 		@Override
 		public Class getColumnClass(int c)
 		{
@@ -559,22 +558,16 @@ public class EntityPropreties extends GlobalPropreties
 		@Override
 		public void mouseClicked(MouseEvent arg0)
 		{
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent arg0)
 		{
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void mouseExited(MouseEvent arg0)
 		{
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
@@ -593,8 +586,6 @@ public class EntityPropreties extends GlobalPropreties
 		@Override
 		public void mouseReleased(MouseEvent arg0)
 		{
-			// TODO Auto-generated method stub
-
 		}
 
 		private void parameterSelected()
@@ -791,16 +782,16 @@ public class EntityPropreties extends GlobalPropreties
 		if (Slyum.getSmallIcons())
 			small = "_small.png";
 			
-		btnAddParameters = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE);
-		btnRemoveMethod = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED);
-		btnRemoveAttribute = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED);
-		btnUpAttribute = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_up" + small), null,Color.MAGENTA);
-		btnDownAttribute = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_down" + small), null,Color.MAGENTA);
-		btnUpMethod = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_up" + small), null,Color.MAGENTA);
-		btnDownMethod = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_down" + small), null,Color.MAGENTA);
-		btnRemoveParameters = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED);
-		btnRightParameters = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_right" + small), null,Color.MAGENTA);
-		btnLeftParameters = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_left" + small), null,Color.MAGENTA);
+		btnAddParameters = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE, "Add");
+		btnRemoveMethod = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED, "Remove");
+		btnRemoveAttribute = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED, "Remove");
+		btnUpAttribute = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_up" + small), null,Color.MAGENTA, "Up");
+		btnDownAttribute = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_down" + small), null,Color.MAGENTA, "Down");
+		btnUpMethod = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_up" + small), null,Color.MAGENTA, "Up");
+		btnDownMethod = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_down" + small), null,Color.MAGENTA, "Down");
+		btnRemoveParameters = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED, "Remove");
+		btnRightParameters = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_right" + small), null,Color.MAGENTA, "Rigth");
+		btnLeftParameters = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_left" + small), null,Color.MAGENTA, "Left");
 		
 		imgNoAttribute = new JLabel(PersonalizedIcon.createImageIcon("resources/icon/empty_attribute.png"));
 		imgNoMethod = new JLabel(PersonalizedIcon.createImageIcon("resources/icon/empty_method.png"));
@@ -915,7 +906,7 @@ public class EntityPropreties extends GlobalPropreties
 		panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.PAGE_AXIS));
 
 		{
-			final JButton button = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE);
+			final JButton button = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE, "Add");
 			button.setBorderPainted(false);
 			button.setContentAreaFilled(false);
 			button.setAlignmentX(CENTER_ALIGNMENT);
@@ -1036,7 +1027,7 @@ public class EntityPropreties extends GlobalPropreties
 		panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.PAGE_AXIS));
 		panelButton.setOpaque(false);
 		{
-			final JButton button = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE);
+			final JButton button = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE, "Add");
 			button.setBorderPainted(false);
 			button.setContentAreaFilled(false);
 			button.setAlignmentX(CENTER_ALIGNMENT);

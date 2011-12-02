@@ -25,21 +25,20 @@ public class EmptyButton extends JButton implements MouseListener
 	
 	private Color themeColor;
 
-	public EmptyButton(Icon icon, String action, Color color)
+	public EmptyButton(Icon icon, String action, Color color, String tooltip)
 	{
 		super(icon);
 		
-		init(action, color);
+		init(action, color, tooltip);
 	}
 	
-	public EmptyButton(String text, String action, Color color)
+	public EmptyButton(String text, String action, Color color, String tooltip)
 	{
 		super(text);
-		init(action, color);
-		init(action, color);
+		init(action, color, tooltip);
 	}
 	
-	private void init(String action, Color color)
+	private void init(String action, Color color, String tooltip)
 	{
 		setActionCommand(action);
 		addActionListener(new ActionListener() {
@@ -53,6 +52,7 @@ public class EmptyButton extends JButton implements MouseListener
 		setBorderPainted(false);
 		setContentAreaFilled(false);
 		setAlignmentX(CENTER_ALIGNMENT);
+		setToolTipText(tooltip);
 		
 		themeColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), 10);
 		
