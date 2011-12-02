@@ -89,8 +89,21 @@ public class Utility
 			return DataFlavor.imageFlavor.equals(flavor);
 		}
 	}
-
-	private static GraphicQualityType graphicQualityType = GraphicQualityType.MAX;
+	
+	public static String keystrokeToString(String a)
+	{
+		String result = "";
+		String[] string = a.split(" ");
+		
+		for (int i = 0; i < string.length; i++)
+		{
+			String car = i == string.length-1 ? "-" : "+";
+			String s = string[i].substring(0, 1).toUpperCase();
+			result += car.concat(s.concat(string[i].substring(1)));
+		}
+		
+		return "(" + result.substring(1) + ")"; // remove first "+"
+	}
 
 	/**
 	 * Get a string representing the tag geometry in the XML structure.

@@ -427,9 +427,6 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 	
 	public void openFromXML(final File file)
 	{
-		if (!askForSave())
-			return;
-
 		final String extension = Utility.getExtension(file);
 
 		if (!file.exists())
@@ -447,6 +444,7 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		final SAXParserFactory factory = SAXParserFactory.newInstance();
 		final SAXParser parser;
 		graphicView.setVisible(false);
+		
 		try
 		{
 			parser = factory.newSAXParser();
