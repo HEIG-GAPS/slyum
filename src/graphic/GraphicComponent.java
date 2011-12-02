@@ -1,5 +1,6 @@
 package graphic;
 
+import graphic.entity.EntityView;
 import graphic.relations.LineView;
 import graphic.textbox.TextBoxCommentary;
 
@@ -18,7 +19,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
-import swing.Slyum;
+import swing.PanelClassDiagram;
 import swing.SlyumColorChooser;
 import utility.PersonalizedIcon;
 import change.BufferCreation;
@@ -76,17 +77,24 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 	public void actionPerformed(ActionEvent e)
 	{
 		if ("NewNote".equals(e.getActionCommand()))
-			parent.addNotes(new TextBoxCommentary(parent, "Double-click to edit note.", this));
+
+			parent.linkNewNoteWithSelectedEntities();
 
 		if ("Color".equals(e.getActionCommand()))
-		{
-			final SlyumColorChooser scc = new SlyumColorChooser(Color.DARK_GRAY);
-			scc.setVisible(true);
+			
+			askNewColorForSelectedItems();
 
-			if (scc.isAccepted())
-				parent.changeColorForSelectedItems(scc.getColor());
-		}
+	}
+	
+	public static void askNewColorForSelectedItems()
+	{
+		final SlyumColorChooser scc = new SlyumColorChooser(EntityView.getBasicColor());
+		
+		scc.setVisible(true);
 
+		if (scc.isAccepted())
+			
+			PanelClassDiagram.getInstance().getCurrentGraphicView().changeColorForSelectedItems(scc.getColor());
 	}
 
 	/**

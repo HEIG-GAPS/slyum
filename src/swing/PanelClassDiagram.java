@@ -20,6 +20,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
@@ -70,7 +71,7 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 
 	private final GraphicView graphicView;
 	
-	private SPanelStyleComponent panelStyle;
+	private SPanelUndoRedo panelUndoRedo;
 	private SSlider sSlider;
 
 	private PanelClassDiagram()
@@ -85,7 +86,10 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		panelToolBar.setLayout(new BoxLayout(panelToolBar, BoxLayout.LINE_AXIS));
 
 		panelToolBar.add(new SPanelFileComponent());
-		panelToolBar.add(panelStyle = new SPanelStyleComponent());
+		panelToolBar.add(panelUndoRedo = new SPanelUndoRedo());
+		panelToolBar.add(new SPanelElement());
+		panelToolBar.add(new SPanelStyleComponent());
+		panelToolBar.add(new SPanelZOrder());
 		panelToolBar.add(sSlider = new SSlider(Color.YELLOW, 200));
 		
 		add(panelToolBar, BorderLayout.PAGE_START);
@@ -266,12 +270,12 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 	
 	public JButton getRedoButton()
 	{
-		return panelStyle.getRedoButton();
+		return panelUndoRedo.getRedoButton();
 	}
 	
 	public JButton getUndoButton()
 	{
-		return panelStyle.getUndoButton();
+		return panelUndoRedo.getUndoButton();
 	}
 
 	/**
@@ -576,9 +580,13 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 				file = new File(file.getPath() + "." + extension);
 			}
 
-			if (extension.equals("jpg") || extension.equals("png") || extension.equals("gif"))
-
-				ImageIO.write(graphicView.getScreen(), extension, file);
+			if (extension.equals("png"))
+				
+				ImageIO.write(graphicView.getScreen(BufferedImage.TYPE_INT_ARGB_PRE), extension, file);
+			
+			else if (extension.equals("jpg") || extension.equals("gif"))
+				
+				ImageIO.write(graphicView.getScreen(BufferedImage.TYPE_INT_RGB), extension, file);
 
 			else
 

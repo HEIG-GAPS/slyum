@@ -5,18 +5,13 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 
 import utility.PersonalizedIcon;
-import utility.SSlider;
 import utility.Utility;
 
 public class SPanelStyleComponent extends JPanelRounded
 {
 	private static final long serialVersionUID = -9156467758854311341L;
-	
-	private static final String TT_UNDO = "Undo " + Utility.keystrokeToString(Slyum.KEY_UNDO);
-	private static final String TT_REDO = "Redo " + Utility.keystrokeToString(Slyum.KEY_REDO);
 	
 	private static final String TT_ALIGN_TOP = "Align top " + Utility.keystrokeToString(Slyum.KEY_ADJUST_UP);
 	private static final String TT_ALIGN_BOTTOM = "Align bottom " + Utility.keystrokeToString(Slyum.KEY_ADJUST_DOWN);
@@ -24,18 +19,13 @@ public class SPanelStyleComponent extends JPanelRounded
 	private static final String TT_ALIGN_LEFT = "Align left " + Utility.keystrokeToString(Slyum.KEY_ADJUST_LEFT);
 	
 	private static final String TT_ADJUST_WIDTH = "Adjust size " + Utility.keystrokeToString(Slyum.KEY_ADJUST_SIZE);
-	
-	private EmptyButton undo, redo;
 
 	public SPanelStyleComponent()
 	{
-		setLayout(new GridLayout(1, 7, 5, 5));
+		setLayout(new GridLayout(1, 5, 5, 5));
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 7));
 		setBackground(/*Color.WHITE*/ new Color(0, 255,0, 10));
 		setForeground(Color.GRAY);
-
-		add(undo = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/undo.png"), "undo", Color.GREEN, TT_UNDO));
-		add(redo = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/redo.png"), "redo", Color.GREEN, TT_REDO));
 
 		add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/alignTop.png"), "alignTop", Color.GREEN, TT_ALIGN_TOP));
 		add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/alignBottom.png"), "alignBottom", Color.GREEN, TT_ALIGN_BOTTOM));
@@ -45,15 +35,5 @@ public class SPanelStyleComponent extends JPanelRounded
 		add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/adjustWidth.png"), "adjustWidth", Color.GREEN, TT_ADJUST_WIDTH));
 		
 		setMaximumSize(new Dimension(43 * ((GridLayout)getLayout()).getColumns(), 50));
-	}
-	
-	public EmptyButton getUndoButton()
-	{
-		return undo;
-	}
-	
-	public EmptyButton getRedoButton()
-	{
-		return redo;
 	}
 }
