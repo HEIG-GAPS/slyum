@@ -11,6 +11,7 @@ import graphic.relations.CompositionView;
 import graphic.relations.DependencyView;
 import graphic.relations.InheritanceView;
 import graphic.relations.InnerClassView;
+import graphic.relations.LineCommentary;
 import graphic.relations.LineView;
 import graphic.relations.MultiView;
 import graphic.textbox.TextBoxCommentary;
@@ -770,9 +771,17 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 */
 	public void changeColorForSelectedItems(Color newColor)
 	{
-		for (final GraphicComponent c : getSelectedComponents())
+		LinkedList<GraphicComponent> gc = getSelectedComponents();
+		
+		if (gc.isEmpty())
+			
+			setColor(newColor);
+		
+		else
+		
+			for (final GraphicComponent c : getSelectedComponents())
 
-			c.setColor(newColor);
+				c.setColor(newColor);
 	}
 
 	/**
@@ -1133,7 +1142,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 * 
 	 * @return a picture representing the scene
 	 */
-	public BufferedImage getScreen()
+	public BufferedImage getScreen(int type)
 	{
 		final int margin = 20;
 		int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxX = 0, maxY = 0;
@@ -1158,7 +1167,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		final Rectangle bounds = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 
 		// Create the buffered image with margin.
-		final BufferedImage img = new BufferedImage(bounds.width + margin * 2, bounds.height + margin * 2, BufferedImage.TYPE_INT_ARGB);
+		final BufferedImage img = new BufferedImage(bounds.width + margin * 2, bounds.height + margin * 2, type);
 		final Graphics2D g2 = img.createGraphics();
 		Utility.setRenderQuality(g2);
 
@@ -1169,6 +1178,12 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		// Translate the rectangle containing all graphic components at origin.
 		g2.translate(-bounds.x + margin, -bounds.y + margin);
 
+		if (type == BufferedImage.TYPE_INT_RGB)
+		{
+			g2.setColor(Color.WHITE);
+			g2.fillRect(bounds.x - margin, bounds.y - margin, bounds.width + margin * 2, bounds.height + margin * 2);
+		}
+		
 		// Paint all components on picture.
 		for (final GraphicComponent c : components)
 			c.paintComponent(g2);
@@ -1333,7 +1348,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		if (factory == null)
 			throw new IllegalArgumentException("factory is null");
 
-		// Df current factory exists, delete it!
+		// If current factory exists, delete it!
 		if (currentFactory != null)
 			deleteCurrentFactory();
 
@@ -1347,23 +1362,40 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	{
 		return true;
 	}
+	
+	public void linkNewNoteWithSelectedEntities()
+	{
+		LinkedList<GraphicComponent> e = getSelectedComponents();
+		
+		TextBoxCommentary tbc = null;
+		
+		if (e.isEmpty())
+			
+			tbc = new TextBoxCommentary(parent, "Double-click to edit note.", this);
+		
+		else
+		{
+			tbc = new TextBoxCommentary(parent, "Double-click to edit note.", e.getFirst());
+			
+			e.remove(0);
+			
+			for (GraphicComponent ev : e)
+				
+				parent.addLineView(new LineCommentary(parent, ev, tbc, new Point(), new Point(), false));
+		}
+		
+		parent.addNotes(tbc);
+	}
 
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
 		if (e.getKeyCode() == KeyEvent.VK_DELETE)
-		{
-			final LinkedList<GraphicComponent> selected = getSelectedComponents();
 
-			if (selected.size() == 0 || SMessageDialog.showQuestionMessageYesNo("Are you sur to delete this component and all its associated components?") == JOptionPane.NO_OPTION)
-
-				return;
-
-			for (final GraphicComponent c : selected)
-
-				c.delete();
-		}
+			deleteSelectedComponents();
+		
 		else if (e.isControlDown())
+			
 			switch (e.getKeyCode())
 			{
 				case KeyEvent.VK_A:
@@ -1376,6 +1408,19 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 					Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new Utility.ImageSelection(getSelectedScreen()), null);
 					break;
 			}
+	}
+	
+	public void deleteSelectedComponents()
+	{
+		final LinkedList<GraphicComponent> selected = getSelectedComponents();
+		
+		if (selected.size() == 0 || SMessageDialog.showQuestionMessageYesNo("Are you sur to delete this component and all its associated components?") == JOptionPane.NO_OPTION)
+
+			return;
+
+		for (final GraphicComponent c : selected)
+
+			c.delete();
 	}
 
 	@Override
@@ -1651,7 +1696,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		// Printing have not been tested a lot (beta).
 		// This method compute the number of pages required for drawing a
 		// picture and cut this picture for each pages.
-		final BufferedImage m_bi = getScreen();
+		final BufferedImage m_bi = getScreen(BufferedImage.TYPE_INT_ARGB_PRE);
 
 		if (pageIndex >= m_maxNumPage || m_bi == null)
 
