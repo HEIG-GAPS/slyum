@@ -190,6 +190,9 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 
 		else if ("linkNote".equals(e.getActionCommand()))
 			graphicView.initNewComponent(new LineCommentaryFactory(graphicView, classDiagram));
+		
+		else if ("klipper".equals(e.getActionCommand()))
+			graphicView.initNewComponent(new LineCommentaryFactory(graphicView, classDiagram));
 	}
 
 	/**
