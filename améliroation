@@ -105,3 +105,11 @@ Déjà implémentées :
  - Ajout d'une barre d'outils pour modifier la couleur / supprimer ou lier une nouvelle note au éléments sélectionnés.
 
  - Lorsque l'on crée une nouvelle note depuis le menu contextuel ou depuis la barre d'outils, celle-ci sera liée à tous les composants sélectionnés (pouvant être liés aux notes).
+
+ - Ajout de la possibilité de scroller verticalement avec la souris.
+
+ - Ajout d'une fenêtre de chargement pour l'ouverture des projets.
+
+ - Encodage des caractère ">" et "<".
+
+

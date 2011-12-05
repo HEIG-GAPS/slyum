@@ -1015,8 +1015,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 	@Override
 	public void setBounds(Rectangle bounds)
 	{
-		// Save current bounds, change bounds and repaint old bounds and new
-		// bounds.
+		// Save current bounds, change bounds and repaint old bounds and new bounds.
 		final Rectangle repaintBounds = new Rectangle(Utility.growRectangle(getBounds(), 10));
 
 		final Rectangle newBounds = new Rectangle(ajustOnGrid(bounds.x), ajustOnGrid(bounds.y), ajustOnGrid(bounds.width), bounds.height);
@@ -1134,20 +1133,28 @@ public abstract class EntityView extends MovableComponent implements Observer
 	@Override
 	public void update(Observable arg0, Object arg1)
 	{
+		boolean enable = false;
 		if (arg1 != null && arg1.getClass() == UpdateMessage.class)
 			switch ((UpdateMessage) arg1)
 			{
 				case SELECT:
 					super.setSelected(true);
 					break;
+					
 				case UNSELECT:
 					super.setSelected(false);
 					break;
+					
 				case ADD_ATTRIBUTE:
-					addAttribute(component.getAttributes().getLast(), true);
+					enable = true;
+				case ADD_ATTRIBUTE_NO_EDIT:
+					addAttribute(component.getAttributes().getLast(), enable);
 					break;
+					
 				case ADD_METHOD:
-					addMethod(component.getMethods().getLast(), true);
+					enable = true;
+				case ADD_METHOD_NO_EDIT:
+					addMethod(component.getMethods().getLast(), enable);
 					break;
 			}
 		else

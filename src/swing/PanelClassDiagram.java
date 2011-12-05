@@ -18,22 +18,30 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.concurrent.ExecutionException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -42,6 +50,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.PropretiesChanger;
+import utility.SDialogProjectLoading;
 import utility.SMessageDialog;
 import utility.SSlider;
 import utility.Utility;
@@ -58,6 +67,7 @@ import classDiagram.ClassDiagram;
 @SuppressWarnings("serial")
 public class PanelClassDiagram extends JPanel implements ActionListener
 {
+
 	private static PanelClassDiagram instance = new PanelClassDiagram();
 
 	public static PanelClassDiagram getInstance()
@@ -450,20 +460,65 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 
 		final SAXParserFactory factory = SAXParserFactory.newInstance();
 		final SAXParser parser;
-		graphicView.setVisible(false);
 		
 		try
 		{
 			parser = factory.newSAXParser();
 
-			final DefaultHandler handler = new XMLParser(classDiagram, graphicView);
+			final SDialogProjectLoading dpl = new SDialogProjectLoading(file.getPath());
 			
+			final DefaultHandler handler = new XMLParser(classDiagram, graphicView, dpl);
 			
-			new Thread(new Runnable() {
-
-				@Override
-				public void run()
+			SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>(){
+				
+				protected Void doInBackground() throws Exception
 				{
+					try
+					{
+						dpl.addComponentListener(new ComponentAdapter() 
+						{
+							@Override
+							public void componentHidden(ComponentEvent e)
+							{
+								cancel(true);
+							}
+						});
+						
+						Change.setBlocked(true);
+						graphicView.setVisible(false);
+						
+						parser.parse(file, handler);
+
+						if (isCancelled())
+						{
+							classDiagram.removeAll();
+							graphicView.removeAll();
+						}
+						
+						graphicView.setVisible(true);
+						Change.setBlocked(false);
+						
+						dpl.setVisible(false);
+						
+					} catch (final Exception e)
+					{
+						showErrorImportationMessage(e);
+					}
+					
+					return null;
+				}				
+			};
+			
+			sw.execute();
+			
+			if (dpl != null)
+				dpl.setVisible(true);
+			
+			//new Thread(new Runnable() {
+				
+				//@Override
+				//public void run()
+				{/*
 					try
 					{
 						Change.setBlocked(true);
@@ -472,16 +527,15 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 						
 						Change.setBlocked(false);
 						
+						dpl.setVisible(false);
+						
 					} catch (final Exception e)
 					{
 						showErrorImportationMessage(e);
-					} finally
-					{
-						graphicView.setVisible(true);
-					}
+					}*/
 				}
-			}).start();
-
+			//}).start();
+				
 			setCurrentFile(file);
 			Change.setHasChange(false);
 		} catch (final Exception e)

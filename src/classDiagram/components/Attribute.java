@@ -168,6 +168,6 @@ public class Attribute extends Variable
 	public String toXML(int depth)
 	{
 		final String tab = Utility.generateTab(depth);
-		return tab + "<attribute " + "name=\"" + name + "\" type=\"" + type + "\" const=\"" + constant + "\" visibility=\"" + visibility + "\" " + (defaultValue == null ? "" : "defaultValue=\"" + defaultValue) + "\" isStatic=\"" + _isStatic + "\" " + "/>";
+		return tab + "<attribute " + "name=\"" + name + "\" type=\"" + type.toXML(depth+1) + "\" const=\"" + constant + "\" visibility=\"" + visibility + "\" " + (defaultValue == null ? "" : "defaultValue=\"" + defaultValue) + "\" isStatic=\"" + _isStatic + "\" " + "/>";
 	}
 }
