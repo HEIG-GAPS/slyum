@@ -20,6 +20,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import utility.SDialogProjectLoading;
+
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.AssociationClass;
@@ -42,8 +44,6 @@ import classDiagram.relationships.Multiplicity;
  */
 public class XMLParser extends DefaultHandler
 {
-	// All private class are used for convert the XML struture in POO structure
-	// before create the UML structure.
 	public enum Aggregation
 	{
 		AGGREGATE, COMPOSE, MULTI, NONE
@@ -164,11 +164,8 @@ public class XMLParser extends DefaultHandler
 	private class Role
 	{
 		int componentId = -1;
-		@SuppressWarnings("unused")
 		Multiplicity multiplicity = null;
-		@SuppressWarnings("unused")
 		String name = null;
-		@SuppressWarnings("unused")
 		Visibility visibility = Visibility.PUBLIC;
 	}
 
@@ -240,8 +237,6 @@ public class XMLParser extends DefaultHandler
 
 	LinkedList<Inheritance> inheritance = new LinkedList<Inheritance>();
 
-	private boolean inMultiView;
-
 	private boolean inMultiViewBounds;
 
 	boolean inRelationView = false, inComponentView = false,
@@ -253,8 +248,9 @@ public class XMLParser extends DefaultHandler
 	private final HashMap<Integer, MultiView> multiView = new HashMap<Integer, MultiView>();
 	private final HashMap<Integer, RelationView> relationView = new HashMap<Integer, RelationView>();
 	private ClassDiagram uMLClassDiagram;
+	private SDialogProjectLoading dpl;
 
-	public XMLParser(classDiagram.ClassDiagram classDiagram, GraphicView graphicView)
+	public XMLParser(classDiagram.ClassDiagram classDiagram, GraphicView graphicView, SDialogProjectLoading dpl)
 	{
 		super();
 
@@ -266,6 +262,7 @@ public class XMLParser extends DefaultHandler
 
 		this.classDiagram = classDiagram;
 		this.graphicView = graphicView;
+		this.dpl = dpl;
 	}
 
 	@Override
@@ -280,6 +277,8 @@ public class XMLParser extends DefaultHandler
 
 	private void createEntity(Entity e)
 	{
+		dpl.addStep("Create entity " + e.name + "...");
+		
 		classDiagram.components.Entity ce = null;
 
 		switch (e.entityType)
@@ -311,9 +310,10 @@ public class XMLParser extends DefaultHandler
 
 		for (final Variable v : e.attribute)
 		{
+			dpl.addStep("Create attribute " + v.name + "...");
 			final Attribute a = new Attribute(v.name, v.type);
 			ce.addAttribute(a);
-			ce.notifyObservers(UpdateMessage.ADD_ATTRIBUTE);
+			ce.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
 			a.setConstant(v.constant);
 			a.setDefaultValue(v.defaultValue);
 			a.setStatic(v.isStatic);
@@ -324,9 +324,10 @@ public class XMLParser extends DefaultHandler
 
 		for (final Operation o : e.method)
 		{
+			dpl.addStep("Create method " + o.name + "...");
 			final Method m = new Method(o.name, o.returnType, o.visibility, ce);
 			ce.addMethod(m);
-			ce.notifyObservers(UpdateMessage.ADD_METHOD);
+			ce.notifyObservers(UpdateMessage.ADD_METHOD_NO_EDIT);
 			m.setStatic(o.isStatic);
 			m.setAbstract(o.isAbstract);
 
@@ -350,21 +351,68 @@ public class XMLParser extends DefaultHandler
 		graphicView.removeAll();
 
 		graphicView.setGridSize(uMLClassDiagram.uMLView.getFirst().grid);
+		
+		int count = uMLClassDiagram.diagrameElement.association.size();
+		count += uMLClassDiagram.diagrameElement.dependency.size();
+		count += uMLClassDiagram.diagrameElement.entity.size();
+
+		for (Entity e : uMLClassDiagram.diagrameElement.entity)
+		{
+			count += e.attribute.size();
+			count += e.method.size();
+		}
+		
+		count += uMLClassDiagram.diagrameElement.inheritance.size();
+		count += uMLClassDiagram.diagrameElement.innerClass.size();
+		count += uMLClassDiagram.uMLView.getFirst().notes.size();
+		
+		dpl.setProgressBarMaximum(count);
 
 		// Don't change methods call order !!
 		importClassesAndInterfaces(); // <- need nothing :D
+		
+		if (checkInterruptedThread())
+			return;
+		
 		importAssociations(); // <- need importation classes
+
+		if (checkInterruptedThread())
+			return;
+		
 		importAssociationClass(); // <- need importation classes and
+		
+		if (checkInterruptedThread())
+			return;
+		
 		// associations
-		importAssociations(); // Import associations that cannot be imported
+		importAssociations(); // Import associations that cannot be imported first time
 		// first time
 
-		importInheritances(); // <- ...
-		importDepedency();
+		if (checkInterruptedThread())
+			return;
 
+		importInheritances(); // <- ...
+
+		if (checkInterruptedThread())
+			return;
+		
+		importDepedency();
+		
+		if (checkInterruptedThread())
+			return;
+		
 		// components locations
 		locateComponentBounds();
 		importNotes();
+		
+
+		dpl.addStep("Importation complete");
+		dpl.setPhase("Finish");
+	}
+	
+	private boolean checkInterruptedThread()
+	{
+		return Thread.currentThread().isInterrupted();
 	}
 
 	@Override
@@ -424,7 +472,6 @@ public class XMLParser extends DefaultHandler
 		}
 		else if (qName.equals("multiView"))
 		{
-			inMultiView = false;
 			multiView.put(currentMultiView.relationId, currentMultiView);
 		}
 		else if (qName.equals("geometry"))
@@ -535,6 +582,7 @@ public class XMLParser extends DefaultHandler
 
 	private void importAssociationClass()
 	{
+		dpl.setPhase("Import association classes...");
 		for (final Entity e : uMLClassDiagram.diagrameElement.entity)
 
 			if (e.entityType == EntityType.ASSOCIATION_CLASS)
@@ -544,6 +592,7 @@ public class XMLParser extends DefaultHandler
 
 	public void importAssociations()
 	{
+		dpl.setPhase("Import associations...");
 		final LinkedList<Association> associationsNotAdded = new LinkedList<Association>();
 
 		for (final Association a : uMLClassDiagram.diagrameElement.association)
@@ -553,6 +602,8 @@ public class XMLParser extends DefaultHandler
 			final classDiagram.components.Entity source = (classDiagram.components.Entity) classDiagram.searchComponentById(a.role.getFirst().componentId);
 			final classDiagram.components.Entity target = (classDiagram.components.Entity) classDiagram.searchComponentById(a.role.getLast().componentId);
 
+			dpl.addStep("Create association " +  source.getName() + " - " + target.getName()  +"...");
+			
 			if (source == null || target == null)
 			{
 				associationsNotAdded.add(a);
@@ -610,26 +661,37 @@ public class XMLParser extends DefaultHandler
 
 	private void importClassesAndInterfaces()
 	{
+		dpl.setPhase("Import classes and interfaces...");
+		
 		for (final Entity e : uMLClassDiagram.diagrameElement.entity)
-
+		{
 			if (!(e.entityType == EntityType.ASSOCIATION_CLASS))
 
 				createEntity(e);
+			
+			if (checkInterruptedThread())
+				return;
+		}
 
 	}
 
 	public void importDepedency()
 	{
+		dpl.setPhase("Import dependency...");
 		for (final Dependency d : uMLClassDiagram.diagrameElement.dependency)
 		{
 			final classDiagram.components.Entity source = (classDiagram.components.Entity) classDiagram.searchComponentById(d.source);
 			final classDiagram.components.Entity target = (classDiagram.components.Entity) classDiagram.searchComponentById(d.target);
 
+			dpl.addStep("Create dependency " +  source.getName() + " - " + target.getName()  +"...");
 			final classDiagram.relationships.Dependency dependency = new classDiagram.relationships.Dependency(source, target, d.id);
 			classDiagram.addDependency(dependency);
 
 			dependency.setLabel(d.label);
 			dependency.notifyObservers();
+			
+			if (checkInterruptedThread())
+				return;
 		}
 	}
 
@@ -637,11 +699,14 @@ public class XMLParser extends DefaultHandler
 
 	public void importInheritances()
 	{
+		dpl.setPhase("Import inheritances...");
 		for (final Inheritance h : uMLClassDiagram.diagrameElement.inheritance)
 		{
 			final classDiagram.components.Entity child = (classDiagram.components.Entity) classDiagram.searchComponentById(h.child);
 			final classDiagram.components.Entity parent = (classDiagram.components.Entity) classDiagram.searchComponentById(h.parent);
 
+			dpl.addStep("Create inheritance " +  child.getName() + " - " + parent.getName()  +"...");
+			
 			if (h.innerClass)
 			{
 				final classDiagram.relationships.InnerClass innerClass = new classDiagram.relationships.InnerClass(child, parent, h.id);
@@ -654,13 +719,19 @@ public class XMLParser extends DefaultHandler
 				classDiagram.addInheritance(inheritance);
 				inheritance.notifyObservers();
 			}
+			
+			if (checkInterruptedThread())
+				return;
 		}
 	}
 
 	private void importNotes()
 	{
+		dpl.setPhase("Import notes...");
+		
 		for (final Note note : uMLClassDiagram.uMLView.getFirst().notes)
 		{
+			dpl.addStep("Import a note.");
 			final TextBoxCommentary noteView = new TextBoxCommentary(graphicView, note.content);
 
 			noteView.setBounds(note.bounds);
@@ -692,11 +763,15 @@ public class XMLParser extends DefaultHandler
 
 			noteView.setColor(note.color);
 			graphicView.addNotes(noteView);
+			
+			if (checkInterruptedThread())
+				return;
 		}
 	}
 
 	public void locateComponentBounds()
 	{
+		dpl.setPhase("Locate components...");
 		// Generals bounds
 		for (final GraphicComponent g : graphicView.getAllComponents())
 		{
@@ -712,6 +787,9 @@ public class XMLParser extends DefaultHandler
 					g.setColor(cv.color);
 				}
 			}
+			
+			if (checkInterruptedThread())
+				return;
 		}
 
 		// Associations
@@ -752,6 +830,9 @@ public class XMLParser extends DefaultHandler
 					}
 				}
 			}
+			
+			if (checkInterruptedThread())
+				return;
 		}
 
 		// Multi-association
@@ -974,7 +1055,6 @@ public class XMLParser extends DefaultHandler
 		else if (qName.equals("multiView"))
 			try
 			{
-				inMultiView = true;
 				currentMultiView = new MultiView();
 				currentMultiView.relationId = Integer.parseInt(attributes.getValue("relationId"));
 				currentMultiView.color = Integer.parseInt(attributes.getValue("color"));

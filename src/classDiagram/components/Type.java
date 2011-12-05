@@ -106,6 +106,6 @@ public class Type extends Observable implements IDiagramComponent
 	{
 		// XML structure is just the name of the type. Sub-elements use this
 		// name themselves.
-		return "";
+		return getName().replace("<", "&lt;").replace(">", "&gt;");
 	}
 }

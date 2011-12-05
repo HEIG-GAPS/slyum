@@ -47,6 +47,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
 import swing.PanelClassDiagram;
@@ -363,13 +364,13 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 			}
 		};
 
-		// Disable scrolling with wheel !
+		scrollPane = new JScrollPane(scene);
+		scrollPane.getVerticalScrollBar().setUnitIncrement(50);
+		
 		scene.addMouseWheelListener(this);
 		scene.addKeyListener(this);
 		scene.addMouseMotionListener(this);
 		scene.addMouseListener(this);
-
-		scrollPane = new JScrollPane(scene);
 		
 		saveComponentMouseHover = this;
 
@@ -1548,6 +1549,10 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 				SSlider ss = PanelClassDiagram.getInstance().getsSlider();
 				ss.setValue((int)(ss.getValue() - (float)e.getUnitsToScroll()));
 			}
+		
+
+		JScrollBar s = scrollPane.getVerticalScrollBar();
+		s.setValue(s.getValue() + s.getUnitIncrement() * (e.getUnitsToScroll() < 0 ? -1 : 1));
 	}
 	
 	protected MouseEvent adapteMouseEvent(MouseEvent e)

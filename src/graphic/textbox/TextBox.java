@@ -13,6 +13,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
@@ -136,6 +137,10 @@ public abstract class TextBox extends GraphicComponent
 			public void paintComponent(Graphics g)
 			{
 				Utility.setRenderQuality(g);
+
+				// Bug with TextField
+				((Graphics2D)g).setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
+				
 
 				super.paintComponent(g);
 			}

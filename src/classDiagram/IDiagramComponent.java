@@ -13,7 +13,7 @@ public interface IDiagramComponent
 {
 	public enum UpdateMessage
 	{
-		ADD_ATTRIBUTE, ADD_METHOD, MODIF, SELECT, UNSELECT
+		ADD_ATTRIBUTE, ADD_METHOD, ADD_ATTRIBUTE_NO_EDIT, ADD_METHOD_NO_EDIT, MODIF, SELECT, UNSELECT
 	};
 
 	public void addObserver(Observer o);

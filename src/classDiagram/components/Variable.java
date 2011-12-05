@@ -127,6 +127,6 @@ public class Variable extends Observable implements IDiagramComponent
 	{
 		final String tab = Utility.generateTab(depth);
 
-		return tab + "<variable " + "name=\"" + name + "\" " + "type=\"" + type + "\" " + "const=\"" + constant + "\"/>";
+		return tab + "<variable " + "name=\"" + name + "\" " + "type=\"" + type.toXML(depth+1) + "\" " + "const=\"" + constant + "\"/>";
 	}
 }
