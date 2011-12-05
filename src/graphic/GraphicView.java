@@ -1394,21 +1394,11 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		if (e.getKeyCode() == KeyEvent.VK_DELETE)
 
 			deleteSelectedComponents();
-		
-		else if (e.isControlDown())
-			
-			switch (e.getKeyCode())
-			{
-				case KeyEvent.VK_A:
-					selectAllComponents();
-					final Rectangle bounds = getBounds();
-					new StyleCross(this, new Point(bounds.width / 2, bounds.height / 2), getSelectedComponents().size());
-					break;
-
-				case KeyEvent.VK_C:
-					Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new Utility.ImageSelection(getSelectedScreen()), null);
-					break;
-			}
+	}
+	
+	public void copyDiagramToClipboard()
+	{
+		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new Utility.ImageSelection(getSelectedScreen()), null);
 	}
 	
 	public void deleteSelectedComponents()
