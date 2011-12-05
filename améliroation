@@ -14,7 +14,7 @@ Note de patch 1.3 :
 
  - Désactiver les boutons (barre d'outils, menu contextuel, etc.) lorsque leur utilisation n'effectue aucune action.
 
- - Implémenter le bouton Klipper en le mettant également dans le menu.
+ - Utiliser la molette de la souris pour se déplacer sur le diagramme de classe.
 
 Futures implémentations :
 
@@ -112,4 +112,8 @@ Déjà implémentées :
 
  - Encodage des caractère ">" et "<".
 
+ - Ajout d'un bouton permetant de copier les éléments sélectionnés du diagramme de classes dans le presse-papier.
 
+ - Ajout du menu pour copier la sélection dans le presse papier.
+
+ - Ajout du menu pour tout sélectionner et tout désélectionner.

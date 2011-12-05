@@ -70,6 +70,8 @@ public class Slyum extends JFrame implements ActionListener
 
 	public final static String KEY_UNDO = "ctrl Z";
 	public final static String KEY_REDO = "ctrl X";
+	public static final String KEY_SELECT_ALL = "ctrl A";
+	public static final String KEY_UNSELECT_ALL = "ctrl U";
 	
 	public final static String KEY_ADJUST_SIZE = "ctrl 1";
 	public final static String KEY_ADJUST_UP = "ctrl UP";
@@ -360,18 +362,23 @@ public class Slyum extends JFrame implements ActionListener
 	public void actionPerformed(ActionEvent e)
 	{
 		if ("About".equals(e.getActionCommand()))
+			
 			new AboutBox(this);
 
 		else if ("Help".equals(e.getActionCommand()))
+			
 			openHelp();
 
 		else if ("Exit".equals(e.getActionCommand()))
+			
 			exit();
 
 		else if ("Properties".equals(e.getActionCommand()))
+			
 			new SProperties();
 
 		else if ("Update".equals(e.getActionCommand()))
+			
 			try
 			{
 				java.awt.Desktop.getDesktop().browse(new URI("http://code.google.com/p/slyum/downloads"));
@@ -382,7 +389,21 @@ public class Slyum extends JFrame implements ActionListener
 			{
 				e1.printStackTrace();
 			}
+			
+		else if ("klipper".equals(e.getActionCommand()))
+			
+			PanelClassDiagram.getInstance().getCurrentGraphicView().copyDiagramToClipboard();
+		
+		else if ("unselectAll".equals(e.getActionCommand()))
+			
+			PanelClassDiagram.getInstance().getCurrentGraphicView().clearAllSelectedComponents();
+		
+		else if ("selectAll".equals(e.getActionCommand()))
+			
+			PanelClassDiagram.getInstance().getCurrentGraphicView().selectAllComponents();
+		
 		else
+			
 			// some actions are in both controls
 			panel.actionPerformed(e);
 	}
@@ -460,6 +481,10 @@ public class Slyum extends JFrame implements ActionListener
 		// Menu item Export as image...
 		menuItem = createMenuItem("Export as image...", "camera16", KeyEvent.VK_M, KEY_EXPORT, "export");
 		menu.add(menuItem);
+		
+		// Menu item Copy to clipboard
+		menuItem = createMenuItem("Copy selection to clipboard", "klipper16", KeyEvent.VK_K, KEY_KLIPPER, "klipper");
+		menu.add(menuItem);
 
 		menu.addSeparator();
 
@@ -492,6 +517,16 @@ public class Slyum extends JFrame implements ActionListener
 		// Menu item Redo
 		menuItem = redo = createMenuItem("Redo", "redo16", KeyEvent.VK_R, KEY_REDO, "redo");
 		menuItem.setEnabled(false);
+		menu.add(menuItem);
+
+		menu.addSeparator();
+
+		// Menu item Select all
+		menuItem = createMenuItem("Select all", "select16", KeyEvent.VK_S, KEY_SELECT_ALL, "selectAll");
+		menu.add(menuItem);
+
+		// Menu item Unselect all
+		menuItem = createMenuItem("Unselect all", "unselect16", KeyEvent.VK_N, KEY_UNSELECT_ALL, "unselectAll");
 		menu.add(menuItem);
 
 		menu.addSeparator();
