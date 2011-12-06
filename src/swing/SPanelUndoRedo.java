@@ -11,6 +11,7 @@ import utility.Utility;
 
 public class SPanelUndoRedo extends JPanelRounded
 {
+	private static final long serialVersionUID = -2478917416625191084L;
 	
 	private static final String TT_UNDO = "Undo " + Utility.keystrokeToString(Slyum.KEY_UNDO);
 	private static final String TT_REDO = "Redo " + Utility.keystrokeToString(Slyum.KEY_REDO);
@@ -24,8 +25,8 @@ public class SPanelUndoRedo extends JPanelRounded
 		setBackground(/*Color.WHITE*/ new Color(255, 150, 0, 20));
 		setForeground(Color.GRAY);
 
-		add(undo = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/undo.png"), "undo", Color.ORANGE, TT_UNDO));
-		add(redo = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/redo.png"), "redo", Color.ORANGE, TT_REDO));
+		add(undo = new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "undo.png"), "undo", Color.ORANGE, TT_UNDO));
+		add(redo = new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "redo.png"), "redo", Color.ORANGE, TT_REDO));
 		
 		setMaximumSize(new Dimension(43 * ((GridLayout)getLayout()).getColumns(), 50));
 	}

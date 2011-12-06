@@ -29,15 +29,15 @@ public class SPanelElement extends JPanelRounded implements ActionListener
 		setBackground(/*Color.WHITE*/ new Color(0, 255, 150, 10));
 		setForeground(Color.GRAY);
 
-		EmptyButton eb = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/note.png"), "NewNote", Color.CYAN, TT_ADD_NOTE);
+		EmptyButton eb = new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "note.png"), "NewNote", Color.CYAN, TT_ADD_NOTE);
 		eb.addActionListener(this);
 		add(eb);
 		
-		eb = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/color16.png"), "Color", Color.CYAN, TT_CHANGE_COLOR);
+		eb = new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "color16.png"), "Color", Color.CYAN, TT_CHANGE_COLOR);
 		eb.addActionListener(this);
 		add(eb);
 		
-		eb = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/delete16.png"), "Delete", Color.CYAN, TT_DELETE);
+		eb = new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete16.png"), "Delete", Color.CYAN, TT_DELETE);
 		eb.addActionListener(this);
 		add(eb);
 		

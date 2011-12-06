@@ -17,7 +17,7 @@ public class SPanelFileComponent extends JPanelRounded
 	private static final String TT_OPEN = "Open " + Utility.keystrokeToString(Slyum.KEY_OPEN_PROJECT);
 	private static final String TT_SAVE = "Save " + Utility.keystrokeToString(Slyum.KEY_SAVE);
 	private static final String TT_EXPORT = "Export image " + Utility.keystrokeToString(Slyum.KEY_EXPORT);
-	private static final String TT_CLIPBOARD = "Presse-papier " + Utility.keystrokeToString(Slyum.KEY_KLIPPER);
+	private static final String TT_CLIPBOARD = "Clipboard " + Utility.keystrokeToString(Slyum.KEY_KLIPPER);
 	private static final String TT_PRINT = "Print " + Utility.keystrokeToString(Slyum.KEY_PRINT);
 	
 	public SPanelFileComponent()
@@ -28,12 +28,12 @@ public class SPanelFileComponent extends JPanelRounded
 		setForeground(Color.GRAY);
 		setMaximumSize(new Dimension(300, 50));
 
-		add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/new.png"), "newProject", Color.BLUE, TT_NEW_PROJECT));
-		add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/open.png"), "open", Color.BLUE, TT_OPEN));
-		add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/save.png"), "save", Color.BLUE, TT_SAVE));
-		add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/export.png"), "export", Color.BLUE, TT_EXPORT));
-		add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/klipper.png"), "klipper", Color.BLUE, TT_CLIPBOARD));
-		add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/print.png"), "print", Color.BLUE, TT_PRINT));
+		add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "new.png"), Slyum.ACTION_NEW_PROJECT, Color.BLUE, TT_NEW_PROJECT));
+		add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "open.png"), Slyum.ACTION_OPEN, Color.BLUE, TT_OPEN));
+		add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "save.png"), Slyum.ACTION_SAVE, Color.BLUE, TT_SAVE));
+		add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "export.png"), Slyum.ACTION_EXPORT, Color.BLUE, TT_EXPORT));
+		add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "klipper.png"), Slyum.ACTION_KLIPPER, Color.BLUE, TT_CLIPBOARD));
+		add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "print.png"), Slyum.ACTION_PRINT, Color.BLUE, TT_PRINT));
 		
 		setMaximumSize(new Dimension(43 * ((GridLayout)getLayout()).getColumns(), 50));
 	}

@@ -51,21 +51,21 @@ public class SPanelDiagramComponent extends JPanelRounded
 		JLabel labelTitle = new JLabel(TITLE);
 		panelTop.add(labelTitle);
 
-		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/class.png"), "newClass", Color.RED, TT_CLASS));
-		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/interface.png"), "newInterface", Color.RED, TT_INTERFACE));
-		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/classAssoc.png"), "newClassAssoc", Color.RED, TT_CLASS_ASSOC));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "class.png"), "newClass", Color.RED, TT_CLASS));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "interface.png"), "newInterface", Color.RED, TT_INTERFACE));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "classAssoc.png"), "newClassAssoc", Color.RED, TT_CLASS_ASSOC));
 		
-		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/generalize.png"), "newGeneralize", Color.RED, TT_GENERALIZE));
-		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/dependency.png"), "newDependency", Color.RED, TT_DEPENDENCY));
-		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/innerClass.png"), "newInnerClass", Color.RED, TT_INNER_CLASS));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "generalize.png"), "newGeneralize", Color.RED, TT_GENERALIZE));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "dependency.png"), "newDependency", Color.RED, TT_DEPENDENCY));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "innerClass.png"), "newInnerClass", Color.RED, TT_INNER_CLASS));
 		
-		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/association.png"), "newAssociation", Color.RED, TT_ASSOCIATION));
-		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/aggregation.png"), "newAggregation", Color.RED, TT_AGGREGATION));
-		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/composition.png"), "newComposition", Color.RED, TT_COMPOSITION));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "association.png"), "newAssociation", Color.RED, TT_ASSOCIATION));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "aggregation.png"), "newAggregation", Color.RED, TT_AGGREGATION));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "composition.png"), "newComposition", Color.RED, TT_COMPOSITION));
 		
-		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/multi.png"), "newMulti", Color.RED, TT_MULTI));
-		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/note.png"), "newNote", Color.RED, TT_NOTE));
-		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/linkNote.png"), "linkNote", Color.RED, TT_LINK_NOTE));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "multi.png"), "newMulti", Color.RED, TT_MULTI));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "note.png"), "newNote", Color.RED, TT_NOTE));
+		panelBottom.add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "linkNote.png"), "linkNote", Color.RED, TT_LINK_NOTE));
 		
 		setMaximumSize(new Dimension(200, 150));
 		
