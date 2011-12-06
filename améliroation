@@ -16,6 +16,16 @@ Note de patch 1.3 :
 
  - Utiliser la molette de la souris pour se déplacer sur le diagramme de classe.
 
+ - Corriger bugs d'ouverture de projet.
+
+ - Enregistrer position des multi-association.
+
+ - Enregistrer la vue des méthodes et des paramètres.
+
+ - Corriger le bug qui ne replace pas correctement le lien des notes après l'ouverture d'un projet.
+
+ - Easter eggs!
+
 Futures implémentations :
 
  - Permettre de glisser et déposer les classes de la vue hiérarchique sur le diagramme de classes.
