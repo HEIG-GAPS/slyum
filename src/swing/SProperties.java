@@ -99,7 +99,7 @@ public class SProperties extends JDialog
 			{
 				final JPanel panelFormatting = new JPanel();
 				panelFormatting.setBorder(new EmptyBorder(8, 8, 8, 8));
-				tabbedPane.addTab("Formatting", new ImageIcon(SProperties.class.getResource("/swing/resources/icon/fonts.png")), panelFormatting, null);
+				tabbedPane.addTab("Formatting", new ImageIcon(SProperties.class.getResource(Slyum.ICON_PATH + "fonts.png")), panelFormatting, null);
 				final GridBagLayout gbl_panelFormatting = new GridBagLayout();
 				gbl_panelFormatting.columnWidths = new int[] { 214, 0, 0 };
 				gbl_panelFormatting.rowHeights = new int[] { 23, 0 };
@@ -406,7 +406,7 @@ public class SProperties extends JDialog
 				{
 					final JPanel panel = new JPanel();
 					panel.setBorder(new EmptyBorder(10, 10, 10, 10));
-					tabbedPane.addTab("Graphics", new ImageIcon(SProperties.class.getResource("/swing/resources/icon/pencil.png")), panel, null);
+					tabbedPane.addTab("Graphics", new ImageIcon(SProperties.class.getResource(Slyum.ICON_PATH + "pencil.png")), panel, null);
 					final GridBagLayout gbl_panel = new GridBagLayout();
 					gbl_panel.columnWidths = new int[] { 0, 0 };
 					gbl_panel.rowHeights = new int[] { 0, 0, 0 };
@@ -489,7 +489,7 @@ public class SProperties extends JDialog
 				{
 					final JPanel panel = new JPanel();
 					panel.setBorder(new CompoundBorder(new EmptyBorder(10, 10, 10, 10), new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Generals", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(51, 51, 51))));
-					tabbedPane.addTab("Diagram editor", new ImageIcon(SProperties.class.getResource("/swing/resources/icon/green_config.png")), panel, null);
+					tabbedPane.addTab("Diagram editor", new ImageIcon(SProperties.class.getResource(Slyum.ICON_PATH + "green_config.png")), panel, null);
 					final GridBagLayout gbl_panel = new GridBagLayout();
 					gbl_panel.columnWidths = new int[] { 0, 0 };
 					gbl_panel.rowHeights = new int[] { 0, 0, 0, 0, 0 };

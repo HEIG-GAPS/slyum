@@ -1,6 +1,5 @@
 package swing;
 
-import graphic.GraphicComponent;
 import graphic.entity.EntityView;
 
 import java.awt.Color;
@@ -12,14 +11,17 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 
 import utility.PersonalizedIcon;
-import utility.Utility;
 
 public class SPanelZOrder extends JPanelRounded implements ActionListener
 {
+	private static final long serialVersionUID = 5673984487858602763L;
+	
 	private static final String TT_MOVE_TOP = "Top"/* + Utility.keystrokeToString(Slyum.KEY_UNDO)*/;
 	private static final String TT_MOVE_UP = "Up"/* + Utility.keystrokeToString(Slyum.KEY_REDO)*/;
 	private static final String TT_MOVE_DOWN = "Down"/* + Utility.keystrokeToString(Slyum.KEY_REDO)*/;
 	private static final String TT_MOVE_BOTTOM = "Bottom"/* + Utility.keystrokeToString(Slyum.KEY_REDO)*/;
+	
+	public static final String ZORDER_PATH = Slyum.ICON_PATH + "zorder" + Slyum.FILE_SEPARATOR;
 
 	public SPanelZOrder()
 	{
@@ -28,19 +30,19 @@ public class SPanelZOrder extends JPanelRounded implements ActionListener
 		setBackground(/*Color.WHITE*/ new Color(255, 0, 150, 10));
 		setForeground(Color.GRAY);
 
-		EmptyButton eb = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/zorder/top.png"), "ZOrderTOP", Color.MAGENTA, TT_MOVE_TOP);
+		EmptyButton eb = new EmptyButton(PersonalizedIcon.createImageIcon(ZORDER_PATH + "top.png"), "ZOrderTOP", Color.MAGENTA, TT_MOVE_TOP);
 		eb.addActionListener(this);
 		add(eb);
 		
-		eb = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/zorder/up.png"), "ZOrderUP", Color.MAGENTA, TT_MOVE_UP);
+		eb = new EmptyButton(PersonalizedIcon.createImageIcon(ZORDER_PATH + "up.png"), "ZOrderUP", Color.MAGENTA, TT_MOVE_UP);
 		eb.addActionListener(this);
 		add(eb);
 		
-		eb = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/zorder/down.png"), "ZOrderDown", Color.MAGENTA, TT_MOVE_DOWN);
+		eb = new EmptyButton(PersonalizedIcon.createImageIcon(ZORDER_PATH + "down.png"), "ZOrderDown", Color.MAGENTA, TT_MOVE_DOWN);
 		eb.addActionListener(this);
 		add(eb);
 		
-		eb = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/zorder/bottom.png"), "ZOrderBottom", Color.MAGENTA, TT_MOVE_BOTTOM);
+		eb = new EmptyButton(PersonalizedIcon.createImageIcon(ZORDER_PATH + "bottom.png"), "ZOrderBottom", Color.MAGENTA, TT_MOVE_BOTTOM);
 		eb.addActionListener(this);
 		add(eb);
 		

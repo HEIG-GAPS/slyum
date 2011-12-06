@@ -61,8 +61,8 @@ public class AboutBox extends JDialog
 				final Rectangle controlRectangle = new Rectangle(bounds.x, bounds.y + bounds.height / 2, bounds.width, bounds.height / 2);
 				final Point[] separator = new Point[] { new Point(bounds.x, bounds.y + bounds.height / 2), new Point(bounds.x + bounds.width, bounds.y + bounds.height / 2) };
 
-				final URL imageLogoURL = Slyum.class.getResource("resources/icon/logo148.png");
-				final URL imageHeigvdURL = Slyum.class.getResource("resources/heigvd.gif");
+				final URL imageLogoURL = Slyum.class.getResource(Slyum.ICON_PATH + "logo148.png");
+				final URL imageHeigvdURL = Slyum.class.getResource(Slyum.RESOURCES_PATH + "heigvd.gif");
 
 				BufferedImage imgLogo = null;
 				BufferedImage imgHeigvd = null;
@@ -110,7 +110,7 @@ public class AboutBox extends JDialog
 				g2.drawString("UML class diagram editor developped at heig-vd.", 20, bounds.height / 2 + 20);
 				g2.drawString("Works with Java and Swing, use UML 1.4 and XML.", 20, bounds.height / 2 + 40);
 				g2.drawString("Developer : Miserez David, Responsable : Donini Pier", 20, bounds.height / 2 + 70);
-				g2.drawString("Copyrigth � 2011 Miserez David", 20, bounds.height / 2 + 110);
+				g2.drawString("Copyrigth 2011 Miserez David", 20, bounds.height / 2 + 110);
 
 				g2.drawImage(imgHeigvd, bounds.x + bounds.width - imgHeigvd.getWidth() - 20, bounds.y + bounds.height / 2 + 20, this);
 			}
