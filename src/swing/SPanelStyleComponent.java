@@ -27,12 +27,12 @@ public class SPanelStyleComponent extends JPanelRounded
 		setBackground(/*Color.WHITE*/ new Color(0, 255,0, 10));
 		setForeground(Color.GRAY);
 
-		add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "alignTop.png"), "alignTop", Color.GREEN, TT_ALIGN_TOP));
-		add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "alignBottom.png"), "alignBottom", Color.GREEN, TT_ALIGN_BOTTOM));
-		add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "alignRight.png"), "alignRight", Color.GREEN, TT_ALIGN_RIGTH));
-		add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "alignLeft.png"), "alignLeft", Color.GREEN, TT_ALIGN_LEFT));
+		add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "alignTop.png"), Slyum.ACTION_ALIGN_TOP, Color.GREEN, TT_ALIGN_TOP));
+		add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "alignBottom.png"), Slyum.ACTION_ALIGN_BOTTOM, Color.GREEN, TT_ALIGN_BOTTOM));
+		add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "alignRight.png"), Slyum.ACTION_ALIGN_RIGHT, Color.GREEN, TT_ALIGN_RIGTH));
+		add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "alignLeft.png"), Slyum.ACTION_ALIGN_LEFT, Color.GREEN, TT_ALIGN_LEFT));
 		
-		add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "adjustWidth.png"), "adjustWidth", Color.GREEN, TT_ADJUST_WIDTH));
+		add(new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "adjustWidth.png"), Slyum.ACTION_ADJUST_WIDTH, Color.GREEN, TT_ADJUST_WIDTH));
 		
 		setMaximumSize(new Dimension(43 * ((GridLayout)getLayout()).getColumns(), 50));
 	}

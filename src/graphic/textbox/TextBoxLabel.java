@@ -103,7 +103,6 @@ public abstract class TextBoxLabel extends TextBox implements Observer
 
 		setBounds(new Rectangle(bounds.x + mouse.x - mousePosition.x, bounds.y + mouse.y - mousePosition.y, 0, 0));
 
-		repainRectangle = Utility.growRectangle(repainRectangle, 5);
 		parent.getScene().repaint(repainRectangle);
 		repaint();
 
@@ -162,7 +161,7 @@ public abstract class TextBoxLabel extends TextBox implements Observer
 	{
 		final Rectangle repaintBounds = getBounds();
 		repaintBounds.add(computeAnchor());
-		parent.getScene().repaint(Utility.growRectangle(repaintBounds, 10));
+		parent.getScene().repaint(repaintBounds);
 	}
 	
 	public void setDeplacement(Point point)

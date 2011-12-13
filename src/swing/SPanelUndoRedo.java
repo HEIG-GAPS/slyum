@@ -25,8 +25,8 @@ public class SPanelUndoRedo extends JPanelRounded
 		setBackground(/*Color.WHITE*/ new Color(255, 150, 0, 20));
 		setForeground(Color.GRAY);
 
-		add(undo = new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "undo.png"), "undo", Color.ORANGE, TT_UNDO));
-		add(redo = new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "redo.png"), "redo", Color.ORANGE, TT_REDO));
+		add(undo = new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "undo.png"), Slyum.ACTION_UNDO, Color.ORANGE, TT_UNDO));
+		add(redo = new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "redo.png"), Slyum.ACTION_REDO, Color.ORANGE, TT_REDO));
 		
 		setMaximumSize(new Dimension(43 * ((GridLayout)getLayout()).getColumns(), 50));
 	}

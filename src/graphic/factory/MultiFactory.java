@@ -213,16 +213,16 @@ public class MultiFactory extends CreateComponent
 		if (ev != null && ev.getClass() == ClassView.class)
 		{
 			if (classMouseHover != null)
-				parent.getScene().repaint(Utility.growRectangle(classMouseHover.getBounds(), 5));
+				parent.getScene().repaint(classMouseHover.getBounds());
 
 			classMouseHover = (ClassView) ev;
-			parent.getScene().repaint(Utility.growRectangle(classMouseHover.getBounds(), 5));
+			parent.getScene().repaint(classMouseHover.getBounds());
 
 			parent.getScene().setCursor(new Cursor(Cursor.HAND_CURSOR));
 		}
 		else if (classMouseHover != null)
 		{
-			parent.getScene().repaint(Utility.growRectangle(classMouseHover.getBounds(), 5));
+			parent.getScene().repaint(classMouseHover.getBounds());
 			classMouseHover = null;
 		}
 
@@ -240,7 +240,7 @@ public class MultiFactory extends CreateComponent
 
 				classSelected.add((ClassView) ev);
 
-			parent.getScene().repaint(Utility.growRectangle(ev.getBounds(), 4));
+			parent.getScene().repaint(ev.getBounds());
 		}
 
 		buttons[0].setEnabled(Multi.canCreate(getClassEntity(classSelected)));

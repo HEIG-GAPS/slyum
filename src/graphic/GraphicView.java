@@ -16,6 +16,8 @@ import graphic.relations.LineView;
 import graphic.relations.MultiView;
 import graphic.textbox.TextBoxCommentary;
 
+import java.awt.AWTException;
+import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -23,6 +25,10 @@ import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.ImageCapabilities;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -35,21 +41,30 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
+import java.awt.image.ColorModel;
+import java.awt.image.ImageObserver;
+import java.awt.image.VolatileImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
+import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
+
+import sun.awt.RepaintArea;
 import swing.PanelClassDiagram;
 import swing.PropertyLoader;
 import swing.Slyum;
@@ -57,6 +72,7 @@ import swing.SlyumColorChooser;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.SSlider;
+import utility.SizedCursor;
 import utility.Utility;
 import change.Change;
 import classDiagram.ClassDiagram;
@@ -92,8 +108,11 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	public final static Color BASIC_COLOR = new Color(170, 190, 240);
 	public final static int GRID_COLOR = Color.DARK_GRAY.getRGB();
 	public final static int GRID_POINT_OPACITY = 255;
+	public final static int GRID_SIZE = 10;
+	public final static boolean GRID_VISIBLE = true;
 	public final static boolean IS_AUTOMATIC_GRID_COLOR = false;
 	public final static boolean IS_GRID_OPACITY_ENABLE = false;
+	public final static boolean IS_GRID_ENABLE = true;
 
 	/**
 	 * Compute mouse entered and exited event. the componentMouseHover can be
@@ -158,6 +177,28 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		return color;
 	}
+	
+	public static int getGridSize()
+	{
+		final String prop = PropertyLoader.getInstance().getProperties().getProperty("gridSize");
+		int size = GRID_SIZE;
+
+		if (prop != null)
+			size = Integer.parseInt(prop);
+
+		return isGridEnable() ? size : 1;
+	}
+
+	public static boolean isGridVisible()
+	{
+		final String prop = PropertyLoader.getInstance().getProperties().getProperty("GridVisible");
+		boolean visible = GRID_VISIBLE;
+
+		if (prop != null)
+			visible = Boolean.parseBoolean(prop);
+
+		return visible;
+	}
 
 	public static int getGridOpacity()
 	{
@@ -206,6 +247,17 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		return enable;
 	}
 
+	public static boolean isGridEnable()
+	{
+		final String prop = PropertyLoader.getInstance().getProperties().getProperty("GridEnable");
+		boolean enable = IS_GRID_ENABLE;
+
+		if (prop != null)
+			enable = Boolean.parseBoolean(prop);
+
+		return enable;
+	}
+
 	/**
 	 * Search a component in the given who are on the location given. This
 	 * method uses the isAtPosition() method from GraphicComponent for know if
@@ -240,6 +292,21 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		PropertyLoader.getInstance().push();
 	}
 
+	public static void setGridSize(int size)
+	{
+		PropertyLoader.getInstance().getProperties().put("gridSize", String.valueOf(size));
+		PropertyLoader.getInstance().push();
+		
+		// Update the components bounds for adapting with new grid.
+		for (GraphicView gv : PanelClassDiagram.getInstance().getAllGraphicView())
+			
+			for (final GraphicComponent c : gv.getAllComponents())
+			{
+				System.out.println("test");
+				c.setBounds(c.getBounds());
+			}
+	}
+
 	/**
 	 * Set a new basic color for graphic views. The basic color is the color
 	 * define by default for new graphic view.
@@ -269,10 +336,22 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		PropertyLoader.getInstance().getProperties().put("gridOpacityEnable", String.valueOf(enable));
 		PropertyLoader.getInstance().push();
 	}
+	
+	public static void setGridEnable(boolean enable)
+	{
+		PropertyLoader.getInstance().getProperties().put("GridEnable", String.valueOf(enable));
+		PropertyLoader.getInstance().push();
+	}
 
 	public static void setGridPointOpacity(int opacity)
 	{
 		PropertyLoader.getInstance().getProperties().put("GridPointOpacity", String.valueOf(opacity));
+		PropertyLoader.getInstance().push();
+	}
+	
+	public static void setGridVisibley(boolean visible)
+	{
+		PropertyLoader.getInstance().getProperties().put("GridVisible", String.valueOf(visible));
 		PropertyLoader.getInstance().push();
 	}
 
@@ -283,7 +362,6 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	private CreateComponent currentFactory;
 
 	private final LinkedList<EntityView> entities = new LinkedList<EntityView>();
-	public int gridSize = 10;
 
 	private final LinkedList<LineView> linesView = new LinkedList<LineView>();
 
@@ -310,6 +388,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	private float zoom = 1.0f;
 	private double scale = 1.0;
 	
+	private Rectangle visibleRect = new Rectangle();
+	private int mouseButton = 0;
 	
 	public void setScale(double scale)
 	{
@@ -348,9 +428,29 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 			public void paintComponent(Graphics g)
 			{
 				updatePreferredSize(); // for scrolling
+				
 				super.paintComponent(g);
 
 				paintScene((Graphics2D) g);
+			}
+			
+			@Override
+			public void repaint(int x, int y, int width, int height)
+			{
+				Rectangle rect = growForRepaint(Utility.scaleRect(new Rectangle(x, y, width, height), getScale()));
+				
+				super.repaint(rect.x, rect.y, rect.width, rect.height);
+			}
+			
+			@Override
+			public void repaint(Rectangle r)
+			{
+				super.repaint(growForRepaint(Utility.scaleRect(r, getScale())));
+			}
+			
+			private Rectangle growForRepaint(Rectangle rect)
+			{
+				return Utility.growRectangle(new Rectangle(rect), getGridSize() + 10);
 			}
 
 			@Override
@@ -832,7 +932,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		int nbrComponentSelected = 0;
 
 		// use for repaint old position
-		final Rectangle previousRect = new Rectangle(Utility.growRectangle(rubberBand, 10));
+		final Rectangle previousRect = new Rectangle(rubberBand);
 
 		// get all selectable components
 		final LinkedList<GraphicComponent> components = new LinkedList<GraphicComponent>();
@@ -1055,16 +1155,6 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	public EntityView getEntityAtPosition(Point pos)
 	{
 		return getComponentListAtPosition(entities, pos);
-	}
-
-	/**
-	 * Get the grid size.
-	 * 
-	 * @return the grid size
-	 */
-	public int getGridSize()
-	{
-		return gridSize;
 	}
 
 	/**
@@ -1310,7 +1400,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	@Override
 	public void gMouseDragged(MouseEvent e)
 	{
-		redrawRubberBand(mousePressedLocation, e.getPoint());
+		if (mouseButton == MouseEvent.BUTTON1)
+			redrawRubberBand(mousePressedLocation, e.getPoint());
 	}
 
 	@Override
@@ -1321,7 +1412,20 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		if (!e.isControlDown())
 			clearAllSelectedComponents();
 
-		scene.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+		switch (mouseButton)
+		{
+		case MouseEvent.BUTTON1:
+			scene.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+			break;
+			
+		case MouseEvent.BUTTON2:
+			Toolkit toolkit = Toolkit.getDefaultToolkit();
+			Image image = toolkit.getImage("src" + Slyum.FILE_SEPARATOR + "swing" + Slyum.FILE_SEPARATOR + Slyum.ICON_PATH + "drag_hand.png");
+			image = SizedCursor.getPreferredSizedCursor(image);
+			Cursor brokenCursor = toolkit.createCustomCursor(image , new Point(0, 0), "drag_hand");
+			scene.setCursor(brokenCursor);
+			break;
+		}			
 	}
 
 	@Override
@@ -1437,7 +1541,9 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 			component = getComponentAtPosition(e.getPoint());
 
-		component.gMouseClicked(e);
+		if (mouseButton != MouseEvent.BUTTON2 || component == this)
+			
+			component.gMouseClicked(e);
 	}
 
 	@Override
@@ -1445,6 +1551,22 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	{
 		e = adapteMouseEvent(e);
 		GraphicComponent component;
+		Rectangle newVisibleRect;
+		
+		if (mouseButton == MouseEvent.BUTTON2)
+		{
+			int dx = -e.getX() + mousePressedLocation.x,
+				dy = -e.getY() + mousePressedLocation.y;
+			
+			visibleRect.translate(dx, dy);
+			
+			newVisibleRect = new Rectangle(visibleRect);
+		}
+		else
+			newVisibleRect = new Rectangle((int)((double)e.getX() * getScale()),
+					(int)((double)e.getY() * getScale()),
+					1,
+					1);
 
 		if (currentFactory != null)
 			component = currentFactory;
@@ -1453,12 +1575,13 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		computeComponentEventEnter(component, saveComponentMouseHover, e);
 
-		componentMousePressed.gMouseDragged(e);
+		if (mouseButton != MouseEvent.BUTTON2)
+			componentMousePressed.gMouseDragged(e);
 
 		saveComponentMouseHover = component;
-		
-		// TODO
-		repaint();
+
+		getScene().scrollRectToVisible(newVisibleRect);
+		visibleRect = getScene().getVisibleRect();
 	}
 
 	@Override
@@ -1492,40 +1615,43 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		// Save the last component mouse hovered. Useful for compute
 		// mouseEntered and mouseExited event.
 		saveComponentMouseHover = component;
-		
-		// TODO
-		repaint();
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
-		e = adapteMouseEvent(e);
 		scene.requestFocusInWindow(); // get the focus
+		mouseButton = e.getButton();
 
+		e = adapteMouseEvent(e);
+		mousePressedLocation = e.getPoint();
+		visibleRect = getScene().getVisibleRect();
 		mousePressedLocation = e.getPoint();
 
 		GraphicComponent component;
-
+		
 		if (currentFactory != null)
 			component = currentFactory;
 		else
 			component = getComponentAtPosition(e.getPoint());
-
+		
 		// Save the last component mouse pressed.
 		componentMousePressed = component;
-		component.gMousePressed(e);
 		
-		// TODO
-		repaint();
+		if (e.getButton() != MouseEvent.BUTTON2 || component == this)
+		
+			component.gMousePressed(e);		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e)
 	{
 		e = adapteMouseEvent(e);
+
+		if (mouseButton != MouseEvent.BUTTON2)
+			
+			componentMousePressed.gMouseReleased(e);
 		
-		componentMousePressed.gMouseReleased(e);
 		getScene().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
 
@@ -1577,6 +1703,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 */
 	protected void paintBackground(int gridSize, Color color, Graphics2D g2)
 	{
+		final Rectangle visibleRect = getScene().getVisibleRect();
+		
 		final int w = scene.getWidth();
 		final int h = scene.getHeight();
 		final boolean gradient = getBackgroundGradient();
@@ -1592,23 +1720,25 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 			g2.fillRect(0, h / 2, w, h / 2);
 		}
 
-		if (getGridSize() >= 10) // Don't draw a grid lesser than 10 (too slow).
+		if (isGridEnable() && isGridVisible() && getGridSize() >= 10) // Don't draw a grid lesser than 10 (too slow).
 		{
-			final int grayLevel = Utility.getGrayLevel(getColor());
-			final Color gridColor;
+			
+			final int grayLevel = Utility.getColorGrayLevel(getColor());
+			Color gridColor = new Color(getGridColor());
 
 			if (isAutomatiqueGridColor())
 
 				gridColor = new Color(grayLevel, grayLevel, grayLevel, getGridOpacity());
+			
 			else
 
-				gridColor = new Color(getGridColor());
-
+				gridColor = new Color(gridColor.getRed(), gridColor.getGreen(), gridColor.getBlue(), getGridOpacity());
+						
 			g2.setColor(gridColor);
-
-			for (int x = 0; x < w; x += gridSize)
-				for (int y = 0; y < h; y += gridSize)
-					g2.drawOval(x, y, 1, 1);
+			
+			for (int x = (visibleRect.x/gridSize)*gridSize; x < visibleRect.x + visibleRect.width + gridSize; x += gridSize)
+				for (int y = (visibleRect.y/gridSize)*gridSize; y < visibleRect.y + visibleRect.height + gridSize; y += gridSize)
+						g2.drawOval(x, y, 1, 1);
 		}
 	}
 
@@ -1676,7 +1806,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 			currentFactory.paintComponent(g2);
 
 		// Paint rubberBand
-		final int grayLevel = Utility.getGrayLevel(getColor());
+		final int grayLevel = Utility.getColorGrayLevel(getColor());
 		final Color rubberBandColor = new Color(grayLevel, grayLevel, grayLevel);
 
 		paintRubberBand(rubberBand, isAutomatiqueGridColor() ? rubberBandColor : new Color(getGridColor()), g2);
@@ -1747,7 +1877,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	protected void redrawRubberBand(Point origin, Point mouse)
 	{
 		// Save previous bounds for redrawing.
-		final Rectangle repaintRect = new Rectangle(Utility.growRectangle(rubberBand, 10));
+		final Rectangle repaintRect = new Rectangle(rubberBand);
 
 		rubberBand = new Rectangle(origin.x, origin.y, mouse.x - origin.x, mouse.y - origin.y);
 
@@ -1821,7 +1951,6 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		if (g != null)
 
 			removeComponent(g);
-
 	}
 
 	@Override
@@ -1877,22 +2006,6 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 			throw new IllegalArgumentException("component is null");
 
 		componentMousePressed = component;
-	}
-
-	/**
-	 * Set the grid size.
-	 * 
-	 * @param gridSize
-	 */
-	public void setGridSize(int gridSize)
-	{
-		this.gridSize = gridSize;
-
-		// Update the components bounds for adapting with new grid.
-		for (final GraphicComponent c : getAllComponents())
-			c.setBounds(c.getBounds());
-
-		repaint();
 	}
 
 	/**
@@ -2045,8 +2158,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		final Rectangle r = Utility.getLimits(getAllComponents());
 
 		// Add margin.
-		final int width = r.x + r.width + 300;
-		final int height = r.y + r.height + 200;
+		final int width = (int)((double)(r.x + r.width + 1000) * getScale());
+		final int height = (int)((double)(r.y + r.height + 1000) * getScale());
 
 		getScene().setPreferredSize(new Dimension(width, height));
 		getScene().revalidate();

@@ -14,7 +14,7 @@ public class JPanelRounded extends JPanel
 	private static final long serialVersionUID = 767852553660266730L;
 
 	/** Double values for Horizontal and Vertical radius of corner arcs */
-	protected Dimension arcs = new Dimension(20, 20);
+	protected Dimension arcs = new Dimension(5, 5);
 
 	/** Distance between shadow border and opaque panel border */
 	protected int shadowGap = 5;

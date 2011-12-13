@@ -343,9 +343,7 @@ public class TextBoxCommentary extends MovableComponent
 	@Override
 	public void repaint()
 	{
-		final Rectangle repaintBounds = Utility.growRectangle(getBounds(), 10);
-
-		parent.getScene().repaint(repaintBounds);
+		parent.getScene().repaint(getBounds());
 	}
 
 	@Override
