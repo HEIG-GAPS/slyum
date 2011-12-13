@@ -92,11 +92,11 @@ public abstract class SquareGrip extends GraphicComponent
 	@Override
 	public void setBounds(Rectangle bounds)
 	{
-		final Rectangle repaintBounds = new Rectangle(Utility.growRectangle(bounds, 10));
+		final Rectangle repaintBounds = new Rectangle(bounds);
 
 		this.bounds = new Rectangle(bounds);
 
 		parent.getScene().repaint(repaintBounds);
-		parent.getScene().repaint(Utility.growRectangle(bounds, 10));
+		parent.getScene().repaint(bounds);
 	}
 }

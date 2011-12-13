@@ -101,18 +101,18 @@ public abstract class ButtonCross extends GraphicComponent
 	@Override
 	public void repaint()
 	{
-		parent.getScene().repaint(Utility.growRectangle(getBounds(), 10));
+		parent.getScene().repaint(getBounds());
 	}
 
 	@Override
 	public void setBounds(Rectangle newbounds)
 	{
-		Rectangle oldBounds = Utility.growRectangle(getBounds(), 10);
+		Rectangle oldBounds = getBounds();
 		
 		bounds = new Rectangle(newbounds);
 		
 		parent.getScene().repaint(oldBounds);
-		parent.getScene().repaint(Utility.growRectangle(bounds, 10));
+		parent.getScene().repaint(bounds);
 		
 	}
 	

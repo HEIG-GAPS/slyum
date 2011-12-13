@@ -308,7 +308,7 @@ public abstract class TextBox extends GraphicComponent
 	public void repaint()
 	{
 		final Rectangle repaintBounds = getBounds();
-		parent.getScene().repaint(Utility.growRectangle(repaintBounds, 10));
+		parent.getScene().repaint(repaintBounds);
 	}
 
 	@Override

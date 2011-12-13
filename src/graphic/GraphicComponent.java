@@ -418,9 +418,11 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 	 */
 	public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu)
 	{
+		GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+		
 		if (e.isPopupTrigger())
 
-			popupMenu.show(e.getComponent(), e.getX(), e.getY());
+			popupMenu.show(e.getComponent(), (int)(e.getX() / gv.getInversedScale()), (int)(e.getY() / gv.getInversedScale()));
 	}
 
 	/**

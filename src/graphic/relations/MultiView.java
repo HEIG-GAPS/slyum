@@ -332,8 +332,8 @@ public class MultiView extends MovableComponent implements Observer
 		this.bounds = bounds;
 
 		// repaint previous et current position.
-		parent.getScene().repaint(Utility.growRectangle(repaintBounds, 5));
-		parent.getScene().repaint(Utility.growRectangle(bounds, 5));
+		parent.getScene().repaint(repaintBounds);
+		parent.getScene().repaint(bounds);
 
 		setChanged();
 		notifyObservers();

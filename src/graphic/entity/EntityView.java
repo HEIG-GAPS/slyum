@@ -665,7 +665,6 @@ public abstract class EntityView extends MovableComponent implements Observer
 		final LinkedList<TextBox> tb = getAllTextBox();
 		tb.remove(entityName);
 		pressedTextBox = GraphicView.searchComponentWithPosition(tb, e.getPoint());
-
 	}
 
 	@Override
@@ -699,7 +698,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 	{
 		if (e.isPopupTrigger())
 		{
-			final JMenuItem menuDelete = Utility.fintMenuItem(popupMenu, "Delete");
+			final JMenuItem menuDelete = Utility.findMenuItem(popupMenu, "Delete");
 
 			if (menuDelete != null)
 			{
@@ -734,12 +733,12 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 				menuDelete.setText(text);
 			}
-
-			popupMenu.show(e.getComponent(), e.getX(), e.getY());
+			
+			super.maybeShowPopup(e, popupMenu);
 		}
 		else
 		{
-			JMenuItem menuItem = Utility.fintMenuItem(popupMenu, "Move Up");
+			JMenuItem menuItem = Utility.findMenuItem(popupMenu, "Move Up");
 			boolean elementRemove = false;
 
 			if (menuItem != null)
@@ -748,7 +747,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 				elementRemove = true;
 			}
 
-			menuItem = Utility.fintMenuItem(popupMenu, "Move Down");
+			menuItem = Utility.findMenuItem(popupMenu, "Move Down");
 
 			if (menuItem != null)
 			{
@@ -1009,14 +1008,14 @@ public abstract class EntityView extends MovableComponent implements Observer
 	@Override
 	public void repaint()
 	{
-		parent.getScene().repaint(Utility.growRectangle(getBounds(), 10));
+		parent.getScene().repaint(getBounds());
 	}
 
 	@Override
 	public void setBounds(Rectangle bounds)
 	{
 		// Save current bounds, change bounds and repaint old bounds and new bounds.
-		final Rectangle repaintBounds = new Rectangle(Utility.growRectangle(getBounds(), 10));
+		final Rectangle repaintBounds = new Rectangle(getBounds());
 
 		final Rectangle newBounds = new Rectangle(ajustOnGrid(bounds.x), ajustOnGrid(bounds.y), ajustOnGrid(bounds.width), bounds.height);
 
@@ -1025,7 +1024,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 		this.bounds = newBounds;
 
 		parent.getScene().repaint(repaintBounds);
-		parent.getScene().repaint(Utility.growRectangle(newBounds, 10));
+		parent.getScene().repaint(newBounds);
 
 		// Move graphics elements associated with this component
 		leftMovableSquare.setBounds(computeLocationResizer(0));
@@ -1166,7 +1165,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 	 */
 	public void updateHeight()
 	{
-		final Rectangle repaintBounds = Utility.growRectangle(getBounds(), 20);
+		final Rectangle repaintBounds = getBounds();
 
 		parent.getScene().paintImmediately(repaintBounds);
 

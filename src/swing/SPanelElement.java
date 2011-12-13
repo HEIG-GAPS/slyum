@@ -29,7 +29,7 @@ public class SPanelElement extends JPanelRounded implements ActionListener
 		setBackground(/*Color.WHITE*/ new Color(0, 255, 150, 10));
 		setForeground(Color.GRAY);
 
-		EmptyButton eb = new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "note.png"), "NewNote", Color.CYAN, TT_ADD_NOTE);
+		EmptyButton eb = new EmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "note.png"), Slyum.ACTION_NEW_NOTE_ASSOCIED, Color.CYAN, TT_ADD_NOTE);
 		eb.addActionListener(this);
 		add(eb);
 		
@@ -57,7 +57,7 @@ public class SPanelElement extends JPanelRounded implements ActionListener
 			
 			GraphicComponent.askNewColorForSelectedItems();
 		
-		else if (e.getActionCommand().equals("NewNote"))
+		else if (e.getActionCommand().equals(Slyum.ACTION_NEW_NOTE_ASSOCIED))
 			
 			gv.linkNewNoteWithSelectedEntities();
 	}

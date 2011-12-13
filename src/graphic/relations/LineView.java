@@ -699,7 +699,7 @@ public abstract class LineView extends GraphicComponent
 	@Override
 	public void repaint()
 	{
-		final Rectangle repaintBounds = Utility.growRectangle(getBounds(), parent.getGridSize());
+		final Rectangle repaintBounds = getBounds();
 
 		parent.getScene().repaint(repaintBounds);
 	}

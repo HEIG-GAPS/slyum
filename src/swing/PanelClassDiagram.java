@@ -28,6 +28,8 @@ import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedList;
+
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -388,11 +390,11 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 	{
 		currentFile = file;
 		Change.setHasChange(false);
+		Slyum.updateWindowTitle(currentFile);
 		
 		if (file == null)
 			return;
 		
-		Slyum.updateWindowTitle(currentFile);
 		Slyum.setCurrentDirectoryFileChooser(file.getParent());
 	}
 	
@@ -535,7 +537,6 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		if (result == JFileChooser.APPROVE_OPTION)
 		
 			openFromXML(fc.getSelectedFile());
-		
 	}
 	
 	/**
@@ -681,5 +682,18 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		graphicView.removeAll();
 
 		graphicView.setVisible(true);
+	}
+
+	/**
+	 * Return a LinkedList with all opened graphic views.
+	 * @return a LinkedList with all opened graphic views
+	 */
+	public LinkedList<GraphicView> getAllGraphicView()
+	{
+		// TODO
+		LinkedList<GraphicView> l = new LinkedList<GraphicView>();
+		l.add(graphicView);
+		
+		return l;
 	}
 }

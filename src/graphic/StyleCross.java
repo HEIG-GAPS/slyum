@@ -178,7 +178,7 @@ public class StyleCross extends GraphicComponent
 	@Override
 	public void repaint()
 	{
-		parent.getScene().repaint(Utility.growRectangle(getBounds(), 5));
+		parent.getScene().repaint(getBounds());
 	}
 	
 	@Override

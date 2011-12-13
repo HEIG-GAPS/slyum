@@ -53,6 +53,24 @@ public class Utility
 	{
 		LOW, MAX, MEDIUM
 	};
+	
+	/**
+	 * Scale the given rectangle with the given scale.
+	 * @param rect rectangle
+	 * @param scale scale
+	 * @return the scaling rectangle.
+	 */
+	public static Rectangle scaleRect(Rectangle rect, double scale)
+	{
+		Rectangle r = new Rectangle(rect);
+		
+		r.x *= scale;
+		r.y *= scale;
+		r.width *= scale;
+		r.height *= scale;
+		
+		return r;
+	}
 
 	/**
 	 * http://www.exampledepot.com/egs/java.awt.datatransfer/ToClipImg.html
@@ -176,7 +194,7 @@ public class Utility
 	 *            the title of the JMenuItem to find.
 	 * @return the JMenuItem find; or null if no JMenuItem has this title.
 	 */
-	public static JMenuItem fintMenuItem(JPopupMenu menu, String text)
+	public static JMenuItem findMenuItem(JPopupMenu menu, String text)
 	{
 		for (final Component component : menu.getComponents())
 
@@ -216,7 +234,7 @@ public class Utility
 	 *            the color to compute its complementary
 	 * @return the complementary color
 	 */
-	public static Color getComplementary(Color color)
+	public static Color getComplementaryColor(Color color)
 	{
 		final int r = color.getRed();
 		final int g = color.getGreen();
@@ -275,7 +293,7 @@ public class Utility
 	 * @param color
 	 * @return
 	 */
-	public static int getGrayLevel(Color color)
+	public static int getColorGrayLevel(Color color)
 	{
 		final float rp = color.getRed() / 255.0f;
 		final float gp = color.getGreen() / 255.0f;

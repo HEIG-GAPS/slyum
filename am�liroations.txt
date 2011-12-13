@@ -1,34 +1,24 @@
 Note de patch 1.3 :
-
- - Refonte des classes internes
-
+ 
  - Support des tableaux et des Listes
-
- - Intégration du Annuler / Refaire
-
- - Permetttre d'effectuer des zoom du diagramme de classes.
-
- - Ascenceur plus rapide et réagissant à la roulette de la souris.
-
- - Modifier la taille de la grille dans les paramètres (et l'enlever du menu).
-
+ 
  - Désactiver les boutons (barre d'outils, menu contextuel, etc.) lorsque leur utilisation n'effectue aucune action.
 
- - Utiliser la molette de la souris pour se déplacer sur le diagramme de classe.
-
- - Corriger bugs d'ouverture de projet.
+ - Corriger bugs d'ouverture de projet (à cause du multi-thread).
 
  - Enregistrer position des multi-association.
 
  - Enregistrer la vue des méthodes et des paramètres.
 
  - Corriger le bug qui ne replace pas correctement le lien des notes après l'ouverture d'un projet.
+ 
+ - Intégration du Annuler / Refaire
 
  - Easter eggs!
 
- - Le paramètrage de la transparence ne fonctionne plus.
-
 Futures implémentations :
+
+ - Refonte des classes internes
 
  - Permettre de glisser et déposer les classes de la vue hiérarchique sur le diagramme de classes.
 
@@ -131,3 +121,13 @@ Déjà implémentées :
  - Ajout du menu pour tout sélectionner et tout désélectionner.
 
  - Création d'une classe SlyFileChooser pour unifier les deux FileChooser anonyme existant pour sélectionner un fichier de type "sly".
+ 
+ - Ascenceur plus rapide et réagissant à la roulette de la souris.
+
+ - Modifier la taille de la grille dans les paramètres (et l'enlever du menu).
+
+ - Le paramètrage de la transparence ne refonctionne plus.
+ 
+ - Utiliser la molette de la souris pour se déplacer sur le diagramme de classe.
+ 
+ - Permetttre d'effectuer des zoom du diagramme de classes.

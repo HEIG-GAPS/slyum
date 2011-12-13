@@ -80,7 +80,7 @@ public abstract class RelationFactory extends ComponentFactory
 	 */
 	private void drawLine(Graphics2D g2)
 	{
-		final int gray = Utility.getGrayLevel(parent.getColor());
+		final int gray = Utility.getColorGrayLevel(parent.getColor());
 
 		g2.setStroke(stroke);
 
@@ -105,7 +105,7 @@ public abstract class RelationFactory extends ComponentFactory
 
 		mouseLocation = e.getPoint();
 
-		repaintBounds = Utility.growRectangle(Utility.normalizeRect(repaintBounds), 10);
+		repaintBounds = Utility.normalizeRect(repaintBounds);
 		parent.getScene().repaint(repaintBounds);
 		parent.getScene().repaint(repaintExtremity);
 
@@ -173,7 +173,7 @@ public abstract class RelationFactory extends ComponentFactory
 		Rectangle repaintBounds = new Rectangle(mousePressed.x, mousePressed.y, mouseReleased.x - mousePressed.x, mouseReleased.y - mousePressed.y);
 
 		repaintBounds = Utility.normalizeRect(repaintBounds);
-		parent.getScene().repaint(Utility.growRectangle(repaintBounds, 20));
+		parent.getScene().repaint(repaintBounds);
 	}
 
 }
