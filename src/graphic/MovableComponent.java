@@ -221,10 +221,14 @@ public abstract class MovableComponent extends GraphicComponent
 	{
 		super.gMouseReleased(e);
 
+		Change.record();
+		
 		// Confirm the ghost translation for all selected component.
 		for (final GraphicComponent c : parent.getSelectedComponents())
 
 			c.apply(e);
+		
+		Change.stopRecord();
 	}
 
 	@Override

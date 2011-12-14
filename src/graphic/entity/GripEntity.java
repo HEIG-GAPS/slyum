@@ -7,6 +7,8 @@ import graphic.SquareGrip;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
+import change.Change;
+
 /**
  * Represent a grip (gray square) using for resizing entities. A grip entity
  * move with mouse cursor when user click on it. Calls move() and apply()
@@ -42,8 +44,13 @@ public abstract class GripEntity extends SquareGrip
 		final Rectangle repaintBounds = new Rectangle(getBounds());
 		repaintBounds.grow(10, 10);
 
+		Change.record();
+		
 		for (final GraphicComponent c : parent.getSelectedComponents())
+			
 			c.apply(e);
+		
+		Change.stopRecord();
 
 		parent.getScene().repaint(repaintBounds);
 	}
