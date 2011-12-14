@@ -15,6 +15,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import change.BufferBounds;
+import change.Change;
+
 import utility.PersonalizedIcon;
 import utility.Utility;
 
@@ -100,6 +103,7 @@ public class RelationGrip extends SquareGrip implements ActionListener
 	@Override
 	public void gMousePressed(MouseEvent e)
 	{
+		Change.push(new BufferBounds(this));
 		maybeShowPopup(e, popupMenu);
 	}
 
@@ -117,7 +121,15 @@ public class RelationGrip extends SquareGrip implements ActionListener
 		relation.smoothLines();
 		relation.searchUselessAnchor(this);
 
+		pushBufferChangeMouseReleased();
+
 		maybeShowPopup(e, popupMenu);
+	}
+	
+	protected void pushBufferChangeMouseReleased()
+	{
+		if (Change.getSize() % 2 == 1)
+			Change.push(new BufferBounds(this));
 	}
 
 	/**

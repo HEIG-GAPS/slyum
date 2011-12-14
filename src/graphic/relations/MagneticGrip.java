@@ -114,6 +114,8 @@ public class MagneticGrip extends RelationGrip implements Observer
 		relation.smoothLines();
 		relation.searchUselessAnchor(this);
 
+		pushBufferChangeMouseReleased();
+		
 		maybeShowPopup(e, popupMenu);
 
 		notifyObservers();

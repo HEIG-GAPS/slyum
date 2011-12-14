@@ -58,11 +58,11 @@ public class Change
 
 	public static void redo()
 	{
-		final int increment = pointer % 2 == 0 ? 1 : 2;
-
 		if (pointer >= stack.size() - 1)
 			return;
 
+		final int increment = pointer % 2 == 0 ? 1 : 2;
+		
 		setBlocked(true);
 		stack.get(pointer += increment).restore();
 		setBlocked(false);
@@ -73,16 +73,16 @@ public class Change
 		
 		setHasChange(true);
 		
-		if (record.size() <= pointer+1 || record.get(pointer+1))
+		if (record.get(pointer))
 			redo();
 	}
 
 	public static void undo()
 	{
-		final int decrement = pointer % 2 > 0 ? 1 : 2;
-		
 		if (pointer <= 0)
 			return;
+		
+		final int decrement = pointer % 2 > 0 ? 1 : 2;
 
 		setBlocked(true);
 		stack.get(pointer -= decrement).restore();
@@ -94,21 +94,35 @@ public class Change
 		
 		setHasChange(true);
 		
-		if (0 > pointer-1 || record.get(pointer-1))
+		if (record.get(pointer))
+			
 			undo();
 	}
 	
+	/**
+	 * Begin a record. A record merge all new pushes in a same group. When undo / redo is called, all
+	 * pushes into a group will be undo / redo at the same time.
+	 */
 	public static void record()
 	{
 		isRecord = true;
 	}
 	
+	/**
+	 * Stop the current record. If no record is currently running, this method have no effect.
+	 */
 	public static void stopRecord()
 	{
-		isRecord = false;
+		if (isRecord = false)
+			return;
 		
+		isRecord = false;
+
+		int b = pointer;
+		while (record.get(--b));
+		
+		record.set(b+1, false);
 		record.set(pointer, false);
-		record.set(pointer+1, false);
 	}
 	
 	protected static void checkToolbarButtonState()
@@ -138,6 +152,11 @@ public class Change
 	{
 		_hasChange = changed;
 		Slyum.setStarOnTitle(changed);
+	}
+	
+	public static int getSize()
+	{
+		return stack.size();
 	}
 	
 }
