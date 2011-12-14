@@ -14,11 +14,17 @@ Note de patch 1.3 :
  
  - Intégration du Annuler / Refaire
 
+ - Corriger les issue de google code
+ 
  - Easter eggs!
 
 Futures implémentations :
 
- - Refonte des classes internes
+ - Trouver pourquoi le déplacement des associations est plus lent que le déplacement d'autres composants qui nécessitent la même taille pour la zone de dessin.
+
+ - Refonte des classes internes.
+ 
+ - Rendre les menus rapetissables.
 
  - Permettre de glisser et déposer les classes de la vue hiérarchique sur le diagramme de classes.
 

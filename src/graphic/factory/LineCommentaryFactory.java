@@ -7,9 +7,6 @@ import graphic.textbox.TextBoxCommentary;
 
 import java.awt.BasicStroke;
 
-import javax.swing.JOptionPane;
-
-import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 
 import classDiagram.ClassDiagram;

@@ -1,29 +1,25 @@
 package utility;
 
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-
-import swing.Slyum;
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
-import javax.swing.JProgressBar;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JList;
-import javax.swing.border.BevelBorder;
 import javax.swing.AbstractListModel;
-import javax.swing.JScrollPane;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EmptyBorder;
+
+import swing.Slyum;
 
 public class SDialogProjectLoading extends JDialog
 {
@@ -33,7 +29,7 @@ public class SDialogProjectLoading extends JDialog
 	private static Slyum s = Slyum.getInstance();
 	
 	private JLabel lblCurrentPhase;
-	private JList list;
+	private JList<String> list;
 	private JProgressBar progressBar;
 	private JScrollPane scrollPane;
 	private JButton btnCancel;
@@ -110,7 +106,7 @@ public class SDialogProjectLoading extends JDialog
 		gbc_scrollPane.gridy = 3;
 		panel.add(scrollPane, gbc_scrollPane);
 		
-		list = new JList();
+		list = new JList<String>();
 		scrollPane.setViewportView(list);
 		list.setModel(new StringListModel());
 		list.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -148,14 +144,14 @@ public class SDialogProjectLoading extends JDialog
 		progressBar.setValue(progressBar.getValue()+1);
 	}
 	
-	private class StringListModel extends AbstractListModel
+	private class StringListModel extends AbstractListModel<String>
 	{
 		private static final long serialVersionUID = -3126417577301749576L;
 		
 		LinkedList<String> values = new LinkedList<String>();
 
 		@Override
-		public Object getElementAt(int index)
+		public String getElementAt(int index)
 		{
 			return values.get(index);
 		}

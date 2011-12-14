@@ -71,7 +71,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 	 */
 	public static Color getBasicColor()
 	{
-		String colorEntities = PropertyLoader.getInstance().getProperties().getProperty("colorEntities");
+		String colorEntities = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.COLOR_ENTITIES);
 		Color color;
 		
 		if (colorEntities == null)
@@ -467,7 +467,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 		// change the width according to the grid
 		final Rectangle bounds = getBounds();
-		setBounds(new Rectangle(bounds.x, bounds.y, width + parent.getGridSize() + 15, bounds.height));
+		setBounds(new Rectangle(bounds.x, bounds.y, width + GraphicView.getGridSize() + 15, bounds.height));
 	}
 
 	@Override
@@ -1175,5 +1175,14 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 		setChanged();
 		notifyObservers();
+	}
+	
+	@Override
+	public void restore()
+	{
+		super.restore();
+		
+		parent.addOthersComponents(leftMovableSquare);
+		parent.addOthersComponents(rightMovableSquare);
 	}
 }

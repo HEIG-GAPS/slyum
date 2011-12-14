@@ -10,21 +10,19 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
 
+import swing.JPanelRounded;
+import swing.propretiesView.GlobalPropreties;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Association;
 import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Role;
-import swing.JPanelRounded;
 
 /**
  * Show the propreties of an association and its roles with Swing components.

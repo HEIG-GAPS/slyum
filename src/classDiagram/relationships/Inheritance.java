@@ -2,10 +2,7 @@ package classDiagram.relationships;
 
 import java.util.Observable;
 
-import javax.swing.JOptionPane;
-
 import swing.OverridesAndImplementationsDialog;
-import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.Utility;
 import classDiagram.ClassDiagram;

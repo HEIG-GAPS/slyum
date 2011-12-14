@@ -2,14 +2,12 @@ package graphic.relations;
 
 import graphic.GraphicView;
 import graphic.entity.EntityView;
-import graphic.textbox.TextBox;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-import classDiagram.components.ClassEntity;
 import classDiagram.relationships.Aggregation;
 
 /**

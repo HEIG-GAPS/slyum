@@ -12,8 +12,6 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
 import utility.Utility;
-import change.BufferCreation;
-import change.Change;
 import classDiagram.ClassDiagram;
 
 /**

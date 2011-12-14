@@ -41,6 +41,7 @@ import javax.swing.table.TableModel;
 import swing.EmptyButton;
 import swing.JPanelRounded;
 import swing.Slyum;
+import swing.propretiesView.GlobalPropreties;
 import utility.PersonalizedIcon;
 import utility.Utility;
 import classDiagram.IDiagramComponent.UpdateMessage;
@@ -88,9 +89,8 @@ public class EntityPropreties extends GlobalPropreties
 			fireTableDataChanged();
 		}
 
-		@SuppressWarnings( { "unchecked"})
 		@Override
-		public Class getColumnClass(int c)
+		public Class<? extends Object> getColumnClass(int c)
 		{
 			return getValueAt(0, c).getClass();
 		}
@@ -300,9 +300,8 @@ public class EntityPropreties extends GlobalPropreties
 			fireTableDataChanged();
 		}
 
-		@SuppressWarnings( { "unchecked" })
 		@Override
-		public Class getColumnClass(int c)
+		public Class<? extends Object> getColumnClass(int c)
 		{
 			return getValueAt(0, c).getClass();
 		}
@@ -513,9 +512,8 @@ public class EntityPropreties extends GlobalPropreties
 			fireTableDataChanged();
 		}
 
-		@SuppressWarnings( { "unchecked" })
 		@Override
-		public Class getColumnClass(int c)
+		public Class<? extends Object> getColumnClass(int c)
 		{
 			return getValueAt(0, c).getClass();
 		}
@@ -763,7 +761,7 @@ public class EntityPropreties extends GlobalPropreties
 
 	JCheckBox checkBoxAbstract = new JCheckBox("Abstract");
 
-	JComboBox comboBox = Utility.getVisibilityComboBox();
+	JComboBox<String> comboBox = Utility.getVisibilityComboBox();
 
 	private final JLabel imgNoAttribute, imgNoMethod, imgMethodSelected,
 			imgNoParameter;

@@ -38,7 +38,9 @@ public class SlyumColorChooser extends JDialog
 		
         Utility.setRootPaneActionOnEsc(getRootPane(), new AbstractAction() {
 		
-            public void actionPerformed(ActionEvent e)
+			private static final long serialVersionUID = -9137055482704631902L;
+
+			public void actionPerformed(ActionEvent e)
             {
             	setVisible(false);
             }

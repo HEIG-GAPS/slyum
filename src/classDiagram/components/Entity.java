@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import swing.Slyum;
-import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.Utility;
 import classDiagram.relationships.Inheritance;

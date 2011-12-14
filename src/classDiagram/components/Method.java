@@ -4,9 +4,6 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.JOptionPane;
-
-import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.Utility;
 import classDiagram.ClassDiagram;

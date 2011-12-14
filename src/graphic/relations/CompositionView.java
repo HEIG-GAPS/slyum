@@ -7,7 +7,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-import classDiagram.relationships.Aggregation;
 import classDiagram.relationships.Composition;
 
 /**

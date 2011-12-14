@@ -20,9 +20,9 @@ import java.util.LinkedList;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import classDiagram.relationships.Aggregation;
+import change.BufferBounds;
+import change.Change;
 
-import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.Utility;
 
@@ -74,6 +74,8 @@ public abstract class LineView extends GraphicComponent
 	private Cursor previousCursor;
 
 	private int saveGrip;
+	
+	private BufferBounds[] bb = new BufferBounds[2];
 
 	// More ratio is bigger, more the line near horizontal / vertical degree
 	// will be adjusted.
@@ -490,6 +492,12 @@ public abstract class LineView extends GraphicComponent
 		if ((!e.isControlDown() && !GraphicView.isCtrlForGrip() || e.isControlDown() && GraphicView.isCtrlForGrip()) && e.getButton() == 1)
 
 			createNewGrip(e.getPoint());
+		
+		if (e.getButton() == MouseEvent.BUTTON1)
+		{
+			bb[0] = new BufferBounds(points.get(saveGrip));
+			bb[1] = new BufferBounds(points.get(saveGrip+1));
+		}
 
 		maybeShowPopup(e, popupMenu);
 	}
@@ -500,6 +508,17 @@ public abstract class LineView extends GraphicComponent
 		super.gMouseReleased(e);
 
 		smoothLines();
+		
+		if (e.getButton() == MouseEvent.BUTTON1)
+		{
+			Change.record();
+			Change.push(bb[0]);
+			Change.push(new BufferBounds(points.get(saveGrip)));
+			
+			Change.push(bb[1]);
+			Change.push(new BufferBounds(points.get(saveGrip+1)));
+			Change.stopRecord();
+		}
 
 		maybeShowPopup(e, popupMenu);
 	}

@@ -16,8 +16,6 @@ import graphic.relations.LineView;
 import graphic.relations.MultiView;
 import graphic.textbox.TextBoxCommentary;
 
-import java.awt.AWTException;
-import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -25,10 +23,7 @@ import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.ImageCapabilities;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -41,19 +36,13 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.awt.image.ColorModel;
-import java.awt.image.ImageObserver;
-import java.awt.image.VolatileImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
-import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
+
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
 import javax.swing.JMenuItem;
@@ -62,14 +51,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
-
-import sun.awt.RepaintArea;
 import swing.PanelClassDiagram;
 import swing.PropertyLoader;
 import swing.Slyum;
 import swing.SlyumColorChooser;
-import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.SSlider;
 import utility.SizedCursor;
@@ -139,7 +124,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	public static boolean getBackgroundGradient()
 	{
-		final String gradientBool = PropertyLoader.getInstance().getProperties().getProperty("backgroundGradient");
+		final String gradientBool = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.BACKGROUND_GRADIENT);
 		boolean gradient = BACKGROUND_GRADIENT;
 
 		if (gradientBool != null)
@@ -156,7 +141,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 */
 	public static Color getBasicColor()
 	{
-		final String basicColor = PropertyLoader.getInstance().getProperties().getProperty("colorGraphicView");
+		final String basicColor = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.COLOR_GRAPHIC_VIEW);
 		Color color;
 
 		if (basicColor == null)
@@ -169,7 +154,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	public static int getGridColor()
 	{
-		final String prop = PropertyLoader.getInstance().getProperties().getProperty("GridColor");
+		final String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.GRID_COLOR);
 		int color = GRID_COLOR;
 
 		if (prop != null)
@@ -180,7 +165,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	
 	public static int getGridSize()
 	{
-		final String prop = PropertyLoader.getInstance().getProperties().getProperty("gridSize");
+		final String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.GRID_SIZE);
 		int size = GRID_SIZE;
 
 		if (prop != null)
@@ -191,7 +176,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	public static boolean isGridVisible()
 	{
-		final String prop = PropertyLoader.getInstance().getProperties().getProperty("GridVisible");
+		final String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.GRID_VISIBLE);
 		boolean visible = GRID_VISIBLE;
 
 		if (prop != null)
@@ -205,7 +190,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		if (!isGridOpacityEnable())
 			return 255;
 			
-		final String prop = PropertyLoader.getInstance().getProperties().getProperty("GridPointOpacity");
+		final String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.GRID_POINT_OPACITY);
 		int opacity = GRID_POINT_OPACITY;
 
 		if (prop != null)
@@ -216,7 +201,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	public static boolean isAutomatiqueGridColor()
 	{
-		final String prop = PropertyLoader.getInstance().getProperties().getProperty("AutomaticGridColor");
+		final String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.AUTOMATIC_GRID_COLOR);
 		boolean enable = IS_AUTOMATIC_GRID_COLOR;
 
 		if (prop != null)
@@ -227,7 +212,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	public static boolean isCtrlForGrip()
 	{
-		final String ctrlForGrip = PropertyLoader.getInstance().getProperties().getProperty("ctrlForGrip");
+		final String ctrlForGrip = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.CTRL_FOR_GRIP);
 		boolean ctrlForGripBool = CTRL_FOR_GRIP;
 
 		if (ctrlForGrip != null)
@@ -238,7 +223,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	public static boolean isGridOpacityEnable()
 	{
-		final String prop = PropertyLoader.getInstance().getProperties().getProperty("gridOpacityEnable");
+		final String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.GRID_OPACITY_ENABLE);
 		boolean enable = IS_GRID_OPACITY_ENABLE;
 
 		if (prop != null)
@@ -249,7 +234,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	public static boolean isGridEnable()
 	{
-		final String prop = PropertyLoader.getInstance().getProperties().getProperty("GridEnable");
+		final String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.GRID_ENABLE);
 		boolean enable = IS_GRID_ENABLE;
 
 		if (prop != null)
@@ -282,29 +267,26 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	public static void setAutomaticGridColor(boolean enable)
 	{
-		PropertyLoader.getInstance().getProperties().put("AutomaticGridColor", String.valueOf(enable));
+		PropertyLoader.getInstance().getProperties().put(PropertyLoader.AUTOMATIC_GRID_COLOR, String.valueOf(enable));
 		PropertyLoader.getInstance().push();
 	}
 
 	public static void setBackgroundGradient(boolean isGradient)
 	{
-		PropertyLoader.getInstance().getProperties().put("backgroundGradient", String.valueOf(isGradient));
+		PropertyLoader.getInstance().getProperties().put(PropertyLoader.BACKGROUND_GRADIENT, String.valueOf(isGradient));
 		PropertyLoader.getInstance().push();
 	}
 
 	public static void setGridSize(int size)
 	{
-		PropertyLoader.getInstance().getProperties().put("gridSize", String.valueOf(size));
+		PropertyLoader.getInstance().getProperties().put(PropertyLoader.GRID_SIZE, String.valueOf(size));
 		PropertyLoader.getInstance().push();
 		
 		// Update the components bounds for adapting with new grid.
 		for (GraphicView gv : PanelClassDiagram.getInstance().getAllGraphicView())
 			
 			for (final GraphicComponent c : gv.getAllComponents())
-			{
-				System.out.println("test");
 				c.setBounds(c.getBounds());
-			}
 	}
 
 	/**
@@ -315,43 +297,43 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 */
 	public static void setBasicColor(Color color)
 	{
-		PropertyLoader.getInstance().getProperties().put("colorGraphicView", String.valueOf(color.getRGB()));
+		PropertyLoader.getInstance().getProperties().put(PropertyLoader.COLOR_GRAPHIC_VIEW, String.valueOf(color.getRGB()));
 		PropertyLoader.getInstance().push();
 	}
 
 	public static void setCtrlForClick(boolean active)
 	{
-		PropertyLoader.getInstance().getProperties().put("ctrlForGrip", String.valueOf(active));
+		PropertyLoader.getInstance().getProperties().put(PropertyLoader.CTRL_FOR_GRIP, String.valueOf(active));
 		PropertyLoader.getInstance().push();
 	}
 
 	public static void setGridColor(int color)
 	{
-		PropertyLoader.getInstance().getProperties().put("GridColor", String.valueOf(color));
+		PropertyLoader.getInstance().getProperties().put(PropertyLoader.GRID_COLOR, String.valueOf(color));
 		PropertyLoader.getInstance().push();
 	}
 
 	public static void setGridOpacityEnable(boolean enable)
 	{
-		PropertyLoader.getInstance().getProperties().put("gridOpacityEnable", String.valueOf(enable));
+		PropertyLoader.getInstance().getProperties().put(PropertyLoader.GRID_OPACITY_ENABLE, String.valueOf(enable));
 		PropertyLoader.getInstance().push();
 	}
 	
 	public static void setGridEnable(boolean enable)
 	{
-		PropertyLoader.getInstance().getProperties().put("GridEnable", String.valueOf(enable));
+		PropertyLoader.getInstance().getProperties().put(PropertyLoader.GRID_ENABLE, String.valueOf(enable));
 		PropertyLoader.getInstance().push();
 	}
 
 	public static void setGridPointOpacity(int opacity)
 	{
-		PropertyLoader.getInstance().getProperties().put("GridPointOpacity", String.valueOf(opacity));
+		PropertyLoader.getInstance().getProperties().put(PropertyLoader.GRID_POINT_OPACITY, String.valueOf(opacity));
 		PropertyLoader.getInstance().push();
 	}
 	
 	public static void setGridVisibley(boolean visible)
 	{
-		PropertyLoader.getInstance().getProperties().put("GridVisible", String.valueOf(visible));
+		PropertyLoader.getInstance().getProperties().put(PropertyLoader.GRID_VISIBLE, String.valueOf(visible));
 		PropertyLoader.getInstance().push();
 	}
 
@@ -483,55 +465,55 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		popupMenu.addSeparator();
 
 		// Menu item add class
-		menuItem = makeMenuItem("Add Class", "newClass", "class16");
+		menuItem = makeMenuItem("Add Class", Slyum.ACTION_NEW_CLASS, "class16");
 		popupMenu.add(menuItem);
 
 		// Menu item add interface
-		menuItem = makeMenuItem("Add Interface", "newInterface", "interface16");
+		menuItem = makeMenuItem("Add Interface", Slyum.ACTION_NEW_INTERFACE, "interface16");
 		popupMenu.add(menuItem);
 
 		// Menu item add class association
-		menuItem = makeMenuItem("Add Association class", "newClassAssoc", "classAssoc16");
+		menuItem = makeMenuItem("Add Association class", Slyum.ACTION_NEW_CLASS_ASSOCIATION, "classAssoc16");
 		popupMenu.add(menuItem);
 
 		popupMenu.addSeparator();
 
 		// Menu item add generalize
-		menuItem = makeMenuItem("Add Inheritance", "newGeneralize", "generalize16");
+		menuItem = makeMenuItem("Add Inheritance", Slyum.ACTION_NEW_GENERALIZE, "generalize16");
 		popupMenu.add(menuItem);
 
 		// Menu item add inner class
-		menuItem = makeMenuItem("Add inner class", "newInnerClass", "innerClass16");
+		menuItem = makeMenuItem("Add inner class", Slyum.ACTION_NEW_INNER_CLASS, "innerClass16");
 		popupMenu.add(menuItem);
 
 		// Menu item add dependency
-		menuItem = makeMenuItem("Add Dependency", "newDependency", "dependency16");
+		menuItem = makeMenuItem("Add Dependency", Slyum.ACTION_NEW_DEPENDENCY, "dependency16");
 		popupMenu.add(menuItem);
 
 		// Menu item add association
-		menuItem = makeMenuItem("Add Association", "newAssociation", "association16");
+		menuItem = makeMenuItem("Add Association", Slyum.ACTION_NEW_ASSOCIATION, "association16");
 		popupMenu.add(menuItem);
 
 		// Menu item add aggregation
-		menuItem = makeMenuItem("Add Aggregation", "newAggregation", "aggregation16");
+		menuItem = makeMenuItem("Add Aggregation", Slyum.ACTION_NEW_AGGREGATION, "aggregation16");
 		popupMenu.add(menuItem);
 
 		// Menu item add composition
-		menuItem = makeMenuItem("Add Composition", "newComposition", "composition16");
+		menuItem = makeMenuItem("Add Composition", Slyum.ACTION_NEW_COMPOSITION, "composition16");
 		popupMenu.add(menuItem);
 
 		// Menu item add composition
-		menuItem = makeMenuItem("Add Multi-association", "newMulti", "multi16");
+		menuItem = makeMenuItem("Add Multi-association", Slyum.ACTION_NEW_MULTI, "multi16");
 		popupMenu.add(menuItem);
 
 		popupMenu.addSeparator();
 
 		// Menu item add note
-		menuItem = makeMenuItem("Add Note", "newNote", "note16");
+		menuItem = makeMenuItem("Add Note", Slyum.ACTION_NEW_NOTE, "note16");
 		popupMenu.add(menuItem);
 
 		// Menu item link note
-		menuItem = makeMenuItem("Link Note", "linkNote", "linkNote16");
+		menuItem = makeMenuItem("Link Note", Slyum.ACTION_NEW_LINK_NOTE, "linkNote16");
 		popupMenu.add(menuItem);
 	}
 
@@ -1703,26 +1685,20 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 */
 	protected void paintBackground(int gridSize, Color color, Graphics2D g2)
 	{
-		final Rectangle visibleRect = getScene().getVisibleRect();
-		
-		final int w = scene.getWidth();
-		final int h = scene.getHeight();
+		final Rectangle vr = getScene().getVisibleRect();
 		final boolean gradient = getBackgroundGradient();
 
 		// Paint a gradient from top to bottom.
-		g2.setColor(color);
-		g2.fillRect(0, 0, w, h / (gradient ? 2 : 1));
-
 		if (gradient)
-		{
-			final GradientPaint gp = new GradientPaint(0, h / 2, color, 0, h, color.brighter());
-			g2.setPaint(gp);
-			g2.fillRect(0, h / 2, w, h / 2);
-		}
-
+			g2.setPaint(new GradientPaint(0, 0, color, 0, scene.getHeight(), color.brighter()));
+		else
+			g2.setColor(color);
+		
+		g2.fillRect(vr.x, vr.y, vr.width, vr.height);
+		
+		// Draw grid
 		if (isGridEnable() && isGridVisible() && getGridSize() >= 10) // Don't draw a grid lesser than 10 (too slow).
 		{
-			
 			final int grayLevel = Utility.getColorGrayLevel(getColor());
 			Color gridColor = new Color(getGridColor());
 
@@ -1736,8 +1712,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 						
 			g2.setColor(gridColor);
 			
-			for (int x = (visibleRect.x/gridSize)*gridSize; x < visibleRect.x + visibleRect.width + gridSize; x += gridSize)
-				for (int y = (visibleRect.y/gridSize)*gridSize; y < visibleRect.y + visibleRect.height + gridSize; y += gridSize)
+			for (int x = (vr.x/gridSize)*gridSize; x < vr.x + vr.width + gridSize; x += gridSize)
+				for (int y = (vr.y/gridSize)*gridSize; y < vr.y + vr.height + gridSize; y += gridSize)
 						g2.drawOval(x, y, 1, 1);
 		}
 	}

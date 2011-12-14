@@ -10,7 +10,6 @@ import java.awt.Rectangle;
 import change.BufferCreation;
 import change.Change;
 import classDiagram.components.AssociationClass;
-import classDiagram.components.InterfaceEntity;
 
 /**
  * Represent the view of an association class in UML structure.

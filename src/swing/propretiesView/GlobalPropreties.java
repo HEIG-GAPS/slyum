@@ -7,6 +7,8 @@ import java.util.Observer;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
+import swing.propretiesView.PropretiesChanger;
+
 import classDiagram.IDiagramComponent.UpdateMessage;
 
 /**

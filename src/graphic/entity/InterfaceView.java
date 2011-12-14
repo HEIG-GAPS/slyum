@@ -1,10 +1,7 @@
 package graphic.entity;
 
 import graphic.GraphicView;
-import change.BufferCreation;
-import change.Change;
 import classDiagram.components.Attribute;
-import classDiagram.components.ClassEntity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Method;
 
@@ -48,8 +45,13 @@ public class InterfaceView extends EntityView
 	@Override
 	public void restore()
 	{
+		super.restore();
+		
 		parent.addEntity(this);
 		parent.getClassDiagram().addInterface((InterfaceEntity)getAssociedComponent());
+		
+		parent.addOthersComponents(leftMovableSquare);
+		parent.addOthersComponents(rightMovableSquare);
 		
 		repaint();
 	}

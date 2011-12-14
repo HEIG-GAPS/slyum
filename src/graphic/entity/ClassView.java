@@ -1,8 +1,6 @@
 package graphic.entity;
 
 import graphic.GraphicView;
-import change.BufferCreation;
-import change.Change;
 import classDiagram.components.Attribute;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Method;
@@ -45,6 +43,8 @@ public class ClassView extends EntityView
 	@Override
 	public void restore()
 	{
+		super.restore();
+		
 		parent.addEntity(this);
 		parent.getClassDiagram().addClass((ClassEntity)getAssociedComponent());
 		

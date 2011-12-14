@@ -7,7 +7,6 @@ import graphic.textbox.TextBoxRole;
 import java.awt.Point;
 import java.util.LinkedList;
 
-import classDiagram.relationships.Aggregation;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Role;
 

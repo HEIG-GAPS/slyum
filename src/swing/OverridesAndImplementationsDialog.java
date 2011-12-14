@@ -77,12 +77,8 @@ public class OverridesAndImplementationsDialog extends JDialog
 		}
 	}
 
-	class CheckListRenderer extends JCheckBox implements ListCellRenderer
+	class CheckListRenderer extends JCheckBox implements ListCellRenderer<Object>
 	{
-
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1514851566910580095L;
 
 		public CheckListRenderer()
@@ -91,7 +87,7 @@ public class OverridesAndImplementationsDialog extends JDialog
 			setForeground(UIManager.getColor("List.textForeground"));
 		}
 
-		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean hasFocus)
+		public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean hasFocus)
 		{
 			setEnabled(list.isEnabled());
 			setSelected(((CheckableItem) value).isSelected());
@@ -101,9 +97,6 @@ public class OverridesAndImplementationsDialog extends JDialog
 		}
 	}
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2174601193484988913L;
 	private boolean accepted = false;
 	private final JPanel contentPanel = new JPanel();
@@ -139,7 +132,7 @@ public class OverridesAndImplementationsDialog extends JDialog
 			gbc_scrollPane.gridy = 0;
 			contentPanel.add(scrollPane, gbc_scrollPane);
 			{
-				final JList list = new JList(createData());
+				final JList<?> list = new JList<Object>(createData());
 				scrollPane.setViewportView(list);
 				list.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 				list.setCellRenderer(new CheckListRenderer());

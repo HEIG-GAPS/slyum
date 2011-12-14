@@ -2,7 +2,6 @@ package graphic;
 
 import graphic.entity.EntityView;
 import graphic.relations.LineView;
-import graphic.textbox.TextBoxCommentary;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -20,6 +19,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
 import swing.PanelClassDiagram;
+import swing.Slyum;
 import swing.SlyumColorChooser;
 import utility.PersonalizedIcon;
 import change.BufferCreation;
@@ -76,7 +76,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		if ("NewNote".equals(e.getActionCommand()))
+		if (Slyum.ACTION_NEW_NOTE_ASSOCIED.equals(e.getActionCommand()))
 
 			parent.linkNewNoteWithSelectedEntities();
 
@@ -329,7 +329,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
 		JMenuItem menuItem;
 
-		menuItem = makeMenuItem("New note", "NewNote", "note16");
+		menuItem = makeMenuItem("New note", Slyum.ACTION_NEW_NOTE_ASSOCIED, "note16");
 		popupMenu.add(menuItem);
 
 		menuItem = makeMenuItem("Change color...", "Color", "color16");

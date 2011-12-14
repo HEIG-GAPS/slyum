@@ -9,6 +9,7 @@ import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 public class SSplitPane extends JSplitPane
 {
+	private static final long serialVersionUID = 2580252563592936191L;
 
 	public SSplitPane(int newOrientation, Component newLeftComponent, Component newRightComponent)
 	{
@@ -25,6 +26,9 @@ public class SSplitPane extends JSplitPane
 			public BasicSplitPaneDivider createDefaultDivider()
 			{
 				return new BasicSplitPaneDivider(this){
+					
+					private static final long serialVersionUID = -2421344291547432263L;
+
 					@Override
 					public void setBorder(Border border)
 					{

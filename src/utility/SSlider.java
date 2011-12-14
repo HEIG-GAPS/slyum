@@ -13,9 +13,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Point;
-import java.awt.Polygon;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -27,8 +25,6 @@ import javax.swing.JPanel;
 
 import swing.JPanelRounded;
 import swing.PanelClassDiagram;
-import swing.PropertyLoader;
-import swing.Slyum;
 
 public class SSlider extends JPanelRounded implements MouseListener
 {

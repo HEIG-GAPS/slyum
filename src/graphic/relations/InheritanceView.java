@@ -14,7 +14,6 @@ import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
-import classDiagram.relationships.Aggregation;
 import classDiagram.relationships.Inheritance;
 
 /**

@@ -7,9 +7,6 @@ import graphic.entity.EntityView;
 
 import java.awt.Rectangle;
 
-import change.BufferBounds;
-import change.BufferCreation;
-import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Visibility;

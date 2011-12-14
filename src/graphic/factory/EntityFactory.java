@@ -61,7 +61,11 @@ public abstract class EntityFactory extends ComponentFactory
 
 		final Point middle = new Point(e.getX() - DEFAULT_SIZE.width / 2, e.getY() - DEFAULT_SIZE.height / 2);
 
-		bounds.setLocation(middle.x / parent.getGridSize() * parent.getGridSize(), middle.y / parent.getGridSize() * parent.getGridSize());
+		int gs = GraphicView.getGridSize();
+		int x = (middle.x / gs) * gs;
+		int y = (middle.y / gs) * gs;
+		
+		bounds.setLocation(x, y);
 
 		parent.getScene().repaint(repaintBounds);
 		repaintBounds = new Rectangle(bounds);

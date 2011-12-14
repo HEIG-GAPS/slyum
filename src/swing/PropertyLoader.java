@@ -12,6 +12,24 @@ import utility.SMessageDialog;
 
 public class PropertyLoader
 {
+	public static final String COLOR_ENTITIES = "colorEntities";
+	public static final String COLOR_GRAPHIC_VIEW = "colorGraphicView";
+	public static final String BACKGROUND_GRADIENT = "backgroundGradient";
+	public static final String CTRL_FOR_GRIP = "ctrlForGrip";
+	public static final String GRID_POINT_OPACITY = "GridPointOpacity";
+	public static final String GRID_OPACITY_ENABLE = "gridOpacityEnable";
+	public static final String SMALL_ICON = "SmallIcon";
+	public static final String SHOW_ERROR_MESSAGES = "ShowErrorMessages";
+	public static final String SHOW_CROSS_MENU = "ShowCrossMenu";
+	public static final String GRID_VISIBLE = "GridVisible";
+	public static final String GRID_ENABLE = "GridEnable";
+	public static final String GRAPHIC_QUALITY = "GraphicQuality";
+	public static final String FONT_POLICE = "FontPolice";
+	public static final String FONT_SIZE = "FontSize";
+	public static final String AUTOMATIC_GRID_COLOR = "AutomaticGridColor";
+	public static final String GRID_COLOR = "GridColor";
+	public static final String GRID_SIZE = "gridSize";
+	
 	public static final String filename = Slyum.getPathAppDir() + Slyum.FILE_SEPARATOR + "config.properties";
 
 	private static PropertyLoader instance;

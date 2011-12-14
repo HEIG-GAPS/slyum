@@ -96,7 +96,6 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		panelToolBar.add(new SPanelStyleComponent());
 		panelToolBar.add(new SPanelZOrder());
 		panelToolBar.add(sSlider = new SSlider(Color.YELLOW, 200));
-		
 		add(panelToolBar, BorderLayout.PAGE_START);
 
 		final SSplitPane mainSplitPane = new SSplitPane(JSplitPane.VERTICAL_SPLIT, graphicView.getScrollPane(), PropretiesChanger.getInstance());
