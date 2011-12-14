@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import javax.swing.JButton;
 
 import utility.PersonalizedIcon;
-import utility.Utility;
 import classDiagram.ClassDiagram;
 import classDiagram.components.ClassEntity;
 import classDiagram.relationships.Multi;

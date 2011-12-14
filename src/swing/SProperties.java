@@ -57,8 +57,8 @@ public class SProperties extends JDialog
 	private JButton btnDefaultClassColor;
 	private final JPanel contentPanel = new JPanel();
 	private JLabel lblPreviewFont = new JLabel();
-	private JList listName;
-	private JList listSize;
+	private JList<String> listName;
+	private JList<Integer> listSize;
 	private JRadioButton rdbtnAutomaticcolor;
 	private JRadioButton rdbtnLow;
 	private JRadioButton rdbtnMax;
@@ -83,7 +83,9 @@ public class SProperties extends JDialog
 	{
         Utility.setRootPaneActionOnEsc(getRootPane(), new AbstractAction() {
 		
-            public void actionPerformed(ActionEvent e)
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e)
             {
             	setVisible(false);
             }
@@ -183,6 +185,8 @@ public class SProperties extends JDialog
 					{
 						panel_Grid = new JPanel()
 						{
+							private static final long serialVersionUID = 1L;
+
 							@Override
 							public void setEnabled(boolean enabled)
 							{
@@ -275,6 +279,8 @@ public class SProperties extends JDialog
 								{
 									sliderGridPoint = new JSlider()
 									{
+										private static final long serialVersionUID = 1L;
+
 										@Override
 										public void setEnabled(boolean enabled)
 										{
@@ -363,6 +369,8 @@ public class SProperties extends JDialog
 									{
 										btnColor = new JButton("Color")
 										{
+											private static final long serialVersionUID = 1L;
+
 											@Override
 											public void setEnabled(boolean b) {
 												super.setEnabled(b && rdbtnSelectedColor.isSelected());
@@ -421,7 +429,7 @@ public class SProperties extends JDialog
 						gbc_scrollPane.gridy = 0;
 						panel.add(scrollPane, gbc_scrollPane);
 						{
-							listName = new JList();
+							listName = new JList<String>();
 							listName.addListSelectionListener(new ListSelectionListener() {
 								public void valueChanged(ListSelectionEvent arg0)
 								{
@@ -432,12 +440,10 @@ public class SProperties extends JDialog
 							scrollPane.setViewportView(listName);
 							listName.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 							listName.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-							listName.setModel(new AbstractListModel() {
+							listName.setModel(new AbstractListModel<String>() {
 
-								/**
-								 * 
-								 */
 								private static final long serialVersionUID = -8806070481194611567L;
+								
 								GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 								String[] values = ge.getAvailableFontFamilyNames();
 
@@ -464,12 +470,11 @@ public class SProperties extends JDialog
 						gbc_scrollPane.gridy = 0;
 						panel.add(scrollPane, gbc_scrollPane);
 						{
-							listSize = new JList();
-							listSize.setModel(new AbstractListModel() {
-								/**
-								 * 
-								 */
+							listSize = new JList<Integer>();
+							listSize.setModel(new AbstractListModel<Integer>() {
+								
 								private static final long serialVersionUID = -2073589127443911972L;
+								
 								int[] values = new int[] { 8, 9, 10, 12, 14, 16, 18, 20, 24, 28, 32, 48, 72 };
 
 								public Integer getElementAt(int index)
@@ -663,18 +668,18 @@ public class SProperties extends JDialog
 						{
 							Properties properties = PropertyLoader.getInstance().getProperties();
 							
-							properties.put("colorEntities", String.valueOf(btnDefaultClassColor.getBackground().getRGB()));
-							properties.put("colorGraphicView", String.valueOf(btnBackgroundColor.getBackground().getRGB()));
-							properties.put("backgroundGradient", String.valueOf(ckbBackgroundGradient.isSelected()));
-							properties.put("ctrlForGrip", String.valueOf(chckbxUseCtrlFor.isSelected()));
-							properties.put("GridPointOpacity", String.valueOf(sliderGridPoint.getValue()));
-							properties.put("gridOpacityEnable", String.valueOf(chckbxOpacityGrid.isSelected()));
-							properties.put("SmallIcon", String.valueOf(chckbxUseSmallIcons.isSelected()));
-							properties.put("ShowErrorMessages", String.valueOf(chckbxDisableErrorMessage.isSelected()));
-							properties.put("ShowCrossMenu", String.valueOf(chckbxDisableCrossPopup.isSelected()));
-							properties.put("GridVisible", String.valueOf(chckbxShowGrid.isSelected()));
-							properties.put("GridEnable", String.valueOf(chckbxEnableGrid.isSelected()));
-
+							properties.put(PropertyLoader.COLOR_ENTITIES, String.valueOf(btnDefaultClassColor.getBackground().getRGB()));
+							properties.put(PropertyLoader.COLOR_GRAPHIC_VIEW, String.valueOf(btnBackgroundColor.getBackground().getRGB()));
+							properties.put(PropertyLoader.BACKGROUND_GRADIENT, String.valueOf(ckbBackgroundGradient.isSelected()));
+							properties.put(PropertyLoader.CTRL_FOR_GRIP, String.valueOf(chckbxUseCtrlFor.isSelected()));
+							properties.put(PropertyLoader.GRID_POINT_OPACITY, String.valueOf(sliderGridPoint.getValue()));
+							properties.put(PropertyLoader.GRID_OPACITY_ENABLE, String.valueOf(chckbxOpacityGrid.isSelected()));
+							properties.put(PropertyLoader.SMALL_ICON, String.valueOf(chckbxUseSmallIcons.isSelected()));
+							properties.put(PropertyLoader.SHOW_ERROR_MESSAGES, String.valueOf(chckbxDisableErrorMessage.isSelected()));
+							properties.put(PropertyLoader.SHOW_CROSS_MENU, String.valueOf(chckbxDisableCrossPopup.isSelected()));
+							properties.put(PropertyLoader.GRID_VISIBLE, String.valueOf(chckbxShowGrid.isSelected()));
+							properties.put(PropertyLoader.GRID_ENABLE, String.valueOf(chckbxEnableGrid.isSelected()));
+									
 							String quality = "MAX";
 
 							if (rdbtnLow.isSelected())
@@ -682,13 +687,13 @@ public class SProperties extends JDialog
 							else if (rdbtnMedium.isSelected())
 								quality = "MEDIUM";
 
-							properties.put("GraphicQuality", quality);
+							properties.put(PropertyLoader.GRAPHIC_QUALITY, quality);
 
-							properties.put("FontPolice", String.valueOf(listName.getSelectedValue()));
-							properties.put("FontSize", String.valueOf(listSize.getSelectedValue()));
+							properties.put(PropertyLoader.FONT_POLICE, String.valueOf(listName.getSelectedValue()));
+							properties.put(PropertyLoader.FONT_SIZE, String.valueOf(listSize.getSelectedValue()));
 
-							properties.put("AutomaticGridColor", String.valueOf(rdbtnAutomaticcolor.isSelected()));
-							properties.put("GridColor", String.valueOf(btnColor.getBackground().getRGB()));
+							properties.put(PropertyLoader.AUTOMATIC_GRID_COLOR, String.valueOf(rdbtnAutomaticcolor.isSelected()));
+							properties.put(PropertyLoader.GRID_COLOR, String.valueOf(btnColor.getBackground().getRGB()));
 
 							PropertyLoader.getInstance().push();
 							

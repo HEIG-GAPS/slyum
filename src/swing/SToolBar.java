@@ -1,11 +1,12 @@
 package swing;
 
 import javax.swing.JPanel;
-import utility.SSlider;
-import java.awt.Color;
+import javax.swing.JToolBar;
 
 public class SToolBar extends JPanel
 {
+	private static final long serialVersionUID = 3947955937687151315L;
+
 	public SToolBar() {
 		
 		SPanelFileComponent panel = new SPanelFileComponent();
@@ -17,8 +18,11 @@ public class SToolBar extends JPanel
 		SPanelZOrder panel_3 = new SPanelZOrder();
 		add(panel_3);
 		
+		JToolBar toolBar = new JToolBar();
+		add(toolBar);
+		
 		SPanelStyleComponent panel_1 = new SPanelStyleComponent();
-		add(panel_1);
+		toolBar.add(panel_1);
 	}
 
 }

@@ -2,7 +2,6 @@ package swing;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
-import graphic.entity.EntityView;
 
 import java.awt.Color;
 import java.awt.Dimension;

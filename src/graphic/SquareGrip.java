@@ -8,8 +8,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
-import utility.Utility;
-
 /**
  * The SquareGrip class represent a (little) gray square. By default, he does
  * nothing but show or hide itself then user entered or exited it.

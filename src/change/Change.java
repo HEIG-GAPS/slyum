@@ -2,7 +2,6 @@ package change;
 
 import java.util.LinkedList;
 
-import swing.PanelClassDiagram;
 import swing.Slyum;
 
 public class Change
@@ -14,13 +13,17 @@ public class Change
 
 	private static LinkedList<Changeable> stack = new LinkedList<Changeable>();
 
+	private static LinkedList<Boolean> record = new LinkedList<Boolean>();
+	
+	private static boolean isRecord = false;
+
 	private static void printStackState()
 	{
 		System.out.println("Etat de la pile");
 
 		for (int i = 0; i < stack.size(); i++)
 		
-			System.out.println(i + (pointer == i ? "<--" : ""));
+			System.out.println(i + " - " + record.get(i) + (pointer == i ? " <--" : ""));
 		
 
 		System.out.println("--------------");
@@ -36,9 +39,14 @@ public class Change
 		{
 			stack.removeLast();
 			stack.removeLast();
+			
+			record.removeLast();
+			record.removeLast();
 		}
 
 		stack.add(ch);
+		record.add(isRecord);
+		
 		pointer = stack.size() - 1;
 
 		printStackState();
@@ -64,6 +72,9 @@ public class Change
 		checkToolbarButtonState();
 		
 		setHasChange(true);
+		
+		if (record.size() <= pointer+1 || record.get(pointer+1))
+			redo();
 	}
 
 	public static void undo()
@@ -82,6 +93,22 @@ public class Change
 		checkToolbarButtonState();
 		
 		setHasChange(true);
+		
+		if (0 > pointer-1 || record.get(pointer-1))
+			undo();
+	}
+	
+	public static void record()
+	{
+		isRecord = true;
+	}
+	
+	public static void stopRecord()
+	{
+		isRecord = false;
+		
+		record.set(pointer, false);
+		record.set(pointer+1, false);
 	}
 	
 	protected static void checkToolbarButtonState()

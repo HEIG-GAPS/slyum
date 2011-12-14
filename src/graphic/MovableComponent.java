@@ -91,7 +91,7 @@ public abstract class MovableComponent extends GraphicComponent
 	public int ajustOnGrid(int value)
 	{
 		// Use the integer cast for adjusting value.
-		return value / parent.getGridSize() * parent.getGridSize();
+		return value / GraphicView.getGridSize() * GraphicView.getGridSize();
 	}
 
 	@Override
@@ -268,7 +268,7 @@ public abstract class MovableComponent extends GraphicComponent
 		leftMovableSquare.saveMouseLocation(e);
 		leftMovableSquare.setBounds(boundsResizer);
 
-		final int anchor = (ghost.x + ghost.width) / parent.getGridSize();
+		final int anchor = (ghost.x + ghost.width) / GraphicView.getGridSize();
 		ghost.x = boundsResizer.x;
 		ghost.x = ajustOnGrid(ghost.x);
 
@@ -277,7 +277,7 @@ public abstract class MovableComponent extends GraphicComponent
 		if (ghost.y < 0)
 			ghost.y = 0;
 
-		ghost.width = anchor * parent.getGridSize() - ghost.x;
+		ghost.width = anchor * GraphicView.getGridSize() - ghost.x;
 
 		if (ghost.width < MINIMUM_SIZE.x)
 		{
@@ -305,7 +305,7 @@ public abstract class MovableComponent extends GraphicComponent
 		rightMovableSquare.saveMouseLocation(e);
 		rightMovableSquare.setBounds(boundsResizer);
 
-		ghost.width = ajustOnGrid(boundsResizer.x - ghost.x) + parent.getGridSize();
+		ghost.width = ajustOnGrid(boundsResizer.x - ghost.x) + GraphicView.getGridSize();
 
 		if (ghost.width < MINIMUM_SIZE.x)
 			ghost.width = saveGhost.width;

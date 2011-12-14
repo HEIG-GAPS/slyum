@@ -15,12 +15,12 @@ import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import swing.JPanelRounded;
 import utility.Utility;
 import classDiagram.components.Visibility;
+import classDiagram.relationships.Multiplicity;
 import classDiagram.relationships.Role;
 
 /**
@@ -32,8 +32,8 @@ import classDiagram.relationships.Role;
 public class SlyumRolePanel extends JPanelRounded implements Observer
 {
 	private static final long serialVersionUID = -8176389461299256256L;
-	private JComboBox comboBoxMultiplicity = Utility.getMultiplicityComboBox();
-	private final JComboBox comboBoxVisibility = Utility.getVisibilityComboBox();
+	private JComboBox<Multiplicity> comboBoxMultiplicity = Utility.getMultiplicityComboBox();
+	private final JComboBox<String> comboBoxVisibility = Utility.getVisibilityComboBox();
 	private final JLabel lblRolename;
 	private final Role role;
 	private final JTextField txtRolename;

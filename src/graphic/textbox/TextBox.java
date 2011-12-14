@@ -49,7 +49,7 @@ public abstract class TextBox extends GraphicComponent
 
 	public static String getFontName()
 	{
-		final String prop = PropertyLoader.getInstance().getProperties().getProperty("FontPolice");
+		final String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.FONT_POLICE);
 		String name = FONT_NAME;
 
 		if (prop != null)
@@ -60,7 +60,7 @@ public abstract class TextBox extends GraphicComponent
 
 	public static int getFontSize()
 	{
-		final String prop = PropertyLoader.getInstance().getProperties().getProperty("FontSize");
+		final String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.FONT_SIZE);
 		int size = FONT_SIZE;
 
 		if (prop != null)
@@ -77,13 +77,13 @@ public abstract class TextBox extends GraphicComponent
 
 	public static void setFontName(String name)
 	{
-		PropertyLoader.getInstance().getProperties().put("FontPolice", name);
+		PropertyLoader.getInstance().getProperties().put(PropertyLoader.FONT_POLICE, name);
 		PropertyLoader.getInstance().push();
 	}
 
 	public static void setFontSize(int size)
 	{
-		PropertyLoader.getInstance().getProperties().put("FontSize", size);
+		PropertyLoader.getInstance().getProperties().put(PropertyLoader.FONT_SIZE, size);
 		PropertyLoader.getInstance().push();
 	}
 

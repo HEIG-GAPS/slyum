@@ -4,6 +4,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 
+import swing.hierarchicalView.NodeInheritance;
 import utility.PersonalizedIcon;
 import classDiagram.relationships.Inheritance;
 

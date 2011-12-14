@@ -11,11 +11,9 @@ import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
 
-import change.BufferBounds;
 import change.BufferDeplacement;
 import change.Change;
 
-import utility.Utility;
 
 /**
  * A TextBox is a graphic component from Slyum containing a String. The

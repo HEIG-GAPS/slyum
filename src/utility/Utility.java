@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComboBox;
@@ -30,12 +30,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
-import javax.swing.plaf.RootPaneUI;
 
-import sun.swing.SwingUtilities2;
 import swing.PropertyLoader;
-
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Multiplicity;
 
@@ -370,9 +366,9 @@ public class Utility
 	 * 
 	 * @return a JComboBox containing all default multiplicities
 	 */
-	public static JComboBox getMultiplicityComboBox()
+	public static JComboBox<Multiplicity> getMultiplicityComboBox()
 	{
-		final JComboBox cmb = new JComboBox();
+		final JComboBox<Multiplicity> cmb = new JComboBox<Multiplicity>();
 		cmb.setEditable(true);
 
 		cmb.addItem(Multiplicity.ONE_ONLY);
@@ -391,14 +387,14 @@ public class Utility
 	 * 
 	 * @return a JComboBox containing all default visibilities
 	 */
-	public static JComboBox getVisibilityComboBox()
+	public static JComboBox<String> getVisibilityComboBox()
 	{
-		final Object[] list = new Object[Visibility.values().length];
+		final String[] list = new String[Visibility.values().length];
 
 		for (int i = 0; i < list.length; i++)
 			list[i] = Visibility.values()[i].getName();
 
-		return new JComboBox(list);
+		return new JComboBox<String>(list);
 	}
 
 	/**

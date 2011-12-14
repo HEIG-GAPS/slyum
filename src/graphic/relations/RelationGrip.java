@@ -148,7 +148,7 @@ public class RelationGrip extends SquareGrip implements ActionListener
 		if (anchor == null)
 			return;
 
-		final Rectangle repaintBounds = Utility.growRectangle(relation.getBounds(), parent.getGridSize() + 20);
+		final Rectangle repaintBounds = Utility.growRectangle(relation.getBounds(), GraphicView.getGridSize() + 20);
 
 		this.anchor = new Point(anchor);
 		relation.gripMoved(repaintBounds);
@@ -159,6 +159,8 @@ public class RelationGrip extends SquareGrip implements ActionListener
 	@Override
 	public void setBounds(Rectangle bounds)
 	{
-		// use setAnchor to move the grip.
+		setAnchor(new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2));
+		
+		notifyObservers();
 	}
 }

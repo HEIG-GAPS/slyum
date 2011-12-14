@@ -87,8 +87,6 @@ public class XMLParser extends DefaultHandler
 		LinkedList<Dependency> dependency = new LinkedList<XMLParser.Dependency>();
 		LinkedList<Entity> entity = new LinkedList<XMLParser.Entity>();
 		LinkedList<Inheritance> inheritance = new LinkedList<XMLParser.Inheritance>();
-
-		@SuppressWarnings("unused")
 		LinkedList<InnerClass> innerClass = new LinkedList<XMLParser.InnerClass>();
 	}
 
@@ -350,7 +348,7 @@ public class XMLParser extends DefaultHandler
 		classDiagram.removeAll();
 		graphicView.removeAll();
 
-		graphicView.setGridSize(uMLClassDiagram.uMLView.getFirst().grid);
+		GraphicView.setGridSize(uMLClassDiagram.uMLView.getFirst().grid);
 		
 		int count = uMLClassDiagram.diagrameElement.association.size();
 		count += uMLClassDiagram.diagrameElement.dependency.size();

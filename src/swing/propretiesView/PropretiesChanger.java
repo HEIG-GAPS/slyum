@@ -8,7 +8,8 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
-import swing.Slyum;
+import swing.propretiesView.EntityPropreties;
+import swing.propretiesView.RelationPropreties;
 import utility.PersonalizedIcon;
 import classDiagram.IComponentsObserver;
 import classDiagram.IDiagramComponent;
@@ -40,9 +41,9 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 	private static PropretiesChanger instance = new PropretiesChanger();
 
 	/**
-	 * Get the unique isntance of the PropretiesChanger class.
+	 * Get the unique instance of the PropretiesChanger class.
 	 * 
-	 * @return
+	 * @return instance
 	 */
 	public static PropretiesChanger getInstance()
 	{

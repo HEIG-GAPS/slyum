@@ -14,9 +14,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -30,7 +28,6 @@ import javax.swing.UIManager;
 import utility.OSValidator;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
-import utility.Utility;
 
 /**
  * Main class! Create a new Instance of Slyum and display it. Create menu.
@@ -113,7 +110,7 @@ public class Slyum extends JFrame implements ActionListener
 	public final static String KEY_EXIT = "alt F4";
 
 	public final static String KEY_UNDO = "ctrl Z";
-	public final static String KEY_REDO = "ctrl X";
+	public final static String KEY_REDO = "ctrl Y";
 	public static final String KEY_SELECT_ALL = "ctrl A";
 	public static final String KEY_UNSELECT_ALL = "ctrl U";
 	

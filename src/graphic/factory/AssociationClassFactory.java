@@ -10,9 +10,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import utility.SMessageDialog;
-
-import change.BufferCreation;
-import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.Entity;
