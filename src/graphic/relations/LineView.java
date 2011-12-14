@@ -573,8 +573,14 @@ public abstract class LineView extends GraphicComponent
 		{
 			final Point anchor = points.get(i).getAnchor();
 			final Point newAnchor = new Point(anchor.x + movement.x, anchor.y + movement.y);
+			final RelationGrip rg = points.get(i);
+			
+			BufferBounds bb = new BufferBounds(rg);
 
-			points.get(i).setAnchor(newAnchor);
+			rg.setAnchor(newAnchor);
+
+			Change.push(new BufferBounds(rg));
+			Change.push(bb);
 		}
 	}
 

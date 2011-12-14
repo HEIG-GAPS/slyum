@@ -115,7 +115,10 @@ public class RelationGrip extends SquareGrip implements ActionListener
 		isMouseDragged = false;
 		
 		if (e.getButton() == MouseEvent.BUTTON1)
+		{
+			Change.record();
 			Change.push(new BufferBounds(this));
+		}
 		
 		maybeShowPopup(e, popupMenu);
 	}
@@ -125,17 +128,18 @@ public class RelationGrip extends SquareGrip implements ActionListener
 	{
 		final GraphicComponent component = parent.getDiagramElementAtPosition(getAnchor(), null), source = relation.getFirstPoint().getAssociedComponentView(), target = relation.getLastPoint().getAssociedComponentView();
 
-		if (component != null && (component.equals(source) || component.equals(target)))
-		{
-			relation.removeGrip(this);
-			return;
-		}
+		pushBufferChangeMouseReleased(e);
 
 		relation.smoothLines();
 		relation.searchUselessAnchor(this);
+		
+		if (component != null && (component.equals(source) || component.equals(target)))
+		
+			delete();
 
-		pushBufferChangeMouseReleased(e);
-
+		
+		Change.stopRecord();
+		
 		maybeShowPopup(e, popupMenu);
 		
 		isMouseDragged = false;
