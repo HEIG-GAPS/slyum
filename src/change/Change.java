@@ -159,4 +159,15 @@ public class Change
 		return stack.size();
 	}
 	
+	public static Changeable getLast()
+	{
+		return stack.getLast();
+	}
+	
+	public static void pop()
+	{
+		stack.removeLast();
+		record.removeLast();
+	}
+	
 }

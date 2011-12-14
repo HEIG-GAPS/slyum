@@ -83,12 +83,14 @@ public abstract class LineView extends GraphicComponent
 
 	protected LinkedList<TextBox> tbRoles = new LinkedList<TextBox>();
 
-	public LineView(final GraphicView parent, GraphicComponent source, GraphicComponent target, Point posSource, // location
-																													// for
-																													// computing
-	// last grip
-	Point posTarget, boolean checkRecursivity) // location for computin
-	// first grip)
+	public LineView (
+				final GraphicView parent,
+				GraphicComponent source,
+				GraphicComponent target,
+				Point posSource,
+				Point posTarget,
+				boolean checkRecursivity
+			) 
 	{
 		super(parent);
 		if (source == null)
@@ -97,10 +99,12 @@ public abstract class LineView extends GraphicComponent
 		if (target == null)
 			throw new IllegalArgumentException("target is null");
 
-		final MagneticGrip first = new MagneticGrip(parent, this, source, posSource, posTarget); // first
-																									// grip
-		final MagneticGrip last = new MagneticGrip(parent, this, target, posTarget, posSource); // last
-																								// grip
+		Change.setBlocked(true);
+		
+		final MagneticGrip first = new MagneticGrip(parent, this, source, posSource, posTarget);
+		final MagneticGrip last = new MagneticGrip(parent, this, target, posTarget, posSource);
+		
+		Change.setBlocked(false);
 
 		// Initialize firsts grips (don't use addGrip method to do that, they
 		// are inter-dependent!)
@@ -484,7 +488,7 @@ public abstract class LineView extends GraphicComponent
 	public void gMousePressed(MouseEvent e)
 	{
 		super.gMousePressed(e);
-
+		
 		// remove all selected components
 		parent.clearAllSelectedComponents();
 		setSelected(true);
@@ -515,13 +519,19 @@ public abstract class LineView extends GraphicComponent
 		
 		if (e.getButton() == MouseEvent.BUTTON1)
 		{
-			Change.record();
-			Change.push(bb[0]);
-			Change.push(new BufferBounds(points.get(saveGrip)));
-			
-			Change.push(bb[1]);
-			Change.push(new BufferBounds(points.get(saveGrip+1)));
-			Change.stopRecord();
+			BufferBounds bb2 = new BufferBounds(points.get(saveGrip)),
+					     bb3 = new BufferBounds(points.get(saveGrip+1));
+
+			if (!(bb[0].getBounds().equals(bb2.getBounds()) && bb[1].getBounds().equals(bb3.getBounds())))
+			{
+				Change.record();
+				Change.push(bb[0]);
+				Change.push(bb2);
+				
+				Change.push(bb[1]);
+				Change.push(bb3);
+				Change.stopRecord();
+			}
 		}
 
 		maybeShowPopup(e, popupMenu);

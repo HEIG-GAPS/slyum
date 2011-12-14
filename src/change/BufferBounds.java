@@ -24,5 +24,10 @@ public class BufferBounds implements Changeable
 		gc.repaint();
 		gc.getGraphicView().getScene().repaint(repaintBounds);
 	}
+	
+	public Rectangle getBounds()
+	{
+		return new Rectangle(bounds);
+	}
 
 }

@@ -130,7 +130,12 @@ public abstract class TextBoxLabel extends TextBox implements Observer
 
 		parent.getScene().setCursor(previousCursor);
 		
-		Change.push(new BufferDeplacement(this));
+		if (!((BufferDeplacement)Change.getLast()).getDeplacement().equals(getDeplacement()))
+			
+			Change.push(new BufferDeplacement(this));
+		else
+			
+			Change.pop();
 	}
 	
 	public Point getDeplacement()
