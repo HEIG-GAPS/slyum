@@ -179,6 +179,8 @@ public abstract class LineView extends GraphicComponent
 
 		points.add(index, grip);
 		parent.addOthersComponents(grip);
+		
+		repaint();
 	}
 
 	/**
