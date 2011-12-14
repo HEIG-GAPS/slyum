@@ -16,6 +16,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import change.BufferBounds;
+import change.BufferCreation;
 import change.Change;
 
 import utility.PersonalizedIcon;
@@ -37,6 +38,9 @@ public class RelationGrip extends SquareGrip implements ActionListener
 	protected JMenuItem menuItemDelete;
 	protected JPopupMenu popupMenu;
 	protected LineView relation;
+	private int index = -1;
+
+	private boolean isMouseDragged;
 
 	/**
 	 * Create a new RelationGrip associate with the given LineView.
@@ -63,6 +67,9 @@ public class RelationGrip extends SquareGrip implements ActionListener
 		menuItemDelete.setActionCommand("delete");
 		menuItemDelete.addActionListener(this);
 		popupMenu.add(menuItemDelete);
+		
+		Change.push(new BufferCreation(false, this));
+		Change.push(new BufferCreation(true, this));
 	}
 
 	@Override
@@ -98,12 +105,18 @@ public class RelationGrip extends SquareGrip implements ActionListener
 
 		parent.clearAllSelectedComponents();
 		relation.setSelected(true);
+		
+		isMouseDragged = true;
 	}
 
 	@Override
 	public void gMousePressed(MouseEvent e)
 	{
-		Change.push(new BufferBounds(this));
+		isMouseDragged = false;
+		
+		if (e.getButton() == MouseEvent.BUTTON1)
+			Change.push(new BufferBounds(this));
+		
 		maybeShowPopup(e, popupMenu);
 	}
 
@@ -121,20 +134,30 @@ public class RelationGrip extends SquareGrip implements ActionListener
 		relation.smoothLines();
 		relation.searchUselessAnchor(this);
 
-		pushBufferChangeMouseReleased();
+			pushBufferChangeMouseReleased(e);
 
 		maybeShowPopup(e, popupMenu);
+		
+		isMouseDragged = false;
 	}
 	
-	protected void pushBufferChangeMouseReleased()
+	protected void pushBufferChangeMouseReleased(MouseEvent e)
 	{
-		if (Change.getSize() % 2 == 1)
-			Change.push(new BufferBounds(this));
+		if (isMouseDragged)
+		{
+			if (Change.getSize() % 2 == 1 && e.getButton() == MouseEvent.BUTTON1)
+				Change.push(new BufferBounds(this));
+		}
+		else
+			Change.pop();
 	}
 	
 	@Override
 	public void delete()
 	{
+		// save index 
+		index = relation.getPoints().indexOf(this);
+		
 		super.delete();
 		
 		relation.removeGrip(this);
@@ -146,7 +169,7 @@ public class RelationGrip extends SquareGrip implements ActionListener
 		super.restore();
 		
 		parent.addOthersComponents(this);
-		relation.addGrip(this, 0);
+		relation.addGrip(this, index);
 	}
 
 	/**

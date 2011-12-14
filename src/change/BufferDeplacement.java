@@ -24,5 +24,10 @@ public class BufferDeplacement implements Changeable
 		tbl.repaint();
 		tbl.getGraphicView().getScene().repaint(repaintBounds);
 	}
+	
+	public Point getDeplacement()
+	{
+		return deplacement;
+	}
 
 }
