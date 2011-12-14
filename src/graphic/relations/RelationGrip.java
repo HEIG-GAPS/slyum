@@ -134,7 +134,7 @@ public class RelationGrip extends SquareGrip implements ActionListener
 		relation.smoothLines();
 		relation.searchUselessAnchor(this);
 
-			pushBufferChangeMouseReleased(e);
+		pushBufferChangeMouseReleased(e);
 
 		maybeShowPopup(e, popupMenu);
 		
@@ -143,13 +143,15 @@ public class RelationGrip extends SquareGrip implements ActionListener
 	
 	protected void pushBufferChangeMouseReleased(MouseEvent e)
 	{
-		if (isMouseDragged)
-		{
-			if (Change.getSize() % 2 == 1 && e.getButton() == MouseEvent.BUTTON1)
-				Change.push(new BufferBounds(this));
-		}
-		else
-			Change.pop();
+		if (e.getButton() == MouseEvent.BUTTON1)
+			
+			if (isMouseDragged)
+			{
+				if (Change.getSize() % 2 == 1)
+					Change.push(new BufferBounds(this));
+			}
+			else
+				Change.pop();
 	}
 	
 	@Override
