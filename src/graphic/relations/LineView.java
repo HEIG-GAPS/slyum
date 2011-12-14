@@ -272,14 +272,18 @@ public abstract class LineView extends GraphicComponent
 	public void delete()
 	{
 		super.delete();
+		
+		Change.setBlocked(true);
+
+		for (final TextBox tb : tbRoles)
+
+			tb.delete();
 
 		for (final RelationGrip grip : points)
 
 			parent.removeComponent(grip);
-
-		for (final TextBox tb : tbRoles)
-
-			parent.removeComponent(tb);
+		
+		Change.setBlocked(false);
 	}
 
 	/**
@@ -587,6 +591,9 @@ public abstract class LineView extends GraphicComponent
 	@Override
 	public void paintComponent(Graphics2D g2)
 	{
+		if (points.size() < 2)
+			return;
+		
 		g2.setStroke(lineStroke);
 		g2.setColor(getColor());
 
@@ -647,24 +654,22 @@ public abstract class LineView extends GraphicComponent
 	 * 
 	 * @param index
 	 *            the index of the grip to remove
-	 * @return true if the grip has beed removed; false otherwise
+	 * @return true if the grip has been removed; false otherwise
 	 */
 	public boolean removeGrip(int index)
 	{
 		if (index == -1)
 			return false;
 
-		final RelationGrip gripToDelete = points.get(index);
-
 		if (index == 1)
 			points.get(2).addObserver((MagneticGrip) points.getFirst());
+		
 		else if (index == points.size() - 1)
 			points.get(points.size() - 2).addObserver((MagneticGrip) points.getLast());
 
 		points.remove(index);
-
-		if (parent.removeComponent(gripToDelete))
-			repaint();
+		
+		repaint();
 
 		return true;
 	}
@@ -708,8 +713,10 @@ public abstract class LineView extends GraphicComponent
 			distGlobal = anchorNext.distance(anchorPrevious);
 
 			if (dist1 + dist2 - distGlobal < ratio)
-
-				return grip.remove();
+			{
+				grip.delete();
+				return true;
+			}
 		}
 
 		return false;
@@ -726,8 +733,6 @@ public abstract class LineView extends GraphicComponent
 	@Override
 	public void restore()
 	{
-		parent.addLineView(this);
-		
 		for (final RelationGrip grip : points)
 
 			parent.addOthersComponents(grip);
@@ -735,6 +740,8 @@ public abstract class LineView extends GraphicComponent
 		for (final TextBox tb : tbRoles)
 		
 			tb.restore();
+		
+		parent.addLineView(this);
 	}
 
 	/**

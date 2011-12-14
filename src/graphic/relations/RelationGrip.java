@@ -69,7 +69,7 @@ public class RelationGrip extends SquareGrip implements ActionListener
 	public void actionPerformed(ActionEvent e)
 	{
 		if ("delete".equals(e.getActionCommand()))
-			remove();
+			delete();
 	}
 
 	/**
@@ -131,12 +131,29 @@ public class RelationGrip extends SquareGrip implements ActionListener
 		if (Change.getSize() % 2 == 1)
 			Change.push(new BufferBounds(this));
 	}
+	
+	@Override
+	public void delete()
+	{
+		super.delete();
+		
+		relation.removeGrip(this);
+	}
+	
+	@Override
+	public void restore()
+	{
+		super.restore();
+		
+		parent.addOthersComponents(this);
+		relation.addGrip(this, 0);
+	}
 
 	/**
 	 * Remove the grip from the LineView.
 	 * 
 	 * @return true if the grip has been removed; false otherwise
-	 */
+	 *//*
 	public boolean remove()
 	{
 		if (relation.removeGrip(this))
@@ -147,7 +164,7 @@ public class RelationGrip extends SquareGrip implements ActionListener
 		}
 
 		return false;
-	}
+	}*/
 
 	/**
 	 * Set the anchor of the grip.
