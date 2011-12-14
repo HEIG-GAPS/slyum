@@ -13,7 +13,7 @@ public class BufferBounds implements Changeable
 	public BufferBounds(GraphicComponent gc)
 	{
 		this.gc = gc;
-		bounds = gc.getBounds();
+		bounds = new Rectangle(gc.getBounds());
 	}
 
 	@Override
