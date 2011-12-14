@@ -153,6 +153,12 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 			lv.delete();
 			Change.setBlocked(false);
 		}
+
+		// Search and remove the UML associated component.
+		final IDiagramComponent associed = getAssociedComponent();
+		
+		if (associed != null)
+			parent.getClassDiagram().removeComponent(associed);
 	}
 
 	/**

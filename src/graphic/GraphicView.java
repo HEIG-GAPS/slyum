@@ -1906,15 +1906,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		success |= notes.remove(component);
 
 		if (success)
-		{
-			// Search and remove the UML associated component.
-			final IDiagramComponent associed = component.getAssociedComponent();
-			if (associed != null)
-				classDiagram.removeComponent(associed);
-
-			component.delete();
+					
 			component.repaint();
-		}
 
 		return success;
 	}

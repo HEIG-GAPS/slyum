@@ -135,6 +135,18 @@ public class MagneticGrip extends RelationGrip implements Observer
 		else
 			super.setAnchor(anchor);
 	}
+	
+	@Override
+	public void restore()
+	{
+		parent.addOthersComponents(this);
+	}
+	
+	@Override
+	public void delete()
+	{
+		parent.removeComponent(this);
+	}
 
 	@Override
 	public void update(Observable arg0, Object arg1)
