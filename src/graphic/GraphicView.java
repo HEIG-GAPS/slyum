@@ -1451,14 +1451,6 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		return true;
 	}
 	
-	@Override
-	public void keyPressed(KeyEvent e)
-	{
-		if (e.getKeyCode() == KeyEvent.VK_DELETE)
-
-			deleteSelectedComponents();
-	}
-	
 	public void copyDiagramToClipboard()
 	{
 		Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new Utility.ImageSelection(getSelectedScreen()), null);
@@ -1471,10 +1463,24 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		if (selected.size() == 0 || SMessageDialog.showQuestionMessageYesNo("Are you sur to delete this component and all its associated components?") == JOptionPane.NO_OPTION)
 
 			return;
+		
+		boolean isRecord = Change.isRecord();
+		Change.record();
 
 		for (final GraphicComponent c : selected)
 
 			c.delete();
+		
+		if (!isRecord)
+			Change.stopRecord();
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e)
+	{
+		if (e.getKeyCode() == KeyEvent.VK_DELETE)
+	
+			deleteSelectedComponents();
 	}
 
 	@Override
