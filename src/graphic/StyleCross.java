@@ -210,6 +210,7 @@ public class StyleCross extends GraphicComponent
 	{
 		final boolean isBlocked = Change.isBlocked();
 		Change.setBlocked(true);
+		
 		super.delete();
 		
 		for (int i = 0; i < btnCross.length; i++)

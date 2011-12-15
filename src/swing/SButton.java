@@ -2,6 +2,7 @@ package swing;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -17,22 +18,24 @@ import javax.swing.JButton;
 
 import utility.Utility;
 
-public class EmptyButton extends JButton implements MouseListener
+public class SButton extends JButton implements MouseListener
 {
 	private static final long serialVersionUID = -359453798459739030L;
 	
 	private boolean isMouseHover = false, isMouseClicked = false;
 	
 	private Color themeColor;
+	
+	private Component linkedComponent;
 
-	public EmptyButton(Icon icon, String action, Color color, String tooltip)
+	public SButton(Icon icon, String action, Color color, String tooltip)
 	{
 		super(icon);
 		
 		init(action, color, tooltip);
 	}
 	
-	public EmptyButton(String text, String action, Color color, String tooltip)
+	public SButton(String text, String action, Color color, String tooltip)
 	{
 		super(text);
 		init(action, color, tooltip);
@@ -141,5 +144,19 @@ public class EmptyButton extends JButton implements MouseListener
 	{
 		isMouseClicked = clicked;
 		repaint();
+	}
+	
+	@Override
+	public void setEnabled(boolean b)
+	{
+		super.setEnabled(b);
+		
+		if (linkedComponent != null)
+			linkedComponent.setEnabled(b);
+	}
+	
+	public void linkComponent(Component c)
+	{
+		linkedComponent = c;
 	}
 }

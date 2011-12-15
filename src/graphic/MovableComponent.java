@@ -173,7 +173,7 @@ public abstract class MovableComponent extends GraphicComponent
 		// when gMouseReleased is called.
 		
 
-		int selectedComponentSize = parent.getSelectedComponents().size(); 
+		int selectedComponentSize = parent.countSelectedEntities();
 		
 		if (e.isControlDown() && selectedComponentSize > 0)
 			

@@ -3,7 +3,6 @@ package classDiagram;
 import java.util.LinkedList;
 
 import utility.Utility;
-import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
@@ -193,9 +192,6 @@ public class ClassDiagram implements IComponentsObserver
 
 		for (final IComponentsObserver c : observers)
 			c.changeZOrder(entity, index);
-		
-		entity.select();
-		entity.notifyObservers(UpdateMessage.SELECT);
 	}
 
 	/**
