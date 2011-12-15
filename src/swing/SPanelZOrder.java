@@ -1,5 +1,6 @@
 package swing;
 
+import graphic.GraphicView;
 import graphic.entity.EntityView;
 
 import java.awt.Color;
@@ -9,44 +10,66 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 
 import utility.PersonalizedIcon;
+import utility.Utility;
 
-public class SPanelZOrder extends JPanelRounded implements ActionListener
+public class SPanelZOrder extends JPanelRounded implements ActionListener, IListenerComponentSelectionChanged
 {
 	private static final long serialVersionUID = 5673984487858602763L;
 	
-	private static final String TT_MOVE_TOP = "Top"/* + Utility.keystrokeToString(Slyum.KEY_UNDO)*/;
-	private static final String TT_MOVE_UP = "Up"/* + Utility.keystrokeToString(Slyum.KEY_REDO)*/;
-	private static final String TT_MOVE_DOWN = "Down"/* + Utility.keystrokeToString(Slyum.KEY_REDO)*/;
-	private static final String TT_MOVE_BOTTOM = "Bottom"/* + Utility.keystrokeToString(Slyum.KEY_REDO)*/;
+	private static final String TT_MOVE_TOP = "Top" + Utility.keystrokeToString(Slyum.KEY_MOVE_TOP);
+	private static final String TT_MOVE_UP = "Up" + Utility.keystrokeToString(Slyum.KEY_MOVE_UP);
+	private static final String TT_MOVE_DOWN = "Down" + Utility.keystrokeToString(Slyum.KEY_MOVE_DOWN);
+	private static final String TT_MOVE_BOTTOM = "Bottom" + Utility.keystrokeToString(Slyum.KEY_MOVE_BOTTOM);
 	
-	public static final String ZORDER_PATH = Slyum.ICON_PATH + "zorder" + Slyum.FILE_SEPARATOR;
+	private static SPanelZOrder instance = new SPanelZOrder();
 
-	public SPanelZOrder()
+	private SButton top, up, down, bottom;
+
+	private SPanelZOrder()
 	{
 		setLayout(new GridLayout(1, 4, 5, 5));
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 7));
 		setBackground(/*Color.WHITE*/ new Color(255, 0, 150, 10));
 		setForeground(Color.GRAY);
 
-		EmptyButton eb = new EmptyButton(PersonalizedIcon.createImageIcon(ZORDER_PATH + "top.png"), "ZOrderTOP", Color.MAGENTA, TT_MOVE_TOP);
-		eb.addActionListener(this);
-		add(eb);
-		
-		eb = new EmptyButton(PersonalizedIcon.createImageIcon(ZORDER_PATH + "up.png"), "ZOrderUP", Color.MAGENTA, TT_MOVE_UP);
-		eb.addActionListener(this);
-		add(eb);
-		
-		eb = new EmptyButton(PersonalizedIcon.createImageIcon(ZORDER_PATH + "down.png"), "ZOrderDown", Color.MAGENTA, TT_MOVE_DOWN);
-		eb.addActionListener(this);
-		add(eb);
-		
-		eb = new EmptyButton(PersonalizedIcon.createImageIcon(ZORDER_PATH + "bottom.png"), "ZOrderBottom", Color.MAGENTA, TT_MOVE_BOTTOM);
-		eb.addActionListener(this);
-		add(eb);
+		add(top = createEmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "top.png"), Slyum.ACTION_MOVE_TOP, Color.MAGENTA, TT_MOVE_TOP));
+		add(up = createEmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "up.png"), Slyum.ACTION_MOVE_UP, Color.MAGENTA, TT_MOVE_UP));
+		add(down = createEmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "down.png"), Slyum.ACTION_MOVE_DOWN, Color.MAGENTA, TT_MOVE_DOWN));
+		add(bottom = createEmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "bottom.png"), Slyum.ACTION_MOVE_BOTTOM, Color.MAGENTA, TT_MOVE_BOTTOM));
 		
 		setMaximumSize(new Dimension(43 * ((GridLayout)getLayout()).getColumns(), 50));
+	}
+	
+	public SButton getBtnTop()
+	{
+		return top;
+	}
+	
+	public SButton getBtnUp()
+	{
+		return up;
+	}
+	
+	public SButton getBtnDown()
+	{
+		return down;
+	}
+	
+	public SButton getBtnBottom()
+	{
+		return bottom;
+	}
+	
+	private SButton createEmptyButton(ImageIcon ii, String action, Color c, String tt)
+	{
+		SButton ee = new SButton(ii, action, c, tt);
+		ee.setEnabled(false);
+		ee.addActionListener(this);
+		
+		return ee;
 	}
 
 	@Override
@@ -55,5 +78,27 @@ public class SPanelZOrder extends JPanelRounded implements ActionListener
 		for (EntityView ev : PanelClassDiagram.getInstance().getCurrentGraphicView().getSelectedEntities())
 			
 			ev.actionPerformed(e);
+	}
+	
+	@Override
+	public void componentSelectionChanged()
+	{
+		updateBtnState();
+	}
+	
+	public void updateBtnState()
+	{
+		GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+		boolean enable = gv.countEntities() > 1 && gv.countSelectedEntities() > 0;
+		
+		top.setEnabled(enable);
+		up.setEnabled(enable);
+		down.setEnabled(enable);
+		bottom.setEnabled(enable);
+	}
+
+	public static SPanelZOrder getInstance()
+	{
+		return instance;
 	}
 }

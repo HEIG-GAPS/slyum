@@ -360,19 +360,19 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 			component.notifyObservers();
 		}
-		else if ("ZOrderUP".equals(e.getActionCommand()))
+		else if (Slyum.ACTION_MOVE_TOP.equals(e.getActionCommand()))
+
+			parent.getClassDiagram().changeZOrder(component, parent.getEntitiesView().size() - 1);
+		
+		else if (Slyum.ACTION_MOVE_UP.equals(e.getActionCommand()))
 
 			parent.getClassDiagram().changeZOrder(component, parent.getEntitiesView().indexOf(this) + 1);
 
-		else if ("ZOrderDown".equals(e.getActionCommand()))
+		else if (Slyum.ACTION_MOVE_DOWN.equals(e.getActionCommand()))
 
 			parent.getClassDiagram().changeZOrder(component, parent.getEntitiesView().indexOf(this) - 1);
 
-		else if ("ZOrderTOP".equals(e.getActionCommand()))
-
-			parent.getClassDiagram().changeZOrder(component, parent.getEntitiesView().size() - 1);
-
-		else if ("ZOrderBottom".equals(e.getActionCommand()))
+		else if (Slyum.ACTION_MOVE_BOTTOM.equals(e.getActionCommand()))
 
 			parent.getClassDiagram().changeZOrder(component, 0);
 

@@ -52,8 +52,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
+import swing.IListenerComponentSelectionChanged;
 import swing.PanelClassDiagram;
 import swing.PropertyLoader;
+import swing.SPanelElement;
+import swing.SPanelStyleComponent;
+import swing.SPanelZOrder;
 import swing.Slyum;
 import swing.SlyumColorChooser;
 import utility.SMessageDialog;
@@ -374,6 +378,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	private Rectangle visibleRect = new Rectangle();
 	private int mouseButton = 0;
 	
+	private LinkedList<IListenerComponentSelectionChanged> lcsc = new LinkedList<IListenerComponentSelectionChanged>();
+	
 	public void setScale(double scale)
 	{
 		this.scale = scale;
@@ -516,6 +522,15 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		// Menu item link note
 		menuItem = makeMenuItem("Link Note", Slyum.ACTION_NEW_LINK_NOTE, "linkNote16");
 		popupMenu.add(menuItem);
+		
+		addSPanelListener();
+	}
+	
+	private void addSPanelListener()
+	{
+		addListenerSelectionChanged(SPanelElement.getInstance());
+		addListenerSelectionChanged(SPanelStyleComponent.getInstance());
+		addListenerSelectionChanged(SPanelZOrder.getInstance());
 	}
 
 	@Override
@@ -740,6 +755,16 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	{
 		return addComponentIn(component, othersComponents);
 	}
+	
+	public boolean addListenerSelectionChanged(IListenerComponentSelectionChanged i)
+	{
+		return lcsc.add(i);
+	}
+	
+	public boolean removeListenerSelectionChanged(IListenerComponentSelectionChanged i)
+	{
+		return lcsc.remove(i);
+	}
 
 	/**
 	 * Get all entities contents in this graphic view and adjust their width.
@@ -948,6 +973,17 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		return nbrComponentSelected;
 	}
+	
+	/**
+	 * Call when a component is selected or unselected.
+	 * 
+	 * @param select a component is selected or not
+	 */
+	public void componentSelected(boolean select)
+	{
+		for (IListenerComponentSelectionChanged i : lcsc)
+			i.componentSelectionChanged();
+	}
 
 	@Override
 	public Point computeAnchorLocation(Point first, Point next)
@@ -968,6 +1004,21 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 			throw new IllegalArgumentException("component is null");
 
 		return getAllComponents().contains(component);
+	}
+	
+	public int countSelectedComponents()
+	{
+		return getSelectedComponents().size();
+	}
+	
+	public int countSelectedEntities()
+	{
+		return getSelectedEntities().size();
+	}
+	
+	public int countEntities()
+	{
+		return getEntitiesView().size();
 	}
 
 	/**
@@ -1415,7 +1466,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	public void gMouseReleased(MouseEvent e)
 	{
 		super.gMouseReleased(e);
-		final int nbrComponentSelected = clearRubberBand();
+		clearRubberBand();
+		final int nbrComponentSelected = countSelectedEntities();
 
 		if (nbrComponentSelected > 0 && e.getButton() == MouseEvent.BUTTON1)
 			new StyleCross(this, e.getPoint(), nbrComponentSelected);

@@ -38,7 +38,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import swing.EmptyButton;
+import swing.SButton;
 import swing.JPanelRounded;
 import swing.Slyum;
 import swing.propretiesView.GlobalPropreties;
@@ -780,16 +780,16 @@ public class EntityPropreties extends GlobalPropreties
 		if (Slyum.getSmallIcons())
 			small = "_small.png";
 			
-		btnAddParameters = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE, "Add");
-		btnRemoveMethod = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED, "Remove");
-		btnRemoveAttribute = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED, "Remove");
-		btnUpAttribute = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_up" + small), null,Color.MAGENTA, "Up");
-		btnDownAttribute = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_down" + small), null,Color.MAGENTA, "Down");
-		btnUpMethod = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_up" + small), null,Color.MAGENTA, "Up");
-		btnDownMethod = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_down" + small), null,Color.MAGENTA, "Down");
-		btnRemoveParameters = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED, "Remove");
-		btnRightParameters = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_right" + small), null,Color.MAGENTA, "Rigth");
-		btnLeftParameters = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_left" + small), null,Color.MAGENTA, "Left");
+		btnAddParameters = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE, "Add");
+		btnRemoveMethod = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED, "Remove");
+		btnRemoveAttribute = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED, "Remove");
+		btnUpAttribute = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_up" + small), null,Color.MAGENTA, "Up");
+		btnDownAttribute = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_down" + small), null,Color.MAGENTA, "Down");
+		btnUpMethod = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_up" + small), null,Color.MAGENTA, "Up");
+		btnDownMethod = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_down" + small), null,Color.MAGENTA, "Down");
+		btnRemoveParameters = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED, "Remove");
+		btnRightParameters = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_right" + small), null,Color.MAGENTA, "Rigth");
+		btnLeftParameters = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_left" + small), null,Color.MAGENTA, "Left");
 		
 		imgNoAttribute = new JLabel(PersonalizedIcon.createImageIcon("resources/icon/empty_attribute.png"));
 		imgNoMethod = new JLabel(PersonalizedIcon.createImageIcon("resources/icon/empty_method.png"));
@@ -904,7 +904,7 @@ public class EntityPropreties extends GlobalPropreties
 		panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.PAGE_AXIS));
 
 		{
-			final JButton button = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE, "Add");
+			final JButton button = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE, "Add");
 			button.setBorderPainted(false);
 			button.setContentAreaFilled(false);
 			button.setAlignmentX(CENTER_ALIGNMENT);
@@ -1025,7 +1025,7 @@ public class EntityPropreties extends GlobalPropreties
 		panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.PAGE_AXIS));
 		panelButton.setOpaque(false);
 		{
-			final JButton button = new EmptyButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE, "Add");
+			final JButton button = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE, "Add");
 			button.setBorderPainted(false);
 			button.setContentAreaFilled(false);
 			button.setAlignmentX(CENTER_ALIGNMENT);

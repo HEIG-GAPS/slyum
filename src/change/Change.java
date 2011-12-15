@@ -115,13 +115,15 @@ public class Change
 	 */
 	public static void stopRecord()
 	{
-		if (isRecord = false)
+		int size = stack.size();
+		
+		if (isRecord = false || size < 1)
 			return;
 		
 		isRecord = false;
 
 		int b = pointer;
-		while (--b >= 0 && record.get(b));
+		while (--b >= 0 && b < size-1 && record.get(b));
 		
 		record.set(b+1, false);
 		record.set(pointer, false);
@@ -163,6 +165,10 @@ public class Change
 	public static void setHasChange(boolean changed)
 	{
 		_hasChange = changed;
+
+		if (!changed)
+			clear();
+		
 		Slyum.setStarOnTitle(changed);
 	}
 	

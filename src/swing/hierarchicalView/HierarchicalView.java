@@ -1,5 +1,7 @@
 package swing.hierarchicalView;
 
+import graphic.entity.EntityView;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.LinkedList;
@@ -17,6 +19,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import swing.JPanelRounded;
+import swing.PanelClassDiagram;
 import utility.PersonalizedIcon;
 import classDiagram.ClassDiagram;
 import classDiagram.IComponentsObserver;
@@ -190,6 +193,8 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 	@Override
 	public void changeZOrder(Entity entity, int index)
 	{
+		LinkedList<EntityView> evs = PanelClassDiagram.getInstance().getCurrentGraphicView().getSelectedEntities();
+		
 		final NodeEntity ne = (NodeEntity) searchAssociedNodeIn(entity, entitiesNode);
 
 		entitiesNode.remove(ne);
@@ -197,6 +202,10 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 		entitiesNode.insert(ne, entitiesNode.getChildCount() - index);
 
 		treeModel.reload(entitiesNode);
+		
+		for (EntityView ev : evs)
+			
+			ev.setSelected(true);
 	}
 
 	@Override
