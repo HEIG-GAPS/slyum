@@ -1450,30 +1450,6 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		return true;
 	}
 	
-	public void linkNewNoteWithSelectedEntities()
-	{
-		LinkedList<GraphicComponent> e = getSelectedComponents();
-		
-		TextBoxCommentary tbc = null;
-		
-		if (e.isEmpty())
-			
-			tbc = new TextBoxCommentary(parent, "Double-click to edit note.", this);
-		
-		else
-		{
-			tbc = new TextBoxCommentary(parent, "Double-click to edit note.", e.getFirst());
-			
-			e.remove(0);
-			
-			for (GraphicComponent ev : e)
-				
-				parent.addLineView(new LineCommentary(parent, ev, tbc, new Point(), new Point(), false));
-		}
-		
-		parent.addNotes(tbc);
-	}
-
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
@@ -1508,6 +1484,38 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	@Override
 	public void keyTyped(KeyEvent e)
 	{
+	}
+
+	public void linkNewNoteWithSelectedEntities()
+	{
+		LinkedList<GraphicComponent> e = getSelectedComponents();
+		
+		TextBoxCommentary tbc = null;
+		
+		if (e.isEmpty())
+			
+			tbc = new TextBoxCommentary(parent, TextBoxCommentary.DEFAULT_TEXT, this);
+		
+		else
+		{
+			tbc = new TextBoxCommentary(parent, TextBoxCommentary.DEFAULT_TEXT, e.getFirst());
+			
+			e.remove(0);
+			
+			for (GraphicComponent ev : e)
+				
+				parent.addLineView(new LineCommentary(parent, ev, tbc, new Point(), new Point(), false));
+		}
+		
+		Rectangle b = tbc.getBounds();
+		Rectangle loc = getScene().getVisibleRect();
+		
+		b.x = (int)loc.getCenterX();
+		b.y = (int)loc.getCenterY();
+				
+		tbc.setBounds(b);
+		
+		parent.addNotes(tbc);
 	}
 
 	@Override

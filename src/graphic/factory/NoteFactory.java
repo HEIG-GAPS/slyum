@@ -21,7 +21,6 @@ import classDiagram.ClassDiagram;
  */
 public class NoteFactory extends RelationFactory
 {
-
 	/**
 	 * Create a new factory allowing the creation of a note.
 	 * 
@@ -38,7 +37,7 @@ public class NoteFactory extends RelationFactory
 	@Override
 	public GraphicComponent create()
 	{
-		final TextBoxCommentary tb = new TextBoxCommentary(parent, "Double-click to edit note.", componentMousePressed);
+		final TextBoxCommentary tb = new TextBoxCommentary(parent, TextBoxCommentary.DEFAULT_TEXT, componentMousePressed);
 		tb.setBounds(new Rectangle(mouseReleased.x, mouseReleased.y, 100, 100));
 
 		parent.addNotes(tb);

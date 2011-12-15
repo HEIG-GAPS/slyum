@@ -37,6 +37,7 @@ import classDiagram.IDiagramComponent;
  */
 public class TextBoxCommentary extends MovableComponent
 {
+	public static final String DEFAULT_TEXT = "Double-click to edit note.";
 	public static final Point MINIMUM_SIZE = new Point(50, 50);
 
 	/**
