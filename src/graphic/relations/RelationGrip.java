@@ -137,7 +137,6 @@ public class RelationGrip extends SquareGrip implements ActionListener
 		
 			delete();
 
-		
 		Change.stopRecord();
 		
 		maybeShowPopup(e, popupMenu);
