@@ -348,6 +348,16 @@ public class TextBoxCommentary extends MovableComponent
 	}
 
 	@Override
+	public void restore()
+	{
+		super.restore();
+		
+		parent.addNotes(this);
+		
+		repaint();
+	}
+
+	@Override
 	public void setBounds(Rectangle bounds)
 	{
 		this.bounds = bounds;

@@ -457,7 +457,8 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 								cancel(true);
 							}
 						});
-						
+
+						final boolean isBlocked = Change.isBlocked();
 						Change.setBlocked(true);
 						graphicView.setVisible(false);
 						
@@ -470,7 +471,7 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 						}
 						
 						graphicView.setVisible(true);
-						Change.setBlocked(false);
+						Change.setBlocked(isBlocked);
 						
 						dpl.setVisible(false);
 						

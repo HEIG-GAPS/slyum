@@ -21,6 +21,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import change.BufferBounds;
+import change.BufferCreation;
 import change.Change;
 
 import utility.SMessageDialog;
@@ -99,12 +100,13 @@ public abstract class LineView extends GraphicComponent
 		if (target == null)
 			throw new IllegalArgumentException("target is null");
 
+		final boolean isBlocked = Change.isBlocked();
 		Change.setBlocked(true);
 		
 		final MagneticGrip first = new MagneticGrip(parent, this, source, posSource, posTarget);
 		final MagneticGrip last = new MagneticGrip(parent, this, target, posTarget, posSource);
 		
-		Change.setBlocked(false);
+		Change.setBlocked(isBlocked);
 
 		// Initialize firsts grips (don't use addGrip method to do that, they
 		// are inter-dependent!)
@@ -128,6 +130,9 @@ public abstract class LineView extends GraphicComponent
 		popupMenu.add(menuItem);
 
 		setColor(getBasicColor());
+
+		Change.push(new BufferCreation(false, this));
+		Change.push(new BufferCreation(true, this));
 	}
 
 	@Override
@@ -278,7 +283,8 @@ public abstract class LineView extends GraphicComponent
 	public void delete()
 	{
 		super.delete();
-		
+
+		final boolean isBlocked = Change.isBlocked();
 		Change.setBlocked(true);
 
 		for (final TextBox tb : tbRoles)
@@ -289,7 +295,7 @@ public abstract class LineView extends GraphicComponent
 
 			parent.removeComponent(grip);
 		
-		Change.setBlocked(false);
+		Change.setBlocked(isBlocked);
 	}
 
 	/**

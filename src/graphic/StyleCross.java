@@ -208,6 +208,7 @@ public class StyleCross extends GraphicComponent
 	@Override
 	public void delete()
 	{
+		final boolean isBlocked = Change.isBlocked();
 		Change.setBlocked(true);
 		super.delete();
 		
@@ -216,7 +217,7 @@ public class StyleCross extends GraphicComponent
 			btnCross[i].delete();
 		
 		repaint();
-		Change.setBlocked(false);
+		Change.setBlocked(isBlocked);
 	}
 	
 	@Override

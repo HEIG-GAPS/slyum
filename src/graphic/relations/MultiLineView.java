@@ -8,6 +8,7 @@ import graphic.textbox.TextBoxRole;
 import java.awt.Point;
 
 import utility.Utility;
+import classDiagram.relationships.Multi;
 import classDiagram.relationships.Role;
 
 /**
@@ -56,9 +57,30 @@ public class MultiLineView extends LineView
 	@Override
 	public void delete()
 	{
+		MultiView mv = (MultiView)getFirstPoint().getAssociedComponentView();
+		final int nbLineAssocied = parent.getLinesViewAssociedWith(mv).size();
+
+		if (nbLineAssocied == 3)
+		
+			mv.delete();
+
 		super.delete();
 
-		((MultiView) getFirstPoint().getAssociedComponentView()).connexionRemoved(this);
+		mv.connexionRemoved(this);
+
+	}
+	
+	@Override
+	public void restore()
+	{
+		super.restore();
+		
+		MultiView mv = (MultiView) getFirstPoint().getAssociedComponentView();
+		Multi m = (Multi) mv.getAssociedComponent();
+		TextBoxRole tbr = (TextBoxRole)tbRoles.getFirst();
+		
+		m.addRole(tbr.getRole());
+		mv.addMultiLineView(this);
 	}
 
 	public String getXML(int depth)

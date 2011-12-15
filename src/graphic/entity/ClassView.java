@@ -25,9 +25,6 @@ public class ClassView extends EntityView
 	public ClassView(GraphicView parent, ClassEntity component)
 	{
 		super(parent, component);
-
-		//Change.push(new BufferCreation(false, this));
-		//Change.push(new BufferCreation(true, this));
 	}
 
 	@Override

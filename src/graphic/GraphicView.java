@@ -5,6 +5,7 @@ import graphic.entity.ClassView;
 import graphic.entity.EntityView;
 import graphic.entity.InterfaceView;
 import graphic.factory.CreateComponent;
+import graphic.factory.MultiFactory;
 import graphic.relations.AggregationView;
 import graphic.relations.BinaryView;
 import graphic.relations.CompositionView;
@@ -698,7 +699,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		if (result == null)
 
-			addComponentIn(new MultiView(this, component), multiViews);
+			addComponentIn(MultiFactory.createMulti(this, component), multiViews);
 	}
 
 	/**
@@ -1492,6 +1493,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		
 		TextBoxCommentary tbc = null;
 		
+		Change.record();
+		
 		if (e.isEmpty())
 			
 			tbc = new TextBoxCommentary(parent, TextBoxCommentary.DEFAULT_TEXT, this);
@@ -1516,6 +1519,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		tbc.setBounds(b);
 		
 		parent.addNotes(tbc);
+		
+		Change.stopRecord();
 	}
 
 	@Override

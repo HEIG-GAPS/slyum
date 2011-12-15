@@ -139,26 +139,27 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 		
 		// Unselect the component.
 		setSelected(false);
-
+		
 		Change.push(new BufferCreation(true, this));
 		Change.push(new BufferCreation(false, this));
 		
 		parent.removeComponent(this);
-
-		// Search and delete all lines (relations, associations, etc...)
-		// associated with this component.
-		for (final LineView lv : parent.getLinesViewAssociedWith(this))
-		{
-			Change.setBlocked(true);
-			lv.delete();
-			Change.setBlocked(false);
-		}
 
 		// Search and remove the UML associated component.
 		final IDiagramComponent associed = getAssociedComponent();
 		
 		if (associed != null)
 			parent.getClassDiagram().removeComponent(associed);
+		
+		// Search and delete all lines (relations, associations, etc...)
+		// associated with this component.
+		for (final LineView lv : parent.getLinesViewAssociedWith(this))
+		{
+			final boolean isBlocked = Change.isBlocked();
+			Change.setBlocked(true);
+			lv.delete();
+			Change.setBlocked(isBlocked);
+		}
 	}
 
 	/**

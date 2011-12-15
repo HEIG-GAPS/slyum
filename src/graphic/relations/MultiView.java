@@ -21,6 +21,7 @@ import java.util.Observer;
 import javax.swing.JMenuItem;
 
 import utility.Utility;
+import change.Change;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Binary;
@@ -38,7 +39,7 @@ public class MultiView extends MovableComponent implements Observer
 {
 	private Rectangle bounds = new Rectangle(50, 50);
 
-	LinkedList<MultiLineView> mlv = new LinkedList<MultiLineView>();
+	LinkedList<MultiLineView> mlvs = new LinkedList<MultiLineView>();
 
 	private final Multi multi;
 
@@ -66,6 +67,9 @@ public class MultiView extends MovableComponent implements Observer
 		final Point middle = new Point((int) bounds.getCenterX(), (int) bounds.getCenterY());
 		int xMoy = 0, yMoy = 0;
 
+		final boolean isBlocked = Change.isBlocked();
+		Change.setBlocked(true);
+		
 		for (final Role role : roles)
 		{
 			final ClassView cv = (ClassView) parent.searchAssociedComponent(role.getEntity());
@@ -74,7 +78,7 @@ public class MultiView extends MovableComponent implements Observer
 
 			final MultiLineView newmlv = new MultiLineView(parent, this, cv, role, middle, middleClass, false);
 
-			mlv.add(newmlv);
+			mlvs.add(newmlv);
 			parent.addLineView(newmlv);
 
 			xMoy += bounds.x + bounds.width / 2;
@@ -92,6 +96,16 @@ public class MultiView extends MovableComponent implements Observer
 
 		final JMenuItem menuItem = makeMenuItem("Delete", "Delete", "delete16");
 		popupMenu.add(menuItem);
+		
+		Change.setBlocked(isBlocked);
+		
+		super.pushBufferCreation();
+	}
+	
+	@Override
+	protected void pushBufferCreation()
+	{
+		
 	}
 
 	@Override
@@ -105,7 +119,7 @@ public class MultiView extends MovableComponent implements Observer
 
 	public void addMultiLineView(MultiLineView mlv)
 	{
-		this.mlv.add(mlv);
+		this.mlvs.add(mlv);
 		parent.addLineView(mlv);
 	}
 
@@ -144,14 +158,6 @@ public class MultiView extends MovableComponent implements Observer
 	public void connexionRemoved(MultiLineView mlv)
 	{
 		multi.removeRole((Role) mlv.getTextBoxRole().getFirst().getAssociedComponent());
-
-		final int nbLineAssocied = parent.getLinesViewAssociedWith(this).size();
-
-		if (nbLineAssocied == 2)
-		{
-			transformToAssociation();
-			delete();
-		}
 	}
 
 	@Override
@@ -159,9 +165,9 @@ public class MultiView extends MovableComponent implements Observer
 	{
 		super.delete();
 
-		for (final LineView lv : parent.getLinesViewAssociedWith(this))
+		//for (final LineView lv : parent.getLinesViewAssociedWith(this))
 
-			lv.delete();
+			//lv.delete();
 	}
 
 	/**
@@ -202,7 +208,7 @@ public class MultiView extends MovableComponent implements Observer
 	@SuppressWarnings("unchecked")
 	public LinkedList<MultiLineView> getMultiLinesView()
 	{
-		return (LinkedList<MultiLineView>) mlv.clone();
+		return (LinkedList<MultiLineView>) mlvs.clone();
 	}
 
 	/**
@@ -322,6 +328,15 @@ public class MultiView extends MovableComponent implements Observer
 	public void resizeRight(MouseEvent e)
 	{
 		// resizing impossible
+	}
+	
+	@Override
+	public void restore()
+	{
+		super.restore();
+
+		parent.addMultiView(this);
+		parent.getClassDiagram().addMulti(multi);
 	}
 
 	@Override

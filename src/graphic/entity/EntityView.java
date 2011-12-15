@@ -40,8 +40,6 @@ import swing.Slyum;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.Utility;
-import change.BufferCreation;
-import change.Change;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Attribute;
@@ -287,9 +285,6 @@ public abstract class EntityView extends MovableComponent implements Observer
 		component.addObserver(this);
 
 		setColor(getBasicColor());
-
-		Change.push(new BufferCreation(false, this));
-		Change.push(new BufferCreation(true, this));
 	}
 
 	@Override

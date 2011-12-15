@@ -9,6 +9,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
 import change.BufferBounds;
+import change.BufferCreation;
 import change.Change;
 
 /**
@@ -79,6 +80,14 @@ public abstract class MovableComponent extends GraphicComponent
 					c.resizeRight(e);
 			}
 		});
+
+		pushBufferCreation();
+	}
+	
+	protected void pushBufferCreation()
+	{
+		Change.push(new BufferCreation(false, this));
+		Change.push(new BufferCreation(true, this));
 	}
 
 	/**
