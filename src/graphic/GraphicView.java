@@ -1493,6 +1493,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		
 		TextBoxCommentary tbc = null;
 		
+		boolean isRecord = Change.isRecord();
 		Change.record();
 		
 		if (e.isEmpty())
@@ -1520,7 +1521,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		
 		parent.addNotes(tbc);
 		
-		Change.stopRecord();
+		if (!isRecord)
+			Change.stopRecord();
 	}
 
 	@Override

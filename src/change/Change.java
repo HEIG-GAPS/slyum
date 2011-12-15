@@ -111,7 +111,7 @@ public class Change
 	}
 	
 	/**
-	 * Stop the current record. If no record is currently running, this method have no effect.
+	 * Stop the current record. If no record is currently running this method have no effect.
 	 */
 	public static void stopRecord()
 	{
@@ -121,7 +121,7 @@ public class Change
 		isRecord = false;
 
 		int b = pointer;
-		while (record.get(--b));
+		while (--b >= 0 && record.get(b));
 		
 		record.set(b+1, false);
 		record.set(pointer, false);
