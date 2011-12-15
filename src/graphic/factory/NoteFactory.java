@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+import change.Change;
 import classDiagram.ClassDiagram;
 
 /**
@@ -37,8 +38,10 @@ public class NoteFactory extends RelationFactory
 	@Override
 	public GraphicComponent create()
 	{
+		Change.record();
 		final TextBoxCommentary tb = new TextBoxCommentary(parent, TextBoxCommentary.DEFAULT_TEXT, componentMousePressed);
 		tb.setBounds(new Rectangle(mouseReleased.x, mouseReleased.y, 100, 100));
+		Change.stopRecord();
 
 		parent.addNotes(tb);
 

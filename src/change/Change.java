@@ -62,10 +62,11 @@ public class Change
 			return;
 
 		final int increment = pointer % 2 == 0 ? 1 : 2;
-		
+
+		final boolean isBlocked = Change.isBlocked();
 		setBlocked(true);
 		stack.get(pointer += increment).restore();
-		setBlocked(false);
+		setBlocked(isBlocked);
 
 		printStackState();
 		
@@ -84,9 +85,10 @@ public class Change
 		
 		final int decrement = pointer % 2 > 0 ? 1 : 2;
 
+		final boolean isBlocked = Change.isBlocked();
 		setBlocked(true);
 		stack.get(pointer -= decrement).restore();
-		setBlocked(false);
+		setBlocked(isBlocked);
 
 		printStackState();
 
@@ -125,6 +127,11 @@ public class Change
 		record.set(pointer, false);
 	}
 	
+	public static boolean isRecord()
+	{
+		return isRecord;
+	}
+	
 	protected static void checkToolbarButtonState()
 	{
 		Slyum.setEnableRedoButtons(pointer < stack.size() - 1);
@@ -134,6 +141,11 @@ public class Change
 	public static void setBlocked(boolean blocked)
 	{
 		block = blocked;
+	}
+	
+	public static boolean isBlocked()
+	{
+		return block;
 	}
 	
 	public static void clear()

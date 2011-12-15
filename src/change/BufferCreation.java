@@ -31,9 +31,10 @@ public class BufferCreation implements Changeable
 		}
 		else
 		{
+			final boolean isBlocked = Change.isBlocked();
 			Change.setBlocked(true);
 			gc.delete();
-			Change.setBlocked(false);
+			Change.setBlocked(isBlocked);
 		}
 	}
 }

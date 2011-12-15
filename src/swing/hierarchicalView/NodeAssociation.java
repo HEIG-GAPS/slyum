@@ -41,8 +41,13 @@ public class NodeAssociation extends DefaultMutableTreeNode implements IClassDia
 			return association.getName();
 
 		final LinkedList<Role> roles = association.getRoles();
-
-		String text = roles.getFirst().getName();
+		
+		String text = "";
+		
+		if (roles.isEmpty())
+			return "";
+		
+		text = roles.getFirst().getName();
 
 		for (int i = 1; i < roles.size(); i++)
 			text += " - " + roles.get(i).getName();

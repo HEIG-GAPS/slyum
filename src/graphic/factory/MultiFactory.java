@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import javax.swing.JButton;
 
 import utility.PersonalizedIcon;
+import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.components.ClassEntity;
 import classDiagram.relationships.Multi;
@@ -149,13 +150,24 @@ public class MultiFactory extends CreateComponent
 		if (Multi.canCreate(ce))
 		{
 			final Multi multi = new Multi(ce);
-			mv = new MultiView(parent, multi);
+			mv = createMulti(parent, multi);
 
 			parent.addMultiView(mv);
 			classDiagram.addMulti(multi);
 		}
 
 		parent.deleteCurrentFactory();
+
+		return mv;
+	}
+	
+	public static MultiView createMulti(GraphicView gv, Multi m)
+	{
+		MultiView mv;
+		
+		Change.record();
+		mv = new MultiView(gv, m);
+		Change.stopRecord();
 
 		return mv;
 	}

@@ -10,8 +10,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import utility.Utility;
-import change.BufferCreation;
-import change.Change;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 
@@ -42,9 +40,6 @@ public abstract class RelationView extends LineView implements Observer
 
 		this.component = component;
 		component.addObserver(this);
-
-		Change.push(new BufferCreation(false, this));
-		Change.push(new BufferCreation(true, this));
 	}
 
 	@Override

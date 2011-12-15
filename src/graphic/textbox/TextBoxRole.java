@@ -161,6 +161,11 @@ public class TextBoxRole extends TextBoxLabel
 	{
 		return tbm;
 	}
+	
+	public Role getRole()
+	{
+		return role;
+	}
 
 	@Override
 	public void gMousePressed(MouseEvent e)
