@@ -9,7 +9,6 @@ import graphic.relations.CompositionView;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import classDiagram.ClassDiagram;
 import classDiagram.relationships.Composition;
 
 /**
@@ -32,9 +31,9 @@ public class CompositionFactory extends RelationFactory
 	 * @param classDiagram
 	 *            the class diagram
 	 */
-	public CompositionFactory(GraphicView parent, ClassDiagram classDiagram)
+	public CompositionFactory(GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 	}
 
 	@Override

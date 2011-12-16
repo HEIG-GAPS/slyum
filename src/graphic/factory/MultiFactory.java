@@ -25,7 +25,6 @@ import javax.swing.JButton;
 
 import utility.PersonalizedIcon;
 import change.Change;
-import classDiagram.ClassDiagram;
 import classDiagram.components.ClassEntity;
 import classDiagram.relationships.Multi;
 
@@ -57,9 +56,9 @@ public class MultiFactory extends CreateComponent
 	 * @param classDiagram
 	 *            the class diagram
 	 */
-	public MultiFactory(final GraphicView parent, ClassDiagram classDiagram)
+	public MultiFactory(final GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 
 		parent.clearAllSelectedComponents();
 

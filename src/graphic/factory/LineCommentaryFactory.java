@@ -9,8 +9,6 @@ import java.awt.BasicStroke;
 
 import utility.SMessageDialog;
 
-import classDiagram.ClassDiagram;
-
 /**
  * LineCommentaryFactory allows to create a new line between a note and a
  * graphic component. Give this factory at the graphic view using the method
@@ -33,9 +31,9 @@ public class LineCommentaryFactory extends RelationFactory
 	 * @param classDiagram
 	 *            the class diagram
 	 */
-	public LineCommentaryFactory(GraphicView parent, ClassDiagram classDiagram)
+	public LineCommentaryFactory(GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 
 		stroke = new BasicStroke(1.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 4.f }, 0.0f);
 	}

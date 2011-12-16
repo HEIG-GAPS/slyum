@@ -65,7 +65,7 @@ public class SPanelZOrder extends JPanelRounded implements ActionListener, IList
 	
 	private SButton createEmptyButton(ImageIcon ii, String action, Color c, String tt)
 	{
-		SButton ee = new SButton(ii, action, c, tt);
+		SButton ee = new SButton(ii, action, c, tt, this);
 		ee.setEnabled(false);
 		ee.addActionListener(this);
 		

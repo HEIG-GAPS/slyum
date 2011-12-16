@@ -10,7 +10,6 @@ import java.awt.Graphics2D;
 
 import utility.SMessageDialog;
 
-import classDiagram.ClassDiagram;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 
@@ -18,9 +17,9 @@ public class InnerClassFactory extends InheritanceFactory
 {
 	public final String ERROR_CREATION_MESSAGE = "Inner class creation failed.\nYou must make a bond between two classes or class -> interface.";
 
-	public InnerClassFactory(GraphicView parent, ClassDiagram classDiagram)
+	public InnerClassFactory(GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 	}
 
 	@Override

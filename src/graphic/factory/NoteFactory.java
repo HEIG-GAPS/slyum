@@ -9,7 +9,6 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import change.Change;
-import classDiagram.ClassDiagram;
 
 /**
  * NoteFactory allows to create a new note. Give this factory at the graphic
@@ -30,9 +29,9 @@ public class NoteFactory extends RelationFactory
 	 * @param classDiagram
 	 *            the class diagram
 	 */
-	public NoteFactory(GraphicView parent, ClassDiagram classDiagram)
+	public NoteFactory(GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 	}
 
 	@Override

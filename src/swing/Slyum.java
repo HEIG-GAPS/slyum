@@ -1,6 +1,6 @@
 package swing;
 
-import graphic.entity.EntityView;
+import graphic.GraphicView;
 
 import java.awt.Color;
 import java.awt.Desktop;
@@ -75,6 +75,7 @@ public class Slyum extends JFrame implements ActionListener
 	public static final String ACTION_NEW_PROJECT = "NewProject";
 	public static final String ACTION_OPEN = "Open";
 	public static final String ACTION_SAVE = "Save";
+	public static final String ACTION_SAVE_AS = "SaveAs";
 	public static final String ACTION_EXPORT = "Export";
 	public static final String ACTION_KLIPPER = "Klipper";
 	public static final String ACTION_PRINT = "Print";
@@ -95,7 +96,6 @@ public class Slyum extends JFrame implements ActionListener
 	public static final String ACTION_ALIGN_BOTTOM = "AlignBottom";
 	public static final String ACTION_ALIGN_LEFT = "AlignLeft";
 	public static final String ACTION_ALIGN_RIGHT = "AlignRight";
-	public static final String ACTION_SAVE_AS = "SaveAs";
 	public static final String ACTION_ADJUST_WIDTH = "AdjustWidth";
 	public static final String ACTION_UNDO = "Undo";
 	public static final String ACTION_REDO = "Redo";
@@ -103,6 +103,8 @@ public class Slyum extends JFrame implements ActionListener
 	public static final String ACTION_MOVE_UP = "MoveUp";
 	public static final String ACTION_MOVE_DOWN = "MoveDown";
 	public static final String ACTION_MOVE_BOTTOM = "MoveBottom";
+	public static final String ACTION_COLOR = "Color";
+	public static final String ACTION_DELETE = "Delete";
 	
 	// Accelerator
 	public final static String KEY_NEW_PROJECT = "ctrl alt N";
@@ -366,6 +368,44 @@ public class Slyum extends JFrame implements ActionListener
 		});
 	}
 	
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		PanelClassDiagram p = PanelClassDiagram.getInstance();
+		GraphicView gv = p.getCurrentGraphicView();
+		
+		if (Slyum.ACTION_SAVE_AS.equals(e.getActionCommand()))
+			p.saveToXML(true);
+		
+		else if (ACTION_ABOUT.equals(e.getActionCommand()))
+			
+			new AboutBox(this);
+	
+		else if (ACTION_HELP.equals(e.getActionCommand()))
+			
+			openHelp();
+	
+		else if (ACTION_EXIT.equals(e.getActionCommand()))
+			
+			exit();
+	
+		else if (ACTION_PROPERTIES.equals(e.getActionCommand()))
+			
+			new SProperties();
+	
+		else if (ACTION_UPDATE.equals(e.getActionCommand()))
+			
+			openURL(URL_UPDATE_PAGE);
+		
+		else if (ACTION_SELECT_ALL.equals(e.getActionCommand()))
+			
+			gv.selectAllComponents();
+		
+		else if (ACTION_UNSELECT_ALL.equals(e.getActionCommand()))
+			
+			gv.clearAllSelectedComponents();
+	}
+
 	/**
 	 * Initialize the properties of the frame.
 	 */
@@ -410,52 +450,6 @@ public class Slyum extends JFrame implements ActionListener
 		UIManager.put("OptionPane.questionIcon", PersonalizedIcon.getQuestionIcon());
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e)
-	{
-		if (ACTION_ABOUT.equals(e.getActionCommand()))
-			
-			new AboutBox(this);
-
-		else if (ACTION_HELP.equals(e.getActionCommand()))
-			
-			openHelp();
-
-		else if (ACTION_EXIT.equals(e.getActionCommand()))
-			
-			exit();
-
-		else if (ACTION_PROPERTIES.equals(e.getActionCommand()))
-			
-			new SProperties();
-
-		else if (ACTION_UPDATE.equals(e.getActionCommand()))
-			
-			openURL(URL_UPDATE_PAGE);
-			
-		else if (ACTION_KLIPPER.equals(e.getActionCommand()))
-			
-			PanelClassDiagram.getInstance().getCurrentGraphicView().copyDiagramToClipboard();
-		
-		else if (ACTION_SELECT_ALL.equals(e.getActionCommand()))
-			
-			PanelClassDiagram.getInstance().getCurrentGraphicView().selectAllComponents();
-		
-		else if (ACTION_UNSELECT_ALL.equals(e.getActionCommand()))
-			
-			PanelClassDiagram.getInstance().getCurrentGraphicView().clearAllSelectedComponents();
-		
-		else
-		{
-			// some actions are in PanelClassDiagram too.
-			panel.actionPerformed(e);
-			
-			for (EntityView ev : PanelClassDiagram.getInstance().getCurrentGraphicView().getSelectedEntities())
-				
-				ev.actionPerformed(e);
-		}
-	}
-	
 	public static void openURL(String url)
 	{
 		try
@@ -496,9 +490,6 @@ public class Slyum extends JFrame implements ActionListener
 		};
 
 		menuBar.setBorder(null);
-		
-		SPanelStyleComponent ps = SPanelStyleComponent.getInstance();
-		SPanelZOrder pz = SPanelZOrder.getInstance();
 
 		JMenu menu;
 		JMenuItem menuItem;
@@ -508,190 +499,214 @@ public class Slyum extends JFrame implements ActionListener
 		menu.setMnemonic(KeyEvent.VK_F);
 		menuBar.add(menu);
 
-		// Menu item New project
-		menuItem = createMenuItem("New Project", "newProject", KeyEvent.VK_J, KEY_NEW_PROJECT, ACTION_NEW_PROJECT, null);
-		menu.add(menuItem);
-
-		// Menu item New view
-		menuItem = createMenuItem("New View", "newView", KeyEvent.VK_N, "ctrl N", "newView", null);
-		menuItem.setEnabled(false);
-		menu.add(menuItem);
-
-		// Menu item open project
-		menuItem = createMenuItem("Open Project...", "open16", KeyEvent.VK_O, KEY_OPEN_PROJECT, ACTION_OPEN, null);
-		menu.add(menuItem);
-
-		menu.addSeparator();
-
-		// Menu item close
-		menuItem = createMenuItem("Close", "close", KeyEvent.VK_C, "ctrl C", "close", null);
-		menuItem.setEnabled(false);
-		menu.add(menuItem);
-
-		menuItem = createMenuItem("Close All", "closeAll", KeyEvent.VK_S, "ctrl aS", "closeAll", null);
-		menu.addSeparator();
-
-		// Menu item save
-		menuItem = createMenuItem("Save", "save16", KeyEvent.VK_S, KEY_SAVE, ACTION_SAVE, null);
-		menu.add(menuItem);
-
-		// Menu item save as...
-		menuItem = createMenuItem("Save As...", "saveAs16", KeyEvent.VK_A, KEY_SAVE_AS, ACTION_SAVE_AS, null);
-		menu.add(menuItem);
-
-		menu.addSeparator();
-
-		// Menu item Export as image...
-		menuItem = createMenuItem("Export as image...", "camera16", KeyEvent.VK_M, KEY_EXPORT, ACTION_EXPORT, null);
-		menu.add(menuItem);
-		
-		// Menu item Copy to clipboard
-		menuItem = createMenuItem("Copy selection to clipboard", "klipper16", KeyEvent.VK_K, KEY_KLIPPER, ACTION_KLIPPER, null);
-		menu.add(menuItem);
-
-		menu.addSeparator();
-
-		// Menu item print
-		menuItem = createMenuItem("Print...", "print16", KeyEvent.VK_P, KEY_PRINT, ACTION_PRINT, null);
-		menu.add(menuItem);
-
-		menu.addSeparator();
-
-		// Menu item Properties
-		menuItem = createMenuItem("Properties...", "Properties", KeyEvent.VK_R, KEY_PROPERTIES, ACTION_PROPERTIES, null);
-		menu.add(menuItem);
-
-		menu.addSeparator();
-
-		// Menu item exit
-		menuItem = createMenuItem("Exit", "exit", KeyEvent.VK_X, KEY_EXIT, ACTION_EXIT, null);
-		menu.add(menuItem);
+		{
+			SPanelFileComponent p = SPanelFileComponent.getInstance();
+			
+			// Menu item New project
+			menuItem = createMenuItem("New Project", "newProject", KeyEvent.VK_J, KEY_NEW_PROJECT, ACTION_NEW_PROJECT, p.getBtnNewProject());
+			menu.add(menuItem);
+	
+			/*
+			// Menu item New view
+			menuItem = createMenuItem("New View", "newView", KeyEvent.VK_N, "ctrl N", "newView", null);
+			menuItem.setEnabled(false);
+			menu.add(menuItem);
+			*/
+	
+			// Menu item open project
+			menuItem = createMenuItem("Open Project...", "open16", KeyEvent.VK_O, KEY_OPEN_PROJECT, ACTION_OPEN, p.getBtnOpen());
+			menu.add(menuItem);
+	
+			menu.addSeparator();
+	
+			/*
+			// Menu item close
+			menuItem = createMenuItem("Close", "close", KeyEvent.VK_C, "ctrl C", "close", null);
+			menuItem.setEnabled(false);
+			menu.add(menuItem);
+	
+			menuItem = createMenuItem("Close All", "closeAll", KeyEvent.VK_S, "ctrl aS", "closeAll", null);
+			menu.addSeparator();
+			*/
+	
+			// Menu item save
+			menuItem = createMenuItem("Save", "save16", KeyEvent.VK_S, KEY_SAVE, ACTION_SAVE, p.getBtnSave());
+			menu.add(menuItem);
+	
+			// Menu item save as...
+			menuItem = createMenuItem("Save As...", "saveAs16", KeyEvent.VK_A, KEY_SAVE_AS, ACTION_SAVE_AS);
+			menu.add(menuItem);
+	
+			menu.addSeparator();
+	
+			// Menu item Export as image...
+			menuItem = createMenuItem("Export as image...", "camera16", KeyEvent.VK_M, KEY_EXPORT, ACTION_EXPORT, p.getBtnExport());
+			menu.add(menuItem);
+			
+			// Menu item Copy to clipboard
+			menuItem = createMenuItem("Copy selection to clipboard", "klipper16", KeyEvent.VK_K, KEY_KLIPPER, ACTION_KLIPPER, p.getBtnKlipper());
+			menu.add(menuItem);
+	
+			menu.addSeparator();
+	
+			// Menu item print
+			menuItem = createMenuItem("Print...", "print16", KeyEvent.VK_P, KEY_PRINT, ACTION_PRINT, p.getBtnPrint());
+			menu.add(menuItem);
+	
+			menu.addSeparator();
+	
+			// Menu item Properties
+			menuItem = createMenuItem("Properties...", "Properties", KeyEvent.VK_R, KEY_PROPERTIES, ACTION_PROPERTIES);
+			menu.add(menuItem);
+	
+			menu.addSeparator();
+	
+			// Menu item exit
+			menuItem = createMenuItem("Exit", "exit", KeyEvent.VK_X, KEY_EXIT, ACTION_EXIT);
+			menu.add(menuItem);
+		}
 
 		// Menu edit
 		menu = new JMenu("Edit");
 		menu.setMnemonic(KeyEvent.VK_E);
 		menuBar.add(menu);
 
-		// Menu item Undo
-		menuItem = undo = createMenuItem("Undo", "undo16", KeyEvent.VK_U, KEY_UNDO, ACTION_UNDO, null);
-		menuItem.setEnabled(false);
-		menu.add(menuItem);
+		{
+			final SPanelUndoRedo p = SPanelUndoRedo.getInstance();
+			// Menu item Undo
+			menuItem = undo = createMenuItem("Undo", "undo16", KeyEvent.VK_U, KEY_UNDO, ACTION_UNDO, p.getUndoButton());
+			menuItem.setEnabled(false);
+			menu.add(menuItem);
 
-		// Menu item Redo
-		menuItem = redo = createMenuItem("Redo", "redo16", KeyEvent.VK_R, KEY_REDO, ACTION_REDO, null);
-		menuItem.setEnabled(false);
-		menu.add(menuItem);
+			// Menu item Redo
+			menuItem = redo = createMenuItem("Redo", "redo16", KeyEvent.VK_R, KEY_REDO, ACTION_REDO, p.getRedoButton());
+			menuItem.setEnabled(false);
+			menu.add(menuItem);
+			
+		}
 
 		menu.addSeparator();
 
 		// Menu item Select all
-		menuItem = createMenuItem("Select all", "select16", KeyEvent.VK_S, KEY_SELECT_ALL, ACTION_SELECT_ALL, null);
+		menuItem = createMenuItem("Select all", "select16", KeyEvent.VK_S, KEY_SELECT_ALL, ACTION_SELECT_ALL);
 		menu.add(menuItem);
 
 		// Menu item Unselect all
-		menuItem = createMenuItem("Unselect all", "unselect16", KeyEvent.VK_N, KEY_UNSELECT_ALL, ACTION_UNSELECT_ALL, null);
+		menuItem = createMenuItem("Unselect all", "unselect16", KeyEvent.VK_N, KEY_UNSELECT_ALL, ACTION_UNSELECT_ALL);
 		menu.add(menuItem);
 
 		menu.addSeparator();
 
-		// Menu item adjust width
-		menuItem = createMenuItem("Adjust Classes Width", "adjustWidth16", KeyEvent.VK_W, KEY_ADJUST_SIZE, ACTION_ADJUST_WIDTH, ps.getBtnAdjust());
-		menu.add(menuItem);
-
-		// Menu item align top
-		menuItem = createMenuItem("Align Top", "alignTop16", KeyEvent.VK_O, KEY_ALIGN_UP, ACTION_ALIGN_TOP, ps.getBtnTop());
-		menu.add(menuItem);
-
-		// Menu item align bottom
-		menuItem = createMenuItem("Align Bottom", "alignBottom16", KeyEvent.VK_B, KEY_ALIGN_DOWN, ACTION_ALIGN_BOTTOM, ps.getBtnBottom());
-		menu.add(menuItem);
-
-		// Menu item align left
-		menuItem = createMenuItem("Align Left", "alignLeft16", KeyEvent.VK_F, KEY_ALIGN_LEFT, ACTION_ALIGN_LEFT, ps.getBtnLeft());
-		menu.add(menuItem);
-
-		// Menu item align right
-		menuItem = createMenuItem("Align Righ", "alignRight16", KeyEvent.VK_H, KEY_ALIGN_RIGHT, ACTION_ALIGN_RIGHT, ps.getBtnRight());
-		menu.add(menuItem);
+		{
+			SPanelStyleComponent p = SPanelStyleComponent.getInstance();
+			
+			// Menu item adjust width
+			menuItem = createMenuItem("Adjust Classes Width", "adjustWidth16", KeyEvent.VK_W, KEY_ADJUST_SIZE, ACTION_ADJUST_WIDTH, p.getBtnAdjust());
+			menu.add(menuItem);
+	
+			// Menu item align top
+			menuItem = createMenuItem("Align Top", "alignTop16", KeyEvent.VK_O, KEY_ALIGN_UP, ACTION_ALIGN_TOP, p.getBtnTop());
+			menu.add(menuItem);
+	
+			// Menu item align bottom
+			menuItem = createMenuItem("Align Bottom", "alignBottom16", KeyEvent.VK_B, KEY_ALIGN_DOWN, ACTION_ALIGN_BOTTOM, p.getBtnBottom());
+			menu.add(menuItem);
+	
+			// Menu item align left
+			menuItem = createMenuItem("Align Left", "alignLeft16", KeyEvent.VK_F, KEY_ALIGN_LEFT, ACTION_ALIGN_LEFT, p.getBtnLeft());
+			menu.add(menuItem);
+	
+			// Menu item align right
+			menuItem = createMenuItem("Align Righ", "alignRight16", KeyEvent.VK_H, KEY_ALIGN_RIGHT, ACTION_ALIGN_RIGHT, p.getBtnRight());
+			menu.add(menuItem);
+		}
 
 		menu.addSeparator();
 		
-		// Menu item top
-		menuItem = createMenuItem("Move top", "top", KeyEvent.VK_T, KEY_MOVE_TOP, ACTION_MOVE_TOP, pz.getBtnTop());
-		menu.add(menuItem);
+		{
+			SPanelZOrder p = SPanelZOrder.getInstance();
+			
+			// Menu item top
+			menuItem = createMenuItem("Move top", "top", KeyEvent.VK_T, KEY_MOVE_TOP, ACTION_MOVE_TOP, p.getBtnTop());
+			menu.add(menuItem);
+	
+			// Menu item up
+			menuItem = createMenuItem("Move up", "up", KeyEvent.VK_P, KEY_MOVE_UP, ACTION_MOVE_UP, p.getBtnUp());
+			menu.add(menuItem);
+	
+			// Menu item down
+			menuItem = createMenuItem("Move down", "down", KeyEvent.VK_D, KEY_MOVE_DOWN, ACTION_MOVE_DOWN, p.getBtnDown());
+			menu.add(menuItem);
+	
+			// Menu item bottom
+			menuItem = createMenuItem("Move Bottom", "bottom", KeyEvent.VK_M, KEY_MOVE_BOTTOM, ACTION_MOVE_BOTTOM, p.getBtnBottom());
+			menu.add(menuItem);
+		}
 
-		// Menu item up
-		menuItem = createMenuItem("Move up", "up", KeyEvent.VK_P, KEY_MOVE_UP, ACTION_MOVE_UP, pz.getBtnUp());
-		menu.add(menuItem);
-
-		// Menu item down
-		menuItem = createMenuItem("Move down", "down", KeyEvent.VK_D, KEY_MOVE_DOWN, ACTION_MOVE_DOWN, pz.getBtnDown());
-		menu.add(menuItem);
-
-		// Menu item bottom
-		menuItem = createMenuItem("Move Bottom", "bottom", KeyEvent.VK_M, KEY_MOVE_BOTTOM, ACTION_MOVE_BOTTOM, pz.getBtnBottom());
-		menu.add(menuItem);
-
-		// Menu Diagram
-		menu = new JMenu("Diagram");
-		menu.setMnemonic(KeyEvent.VK_D);
-		menuBar.add(menu);
-
-		// Menu item add class
-		menuItem = createMenuItem("Add Class", "class16", KeyEvent.VK_C, KEY_CLASS, ACTION_NEW_CLASS, null);
-		menu.add(menuItem);
-
-		// Menu item add interface
-		menuItem = createMenuItem("Add Interface", "interface16", KeyEvent.VK_I, KEY_INTERFACE, ACTION_NEW_INTERFACE, null);
-		menu.add(menuItem);
-
-		// Menu item add class association
-		menuItem = createMenuItem("Add Association class", "classAssoc16", KeyEvent.VK_X, KEY_ASSOCIATION_CLASS, ACTION_NEW_CLASS_ASSOCIATION, null);
-		menu.add(menuItem);
-
-		menu.addSeparator();
-
-		// Menu item add generalize
-		menuItem = createMenuItem("Add Inheritance", "generalize16", KeyEvent.VK_H, KEY_INHERITANCE, ACTION_NEW_GENERALIZE, null);
-		menu.add(menuItem);
-
-		// Menu item add inner class
-		menuItem = createMenuItem("Add inner class", "innerClass16", KeyEvent.VK_N, KEY_INNER_CLASS, ACTION_NEW_INNER_CLASS, null);
-		menu.add(menuItem);
-
-		// Menu item add dependency
-		menuItem = createMenuItem("Add Dependency", "dependency16", KeyEvent.VK_E, KEY_DEPENDENCY, ACTION_NEW_DEPENDENCY, null);
-		menu.add(menuItem);
-
-		// Menu item add association
-		menuItem = createMenuItem("Add Association", "association16", KeyEvent.VK_S, KEY_ASSOCIATION, ACTION_NEW_ASSOCIATION, null);
-		menu.add(menuItem);
-
-		// Menu item add aggregation
-		menuItem = createMenuItem("Add Aggregation", "aggregation16", KeyEvent.VK_G, KEY_AGGREGATION, ACTION_NEW_AGGREGATION, null);
-		menu.add(menuItem);
-
-		// Menu item add composition
-		menuItem = createMenuItem("Add Composition", "composition16", KeyEvent.VK_M, KEY_COMPOSITION, ACTION_NEW_COMPOSITION, null);
-		menu.add(menuItem);
-
-		// Menu item add multi association
-		menuItem = createMenuItem("Add Multi-association", "multi16", KeyEvent.VK_W, KEY_MULTI_ASSOCIATION, ACTION_NEW_MULTI, null);
-		menu.add(menuItem);
-
-		menu.addSeparator();
-
-		// Menu item add note
-		menuItem = createMenuItem("Add Note", "note16", KeyEvent.VK_N, KEY_NOTE, ACTION_NEW_NOTE, null);
-		menu.add(menuItem);
-
-		// Menu item link note
-		menuItem = createMenuItem("Link Note", "linkNote16", KeyEvent.VK_L, KEY_LINK_NOTE, ACTION_NEW_LINK_NOTE, null);
-		menu.add(menuItem);
+		{
+			SPanelDiagramComponent p = SPanelDiagramComponent.getInstance();
+			
+			// Menu Diagram
+			menu = new JMenu("Diagram");
+			menu.setMnemonic(KeyEvent.VK_D);
+			menuBar.add(menu);
+	
+			// Menu item add class
+			menuItem = createMenuItem("Add Class", "class16", KeyEvent.VK_C, KEY_CLASS, ACTION_NEW_CLASS, p.getBtnClass());
+			menu.add(menuItem);
+	
+			// Menu item add interface
+			menuItem = createMenuItem("Add Interface", "interface16", KeyEvent.VK_I, KEY_INTERFACE, ACTION_NEW_INTERFACE, p.getBtnInterface());
+			menu.add(menuItem);
+	
+			// Menu item add class association
+			menuItem = createMenuItem("Add Association class", "classAssoc16", KeyEvent.VK_X, KEY_ASSOCIATION_CLASS, ACTION_NEW_CLASS_ASSOCIATION, p.getBtnAssociation());
+			menu.add(menuItem);
+	
+			menu.addSeparator();
+	
+			// Menu item add generalize
+			menuItem = createMenuItem("Add Inheritance", "generalize16", KeyEvent.VK_H, KEY_INHERITANCE, ACTION_NEW_GENERALIZE, p.getBtnGeneralize());
+			menu.add(menuItem);
+	
+			// Menu item add inner class
+			menuItem = createMenuItem("Add inner class", "innerClass16", KeyEvent.VK_N, KEY_INNER_CLASS, ACTION_NEW_INNER_CLASS, p.getBtnInnerClass());
+			menu.add(menuItem);
+	
+			// Menu item add dependency
+			menuItem = createMenuItem("Add Dependency", "dependency16", KeyEvent.VK_E, KEY_DEPENDENCY, ACTION_NEW_DEPENDENCY, p.getBtnDependency());
+			menu.add(menuItem);
+	
+			// Menu item add association
+			menuItem = createMenuItem("Add Association", "association16", KeyEvent.VK_S, KEY_ASSOCIATION, ACTION_NEW_ASSOCIATION, p.getBtnAssociation());
+			menu.add(menuItem);
+	
+			// Menu item add aggregation
+			menuItem = createMenuItem("Add Aggregation", "aggregation16", KeyEvent.VK_G, KEY_AGGREGATION, ACTION_NEW_AGGREGATION, p.getBtnAggregation());
+			menu.add(menuItem);
+	
+			// Menu item add composition
+			menuItem = createMenuItem("Add Composition", "composition16", KeyEvent.VK_M, KEY_COMPOSITION, ACTION_NEW_COMPOSITION, p.getBtnComposition());
+			menu.add(menuItem);
+	
+			// Menu item add multi association
+			menuItem = createMenuItem("Add Multi-association", "multi16", KeyEvent.VK_W, KEY_MULTI_ASSOCIATION, ACTION_NEW_MULTI, p.getBtnMulti());
+			menu.add(menuItem);
+	
+			menu.addSeparator();
+	
+			// Menu item add note
+			menuItem = createMenuItem("Add Note", "note16", KeyEvent.VK_N, KEY_NOTE, ACTION_NEW_NOTE, p.getBtnNote());
+			menu.add(menuItem);
+	
+			// Menu item link note
+			menuItem = createMenuItem("Link Note", "linkNote16", KeyEvent.VK_L, KEY_LINK_NOTE, ACTION_NEW_LINK_NOTE, p.getBtnLinkNote());
+			menu.add(menuItem);
+		}
 
 		// Menu Element
-		menu = new JMenu("Element");
-		menu.setMnemonic(KeyEvent.VK_E);
+		// menu = new JMenu("Element");
+		// menu.setMnemonic(KeyEvent.VK_E);
 		// menuBar.add(menu);
 
 		// Menu Help
@@ -700,59 +715,51 @@ public class Slyum extends JFrame implements ActionListener
 		menuBar.add(menu);
 
 		// Menu item Help
-		menuItem = createMenuItem("Help...", "help", KeyEvent.VK_E, KEY_HELP, ACTION_HELP, null);
+		menuItem = createMenuItem("Help...", "help", KeyEvent.VK_E, KEY_HELP, ACTION_HELP);
 		menu.add(menuItem);
 
 		// Menu item Update
-		menuItem = createMenuItem("Go to update page...", "update", KeyEvent.VK_U, null, ACTION_UPDATE, null);
+		menuItem = createMenuItem("Go to update page...", "update", KeyEvent.VK_U, null, ACTION_UPDATE);
 		menu.add(menuItem);
 
 		menu.addSeparator();
 
 		// Menu item About
-		menuItem = createMenuItem("About Slyum...", null, KeyEvent.VK_A, null, ACTION_ABOUT, null);
+		menuItem = createMenuItem("About Slyum...", null, KeyEvent.VK_A, null, ACTION_ABOUT);
 		menu.add(menuItem);
 
 		setJMenuBar(menuBar);
-		
-		ps.updateBtnState();
-		pz.updateBtnState();
 	}
-
-	/**
-	 * Create a JMenuItem with given informations.
-	 * 
-	 * @param text
-	 *            the text of the menu
-	 * @param iconName
-	 *            the icon path for the menu
-	 * @param mnemonic
-	 *            the mnemoni for the menu
-	 * @param accelerator
-	 *            the keystroke, in string, for the menu
-	 * @param actionCommand
-	 *            the action command
-	 * @return the new JMenuItem created
-	 */
-	public JMenuItem createMenuItem(String text, String iconName, int mnemonic, String accelerator, String actionCommand, SButton link)
+	
+	public JMenuItem createMenuItem(String text, String iconName, int mnemonic, String accelerator, String actionCommand, ActionListener al)
 	{
 		JMenuItem item;
-
+	
 		final String imgLocation = ICON_PATH + iconName + ".png";
-
+	
 		final ImageIcon icon = PersonalizedIcon.createImageIcon(imgLocation);
-
+	
 		item = new JMenuItem(text, icon);
 		item.setMnemonic(mnemonic);
 		item.setActionCommand(actionCommand);
 		item.setAccelerator(KeyStroke.getKeyStroke(accelerator));
-		item.addActionListener(this);
+		item.addActionListener(al);
+	
+		return item;
+	}
+	
+	public JMenuItem createMenuItem(String text, String iconName, int mnemonic, String accelerator, String actionCommand, SButton link)
+	{
+		JMenuItem item =  createMenuItem(text, iconName, mnemonic, accelerator, actionCommand, link.getActionListeners()[0]);
 		
-		if (link != null)
-			
-			link.linkComponent(item);
+		link.linkComponent(item);
 
 		return item;
+	}
+	
+	public JMenuItem createMenuItem(String text, String iconName, int mnemonic, String accelerator, String actionCommand)
+	{
+		return createMenuItem(text, iconName, mnemonic, accelerator, actionCommand, this);
 	}
 
 	private void exit()
