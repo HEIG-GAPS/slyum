@@ -64,6 +64,7 @@ import utility.SMessageDialog;
 import utility.SSlider;
 import utility.SizedCursor;
 import utility.Utility;
+import change.BufferBounds;
 import change.BufferColor;
 import change.Change;
 import classDiagram.ClassDiagram;
@@ -773,9 +774,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 */
 	public void adjustWidthAllEntities()
 	{
-		for (final EntityView ev : getEntitiesView())
-
-			ev.adjustWidth();
+		adjustEntities(getEntitiesView());
 	}
 
 	/**
@@ -784,9 +783,25 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 */
 	public void adjustWidthSelectedEntities()
 	{
-		for (final EntityView ev : getSelectedEntities())
-
+		adjustEntities(getSelectedEntities());
+	}
+	
+	/**
+	 * Get entities contents in this graphic view and adjust their
+	 * width. See adjustWidth() method from EntityView.
+	 * @param list the entities list to selected
+	 */
+	public void adjustEntities(LinkedList<EntityView> list)
+	{
+		boolean isRecord = Change.isRecord();
+		Change.record();
+		
+		for (final EntityView ev : list)
+			
 			ev.adjustWidth();
+
+		if (!isRecord)
+			Change.stopRecord();
 	}
 
 	/**
@@ -797,6 +812,9 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 */
 	public void alignHorizontal(boolean top)
 	{
+		boolean isRecord = Change.isRecord();
+		Change.record();
+		
 		int totalWidth = 0, bottom = Integer.MIN_VALUE;
 
 		final LinkedList<EntityView> sorted = sortXLocation(getSelectedEntities());
@@ -826,9 +844,14 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		{
 			final Rectangle bounds = c.getBounds();
 
+			Change.push(new BufferBounds(c));
 			c.setBounds(new Rectangle(offset, top ? limits.y : bottom, bounds.width, bounds.height));
+			Change.push(new BufferBounds(c));
 			offset += bounds.width + space;
 		}
+		
+		if (!isRecord)
+			Change.stopRecord();
 	}
 
 	/**
@@ -839,6 +862,9 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 */
 	public void alignVertical(boolean left)
 	{
+		boolean isRecord = Change.isRecord();
+		Change.record();
+		
 		int totalHeight = 0, right = Integer.MIN_VALUE;
 
 		final LinkedList<EntityView> sorted = sortYLocation(getSelectedEntities());
@@ -868,9 +894,14 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		{
 			final Rectangle bounds = c.getBounds();
 
+			Change.push(new BufferBounds(c));
 			c.setBounds(new Rectangle(left ? limits.x : right, offset, bounds.width, bounds.height));
+			Change.push(new BufferBounds(c));
 			offset += bounds.height + space;
 		}
+		
+		if (!isRecord)
+			Change.stopRecord();
 	}
 
 	/**
