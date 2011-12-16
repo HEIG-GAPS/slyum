@@ -457,9 +457,6 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 								cancel(true);
 							}
 						});
-
-						final boolean isBlocked = Change.isBlocked();
-						Change.setBlocked(true);
 						graphicView.setVisible(false);
 						
 						parser.parse(file, handler);
@@ -471,7 +468,6 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 						}
 						
 						graphicView.setVisible(true);
-						Change.setBlocked(isBlocked);
 						
 						dpl.setVisible(false);
 						
@@ -483,11 +479,16 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 					return null;
 				}				
 			};
-			
+
+
+			final boolean isBlocked = Change.isBlocked();
+			Change.setBlocked(true);
 			sw.execute();
 			
 			if (dpl != null)
 				dpl.setVisible(true);
+
+			Change.setBlocked(isBlocked);
 			
 			//new Thread(new Runnable() {
 				

@@ -148,7 +148,7 @@ public class SProperties extends JDialog
 
 						public void actionPerformed(ActionEvent arg0)
 						{
-							final SlyumColorChooser scc = new SlyumColorChooser(btnBackgroundColor.getBackground());
+							final SColorChooser scc = new SColorChooser(btnBackgroundColor.getBackground());
 							scc.setVisible(true);
 
 							if (scc.isAccepted())
@@ -380,7 +380,7 @@ public class SProperties extends JDialog
 										btnColor.addActionListener(new ActionListener() {
 											public void actionPerformed(ActionEvent arg0)
 											{
-												final SlyumColorChooser scc = new SlyumColorChooser(new Color(GraphicView.getGridColor()));
+												final SColorChooser scc = new SColorChooser(new Color(GraphicView.getGridColor()));
 												scc.setVisible(true);
 
 												if (scc.isAccepted())
@@ -397,7 +397,7 @@ public class SProperties extends JDialog
 
 						public void actionPerformed(ActionEvent arg0)
 						{
-							final SlyumColorChooser scc = new SlyumColorChooser(btnDefaultClassColor.getBackground());
+							final SColorChooser scc = new SColorChooser(btnDefaultClassColor.getBackground());
 							scc.setVisible(true);
 
 							if (scc.isAccepted())

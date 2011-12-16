@@ -36,7 +36,7 @@ public class SPanelElement extends JPanelRounded implements ActionListener, ILis
 		eb.addActionListener(this);
 		add(eb);
 		
-		eb = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "color16.png"), "Color", Color.CYAN, TT_CHANGE_COLOR);
+		eb = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "color16.png"), "ColorPanel", Color.CYAN, TT_CHANGE_COLOR);
 		eb.addActionListener(this);
 		add(eb);
 		
@@ -62,7 +62,7 @@ public class SPanelElement extends JPanelRounded implements ActionListener, ILis
 			
 			gv.deleteSelectedComponents();
 		
-		else if (e.getActionCommand().equals("Color"))
+		else if (e.getActionCommand().equals("ColorPanel"))
 			
 			GraphicComponent.askNewColorForSelectedItems();
 		
