@@ -8,7 +8,6 @@ import graphic.relations.AggregationView;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import classDiagram.ClassDiagram;
 import classDiagram.relationships.Aggregation;
 
 /**
@@ -32,9 +31,9 @@ public class AggregationFactory extends RelationFactory
 	 * @param classDiagram
 	 *            the class diagram
 	 */
-	public AggregationFactory(GraphicView parent, ClassDiagram classDiagram)
+	public AggregationFactory(GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 	}
 
 	@Override

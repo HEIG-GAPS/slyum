@@ -9,8 +9,6 @@ import java.awt.event.MouseEvent;
 
 import swing.Slyum;
 
-import classDiagram.ClassDiagram;
-
 /**
  * ComponentFactory allows to create a new component view associated with a new
  * component UML. Give this factory at the graphic view using the method
@@ -29,9 +27,9 @@ public abstract class ComponentFactory extends CreateComponent
 	protected Point mousePressed;
 	protected Point mouseReleased;
 
-	public ComponentFactory(GraphicView parent, ClassDiagram classDiagram)
+	public ComponentFactory(GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 	}
 
 	@Override

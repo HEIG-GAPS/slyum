@@ -13,7 +13,6 @@ import java.awt.Rectangle;
 
 import utility.SMessageDialog;
 
-import classDiagram.ClassDiagram;
 import classDiagram.components.ClassEntity;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Multi;
@@ -41,9 +40,9 @@ public class BinaryFactory extends RelationFactory
 	 * @param classDiagram
 	 *            the class diagram
 	 */
-	public BinaryFactory(GraphicView parent, ClassDiagram classDiagram)
+	public BinaryFactory(GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 	}
 
 	@Override

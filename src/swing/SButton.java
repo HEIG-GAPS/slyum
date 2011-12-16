@@ -7,7 +7,6 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -27,31 +26,29 @@ public class SButton extends JButton implements MouseListener
 	private Color themeColor;
 	
 	private Component linkedComponent;
-
-	public SButton(Icon icon, String action, Color color, String tooltip)
+	
+	public SButton(Icon icon, Color color, String tooltip)
 	{
 		super(icon);
-		
-		init(action, color, tooltip);
+		init("", color, tooltip, null);
+	}
+
+	public SButton(Icon icon, String action, Color color, String tooltip, ActionListener al)
+	{
+		super(icon);
+		init(action, color, tooltip, al);
 	}
 	
-	public SButton(String text, String action, Color color, String tooltip)
+	public SButton(String text, String action, Color color, String tooltip, ActionListener al)
 	{
 		super(text);
-		init(action, color, tooltip);
+		init(action, color, tooltip, al);
 	}
 	
-	private void init(String action, Color color, String tooltip)
+	private void init(String action, Color color, String tooltip, ActionListener al)
 	{
 		setActionCommand(action);
-		addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				Slyum.getInstance().actionPerformed(e);
-			}
-		});
+		addActionListener(al);
 		setBorderPainted(false);
 		setContentAreaFilled(false);
 		setAlignmentX(CENTER_ALIGNMENT);

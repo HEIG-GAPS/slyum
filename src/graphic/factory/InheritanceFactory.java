@@ -10,7 +10,6 @@ import java.awt.Graphics2D;
 
 import utility.SMessageDialog;
 
-import classDiagram.ClassDiagram;
 import classDiagram.relationships.Inheritance;
 
 /**
@@ -35,9 +34,9 @@ public class InheritanceFactory extends RelationFactory
 	 * @param classDiagram
 	 *            the class diagram
 	 */
-	public InheritanceFactory(GraphicView parent, ClassDiagram classDiagram)
+	public InheritanceFactory(GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 	}
 
 	@Override

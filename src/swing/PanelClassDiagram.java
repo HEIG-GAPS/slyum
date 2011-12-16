@@ -1,25 +1,11 @@
 package swing;
 
 import graphic.GraphicView;
-import graphic.factory.AggregationFactory;
-import graphic.factory.AssociationClassFactory;
-import graphic.factory.BinaryFactory;
-import graphic.factory.ClassFactory;
-import graphic.factory.CompositionFactory;
-import graphic.factory.DependencyFactory;
-import graphic.factory.InheritanceFactory;
-import graphic.factory.InnerClassFactory;
-import graphic.factory.InterfaceFactory;
-import graphic.factory.LineCommentaryFactory;
-import graphic.factory.MultiFactory;
-import graphic.factory.NoteFactory;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
@@ -61,7 +47,7 @@ import classDiagram.ClassDiagram;
  * @version 1.0 - 25.07.2011
  */
 @SuppressWarnings("serial")
-public class PanelClassDiagram extends JPanel implements ActionListener
+public class PanelClassDiagram extends JPanel
 {
 	private static PanelClassDiagram instance = new PanelClassDiagram();
 
@@ -76,7 +62,6 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 
 	private final GraphicView graphicView;
 	
-	private SPanelUndoRedo panelUndoRedo;
 	private SSlider sSlider;
 
 	private PanelClassDiagram()
@@ -91,7 +76,7 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		panelToolBar.setLayout(new BoxLayout(panelToolBar, BoxLayout.LINE_AXIS));
 
 		panelToolBar.add(SPanelFileComponent.getInstance());
-		panelToolBar.add(panelUndoRedo = new SPanelUndoRedo());
+		panelToolBar.add(SPanelUndoRedo.getInstance());
 		panelToolBar.add(SPanelElement.getInstance());
 		panelToolBar.add(SPanelStyleComponent.getInstance());
 		panelToolBar.add(SPanelZOrder.getInstance());
@@ -105,7 +90,7 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
 		
-		leftPanel.add(new SPanelDiagramComponent());
+		leftPanel.add(SPanelDiagramComponent.getInstance());
 		leftPanel.add(new HierarchicalView(getClassDiagram()));
 		
 		final SSplitPane leftSplitPanel = new SSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, mainSplitPane);
@@ -115,88 +100,6 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		graphicView.getScene().setMinimumSize(new Dimension(200, 150));
 
 		add(leftSplitPanel, BorderLayout.CENTER);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e)
-	{
-		if (Slyum.ACTION_NEW_CLASS.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new ClassFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_INTERFACE.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new InterfaceFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_GENERALIZE.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new InheritanceFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_INNER_CLASS.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new InnerClassFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_DEPENDENCY.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new DependencyFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_ASSOCIATION.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new BinaryFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_AGGREGATION.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new AggregationFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_COMPOSITION.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new CompositionFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_CLASS_ASSOCIATION.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new AssociationClassFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_MULTI.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new MultiFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_NOTE.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new NoteFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_EXPORT.equals(e.getActionCommand()))
-			exportAsImage();
-
-		else if (Slyum.ACTION_ALIGN_TOP.equals(e.getActionCommand()))
-			graphicView.alignHorizontal(true);
-
-		else if (Slyum.ACTION_ALIGN_BOTTOM.equals(e.getActionCommand()))
-			graphicView.alignHorizontal(false);
-
-		else if (Slyum.ACTION_ALIGN_LEFT.equals(e.getActionCommand()))
-			graphicView.alignVertical(true);
-
-		else if (Slyum.ACTION_ALIGN_RIGHT.equals(e.getActionCommand()))
-			graphicView.alignVertical(false);
-
-		else if (Slyum.ACTION_PRINT.equals(e.getActionCommand()))
-			initPrinting();
-
-		else if (Slyum.ACTION_SAVE.equals(e.getActionCommand()))
-			saveToXML(false);
-
-		else if (Slyum.ACTION_SAVE_AS.equals(e.getActionCommand()))
-			saveToXML(true);
-
-		else if (Slyum.ACTION_OPEN.equals(e.getActionCommand()))
-			openFromXML();
-
-		else if (Slyum.ACTION_NEW_PROJECT.equals(e.getActionCommand()))
-			newProject();
-
-		else if (Slyum.ACTION_ADJUST_WIDTH.equals(e.getActionCommand()))
-			graphicView.adjustWidthSelectedEntities();
-
-		else if (Slyum.ACTION_UNDO.equals(e.getActionCommand()))
-			Change.undo();
-
-		else if (Slyum.ACTION_REDO.equals(e.getActionCommand()))
-			Change.redo();
-
-		else if (Slyum.ACTION_NEW_LINK_NOTE.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new LineCommentaryFactory(graphicView, classDiagram));
-		
-		else if (Slyum.ACTION_KLIPPER.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new LineCommentaryFactory(graphicView, classDiagram));
 	}
 
 	/**
@@ -277,12 +180,12 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 	
 	public JButton getRedoButton()
 	{
-		return panelUndoRedo.getRedoButton();
+		return SPanelUndoRedo.getInstance().getRedoButton();
 	}
 	
 	public JButton getUndoButton()
 	{
-		return panelUndoRedo.getUndoButton();
+		return SPanelUndoRedo.getInstance().getUndoButton();
 	}
 
 	/**

@@ -10,7 +10,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import utility.SMessageDialog;
-import classDiagram.ClassDiagram;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.Entity;
 import classDiagram.components.Visibility;
@@ -38,9 +37,9 @@ public class AssociationClassFactory extends RelationFactory
 	 * @param classDiagram
 	 *            the class diagram
 	 */
-	public AssociationClassFactory(GraphicView parent, ClassDiagram classDiagram)
+	public AssociationClassFactory(GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 	}
 
 	@Override
