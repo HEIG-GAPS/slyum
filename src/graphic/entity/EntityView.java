@@ -40,6 +40,8 @@ import swing.Slyum;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.Utility;
+import change.BufferBounds;
+import change.Change;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Attribute;
@@ -462,7 +464,10 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 		// change the width according to the grid
 		final Rectangle bounds = getBounds();
+		
+		Change.push(new BufferBounds(this));
 		setBounds(new Rectangle(bounds.x, bounds.y, width + GraphicView.getGridSize() + 15, bounds.height));
+		Change.push(new BufferBounds(this));
 	}
 
 	@Override
