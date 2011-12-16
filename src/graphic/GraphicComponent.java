@@ -20,7 +20,7 @@ import javax.swing.JRadioButtonMenuItem;
 
 import swing.PanelClassDiagram;
 import swing.Slyum;
-import swing.SlyumColorChooser;
+import swing.SColorChooser;
 import utility.PersonalizedIcon;
 import change.BufferCreation;
 import change.Change;
@@ -88,7 +88,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 	
 	public static void askNewColorForSelectedItems()
 	{
-		final SlyumColorChooser scc = new SlyumColorChooser(EntityView.getBasicColor());
+		final SColorChooser scc = new SColorChooser(EntityView.getBasicColor());
 		
 		scc.setVisible(true);
 

@@ -59,11 +59,12 @@ import swing.SPanelElement;
 import swing.SPanelStyleComponent;
 import swing.SPanelZOrder;
 import swing.Slyum;
-import swing.SlyumColorChooser;
+import swing.SColorChooser;
 import utility.SMessageDialog;
 import utility.SSlider;
 import utility.SizedCursor;
 import utility.Utility;
+import change.BufferColor;
 import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IComponentsObserver;
@@ -538,7 +539,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	{
 		if ("Color".equals(e.getActionCommand()))
 		{
-			final SlyumColorChooser scc = new SlyumColorChooser(getColor());
+			final SColorChooser scc = new SColorChooser(getColor());
 			scc.setVisible(true);
 
 			if (scc.isAccepted())
@@ -887,10 +888,21 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 			setColor(newColor);
 		
 		else
-		
+		{
+			Change.record();
+			
 			for (final GraphicComponent c : getSelectedComponents())
-
+			{
+				// Set default style before save color.
+				c.setDefaultStyle();
+				
+				Change.push(new BufferColor(c));
 				c.setColor(newColor);
+				Change.push(new BufferColor(c));
+			}
+			
+			Change.stopRecord();
+		}
 	}
 
 	/**

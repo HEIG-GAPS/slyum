@@ -1,8 +1,6 @@
 Note de patch 1.3 :
  
  - Support des tableaux et des Listes
- 
- - Désactiver les boutons (barre d'outils, menu contextuel, etc.) lorsque leur utilisation n'effectue aucune action.
 
  - Corriger bugs d'ouverture de projet (à cause du multi-thread).
 
@@ -137,3 +135,5 @@ Déjà implémentées :
  - Utiliser la molette de la souris pour se déplacer sur le diagramme de classe.
  
  - Permetttre d'effectuer des zoom du diagramme de classes.
+ 
+ - Désactiver les boutons (barre d'outils, menu contextuel, etc.) lorsque leur utilisation n'effectue aucune action.

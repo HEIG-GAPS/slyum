@@ -165,9 +165,6 @@ public class Change
 	public static void setHasChange(boolean changed)
 	{
 		_hasChange = changed;
-
-		if (!changed)
-			clear();
 		
 		Slyum.setStarOnTitle(changed);
 	}

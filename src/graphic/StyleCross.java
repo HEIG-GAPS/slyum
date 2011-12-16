@@ -7,8 +7,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import change.Change;
 
@@ -110,32 +108,16 @@ public class StyleCross extends GraphicComponent
 		
 		return new Rectangle(x, y, width, height);
 	}
-	
-	private boolean isTimed = false;
 
 	@Override
 	public boolean isAtPosition(Point position)
 	{
 		if (getBounds().contains(position))
-		{
-			isTimed = false;
 			
 			return true;
-		}
 		else
 		{
-			Timer timer = new Timer();
-			isTimed = true;
-			timer.schedule(new TimerTask() {
-				
-				@Override
-				public void run()
-				{
-					if (isTimed)
-						delete();
-				}
-			}, 1500);
-			
+			delete();
 			return false;
 		}
 	}
