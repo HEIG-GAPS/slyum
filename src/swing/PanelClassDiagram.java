@@ -90,7 +90,7 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		JPanel panelToolBar = new JPanel();
 		panelToolBar.setLayout(new BoxLayout(panelToolBar, BoxLayout.LINE_AXIS));
 
-		panelToolBar.add(new SPanelFileComponent());
+		panelToolBar.add(SPanelFileComponent.getInstance());
 		panelToolBar.add(panelUndoRedo = new SPanelUndoRedo());
 		panelToolBar.add(SPanelElement.getInstance());
 		panelToolBar.add(SPanelStyleComponent.getInstance());
