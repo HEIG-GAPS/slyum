@@ -1,5 +1,6 @@
 package classDiagram.components;
 
+import java.util.LinkedList;
 import java.util.Observable;
 
 import classDiagram.ClassDiagram;
@@ -13,12 +14,50 @@ import classDiagram.IDiagramComponent;
  */
 public class Type extends Observable implements IDiagramComponent
 {
+	public final static String REGEX_SEMANTIC_TYPE =  "([a-zA-Z|_])[\\w<>.\\[\\]]*";
+	public final static String REGEX_DIGIT = "[0-9]*";
+	
+	public static boolean checkSemantic(String type)
+	{
+		int state = 0;
+		char c;
+		for (int i = 0; i < type.length(); i++)
+		{
+			c = type.charAt(i);
+			switch (state)
+			{
+			case 0:				
+				if (c == '[')
+				{
+					state = 1;
+					continue;
+				}
+				else if (i == type.length()-1)
+				
+					continue;
+				
+				break;
+				
+			case 1:
+				
+				if (c == ']' || c == '[')
+					continue;
+				
+				else if (!String.valueOf(c).matches(REGEX_DIGIT))
+					return false;
+				
+				break;
+			}
+		}
+		
+		return !type.isEmpty() && type.matches(REGEX_SEMANTIC_TYPE);
+	}
+	
 	protected final int id;
 
-	protected String name;
-
-	// private LinkedList<Type> collections; // Not use in Slyum 1.0 (can't
-	// create array of types).
+	protected String name = "void";
+	
+	LinkedList<Integer> arraysSize = new LinkedList<>();
 
 	/**
 	 * Create a new type with the specified name.
@@ -28,11 +67,9 @@ public class Type extends Observable implements IDiagramComponent
 	 */
 	public Type(String name)
 	{
-		if (name.isEmpty())
-			throw new IllegalArgumentException("name is null");
-
+		initialize(name);
+		
 		id = ClassDiagram.getNextId();
-		this.name = name;
 	}
 
 	/**
@@ -45,11 +82,15 @@ public class Type extends Observable implements IDiagramComponent
 	 */
 	public Type(String name, int id)
 	{
-		if (name.isEmpty())
-			throw new IllegalArgumentException("name is null");
-
+		initialize(name);
+		
 		this.id = id;
-		this.name = name;
+	}
+	
+	private void initialize(String name)
+	{
+		if (!setName(name))
+			throw new IllegalArgumentException("semantic incorrect");
 	}
 
 	@Override
@@ -65,7 +106,13 @@ public class Type extends Observable implements IDiagramComponent
 	 */
 	public String getName()
 	{
-		return name;
+		String n = name;		
+		
+		for (Integer i : arraysSize)
+		
+			n += "[" + (i < 1 ? "" : i) + "]";
+		
+		return n;
 	}
 
 	@Override
@@ -82,17 +129,105 @@ public class Type extends Observable implements IDiagramComponent
 	 */
 	public boolean setName(String name)
 	{
-		if (name == null)
-			throw new IllegalArgumentException("name is null");
-
-		if (name.isEmpty() || !name.matches("([a-zA-Z|_])[(\\w)<>.]*"))
+		if (!checkSemantic(name))
 			return false;
+		
+		int state = 0; // 0 = name, 1 = array
+		String buff = "", n = "";
+		LinkedList<Integer> a = new LinkedList<>();
+		char c;
+		for (int i = 0; i < name.length(); i++)
+		{
+			c = name.charAt(i);
+			switch (state)
+			{
+			case 0:				
+				if (c == '[')
+				{
+					n = buff;
+					buff = "";
+					state = 1;
+					continue;
+				}
+				else if (i == name.length()-1)
+				{
+					n = buff + name.charAt(i);
+					continue;
+				}
 
-		this.name = name;
+				buff += name.charAt(i);
+				break;
+				
+			case 1:
+				
+				if (c == ']')
+				{
+					int s = -1;
+					if (!buff.isEmpty())
+						s = Integer.parseInt(buff);
+					
+					a.add(s);
+					buff = "";
+					continue;
+				}
+				else if (c == '[')
+				{
+					// Only last dimension can be empty.
+					if (a.getLast() == -1)
+						return false;
+					
+					buff = "";
+					
+					continue;
+				}
+				else if (!String.valueOf(c).matches(REGEX_DIGIT))
+					
+					return false;
+				
+				buff += name.charAt(i);
+				break;
+			}
+		}
+		
+		arraysSize = a;
+
+		this.name = n;
 
 		setChanged();
 
 		return true;
+	}
+	
+	/**
+	 * Return if this type represent an array.
+	 * @return if this type represent an array; false otherwise.
+	 */
+	public boolean isArray()
+	{
+		return arraysSize.size() > 0;
+	}
+	
+	/**
+	 * Return the number of dimension of this type, or 0 if the type
+	 * doesn't represent an array.
+	 * @return the number of dimension of this type, or 0 if the type
+	 * doesn't represent an array.
+	 */
+	public int nbDimension()
+	{
+		return arraysSize.size();
+	}
+	
+	/**
+	 * Return a LinkedList containing the size of the dimensions in the array.
+	 * If the LinkedList is empty, that means this type doesn't represent an array.
+	 * The number -1 means the size is left blank (only possible in last dimension).
+	 * @return sizes of dimensions
+	 */
+	@SuppressWarnings("unchecked")
+	public LinkedList<Integer> getDimensions()
+	{
+		return (LinkedList<Integer>) arraysSize.clone();
 	}
 
 	@Override
@@ -103,9 +238,7 @@ public class Type extends Observable implements IDiagramComponent
 
 	@Override
 	public String toXML(int depth)
-	{
-		// XML structure is just the name of the type. Sub-elements use this
-		// name themselves.
+	{		
 		return getName().replace("<", "&lt;").replace(">", "&gt;");
 	}
 }

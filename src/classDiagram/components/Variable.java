@@ -14,6 +14,13 @@ import classDiagram.IDiagramComponent;
  */
 public class Variable extends Observable implements IDiagramComponent
 {
+	public static final String REGEX_SEMANTIC_ATTRIBUTE = "([a-zA-Z|_])(\\w)*";
+	
+	public static boolean checkSemantic(String name)
+	{
+		return !name.isEmpty() && name.matches(REGEX_SEMANTIC_ATTRIBUTE);
+	}
+	
 	protected boolean constant = false;
 
 	protected final int id = ClassDiagram.getNextId();
@@ -30,11 +37,10 @@ public class Variable extends Observable implements IDiagramComponent
 	 */
 	public Variable(String name, Type type)
 	{
-		if (type.toString().isEmpty())
-			throw new IllegalArgumentException("type is null");
-
-		this.name = name;
-		this.type = new Type(type.getName());
+		if (!setName(name))
+			throw new IllegalArgumentException("semantic name incorrect");
+		
+		setType(type);
 	}
 	
 	public Variable(Variable variable)
@@ -85,10 +91,7 @@ public class Variable extends Observable implements IDiagramComponent
 	 */
 	public boolean setName(String name)
 	{
-		if (name.isEmpty())
-			throw new IllegalArgumentException("name is null");
-
-		if (!name.matches("([a-zA-Z|_])(\\w)*"))
+		if (!checkSemantic(name))
 			return false;
 
 		this.name = name;
@@ -104,16 +107,11 @@ public class Variable extends Observable implements IDiagramComponent
 	 * @param type
 	 *            the new type for this variable
 	 */
-	public boolean setType(Type type)
+	public void setType(Type type)
 	{
-		if (!type.getName().matches("([a-zA-Z|_])[(\\w)<>.]*"))
-			return false;
-
 		this.type = type;
 
 		setChanged();
-
-		return true;
 	}
 
 	@Override

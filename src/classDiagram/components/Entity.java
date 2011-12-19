@@ -18,7 +18,7 @@ import classDiagram.relationships.Role;
  * @version 1.0 - 24.07.2011
  */
 public abstract class Entity extends Type
-{
+{	
 	private boolean _isAbstract = false;
 	protected LinkedList<Attribute> attributes = new LinkedList<Attribute>();
 	protected List<Inheritance> childs = new LinkedList<Inheritance>();
@@ -455,7 +455,7 @@ public abstract class Entity extends Type
 	{
 		final String tab = Utility.generateTab(depth);
 
-		String xml = tab + "<entity " + "id=\"" + getId() + "\" " + "name=\"" + name + "\" " + "visibility=\"" + visibility + "\" " + "entityType=\"" + getEntityType() + "\" " + "isAbstract=\"" + isAbstract() + "\" ";
+		String xml = tab + "<entity " + "id=\"" + getId() + "\" " + "name=\"" + super.toXML(0) + "\" " + "visibility=\"" + visibility + "\" " + "entityType=\"" + getEntityType() + "\" " + "isAbstract=\"" + isAbstract() + "\" ";
 
 		if (attributes.size() == 0 && methods.size() == 0 && getLastBalise(depth).isEmpty())
 			return xml + "/>";

@@ -50,6 +50,7 @@ import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Method;
 import classDiagram.components.PrimitiveType;
+import classDiagram.components.Type;
 import classDiagram.components.Variable;
 import classDiagram.components.Visibility;
 
@@ -500,7 +501,7 @@ public class EntityPropreties extends GlobalPropreties
 			if (currentMethod == null)
 				return;
 
-			currentMethod.addParameter(new Variable("parameter", PrimitiveType.INTEGER_TYPE));
+			currentMethod.addParameter(new Variable("p", new Type(PrimitiveType.INTEGER_TYPE.getName())));
 			currentMethod.notifyObservers();
 			currentMethod.select();
 			currentMethod.notifyObservers(UpdateMessage.SELECT);
