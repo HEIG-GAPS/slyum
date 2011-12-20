@@ -365,39 +365,21 @@ public class XMLParser extends DefaultHandler
 		count += uMLClassDiagram.uMLView.getFirst().notes.size();
 		
 		dpl.setProgressBarMaximum(count);
-
-		// Don't change methods call order !!
+	}
+	
+	public void createDiagram()
+	{
+		
+		// Don't change order !!
 		importClassesAndInterfaces(); // <- need nothing :D
-		
-		if (checkInterruptedThread())
-			return;
-		
+	
 		importAssociations(); // <- need importation classes
-
-		if (checkInterruptedThread())
-			return;
-		
 		importAssociationClass(); // <- need importation classes and
-		
-		if (checkInterruptedThread())
-			return;
-		
 		// associations
 		importAssociations(); // Import associations that cannot be imported first time
 		// first time
-
-		if (checkInterruptedThread())
-			return;
-
 		importInheritances(); // <- ...
-
-		if (checkInterruptedThread())
-			return;
-		
 		importDepedency();
-		
-		if (checkInterruptedThread())
-			return;
 		
 		// components locations
 		locateComponentBounds();
@@ -406,11 +388,6 @@ public class XMLParser extends DefaultHandler
 
 		dpl.addStep("Importation complete");
 		dpl.setPhase("Finish");
-	}
-	
-	private boolean checkInterruptedThread()
-	{
-		return Thread.currentThread().isInterrupted();
 	}
 
 	@Override
@@ -662,14 +639,11 @@ public class XMLParser extends DefaultHandler
 		dpl.setPhase("Import classes and interfaces...");
 		
 		for (final Entity e : uMLClassDiagram.diagrameElement.entity)
-		{
+		
 			if (!(e.entityType == EntityType.ASSOCIATION_CLASS))
 
 				createEntity(e);
-			
-			if (checkInterruptedThread())
-				return;
-		}
+		
 
 	}
 
@@ -687,9 +661,6 @@ public class XMLParser extends DefaultHandler
 
 			dependency.setLabel(d.label);
 			dependency.notifyObservers();
-			
-			if (checkInterruptedThread())
-				return;
 		}
 	}
 
@@ -717,9 +688,6 @@ public class XMLParser extends DefaultHandler
 				classDiagram.addInheritance(inheritance);
 				inheritance.notifyObservers();
 			}
-			
-			if (checkInterruptedThread())
-				return;
 		}
 	}
 
@@ -761,9 +729,6 @@ public class XMLParser extends DefaultHandler
 
 			noteView.setColor(note.color);
 			graphicView.addNotes(noteView);
-			
-			if (checkInterruptedThread())
-				return;
 		}
 	}
 
@@ -785,9 +750,6 @@ public class XMLParser extends DefaultHandler
 					g.setColor(cv.color);
 				}
 			}
-			
-			if (checkInterruptedThread())
-				return;
 		}
 
 		// Associations
@@ -828,9 +790,6 @@ public class XMLParser extends DefaultHandler
 					}
 				}
 			}
-			
-			if (checkInterruptedThread())
-				return;
 		}
 
 		// Multi-association

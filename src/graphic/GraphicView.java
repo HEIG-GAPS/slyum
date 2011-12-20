@@ -1813,7 +1813,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		g2.fillRect(vr.x, vr.y, vr.width, vr.height);
 		
 		// Draw grid
-		if (isGridEnable() && isGridVisible() && getGridSize() >= 10) // Don't draw a grid lesser than 10 (too slow).
+		if (isVisible() && isGridEnable() && isGridVisible() && getGridSize() >= 10) // Don't draw a grid lesser than 10 (too slow).
 		{
 			final int grayLevel = Utility.getColorGrayLevel(getColor());
 			Color gridColor = new Color(getGridColor());
@@ -1877,15 +1877,15 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		paintBackground(getGridSize(), getBasicColor(), g2);
 
+		if (!isVisible())
+			return;
+		
 		Utility.setRenderQuality(g2);
 		
 		double scale = getScale(),
 		inversedScale = getInversedScale();
 		
 		g2.scale(scale, scale);
-
-		if (!isVisible())
-			return;
 
 		// Paint components
 		for (final GraphicComponent c : getAllComponents())

@@ -470,7 +470,7 @@
 				</point>
 				<point>
 					<x>626</x>
-					<y>124</y>
+					<y>127</y>
 				</point>
 			</line>
 		</relationView>
@@ -482,7 +482,7 @@
 				</point>
 				<point>
 					<x>682</x>
-					<y>124</y>
+					<y>127</y>
 				</point>
 			</line>
 		</relationView>
@@ -502,7 +502,7 @@
 				</point>
 				<point>
 					<x>721</x>
-					<y>124</y>
+					<y>127</y>
 				</point>
 			</line>
 		</relationView>
@@ -513,20 +513,6 @@
 				<w>107</w>
 				<h>111</h>
 			</noteGeometry>
-			<noteLine relationId="-1" color="-12566464">
-				<point>
-					<x>100</x>
-					<y>153</y>
-				</point>
-				<point>
-					<x>68</x>
-					<y>145</y>
-				</point>
-				<point>
-					<x>68</x>
-					<y>145</y>
-				</point>
-			</noteLine>
 			<noteLine relationId="47" color="-12566464">
 				<point>
 					<x>100</x>
@@ -547,6 +533,20 @@
 				<point>
 					<x>388</x>
 					<y>386</y>
+				</point>
+			</noteLine>
+			<noteLine relationId="77" color="-12566464">
+				<point>
+					<x>207</x>
+					<y>117</y>
+				</point>
+				<point>
+					<x>243</x>
+					<y>117</y>
+				</point>
+				<point>
+					<x>243</x>
+					<y>250</y>
 				</point>
 			</noteLine>
 		</note>
