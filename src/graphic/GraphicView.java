@@ -1608,8 +1608,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 			e.remove(0);
 			
 			for (GraphicComponent ev : e)
-				
-				parent.addLineView(new LineCommentary(parent, ev, tbc, new Point(), new Point(), false));
+				if (LineCommentary.checkCreate(ev, tbc, false))
+					parent.addLineView(new LineCommentary(parent, ev, tbc, new Point(), new Point(), false));
 		}
 		
 		Rectangle b = tbc.getBounds();

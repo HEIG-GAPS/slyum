@@ -121,7 +121,8 @@ public class TextBoxCommentary extends MovableComponent
 
 		final Point middleComponent = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
 
-		parent.addLineView(new LineCommentary(parent, this, component, middleTextBox, middleComponent, true));
+		if (LineCommentary.checkCreate(this, component, true))
+			parent.addLineView(new LineCommentary(parent, this, component, middleTextBox, middleComponent, true));
 
 		init(text);
 	}
@@ -395,12 +396,21 @@ public class TextBoxCommentary extends MovableComponent
 
 		for (final LineView lv : parent.getLinesViewAssociedWith(this))
 		{
-			final IDiagramComponent associedComponent = lv.getLastPoint().getAssociedComponentView().getAssociedComponent();
+			IDiagramComponent associedComponent = lv.getLastPoint().getAssociedComponentView().getAssociedComponent();
 			int id = -1;
 
 			if (associedComponent != null)
 
 				id = associedComponent.getId();
+			
+			else
+			{
+				associedComponent = lv.getFirstPoint().getAssociedComponentView().getAssociedComponent();
+				
+				if (associedComponent != null)
+					
+					id = associedComponent.getId();
+			}
 
 			xml += tab + "\t<noteLine relationId=\"" + id + "\" color=\"" + lv.getColor().getRGB() + "\">\n";
 
