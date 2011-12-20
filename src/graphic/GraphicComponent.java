@@ -1,9 +1,7 @@
 package graphic;
 
 import graphic.entity.EntityView;
-import graphic.relations.LineCommentary;
 import graphic.relations.LineView;
-import graphic.textbox.TextBoxCommentary;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
