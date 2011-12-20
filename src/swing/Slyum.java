@@ -25,6 +25,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import utility.OSValidator;
@@ -268,6 +269,16 @@ public class Slyum extends JFrame implements ActionListener
 
 		PropertyLoader.getInstance();
 		instance = new Slyum();
+		
+		// Launch application from ETD.
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run()
+			{
+				instance.setVisible(true);
+			}
+		});
 	}
 
 	public static void setCurrentDirectoryFileChooser(String path)
@@ -340,6 +351,7 @@ public class Slyum extends JFrame implements ActionListener
 	 */
 	public Slyum()
 	{
+
 		try
 		{
 			defaultFont = new Font(Font.createFont(
@@ -362,7 +374,7 @@ public class Slyum extends JFrame implements ActionListener
 
 			@Override
 			public void windowClosing(WindowEvent e)
-			{
+			{				
 				exit();
 			}
 		});
@@ -419,7 +431,6 @@ public class Slyum extends JFrame implements ActionListener
 		setMinimumSize(new Dimension(400, 400));
 		setContentPane(panel);
 		setLocationRelativeTo(null);
-		setVisible(true);
 		setExtendedState(MAXIMIZED_BOTH);
 	}
 	

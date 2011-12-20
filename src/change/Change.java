@@ -169,6 +169,8 @@ public class Change
 		_hasChange = changed;
 		
 		Slyum.setStarOnTitle(changed);
+		
+		checkToolbarButtonState();
 	}
 	
 	public static int getSize()

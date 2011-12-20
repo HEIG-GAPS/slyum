@@ -1,5 +1,6 @@
 package utility;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -25,6 +26,8 @@ public class SDialogProjectLoading extends JDialog
 {
 	private static final long serialVersionUID = 1L;
 	private static final String TITLE_DIALOG_PROJECT_LOADING = "Slyum - Project loading...";
+	private static final Dimension MINIMIZED_SIZE = new Dimension(400, 60);
+	private static final Dimension NORMAL_SIZE = new Dimension(400, 250);
 	
 	private static Slyum s = Slyum.getInstance();
 	
@@ -36,12 +39,11 @@ public class SDialogProjectLoading extends JDialog
 	
 	public SDialogProjectLoading(String projectName)
 	{
-		setModalityType(ModalityType.TOOLKIT_MODAL);
+		super(s, TITLE_DIALOG_PROJECT_LOADING, true);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setSize(400, 250);
 		setLocationRelativeTo(s);
 		setResizable(false);
-		setTitle(TITLE_DIALOG_PROJECT_LOADING);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0};
@@ -123,6 +125,21 @@ public class SDialogProjectLoading extends JDialog
 		gbc_btnCancel.gridx = 1;
 		gbc_btnCancel.gridy = 4;
 		panel.add(btnCancel, gbc_btnCancel);
+		minimized(true);
+	}
+	
+	public void minimized(boolean enable)
+	{
+		btnCancel.setVisible(!enable);
+		list.setVisible(!enable);
+		progressBar.setVisible(!enable);
+		lblCurrentPhase.setVisible(!enable);
+		scrollPane.setVisible(!enable);
+		
+		if(enable)
+			setSize(MINIMIZED_SIZE);
+		else
+			setSize(NORMAL_SIZE);
 	}
 	
 	public void setProgressBarMaximum(int value)
@@ -143,7 +160,7 @@ public class SDialogProjectLoading extends JDialog
 		
 		progressBar.setValue(progressBar.getValue()+1);
 	}
-	
+
 	private class StringListModel extends AbstractListModel<String>
 	{
 		private static final long serialVersionUID = -3126417577301749576L;

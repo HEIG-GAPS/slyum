@@ -6,8 +6,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
@@ -23,12 +23,13 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.SwingWorker;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.SAXException;
 
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.PropretiesChanger;
@@ -281,11 +282,15 @@ public class PanelClassDiagram extends JPanel
 	{
 		if (!askForSave())
 			return;
-
+		
+		cleanApplication();
+	}
+	
+	public void cleanApplication()
+	{
 		classDiagram.removeAll();
 		graphicView.removeAll();
 		setCurrentFile(null);
-		Change.setHasChange(false);
 	}
 	
 	public void setCurrentFile(File file)
@@ -319,7 +324,7 @@ public class PanelClassDiagram extends JPanel
 	}
 	
 	public void openFromXML(final File file)
-	{
+	{		
 		final String extension = Utility.getExtension(file);
 
 		if (!file.exists())
@@ -335,92 +340,49 @@ public class PanelClassDiagram extends JPanel
 		}
 
 		final SAXParserFactory factory = SAXParserFactory.newInstance();
-		final SAXParser parser;
+
+		graphicView.setVisible(false);
 		
-		try
-		{
-			parser = factory.newSAXParser();
+		final boolean isBlocked = Change.isBlocked();
+		Change.setBlocked(true);
 
-			final SDialogProjectLoading dpl = new SDialogProjectLoading(file.getPath());
+		final SDialogProjectLoading dpl = new SDialogProjectLoading(file.getPath());
+		dpl.addWindowListener(new WindowAdapter() {
 			
-			final DefaultHandler handler = new XMLParser(classDiagram, graphicView, dpl);
+			@Override
+			public void windowClosed(WindowEvent e)
+			{
+				cleanApplication();
+			}
+		});
+
+		SwingUtilities.invokeLater(new Runnable() {
 			
-			SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>(){
-				
-				@Override
-				protected Void doInBackground() throws Exception
+			@Override
+			public void run() {
+				try
 				{
-					try
-					{
-						dpl.addComponentListener(new ComponentAdapter() 
-						{
-							@Override
-							public void componentHidden(ComponentEvent e)
-							{
-								cancel(true);
-							}
-						});
-						graphicView.setVisible(false);
-						
-						parser.parse(file, handler);
+					SAXParser parser = factory.newSAXParser();
+					XMLParser handler = new XMLParser(classDiagram, graphicView, dpl);
+					parser.parse(file, handler);
 
-						if (isCancelled())
-						{
-							classDiagram.removeAll();
-							graphicView.removeAll();
-						}
-						
-						graphicView.setVisible(true);
-						
-						dpl.setVisible(false);
-						
-					} catch (final Exception e)
-					{
-						showErrorImportationMessage(e);
-					}
-					
-					return null;
-				}				
-			};
-
-
-			final boolean isBlocked = Change.isBlocked();
-			Change.setBlocked(true);
-			sw.execute();
-			
-			if (dpl != null)
-				dpl.setVisible(true);
-
-			Change.setBlocked(isBlocked);
-			
-			//new Thread(new Runnable() {
-				
-				//@Override
-				//public void run()
-				{/*
-					try
-					{
-						Change.setBlocked(true);
-						
-						parser.parse(file, handler);
-						
-						Change.setBlocked(false);
-						
-						dpl.setVisible(false);
-						
-					} catch (final Exception e)
-					{
-						showErrorImportationMessage(e);
-					}*/
+					handler.createDiagram();
 				}
-			//}).start();
+				catch (ParserConfigurationException | SAXException | IOException e)
+				{
+					showErrorImportationMessage(e);
+				}
 				
-			setCurrentFile(file);
-			Change.setHasChange(false);
-		} catch (final Exception e)
-		{
-			showErrorImportationMessage(e);
-		}
+				Change.setBlocked(isBlocked);
+				graphicView.setVisible(true);
+				graphicView.getScene().paintImmediately(graphicView.getBounds());
+				setCurrentFile(file);
+				Change.setHasChange(false);
+				dpl.setVisible(false);
+			}
+		});
+
+		dpl.setVisible(true);
 	}
 
 	/**
@@ -582,9 +544,7 @@ public class PanelClassDiagram extends JPanel
 		
 		e.printStackTrace();
 
-		classDiagram.removeAll();
-		graphicView.removeAll();
-
+		cleanApplication();
 		graphicView.setVisible(true);
 	}
 
