@@ -3,7 +3,6 @@ package graphic.factory;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.relations.LineCommentary;
-import graphic.textbox.TextBoxCommentary;
 
 import java.awt.BasicStroke;
 
@@ -40,16 +39,14 @@ public class LineCommentaryFactory extends RelationFactory
 
 	@Override
 	public GraphicComponent create()
-	{		
-		if ((componentMousePressed instanceof TextBoxCommentary || componentMouseReleased instanceof TextBoxCommentary) && componentMousePressed.getClass() != componentMouseReleased.getClass())
-		{
-			final LineCommentary lc = new LineCommentary(parent, componentMousePressed, componentMouseReleased, mousePressed, mouseReleased, false);
-			parent.addLineView(lc);
+	{
+		if (!LineCommentary.checkCreate(componentMousePressed, componentMouseReleased, true))
+			return null;
+		
+		final LineCommentary lc = new LineCommentary(parent, componentMousePressed, componentMouseReleased, mousePressed, mouseReleased, false);
+		parent.addLineView(lc);
 
-			return lc;
-		}
-
-		return null;
+		return lc;
 	}
 	
 	@Override

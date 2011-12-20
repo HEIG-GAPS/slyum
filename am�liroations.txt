@@ -1,10 +1,6 @@
 Note de patch 1.3 :
- 
- (- Corriger bugs d'ouverture de projet (à cause du multi-thread).)
 
  - Enregistrer la vue des méthodes et des paramètres.
-
- - Corriger le bug qui ne replace pas correctement le lien des notes après l'ouverture d'un projet.
  
  - Intégration du Annuler / Refaire
 
@@ -13,6 +9,12 @@ Note de patch 1.3 :
  - Menus contextuel
  
  - Revoir Z-Order
+
+ - Ajouter une vue des propriétés pour d'autres composants (comme les héritage ou les notes).
+ 
+ - Ajouter d'autres barres d'outils et menus.
+ 
+ - Tester sur Mac Os X
  
  - Easter eggs!
 
@@ -22,25 +24,19 @@ Futures implémentations :
 
  - Refonte des classes internes.
  
- - Rendre les menus rapetissables.
+ - Adapter les barres d'outils en fonction de la taille de la fenêtre.
 
  - Permettre de glisser et déposer les classes de la vue hiérarchique sur le diagramme de classes.
 
  - Utiliser une précision en float (ou double) au lieu de int pour le dessin.
 
- - Ajouter d'autres barres d'outils.
-
  - Pouvoir ouvrir plusieurs projets.
 
  - Pouvoir ouvrir plusieurs diagrammes de classes dans un même projet.
 
- - Ajouter une vue des propriétés pour d'autres composants (comme les héritage ou les notes).
-
  - Revoir l'enregistrement en format xml et son importation proprement.
 
  - Revoir la classe EntityProperties proprement.
-
- - Resélectionner les bonnes classes après un changement du z-order.
 
 Déjà implémentées :
 
@@ -139,3 +135,7 @@ Déjà implémentées :
  - Désactiver les boutons (barre d'outils, menu contextuel, etc.) lorsque leur utilisation n'effectue aucune action.
  
  - Support des tableaux et des Listes
+ 
+ - Corriger bugs d'ouverture de projet (à cause du multi-thread).
+ 
+ - Corriger le bug qui ne replace pas correctement le lien des notes après l'ouverture d'un projet.

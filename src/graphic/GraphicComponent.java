@@ -1,7 +1,9 @@
 package graphic;
 
 import graphic.entity.EntityView;
+import graphic.relations.LineCommentary;
 import graphic.relations.LineView;
+import graphic.textbox.TextBoxCommentary;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -46,6 +48,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 	protected GraphicView parent;
 
 	protected JPopupMenu popupMenu;
+	protected JMenuItem miNewNote;
 
 	private boolean selected = false;
 
@@ -336,7 +339,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
 		JMenuItem menuItem;
 
-		menuItem = makeMenuItem("New note", Slyum.ACTION_NEW_NOTE_ASSOCIED, "note16");
+		miNewNote = menuItem = makeMenuItem("New note", Slyum.ACTION_NEW_NOTE_ASSOCIED, "note16");
 		popupMenu.add(menuItem);
 
 		menuItem = makeMenuItem("Change color...", "Color", "color16");
@@ -428,8 +431,10 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 		GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
 		
 		if (e.isPopupTrigger())
-
+		{
+			miNewNote.setEnabled(getAssociedComponent() != null);
 			popupMenu.show(e.getComponent(), (int)(e.getX() / gv.getInversedScale()), (int)(e.getY() / gv.getInversedScale()));
+		}
 	}
 
 	/**
