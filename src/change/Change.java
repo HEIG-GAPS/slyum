@@ -124,7 +124,7 @@ public class Change
 		
 		isRecord = false;
 
-		int b = pointer;
+		int b = pointer-1;
 		while (--b >= 0 && b < size-1 && record.get(b));
 		
 		record.set(b+1, false);
@@ -185,6 +185,9 @@ public class Change
 	
 	public static void pop()
 	{
+		if (pointer == stack.size()-1)
+			pointer--;
+		
 		stack.removeLast();
 		record.removeLast();
 	}

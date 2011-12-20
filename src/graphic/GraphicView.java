@@ -1830,7 +1830,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 			
 			for (int x = (vr.x/gridSize)*gridSize; x < vr.x + vr.width + gridSize; x += gridSize)
 				for (int y = (vr.y/gridSize)*gridSize; y < vr.y + vr.height + gridSize; y += gridSize)
-						g2.drawOval(x, y, 1, 1);
+						g2.drawLine(x, y, x, y);
 		}
 	}
 

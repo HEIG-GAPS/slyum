@@ -6,7 +6,7 @@ Note de patch 1.3 :
 
  - Corriger les issue de google code
  
- - Menus contextuel
+ - Menus contextuels
  
  - Revoir Z-Order
 
