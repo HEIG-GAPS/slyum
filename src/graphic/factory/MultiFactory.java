@@ -164,9 +164,13 @@ public class MultiFactory extends CreateComponent
 	{
 		MultiView mv;
 		
+		boolean isRecord = Change.isRecord();
 		Change.record();
+		
 		mv = new MultiView(gv, m);
-		Change.stopRecord();
+		
+		if (!isRecord)
+			Change.stopRecord();
 
 		return mv;
 	}

@@ -811,17 +811,14 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 * @param true for align top; false for align bottom
 	 */
 	public void alignHorizontal(boolean top)
-	{
-		boolean isRecord = Change.isRecord();
-		Change.record();
-		
+	{		
 		int totalWidth = 0, bottom = Integer.MIN_VALUE;
 
 		final LinkedList<EntityView> sorted = sortXLocation(getSelectedEntities());
 
 		if (sorted.size() < 2)
 			return;
-
+		
 		for (final EntityView c : sorted)
 		{
 			final Rectangle bounds = c.getBounds();
@@ -840,6 +837,9 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		int offset = limits.x;
 
+		boolean isRecord = Change.isRecord();
+		Change.record();
+		
 		for (final GraphicComponent c : sorted)
 		{
 			final Rectangle bounds = c.getBounds();
@@ -920,6 +920,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		
 		else
 		{
+			boolean isRecord = Change.isRecord();
 			Change.record();
 			
 			for (final GraphicComponent c : getSelectedComponents())
@@ -932,7 +933,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 				Change.push(new BufferColor(c));
 			}
 			
-			Change.stopRecord();
+			if (!isRecord)
+				Change.stopRecord();
 		}
 	}
 
