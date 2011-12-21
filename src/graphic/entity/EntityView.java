@@ -33,9 +33,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JSeparator;
 
 import swing.PropertyLoader;
+import swing.SPanelZOrder;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
@@ -231,11 +231,11 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 		popupMenu.addSeparator();
 		
-		menuItemMoveUp = menuItem = makeMenuItem("Move up", "Move Up", "direction_up");
+		menuItemMoveUp = menuItem = makeMenuItem("Move up", Slyum.ACTION_TEXTBOX_UP, "direction_up");
 		menuItemMoveUp.setEnabled(false);
 		popupMenu.add(menuItem);
 		
-		menuItemMoveDown = menuItem = makeMenuItem("Move down", "Move Down", "direction_down");
+		menuItemMoveDown = menuItem = makeMenuItem("Move down", Slyum.ACTION_TEXTBOX_DOWN, "direction_down");
 		menuItemMoveDown.setEnabled(false);
 		popupMenu.add(menuItem);
 		
@@ -286,13 +286,21 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 		popupMenu.addSeparator();
 
-		menuItem = makeMenuItem("Move top", "ZOrderTOP", "zorder/top");
+		SPanelZOrder p = SPanelZOrder.getInstance();
+		menuItem = makeMenuItem("Move top", "ZOrderTOP", "top");
+		p.getBtnTop().linkComponent(menuItem);
 		popupMenu.add(menuItem);
-		menuItem = makeMenuItem("Up", "ZOrderUP", "zorder/up");
+		
+		menuItem = makeMenuItem("Up", "ZOrderUP", "up");
+		p.getBtnUp().linkComponent(menuItem);
 		popupMenu.add(menuItem);
-		menuItem = makeMenuItem("Down", "ZOrderDown", "zorder/down");
+		
+		menuItem = makeMenuItem("Down", "ZOrderDown", "down");
+		p.getBtnDown().linkComponent(menuItem);
 		popupMenu.add(menuItem);
-		menuItem = makeMenuItem("Move bottom", "ZOrderBottom", "zorder/bottom");
+		
+		menuItem = makeMenuItem("Move bottom", "ZOrderBottom", "bottom");
+		p.getBtnBottom().linkComponent(menuItem);
 		popupMenu.add(menuItem);
 
 		component.addObserver(this);
@@ -352,11 +360,11 @@ public abstract class EntityView extends MovableComponent implements Observer
 			methodViewChangeClicked(ParametersViewStyle.NAME);
 		else if ("ViewMethodNothing".equals(e.getActionCommand()))
 			methodViewChangeClicked(ParametersViewStyle.NOTHING);
-		else if ("Move Up".equals(e.getActionCommand()) || "Move Down".equals(e.getActionCommand()))
+		else if (Slyum.ACTION_TEXTBOX_UP.equals(e.getActionCommand()) || Slyum.ACTION_TEXTBOX_DOWN.equals(e.getActionCommand()))
 		{
 			int offset = 1;
 
-			if ("Move Up".equals(e.getActionCommand()))
+			if (Slyum.ACTION_TEXTBOX_UP.equals(e.getActionCommand()))
 
 				offset = -1;
 
@@ -373,24 +381,8 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 			component.notifyObservers();
 		}
-		else if (Slyum.ACTION_MOVE_TOP.equals(e.getActionCommand()))
-
-			parent.getClassDiagram().changeZOrder(component, parent.getEntitiesView().size() - 1);
-		
-		else if (Slyum.ACTION_MOVE_UP.equals(e.getActionCommand()))
-
-			parent.getClassDiagram().changeZOrder(component, parent.getEntitiesView().indexOf(this) + 1);
-
-		else if (Slyum.ACTION_MOVE_DOWN.equals(e.getActionCommand()))
-
-			parent.getClassDiagram().changeZOrder(component, parent.getEntitiesView().indexOf(this) - 1);
-
-		else if (Slyum.ACTION_MOVE_BOTTOM.equals(e.getActionCommand()))
-
-			parent.getClassDiagram().changeZOrder(component, 0);
-
 	}
-
+	
 	/**
 	 * Create a new attribute with default type and name.
 	 */

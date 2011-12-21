@@ -106,6 +106,9 @@ public class Slyum extends JFrame implements ActionListener
 	public static final String ACTION_MOVE_BOTTOM = "MoveBottom";
 	public static final String ACTION_COLOR = "Color";
 	public static final String ACTION_DELETE = "Delete";
+
+	public static final String ACTION_TEXTBOX_UP = "MoveTextBoxUp";
+	public static final String ACTION_TEXTBOX_DOWN = "MoveTextBoxDown";
 	
 	// Accelerator
 	public final static String KEY_NEW_PROJECT = "ctrl alt N";
@@ -612,23 +615,23 @@ public class Slyum extends JFrame implements ActionListener
 			SPanelStyleComponent p = SPanelStyleComponent.getInstance();
 			
 			// Menu item adjust width
-			menuItem = createMenuItem("Adjust Classes Width", "adjustWidth16", KeyEvent.VK_W, KEY_ADJUST_SIZE, ACTION_ADJUST_WIDTH, p.getBtnAdjust());
+			menuItem = createMenuItemDisable("Adjust Classes Width", "adjustWidth16", KeyEvent.VK_W, KEY_ADJUST_SIZE, ACTION_ADJUST_WIDTH, p.getBtnAdjust());
 			menu.add(menuItem);
 	
 			// Menu item align top
-			menuItem = createMenuItem("Align Top", "alignTop16", KeyEvent.VK_O, KEY_ALIGN_UP, ACTION_ALIGN_TOP, p.getBtnTop());
+			menuItem = createMenuItemDisable("Align Top", "alignTop16", KeyEvent.VK_O, KEY_ALIGN_UP, ACTION_ALIGN_TOP, p.getBtnTop());
 			menu.add(menuItem);
 	
 			// Menu item align bottom
-			menuItem = createMenuItem("Align Bottom", "alignBottom16", KeyEvent.VK_B, KEY_ALIGN_DOWN, ACTION_ALIGN_BOTTOM, p.getBtnBottom());
+			menuItem = createMenuItemDisable("Align Bottom", "alignBottom16", KeyEvent.VK_B, KEY_ALIGN_DOWN, ACTION_ALIGN_BOTTOM, p.getBtnBottom());
 			menu.add(menuItem);
 	
 			// Menu item align left
-			menuItem = createMenuItem("Align Left", "alignLeft16", KeyEvent.VK_F, KEY_ALIGN_LEFT, ACTION_ALIGN_LEFT, p.getBtnLeft());
+			menuItem = createMenuItemDisable("Align Left", "alignLeft16", KeyEvent.VK_F, KEY_ALIGN_LEFT, ACTION_ALIGN_LEFT, p.getBtnLeft());
 			menu.add(menuItem);
 	
 			// Menu item align right
-			menuItem = createMenuItem("Align Righ", "alignRight16", KeyEvent.VK_H, KEY_ALIGN_RIGHT, ACTION_ALIGN_RIGHT, p.getBtnRight());
+			menuItem = createMenuItemDisable("Align Righ", "alignRight16", KeyEvent.VK_H, KEY_ALIGN_RIGHT, ACTION_ALIGN_RIGHT, p.getBtnRight());
 			menu.add(menuItem);
 		}
 
@@ -638,19 +641,19 @@ public class Slyum extends JFrame implements ActionListener
 			SPanelZOrder p = SPanelZOrder.getInstance();
 			
 			// Menu item top
-			menuItem = createMenuItem("Move top", "top", KeyEvent.VK_T, KEY_MOVE_TOP, ACTION_MOVE_TOP, p.getBtnTop());
+			menuItem = createMenuItemDisable("Move top", "top", KeyEvent.VK_T, KEY_MOVE_TOP, ACTION_MOVE_TOP, p.getBtnTop());
 			menu.add(menuItem);
 	
 			// Menu item up
-			menuItem = createMenuItem("Move up", "up", KeyEvent.VK_P, KEY_MOVE_UP, ACTION_MOVE_UP, p.getBtnUp());
+			menuItem = createMenuItemDisable("Move up", "up", KeyEvent.VK_P, KEY_MOVE_UP, ACTION_MOVE_UP, p.getBtnUp());
 			menu.add(menuItem);
 	
 			// Menu item down
-			menuItem = createMenuItem("Move down", "down", KeyEvent.VK_D, KEY_MOVE_DOWN, ACTION_MOVE_DOWN, p.getBtnDown());
+			menuItem = createMenuItemDisable("Move down", "down", KeyEvent.VK_D, KEY_MOVE_DOWN, ACTION_MOVE_DOWN, p.getBtnDown());
 			menu.add(menuItem);
 	
 			// Menu item bottom
-			menuItem = createMenuItem("Move Bottom", "bottom", KeyEvent.VK_M, KEY_MOVE_BOTTOM, ACTION_MOVE_BOTTOM, p.getBtnBottom());
+			menuItem = createMenuItemDisable("Move Bottom", "bottom", KeyEvent.VK_M, KEY_MOVE_BOTTOM, ACTION_MOVE_BOTTOM, p.getBtnBottom());
 			menu.add(menuItem);
 		}
 
@@ -764,6 +767,15 @@ public class Slyum extends JFrame implements ActionListener
 		JMenuItem item =  createMenuItem(text, iconName, mnemonic, accelerator, actionCommand, link.getActionListeners()[0]);
 		
 		link.linkComponent(item);
+
+		return item;
+	}
+	
+	public JMenuItem createMenuItemDisable(String text, String iconName, int mnemonic, String accelerator, String actionCommand, SButton link)
+	{
+		JMenuItem item =  createMenuItem(text, iconName, mnemonic, accelerator, actionCommand, link);
+		
+		item.setEnabled(false);
 
 		return item;
 	}

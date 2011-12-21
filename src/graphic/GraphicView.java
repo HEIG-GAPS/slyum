@@ -1769,6 +1769,53 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		s.setValue(s.getValue() + s.getUnitIncrement() * (e.getUnitsToScroll() < 0 ? -1 : 1));
 	}
 	
+	public void moveZOrderUpSelectedEntities()
+	{
+		LinkedList<EntityView> evs = getSelectedEntities();
+		LinkedList<EntityView> evsSorted = new LinkedList<>();
+		int current = 0, max = -1, size = evs.size();
+		
+		for (int i = 0; i < size; i++)
+		{
+			for (EntityView ev : evs)
+			{
+				int io = getEntitiesView().indexOf(ev);
+				
+				if (io > max)
+				{
+					max = io;
+					current = evs.indexOf(ev);
+				}
+			}
+			evsSorted.add(evs.remove(current));
+			current = 0; max = -1;
+		}
+		
+		for (EntityView ev : evsSorted)
+			getClassDiagram().changeZOrder(ev.getComponent(), getEntitiesView().indexOf(ev) + 1);
+	}
+	
+	public void moveZOrderDownSelectedEntities()
+	{
+		for (EntityView ev : getSelectedEntities())
+			
+			getClassDiagram().changeZOrder(ev.getComponent(), getEntitiesView().indexOf(ev) - 1);
+	}
+	
+	public void moveZOrderTopSelectedEntities()
+	{
+		for (EntityView ev : getSelectedEntities())
+			
+			getClassDiagram().changeZOrder(ev.getComponent(), getEntitiesView().size() - 1);
+	}
+	
+	public void moveZOrderBottomSelectedEntities()
+	{
+		for (EntityView ev : getSelectedEntities())
+			
+			getClassDiagram().changeZOrder(ev.getComponent(), 0);
+	}
+	
 	protected MouseEvent adapteMouseEvent(MouseEvent e)
 	{
 		return  new MouseEvent(e.getComponent(),

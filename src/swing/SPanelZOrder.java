@@ -1,7 +1,6 @@
 package swing;
 
 import graphic.GraphicView;
-import graphic.entity.EntityView;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -67,7 +66,6 @@ public class SPanelZOrder extends JPanelRounded implements ActionListener, IList
 	{
 		SButton ee = new SButton(ii, action, c, tt, this);
 		ee.setEnabled(false);
-		ee.addActionListener(this);
 		
 		return ee;
 	}
@@ -75,9 +73,23 @@ public class SPanelZOrder extends JPanelRounded implements ActionListener, IList
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		for (EntityView ev : PanelClassDiagram.getInstance().getCurrentGraphicView().getSelectedEntities())
+		GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+		
+		if (Slyum.ACTION_MOVE_TOP.equals(e.getActionCommand()))
 			
-			ev.actionPerformed(e);
+			gv.moveZOrderTopSelectedEntities();
+		
+		else if (Slyum.ACTION_MOVE_UP.equals(e.getActionCommand()))
+
+			gv.moveZOrderUpSelectedEntities();
+		
+		else if (Slyum.ACTION_MOVE_DOWN.equals(e.getActionCommand()))
+
+			gv.moveZOrderDownSelectedEntities();
+
+		else if (Slyum.ACTION_MOVE_BOTTOM.equals(e.getActionCommand()))
+
+			gv.moveZOrderBottomSelectedEntities();
 	}
 	
 	@Override
