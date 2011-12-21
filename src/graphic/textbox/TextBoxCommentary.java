@@ -22,9 +22,11 @@ import java.awt.event.MouseEvent;
 import javax.swing.JMenuItem;
 
 import swing.EditCommentaryDialog;
+import swing.propretiesView.NoteProperties;
 import utility.PersonalizedIcon;
 import utility.Utility;
 import classDiagram.IDiagramComponent;
+import classDiagram.IDiagramComponent.UpdateMessage;
 
 /**
  * A TextBoxCommentary is not a subclass of TextBox becauseit is not on signle
@@ -384,6 +386,14 @@ public class TextBoxCommentary extends MovableComponent
 		this.text = text;
 
 		repaint();
+	}
+	
+	@Override
+	public void setSelected(boolean selected)
+	{
+		super.setSelected(selected);
+		
+		NoteProperties.getInstance().update(this, selected ? UpdateMessage.SELECT : UpdateMessage.UNSELECT);
 	}
 
 	@Override

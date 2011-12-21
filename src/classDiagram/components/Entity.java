@@ -137,6 +137,20 @@ public abstract class Entity extends Type
 
 		setChanged();
 	}
+	
+	public int countStaticMethods()
+	{
+		int i = 0;
+		for (Method m : getMethods())
+			if (m.isStatic()) i++;
+		
+		return i;
+	}
+	
+	public boolean isEveryMethodsStatic()
+	{
+		return getMethods().size() - countStaticMethods() == 0;
+	}
 
 	public LinkedList<Entity> getAllChilds()
 	{

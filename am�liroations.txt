@@ -145,3 +145,5 @@ Déjà implémentées :
  - Bug : Création d'une association -> Ctrl+Z -> Ctrl + Y -> Suppression de l'association -> Ctrl+Z -> Ctrl+Y
  
  - Ajout d'une vue aux relations d'héritages.
+ 
+ - Amélioration de l'ergonomie en interdisant des actions qui n'auraient aucun effet.

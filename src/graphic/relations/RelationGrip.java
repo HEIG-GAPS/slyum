@@ -160,7 +160,7 @@ public class RelationGrip extends SquareGrip implements ActionListener
 	@Override
 	public void delete()
 	{
-		// save index 
+		// save index
 		index = relation.getPoints().indexOf(this);
 		
 		super.delete();

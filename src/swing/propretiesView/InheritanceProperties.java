@@ -1,15 +1,16 @@
 package swing.propretiesView;
 
 import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.relationships.Inheritance;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import swing.JPanelRounded;
-import swing.SButton;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 
@@ -28,6 +29,7 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 	private static InheritanceProperties instance;
 	
 	private JLabel lblName, lblType;
+	private JButton btnOI;
 	
 	public static InheritanceProperties getInstance()
 	{
@@ -47,7 +49,7 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 		add(panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{0, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 0, 0};
+		gbl_panel.rowHeights = new int[]{0, 55, 0, 0};
 		gbl_panel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
 		gbl_panel.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
@@ -70,13 +72,16 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 		panel.add(lblName, gbc_lblInheritancename);
 		lblName.setBounds(255, 0, 80, 272);
 		
-		SButton btnOverridesImplementations = new SButton("Overrides & Implementations...", ACTION_OI, Color.DARK_GRAY, "Open Overrides & Implementations", this);
-		btnOverridesImplementations.setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "method.png"));
+		btnOI = new JButton("Overrides & Implementations...");
+		btnOI.setActionCommand(ACTION_OI);
+		btnOI.setToolTipText("Open Overrides & Implementations");
+		btnOI.addActionListener(this);
+		btnOI.setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "method.png"));
 		GridBagConstraints gbc_btnOverridesImplementations = new GridBagConstraints();
 		gbc_btnOverridesImplementations.gridx = 0;
 		gbc_btnOverridesImplementations.gridy = 2;
-		panel.add(btnOverridesImplementations, gbc_btnOverridesImplementations);
-		btnOverridesImplementations.setBounds(204, 277, 183, 23);
+		panel.add(btnOI, gbc_btnOverridesImplementations);
+		btnOI.setBounds(204, 277, 183, 23);
 		
 	}
 
@@ -86,14 +91,16 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 		if (currentObject != null)
 		{
 			Inheritance i = (Inheritance)currentObject;
+			Entity parent = i.getParent();
 			String lblTypeText = "Generalize";
 			
-			if (i.getParent().getClass() == InterfaceEntity.class)
+			if (parent.getClass() == InterfaceEntity.class)
 				lblTypeText = "Realize";
 			
 			lblType.setText(lblTypeText);
 			
-			lblName.setText(i.getChild().getName() + " - " + i.getParent().getName());
+			lblName.setText(i.getChild().getName() + " - " + parent.getName());
+			btnOI.setEnabled(!parent.isEveryMethodsStatic());
 		}
 	}
 
