@@ -124,7 +124,7 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 	@Override
 	public void addInheritance(Inheritance component)
 	{
-		// no view for inheritance
+		component.addObserver(InheritanceProperties.getInstance());
 	}
 
 	@Override

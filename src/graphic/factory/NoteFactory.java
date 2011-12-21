@@ -37,10 +37,14 @@ public class NoteFactory extends RelationFactory
 	@Override
 	public GraphicComponent create()
 	{
+		boolean isRecord = Change.isRecord();
 		Change.record();
+		
 		final TextBoxCommentary tb = new TextBoxCommentary(parent, TextBoxCommentary.DEFAULT_TEXT, componentMousePressed);
 		tb.setBounds(new Rectangle(mouseReleased.x, mouseReleased.y, 100, 100));
-		Change.stopRecord();
+		
+		if (!isRecord)
+			Change.stopRecord();
 
 		parent.addNotes(tb);
 

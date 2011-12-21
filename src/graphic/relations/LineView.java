@@ -540,13 +540,17 @@ public abstract class LineView extends GraphicComponent
 
 			if (!(bb[0].getBounds().equals(bb2.getBounds()) && bb[1].getBounds().equals(bb3.getBounds())))
 			{
+				boolean isRecord = Change.isRecord();
 				Change.record();
+				
 				Change.push(bb[0]);
 				Change.push(bb2);
 				
 				Change.push(bb[1]);
 				Change.push(bb3);
-				Change.stopRecord();
+				
+				if (!isRecord)
+					Change.stopRecord();
 			}
 		}
 

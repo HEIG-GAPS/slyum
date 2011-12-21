@@ -230,6 +230,7 @@ public abstract class MovableComponent extends GraphicComponent
 	{
 		super.gMouseReleased(e);
 
+		boolean isRecord = Change.isRecord();
 		Change.record();
 		
 		// Confirm the ghost translation for all selected component.
@@ -237,7 +238,8 @@ public abstract class MovableComponent extends GraphicComponent
 
 			c.apply(e);
 		
-		Change.stopRecord();
+		if (!isRecord);
+			Change.stopRecord();
 	}
 
 	@Override
