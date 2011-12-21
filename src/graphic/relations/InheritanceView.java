@@ -9,6 +9,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
@@ -78,6 +82,7 @@ public class InheritanceView extends RelationView
 	}
 
 	private final Inheritance inheritance;
+	private JMenuItem menuItemOI;
 
 	/**
 	 * Create a new InheritanceView between source and target.
@@ -97,13 +102,13 @@ public class InheritanceView extends RelationView
 	 * @param checkRecursivity
 	 *            check if the relation is on itself
 	 */
-	public InheritanceView(GraphicView parent, EntityView source, EntityView target, Inheritance inheritance, Point posSource, // location
-	// for
-	// computing
-	// last
-	// grip
-	Point posTarget, boolean checkRecursivity) // location for computin
-	// first grip
+	public InheritanceView(GraphicView parent,
+			EntityView source,
+			EntityView target,
+			Inheritance inheritance,
+			Point posSource,
+			Point posTarget,
+			boolean checkRecursivity)
 	{
 		super(parent, source, target, inheritance, posSource, posTarget, checkRecursivity);
 
@@ -112,11 +117,18 @@ public class InheritanceView extends RelationView
 		if (getClass() == InheritanceView.class)
 		{
 			popupMenu.addSeparator();
-			popupMenu.add(makeMenuItem("Overrides & Implementations...", "O&I", "method"));
+			popupMenu.add(menuItemOI = makeMenuItem("Overrides & Implementations...", "O&I", "method"));
 		}
 
 		if (inheritance.getParent().getClass() == InterfaceEntity.class)
 			lineStroke = new BasicStroke(1.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 7.f }, 0.0f);
+	}
+	
+	@Override
+	public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu)
+	{
+		menuItemOI.setEnabled(!inheritance.getParent().isEveryMethodsStatic());
+		super.maybeShowPopup(e, popupMenu);
 	}
 
 	@Override
