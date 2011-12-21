@@ -76,6 +76,8 @@ public abstract class LineView extends GraphicComponent
 
 	private int saveGrip;
 	
+	private boolean acceptGripCreation = false;
+	
 	private BufferBounds[] bb = new BufferBounds[2];
 
 	// More ratio is bigger, more the line near horizontal / vertical degree
@@ -455,16 +457,22 @@ public abstract class LineView extends GraphicComponent
 	public void gMouseDragged(MouseEvent e)
 	{
 		final Point mouse = e.getPoint();
-		final Point movement = new Point(mouse.x - mousePressed.x, mouse.y - mousePressed.y);
 
-		final RelationGrip grip1 = points.get(saveGrip);
-		final RelationGrip grip2 = points.get(saveGrip + 1);
-
-		final Point anchor1 = grip1.getAnchor();
-		final Point anchor2 = grip2.getAnchor();
-
-		if (e.isControlDown() && !GraphicView.isCtrlForGrip() || !e.isControlDown() && GraphicView.isCtrlForGrip())
+		if (acceptGripCreation)
 		{
+			createNewGrip(mousePressed);
+			acceptGripCreation = false;
+		}
+		else if (e.isControlDown() && !GraphicView.isCtrlForGrip() || !e.isControlDown() && GraphicView.isCtrlForGrip())
+		{
+			final Point movement = new Point(mouse.x - mousePressed.x, mouse.y - mousePressed.y);
+
+			final RelationGrip grip1 = points.get(saveGrip);
+			final RelationGrip grip2 = points.get(saveGrip + 1);
+
+			final Point anchor1 = grip1.getAnchor();
+			final Point anchor2 = grip2.getAnchor();
+		
 			grip1.setAnchor(new Point(anchor1.x + movement.x, anchor1.y + movement.y));
 			grip2.setAnchor(new Point(anchor2.x + movement.x, anchor2.y + movement.y));
 
@@ -507,8 +515,8 @@ public abstract class LineView extends GraphicComponent
 
 		if ((!e.isControlDown() && !GraphicView.isCtrlForGrip() || e.isControlDown() && GraphicView.isCtrlForGrip()) && e.getButton() == 1)
 
-			createNewGrip(e.getPoint());
-		
+			acceptGripCreation = true;
+
 		if (e.getButton() == MouseEvent.BUTTON1)
 		{
 			bb[0] = new BufferBounds(points.get(saveGrip));
@@ -543,6 +551,7 @@ public abstract class LineView extends GraphicComponent
 		}
 
 		maybeShowPopup(e, popupMenu);
+		acceptGripCreation = false;
 	}
 
 	/**

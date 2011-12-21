@@ -16,6 +16,10 @@ Note de patch 1.3 :
  
  - Tester sur Mac Os X
  
+ - Pouvoir éditer les éléments de la vue hiérarchique.
+ 
+ - Bug : Création d'une association -> Ctrl+Z -> Ctrl + Y -> Suppression de l'association -> Ctrl+Z -> Ctrl+Y
+ 
  - Easter eggs!
 
 Futures implémentations :
