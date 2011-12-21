@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.RoundRectangle2D;
+import java.util.LinkedList;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -25,7 +26,7 @@ public class SButton extends JButton implements MouseListener
 	
 	private Color themeColor;
 	
-	private Component linkedComponent;
+	private LinkedList<Component> linkedComponents = new LinkedList<>();
 	
 	public SButton(Icon icon, Color color, String tooltip)
 	{
@@ -148,12 +149,12 @@ public class SButton extends JButton implements MouseListener
 	{
 		super.setEnabled(b);
 		
-		if (linkedComponent != null)
-			linkedComponent.setEnabled(b);
+		for (Component c : linkedComponents)
+			c.setEnabled(b);
 	}
 	
 	public void linkComponent(Component c)
 	{
-		linkedComponent = c;
+		linkedComponents.add(c);
 	}
 }
