@@ -4,7 +4,7 @@ Note de patch 1.3 :
  
  - Intégration du Annuler / Refaire
 
- - Corriger les issue de google code
+ - Corriger les issues de google code
  
  - Menus contextuels
  

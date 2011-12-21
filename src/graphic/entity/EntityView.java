@@ -197,6 +197,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 	protected LinkedList<TextBoxMethod> methodsView = new LinkedList<TextBoxMethod>();
 
 	private TextBox pressedTextBox;
+	private JMenuItem menuItemDelete, menuItemMoveUp, menuItemMoveDown;
 
 	private Cursor saveCursor = Cursor.getDefaultCursor();
 
@@ -229,8 +230,18 @@ public abstract class EntityView extends MovableComponent implements Observer
 		popupMenu.add(menuItem);
 
 		popupMenu.addSeparator();
+		
+		menuItemMoveUp = menuItem = makeMenuItem("Move up", "Move Up", "direction_up");
+		menuItemMoveUp.setEnabled(false);
+		popupMenu.add(menuItem);
+		
+		menuItemMoveDown = menuItem = makeMenuItem("Move down", "Move Down", "direction_down");
+		menuItemMoveDown.setEnabled(false);
+		popupMenu.add(menuItem);
+		
+		popupMenu.addSeparator();
 
-		menuItem = makeMenuItem("Delete", "Delete", "delete16");
+		menuItemDelete = menuItem = makeMenuItem("Delete", "Delete", "delete16");
 		popupMenu.add(menuItem);
 
 		popupMenu.addSeparator();
@@ -698,66 +709,27 @@ public abstract class EntityView extends MovableComponent implements Observer
 	{
 		if (e.isPopupTrigger())
 		{
-			final JMenuItem menuDelete = Utility.findMenuItem(popupMenu, "Delete");
+			String text = "Delete ";
 
-			if (menuDelete != null)
+			// if context menu is requested on a TextBox, customize popup menu.
+			if (pressedTextBox != null)
 			{
-				String text = "Delete ";
-
-				// if context menu is requested on a TextBox, change popup menu.
-				if (pressedTextBox != null)
-				{
-					text += pressedTextBox.getText();
-
-					JMenuItem itemTop;
-					int index = 0;
-
-					if (attributesView.indexOf(pressedTextBox) != 0 && methodsView.indexOf(pressedTextBox) != 0)
-					{
-						itemTop = makeMenuItem("Move Up", "Move Up", "direction_up");
-						popupMenu.add(itemTop, index++);
-					}
-
-					if ((attributesView.size() == 0 || attributesView.indexOf(pressedTextBox) != attributesView.size() - 1) && (methodsView.size() == 0 || methodsView.indexOf(pressedTextBox) != methodsView.size() - 1))
-					{
-						itemTop = makeMenuItem("Move Down", "Move Down", "direction_down");
-						popupMenu.add(itemTop, index++);
-					}
-
-					if (index > 0)
-						popupMenu.add(new JSeparator(), index);
-				}
-				else
-
-					text += component.getName();
-
-				menuDelete.setText(text);
+				text += pressedTextBox.getText();
+				menuItemMoveUp.setEnabled(attributesView.indexOf(pressedTextBox) != 0 && methodsView.indexOf(pressedTextBox) != 0);
+				menuItemMoveDown.setEnabled((attributesView.size() == 0 || attributesView.indexOf(pressedTextBox) != attributesView.size() - 1) && (methodsView.size() == 0 || methodsView.indexOf(pressedTextBox) != methodsView.size() - 1));
 			}
+			else
+			{
+				text += component.getName();
+				menuItemMoveUp.setEnabled(false);
+				menuItemMoveDown.setEnabled(false);
+			}
+
+			menuItemDelete.setText(text);
 			
-			super.maybeShowPopup(e, popupMenu);
 		}
-		else
-		{
-			JMenuItem menuItem = Utility.findMenuItem(popupMenu, "Move Up");
-			boolean elementRemove = false;
-
-			if (menuItem != null)
-			{
-				popupMenu.remove(menuItem);
-				elementRemove = true;
-			}
-
-			menuItem = Utility.findMenuItem(popupMenu, "Move Down");
-
-			if (menuItem != null)
-			{
-				popupMenu.remove(menuItem);
-				elementRemove = true;
-			}
-
-			if (elementRemove)
-				popupMenu.remove(0);
-		}
+		
+		super.maybeShowPopup(e, popupMenu);
 	}
 
 	/**
