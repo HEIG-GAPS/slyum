@@ -671,11 +671,20 @@ public abstract class EntityView extends MovableComponent implements Observer
 	@Override
 	public void gMousePressed(MouseEvent e)
 	{
+		pressedTextBox = searchTextBoxAtLocation(e.getPoint());
 		super.gMousePressed(e);
-
+	}
+	
+	/**
+	 * Search and return the Textbox (methods and attributes) at the given location.
+	 * @param location the location where find a TextBox
+	 * @return the found TextBox
+	 */
+	private TextBox searchTextBoxAtLocation(Point location)
+	{
 		final LinkedList<TextBox> tb = getAllTextBox();
 		tb.remove(entityName);
-		pressedTextBox = GraphicView.searchComponentWithPosition(tb, e.getPoint());
+		return GraphicView.searchComponentWithPosition(tb, location);
 	}
 
 	@Override
@@ -724,9 +733,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 				menuItemMoveUp.setEnabled(false);
 				menuItemMoveDown.setEnabled(false);
 			}
-
 			menuItemDelete.setText(text);
-			
 		}
 		
 		super.maybeShowPopup(e, popupMenu);
