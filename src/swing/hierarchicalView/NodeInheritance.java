@@ -40,7 +40,7 @@ public class NodeInheritance extends DefaultMutableTreeNode implements ICustomiz
 	 */
 	public static String generateName(Inheritance inheritance)
 	{
-		return inheritance.getChild().getName() + " - " + inheritance.getParent().getName();
+		return inheritance.toString();
 	}
 
 	private final Inheritance inheritance;

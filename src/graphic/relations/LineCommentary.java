@@ -96,7 +96,10 @@ public class LineCommentary extends LineView
 	@Override
 	public String toString()
 	{
-		return getComponent().getAssociedComponent().toString();
+		if (getComponent().getAssociedComponent() != null)
+			return getComponent().getAssociedComponent().toString();
+		else
+			return "unknowed link";
 	}
 	
 	@Override

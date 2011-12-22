@@ -55,7 +55,7 @@ public class XMLParser extends DefaultHandler
 		boolean direction = false;
 		int id = -1;
 		String name = null;
-		LinkedList<Role> role = new LinkedList<XMLParser.Role>();
+		LinkedList<Role> role = new LinkedList<>();
 	};
 
 	private class ClassDiagram
@@ -63,7 +63,7 @@ public class XMLParser extends DefaultHandler
 		DiagramElements diagrameElement = null;
 		@SuppressWarnings("unused")
 		String name = null;
-		LinkedList<UMLView> uMLView = new LinkedList<XMLParser.UMLView>();
+		LinkedList<UMLView> uMLView = new LinkedList<>();
 	}
 
 	private class ComponentView
@@ -83,21 +83,21 @@ public class XMLParser extends DefaultHandler
 
 	private class DiagramElements
 	{
-		LinkedList<Association> association = new LinkedList<XMLParser.Association>();
-		LinkedList<Dependency> dependency = new LinkedList<XMLParser.Dependency>();
-		LinkedList<Entity> entity = new LinkedList<XMLParser.Entity>();
-		LinkedList<Inheritance> inheritance = new LinkedList<XMLParser.Inheritance>();
-		LinkedList<InnerClass> innerClass = new LinkedList<XMLParser.InnerClass>();
+		LinkedList<Association> association = new LinkedList<>();
+		LinkedList<Dependency> dependency = new LinkedList<>();
+		LinkedList<Entity> entity = new LinkedList<>();
+		LinkedList<Inheritance> inheritance = new LinkedList<>();
+		LinkedList<InnerClass> innerClass = new LinkedList<>();
 	}
 
 	private class Entity
 	{
 		int associationClassID = -1;
-		LinkedList<Variable> attribute = new LinkedList<XMLParser.Variable>();
+		LinkedList<Variable> attribute = new LinkedList<>();
 		EntityType entityType = null;
 		int id = -1;
 		boolean isAbstract = false;
-		LinkedList<Operation> method = new LinkedList<XMLParser.Operation>();
+		LinkedList<Operation> method = new LinkedList<>();
 		String name = null;
 		Visibility visibility = Visibility.PUBLIC;
 	}
@@ -126,7 +126,7 @@ public class XMLParser extends DefaultHandler
 	private class MultiView
 	{
 		int color = 0;
-		LinkedList<RelationView> multiLineView = new LinkedList<RelationView>();
+		LinkedList<RelationView> multiLineView = new LinkedList<>();
 		Rectangle multiViewBounds = new Rectangle();
 		int relationId = -1;
 	}
@@ -136,7 +136,7 @@ public class XMLParser extends DefaultHandler
 		Rectangle bounds = new Rectangle();
 		int color = 0;
 		String content;
-		LinkedList<RelationView> line = new LinkedList<XMLParser.RelationView>();
+		LinkedList<RelationView> line = new LinkedList<>();
 	}
 
 	private class Operation
@@ -145,7 +145,7 @@ public class XMLParser extends DefaultHandler
 		boolean isStatic = false;
 		String name = null;
 		Type returnType = null;
-		LinkedList<Variable> variable = new LinkedList<XMLParser.Variable>();
+		LinkedList<Variable> variable = new LinkedList<>();
 		Visibility visibility = Visibility.PUBLIC;
 	}
 
@@ -153,10 +153,10 @@ public class XMLParser extends DefaultHandler
 	{
 		int color = 0;
 		Rectangle labelAssociation = new Rectangle();
-		LinkedList<Point> line = new LinkedList<Point>();
-		LinkedList<Rectangle> multipliciteAssociations = new LinkedList<Rectangle>();
+		LinkedList<Point> line = new LinkedList<>();
+		LinkedList<Rectangle> multipliciteAssociations = new LinkedList<>();
 		int relationId = -1;
-		LinkedList<Rectangle> roleAssociations = new LinkedList<Rectangle>();
+		LinkedList<Rectangle> roleAssociations = new LinkedList<>();
 	}
 
 	private class Role
@@ -170,17 +170,17 @@ public class XMLParser extends DefaultHandler
 	private class UMLView
 	{
 		@SuppressWarnings("unused")
-		LinkedList<ComponentView> componentView = new LinkedList<XMLParser.ComponentView>();
+		LinkedList<ComponentView> componentView = new LinkedList<>();
 		
 		int grid = 0;
 		
 		@SuppressWarnings("unused")
 		String name = null;
 
-		LinkedList<Note> notes = new LinkedList<XMLParser.Note>();
+		LinkedList<Note> notes = new LinkedList<>();
 		
 		@SuppressWarnings("unused")
-		LinkedList<RelationView> relationView = new LinkedList<XMLParser.RelationView>();
+		LinkedList<RelationView> relationView = new LinkedList<>();
 	}
 
 	// UML STRUCTURE
@@ -196,15 +196,15 @@ public class XMLParser extends DefaultHandler
 		Visibility visibility = null;
 	}
 
-	LinkedList<AssociationClass> associationClassEntities = new LinkedList<AssociationClass>();
-	LinkedList<Association> associations = new LinkedList<Association>();
+	LinkedList<AssociationClass> associationClassEntities = new LinkedList<>();
+	LinkedList<Association> associations = new LinkedList<>();
 	private StringBuffer buffer;
 
 	private final classDiagram.ClassDiagram classDiagram;
 
-	LinkedList<ClassEntity> classEntities = new LinkedList<ClassEntity>();
+	LinkedList<ClassEntity> classEntities = new LinkedList<>();
 	// LinkedList<InnerCLass> innerCLass = new LinkedList<InnerCLass>();
-	private final HashMap<Integer, ComponentView> componentView = new HashMap<Integer, ComponentView>();
+	private final HashMap<Integer, ComponentView> componentView = new HashMap<>();
 	Association currentAssociation;
 	ComponentView currentComponentView;
 	Dependency currentDependency;
@@ -229,11 +229,11 @@ public class XMLParser extends DefaultHandler
 
 	Role currentRole;
 
-	LinkedList<Dependency> dependency = new LinkedList<Dependency>();
+	LinkedList<Dependency> dependency = new LinkedList<>();
 
 	private final GraphicView graphicView;
 
-	LinkedList<Inheritance> inheritance = new LinkedList<Inheritance>();
+	LinkedList<Inheritance> inheritance = new LinkedList<>();
 
 	private boolean inMultiViewBounds;
 
@@ -241,10 +241,10 @@ public class XMLParser extends DefaultHandler
 			inNoteGeometry = false, inNoteRelation = false,
 			inLabelAssociation = false;
 
-	LinkedList<InterfaceEntity> interfaceEntities = new LinkedList<InterfaceEntity>();
+	LinkedList<InterfaceEntity> interfaceEntities = new LinkedList<>();
 
-	private final HashMap<Integer, MultiView> multiView = new HashMap<Integer, MultiView>();
-	private final HashMap<Integer, RelationView> relationView = new HashMap<Integer, RelationView>();
+	private final HashMap<Integer, MultiView> multiView = new HashMap<>();
+	private final HashMap<Integer, RelationView> relationView = new HashMap<>();
 	private ClassDiagram uMLClassDiagram;
 	private SDialogProjectLoading dpl;
 
@@ -568,7 +568,7 @@ public class XMLParser extends DefaultHandler
 	public void importAssociations()
 	{
 		dpl.setPhase("Import associations...");
-		final LinkedList<Association> associationsNotAdded = new LinkedList<Association>();
+		final LinkedList<Association> associationsNotAdded = new LinkedList<>();
 
 		for (final Association a : uMLClassDiagram.diagrameElement.association)
 		{
@@ -605,7 +605,7 @@ public class XMLParser extends DefaultHandler
 					break;
 
 				case MULTI:
-					final LinkedList<classDiagram.components.ClassEntity> entities = new LinkedList<classDiagram.components.ClassEntity>();
+					final LinkedList<classDiagram.components.ClassEntity> entities = new LinkedList<>();
 
 					for (final Role role : a.role)
 
@@ -656,11 +656,11 @@ public class XMLParser extends DefaultHandler
 			final classDiagram.components.Entity target = (classDiagram.components.Entity) classDiagram.searchComponentById(d.target);
 
 			dpl.addStep("Create dependency " +  source.getName() + " - " + target.getName()  +"...");
-			final classDiagram.relationships.Dependency dependency = new classDiagram.relationships.Dependency(source, target, d.id);
-			classDiagram.addDependency(dependency);
+			final classDiagram.relationships.Dependency dr = new classDiagram.relationships.Dependency(source, target, d.id);
+			classDiagram.addDependency(dr);
 
-			dependency.setLabel(d.label);
-			dependency.notifyObservers();
+			dr.setLabel(d.label);
+			dr.notifyObservers();
 		}
 	}
 
@@ -684,9 +684,9 @@ public class XMLParser extends DefaultHandler
 			}
 			else
 			{
-				final classDiagram.relationships.Inheritance inheritance = new classDiagram.relationships.Inheritance(child, parent, h.id);
-				classDiagram.addInheritance(inheritance);
-				inheritance.notifyObservers();
+				final classDiagram.relationships.Inheritance i = new classDiagram.relationships.Inheritance(child, parent, h.id);
+				classDiagram.addInheritance(i);
+				i.notifyObservers();
 			}
 		}
 	}
@@ -710,21 +710,24 @@ public class XMLParser extends DefaultHandler
 
 					component = graphicView;
 
-				final LineCommentary lc = new LineCommentary(graphicView, noteView, component, rv.line.getFirst(), rv.line.getLast(), false);
-
-				for (int i = 1; i < rv.line.size() - 1; i++)
+				if (LineCommentary.checkCreate(noteView, component, false))
 				{
-					final RelationGrip rg = new RelationGrip(graphicView, lc);
-					rg.setAnchor(rv.line.get(i));
-					lc.addGrip(rg, i);
+					final LineCommentary lc = new LineCommentary(graphicView, noteView, component, rv.line.getFirst(), rv.line.getLast(), false);
+
+					for (int i = 1; i < rv.line.size() - 1; i++)
+					{
+						final RelationGrip rg = new RelationGrip(graphicView, lc);
+						rg.setAnchor(rv.line.get(i));
+						lc.addGrip(rg, i);
+					}
+
+					lc.getFirstPoint().setAnchor(rv.line.getFirst());
+					lc.getLastPoint().setAnchor(rv.line.getLast());
+
+					lc.setColor(rv.color);
+
+					graphicView.addLineView(lc);
 				}
-
-				lc.getFirstPoint().setAnchor(rv.line.getFirst());
-				lc.getLastPoint().setAnchor(rv.line.getLast());
-
-				lc.setColor(rv.color);
-
-				graphicView.addLineView(lc);
 			}
 
 			noteView.setColor(note.color);
@@ -856,7 +859,7 @@ public class XMLParser extends DefaultHandler
 			try
 			{
 				currentEntity = new Entity();
-				currentEntity.id = Integer.parseInt(attributes.getValue("id"));;
+				currentEntity.id = Integer.parseInt(attributes.getValue("id"));
 				currentEntity.name = attributes.getValue("name");
 				currentEntity.entityType = EntityType.valueOf(attributes.getValue("entityType"));
 				currentEntity.visibility = Visibility.valueOf(attributes.getValue("visibility"));
@@ -1025,11 +1028,11 @@ public class XMLParser extends DefaultHandler
 			currentGeometry = new Rectangle();
 		}
 		else if (qName.equals("line"))
-			currentLine = new LinkedList<Point>();
+			currentLine = new LinkedList<>();
 		else if (qName.equals("noteLine"))
 		{
 			inNoteRelation = true;
-			currentLine = new LinkedList<Point>();
+			currentLine = new LinkedList<>();
 			currentRelationView = new RelationView();
 			currentRelationView.relationId = Integer.parseInt(attributes.getValue("relationId"));
 			currentRelationView.color = Integer.parseInt(attributes.getValue("color"));

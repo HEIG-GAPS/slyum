@@ -11,9 +11,9 @@ public class Change
 	
 	private static boolean _hasChange = false;
 
-	private static LinkedList<Changeable> stack = new LinkedList<Changeable>();
+	private static LinkedList<Changeable> stack = new LinkedList<>();
 
-	private static LinkedList<Boolean> record = new LinkedList<Boolean>();
+	private static LinkedList<Boolean> record = new LinkedList<>();
 	
 	private static boolean isRecord = false;
 
@@ -122,8 +122,8 @@ public class Change
 		
 		isRecord = false;
 
-		int b = pointer-1;
-		while (--b >= 0 && b < size-1 && record.get(b));
+		int b = pointer-2;
+		while (b >= 0 && b < size-1 && record.get(b)) b--;
 		
 		record.set(b+1, false);
 		record.set(pointer, false);
@@ -153,6 +153,7 @@ public class Change
 	public static void clear()
 	{
 		stack.clear();
+		record.clear();
 		
 		printStackState();
 	}

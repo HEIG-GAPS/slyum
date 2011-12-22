@@ -183,6 +183,14 @@ public class Inheritance extends Observable implements IDiagramComponent
 	}
 
 	@Override
+	public String toString()
+	{
+		return getChild().getName() + " - " + getParent().getName();
+	}
+	
+	
+
+	@Override
 	public String toXML(int depth)
 	{
 		final String tab = Utility.generateTab(depth);

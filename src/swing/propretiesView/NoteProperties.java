@@ -72,23 +72,27 @@ public class NoteProperties extends GlobalPropreties
 		scrollPane.setPreferredSize(new Dimension(200, 0));
 		panel.add(scrollPane);
 		
-		list = new JList<LineCommentary>();
+		list = new JList<>();
 		list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(list);
 		list.setModel(new ListLineCommentaryModel());
-		list.addMouseListener(new MouseAdapter() {
+		list.addMouseListener(new MouseAdapter()
+		{
 			@Override
-			public void mousePressed(MouseEvent e) {
+			public void mousePressed(MouseEvent e)
+			{
 				super.mousePressed(e);
 
 				List<LineCommentary> l = list.getSelectedValuesList();
 				
-				for (LineView lc : getLineCommentary())
+				for (LineCommentary lc : getLineCommentary())
+					
 					lc.setSelected(l.contains(lc));
 			}
 		});
-		list.addListSelectionListener(new ListSelectionListener() {
-			
+		
+		list.addListSelectionListener(new ListSelectionListener()
+		{
 			@Override
 			public void valueChanged(ListSelectionEvent e)
 			{
@@ -115,6 +119,7 @@ public class NoteProperties extends GlobalPropreties
 				list.setSelectedIndex(i);
 			}
 		});
+		btnDelete.setEnabled(false);
 		panel.add(btnDelete);
 	}
 
@@ -152,10 +157,16 @@ public class NoteProperties extends GlobalPropreties
 		}
 	}
 	
-	private LinkedList<LineView> getLineCommentary()
+	private LinkedList<LineCommentary> getLineCommentary()
 	{
 		GraphicComponent gc = (GraphicComponent)currentObject;
 		
-		return gc.getGraphicView().getLinesViewAssociedWith(gc);
+		LinkedList<LineCommentary> ll = new LinkedList<>();
+		
+		for (LineView lv : gc.getGraphicView().getLinesViewAssociedWith(gc))
+			
+			ll.add((LineCommentary)lv);
+		
+		return ll;
 	}
 }
