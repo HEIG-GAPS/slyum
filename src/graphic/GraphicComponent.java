@@ -155,12 +155,9 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 		// Search and delete all lines (relations, associations, etc...)
 		// associated with this component.
 		for (final LineView lv : parent.getLinesViewAssociedWith(this))
-		{
-			final boolean isBlocked = Change.isBlocked();
-			Change.setBlocked(true);
+		
 			lv.delete();
-			Change.setBlocked(isBlocked);
-		}
+		
 	}
 
 	/**

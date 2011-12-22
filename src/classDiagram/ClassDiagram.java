@@ -175,6 +175,9 @@ public class ClassDiagram implements IComponentsObserver
 	@Override
 	public void addMulti(Multi component)
 	{
+		if (components.contains(component))
+			return;
+		
 		for (final IComponentsObserver c : observers)
 			c.addMulti(component);
 
