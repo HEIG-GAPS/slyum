@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
+import swing.Slyum;
 import swing.propretiesView.EntityPropreties;
 import swing.propretiesView.RelationPropreties;
 import utility.PersonalizedIcon;
@@ -60,7 +61,7 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 		setPreferredSize(new Dimension(150, 200));
 		setMinimumSize(new Dimension(150, 200));
 
-		noComponentLabel = new JLabel("No component selected", PersonalizedIcon.createImageIcon("resources/icon/loupe.png"), SwingConstants.CENTER);
+		noComponentLabel = new JLabel("No component selected", PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "loupe.png"), SwingConstants.CENTER);
 		noComponentLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		noComponentLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
 		noComponentLabel.setOpaque(false);

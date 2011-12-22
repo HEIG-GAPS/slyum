@@ -22,6 +22,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JMenuItem;
 
 import swing.EditCommentaryDialog;
+import swing.Slyum;
 import swing.propretiesView.NoteProperties;
 import utility.PersonalizedIcon;
 import utility.Utility;
@@ -301,7 +302,7 @@ public class TextBoxCommentary extends MovableComponent
 
 		setColor(EntityView.getBasicColor());
 		popupMenu.addSeparator();
-		final JMenuItem item = new JMenuItem("Delete commentary", PersonalizedIcon.createImageIcon("resources/icon/delete16.png"));
+		final JMenuItem item = new JMenuItem("Delete commentary", PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete16.png"));
 		item.addActionListener(new ActionListener() {
 
 			@Override

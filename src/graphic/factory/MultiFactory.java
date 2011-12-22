@@ -23,6 +23,7 @@ import java.util.LinkedList;
 
 import javax.swing.JButton;
 
+import swing.Slyum;
 import utility.PersonalizedIcon;
 import change.Change;
 import classDiagram.components.ClassEntity;
@@ -81,7 +82,7 @@ public class MultiFactory extends CreateComponent
 			}
 		};
 
-		buttons[0] = new JButton(PersonalizedIcon.createImageIcon("resources/icon/tick.png"));
+		buttons[0] = new JButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "tick.png"));
 		buttons[0].setBounds(10, 10, 66, 42);
 		buttons[0].addMouseListener(ma);
 		buttons[0].setEnabled(false);

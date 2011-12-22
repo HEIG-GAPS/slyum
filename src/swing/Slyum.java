@@ -48,12 +48,10 @@ public class Slyum extends JFrame implements ActionListener
 	public final static String FILE_SEPARATOR = System.getProperty("file.separator");
 	public final static Point DEFAULT_SIZE = new Point(1024, 760);
 
-	public final static String RESOURCES_PATH = "resources" + FILE_SEPARATOR;
-	public final static String ICON_PATH = RESOURCES_PATH + "icon" + FILE_SEPARATOR;
-	public final static String FONT_PATH = RESOURCES_PATH + "fonts" + FILE_SEPARATOR;
-	
-	public final static String DEFAULT_FONT_NAME = "DejaVu/DejaVuSans";
-	public final static String DEFAULT_FONT_PATH = FONT_PATH + DEFAULT_FONT_NAME;
+	// Don't use the file separator here. Java resources are get with getResource() and
+	// didn't support back-slash character on Windows.
+	public final static String RESOURCES_PATH = "resources/";
+	public final static String ICON_PATH = RESOURCES_PATH + "icon/";
 	
 	public final static int DEFAULT_FONT_SIZE = 12;
 
@@ -157,6 +155,23 @@ public class Slyum extends JFrame implements ActionListener
 	private static JMenuItem undo, redo;
 
 	private static String windowTitle = APP_NAME;
+
+	public static void main(String[] args)
+	{
+		showWarningForOpenJDK();
+	
+		instance = new Slyum();
+		
+		// Launch application from ETD.
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run()
+			{
+				instance.setVisible(true);
+			}
+		});
+	}
 
 	/**
 	 * Create the application directory.
@@ -266,24 +281,6 @@ public class Slyum extends JFrame implements ActionListener
 		return enable;
 	}
 
-	public static void main(String[] args)
-	{
-		showWarningForOpenJDK();
-
-		PropertyLoader.getInstance();
-		instance = new Slyum();
-		
-		// Launch application from ETD.
-		SwingUtilities.invokeLater(new Runnable() {
-			
-			@Override
-			public void run()
-			{
-				instance.setVisible(true);
-			}
-		});
-	}
-
 	public static void setCurrentDirectoryFileChooser(String path)
 	{
 		PropertyLoader.getInstance().getProperties().put("PathForFileChooser", String.valueOf(path));
@@ -345,8 +342,6 @@ public class Slyum extends JFrame implements ActionListener
 		windowTitle = APP_NAME + (projectName == null ? "" : " - " + projectName.getPath());
 	}
 
-	private final PanelClassDiagram panel;
-
 	public Font defaultFont;
 
 	/**
@@ -354,25 +349,20 @@ public class Slyum extends JFrame implements ActionListener
 	 */
 	public Slyum()
 	{
-
-		try
-		{
-			defaultFont = new Font(Font.createFont(
-					Font.TRUETYPE_FONT,
-					getClass().getResourceAsStream(DEFAULT_FONT_PATH + ".ttf")).getFamily(),
-					Font.PLAIN,
-					DEFAULT_FONT_SIZE);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
+		initFont();
 		setUIProperties();
-		panel = PanelClassDiagram.getInstance();
 		createJMenuBar();
 		setFrameProperties();
-
+		initEventListener();
+	}
+	
+	private void initFont()
+	{
+		defaultFont = new Font(Font.SANS_SERIF, Font.PLAIN, DEFAULT_FONT_SIZE);
+	}
+	
+	private void initEventListener()
+	{
 		addWindowListener(new WindowAdapter() {
 
 			@Override
@@ -432,7 +422,7 @@ public class Slyum extends JFrame implements ActionListener
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setSize(DEFAULT_SIZE.x, DEFAULT_SIZE.y);
 		setMinimumSize(new Dimension(400, 400));
-		setContentPane(panel);
+		setContentPane(PanelClassDiagram.getInstance());
 		setLocationRelativeTo(null);
 		setExtendedState(MAXIMIZED_BOTH);
 	}
@@ -787,13 +777,15 @@ public class Slyum extends JFrame implements ActionListener
 
 	private void exit()
 	{
-		switch (panel.askSavingCurrentProject())
+		PanelClassDiagram p = PanelClassDiagram.getInstance();
+		
+		switch (p.askSavingCurrentProject())
 		{
 			case JOptionPane.CANCEL_OPTION:
 				return;
 
 			case JOptionPane.YES_OPTION:
-				panel.saveToXML(false);
+				p.saveToXML(false);
 				System.exit(0);
 				break;
 

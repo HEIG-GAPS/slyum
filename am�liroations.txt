@@ -14,6 +14,8 @@ Note de patch 1.3 :
  
  - Pouvoir éditer les éléments de la vue hiérarchique.
  
+ - Problème avec la suppression multiple.
+ 
  - Easter eggs!
 
 Futures implémentations :
@@ -144,6 +146,8 @@ Déjà implémentées :
  
  - Bug : Création d'une association -> Ctrl+Z -> Ctrl + Y -> Suppression de l'association -> Ctrl+Z -> Ctrl+Y
  
- - Ajout d'une vue aux relations d'héritages.
+ - Ajout d'une vue des propriétés aux relations d'héritages.
+ 
+ - Ajout d'une vue des propriétés aux notes.
  
  - Amélioration de l'ergonomie en interdisant des actions qui n'auraient aucun effet.

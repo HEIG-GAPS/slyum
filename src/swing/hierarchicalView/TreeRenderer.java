@@ -5,6 +5,7 @@ import java.awt.Component;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
+import swing.Slyum;
 import swing.hierarchicalView.ICustomizedIconNode;
 import utility.PersonalizedIcon;
 
@@ -13,9 +14,9 @@ public class TreeRenderer extends DefaultTreeCellRenderer
 {
 	public TreeRenderer()
 	{
-		setLeafIcon(PersonalizedIcon.createImageIcon("resources/icon/boxOpen.png"));
-		setClosedIcon(PersonalizedIcon.createImageIcon("resources/icon/boxClose.png"));
-		setOpenIcon(PersonalizedIcon.createImageIcon("resources/icon/boxOpen.png"));
+		setLeafIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "boxOpen.png"));
+		setClosedIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "boxClose.png"));
+		setOpenIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "boxOpen.png"));
 	}
 
 	@Override
@@ -25,7 +26,7 @@ public class TreeRenderer extends DefaultTreeCellRenderer
 		super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
 		if (row == 0) // root
-			setIcon(PersonalizedIcon.createImageIcon("resources/icon/diagramIcon.png"));
+			setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "diagramIcon.png"));
 
 		else if (value instanceof ICustomizedIconNode)
 
