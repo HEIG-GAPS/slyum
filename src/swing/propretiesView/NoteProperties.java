@@ -20,7 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
-import javax.swing.JTextPane;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -30,10 +29,8 @@ import swing.SButton;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 import swing.JPanelRounded;
-import javax.swing.JLabel;
 
 public class NoteProperties extends GlobalPropreties
 {

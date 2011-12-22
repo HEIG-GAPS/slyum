@@ -387,7 +387,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 	 */
 	public JMenuItem makeMenuItem(String name, String action, String imgIcon)
 	{
-		final ImageIcon img = PersonalizedIcon.createImageIcon("resources/icon/" + imgIcon + ".png");
+		final ImageIcon img = PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + imgIcon + ".png");
 
 		final JMenuItem menuItem = new JMenuItem(name, img);
 		menuItem.setActionCommand(action);

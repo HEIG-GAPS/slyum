@@ -247,7 +247,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 		popupMenu.addSeparator();
 
 		JMenu subMenu = new JMenu("View");
-		subMenu.setIcon(PersonalizedIcon.createImageIcon("resources/icon/visibility.png"));
+		subMenu.setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "visibility.png"));
 		ButtonGroup group = new ButtonGroup();
 
 		JRadioButtonMenuItem rbMenuItem = makeRadioButtonMenuItem("All", "ViewAll", group);

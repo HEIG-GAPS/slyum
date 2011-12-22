@@ -19,6 +19,7 @@ import change.BufferBounds;
 import change.BufferCreation;
 import change.Change;
 
+import swing.Slyum;
 import utility.PersonalizedIcon;
 import utility.Utility;
 
@@ -61,7 +62,7 @@ public class RelationGrip extends SquareGrip implements ActionListener
 
 		popupMenu = new JPopupMenu();
 
-		final ImageIcon imgIcon = PersonalizedIcon.createImageIcon("resources/icon/delete16.png");
+		final ImageIcon imgIcon = PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete16.png");
 
 		menuItemDelete = new JMenuItem("Delete", imgIcon);
 		menuItemDelete.setActionCommand("delete");

@@ -9,6 +9,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import swing.Slyum;
 import swing.hierarchicalView.IClassDiagramNode;
 import swing.hierarchicalView.ICustomizedIconNode;
 import utility.PersonalizedIcon;
@@ -65,7 +66,7 @@ public class NodeAttribute extends DefaultMutableTreeNode implements ICustomized
 	@Override
 	public ImageIcon getCustomizedIcon()
 	{
-		return PersonalizedIcon.createImageIcon("resources/icon/attribute.png");
+		return PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "attribute.png");
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import swing.JPanelRounded;
 import swing.PanelClassDiagram;
+import swing.Slyum;
 import utility.PersonalizedIcon;
 import classDiagram.ClassDiagram;
 import classDiagram.IComponentsObserver;
@@ -123,7 +124,7 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 	@Override
 	public void addAssociationClass(AssociationClass component)
 	{
-		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon("resources/icon/classAssoc16.png")), entitiesNode);
+		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "classAssoc16.png")), entitiesNode);
 	}
 
 	@Override
@@ -135,7 +136,7 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 	@Override
 	public void addClass(ClassEntity component)
 	{
-		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon("resources/icon/class16.png")), entitiesNode);
+		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "class16.png")), entitiesNode);
 	}
 
 	@Override
@@ -166,7 +167,7 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 	@Override
 	public void addInterface(InterfaceEntity component)
 	{
-		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon("resources/icon/interface16.png")), entitiesNode);
+		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "interface16.png")), entitiesNode);
 	}
 
 	@Override

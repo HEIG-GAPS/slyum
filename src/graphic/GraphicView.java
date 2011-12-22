@@ -60,6 +60,7 @@ import swing.SPanelStyleComponent;
 import swing.SPanelZOrder;
 import swing.Slyum;
 import swing.SColorChooser;
+import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.SSlider;
 import utility.SizedCursor;
@@ -1499,7 +1500,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 			
 		case MouseEvent.BUTTON2:
 			Toolkit toolkit = Toolkit.getDefaultToolkit();
-			Image image = toolkit.getImage("src" + Slyum.FILE_SEPARATOR + "swing" + Slyum.FILE_SEPARATOR + Slyum.ICON_PATH + "drag_hand.png");
+			Image image = PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "drag_hand.png").getImage();
 			image = SizedCursor.getPreferredSizedCursor(image);
 			Cursor brokenCursor = toolkit.createCustomCursor(image , new Point(0, 0), "drag_hand");
 			scene.setCursor(brokenCursor);
