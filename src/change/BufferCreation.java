@@ -22,13 +22,9 @@ public class BufferCreation implements Changeable
 	public void restore()
 	{
 		if (isCreated)
-		{
+		
 			gc.restore();
-			
-			for (LineView lv : associedLinesView)
-				
-				lv.restore();
-		}
+		
 		else
 		{
 			final boolean isBlocked = Change.isBlocked();

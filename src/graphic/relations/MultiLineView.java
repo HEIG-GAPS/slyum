@@ -78,9 +78,10 @@ public class MultiLineView extends LineView
 		MultiView mv = (MultiView) getFirstPoint().getAssociedComponentView();
 		Multi m = (Multi) mv.getAssociedComponent();
 		TextBoxRole tbr = (TextBoxRole)tbRoles.getFirst();
-		
 		m.addRole(tbr.getRole());
 		mv.addMultiLineView(this);
+		
+		mv.restore();
 	}
 
 	public String getXML(int depth)
