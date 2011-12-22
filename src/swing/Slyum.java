@@ -16,8 +16,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 
+import java.net.URISyntaxException;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -38,7 +40,6 @@ import utility.SMessageDialog;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-@SuppressWarnings("serial")
 public class Slyum extends JFrame implements ActionListener
 {
 	private static final String APP_NAME = "Slyum";
@@ -196,17 +197,10 @@ public class Slyum extends JFrame implements ActionListener
 	{
 		String defaultPath = null;
 
-		try
-		{
-			defaultPath = PropertyLoader.getInstance().getProperties().getProperty("PathForFileChooser");
-		} catch (final Exception e)
-		{
-			e.printStackTrace();
-		}
+		defaultPath = PropertyLoader.getInstance().getProperties().getProperty("PathForFileChooser");
 
 		if (defaultPath == null)
-
-			defaultPath = System.getProperty("user.home");
+                    defaultPath = System.getProperty("user.home");
 
 		return defaultPath;
 	}
@@ -349,11 +343,11 @@ public class Slyum extends JFrame implements ActionListener
 	 */
 	public Slyum()
 	{
-		initFont();
-		setUIProperties();
-		createJMenuBar();
-		setFrameProperties();
-		initEventListener();
+            initFont();
+            setUIProperties();
+            createJMenuBar();
+            setFrameProperties();
+            initEventListener();
 	}
 	
 	private void initFont()
@@ -378,43 +372,40 @@ public class Slyum extends JFrame implements ActionListener
 	{
 		PanelClassDiagram p = PanelClassDiagram.getInstance();
 		GraphicView gv = p.getCurrentGraphicView();
-		
-		if (Slyum.ACTION_SAVE_AS.equals(e.getActionCommand()))
-			p.saveToXML(true);
-		
-		else if (ACTION_ABOUT.equals(e.getActionCommand()))
-			
-			new AboutBox(this);
-	
-		else if (ACTION_HELP.equals(e.getActionCommand()))
-			
-			openHelp();
-	
-		else if (ACTION_EXIT.equals(e.getActionCommand()))
-			
-			exit();
-	
-		else if (ACTION_PROPERTIES.equals(e.getActionCommand()))
-			
-			new SProperties();
-	
-		else if (ACTION_UPDATE.equals(e.getActionCommand()))
-			
-			openURL(URL_UPDATE_PAGE);
-		
-		else if (ACTION_SELECT_ALL.equals(e.getActionCommand()))
-			
-			gv.selectAllComponents();
-		
-		else if (ACTION_UNSELECT_ALL.equals(e.getActionCommand()))
-			
-			gv.clearAllSelectedComponents();
+                
+            switch (e.getActionCommand())
+            {
+                case Slyum.ACTION_SAVE_AS:
+                    p.saveToXML(true);
+                    break;
+                case ACTION_ABOUT:
+                    new AboutBox(this);
+                    break;
+                case ACTION_HELP:
+                    openHelp();
+                    break;
+                case ACTION_EXIT:
+                    exit();
+                    break;
+                case ACTION_PROPERTIES:
+                    new SProperties();
+                    break;
+                case ACTION_UPDATE:
+                    openURL(URL_UPDATE_PAGE);
+                    break;
+                case ACTION_SELECT_ALL:
+                    gv.selectAllComponents();
+                    break;
+                case ACTION_UNSELECT_ALL:
+                    gv.clearAllSelectedComponents();
+                    break;
+            }
 	}
 
 	/**
 	 * Initialize the properties of the frame.
 	 */
-	public void setFrameProperties()
+	private void setFrameProperties()
 	{
 		setName(APP_NAME);
 		setTitle(getName());
@@ -430,28 +421,28 @@ public class Slyum extends JFrame implements ActionListener
 	/**
 	 * Initialize the properties of Slyum.
 	 */
-	public void setUIProperties()
+	private void setUIProperties()
 	{
-		System.setProperty("awt.useSystemAAFontSettings", "on");
-		System.setProperty("swing.aatext", "true");
-		
-		Font f = defaultFont.deriveFont(13.0f);
-		UIManager.put("Button.font", f);
-		UIManager.put("Label.font", f);
-		UIManager.put("CheckBox.font", f);
-		UIManager.put("RadioButton.font", f);
-		UIManager.put("TabbedPane.font", f);
-		UIManager.put("TitledBorder.font", f);
-		UIManager.put("List.font", f);
-		UIManager.put("Menu.font", f);
-		UIManager.put("MenuItem.font", f);
-		UIManager.put("ComboBox.font", f);
-		UIManager.put("Table.font", f);
-		UIManager.put("TextField.font", f);
-		UIManager.put("OptionPane.informationIcon", PersonalizedIcon.getInfoIcon());
-		UIManager.put("OptionPane.errorIcon", PersonalizedIcon.getErrorIcon());
-		UIManager.put("OptionPane.warningIcon", PersonalizedIcon.getWarningIcon());
-		UIManager.put("OptionPane.questionIcon", PersonalizedIcon.getQuestionIcon());
+            System.setProperty("awt.useSystemAAFontSettings", "on");
+            System.setProperty("swing.aatext", "true");
+
+            Font f = defaultFont.deriveFont(13.0f);
+            UIManager.put("Button.font", f);
+            UIManager.put("Label.font", f);
+            UIManager.put("CheckBox.font", f);
+            UIManager.put("RadioButton.font", f);
+            UIManager.put("TabbedPane.font", f);
+            UIManager.put("TitledBorder.font", f);
+            UIManager.put("List.font", f);
+            UIManager.put("Menu.font", f);
+            UIManager.put("MenuItem.font", f);
+            UIManager.put("ComboBox.font", f);
+            UIManager.put("Table.font", f);
+            UIManager.put("TextField.font", f);
+            UIManager.put("OptionPane.informationIcon", PersonalizedIcon.getInfoIcon());
+            UIManager.put("OptionPane.errorIcon", PersonalizedIcon.getErrorIcon());
+            UIManager.put("OptionPane.warningIcon", PersonalizedIcon.getWarningIcon());
+            UIManager.put("OptionPane.questionIcon", PersonalizedIcon.getQuestionIcon());
 	}
 
 	public static void openURL(String url)
@@ -460,7 +451,7 @@ public class Slyum extends JFrame implements ActionListener
 		{
 			java.awt.Desktop.getDesktop().browse(new URI(url));
 		}
-		catch (Exception e)
+		catch (URISyntaxException | IOException e)
 		{
 			SMessageDialog.showErrorMessage("Unable to open " + URL_UPDATE_PAGE + ".");
 		}
@@ -800,27 +791,28 @@ public class Slyum extends JFrame implements ActionListener
 	 */
 	private void openHelp()
 	{
-		try
-		{
-			final File pdfFile = new File("Documentation/User manual.pdf");
+            final String ERROR_MESSAGE = "Cannot open help file!\nTry manually in help folder.";
+            try
+            {
+                final File pdfFile = new File("Documentation/User manual.pdf");
 
-			if (pdfFile.exists())
-			{
+                if (pdfFile.exists())
+                {
 
-				if (Desktop.isDesktopSupported())
+                        if (Desktop.isDesktopSupported())
 
-					Desktop.getDesktop().open(pdfFile);
+                                Desktop.getDesktop().open(pdfFile);
 
-				else
-					SMessageDialog.showErrorMessage("Cannot open help file!\nTry manually in help folder.");
+                        else
+                                SMessageDialog.showErrorMessage(ERROR_MESSAGE);
 
-			}
-			else
-				SMessageDialog.showErrorMessage("Help file not found!\nTry to re-download Slyum.");
+                }
+                else
+                        SMessageDialog.showErrorMessage("Help file not found!\nTry to re-download Slyum.");
 
-		} catch (final Exception ex)
-		{
-			ex.printStackTrace();
-		}
+            } catch (final Exception ex)
+            {
+                SMessageDialog.showErrorMessage(ERROR_MESSAGE);
+            }
 	}
 }

@@ -83,6 +83,7 @@ import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Role;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 /**
  * This class is the main container for all diagrams components view
