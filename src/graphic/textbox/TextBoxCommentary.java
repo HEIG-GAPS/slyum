@@ -311,6 +311,8 @@ public class TextBoxCommentary extends MovableComponent
 				delete();
 			}
 		});
+		
+		parent.selectOnly(this);
 		popupMenu.add(item);
 	}
 

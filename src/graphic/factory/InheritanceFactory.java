@@ -61,7 +61,7 @@ public class InheritanceFactory extends RelationFactory
 				parent.addLineView(i);
 				classDiagram.addInheritance(inheritance);
 
-				parent.clearAllSelectedComponents();
+				parent.unselectAll();
 				i.setSelected(true);
 
 				return i;

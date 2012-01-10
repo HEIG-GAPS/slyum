@@ -61,7 +61,7 @@ public class MultiFactory extends CreateComponent
 	{
 		super(parent);
 
-		parent.clearAllSelectedComponents();
+		parent.unselectAll();
 
 		parent.getScene().repaint();
 

@@ -60,7 +60,7 @@ public class BinaryFactory extends RelationFactory
 			parent.addLineView(b);
 			classDiagram.addBinary(binary);
 
-			parent.clearAllSelectedComponents();
+			parent.unselectAll();
 			b.setSelected(true);
 
 			return b;

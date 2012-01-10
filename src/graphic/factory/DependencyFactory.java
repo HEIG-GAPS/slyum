@@ -55,7 +55,7 @@ public class DependencyFactory extends RelationFactory
 			parent.addLineView(d);
 			classDiagram.addDependency(dependency);
 
-			parent.clearAllSelectedComponents();
+			parent.unselectAll();
 			d.setSelected(true);
 
 			return d;
