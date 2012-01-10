@@ -105,6 +105,11 @@ public class Slyum extends JFrame implements ActionListener
 	public static final String ACTION_MOVE_BOTTOM = "MoveBottom";
 	public static final String ACTION_COLOR = "Color";
 	public static final String ACTION_DELETE = "Delete";
+	
+	public static final String ACTION_ZOOM_0_5 = "Zoom 0.5x";
+	public static final String ACTION_ZOOM_1 = "Zoom 1x";
+	public static final String ACTION_ZOOM_1_5 = "Zoom 1.5x";
+	public static final String ACTION_ZOOM_2 = "Zoom 2x";
 
 	public static final String ACTION_TEXTBOX_UP = "MoveTextBoxUp";
 	public static final String ACTION_TEXTBOX_DOWN = "MoveTextBoxDown";
@@ -135,6 +140,8 @@ public class Slyum extends JFrame implements ActionListener
 	public static final String KEY_MOVE_UP = "ctrl alt RIGHT";
 	public static final String KEY_MOVE_DOWN = "ctrl alt LEFT";
 	public static final String KEY_MOVE_BOTTOM = "ctrl alt DOWN";
+	
+	public final static String KEY_ZOOM_1 = "1";
 
 	public final static String KEY_CLASS = "ctrl shift C";
 	public final static String KEY_INTERFACE = "ctrl shift I";
@@ -399,6 +406,18 @@ public class Slyum extends JFrame implements ActionListener
                 case ACTION_UNSELECT_ALL:
                     gv.unselectAll();
                     break;
+				case ACTION_ZOOM_1:
+					PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(1.0);
+					break;
+				case ACTION_ZOOM_0_5:
+					PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(0.5);
+					break;
+				case ACTION_ZOOM_1_5:
+					PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(1.5);
+					break;
+				case ACTION_ZOOM_2:
+					PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(2.0);
+					break;
             }
 	}
 
@@ -645,6 +664,31 @@ public class Slyum extends JFrame implements ActionListener
 			menu = new JMenu("Diagram");
 			menu.setMnemonic(KeyEvent.VK_D);
 			menuBar.add(menu);
+			
+			// Sub Menu Zoom
+			JMenu subMenu = new JMenu("Zoom");
+			subMenu.setMnemonic(KeyEvent.VK_Z);
+			menu.add(subMenu);
+			
+			// Menu item Zoom0.5x
+			menuItem = createMenuItem("1:1 (100 %)", "", 0, KEY_ZOOM_1, ACTION_ZOOM_1);
+			subMenu.add(menuItem);
+			
+			subMenu.addSeparator();
+			
+			// Menu item Zoom1x
+			menuItem = createMenuItem("1:2 (50 %)", "", 0, null, ACTION_ZOOM_0_5);
+			subMenu.add(menuItem);
+			
+			// Menu item Zoom1.5x
+			menuItem = createMenuItem("3:2 (150 %)", "", 0, null, ACTION_ZOOM_1_5);
+			subMenu.add(menuItem);
+			
+			// Menu item Zoom2x
+			menuItem = createMenuItem("2:1 (200 %)", "", 0, null, ACTION_ZOOM_2);
+			subMenu.add(menuItem);
+			
+			menu.addSeparator();
 	
 			// Menu item add class
 			menuItem = createMenuItem("Add Class", "class16", KeyEvent.VK_C, KEY_CLASS, ACTION_NEW_CLASS, p.getBtnClass());

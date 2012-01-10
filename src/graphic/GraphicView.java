@@ -387,8 +387,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	{
 		return PanelClassDiagram.getInstance().getsSlider().getValue() / 100.0;
 	}
-	 
-
+	
 	/**
 	 * Create a new graphic view representing the class diagram given. The new
 	 * graphic view is empty when created. If classDiagram given is not empty,
@@ -1754,10 +1753,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL)
 			
 			if (e.isControlDown())
-			{
-				SSlider ss = PanelClassDiagram.getInstance().getsSlider();
-				ss.setValue((int)(ss.getValue() - (float)e.getUnitsToScroll()));
-			}
+			
+				setScale(getScale() - (double)e.getUnitsToScroll()/20.0);
 		
 
 		JScrollBar s = scrollPane.getVerticalScrollBar();
@@ -2145,9 +2142,14 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		componentMousePressed = component;
 	}
+	
+	public void setScale(double scale)
+	{
+		PanelClassDiagram.getInstance().getsSlider().setValue((int)(scale * 100.0));
+	}
 
 	/**
-	 * Set the police zoom. The zoom is multiplied with the police size for
+	 * Set the font zoom. The zoom is multiplied with the font size for
 	 * computing new size. Default value : 1.0f.
 	 * 
 	 * @param zoom
