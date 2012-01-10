@@ -394,10 +394,10 @@ public class Slyum extends JFrame implements ActionListener
                     openURL(URL_UPDATE_PAGE);
                     break;
                 case ACTION_SELECT_ALL:
-                    gv.selectAllComponents();
+                    gv.selectAll();
                     break;
                 case ACTION_UNSELECT_ALL:
-                    gv.clearAllSelectedComponents();
+                    gv.unselectAll();
                     break;
             }
 	}

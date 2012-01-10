@@ -44,7 +44,7 @@ public class InnerClassFactory extends InheritanceFactory
 				parent.addLineView(i);
 				classDiagram.addInnerClass(innerClass);
 
-				parent.clearAllSelectedComponents();
+				parent.unselectAll();
 				i.setSelected(true);
 
 				return i;

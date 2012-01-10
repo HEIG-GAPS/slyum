@@ -50,7 +50,7 @@ public class AggregationFactory extends RelationFactory
 			parent.addLineView(a);
 			classDiagram.addAggregation(aggregation);
 
-			parent.clearAllSelectedComponents();
+			parent.unselectAll();
 			a.setSelected(true);
 
 			return a;

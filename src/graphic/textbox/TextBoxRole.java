@@ -173,7 +173,7 @@ public class TextBoxRole extends TextBoxLabel
 		super.gMousePressed(e);
 
 		// remove all selected components TODO : AMELIORE
-		parent.clearAllSelectedComponents();
+		parent.unselectAll();
 
 		parent.searchAssociedComponent(role.getAssociation()).setSelected(true);
 	}

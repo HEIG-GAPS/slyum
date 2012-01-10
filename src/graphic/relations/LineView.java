@@ -70,7 +70,7 @@ public abstract class LineView extends GraphicComponent
 
 	protected Stroke lineStroke = new BasicStroke(1.2f);
 
-	protected LinkedList<RelationGrip> points = new LinkedList<RelationGrip>();
+	protected LinkedList<RelationGrip> points = new LinkedList<>();
 
 	private Cursor previousCursor;
 
@@ -84,7 +84,7 @@ public abstract class LineView extends GraphicComponent
 	// will be adjusted.
 	public final int SMOOTH_RATIO = 15;
 
-	protected LinkedList<TextBox> tbRoles = new LinkedList<TextBox>();
+	protected LinkedList<TextBox> tbRoles = new LinkedList<>();
 
 	public LineView (
 				final GraphicView parent,
@@ -194,7 +194,7 @@ public abstract class LineView extends GraphicComponent
 	 * This method is called when the GraphicComponent source or target is
 	 * changed.
 	 */
-	public void componentChanged()
+	final public void componentChanged()
 	{
 		// Remove all intermediate grip.
 		while (points.size() > 2)
@@ -506,7 +506,7 @@ public abstract class LineView extends GraphicComponent
 		super.gMousePressed(e);
 		
 		// remove all selected components
-		parent.clearAllSelectedComponents();
+		parent.unselectAll();
 		setSelected(true);
 
 		// save mouse location and current line segment clicked by user.
@@ -594,12 +594,12 @@ public abstract class LineView extends GraphicComponent
 			final Point newAnchor = new Point(anchor.x + movement.x, anchor.y + movement.y);
 			final RelationGrip rg = points.get(i);
 			
-			BufferBounds bb = new BufferBounds(rg);
+			BufferBounds bbs = new BufferBounds(rg);
 
 			rg.setAnchor(newAnchor);
 
 			Change.push(new BufferBounds(rg));
-			Change.push(bb);
+			Change.push(bbs);
 		}
 	}
 
@@ -851,7 +851,7 @@ public abstract class LineView extends GraphicComponent
 	 * line. Use the SMOOTH_RATIO to change the ratio for say if the line must
 	 * be moved or not.
 	 */
-	public void smoothLines()
+	final protected void smoothLines()
 	{
 		for (int i = 0; i < points.size() - 1; i++)
 		{

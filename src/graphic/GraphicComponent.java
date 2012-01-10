@@ -572,6 +572,8 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 			
 			parent.componentSelected(selected);
 		}
+		
+		setChanged();
 	}
 
 	/**

@@ -83,7 +83,6 @@ import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Role;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 /**
  * This class is the main container for all diagrams components view
@@ -352,20 +351,20 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	private CreateComponent currentFactory;
 
-	private final LinkedList<EntityView> entities = new LinkedList<EntityView>();
+	private final LinkedList<EntityView> entities = new LinkedList<>();
 
-	private final LinkedList<LineView> linesView = new LinkedList<LineView>();
+	private final LinkedList<LineView> linesView = new LinkedList<>();
 
 	// use in printing
 	private int m_maxNumPage = 1;
 
 	private Point mousePressedLocation = new Point();
-	private final LinkedList<MultiView> multiViews = new LinkedList<MultiView>();
+	private final LinkedList<MultiView> multiViews = new LinkedList<>();
 	private String name;
 
-	private final LinkedList<TextBoxCommentary> notes = new LinkedList<TextBoxCommentary>();
+	private final LinkedList<TextBoxCommentary> notes = new LinkedList<>();
 
-	private final LinkedList<GraphicComponent> othersComponents = new LinkedList<GraphicComponent>();
+	private final LinkedList<GraphicComponent> othersComponents = new LinkedList<>();
 
 	// Selection rectangle.
 	private Rectangle rubberBand = new Rectangle();
@@ -382,7 +381,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	private Rectangle visibleRect = new Rectangle();
 	private int mouseButton = 0;
 	
-	private LinkedList<IListenerComponentSelectionChanged> lcsc = new LinkedList<IListenerComponentSelectionChanged>();
+	private LinkedList<IListenerComponentSelectionChanged> lcsc = new LinkedList<>();
 	
 	public void setScale(double scale)
 	{
@@ -969,7 +968,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	/**
 	 * Unselect all component.
 	 */
-	public void clearAllSelectedComponents()
+	public void unselectAll()
 	{
 		final LinkedList<GraphicComponent> components = getAllComponents();
 
@@ -1345,7 +1344,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		// Unselect all component (we will not see graphic selection style in
 		// image exportation).
-		clearAllSelectedComponents();
+		unselectAll();
 
 		// Translate the rectangle containing all graphic components at origin.
 		g2.translate(-bounds.x + margin, -bounds.y + margin);
@@ -1452,7 +1451,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		// Unselect all component (we will not see graphic selection style in
 		// image exportation).
-		clearAllSelectedComponents();
+		unselectAll();
 
 		// Translate the rectangle containing all graphic components at origin.
 		g2.translate(-bounds.x + margin, -bounds.y + margin);
@@ -1491,7 +1490,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		super.gMousePressed(e);
 
 		if (!e.isControlDown())
-			clearAllSelectedComponents();
+			unselectAll();
 
 		switch (mouseButton)
 		{
@@ -2113,11 +2112,22 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		return null;
 	}
+	
+	/**
+	 * Select the given component and unselect all other.
+	 * @param gc the component to selected
+	 */
+	public void selectOnly(GraphicComponent gc)
+	{
+		unselectAll();
+		gc.setSelected(true);
+		gc.notifyObservers();
+	}
 
 	/**
 	 * Select all diagram elements.
 	 */
-	public void selectAllComponents()
+	public void selectAll()
 	{
 		for (final GraphicComponent c : getDiagramElements())
 

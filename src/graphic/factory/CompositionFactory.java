@@ -50,7 +50,7 @@ public class CompositionFactory extends RelationFactory
 			parent.addLineView(c);
 			classDiagram.addComposition(composition);
 
-			parent.clearAllSelectedComponents();
+			parent.unselectAll();
 			c.setSelected(true);
 
 			return c;

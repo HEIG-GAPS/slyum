@@ -104,7 +104,7 @@ public class RelationGrip extends SquareGrip implements ActionListener
 		setAnchor(new Point(mouse.x, mouse.y));
 		notifyObservers();
 
-		parent.clearAllSelectedComponents();
+		parent.unselectAll();
 		relation.setSelected(true);
 		
 		isMouseDragged = true;

@@ -100,7 +100,7 @@ public class TextBoxLabelTitle extends TextBoxLabel
 		super.gMousePressed(e);
 
 		// remove all selected components TODO : AMELIORE
-		parent.clearAllSelectedComponents();
+		parent.unselectAll();
 
 		relationView.setSelected(true);
 	}
