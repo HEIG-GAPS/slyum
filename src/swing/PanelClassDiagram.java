@@ -81,7 +81,16 @@ public class PanelClassDiagram extends JPanel
 		panelToolBar.add(SPanelElement.getInstance());
 		panelToolBar.add(SPanelStyleComponent.getInstance());
 		panelToolBar.add(SPanelZOrder.getInstance());
-		panelToolBar.add(sSlider = new SSlider(Color.YELLOW, 200));
+		panelToolBar.add(sSlider = new SSlider(Color.YELLOW, 100, 50, 200){
+
+			@Override
+			public void setValue(int value)
+			{
+				super.setValue(value);
+				getCurrentGraphicView().repaint();
+			}			
+		});
+		
 		add(panelToolBar, BorderLayout.PAGE_START);
 
 		final SSplitPane mainSplitPane = new SSplitPane(JSplitPane.VERTICAL_SPLIT, graphicView.getScrollPane(), PropretiesChanger.getInstance());

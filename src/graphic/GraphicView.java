@@ -383,19 +383,11 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	
 	private LinkedList<IListenerComponentSelectionChanged> lcsc = new LinkedList<>();
 	
-	public void setScale(double scale)
-	{
-		this.scale = scale;
-		
-		PanelClassDiagram.getInstance().getsSlider().setScale(scale);
-		
-		repaint();
-	}
-	
 	public double getScale()
 	{
-		return scale;
+		return PanelClassDiagram.getInstance().getsSlider().getValue() / 100.0;
 	}
+	 
 
 	/**
 	 * Create a new graphic view representing the class diagram given. The new

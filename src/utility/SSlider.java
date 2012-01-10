@@ -1,8 +1,5 @@
 package utility;
 
-import graphic.GraphicView;
-import graphic.textbox.TextBox;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,6 +14,8 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
@@ -24,18 +23,19 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import swing.JPanelRounded;
-import swing.PanelClassDiagram;
 
-public class SSlider extends JPanelRounded implements MouseListener
+public class SSlider extends JPanelRounded implements MouseListener, MouseWheelListener
 {
 	private static final long serialVersionUID = 1L;
-	private static final String TOOL_TIP_MESSAGE = "Zoom (Ctrl+MouseWheel)(Right click : 100)";
+	private static String toolTipMessage;
 	public final static double SLIDER_HEIGHT = 4.0;
 	private final static int ROUDING_SLIDER = 0;
 	private final static int MARGIN = 15;
 
 	private int value;
-	private int maxValue;
+	private int maxValue = 100;
+	private int minValue = 0;
+	private int defaultValue;
 	private STicker ticker;
 	
 	private class STicker extends JPanel implements MouseListener, MouseMotionListener
@@ -62,8 +62,8 @@ public class SSlider extends JPanelRounded implements MouseListener
 			
 			addMouseListener(this);
 			addMouseMotionListener(this);
+			addMouseWheelListener(sslider);
 		}
-		
 		
 		@Override
 		protected void paintComponent(Graphics g)
@@ -120,72 +120,92 @@ public class SSlider extends JPanelRounded implements MouseListener
 
 
 		@Override
-		public void mouseClicked(MouseEvent arg0)
+		public void mouseClicked(MouseEvent e)
 		{
-			if (arg0.getButton() == MouseEvent.BUTTON3)
-				
-				setValue(100);
+			sslider.mouseClicked(e);
 		}
 
 
 		@Override
-		public void mouseEntered(MouseEvent arg0)
+		public void mouseEntered(MouseEvent e)
 		{
 			setIsMouseHover(true);
 		}
 
 
 		@Override
-		public void mouseExited(MouseEvent arg0)
+		public void mouseExited(MouseEvent e)
 		{
 			setIsMouseHover(false);
 		}
 
 
 		@Override
-		public void mousePressed(MouseEvent arg0)
+		public void mousePressed(MouseEvent e)
 		{
 			setIsMousePressed(true);
 			
-			mousePressedX = arg0.getX();
+			mousePressedX = e.getX();
 		}
 
 
 		@Override
-		public void mouseReleased(MouseEvent arg0)
+		public void mouseReleased(MouseEvent e)
 		{
 			setIsMousePressed(false);
 		}
 
-
 		@Override
-		public void mouseDragged(MouseEvent arg0)
+		public void mouseDragged(MouseEvent e)
 		{
-			setLocation(getX() + arg0.getX() - mousePressedX, getY());
-			sslider.setValue((getX() * maxValue) / (sslider.getWidth() - 10));
+			int x = getX() + e.getX() - mousePressedX;
+			
+			sslider.setValue(getRelativeValue(x));
 		}
 		
-		@Override
-		public void setLocation(int x, int y)
+		private int getRelativeValue(int location)
 		{
-			if (x > sslider.getWidth() - TICKER_WIDTH*2 || x < TICKER_WIDTH)
-				return;
-
-			super.setLocation(x, y);
+			int sWidth = getSliderWidth();
+			
+			if (sWidth == 0)
+				return minValue;
+			
+			location -= MARGIN - getWidth()/2;
+			int range = maxValue - minValue;
+			
+			return ((location * range) / sWidth) + minValue;
+		}
+		
+		private int getAbsoluteValue(int value)
+		{
+			if (maxValue == 0)
+				return minValue;
+			
+			int sWidth = getSliderWidth();
+			int range = maxValue - minValue;
+			
+			return ((value - minValue) * sWidth) / range + MARGIN - getWidth()/2;
+		}
+		
+		private int getSliderWidth()
+		{
+			return sslider.getWidth() - MARGIN*2;
 		}
 
 
 		@Override
 		public void mouseMoved(MouseEvent arg0)
 		{
-			
 		}
 	}
 	
-	public SSlider(Color color, int value)
+	public SSlider(Color color, final int defaultValue, int minValue, int maxValue) 
 	{
-		this.maxValue = value;
-		this.value = maxValue / 2;
+		toolTipMessage = "Zoom (Ctrl+MouseWheel)(Right click : " + defaultValue + ")";
+				
+		this.maxValue = maxValue;
+		this.minValue = minValue;
+		this.defaultValue = defaultValue;
 		
 		setLayout(new GridLayout(1, 7, 5, 5));
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 7));
@@ -193,27 +213,29 @@ public class SSlider extends JPanelRounded implements MouseListener
 		setForeground(Color.GRAY);
 
 		setMaximumSize(new Dimension(150, 50));
+		setSize(getMaximumSize());
 
 		setLayout(null);
 		
 		add(ticker = new STicker(this));
 		
-		setValue(this.value);
-		
 		addMouseListener(this);
+		addMouseWheelListener(this);
 		
-		setToolTipText(TOOL_TIP_MESSAGE);
+		setToolTipText(toolTipMessage);
+		
+		setValue(defaultValue);
 	}
 	
 	@Override
 	protected void paintComponent(Graphics g)
-	{
+	{		
 		super.paintComponent(g);
 		Utility.setRenderQuality(g);
 		
 		Graphics2D g2 = (Graphics2D)g;
 		
-		Font valueFont = TextBox.getFont().deriveFont(10.0f);
+		Font valueFont = new Font(Font.SANS_SERIF, Font.PLAIN, 10);
 		Rectangle2D bounds = getBounds().getBounds2D();
 		String text;
 		
@@ -230,7 +252,7 @@ public class SSlider extends JPanelRounded implements MouseListener
 		g2.draw(slider);
 		
 		g2.setFont(valueFont);
-		text = "0";
+		text = String.valueOf(minValue);
 		g2.drawString(text, (float)(x - 2.0), (float)(height + y + 12.0));
 		
 		FontMetrics fmValue = g.getFontMetrics(valueFont);
@@ -240,7 +262,7 @@ public class SSlider extends JPanelRounded implements MouseListener
 		
 		g2.drawString(text, (float)(x + width - textwidth/2 - 4.0), (float)(height + y + 12.0));
 		
-		text = String.valueOf(maxValue/2);
+		text = String.valueOf(value);
 		textwidth = fmValue.stringWidth(text);
 		
 		g2.drawString(text, (float)(x + width/2 - textwidth/2), (float)(height + y + 12.0));
@@ -248,25 +270,16 @@ public class SSlider extends JPanelRounded implements MouseListener
 	
 	public void setValue(int value)
 	{
-		setScale((double)value / 100.0);
-
-		if (PanelClassDiagram.getInstance() == null)
-			return;
+		if (value > maxValue) value = maxValue;
 		
-		GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
-		gv.setScale((double)value / 100.0);
-	}
-	
-	public void setScale(double scale)
-	{
-		int value = (int)(scale * 100.0);
+		if (value < minValue) value = minValue;
 		
-		if (value < 11 || value > maxValue - 11)
-			return;
+		int x = ticker.getAbsoluteValue(value),
+			y = ticker.getY();
 		
+		ticker.setLocation(x, y);
 		this.value = value;
-		
-		ticker.setLocation((int)(((float)value / (float)maxValue) * ((float)getWidth()-10)), ticker.getY());
+		repaint();
 	}
 	
 	public int getValue()
@@ -277,6 +290,9 @@ public class SSlider extends JPanelRounded implements MouseListener
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
+		if (e.getButton() == MouseEvent.BUTTON3)
+			
+			setValue(defaultValue);
 	}
 
 	@Override
@@ -292,13 +308,16 @@ public class SSlider extends JPanelRounded implements MouseListener
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
-		if (e.getButton() == MouseEvent.BUTTON3)
-			
-			setValue(100);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e)
 	{
+	}
+	
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e)
+	{
+		setValue(getValue() + (int)((maxValue - minValue) / 10.0) * -e.getWheelRotation());
 	}
 }
