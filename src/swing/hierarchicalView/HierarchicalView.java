@@ -14,6 +14,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -38,6 +39,7 @@ import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
+import java.util.Observer;
 
 /**
  * This class is a hierarchical view of the class diagram. It represents class
@@ -84,7 +86,17 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 		dependenciesNode = new DefaultMutableTreeNode("Dependencies");
 		root.add(dependenciesNode);
 
-		treeModel = new DefaultTreeModel(root);
+		treeModel = new DefaultTreeModel(root)
+		{
+
+			@Override
+			public void removeNodeFromParent(MutableTreeNode node)
+			{
+				((IClassDiagramNode)node).remove();
+				super.removeNodeFromParent(node);
+			}
+			
+		};
 		tree = new JTree(treeModel);
 
 		tree.addTreeSelectionListener(this);
@@ -215,7 +227,10 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 		final IClassDiagramNode associedNode = searchAssociedNode(component);
 
 		if (associedNode != null)
-			treeModel.removeNodeFromParent((DefaultMutableTreeNode) associedNode);
+		{
+			treeModel.removeNodeFromParent((DefaultMutableTreeNode)associedNode);
+			component.deleteObserver((Observer)associedNode);
+		}
 	}
 
 	/**
@@ -252,7 +267,7 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 	 *            the root node for the JTree
 	 * @return the node associated with the object; or null if no node are found
 	 */
-	public IClassDiagramNode searchAssociedNodeIn(Object o, TreeNode root)
+	public static IClassDiagramNode searchAssociedNodeIn(Object o, TreeNode root)
 	{
 		IClassDiagramNode child = null;
 
@@ -273,7 +288,7 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 	@Override
 	public void valueChanged(TreeSelectionEvent e)
 	{
-		final LinkedList<TreePath> paths = new LinkedList<TreePath>();
+		final LinkedList<TreePath> paths = new LinkedList<>();
 		final TreePath[] treePaths = e.getPaths();
 
 		// sort unselect first, select next

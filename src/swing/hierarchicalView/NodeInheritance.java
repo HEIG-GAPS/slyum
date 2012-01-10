@@ -10,12 +10,11 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import swing.Slyum;
-import swing.hierarchicalView.IClassDiagramNode;
-import swing.hierarchicalView.ICustomizedIconNode;
 import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Inheritance;
+import swing.PanelClassDiagram;
 
 /**
  * A JTree node associated with an inheritance.
@@ -107,7 +106,12 @@ public class NodeInheritance extends DefaultMutableTreeNode implements ICustomiz
 		else
 		{
 			setUserObject(generateName(inheritance));
-			treeModel.reload(getParent());
+			treeModel.reload(this);
 		}
+	}
+	
+	@Override
+	public void remove()
+	{
 	}
 }

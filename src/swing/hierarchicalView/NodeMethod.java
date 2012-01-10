@@ -93,4 +93,14 @@ public class NodeMethod extends DefaultMutableTreeNode implements Observer, ICla
 			treeModel.reload(getParent());
 		}
 	}
+
+	@Override
+	public void removeAllChildren()
+	{
+	}
+	
+	@Override
+	public void remove()
+	{
+	}
 }

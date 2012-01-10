@@ -10,9 +10,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import swing.hierarchicalView.IClassDiagramNode;
-import swing.hierarchicalView.ICustomizedIconNode;
-
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Association;
@@ -130,4 +127,10 @@ public class NodeAssociation extends DefaultMutableTreeNode implements IClassDia
 		}
 	}
 
+	@Override
+	public void remove()
+	{
+		for (final Role role : association.getRoles())
+			role.deleteObserver(this);
+	}
 }

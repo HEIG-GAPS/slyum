@@ -10,8 +10,6 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import swing.Slyum;
-import swing.hierarchicalView.IClassDiagramNode;
-import swing.hierarchicalView.ICustomizedIconNode;
 import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
@@ -36,7 +34,7 @@ public class NodeDepedency extends DefaultMutableTreeNode implements IClassDiagr
 	 */
 	public static String generateName(Dependency dependency)
 	{
-		return dependency.getSource().getName() + " - " + dependency.getTarget().getName();
+		return dependency.toString();
 	}
 
 	private final Dependency dependency;
@@ -104,8 +102,13 @@ public class NodeDepedency extends DefaultMutableTreeNode implements IClassDiagr
 		else
 		{
 			setUserObject(generateName(dependency));
-			treeModel.reload(getParent());
+			treeModel.reload(this);
 		}
+	}
+	
+	@Override
+	public void remove()
+	{
 	}
 
 }

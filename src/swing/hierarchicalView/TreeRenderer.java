@@ -6,7 +6,6 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 import swing.Slyum;
-import swing.hierarchicalView.ICustomizedIconNode;
 import utility.PersonalizedIcon;
 
 @SuppressWarnings("serial")
