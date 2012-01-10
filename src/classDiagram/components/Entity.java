@@ -20,11 +20,11 @@ import classDiagram.relationships.Role;
 public abstract class Entity extends Type
 {	
 	private boolean _isAbstract = false;
-	protected LinkedList<Attribute> attributes = new LinkedList<Attribute>();
-	protected List<Inheritance> childs = new LinkedList<Inheritance>();
-	protected LinkedList<Method> methods = new LinkedList<Method>();
-	protected List<Inheritance> parents = new LinkedList<Inheritance>();
-	protected List<Role> roles = new LinkedList<Role>();
+	protected LinkedList<Attribute> attributes = new LinkedList<>();
+	protected List<Inheritance> childs = new LinkedList<>();
+	protected LinkedList<Method> methods = new LinkedList<>();
+	protected List<Inheritance> parents = new LinkedList<>();
+	protected List<Role> roles = new LinkedList<>();
 
 	protected String stereotype = "";
 

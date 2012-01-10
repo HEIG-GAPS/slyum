@@ -1112,7 +1112,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 					break;
 					
 				case UNSELECT:
-					super.setSelected(false);
+			super.setSelected(false);
 					break;
 					
 				case ADD_ATTRIBUTE:

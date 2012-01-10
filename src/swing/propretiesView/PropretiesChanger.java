@@ -9,8 +9,6 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import swing.Slyum;
-import swing.propretiesView.EntityPropreties;
-import swing.propretiesView.RelationPropreties;
 import utility.PersonalizedIcon;
 import classDiagram.IComponentsObserver;
 import classDiagram.IDiagramComponent;
