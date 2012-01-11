@@ -375,10 +375,10 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	private GraphicComponent saveComponentMouseHover;
 	private final JPanel scene;
 
-	private final JScrollPane scrollPane;
+	private final JScrollPane scrollPane;	
 
 	private float zoom = 1.0f;
-	private double scale = 1.0;
+	private boolean stopRepaint = false;
 	
 	private Rectangle visibleRect = new Rectangle();
 	private int mouseButton = 0;
@@ -419,19 +419,38 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 				paintScene((Graphics2D) g);
 			}
 			
+			
 			@Override
 			public void repaint(int x, int y, int width, int height)
 			{
-				Rectangle rect = growForRepaint(Utility.scaleRect(new Rectangle(x, y, width, height), getScale()));
-				
-				super.repaint(rect.x, rect.y, rect.width, rect.height);
+				repaint(new Rectangle(x, y, width, height));
 			}
 			
 			@Override
 			public void repaint(Rectangle r)
 			{
+				if (stopRepaint)
+					return;
+				
 				super.repaint(growForRepaint(Utility.scaleRect(r, getScale())));
 			}
+
+			@Override
+			public void paintImmediately(int x, int y, int w, int h)
+			{
+				paintImmediately(new Rectangle(x, y, w, h));
+			}
+
+			@Override
+			public void paintImmediately(Rectangle r)
+			{
+				if (stopRepaint)
+					return;
+				
+				super.paintImmediately(r.x, r.y, r.width, r.height);
+			}
+			
+			
 			
 			private Rectangle growForRepaint(Rectangle rect)
 			{
@@ -1585,6 +1604,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	public void linkNewNoteWithSelectedEntities()
 	{
+		setStopRepaint(true);
 		LinkedList<GraphicComponent> e = getSelectedComponents();
 		
 		TextBoxCommentary tbc = null;
@@ -1619,6 +1639,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		
 		if (!isRecord)
 			Change.stopRecord();
+		
+		goRepaint();
 	}
 
 	@Override
@@ -2085,7 +2107,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	@Override
 	public void repaint()
-	{
+	{		
 		scene.repaint();
 	}
 
@@ -2127,6 +2149,22 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		for (final GraphicComponent c : getDiagramElements())
 
 			c.setSelected(true);
+	}
+	
+	public void goRepaint()
+	{
+		setStopRepaint(false);
+		repaint();
+	}
+	
+	public void setStopRepaint(boolean enable)
+	{
+		stopRepaint = enable;
+	}
+	
+	public boolean getStopRepaint()
+	{
+		return stopRepaint;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import javax.swing.BorderFactory;
 
 import change.Change;
 
+import graphic.GraphicView;
 import utility.PersonalizedIcon;
 import utility.Utility;
 
@@ -51,11 +52,16 @@ public class SPanelUndoRedo extends JPanelRounded implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
+		GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+		gv.setStopRepaint(true);
+		
 		if (Slyum.ACTION_UNDO.equals(e.getActionCommand()))
 			Change.undo();
 		
 		else if (Slyum.ACTION_REDO.equals(e.getActionCommand()))
 			Change.redo();
+		
+		gv.goRepaint();
 	}
 
 	public SButton getUndoButton()
