@@ -1754,34 +1754,17 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL)
 			
 			if (e.isControlDown())
-			{
-				final int alphaX = (int)(e.getX() * getInversedScale()),
-					  alphaY = (int)(e.getY() * getInversedScale());
-
-				final Rectangle vr = getScene().getVisibleRect();
-
+			{				
 				if (e.getWheelRotation() < 0)
 				{ backScale(); }
 				else
 				{ forwardScale(); }
-			
-				SwingUtilities.invokeLater(new Runnable() {
-
-				@Override
-				public void run()
-				{
-					int alphaX2 = alphaX - (int)(e.getX() * getInversedScale());
-					int alphaY2 = alphaY - (int)(e.getY() * getInversedScale());
-					
-					vr.translate((int)(alphaX2 * getScale()), (int)(alphaY2 * getScale()));
-					getScene().scrollRectToVisible(vr);
-				}
-			});
 			}
-		
-
-		JScrollBar s = scrollPane.getVerticalScrollBar();
-		s.setValue(s.getValue() + s.getUnitIncrement() * (e.getUnitsToScroll() < 0 ? -1 : 1));
+			else
+			{
+				JScrollBar s = scrollPane.getVerticalScrollBar();
+				s.setValue(s.getValue() + s.getUnitIncrement() * (e.getUnitsToScroll() < 0 ? -1 : 1));	
+			}
 	}
 	
 	public void moveZOrderUpSelectedEntities()
