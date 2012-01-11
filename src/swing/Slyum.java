@@ -164,7 +164,6 @@ public class Slyum extends JFrame implements ActionListener
 	public final static String KEY_LINK_NOTE = "ctrl shift L";
 
 	public final static String KEY_HELP = "F1";
-	
 
 	private static Slyum instance;
 	private static JMenuItem undo, redo;
@@ -214,7 +213,7 @@ public class Slyum extends JFrame implements ActionListener
 		defaultPath = PropertyLoader.getInstance().getProperties().getProperty("PathForFileChooser");
 
 		if (defaultPath == null)
-                    defaultPath = System.getProperty("user.home");
+			defaultPath = System.getProperty("user.home");
 
 		return defaultPath;
 	}
@@ -357,11 +356,11 @@ public class Slyum extends JFrame implements ActionListener
 	 */
 	public Slyum()
 	{
-            initFont();
-            setUIProperties();
-            createJMenuBar();
-            setFrameProperties();
-            initEventListener();
+		initFont();
+		setUIProperties();
+		createJMenuBar();
+		setFrameProperties();
+		initEventListener();
 	}
 	
 	private void initFont()
@@ -875,28 +874,28 @@ public class Slyum extends JFrame implements ActionListener
 	 */
 	private void openHelp()
 	{
-            final String ERROR_MESSAGE = "Cannot open help file!\nTry manually in help folder.";
-            try
-            {
-                final File pdfFile = new File("Documentation/User manual.pdf");
+		final String ERROR_MESSAGE = "Cannot open help file!\nTry manually in help folder.";
+		try
+		{
+			final File pdfFile = new File("Documentation/User manual.pdf");
 
-                if (pdfFile.exists())
-                {
+			if (pdfFile.exists())
+			{
 
-                        if (Desktop.isDesktopSupported())
+					if (Desktop.isDesktopSupported())
 
-                                Desktop.getDesktop().open(pdfFile);
+							Desktop.getDesktop().open(pdfFile);
 
-                        else
-                                SMessageDialog.showErrorMessage(ERROR_MESSAGE);
+					else
+							SMessageDialog.showErrorMessage(ERROR_MESSAGE);
 
-                }
-                else
-                        SMessageDialog.showErrorMessage("Help file not found!\nTry to re-download Slyum.");
+			}
+			else
+					SMessageDialog.showErrorMessage("Help file not found!\nTry to re-download Slyum.");
 
-            } catch (final Exception ex)
-            {
-                SMessageDialog.showErrorMessage(ERROR_MESSAGE);
-            }
+		} catch (final Exception ex)
+		{
+			SMessageDialog.showErrorMessage(ERROR_MESSAGE);
+		}
 	}
 }
