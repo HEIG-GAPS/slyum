@@ -168,7 +168,11 @@ public class MultiFactory extends CreateComponent
 		boolean isRecord = Change.isRecord();
 		Change.record();
 		
+		gv.setStopRepaint(true);
+		
 		mv = new MultiView(gv, m);
+		
+		gv.goRepaint();
 		
 		if (!isRecord)
 			Change.stopRecord();
