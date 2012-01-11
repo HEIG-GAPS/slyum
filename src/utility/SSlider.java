@@ -194,7 +194,7 @@ public class SSlider extends JPanelRounded implements MouseListener, MouseWheelL
 
 
 		@Override
-		public void mouseMoved(MouseEvent arg0)
+		public void mouseMoved(MouseEvent e)
 		{
 		}
 	}

@@ -106,6 +106,10 @@ public class Slyum extends JFrame implements ActionListener
 	public static final String ACTION_COLOR = "Color";
 	public static final String ACTION_DELETE = "Delete";
 	
+	public static final String ACTION_ZOOM_ADAPT = "ZoomAdapt";
+	public static final String ACTION_ZOOM_ADAPT_SELECTION = "ZoomAdaptSelection";
+	public static final String ACTION_ZOOM_PLUS = "Zoom +";
+	public static final String ACTION_ZOOM_MINUS = "Zoom -";
 	public static final String ACTION_ZOOM_0_5 = "Zoom 0.5x";
 	public static final String ACTION_ZOOM_1 = "Zoom 1x";
 	public static final String ACTION_ZOOM_1_5 = "Zoom 1.5x";
@@ -141,6 +145,9 @@ public class Slyum extends JFrame implements ActionListener
 	public static final String KEY_MOVE_DOWN = "ctrl alt LEFT";
 	public static final String KEY_MOVE_BOTTOM = "ctrl alt DOWN";
 	
+	public final static String KEY_ZOOM_PLUS = "PLUS";
+	public final static String KEY_ZOOM_MINUS = "MINUS";
+	public final static String KEY_ZOOM_ADAPT = "ctrl shift E";
 	public final static String KEY_ZOOM_1 = "1";
 
 	public final static String KEY_CLASS = "ctrl shift C";
@@ -406,6 +413,18 @@ public class Slyum extends JFrame implements ActionListener
                 case ACTION_UNSELECT_ALL:
                     gv.unselectAll();
                     break;
+				case ACTION_ZOOM_PLUS:
+					PanelClassDiagram.getInstance().getCurrentGraphicView().forwardScale();
+					break;
+				case ACTION_ZOOM_MINUS:
+					PanelClassDiagram.getInstance().getCurrentGraphicView().backScale();
+					break;
+				case ACTION_ZOOM_ADAPT:
+					PanelClassDiagram.getInstance().getCurrentGraphicView().adaptDiagramToWindow();
+					break;
+				case ACTION_ZOOM_ADAPT_SELECTION:
+					PanelClassDiagram.getInstance().getCurrentGraphicView().adaptSelectionToWindow();
+					break;
 				case ACTION_ZOOM_1:
 					PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(1.0);
 					break;
@@ -670,8 +689,29 @@ public class Slyum extends JFrame implements ActionListener
 			subMenu.setMnemonic(KeyEvent.VK_Z);
 			menu.add(subMenu);
 			
+			
+			// Menu item back zoom
+			menuItem = createMenuItem("Zoom in", "zoomMinus", KeyEvent.VK_I, KEY_ZOOM_MINUS, ACTION_ZOOM_PLUS);
+			subMenu.add(menuItem);
+			
+			// Menu item foreward zoom
+			menuItem = createMenuItem("Zoom out", "zoomPlus", KeyEvent.VK_O, KEY_ZOOM_PLUS, ACTION_ZOOM_MINUS);
+			subMenu.add(menuItem);
+			
+			subMenu.addSeparator();
+			
+			// Menu item adapte zoom
+			menuItem = createMenuItem("Adapt diagram to window", "zoomAdapt", KeyEvent.VK_D, KEY_ZOOM_ADAPT, ACTION_ZOOM_ADAPT);
+			subMenu.add(menuItem);
+			
+			// Menu item adapt zoom to selection
+			menuItem = createMenuItem("Adapt selection to window", "zoomAdapt", KeyEvent.VK_S, null, ACTION_ZOOM_ADAPT_SELECTION);
+			subMenu.add(menuItem);
+			
+			subMenu.addSeparator();
+			
 			// Menu item Zoom0.5x
-			menuItem = createMenuItem("1:1 (100 %)", "", 0, KEY_ZOOM_1, ACTION_ZOOM_1);
+			menuItem = createMenuItem("1:1 (100 %)", "zoom1", 0, KEY_ZOOM_1, ACTION_ZOOM_1);
 			subMenu.add(menuItem);
 			
 			subMenu.addSeparator();

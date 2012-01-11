@@ -83,6 +83,7 @@ import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Role;
+import javax.swing.SwingUtilities;
 
 /**
  * This class is the main container for all diagrams components view
@@ -106,6 +107,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	public final static boolean IS_AUTOMATIC_GRID_COLOR = false;
 	public final static boolean IS_GRID_OPACITY_ENABLE = false;
 	public final static boolean IS_GRID_ENABLE = true;
+	public final static double SCALE_STEP = 0.1;
 
 	/**
 	 * Compute mouse entered and exited event. the componentMouseHover can be
@@ -1480,13 +1482,12 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	{
 		super.gMousePressed(e);
 
-		if (!e.isControlDown())
-			unselectAll();
-
 		switch (mouseButton)
 		{
 		case MouseEvent.BUTTON1:
 			scene.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+			if (!e.isControlDown())
+				unselectAll();
 			break;
 			
 		case MouseEvent.BUTTON2:
@@ -1641,34 +1642,34 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	@Override
 	public void mouseDragged(MouseEvent e)
 	{
-		e = adapteMouseEvent(e);
+		MouseEvent ea = adapteMouseEvent(e);
 		GraphicComponent component;
 		Rectangle newVisibleRect;
 		
 		if (mouseButton == MouseEvent.BUTTON2)
 		{
-			int dx = -e.getX() + mousePressedLocation.x,
-				dy = -e.getY() + mousePressedLocation.y;
+			int dx = (int)(mousePressedLocation.x * getScale()-e.getX()),
+				dy = (int)(mousePressedLocation.y * getScale()-e.getY());
 			
 			visibleRect.translate(dx, dy);
 			
 			newVisibleRect = new Rectangle(visibleRect);
 		}
 		else
-			newVisibleRect = new Rectangle((int)((double)e.getX() * getScale()),
-					(int)((double)e.getY() * getScale()),
+			newVisibleRect = new Rectangle((int)((double)ea.getX() * getScale()),
+					(int)((double)ea.getY() * getScale()),
 					1,
 					1);
 
 		if (currentFactory != null)
 			component = currentFactory;
 		else
-			component = getComponentAtPosition(e.getPoint());
+			component = getComponentAtPosition(ea.getPoint());
 
-		computeComponentEventEnter(component, saveComponentMouseHover, e);
+		computeComponentEventEnter(component, saveComponentMouseHover, ea);
 
 		if (mouseButton != MouseEvent.BUTTON2)
-			componentMousePressed.gMouseDragged(e);
+			componentMousePressed.gMouseDragged(ea);
 
 		saveComponentMouseHover = component;
 
@@ -1748,13 +1749,35 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	}
 
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent e)
+	public void mouseWheelMoved(final MouseWheelEvent e)
 	{
 		if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL)
 			
 			if (e.isControlDown())
+			{
+				final int alphaX = (int)(e.getX() * getInversedScale()),
+					  alphaY = (int)(e.getY() * getInversedScale());
+
+				final Rectangle vr = getScene().getVisibleRect();
+
+				if (e.getWheelRotation() < 0)
+				{ backScale(); }
+				else
+				{ forwardScale(); }
 			
-				setScale(getScale() - (double)e.getUnitsToScroll()/20.0);
+				SwingUtilities.invokeLater(new Runnable() {
+
+				@Override
+				public void run()
+				{
+					int alphaX2 = alphaX - (int)(e.getX() * getInversedScale());
+					int alphaY2 = alphaY - (int)(e.getY() * getInversedScale());
+					
+					vr.translate((int)(alphaX2 * getScale()), (int)(alphaY2 * getScale()));
+					getScene().scrollRectToVisible(vr);
+				}
+			});
+			}
 		
 
 		JScrollBar s = scrollPane.getVerticalScrollBar();
@@ -2143,9 +2166,56 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		componentMousePressed = component;
 	}
 	
+	public void adaptListToWindow(LinkedList<? extends GraphicComponent> list)
+	{
+		final Rectangle limits = Utility.getLimits(list);
+				  Rectangle vr = getScene().getVisibleRect(),
+				  l;
+		
+		l = Utility.scaleRect(limits, getScale());
+		
+		double xRatio = l.getWidth() / vr.getWidth();
+		double yRatio = l.getHeight() / vr.getHeight();
+		
+		if (xRatio > yRatio)
+			setScale(getScale() / xRatio);
+		else
+			setScale(getScale() / yRatio);
+		
+		// Must wait scaling.
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run()
+			{
+				getScene().scrollRectToVisible(Utility.scaleRect(limits, getScale()));
+			}
+		});
+	}
+	
+	public void adaptDiagramToWindow()
+	{
+		adaptListToWindow(getAllComponents());
+	}
+	
+	public void adaptSelectionToWindow()
+	{
+		adaptListToWindow(getSelectedComponents());
+	}
+	
 	public void setScale(double scale)
 	{
 		PanelClassDiagram.getInstance().getsSlider().setValue((int)(scale * 100.0));
+	}
+	
+	public void backScale()
+	{
+		setScale(getScale() + SCALE_STEP);
+	}
+	
+	public void forwardScale()
+	{
+		setScale(getScale() - SCALE_STEP);
 	}
 
 	/**
