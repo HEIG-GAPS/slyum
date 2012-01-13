@@ -171,7 +171,7 @@ public class TextBoxMultiplicity extends TextBoxLabel
 		super.gMousePressed(e);
 
 		// remove all selected components TODO : AMELIORE
-		parent.clearAllSelectedComponents();
+		parent.unselectAll();
 
 		// search a multiplicity corresponding to the textBox multiplicity...
 		for (final LineView av : parent.getLinesView())

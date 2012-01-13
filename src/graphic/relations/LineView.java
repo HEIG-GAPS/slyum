@@ -70,11 +70,13 @@ public abstract class LineView extends GraphicComponent
 
 	protected Stroke lineStroke = new BasicStroke(1.2f);
 
-	protected LinkedList<RelationGrip> points = new LinkedList<RelationGrip>();
+	protected LinkedList<RelationGrip> points = new LinkedList<>();
 
 	private Cursor previousCursor;
 
 	private int saveGrip;
+	
+	private boolean acceptGripCreation = false;
 	
 	private BufferBounds[] bb = new BufferBounds[2];
 
@@ -82,7 +84,7 @@ public abstract class LineView extends GraphicComponent
 	// will be adjusted.
 	public final int SMOOTH_RATIO = 15;
 
-	protected LinkedList<TextBox> tbRoles = new LinkedList<TextBox>();
+	protected LinkedList<TextBox> tbRoles = new LinkedList<>();
 
 	public LineView (
 				final GraphicView parent,
@@ -192,7 +194,7 @@ public abstract class LineView extends GraphicComponent
 	 * This method is called when the GraphicComponent source or target is
 	 * changed.
 	 */
-	public void componentChanged()
+	final public void componentChanged()
 	{
 		// Remove all intermediate grip.
 		while (points.size() > 2)
@@ -455,16 +457,22 @@ public abstract class LineView extends GraphicComponent
 	public void gMouseDragged(MouseEvent e)
 	{
 		final Point mouse = e.getPoint();
-		final Point movement = new Point(mouse.x - mousePressed.x, mouse.y - mousePressed.y);
 
-		final RelationGrip grip1 = points.get(saveGrip);
-		final RelationGrip grip2 = points.get(saveGrip + 1);
-
-		final Point anchor1 = grip1.getAnchor();
-		final Point anchor2 = grip2.getAnchor();
-
-		if (e.isControlDown() && !GraphicView.isCtrlForGrip() || !e.isControlDown() && GraphicView.isCtrlForGrip())
+		if (acceptGripCreation)
 		{
+			createNewGrip(mousePressed);
+			acceptGripCreation = false;
+		}
+		else if (e.isControlDown() && !GraphicView.isCtrlForGrip() || !e.isControlDown() && GraphicView.isCtrlForGrip())
+		{
+			final Point movement = new Point(mouse.x - mousePressed.x, mouse.y - mousePressed.y);
+
+			final RelationGrip grip1 = points.get(saveGrip);
+			final RelationGrip grip2 = points.get(saveGrip + 1);
+
+			final Point anchor1 = grip1.getAnchor();
+			final Point anchor2 = grip2.getAnchor();
+		
 			grip1.setAnchor(new Point(anchor1.x + movement.x, anchor1.y + movement.y));
 			grip2.setAnchor(new Point(anchor2.x + movement.x, anchor2.y + movement.y));
 
@@ -498,7 +506,7 @@ public abstract class LineView extends GraphicComponent
 		super.gMousePressed(e);
 		
 		// remove all selected components
-		parent.clearAllSelectedComponents();
+		parent.unselectAll();
 		setSelected(true);
 
 		// save mouse location and current line segment clicked by user.
@@ -507,8 +515,8 @@ public abstract class LineView extends GraphicComponent
 
 		if ((!e.isControlDown() && !GraphicView.isCtrlForGrip() || e.isControlDown() && GraphicView.isCtrlForGrip()) && e.getButton() == 1)
 
-			createNewGrip(e.getPoint());
-		
+			acceptGripCreation = true;
+
 		if (e.getButton() == MouseEvent.BUTTON1)
 		{
 			bb[0] = new BufferBounds(points.get(saveGrip));
@@ -532,17 +540,22 @@ public abstract class LineView extends GraphicComponent
 
 			if (!(bb[0].getBounds().equals(bb2.getBounds()) && bb[1].getBounds().equals(bb3.getBounds())))
 			{
+				boolean isRecord = Change.isRecord();
 				Change.record();
+				
 				Change.push(bb[0]);
 				Change.push(bb2);
 				
 				Change.push(bb[1]);
 				Change.push(bb3);
-				Change.stopRecord();
+				
+				if (!isRecord)
+					Change.stopRecord();
 			}
 		}
 
 		maybeShowPopup(e, popupMenu);
+		acceptGripCreation = false;
 	}
 
 	/**
@@ -581,12 +594,12 @@ public abstract class LineView extends GraphicComponent
 			final Point newAnchor = new Point(anchor.x + movement.x, anchor.y + movement.y);
 			final RelationGrip rg = points.get(i);
 			
-			BufferBounds bb = new BufferBounds(rg);
+			BufferBounds bbs = new BufferBounds(rg);
 
 			rg.setAnchor(newAnchor);
 
 			Change.push(new BufferBounds(rg));
-			Change.push(bb);
+			Change.push(bbs);
 		}
 	}
 
@@ -838,7 +851,7 @@ public abstract class LineView extends GraphicComponent
 	 * line. Use the SMOOTH_RATIO to change the ratio for say if the line must
 	 * be moved or not.
 	 */
-	public void smoothLines()
+	final public void smoothLines()
 	{
 		for (int i = 0; i < points.size() - 1; i++)
 		{

@@ -11,14 +11,15 @@ public class Change
 	
 	private static boolean _hasChange = false;
 
-	private static LinkedList<Changeable> stack = new LinkedList<Changeable>();
+	private static LinkedList<Changeable> stack = new LinkedList<>();
 
-	private static LinkedList<Boolean> record = new LinkedList<Boolean>();
+	private static LinkedList<Boolean> record = new LinkedList<>();
 	
 	private static boolean isRecord = false;
 
 	private static void printStackState()
 	{
+		/*
 		System.out.println("Etat de la pile");
 
 		for (int i = 0; i < stack.size(); i++)
@@ -27,6 +28,7 @@ public class Change
 		
 
 		System.out.println("--------------");
+		 */
 	}
 
 	public static void push(Changeable ch)
@@ -122,8 +124,8 @@ public class Change
 		
 		isRecord = false;
 
-		int b = pointer;
-		while (--b >= 0 && b < size-1 && record.get(b));
+		int b = pointer-2;
+		while (b >= 0 && b < size-1 && record.get(b)) b--;
 		
 		record.set(b+1, false);
 		record.set(pointer, false);
@@ -153,6 +155,7 @@ public class Change
 	public static void clear()
 	{
 		stack.clear();
+		record.clear();
 		
 		printStackState();
 	}
@@ -167,6 +170,8 @@ public class Change
 		_hasChange = changed;
 		
 		Slyum.setStarOnTitle(changed);
+		
+		checkToolbarButtonState();
 	}
 	
 	public static int getSize()
@@ -181,6 +186,9 @@ public class Change
 	
 	public static void pop()
 	{
+		if (pointer == stack.size()-1)
+			pointer--;
+		
 		stack.removeLast();
 		record.removeLast();
 	}

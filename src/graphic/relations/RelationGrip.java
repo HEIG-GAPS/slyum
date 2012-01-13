@@ -19,6 +19,7 @@ import change.BufferBounds;
 import change.BufferCreation;
 import change.Change;
 
+import swing.Slyum;
 import utility.PersonalizedIcon;
 import utility.Utility;
 
@@ -61,7 +62,7 @@ public class RelationGrip extends SquareGrip implements ActionListener
 
 		popupMenu = new JPopupMenu();
 
-		final ImageIcon imgIcon = PersonalizedIcon.createImageIcon("resources/icon/delete16.png");
+		final ImageIcon imgIcon = PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete16.png");
 
 		menuItemDelete = new JMenuItem("Delete", imgIcon);
 		menuItemDelete.setActionCommand("delete");
@@ -103,7 +104,7 @@ public class RelationGrip extends SquareGrip implements ActionListener
 		setAnchor(new Point(mouse.x, mouse.y));
 		notifyObservers();
 
-		parent.clearAllSelectedComponents();
+		parent.unselectAll();
 		relation.setSelected(true);
 		
 		isMouseDragged = true;
@@ -160,7 +161,7 @@ public class RelationGrip extends SquareGrip implements ActionListener
 	@Override
 	public void delete()
 	{
-		// save index 
+		// save index
 		index = relation.getPoints().indexOf(this);
 		
 		super.delete();

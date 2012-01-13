@@ -46,6 +46,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 	protected GraphicView parent;
 
 	protected JPopupMenu popupMenu;
+	protected JMenuItem miNewNote;
 
 	private boolean selected = false;
 
@@ -154,12 +155,9 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 		// Search and delete all lines (relations, associations, etc...)
 		// associated with this component.
 		for (final LineView lv : parent.getLinesViewAssociedWith(this))
-		{
-			final boolean isBlocked = Change.isBlocked();
-			Change.setBlocked(true);
+		
 			lv.delete();
-			Change.setBlocked(isBlocked);
-		}
+		
 	}
 
 	/**
@@ -336,7 +334,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
 		JMenuItem menuItem;
 
-		menuItem = makeMenuItem("New note", Slyum.ACTION_NEW_NOTE_ASSOCIED, "note16");
+		miNewNote = menuItem = makeMenuItem("New note", Slyum.ACTION_NEW_NOTE_ASSOCIED, "note16");
 		popupMenu.add(menuItem);
 
 		menuItem = makeMenuItem("Change color...", "Color", "color16");
@@ -386,7 +384,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 	 */
 	public JMenuItem makeMenuItem(String name, String action, String imgIcon)
 	{
-		final ImageIcon img = PersonalizedIcon.createImageIcon("resources/icon/" + imgIcon + ".png");
+		final ImageIcon img = PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + imgIcon + ".png");
 
 		final JMenuItem menuItem = new JMenuItem(name, img);
 		menuItem.setActionCommand(action);
@@ -428,8 +426,10 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 		GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
 		
 		if (e.isPopupTrigger())
-
+		{
+			miNewNote.setEnabled(getAssociedComponent() != null);
 			popupMenu.show(e.getComponent(), (int)(e.getX() / gv.getInversedScale()), (int)(e.getY() / gv.getInversedScale()));
+		}
 	}
 
 	/**
@@ -572,6 +572,8 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 			
 			parent.componentSelected(selected);
 		}
+		
+		setChanged();
 	}
 
 	/**

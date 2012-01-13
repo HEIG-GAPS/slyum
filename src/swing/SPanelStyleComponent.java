@@ -1,15 +1,20 @@
 package swing;
 
+import graphic.GraphicView;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 
 import utility.PersonalizedIcon;
 import utility.Utility;
 
-public class SPanelStyleComponent extends JPanelRounded implements IListenerComponentSelectionChanged
+public class SPanelStyleComponent extends JPanelRounded implements IListenerComponentSelectionChanged, ActionListener
 {
 	private static final long serialVersionUID = -9156467758854311341L;
 	
@@ -31,12 +36,12 @@ public class SPanelStyleComponent extends JPanelRounded implements IListenerComp
 		setBackground(/*Color.WHITE*/ new Color(0, 255,0, 10));
 		setForeground(Color.GRAY);
 
-		add(top = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "alignTop.png"), Slyum.ACTION_ALIGN_TOP, Color.GREEN, TT_ALIGN_TOP));
-		add(bottom = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "alignBottom.png"), Slyum.ACTION_ALIGN_BOTTOM, Color.GREEN, TT_ALIGN_BOTTOM));
-		add(right = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "alignRight.png"), Slyum.ACTION_ALIGN_RIGHT, Color.GREEN, TT_ALIGN_RIGTH));
-		add(left = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "alignLeft.png"), Slyum.ACTION_ALIGN_LEFT, Color.GREEN, TT_ALIGN_LEFT));
+		add(top = createEmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "alignTop.png"), Slyum.ACTION_ALIGN_TOP, Color.GREEN, TT_ALIGN_TOP));
+		add(bottom = createEmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "alignBottom.png"), Slyum.ACTION_ALIGN_BOTTOM, Color.GREEN, TT_ALIGN_BOTTOM));
+		add(right = createEmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "alignRight.png"), Slyum.ACTION_ALIGN_RIGHT, Color.GREEN, TT_ALIGN_RIGTH));
+		add(left = createEmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "alignLeft.png"), Slyum.ACTION_ALIGN_LEFT, Color.GREEN, TT_ALIGN_LEFT));
 		
-		add(adujst = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "adjustWidth.png"), Slyum.ACTION_ADJUST_WIDTH, Color.GREEN, TT_ADJUST_WIDTH));
+		add(adujst = createEmptyButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "adjustWidth.png"), Slyum.ACTION_ADJUST_WIDTH, Color.GREEN, TT_ADJUST_WIDTH));
 
 		top.setEnabled(false);
 		bottom.setEnabled(false);
@@ -45,6 +50,34 @@ public class SPanelStyleComponent extends JPanelRounded implements IListenerComp
 		adujst.setEnabled(false);
 		
 		setMaximumSize(new Dimension(43 * ((GridLayout)getLayout()).getColumns(), 50));
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+		
+		if (Slyum.ACTION_ALIGN_TOP.equals(e.getActionCommand()))
+			gv.alignHorizontal(true);
+
+		else if (Slyum.ACTION_ALIGN_BOTTOM.equals(e.getActionCommand()))
+			gv.alignHorizontal(false);
+
+		else if (Slyum.ACTION_ALIGN_LEFT.equals(e.getActionCommand()))
+			gv.alignVertical(true);
+
+		else if (Slyum.ACTION_ALIGN_RIGHT.equals(e.getActionCommand()))
+			gv.alignVertical(false);
+
+		else if (Slyum.ACTION_ADJUST_WIDTH.equals(e.getActionCommand()))
+			gv.adjustWidthSelectedEntities();
+	}
+
+	private SButton createEmptyButton(ImageIcon ii, String action, Color c, String tt)
+	{
+		SButton ee = new SButton(ii, action, c, tt, this);
+		ee.setEnabled(false);
+		return ee;
 	}
 	
 	public SButton getBtnTop()

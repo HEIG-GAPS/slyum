@@ -17,8 +17,14 @@ import classDiagram.IDiagramComponent;
  */
 public class Method extends Observable implements IDiagramComponent, Observer
 {
+	public static final String REGEX_SEMANTIC_METHOD = Variable.REGEX_SEMANTIC_ATTRIBUTE;
+	
+	public static boolean checkSemantic(String name)
+	{
+		return !name.isEmpty() && name.matches(REGEX_SEMANTIC_METHOD);
+	}
+	
 	private boolean _isAbstract = false;
-
 	private boolean _isStatic = false;
 	private final Entity entity;
 	protected final int id = ClassDiagram.getNextId();
@@ -39,18 +45,17 @@ public class Method extends Observable implements IDiagramComponent, Observer
 	 */
 	public Method(String name, Type returnType, Visibility visibility, Entity entity)
 	{
-		if (name.isEmpty())
-			throw new IllegalArgumentException("name is null");
-
 		if (returnType == null)
 			throw new IllegalArgumentException("type is null");
 
 		if (visibility == null)
 			throw new IllegalArgumentException("visibility is null");
-
+		
+		if (!setName(name))
+			throw new IllegalArgumentException("semantic name incorrect");
+			
 		this.entity = entity;
-		this.name = name;
-		this.returnType = new Type(returnType.getName());
+		setReturnType(returnType);
 		this.visibility = visibility;
 	}
 	
@@ -215,10 +220,7 @@ public class Method extends Observable implements IDiagramComponent, Observer
 	 */
 	public boolean setName(String name)
 	{
-		if (name.isEmpty())
-			throw new IllegalArgumentException("name is null");
-
-		if (!name.matches("([a-zA-Z|_])(\\w)*"))
+		if (name.isEmpty() || !checkSemantic(name))
 			return false;
 
 		this.name = name;
@@ -239,8 +241,8 @@ public class Method extends Observable implements IDiagramComponent, Observer
 		if (returnType == null)
 			throw new IllegalArgumentException("returnType is null");
 
-		if (!returnType.getName().matches("([a-zA-Z|_])(\\w)*"))
-			return false;
+		//if (!returnType.getName().matches("([a-zA-Z|_])(\\w)*"))
+			//return false;
 
 		this.returnType = returnType;
 
@@ -279,7 +281,7 @@ public class Method extends Observable implements IDiagramComponent, Observer
 
 		newName = subString[0].trim();
 
-		if (!newName.matches("([a-zA-Z|_])(\\w)*"))
+		if (!checkSemantic(newName))
 			newName = getName();
 
 		if (subString.length == 2)
@@ -298,19 +300,15 @@ public class Method extends Observable implements IDiagramComponent, Observer
 					if (variable[0].trim().length() == 0)
 						continue;
 
-					if (variable.length != 2)
+					if (variable.length == 2)
 					{
-						if (!variable[0].trim().matches("([a-zA-Z|_])(\\w)*"))
+						String name = variable[0].trim(), 
+							   type = variable[1].trim();
+						
+						if (!Variable.checkSemantic(name) || !Type.checkSemantic(type))
 							continue;
 
-						addParameter(new Variable("", new Type(variable[0].trim())));
-					}
-					else
-					{
-						if (!variable[0].trim().matches("([a-zA-Z|_])(\\w)*") || !variable[1].trim().matches("([a-zA-Z|_])[(\\w)<>.]*"))
-							continue;
-
-						addParameter(new Variable(variable[0].trim(), new Type(variable[1].trim())));
+						addParameter(new Variable(name, new Type(type)));
 					}
 				}
 			}
@@ -318,8 +316,7 @@ public class Method extends Observable implements IDiagramComponent, Observer
 			if (arguments.length > 1)
 			{
 				final String returnType = arguments[1].substring(arguments[1].indexOf(":") + 1).trim();
-
-				if (!returnType.isEmpty() && returnType.matches("([a-zA-Z|_])[(\\w)<>.]*"))
+				if (Type.checkSemantic(returnType))
 					setReturnType(new Type(returnType));
 			}
 		}
@@ -356,7 +353,7 @@ public class Method extends Observable implements IDiagramComponent, Observer
 	{
 		final String tab = Utility.generateTab(depth);
 
-		String xml = tab + "<method " + "name=\"" + name + "\" returnType=\"" + returnType + "\" visibility=\"" + visibility + "\" isStatic=\"" + _isStatic + "\" isAbstract=\"" + _isAbstract + "\" ";
+		String xml = tab + "<method " + "name=\"" + name + "\" returnType=\"" + returnType.toXML(0) + "\" visibility=\"" + visibility + "\" isStatic=\"" + _isStatic + "\" isAbstract=\"" + _isAbstract + "\" ";
 
 		if (parameters.size() == 0)
 

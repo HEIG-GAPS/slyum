@@ -21,7 +21,6 @@ import classDiagram.components.Method;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-@SuppressWarnings("serial")
 public class NodeEntity extends DefaultMutableTreeNode implements Observer, IClassDiagramNode, ICustomizedIconNode
 {
 	private final Entity entity;
@@ -58,6 +57,8 @@ public class NodeEntity extends DefaultMutableTreeNode implements Observer, ICla
 		this.icon = icon;
 
 		entity.addObserver(this);
+		
+		reloadChildsNodes();
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class NodeEntity extends DefaultMutableTreeNode implements Observer, ICla
 	 * Remove and re-generate all child nodes according to methods and attributs
 	 * containing by the entity.
 	 */
-	public void reloadChildsNodes()
+	private void reloadChildsNodes()
 	{
 		DefaultMutableTreeNode node;
 
@@ -96,6 +97,19 @@ public class NodeEntity extends DefaultMutableTreeNode implements Observer, ICla
 		}
 
 		treeModel.reload(this);
+	}
+
+	@Override
+	public void removeAllChildren()
+	{
+		for (int i = getChildCount()-1; i >= 0; i--)
+		{
+			IClassDiagramNode node = (IClassDiagramNode)getChildAt(i);
+			
+            node.getAssociedComponent().deleteObserver((Observer)node);
+        }
+		
+		super.removeAllChildren();
 	}
 
 	@Override
@@ -122,5 +136,11 @@ public class NodeEntity extends DefaultMutableTreeNode implements Observer, ICla
 		}
 		else
 			reloadChildsNodes();
+	}
+	
+	@Override
+	public void remove()
+	{
+		removeAllChildren();
 	}
 }

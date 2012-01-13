@@ -60,6 +60,7 @@ import swing.SPanelStyleComponent;
 import swing.SPanelZOrder;
 import swing.Slyum;
 import swing.SColorChooser;
+import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.SSlider;
 import utility.SizedCursor;
@@ -82,6 +83,7 @@ import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Role;
+import javax.swing.SwingUtilities;
 
 /**
  * This class is the main container for all diagrams components view
@@ -105,6 +107,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	public final static boolean IS_AUTOMATIC_GRID_COLOR = false;
 	public final static boolean IS_GRID_OPACITY_ENABLE = false;
 	public final static boolean IS_GRID_ENABLE = true;
+	public final static double SCALE_STEP = 0.1;
 
 	/**
 	 * Compute mouse entered and exited event. the componentMouseHover can be
@@ -343,6 +346,22 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		PropertyLoader.getInstance().getProperties().put(PropertyLoader.GRID_VISIBLE, String.valueOf(visible));
 		PropertyLoader.getInstance().push();
 	}
+	
+	public boolean getPaintBackgroundLast()
+	{
+		return paintBackgroundLast;
+	}
+	
+	public void setPaintBackgroundLast(boolean enable)
+	{
+		paintBackgroundLast = enable;
+	}
+	
+	public void paintBackgroundFirst()
+	{
+		setPaintBackgroundLast(false);
+		repaint();
+	}
 
 	private final ClassDiagram classDiagram;
 	// last component mouse pressed
@@ -350,20 +369,20 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	private CreateComponent currentFactory;
 
-	private final LinkedList<EntityView> entities = new LinkedList<EntityView>();
+	private final LinkedList<EntityView> entities = new LinkedList<>();
 
-	private final LinkedList<LineView> linesView = new LinkedList<LineView>();
+	private final LinkedList<LineView> linesView = new LinkedList<>();
 
 	// use in printing
 	private int m_maxNumPage = 1;
 
 	private Point mousePressedLocation = new Point();
-	private final LinkedList<MultiView> multiViews = new LinkedList<MultiView>();
+	private final LinkedList<MultiView> multiViews = new LinkedList<>();
 	private String name;
 
-	private final LinkedList<TextBoxCommentary> notes = new LinkedList<TextBoxCommentary>();
+	private final LinkedList<TextBoxCommentary> notes = new LinkedList<>();
 
-	private final LinkedList<GraphicComponent> othersComponents = new LinkedList<GraphicComponent>();
+	private final LinkedList<GraphicComponent> othersComponents = new LinkedList<>();
 
 	// Selection rectangle.
 	private Rectangle rubberBand = new Rectangle();
@@ -372,30 +391,22 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	private GraphicComponent saveComponentMouseHover;
 	private final JPanel scene;
 
-	private final JScrollPane scrollPane;
+	private final JScrollPane scrollPane;	
 
 	private float zoom = 1.0f;
-	private double scale = 1.0;
+	private boolean stopRepaint = false;
+	private boolean paintBackgroundLast = false;
 	
 	private Rectangle visibleRect = new Rectangle();
 	private int mouseButton = 0;
 	
-	private LinkedList<IListenerComponentSelectionChanged> lcsc = new LinkedList<IListenerComponentSelectionChanged>();
-	
-	public void setScale(double scale)
-	{
-		this.scale = scale;
-		
-		PanelClassDiagram.getInstance().getsSlider().setScale(scale);
-		
-		repaint();
-	}
+	private LinkedList<IListenerComponentSelectionChanged> lcsc = new LinkedList<>();
 	
 	public double getScale()
 	{
-		return scale;
+		return PanelClassDiagram.getInstance().getsSlider().getValue() / 100.0;
 	}
-
+	
 	/**
 	 * Create a new graphic view representing the class diagram given. The new
 	 * graphic view is empty when created. If classDiagram given is not empty,
@@ -425,19 +436,38 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 				paintScene((Graphics2D) g);
 			}
 			
+			
 			@Override
 			public void repaint(int x, int y, int width, int height)
 			{
-				Rectangle rect = growForRepaint(Utility.scaleRect(new Rectangle(x, y, width, height), getScale()));
-				
-				super.repaint(rect.x, rect.y, rect.width, rect.height);
+				repaint(new Rectangle(x, y, width, height));
 			}
 			
 			@Override
 			public void repaint(Rectangle r)
 			{
+				if (stopRepaint)
+					return;
+				
 				super.repaint(growForRepaint(Utility.scaleRect(r, getScale())));
 			}
+
+			@Override
+			public void paintImmediately(int x, int y, int w, int h)
+			{
+				paintImmediately(new Rectangle(x, y, w, h));
+			}
+
+			@Override
+			public void paintImmediately(Rectangle r)
+			{
+				if (stopRepaint)
+					return;
+				
+				super.paintImmediately(r.x, r.y, r.width, r.height);
+			}
+			
+			
 			
 			private Rectangle growForRepaint(Rectangle rect)
 			{
@@ -811,17 +841,14 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 * @param true for align top; false for align bottom
 	 */
 	public void alignHorizontal(boolean top)
-	{
-		boolean isRecord = Change.isRecord();
-		Change.record();
-		
+	{		
 		int totalWidth = 0, bottom = Integer.MIN_VALUE;
 
 		final LinkedList<EntityView> sorted = sortXLocation(getSelectedEntities());
 
 		if (sorted.size() < 2)
 			return;
-
+		
 		for (final EntityView c : sorted)
 		{
 			final Rectangle bounds = c.getBounds();
@@ -840,6 +867,9 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		int offset = limits.x;
 
+		boolean isRecord = Change.isRecord();
+		Change.record();
+		
 		for (final GraphicComponent c : sorted)
 		{
 			final Rectangle bounds = c.getBounds();
@@ -920,6 +950,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		
 		else
 		{
+			boolean isRecord = Change.isRecord();
 			Change.record();
 			
 			for (final GraphicComponent c : getSelectedComponents())
@@ -932,7 +963,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 				Change.push(new BufferColor(c));
 			}
 			
-			Change.stopRecord();
+			if (!isRecord)
+				Change.stopRecord();
 		}
 	}
 
@@ -965,7 +997,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	/**
 	 * Unselect all component.
 	 */
-	public void clearAllSelectedComponents()
+	public void unselectAll()
 	{
 		final LinkedList<GraphicComponent> components = getAllComponents();
 
@@ -1341,7 +1373,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		// Unselect all component (we will not see graphic selection style in
 		// image exportation).
-		clearAllSelectedComponents();
+		unselectAll();
 
 		// Translate the rectangle containing all graphic components at origin.
 		g2.translate(-bounds.x + margin, -bounds.y + margin);
@@ -1448,7 +1480,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		// Unselect all component (we will not see graphic selection style in
 		// image exportation).
-		clearAllSelectedComponents();
+		unselectAll();
 
 		// Translate the rectangle containing all graphic components at origin.
 		g2.translate(-bounds.x + margin, -bounds.y + margin);
@@ -1486,18 +1518,17 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	{
 		super.gMousePressed(e);
 
-		if (!e.isControlDown())
-			clearAllSelectedComponents();
-
 		switch (mouseButton)
 		{
 		case MouseEvent.BUTTON1:
 			scene.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+			if (!e.isControlDown())
+				unselectAll();
 			break;
 			
 		case MouseEvent.BUTTON2:
 			Toolkit toolkit = Toolkit.getDefaultToolkit();
-			Image image = toolkit.getImage("src" + Slyum.FILE_SEPARATOR + "swing" + Slyum.FILE_SEPARATOR + Slyum.ICON_PATH + "drag_hand.png");
+			Image image = PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "drag_hand.png").getImage();
 			image = SizedCursor.getPreferredSizedCursor(image);
 			Cursor brokenCursor = toolkit.createCustomCursor(image , new Point(0, 0), "drag_hand");
 			scene.setCursor(brokenCursor);
@@ -1590,6 +1621,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	public void linkNewNoteWithSelectedEntities()
 	{
+		setStopRepaint(true);
 		LinkedList<GraphicComponent> e = getSelectedComponents();
 		
 		TextBoxCommentary tbc = null;
@@ -1608,8 +1640,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 			e.remove(0);
 			
 			for (GraphicComponent ev : e)
-				
-				parent.addLineView(new LineCommentary(parent, ev, tbc, new Point(), new Point(), false));
+				if (LineCommentary.checkCreate(ev, tbc, false))
+					parent.addLineView(new LineCommentary(parent, ev, tbc, new Point(), new Point(), false));
 		}
 		
 		Rectangle b = tbc.getBounds();
@@ -1624,6 +1656,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		
 		if (!isRecord)
 			Change.stopRecord();
+		
+		goRepaint();
 	}
 
 	@Override
@@ -1647,34 +1681,34 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	@Override
 	public void mouseDragged(MouseEvent e)
 	{
-		e = adapteMouseEvent(e);
+		MouseEvent ea = adapteMouseEvent(e);
 		GraphicComponent component;
 		Rectangle newVisibleRect;
 		
 		if (mouseButton == MouseEvent.BUTTON2)
 		{
-			int dx = -e.getX() + mousePressedLocation.x,
-				dy = -e.getY() + mousePressedLocation.y;
+			int dx = (int)(mousePressedLocation.x * getScale()-e.getX()),
+				dy = (int)(mousePressedLocation.y * getScale()-e.getY());
 			
 			visibleRect.translate(dx, dy);
 			
 			newVisibleRect = new Rectangle(visibleRect);
 		}
 		else
-			newVisibleRect = new Rectangle((int)((double)e.getX() * getScale()),
-					(int)((double)e.getY() * getScale()),
+			newVisibleRect = new Rectangle((int)((double)ea.getX() * getScale()),
+					(int)((double)ea.getY() * getScale()),
 					1,
 					1);
 
 		if (currentFactory != null)
 			component = currentFactory;
 		else
-			component = getComponentAtPosition(e.getPoint());
+			component = getComponentAtPosition(ea.getPoint());
 
-		computeComponentEventEnter(component, saveComponentMouseHover, e);
+		computeComponentEventEnter(component, saveComponentMouseHover, ea);
 
 		if (mouseButton != MouseEvent.BUTTON2)
-			componentMousePressed.gMouseDragged(e);
+			componentMousePressed.gMouseDragged(ea);
 
 		saveComponentMouseHover = component;
 
@@ -1754,19 +1788,69 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	}
 
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent e)
+	public void mouseWheelMoved(final MouseWheelEvent e)
 	{
 		if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL)
 			
 			if (e.isControlDown())
-			{
-				SSlider ss = PanelClassDiagram.getInstance().getsSlider();
-				ss.setValue((int)(ss.getValue() - (float)e.getUnitsToScroll()));
+			{				
+				if (e.getWheelRotation() < 0)
+				{ backScale(); }
+				else
+				{ forwardScale(); }
 			}
+			else
+			{
+				JScrollBar s = scrollPane.getVerticalScrollBar();
+				s.setValue(s.getValue() + s.getUnitIncrement() * (e.getUnitsToScroll() < 0 ? -1 : 1));	
+			}
+	}
+	
+	public void moveZOrderUpSelectedEntities()
+	{
+		LinkedList<EntityView> evs = getSelectedEntities();
+		LinkedList<EntityView> evsSorted = new LinkedList<>();
+		int current = 0, max = -1, size = evs.size();
 		
-
-		JScrollBar s = scrollPane.getVerticalScrollBar();
-		s.setValue(s.getValue() + s.getUnitIncrement() * (e.getUnitsToScroll() < 0 ? -1 : 1));
+		for (int i = 0; i < size; i++)
+		{
+			for (EntityView ev : evs)
+			{
+				int io = getEntitiesView().indexOf(ev);
+				
+				if (io > max)
+				{
+					max = io;
+					current = evs.indexOf(ev);
+				}
+			}
+			evsSorted.add(evs.remove(current));
+			current = 0; max = -1;
+		}
+		
+		for (EntityView ev : evsSorted)
+			getClassDiagram().changeZOrder(ev.getComponent(), getEntitiesView().indexOf(ev) + 1);
+	}
+	
+	public void moveZOrderDownSelectedEntities()
+	{
+		for (EntityView ev : getSelectedEntities())
+			
+			getClassDiagram().changeZOrder(ev.getComponent(), getEntitiesView().indexOf(ev) - 1);
+	}
+	
+	public void moveZOrderTopSelectedEntities()
+	{
+		for (EntityView ev : getSelectedEntities())
+			
+			getClassDiagram().changeZOrder(ev.getComponent(), getEntitiesView().size() - 1);
+	}
+	
+	public void moveZOrderBottomSelectedEntities()
+	{
+		for (EntityView ev : getSelectedEntities())
+			
+			getClassDiagram().changeZOrder(ev.getComponent(), 0);
 	}
 	
 	protected MouseEvent adapteMouseEvent(MouseEvent e)
@@ -1801,6 +1885,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 */
 	protected void paintBackground(int gridSize, Color color, Graphics2D g2)
 	{
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		
 		final Rectangle vr = getScene().getVisibleRect();
 		final boolean gradient = getBackgroundGradient();
 
@@ -1813,7 +1899,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		g2.fillRect(vr.x, vr.y, vr.width, vr.height);
 		
 		// Draw grid
-		if (isGridEnable() && isGridVisible() && getGridSize() >= 10) // Don't draw a grid lesser than 10 (too slow).
+		if (isVisible() && isGridEnable() && isGridVisible() && getGridSize() >= 10) // Don't draw a grid lesser than 10 (too slow).
 		{
 			final int grayLevel = Utility.getColorGrayLevel(getColor());
 			Color gridColor = new Color(getGridColor());
@@ -1830,7 +1916,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 			
 			for (int x = (vr.x/gridSize)*gridSize; x < vr.x + vr.width + gridSize; x += gridSize)
 				for (int y = (vr.y/gridSize)*gridSize; y < vr.y + vr.height + gridSize; y += gridSize)
-						g2.drawOval(x, y, 1, 1);
+						g2.drawLine(x, y, x, y);
 		}
 	}
 
@@ -1873,19 +1959,20 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 */
 	public void paintScene(Graphics2D g2)
 	{
+		int gridSize = getGridSize();
+		
 		// Paint background.
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		paintBackground(getGridSize(), getBasicColor(), g2);
+		paintBackground(gridSize, getBasicColor(), g2);
 
+		if (!isVisible())
+			return;
+		
 		Utility.setRenderQuality(g2);
 		
 		double scale = getScale(),
 		inversedScale = getInversedScale();
 		
 		g2.scale(scale, scale);
-
-		if (!isVisible())
-			return;
 
 		// Paint components
 		for (final GraphicComponent c : getAllComponents())
@@ -1904,6 +1991,9 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		paintRubberBand(rubberBand, isAutomatiqueGridColor() ? rubberBandColor : new Color(getGridColor()), g2);
 		
 		g2.scale(inversedScale, inversedScale);
+		
+		if (getPaintBackgroundLast())
+			paintBackground(gridSize, getBasicColor(), g2);
 	}
 
 	@Override
@@ -2040,7 +2130,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	@Override
 	public void repaint()
-	{
+	{		
 		scene.repaint();
 	}
 
@@ -2062,15 +2152,42 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		return null;
 	}
+	
+	/**
+	 * Select the given component and unselect all other.
+	 * @param gc the component to selected
+	 */
+	public void selectOnly(GraphicComponent gc)
+	{
+		unselectAll();
+		gc.setSelected(true);
+		gc.notifyObservers();
+	}
 
 	/**
 	 * Select all diagram elements.
 	 */
-	public void selectAllComponents()
+	public void selectAll()
 	{
 		for (final GraphicComponent c : getDiagramElements())
 
 			c.setSelected(true);
+	}
+	
+	public void goRepaint()
+	{
+		setStopRepaint(false);
+		repaint();
+	}
+	
+	public void setStopRepaint(boolean enable)
+	{
+		stopRepaint = enable;
+	}
+	
+	public boolean getStopRepaint()
+	{
+		return stopRepaint;
 	}
 
 	@Override
@@ -2092,9 +2209,61 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		componentMousePressed = component;
 	}
+	
+	public void adaptListToWindow(LinkedList<? extends GraphicComponent> list)
+	{
+		final Rectangle limits = Utility.getLimits(list);
+				  Rectangle vr = getScene().getVisibleRect(),
+				  l;
+		
+		l = Utility.scaleRect(limits, getScale());
+		
+		double xRatio = l.getWidth() / vr.getWidth();
+		double yRatio = l.getHeight() / vr.getHeight();
+		
+		if (xRatio > yRatio)
+			setScale(getScale() / xRatio);
+		else
+			setScale(getScale() / yRatio);
+		
+		// Must wait scaling.
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run()
+			{
+				getScene().scrollRectToVisible(Utility.scaleRect(limits, getScale()));
+			}
+		});
+	}
+	
+	public void adaptDiagramToWindow()
+	{
+		adaptListToWindow(getAllComponents());
+	}
+	
+	public void adaptSelectionToWindow()
+	{
+		adaptListToWindow(getSelectedComponents());
+	}
+	
+	public void setScale(double scale)
+	{
+		PanelClassDiagram.getInstance().getsSlider().setValue((int)(scale * 100.0));
+	}
+	
+	public void backScale()
+	{
+		setScale(getScale() + SCALE_STEP);
+	}
+	
+	public void forwardScale()
+	{
+		setScale(getScale() - SCALE_STEP);
+	}
 
 	/**
-	 * Set the police zoom. The zoom is multiplied with the police size for
+	 * Set the font zoom. The zoom is multiplied with the font size for
 	 * computing new size. Default value : 1.0f.
 	 * 
 	 * @param zoom

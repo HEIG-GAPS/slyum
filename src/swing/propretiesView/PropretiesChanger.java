@@ -8,8 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
-import swing.propretiesView.EntityPropreties;
-import swing.propretiesView.RelationPropreties;
+import swing.Slyum;
 import utility.PersonalizedIcon;
 import classDiagram.IComponentsObserver;
 import classDiagram.IDiagramComponent;
@@ -60,7 +59,7 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 		setPreferredSize(new Dimension(150, 200));
 		setMinimumSize(new Dimension(150, 200));
 
-		noComponentLabel = new JLabel("No component selected", PersonalizedIcon.createImageIcon("resources/icon/loupe.png"), SwingConstants.CENTER);
+		noComponentLabel = new JLabel("No component selected", PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "loupe.png"), SwingConstants.CENTER);
 		noComponentLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 		noComponentLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
 		noComponentLabel.setOpaque(false);
@@ -124,7 +123,7 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 	@Override
 	public void addInheritance(Inheritance component)
 	{
-		// no view for inheritance
+		component.addObserver(InheritanceProperties.getInstance());
 	}
 
 	@Override

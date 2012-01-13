@@ -8,7 +8,7 @@ import swing.Slyum;
 
 public class PersonalizedIcon
 {
-	public final static String PATH_ICON = "resources/icon/";
+	public final static String PATH_ICON = Slyum.ICON_PATH;
 	public final static String PATH_WARNING_ICON = PATH_ICON + "warning.png";
 	public final static String PATH_QUESTION_ICON = PATH_ICON + "question.png";
 	public final static String PATH_INFO_ICON = PATH_ICON + "get_info.png";
@@ -23,7 +23,8 @@ public class PersonalizedIcon
 	 */
 	public static ImageIcon createImageIcon(String imagePath)
 	{
-		final URL imageURL = Slyum.class.getResource(imagePath);
+		 URL imageURL = Slyum.class.getResource(imagePath);
+		 
 		ImageIcon icon = null;
 
 		if (imageURL != null)
@@ -54,7 +55,7 @@ public class PersonalizedIcon
 	
 	public static ImageIcon getLogo()
 	{
-		return createImageIcon("resources/icon/logo32.png");
+		return createImageIcon(Slyum.ICON_PATH + "logo32.png");
 	}
 
 }

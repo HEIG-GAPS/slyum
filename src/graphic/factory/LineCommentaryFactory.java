@@ -3,13 +3,10 @@ package graphic.factory;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.relations.LineCommentary;
-import graphic.textbox.TextBoxCommentary;
 
 import java.awt.BasicStroke;
 
 import utility.SMessageDialog;
-
-import classDiagram.ClassDiagram;
 
 /**
  * LineCommentaryFactory allows to create a new line between a note and a
@@ -33,25 +30,23 @@ public class LineCommentaryFactory extends RelationFactory
 	 * @param classDiagram
 	 *            the class diagram
 	 */
-	public LineCommentaryFactory(GraphicView parent, ClassDiagram classDiagram)
+	public LineCommentaryFactory(GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 
 		stroke = new BasicStroke(1.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 4.f }, 0.0f);
 	}
 
 	@Override
 	public GraphicComponent create()
-	{		
-		if ((componentMousePressed instanceof TextBoxCommentary || componentMouseReleased instanceof TextBoxCommentary) && componentMousePressed.getClass() != componentMouseReleased.getClass())
-		{
-			final LineCommentary lc = new LineCommentary(parent, componentMousePressed, componentMouseReleased, mousePressed, mouseReleased, false);
-			parent.addLineView(lc);
+	{
+		if (!LineCommentary.checkCreate(componentMousePressed, componentMouseReleased, true))
+			return null;
+		
+		final LineCommentary lc = new LineCommentary(parent, componentMousePressed, componentMouseReleased, mousePressed, mouseReleased, false);
+		parent.addLineView(lc);
 
-			return lc;
-		}
-
-		return null;
+		return lc;
 	}
 	
 	@Override

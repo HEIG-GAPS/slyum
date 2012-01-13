@@ -22,9 +22,12 @@ import java.awt.event.MouseEvent;
 import javax.swing.JMenuItem;
 
 import swing.EditCommentaryDialog;
+import swing.Slyum;
+import swing.propretiesView.NoteProperties;
 import utility.PersonalizedIcon;
 import utility.Utility;
 import classDiagram.IDiagramComponent;
+import classDiagram.IDiagramComponent.UpdateMessage;
 
 /**
  * A TextBoxCommentary is not a subclass of TextBox becauseit is not on signle
@@ -121,7 +124,8 @@ public class TextBoxCommentary extends MovableComponent
 
 		final Point middleComponent = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
 
-		parent.addLineView(new LineCommentary(parent, this, component, middleTextBox, middleComponent, true));
+		if (LineCommentary.checkCreate(this, component, true))
+			parent.addLineView(new LineCommentary(parent, this, component, middleTextBox, middleComponent, true));
 
 		init(text);
 	}
@@ -298,7 +302,7 @@ public class TextBoxCommentary extends MovableComponent
 
 		setColor(EntityView.getBasicColor());
 		popupMenu.addSeparator();
-		final JMenuItem item = new JMenuItem("Delete commentary", PersonalizedIcon.createImageIcon("resources/icon/delete16.png"));
+		final JMenuItem item = new JMenuItem("Delete commentary", PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete16.png"));
 		item.addActionListener(new ActionListener() {
 
 			@Override
@@ -307,6 +311,8 @@ public class TextBoxCommentary extends MovableComponent
 				delete();
 			}
 		});
+		
+		parent.selectOnly(this);
 		popupMenu.add(item);
 	}
 
@@ -384,6 +390,14 @@ public class TextBoxCommentary extends MovableComponent
 
 		repaint();
 	}
+	
+	@Override
+	public void setSelected(boolean selected)
+	{
+		super.setSelected(selected);
+		
+		NoteProperties.getInstance().update(this, selected ? UpdateMessage.SELECT : UpdateMessage.UNSELECT);
+	}
 
 	@Override
 	public String toXML(int depth)
@@ -395,12 +409,21 @@ public class TextBoxCommentary extends MovableComponent
 
 		for (final LineView lv : parent.getLinesViewAssociedWith(this))
 		{
-			final IDiagramComponent associedComponent = lv.getLastPoint().getAssociedComponentView().getAssociedComponent();
+			IDiagramComponent associedComponent = lv.getLastPoint().getAssociedComponentView().getAssociedComponent();
 			int id = -1;
 
 			if (associedComponent != null)
 
 				id = associedComponent.getId();
+			
+			else
+			{
+				associedComponent = lv.getFirstPoint().getAssociedComponentView().getAssociedComponent();
+				
+				if (associedComponent != null)
+					
+					id = associedComponent.getId();
+			}
 
 			xml += tab + "\t<noteLine relationId=\"" + id + "\" color=\"" + lv.getColor().getRGB() + "\">\n";
 

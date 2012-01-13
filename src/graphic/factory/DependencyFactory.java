@@ -10,7 +10,6 @@ import java.awt.Graphics2D;
 
 import utility.SMessageDialog;
 
-import classDiagram.ClassDiagram;
 import classDiagram.relationships.Dependency;
 
 /**
@@ -35,9 +34,9 @@ public class DependencyFactory extends RelationFactory
 	 * @param classDiagram
 	 *            the class diagram
 	 */
-	public DependencyFactory(GraphicView parent, ClassDiagram classDiagram)
+	public DependencyFactory(GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 
 		stroke = new BasicStroke(1.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 7.f }, 0.0f);
 	}
@@ -56,7 +55,7 @@ public class DependencyFactory extends RelationFactory
 			parent.addLineView(d);
 			classDiagram.addDependency(dependency);
 
-			parent.clearAllSelectedComponents();
+			parent.unselectAll();
 			d.setSelected(true);
 
 			return d;

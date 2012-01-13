@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 
 import utility.PersonalizedIcon;
 
@@ -23,7 +24,15 @@ public class SPanelElement extends JPanelRounded implements ActionListener, ILis
 	
 	private SButton btnDelete;
 	
-	private static SPanelElement instance = new SPanelElement();
+	private static SPanelElement instance;
+
+	public static SPanelElement getInstance()
+	{
+		if (instance == null)
+			instance = new SPanelElement();
+		
+		return instance;
+	}
 
 	private SPanelElement()
 	{
@@ -32,20 +41,20 @@ public class SPanelElement extends JPanelRounded implements ActionListener, ILis
 		setBackground(/*Color.WHITE*/ new Color(0, 255, 150, 10));
 		setForeground(Color.GRAY);
 
-		SButton eb = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "note.png"), Slyum.ACTION_NEW_NOTE_ASSOCIED, Color.CYAN, TT_ADD_NOTE);
-		eb.addActionListener(this);
-		add(eb);
 		
-		eb = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "color16.png"), "ColorPanel", Color.CYAN, TT_CHANGE_COLOR);
-		eb.addActionListener(this);
-		add(eb);
-		
-		btnDelete = eb = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete16.png"), "Delete", Color.CYAN, TT_DELETE);
-		eb.addActionListener(this);
-		eb.setEnabled(false);
-		add(eb);
+		add(createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "note.png"), Slyum.ACTION_NEW_NOTE_ASSOCIED, Color.CYAN, TT_ADD_NOTE, true));
+		add(createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "color16.png"), "Color", Color.CYAN, TT_CHANGE_COLOR, true));
+		btnDelete = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete16.png"), "Delete", Color.CYAN, TT_DELETE, false);
+		add(btnDelete);
 		
 		setMaximumSize(new Dimension(43 * ((GridLayout)getLayout()).getColumns(), 50));
+	}
+	
+	private SButton createSButton(ImageIcon ii, String a, Color c, String tt, boolean enable)
+	{
+		SButton sb = new SButton(ii, a, c, tt, this);
+		sb.setEnabled(enable);
+		return sb;
 	}
 
 	public void componentSelectionChanged()
@@ -58,11 +67,11 @@ public class SPanelElement extends JPanelRounded implements ActionListener, ILis
 	{
 		GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
 		
-		if (e.getActionCommand().equals("Delete"))
+		if (e.getActionCommand().equals(Slyum.ACTION_DELETE))
 			
 			gv.deleteSelectedComponents();
 		
-		else if (e.getActionCommand().equals("ColorPanel"))
+		else if (e.getActionCommand().equals(Slyum.ACTION_COLOR))
 			
 			GraphicComponent.askNewColorForSelectedItems();
 		
@@ -74,10 +83,5 @@ public class SPanelElement extends JPanelRounded implements ActionListener, ILis
 	public SButton getBtnDelete()
 	{
 		return btnDelete;
-	}
-	
-	public static SPanelElement getInstance()
-	{
-		return instance;
 	}
 }

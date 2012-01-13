@@ -9,9 +9,8 @@ import utility.Utility;
  * @version 1.0 - 24.07.2011
  */
 public class Attribute extends Variable
-{
+{	
 	private boolean _isConstant = false;
-	/** /!\ not used in Slyum 1.0. */
 	private boolean _isStatic = false;
 	private String defaultValue;
 	private Visibility visibility = Visibility.PRIVATE;
@@ -132,15 +131,16 @@ public class Attribute extends Variable
 
 		newName = subString[0].trim();
 
-		if (!newName.matches("([a-zA-Z|_])(\\w)*"))
+		if (!setName(newName))
 			newName = getName();
 
 		if (subString.length == 2)
 		{
 			subString[1] = subString[1].trim();
-			if (!subString[1].matches("([a-zA-Z|_])[(\\w)<>.]*"))
+			
+			if (!Type.checkSemantic(subString[1]))
 				return;
-
+			
 			setType(new Type(subString[1]));
 		}
 

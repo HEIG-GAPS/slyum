@@ -14,7 +14,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
-import classDiagram.ClassDiagram;
 
 /**
  * EntityFactory allows to create a new entity view associated with a new entity
@@ -28,12 +27,12 @@ import classDiagram.ClassDiagram;
  */
 public abstract class EntityFactory extends ComponentFactory
 {
-	public final static Dimension DEFAULT_SIZE = new Dimension(150, 41);
+	public final static Dimension DEFAULT_SIZE = new Dimension(150, 61);
 	private final Rectangle bounds;
 
-	public EntityFactory(GraphicView parent, ClassDiagram classDiagram)
+	public EntityFactory(GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 
 		bounds = new Rectangle(0, 0, DEFAULT_SIZE.width, DEFAULT_SIZE.height);
 	}

@@ -9,7 +9,6 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import change.Change;
-import classDiagram.ClassDiagram;
 
 /**
  * NoteFactory allows to create a new note. Give this factory at the graphic
@@ -30,18 +29,22 @@ public class NoteFactory extends RelationFactory
 	 * @param classDiagram
 	 *            the class diagram
 	 */
-	public NoteFactory(GraphicView parent, ClassDiagram classDiagram)
+	public NoteFactory(GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 	}
 
 	@Override
 	public GraphicComponent create()
 	{
+		boolean isRecord = Change.isRecord();
 		Change.record();
+		
 		final TextBoxCommentary tb = new TextBoxCommentary(parent, TextBoxCommentary.DEFAULT_TEXT, componentMousePressed);
 		tb.setBounds(new Rectangle(mouseReleased.x, mouseReleased.y, 100, 100));
-		Change.stopRecord();
+		
+		if (!isRecord)
+			Change.stopRecord();
 
 		parent.addNotes(tb);
 
