@@ -851,7 +851,7 @@ public abstract class LineView extends GraphicComponent
 	 * line. Use the SMOOTH_RATIO to change the ratio for say if the line must
 	 * be moved or not.
 	 */
-	final protected void smoothLines()
+	final public void smoothLines()
 	{
 		for (int i = 0; i < points.size() - 1; i++)
 		{

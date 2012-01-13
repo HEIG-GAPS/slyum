@@ -350,7 +350,7 @@ public class PanelClassDiagram extends JPanel
 
 		final SAXParserFactory factory = SAXParserFactory.newInstance();
 
-		graphicView.setVisible(false);
+		graphicView.setStopRepaint(true);
 		
 		final boolean isBlocked = Change.isBlocked();
 		Change.setBlocked(true);
@@ -368,7 +368,8 @@ public class PanelClassDiagram extends JPanel
 		SwingUtilities.invokeLater(new Runnable() {
 			
 			@Override
-			public void run() {
+			public void run() 
+			{
 				try
 				{
 					SAXParser parser = factory.newSAXParser();
@@ -383,8 +384,7 @@ public class PanelClassDiagram extends JPanel
 				}
 				
 				Change.setBlocked(isBlocked);
-				graphicView.setVisible(true);
-				graphicView.getScene().paintImmediately(graphicView.getBounds());
+				
 				setCurrentFile(file);
 				Change.setHasChange(false);
 				dpl.setVisible(false);
@@ -392,6 +392,15 @@ public class PanelClassDiagram extends JPanel
 		});
 
 		dpl.setVisible(true);
+		
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run()
+			{
+				graphicView.paintBackgroundFirst();
+			}
+		});
 	}
 
 	/**

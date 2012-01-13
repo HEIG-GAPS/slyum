@@ -35,6 +35,7 @@ import classDiagram.relationships.Binary;
 import classDiagram.relationships.Composition;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Multiplicity;
+import javax.swing.SwingUtilities;
 
 /**
  * This class read the XML file and create the diagram UML structured from this.
@@ -347,8 +348,6 @@ public class XMLParser extends DefaultHandler
 	{
 		classDiagram.removeAll();
 		graphicView.removeAll();
-
-		GraphicView.setGridSize(uMLClassDiagram.uMLView.getFirst().grid);
 		
 		int count = uMLClassDiagram.diagrameElement.association.size();
 		count += uMLClassDiagram.diagrameElement.dependency.size();
@@ -369,7 +368,6 @@ public class XMLParser extends DefaultHandler
 	
 	public void createDiagram()
 	{
-		
 		// Don't change order !!
 		importClassesAndInterfaces(); // <- need nothing :D
 	
@@ -381,11 +379,13 @@ public class XMLParser extends DefaultHandler
 		importInheritances(); // <- ...
 		importDepedency();
 		
+		graphicView.setPaintBackgroundLast(true);
+		graphicView.goRepaint();
+		
 		// components locations
 		locateComponentBounds();
 		importNotes();
 		
-
 		dpl.addStep("Importation complete");
 		dpl.setPhase("Finish");
 	}
@@ -770,11 +770,18 @@ public class XMLParser extends DefaultHandler
 				{
 					final RelationGrip rg = new RelationGrip(graphicView, l);
 					rg.setAnchor(points.get(i));
+					rg.notifyObservers();
 					l.addGrip(rg, i);
 				}
 
-				l.getFirstPoint().setAnchor(points.getFirst());
-				l.getLastPoint().setAnchor(points.getLast());
+				RelationGrip first = l.getFirstPoint(),
+						     last = l.getLastPoint();
+				
+				first.setAnchor(points.getFirst());
+				last.setAnchor(points.getLast());
+				
+				first.notifyObservers();
+				last.notifyObservers();
 
 				l.setColor(rl.color);
 				final LinkedList<TextBox> tb = l.getTextBoxRole();
@@ -816,11 +823,18 @@ public class XMLParser extends DefaultHandler
 					{
 						final RelationGrip rg = new RelationGrip(graphicView, mlv);
 						rg.setAnchor(points.get(i));
+						rg.notifyObservers();
 						mlv.addGrip(rg, i);
 					}
 
-					mlv.getFirstPoint().setAnchor(points.getFirst());
-					mlv.getLastPoint().setAnchor(points.getLast());
+					RelationGrip first = mlv.getFirstPoint(),
+								 last = mlv.getLastPoint();
+				
+				first.setAnchor(points.getFirst());
+				last.setAnchor(points.getLast());
+				
+				first.notifyObservers();
+				last.notifyObservers();
 
 					// Role
 					final LinkedList<TextBox> tb = mlv.getTextBoxRole();
