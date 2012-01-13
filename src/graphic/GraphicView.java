@@ -346,6 +346,22 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		PropertyLoader.getInstance().getProperties().put(PropertyLoader.GRID_VISIBLE, String.valueOf(visible));
 		PropertyLoader.getInstance().push();
 	}
+	
+	public boolean getPaintBackgroundLast()
+	{
+		return paintBackgroundLast;
+	}
+	
+	public void setPaintBackgroundLast(boolean enable)
+	{
+		paintBackgroundLast = enable;
+	}
+	
+	public void paintBackgroundFirst()
+	{
+		setPaintBackgroundLast(false);
+		repaint();
+	}
 
 	private final ClassDiagram classDiagram;
 	// last component mouse pressed
@@ -379,6 +395,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	private float zoom = 1.0f;
 	private boolean stopRepaint = false;
+	private boolean paintBackgroundLast = false;
 	
 	private Rectangle visibleRect = new Rectangle();
 	private int mouseButton = 0;
@@ -1868,6 +1885,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 */
 	protected void paintBackground(int gridSize, Color color, Graphics2D g2)
 	{
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		
 		final Rectangle vr = getScene().getVisibleRect();
 		final boolean gradient = getBackgroundGradient();
 
@@ -1940,9 +1959,10 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 */
 	public void paintScene(Graphics2D g2)
 	{
+		int gridSize = getGridSize();
+		
 		// Paint background.
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		paintBackground(getGridSize(), getBasicColor(), g2);
+		paintBackground(gridSize, getBasicColor(), g2);
 
 		if (!isVisible())
 			return;
@@ -1971,6 +1991,9 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		paintRubberBand(rubberBand, isAutomatiqueGridColor() ? rubberBandColor : new Color(getGridColor()), g2);
 		
 		g2.scale(inversedScale, inversedScale);
+		
+		if (getPaintBackgroundLast())
+			paintBackground(gridSize, getBasicColor(), g2);
 	}
 
 	@Override

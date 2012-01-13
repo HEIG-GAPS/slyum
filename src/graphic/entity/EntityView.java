@@ -896,7 +896,8 @@ public abstract class EntityView extends MovableComponent implements Observer
 	 */
 	public void regenerateEntity()
 	{
-		setVisible(false);
+		boolean isStopRepaint = parent.getStopRepaint();
+		parent.setStopRepaint(true);
 
 		methodsView.clear();
 		attributesView.clear();
@@ -909,7 +910,9 @@ public abstract class EntityView extends MovableComponent implements Observer
 		for (final Method m : component.getMethods())
 			addMethod(m, false);
 
-		setVisible(true);
+		if (!isStopRepaint)
+			parent.goRepaint();
+		
 		updateHeight();
 	}
 
