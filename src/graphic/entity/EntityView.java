@@ -33,9 +33,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JSeparator;
 
 import swing.PropertyLoader;
+import swing.SPanelZOrder;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
@@ -197,6 +197,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 	protected LinkedList<TextBoxMethod> methodsView = new LinkedList<TextBoxMethod>();
 
 	private TextBox pressedTextBox;
+	private JMenuItem menuItemDelete, menuItemMoveUp, menuItemMoveDown;
 
 	private Cursor saveCursor = Cursor.getDefaultCursor();
 
@@ -229,14 +230,24 @@ public abstract class EntityView extends MovableComponent implements Observer
 		popupMenu.add(menuItem);
 
 		popupMenu.addSeparator();
+		
+		menuItemMoveUp = menuItem = makeMenuItem("Move up", Slyum.ACTION_TEXTBOX_UP, "direction_up");
+		menuItemMoveUp.setEnabled(false);
+		popupMenu.add(menuItem);
+		
+		menuItemMoveDown = menuItem = makeMenuItem("Move down", Slyum.ACTION_TEXTBOX_DOWN, "direction_down");
+		menuItemMoveDown.setEnabled(false);
+		popupMenu.add(menuItem);
+		
+		popupMenu.addSeparator();
 
-		menuItem = makeMenuItem("Delete", "Delete", "delete16");
+		menuItemDelete = menuItem = makeMenuItem("Delete", "Delete", "delete16");
 		popupMenu.add(menuItem);
 
 		popupMenu.addSeparator();
 
 		JMenu subMenu = new JMenu("View");
-		subMenu.setIcon(PersonalizedIcon.createImageIcon("resources/icon/visibility.png"));
+		subMenu.setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "visibility.png"));
 		ButtonGroup group = new ButtonGroup();
 
 		JRadioButtonMenuItem rbMenuItem = makeRadioButtonMenuItem("All", "ViewAll", group);
@@ -275,13 +286,21 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 		popupMenu.addSeparator();
 
-		menuItem = makeMenuItem("Move top", "ZOrderTOP", "zorder/top");
+		SPanelZOrder p = SPanelZOrder.getInstance();
+		menuItem = makeMenuItem("Move top", "ZOrderTOP", "top");
+		p.getBtnTop().linkComponent(menuItem);
 		popupMenu.add(menuItem);
-		menuItem = makeMenuItem("Up", "ZOrderUP", "zorder/up");
+		
+		menuItem = makeMenuItem("Up", "ZOrderUP", "up");
+		p.getBtnUp().linkComponent(menuItem);
 		popupMenu.add(menuItem);
-		menuItem = makeMenuItem("Down", "ZOrderDown", "zorder/down");
+		
+		menuItem = makeMenuItem("Down", "ZOrderDown", "down");
+		p.getBtnDown().linkComponent(menuItem);
 		popupMenu.add(menuItem);
-		menuItem = makeMenuItem("Move bottom", "ZOrderBottom", "zorder/bottom");
+		
+		menuItem = makeMenuItem("Move bottom", "ZOrderBottom", "bottom");
+		p.getBtnBottom().linkComponent(menuItem);
 		popupMenu.add(menuItem);
 
 		component.addObserver(this);
@@ -341,11 +360,11 @@ public abstract class EntityView extends MovableComponent implements Observer
 			methodViewChangeClicked(ParametersViewStyle.NAME);
 		else if ("ViewMethodNothing".equals(e.getActionCommand()))
 			methodViewChangeClicked(ParametersViewStyle.NOTHING);
-		else if ("Move Up".equals(e.getActionCommand()) || "Move Down".equals(e.getActionCommand()))
+		else if (Slyum.ACTION_TEXTBOX_UP.equals(e.getActionCommand()) || Slyum.ACTION_TEXTBOX_DOWN.equals(e.getActionCommand()))
 		{
 			int offset = 1;
 
-			if ("Move Up".equals(e.getActionCommand()))
+			if (Slyum.ACTION_TEXTBOX_UP.equals(e.getActionCommand()))
 
 				offset = -1;
 
@@ -362,24 +381,8 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 			component.notifyObservers();
 		}
-		else if (Slyum.ACTION_MOVE_TOP.equals(e.getActionCommand()))
-
-			parent.getClassDiagram().changeZOrder(component, parent.getEntitiesView().size() - 1);
-		
-		else if (Slyum.ACTION_MOVE_UP.equals(e.getActionCommand()))
-
-			parent.getClassDiagram().changeZOrder(component, parent.getEntitiesView().indexOf(this) + 1);
-
-		else if (Slyum.ACTION_MOVE_DOWN.equals(e.getActionCommand()))
-
-			parent.getClassDiagram().changeZOrder(component, parent.getEntitiesView().indexOf(this) - 1);
-
-		else if (Slyum.ACTION_MOVE_BOTTOM.equals(e.getActionCommand()))
-
-			parent.getClassDiagram().changeZOrder(component, 0);
-
 	}
-
+	
 	/**
 	 * Create a new attribute with default type and name.
 	 */
@@ -660,11 +663,20 @@ public abstract class EntityView extends MovableComponent implements Observer
 	@Override
 	public void gMousePressed(MouseEvent e)
 	{
+		pressedTextBox = searchTextBoxAtLocation(e.getPoint());
 		super.gMousePressed(e);
-
+	}
+	
+	/**
+	 * Search and return the Textbox (methods and attributes) at the given location.
+	 * @param location the location where find a TextBox
+	 * @return the found TextBox
+	 */
+	private TextBox searchTextBoxAtLocation(Point location)
+	{
 		final LinkedList<TextBox> tb = getAllTextBox();
 		tb.remove(entityName);
-		pressedTextBox = GraphicView.searchComponentWithPosition(tb, e.getPoint());
+		return GraphicView.searchComponentWithPosition(tb, location);
 	}
 
 	@Override
@@ -698,66 +710,25 @@ public abstract class EntityView extends MovableComponent implements Observer
 	{
 		if (e.isPopupTrigger())
 		{
-			final JMenuItem menuDelete = Utility.findMenuItem(popupMenu, "Delete");
+			String text = "Delete ";
 
-			if (menuDelete != null)
+			// if context menu is requested on a TextBox, customize popup menu.
+			if (pressedTextBox != null)
 			{
-				String text = "Delete ";
-
-				// if context menu is requested on a TextBox, change popup menu.
-				if (pressedTextBox != null)
-				{
-					text += pressedTextBox.getText();
-
-					JMenuItem itemTop;
-					int index = 0;
-
-					if (attributesView.indexOf(pressedTextBox) != 0 && methodsView.indexOf(pressedTextBox) != 0)
-					{
-						itemTop = makeMenuItem("Move Up", "Move Up", "direction_up");
-						popupMenu.add(itemTop, index++);
-					}
-
-					if ((attributesView.size() == 0 || attributesView.indexOf(pressedTextBox) != attributesView.size() - 1) && (methodsView.size() == 0 || methodsView.indexOf(pressedTextBox) != methodsView.size() - 1))
-					{
-						itemTop = makeMenuItem("Move Down", "Move Down", "direction_down");
-						popupMenu.add(itemTop, index++);
-					}
-
-					if (index > 0)
-						popupMenu.add(new JSeparator(), index);
-				}
-				else
-
-					text += component.getName();
-
-				menuDelete.setText(text);
+				text += pressedTextBox.getText();
+				menuItemMoveUp.setEnabled(attributesView.indexOf(pressedTextBox) != 0 && methodsView.indexOf(pressedTextBox) != 0);
+				menuItemMoveDown.setEnabled((attributesView.size() == 0 || attributesView.indexOf(pressedTextBox) != attributesView.size() - 1) && (methodsView.size() == 0 || methodsView.indexOf(pressedTextBox) != methodsView.size() - 1));
 			}
-			
-			super.maybeShowPopup(e, popupMenu);
+			else
+			{
+				text += component.getName();
+				menuItemMoveUp.setEnabled(false);
+				menuItemMoveDown.setEnabled(false);
+			}
+			menuItemDelete.setText(text);
 		}
-		else
-		{
-			JMenuItem menuItem = Utility.findMenuItem(popupMenu, "Move Up");
-			boolean elementRemove = false;
-
-			if (menuItem != null)
-			{
-				popupMenu.remove(menuItem);
-				elementRemove = true;
-			}
-
-			menuItem = Utility.findMenuItem(popupMenu, "Move Down");
-
-			if (menuItem != null)
-			{
-				popupMenu.remove(menuItem);
-				elementRemove = true;
-			}
-
-			if (elementRemove)
-				popupMenu.remove(0);
-		}
+		
+		super.maybeShowPopup(e, popupMenu);
 	}
 
 	/**
@@ -925,7 +896,8 @@ public abstract class EntityView extends MovableComponent implements Observer
 	 */
 	public void regenerateEntity()
 	{
-		setVisible(false);
+		boolean isStopRepaint = parent.getStopRepaint();
+		parent.setStopRepaint(true);
 
 		methodsView.clear();
 		attributesView.clear();
@@ -938,7 +910,9 @@ public abstract class EntityView extends MovableComponent implements Observer
 		for (final Method m : component.getMethods())
 			addMethod(m, false);
 
-		setVisible(true);
+		if (!isStopRepaint)
+			parent.goRepaint();
+		
 		updateHeight();
 	}
 
@@ -1141,7 +1115,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 					break;
 					
 				case UNSELECT:
-					super.setSelected(false);
+			super.setSelected(false);
 					break;
 					
 				case ADD_ATTRIBUTE:

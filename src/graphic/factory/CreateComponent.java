@@ -22,14 +22,11 @@ public abstract class CreateComponent extends GraphicComponent
 {
 	protected ClassDiagram classDiagram;
 
-	public CreateComponent(GraphicView parent, ClassDiagram classDiagram)
+	public CreateComponent(GraphicView parent)
 	{
 		super(parent);
 
-		if (classDiagram == null)
-			throw new IllegalArgumentException("classDiagram is null");
-
-		this.classDiagram = classDiagram;
+		this.classDiagram = parent.getClassDiagram();
 	}
 
 	/**

@@ -78,6 +78,15 @@ public class TextBoxLabelTitle extends TextBoxLabel
 
 		return new Point(posX, posY);
 	}
+	
+	/**
+	 * Get the LineView associed with this TextBoxLabelTitle.
+	 * @return the LineView associed with this TextBoxLabelTitle
+	 */
+	public LineView getLineView()
+	{
+		return relationView;
+	}
 
 	@Override
 	public String getText()
@@ -91,7 +100,7 @@ public class TextBoxLabelTitle extends TextBoxLabel
 		super.gMousePressed(e);
 
 		// remove all selected components TODO : AMELIORE
-		parent.clearAllSelectedComponents();
+		parent.unselectAll();
 
 		relationView.setSelected(true);
 	}

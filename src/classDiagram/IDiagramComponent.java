@@ -17,7 +17,9 @@ public interface IDiagramComponent
 	};
 
 	public void addObserver(Observer o);
-
+	public void deleteObserver(Observer o);
+	public int countObservers();
+	
 	/**
 	 * Get the id of the component.
 	 * 

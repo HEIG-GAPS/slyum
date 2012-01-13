@@ -21,7 +21,6 @@ import java.util.Observer;
 import javax.swing.JMenuItem;
 
 import utility.Utility;
-import change.Change;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Binary;
@@ -39,7 +38,7 @@ public class MultiView extends MovableComponent implements Observer
 {
 	private Rectangle bounds = new Rectangle(50, 50);
 
-	LinkedList<MultiLineView> mlvs = new LinkedList<MultiLineView>();
+	LinkedList<MultiLineView> mlvs = new LinkedList<>();
 
 	private final Multi multi;
 
@@ -66,9 +65,6 @@ public class MultiView extends MovableComponent implements Observer
 		Point middleClass;
 		final Point middle = new Point((int) bounds.getCenterX(), (int) bounds.getCenterY());
 		int xMoy = 0, yMoy = 0;
-
-		final boolean isBlocked = Change.isBlocked();
-		Change.setBlocked(true);
 		
 		for (final Role role : roles)
 		{
@@ -97,8 +93,6 @@ public class MultiView extends MovableComponent implements Observer
 		final JMenuItem menuItem = makeMenuItem("Delete", "Delete", "delete16");
 		popupMenu.add(menuItem);
 		
-		Change.setBlocked(isBlocked);
-		
 		super.pushBufferCreation();
 	}
 	
@@ -119,7 +113,10 @@ public class MultiView extends MovableComponent implements Observer
 
 	public void addMultiLineView(MultiLineView mlv)
 	{
-		this.mlvs.add(mlv);
+		if (mlvs.contains(mlv))
+			return;
+		
+		mlvs.add(mlv);
 		parent.addLineView(mlv);
 	}
 
@@ -158,16 +155,7 @@ public class MultiView extends MovableComponent implements Observer
 	public void connexionRemoved(MultiLineView mlv)
 	{
 		multi.removeRole((Role) mlv.getTextBoxRole().getFirst().getAssociedComponent());
-	}
-
-	@Override
-	public void delete()
-	{
-		super.delete();
-
-		//for (final LineView lv : parent.getLinesViewAssociedWith(this))
-
-			//lv.delete();
+		mlvs.remove(mlv);
 	}
 
 	/**

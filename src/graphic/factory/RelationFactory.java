@@ -12,7 +12,6 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
 import utility.Utility;
-import classDiagram.ClassDiagram;
 
 /**
  * RelationFactory allows to create a new relation view associated with a new
@@ -30,9 +29,9 @@ public abstract class RelationFactory extends ComponentFactory
 	protected Point mouseLocation = new Point();
 	protected BasicStroke stroke = new BasicStroke(1.2f);
 
-	public RelationFactory(GraphicView parent, ClassDiagram classDiagram)
+	public RelationFactory(GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 
 		componentMouseHover = parent;
 	}

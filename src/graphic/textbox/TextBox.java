@@ -292,7 +292,7 @@ public abstract class TextBox extends GraphicComponent
 		g2.setColor(Color.DARK_GRAY);
 		g2.setFont(effectivFont);
 
-		final AttributedString ats = new AttributedString(truncate(g2, text, bounds.width));
+		final AttributedString ats = new AttributedString(truncate(g2, getText(), bounds.width));
 
 		// Draw String
 		if (ats.getIterator().getEndIndex() != 0)

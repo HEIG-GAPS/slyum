@@ -46,7 +46,7 @@ public abstract class MovableComponent extends GraphicComponent
 			public void gMousePressed(MouseEvent e)
 			{
 				if (!g.isSelected())
-					parent.clearAllSelectedComponents();
+					parent.unselectAll();
 
 				g.setSelected(true);
 				super.gMousePressed(e);
@@ -66,7 +66,7 @@ public abstract class MovableComponent extends GraphicComponent
 			public void gMousePressed(MouseEvent e)
 			{
 				if (!g.isSelected())
-					parent.clearAllSelectedComponents();
+					parent.unselectAll();
 
 				g.setSelected(true);
 				super.gMousePressed(e);
@@ -160,7 +160,7 @@ public abstract class MovableComponent extends GraphicComponent
 		if (!e.isControlDown()) // If ctrl is not down, unselect all component
 		// except this one.
 		{
-			parent.clearAllSelectedComponents();
+			parent.unselectAll();
 			setSelected(true);
 		}
 		else // If control is down, inverse the current selected state of this
@@ -207,7 +207,7 @@ public abstract class MovableComponent extends GraphicComponent
 
 		if (!parent.getSelectedComponents().contains(this) && !e.isControlDown())
 
-			parent.clearAllSelectedComponents();
+			parent.unselectAll();
 
 		if (!isSelected()) // Select the component, see doc for know how
 		// component are selected.
@@ -230,6 +230,7 @@ public abstract class MovableComponent extends GraphicComponent
 	{
 		super.gMouseReleased(e);
 
+		boolean isRecord = Change.isRecord();
 		Change.record();
 		
 		// Confirm the ghost translation for all selected component.
@@ -237,7 +238,8 @@ public abstract class MovableComponent extends GraphicComponent
 
 			c.apply(e);
 		
-		Change.stopRecord();
+		if (!isRecord);
+			Change.stopRecord();
 	}
 
 	@Override

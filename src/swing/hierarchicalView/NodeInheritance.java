@@ -9,12 +9,12 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import swing.hierarchicalView.IClassDiagramNode;
-import swing.hierarchicalView.ICustomizedIconNode;
+import swing.Slyum;
 import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Inheritance;
+import swing.PanelClassDiagram;
 
 /**
  * A JTree node associated with an inheritance.
@@ -39,7 +39,7 @@ public class NodeInheritance extends DefaultMutableTreeNode implements ICustomiz
 	 */
 	public static String generateName(Inheritance inheritance)
 	{
-		return inheritance.getChild().getName() + " - " + inheritance.getParent().getName();
+		return inheritance.toString();
 	}
 
 	private final Inheritance inheritance;
@@ -83,7 +83,7 @@ public class NodeInheritance extends DefaultMutableTreeNode implements ICustomiz
 	@Override
 	public ImageIcon getCustomizedIcon()
 	{
-		return PersonalizedIcon.createImageIcon("resources/icon/generalize16.png");
+		return PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "generalize16.png");
 	}
 
 	@Override
@@ -106,7 +106,12 @@ public class NodeInheritance extends DefaultMutableTreeNode implements ICustomiz
 		else
 		{
 			setUserObject(generateName(inheritance));
-			treeModel.reload(getParent());
+			treeModel.reload(this);
 		}
+	}
+	
+	@Override
+	public void remove()
+	{
 	}
 }

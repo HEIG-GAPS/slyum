@@ -54,7 +54,7 @@ public class Dependency extends Observable implements IDiagramComponent, ILabelT
 		init(source, target);
 
 		this.id = id;
-	}
+	}	
 
 	@Override
 	public int getId()
@@ -146,6 +146,12 @@ public class Dependency extends Observable implements IDiagramComponent, ILabelT
 		this.target = target;
 
 		setChanged();
+	}
+
+	@Override
+	public String toString()
+	{
+		return getLabel();
 	}
 
 	@Override

@@ -7,7 +7,6 @@ import graphic.entity.EntityView;
 
 import java.awt.Rectangle;
 
-import classDiagram.ClassDiagram;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Visibility;
 
@@ -32,9 +31,9 @@ public class ClassFactory extends EntityFactory
 	 * @param classDiagram
 	 *            the class diagram
 	 */
-	public ClassFactory(GraphicView parent, ClassDiagram classDiagram)
+	public ClassFactory(GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 	}
 
 	@Override

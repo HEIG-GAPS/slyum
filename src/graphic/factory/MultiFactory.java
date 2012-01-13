@@ -23,9 +23,9 @@ import java.util.LinkedList;
 
 import javax.swing.JButton;
 
+import swing.Slyum;
 import utility.PersonalizedIcon;
 import change.Change;
-import classDiagram.ClassDiagram;
 import classDiagram.components.ClassEntity;
 import classDiagram.relationships.Multi;
 
@@ -43,7 +43,7 @@ public class MultiFactory extends CreateComponent
 {
 	private final JButton[] buttons = new JButton[2];
 	private ClassView classMouseHover = null;
-	private final LinkedList<ClassView> classSelected = new LinkedList<ClassView>();
+	private final LinkedList<ClassView> classSelected = new LinkedList<>();
 	private final KeyAdapter keyListener;
 	private boolean onButton = false;
 
@@ -57,11 +57,11 @@ public class MultiFactory extends CreateComponent
 	 * @param classDiagram
 	 *            the class diagram
 	 */
-	public MultiFactory(final GraphicView parent, ClassDiagram classDiagram)
+	public MultiFactory(final GraphicView parent)
 	{
-		super(parent, classDiagram);
+		super(parent);
 
-		parent.clearAllSelectedComponents();
+		parent.unselectAll();
 
 		parent.getScene().repaint();
 
@@ -82,7 +82,7 @@ public class MultiFactory extends CreateComponent
 			}
 		};
 
-		buttons[0] = new JButton(PersonalizedIcon.createImageIcon("resources/icon/tick.png"));
+		buttons[0] = new JButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "tick.png"));
 		buttons[0].setBounds(10, 10, 66, 42);
 		buttons[0].addMouseListener(ma);
 		buttons[0].setEnabled(false);
@@ -165,9 +165,19 @@ public class MultiFactory extends CreateComponent
 	{
 		MultiView mv;
 		
-		Change.record();
+		boolean isRecord = Change.isRecord();
+		boolean isStopRepaint = gv.getStopRepaint();
+		
+		Change.record();		
+		gv.setStopRepaint(true);
+		
 		mv = new MultiView(gv, m);
-		Change.stopRecord();
+		
+		if (!isStopRepaint)
+			gv.goRepaint();
+		
+		if (!isRecord)
+			Change.stopRecord();
 
 		return mv;
 	}

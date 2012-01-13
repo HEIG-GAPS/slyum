@@ -50,6 +50,7 @@ import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Method;
 import classDiagram.components.PrimitiveType;
+import classDiagram.components.Type;
 import classDiagram.components.Variable;
 import classDiagram.components.Visibility;
 
@@ -500,7 +501,7 @@ public class EntityPropreties extends GlobalPropreties
 			if (currentMethod == null)
 				return;
 
-			currentMethod.addParameter(new Variable("parameter", PrimitiveType.INTEGER_TYPE));
+			currentMethod.addParameter(new Variable("p", new Type(PrimitiveType.INTEGER_TYPE.getName())));
 			currentMethod.notifyObservers();
 			currentMethod.select();
 			currentMethod.notifyObservers(UpdateMessage.SELECT);
@@ -780,21 +781,21 @@ public class EntityPropreties extends GlobalPropreties
 		if (Slyum.getSmallIcons())
 			small = "_small.png";
 			
-		btnAddParameters = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE, "Add");
-		btnRemoveMethod = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED, "Remove");
-		btnRemoveAttribute = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED, "Remove");
-		btnUpAttribute = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_up" + small), null,Color.MAGENTA, "Up");
-		btnDownAttribute = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_down" + small), null,Color.MAGENTA, "Down");
-		btnUpMethod = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_up" + small), null,Color.MAGENTA, "Up");
-		btnDownMethod = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_down" + small), null,Color.MAGENTA, "Down");
-		btnRemoveParameters = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_red_delete" + small), null,Color.RED, "Remove");
-		btnRightParameters = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_right" + small), null,Color.MAGENTA, "Rigth");
-		btnLeftParameters = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_violet_left" + small), null,Color.MAGENTA, "Left");
+		btnAddParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_plus_blue" + small), Color.BLUE, "Add");
+		btnRemoveMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_red_delete" + small), Color.RED, "Remove");
+		btnRemoveAttribute = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_red_delete" + small), Color.RED, "Remove");
+		btnUpAttribute = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_violet_up" + small), Color.MAGENTA, "Up");
+		btnDownAttribute = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_violet_down" + small), Color.MAGENTA, "Down");
+		btnUpMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_violet_up" + small), Color.MAGENTA, "Up");
+		btnDownMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_violet_down" + small), Color.MAGENTA, "Down");
+		btnRemoveParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_red_delete" + small), Color.RED, "Remove");
+		btnRightParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_violet_right" + small), Color.MAGENTA, "Rigth");
+		btnLeftParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_violet_left" + small), Color.MAGENTA, "Left");
 		
-		imgNoAttribute = new JLabel(PersonalizedIcon.createImageIcon("resources/icon/empty_attribute.png"));
-		imgNoMethod = new JLabel(PersonalizedIcon.createImageIcon("resources/icon/empty_method.png"));
-		imgMethodSelected = new JLabel(PersonalizedIcon.createImageIcon("resources/icon/select_method.png"));
-		imgNoParameter = new JLabel(PersonalizedIcon.createImageIcon("resources/icon/empty_parameter.png"));
+		imgNoAttribute = new JLabel(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "empty_attribute.png"));
+		imgNoMethod = new JLabel(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "empty_method.png"));
+		imgMethodSelected = new JLabel(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "select_method.png"));
+		imgNoParameter = new JLabel(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "empty_parameter.png"));
 
 		imgNoMethod.setAlignmentX(CENTER_ALIGNMENT);
 		imgNoAttribute.setAlignmentX(CENTER_ALIGNMENT);
@@ -904,7 +905,7 @@ public class EntityPropreties extends GlobalPropreties
 		panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.PAGE_AXIS));
 
 		{
-			final JButton button = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE, "Add");
+			final JButton button = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_plus_blue" + small), Color.BLUE, "Add");
 			button.setBorderPainted(false);
 			button.setContentAreaFilled(false);
 			button.setAlignmentX(CENTER_ALIGNMENT);
@@ -1025,7 +1026,7 @@ public class EntityPropreties extends GlobalPropreties
 		panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.PAGE_AXIS));
 		panelButton.setOpaque(false);
 		{
-			final JButton button = new SButton(PersonalizedIcon.createImageIcon("resources/icon/button_plus_blue" + small), null, Color.BLUE, "Add");
+			final JButton button = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_plus_blue" + small), Color.BLUE, "Add");
 			button.setBorderPainted(false);
 			button.setContentAreaFilled(false);
 			button.setAlignmentX(CENTER_ALIGNMENT);

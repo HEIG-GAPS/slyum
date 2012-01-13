@@ -1,27 +1,13 @@
 package swing;
 
 import graphic.GraphicView;
-import graphic.factory.AggregationFactory;
-import graphic.factory.AssociationClassFactory;
-import graphic.factory.BinaryFactory;
-import graphic.factory.ClassFactory;
-import graphic.factory.CompositionFactory;
-import graphic.factory.DependencyFactory;
-import graphic.factory.InheritanceFactory;
-import graphic.factory.InnerClassFactory;
-import graphic.factory.InterfaceFactory;
-import graphic.factory.LineCommentaryFactory;
-import graphic.factory.MultiFactory;
-import graphic.factory.NoteFactory;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
@@ -37,12 +23,13 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.SwingWorker;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.SAXException;
 
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.PropretiesChanger;
@@ -61,7 +48,7 @@ import classDiagram.ClassDiagram;
  * @version 1.0 - 25.07.2011
  */
 @SuppressWarnings("serial")
-public class PanelClassDiagram extends JPanel implements ActionListener
+public class PanelClassDiagram extends JPanel
 {
 	private static PanelClassDiagram instance = new PanelClassDiagram();
 
@@ -76,7 +63,6 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 
 	private final GraphicView graphicView;
 	
-	private SPanelUndoRedo panelUndoRedo;
 	private SSlider sSlider;
 
 	private PanelClassDiagram()
@@ -90,12 +76,21 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		JPanel panelToolBar = new JPanel();
 		panelToolBar.setLayout(new BoxLayout(panelToolBar, BoxLayout.LINE_AXIS));
 
-		panelToolBar.add(new SPanelFileComponent());
-		panelToolBar.add(panelUndoRedo = new SPanelUndoRedo());
+		panelToolBar.add(SPanelFileComponent.getInstance());
+		panelToolBar.add(SPanelUndoRedo.getInstance());
 		panelToolBar.add(SPanelElement.getInstance());
 		panelToolBar.add(SPanelStyleComponent.getInstance());
 		panelToolBar.add(SPanelZOrder.getInstance());
-		panelToolBar.add(sSlider = new SSlider(Color.YELLOW, 200));
+		panelToolBar.add(sSlider = new SSlider(Color.YELLOW, 100, 50, 200){
+
+			@Override
+			public void setValue(int value)
+			{
+				super.setValue(value);
+				getCurrentGraphicView().repaint();
+			}			
+		});
+		
 		add(panelToolBar, BorderLayout.PAGE_START);
 
 		final SSplitPane mainSplitPane = new SSplitPane(JSplitPane.VERTICAL_SPLIT, graphicView.getScrollPane(), PropretiesChanger.getInstance());
@@ -105,7 +100,7 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
 		
-		leftPanel.add(new SPanelDiagramComponent());
+		leftPanel.add(SPanelDiagramComponent.getInstance());
 		leftPanel.add(new HierarchicalView(getClassDiagram()));
 		
 		final SSplitPane leftSplitPanel = new SSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, mainSplitPane);
@@ -115,88 +110,6 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		graphicView.getScene().setMinimumSize(new Dimension(200, 150));
 
 		add(leftSplitPanel, BorderLayout.CENTER);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e)
-	{
-		if (Slyum.ACTION_NEW_CLASS.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new ClassFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_INTERFACE.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new InterfaceFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_GENERALIZE.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new InheritanceFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_INNER_CLASS.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new InnerClassFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_DEPENDENCY.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new DependencyFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_ASSOCIATION.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new BinaryFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_AGGREGATION.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new AggregationFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_COMPOSITION.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new CompositionFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_CLASS_ASSOCIATION.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new AssociationClassFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_MULTI.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new MultiFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_NEW_NOTE.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new NoteFactory(graphicView, classDiagram));
-
-		else if (Slyum.ACTION_EXPORT.equals(e.getActionCommand()))
-			exportAsImage();
-
-		else if (Slyum.ACTION_ALIGN_TOP.equals(e.getActionCommand()))
-			graphicView.alignHorizontal(true);
-
-		else if (Slyum.ACTION_ALIGN_BOTTOM.equals(e.getActionCommand()))
-			graphicView.alignHorizontal(false);
-
-		else if (Slyum.ACTION_ALIGN_LEFT.equals(e.getActionCommand()))
-			graphicView.alignVertical(true);
-
-		else if (Slyum.ACTION_ALIGN_RIGHT.equals(e.getActionCommand()))
-			graphicView.alignVertical(false);
-
-		else if (Slyum.ACTION_PRINT.equals(e.getActionCommand()))
-			initPrinting();
-
-		else if (Slyum.ACTION_SAVE.equals(e.getActionCommand()))
-			saveToXML(false);
-
-		else if (Slyum.ACTION_SAVE_AS.equals(e.getActionCommand()))
-			saveToXML(true);
-
-		else if (Slyum.ACTION_OPEN.equals(e.getActionCommand()))
-			openFromXML();
-
-		else if (Slyum.ACTION_NEW_PROJECT.equals(e.getActionCommand()))
-			newProject();
-
-		else if (Slyum.ACTION_ADJUST_WIDTH.equals(e.getActionCommand()))
-			graphicView.adjustWidthSelectedEntities();
-
-		else if (Slyum.ACTION_UNDO.equals(e.getActionCommand()))
-			Change.undo();
-
-		else if (Slyum.ACTION_REDO.equals(e.getActionCommand()))
-			Change.redo();
-
-		else if (Slyum.ACTION_NEW_LINK_NOTE.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new LineCommentaryFactory(graphicView, classDiagram));
-		
-		else if (Slyum.ACTION_KLIPPER.equals(e.getActionCommand()))
-			graphicView.initNewComponent(new LineCommentaryFactory(graphicView, classDiagram));
 	}
 
 	/**
@@ -277,12 +190,12 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 	
 	public JButton getRedoButton()
 	{
-		return panelUndoRedo.getRedoButton();
+		return SPanelUndoRedo.getInstance().getRedoButton();
 	}
 	
 	public JButton getUndoButton()
 	{
-		return panelUndoRedo.getUndoButton();
+		return SPanelUndoRedo.getInstance().getUndoButton();
 	}
 
 	/**
@@ -378,11 +291,15 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 	{
 		if (!askForSave())
 			return;
-
+		
+		cleanApplication();
+	}
+	
+	public void cleanApplication()
+	{
 		classDiagram.removeAll();
 		graphicView.removeAll();
 		setCurrentFile(null);
-		Change.setHasChange(false);
 	}
 	
 	public void setCurrentFile(File file)
@@ -416,7 +333,7 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 	}
 	
 	public void openFromXML(final File file)
-	{
+	{		
 		final String extension = Utility.getExtension(file);
 
 		if (!file.exists())
@@ -432,92 +349,58 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		}
 
 		final SAXParserFactory factory = SAXParserFactory.newInstance();
-		final SAXParser parser;
+
+		graphicView.setStopRepaint(true);
 		
-		try
-		{
-			parser = factory.newSAXParser();
+		final boolean isBlocked = Change.isBlocked();
+		Change.setBlocked(true);
 
-			final SDialogProjectLoading dpl = new SDialogProjectLoading(file.getPath());
+		final SDialogProjectLoading dpl = new SDialogProjectLoading(file.getPath());
+		dpl.addWindowListener(new WindowAdapter() {
 			
-			final DefaultHandler handler = new XMLParser(classDiagram, graphicView, dpl);
+			@Override
+			public void windowClosed(WindowEvent e)
+			{
+				cleanApplication();
+			}
+		});
+
+		SwingUtilities.invokeLater(new Runnable() {
 			
-			SwingWorker<Void, Void> sw = new SwingWorker<Void, Void>(){
-				
-				@Override
-				protected Void doInBackground() throws Exception
+			@Override
+			public void run() 
+			{
+				try
 				{
-					try
-					{
-						dpl.addComponentListener(new ComponentAdapter() 
-						{
-							@Override
-							public void componentHidden(ComponentEvent e)
-							{
-								cancel(true);
-							}
-						});
-						graphicView.setVisible(false);
-						
-						parser.parse(file, handler);
+					SAXParser parser = factory.newSAXParser();
+					XMLParser handler = new XMLParser(classDiagram, graphicView, dpl);
+					parser.parse(file, handler);
 
-						if (isCancelled())
-						{
-							classDiagram.removeAll();
-							graphicView.removeAll();
-						}
-						
-						graphicView.setVisible(true);
-						
-						dpl.setVisible(false);
-						
-					} catch (final Exception e)
-					{
-						showErrorImportationMessage(e);
-					}
-					
-					return null;
-				}				
-			};
-
-
-			final boolean isBlocked = Change.isBlocked();
-			Change.setBlocked(true);
-			sw.execute();
-			
-			if (dpl != null)
-				dpl.setVisible(true);
-
-			Change.setBlocked(isBlocked);
-			
-			//new Thread(new Runnable() {
-				
-				//@Override
-				//public void run()
-				{/*
-					try
-					{
-						Change.setBlocked(true);
-						
-						parser.parse(file, handler);
-						
-						Change.setBlocked(false);
-						
-						dpl.setVisible(false);
-						
-					} catch (final Exception e)
-					{
-						showErrorImportationMessage(e);
-					}*/
+					handler.createDiagram();
 				}
-			//}).start();
+				catch (ParserConfigurationException | SAXException | IOException e)
+				{
+					showErrorImportationMessage(e);
+				}
 				
-			setCurrentFile(file);
-			Change.setHasChange(false);
-		} catch (final Exception e)
-		{
-			showErrorImportationMessage(e);
-		}
+				Change.setBlocked(isBlocked);
+				
+				setCurrentFile(file);
+				Change.setHasChange(false);
+				dpl.setVisible(false);
+			}
+		});
+
+		dpl.setVisible(true);
+		
+		SwingUtilities.invokeLater(new Runnable() {
+
+			@Override
+			public void run()
+			{
+				graphicView.paintBackgroundFirst();
+			}
+		});
 	}
 
 	/**
@@ -679,9 +562,7 @@ public class PanelClassDiagram extends JPanel implements ActionListener
 		
 		e.printStackTrace();
 
-		classDiagram.removeAll();
-		graphicView.removeAll();
-
+		cleanApplication();
 		graphicView.setVisible(true);
 	}
 

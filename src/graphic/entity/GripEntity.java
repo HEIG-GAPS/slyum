@@ -44,13 +44,15 @@ public abstract class GripEntity extends SquareGrip
 		final Rectangle repaintBounds = new Rectangle(getBounds());
 		repaintBounds.grow(10, 10);
 
+		boolean isRecord = Change.isRecord();
 		Change.record();
 		
 		for (final GraphicComponent c : parent.getSelectedComponents())
 			
 			c.apply(e);
 		
-		Change.stopRecord();
+		if (!isRecord)
+			Change.stopRecord();
 
 		parent.getScene().repaint(repaintBounds);
 	}

@@ -18,13 +18,13 @@ import classDiagram.relationships.Role;
  * @version 1.0 - 24.07.2011
  */
 public abstract class Entity extends Type
-{
+{	
 	private boolean _isAbstract = false;
-	protected LinkedList<Attribute> attributes = new LinkedList<Attribute>();
-	protected List<Inheritance> childs = new LinkedList<Inheritance>();
-	protected LinkedList<Method> methods = new LinkedList<Method>();
-	protected List<Inheritance> parents = new LinkedList<Inheritance>();
-	protected List<Role> roles = new LinkedList<Role>();
+	protected LinkedList<Attribute> attributes = new LinkedList<>();
+	protected List<Inheritance> childs = new LinkedList<>();
+	protected LinkedList<Method> methods = new LinkedList<>();
+	protected List<Inheritance> parents = new LinkedList<>();
+	protected List<Role> roles = new LinkedList<>();
 
 	protected String stereotype = "";
 
@@ -136,6 +136,20 @@ public abstract class Entity extends Type
 		roles.add(role);
 
 		setChanged();
+	}
+	
+	public int countStaticMethods()
+	{
+		int i = 0;
+		for (Method m : getMethods())
+			if (m.isStatic()) i++;
+		
+		return i;
+	}
+	
+	public boolean isEveryMethodsStatic()
+	{
+		return getMethods().size() - countStaticMethods() == 0;
 	}
 
 	public LinkedList<Entity> getAllChilds()
@@ -455,7 +469,7 @@ public abstract class Entity extends Type
 	{
 		final String tab = Utility.generateTab(depth);
 
-		String xml = tab + "<entity " + "id=\"" + getId() + "\" " + "name=\"" + name + "\" " + "visibility=\"" + visibility + "\" " + "entityType=\"" + getEntityType() + "\" " + "isAbstract=\"" + isAbstract() + "\" ";
+		String xml = tab + "<entity " + "id=\"" + getId() + "\" " + "name=\"" + super.toXML(0) + "\" " + "visibility=\"" + visibility + "\" " + "entityType=\"" + getEntityType() + "\" " + "isAbstract=\"" + isAbstract() + "\" ";
 
 		if (attributes.size() == 0 && methods.size() == 0 && getLastBalise(depth).isEmpty())
 			return xml + "/>";
