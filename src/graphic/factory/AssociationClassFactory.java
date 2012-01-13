@@ -88,7 +88,7 @@ public class AssociationClassFactory extends RelationFactory
 				Change.stopRecord();
 			
 			parent.addEntity(acv);
-			classDiagram.addClass(ac);
+			classDiagram.addAssociationClass(ac);
 		}
 
 		repaint();

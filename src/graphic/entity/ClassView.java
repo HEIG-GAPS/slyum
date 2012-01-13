@@ -43,8 +43,13 @@ public class ClassView extends EntityView
 		super.restore();
 		
 		parent.addEntity(this);
-		parent.getClassDiagram().addClass((ClassEntity)getAssociedComponent());
+		restoreEntity();
 		
 		repaint();
+	}
+	
+	protected void restoreEntity()
+	{
+		parent.getClassDiagram().addClass((ClassEntity)getAssociedComponent());
 	}
 }

@@ -83,6 +83,8 @@ import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Role;
+import java.awt.image.renderable.RenderableImageProducer;
+import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 
 /**
@@ -1607,6 +1609,10 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		if (e.getKeyCode() == KeyEvent.VK_DELETE)
 	
 			deleteSelectedComponents();
+		
+		else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+			
+			unselectAll();
 	}
 
 	@Override
@@ -1647,8 +1653,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 		Rectangle b = tbc.getBounds();
 		Rectangle loc = getScene().getVisibleRect();
 		
-		b.x = (int)loc.getCenterX();
-		b.y = (int)loc.getCenterY();
+		b.x = (int)(loc.getCenterX() * getInversedScale());
+		b.y = (int)(loc.getCenterY() * getInversedScale());
 				
 		tbc.setBounds(b);
 		

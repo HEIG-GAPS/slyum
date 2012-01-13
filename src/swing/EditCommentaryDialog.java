@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -12,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import utility.Utility;
 
 /**
  * This dialog display a JTextEdit for edit the content of a TextBoxCommentary.
@@ -36,6 +38,16 @@ public class EditCommentaryDialog extends JDialog
 		setTitle("Slyum - Commentary editor");
 		setResizable(false);
 		setBounds(100, 100, 513, 107);
+		Utility.setRootPaneActionOnEsc(getRootPane(), new AbstractAction() {
+		
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e)
+            {
+            	setVisible(false);
+            }
+		});
+		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -81,7 +93,8 @@ public class EditCommentaryDialog extends JDialog
 				buttonPane.add(cancelButton);
 			}
 		}
-		setLocationRelativeTo(null);
+		
+		setLocationRelativeTo(PanelClassDiagram.getInstance());
 	}
 
 	public String getText()
