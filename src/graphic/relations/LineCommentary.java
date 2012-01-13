@@ -120,7 +120,7 @@ public class LineCommentary extends LineView
 		
 		notifyNoteProperties();
 	}
-	
+
 	private void notifyNoteProperties()
 	{
 		NoteProperties np = NoteProperties.getInstance();

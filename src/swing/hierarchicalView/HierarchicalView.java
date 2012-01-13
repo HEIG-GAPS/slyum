@@ -88,14 +88,12 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 
 		treeModel = new DefaultTreeModel(root)
 		{
-
 			@Override
 			public void removeNodeFromParent(MutableTreeNode node)
 			{
 				((IClassDiagramNode)node).remove();
 				super.removeNodeFromParent(node);
 			}
-			
 		};
 		tree = new JTree(treeModel);
 
