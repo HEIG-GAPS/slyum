@@ -91,10 +91,15 @@ public class AssociationClassView extends ClassView
 	@Override
 	public void restore()
 	{
-		parent.addEntity(this);
-		parent.getClassDiagram().addAssociationClass((AssociationClass)getAssociedComponent());
+		super.restore();
 		acl.restore();
-		
-		repaint();
 	}
+
+	@Override
+	protected void restoreEntity()
+	{
+		parent.getClassDiagram().addAssociationClass((AssociationClass)getAssociedComponent());
+	}
+	
+	
 }
