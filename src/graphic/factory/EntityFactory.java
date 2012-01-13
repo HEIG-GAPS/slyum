@@ -27,7 +27,7 @@ import java.awt.event.MouseEvent;
  */
 public abstract class EntityFactory extends ComponentFactory
 {
-	public final static Dimension DEFAULT_SIZE = new Dimension(150, 41);
+	public final static Dimension DEFAULT_SIZE = new Dimension(150, 61);
 	private final Rectangle bounds;
 
 	public EntityFactory(GraphicView parent)

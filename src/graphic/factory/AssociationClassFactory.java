@@ -1,5 +1,6 @@
 package graphic.factory;
 
+import change.Change;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.AssociationClassView;
@@ -58,8 +59,15 @@ public class AssociationClassFactory extends RelationFactory
 			final ClassView target = (ClassView) componentMouseReleased;
 
 			ac = new AssociationClass("AssociationClass", Visibility.PUBLIC, (Entity) source.getAssociedComponent(), (Entity) target.getAssociedComponent());
+			
+			boolean isRecord = Change.isRecord();
+			Change.record();
+			
 			acv = new AssociationClassView(parent, ac, source, target, (Point) mousePressed.clone(), (Point) mouseReleased.clone(), bounds);
 
+			if (!isRecord)
+				Change.stopRecord();
+			
 			parent.addEntity(acv);
 			classDiagram.addAssociationClass(ac);
 
@@ -70,8 +78,15 @@ public class AssociationClassFactory extends RelationFactory
 
 			final Rectangle bounds = new Rectangle(mouseReleased.x, mouseReleased.y, EntityFactory.DEFAULT_SIZE.width, EntityFactory.DEFAULT_SIZE.height - 5);
 			ac = new AssociationClass("AssociationClass", Visibility.PUBLIC, (Binary) componentMousePressed.getAssociedComponent());
+			
+			boolean isRecord = Change.isRecord();
+			Change.record();
+			
 			acv = new AssociationClassView(parent, ac, (BinaryView) componentMousePressed, bounds);
 
+			if (!isRecord)
+				Change.stopRecord();
+			
 			parent.addEntity(acv);
 			classDiagram.addClass(ac);
 		}
@@ -85,5 +100,4 @@ public class AssociationClassFactory extends RelationFactory
 	{
 		SMessageDialog.showErrorMessage(ERROR_CREATION_MESSAGE);
 	}
-
 }

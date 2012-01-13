@@ -127,7 +127,9 @@ public class InheritanceView extends RelationView
 	@Override
 	public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu)
 	{
-		menuItemOI.setEnabled(!inheritance.getParent().isEveryMethodsStatic());
+		if (menuItemOI != null)
+			menuItemOI.setEnabled(!inheritance.getParent().isEveryMethodsStatic());
+		
 		super.maybeShowPopup(e, popupMenu);
 	}
 

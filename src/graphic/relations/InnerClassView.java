@@ -9,6 +9,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 
 import classDiagram.relationships.Inheritance;
+import java.awt.event.MouseEvent;
+import javax.swing.JPopupMenu;
 
 public class InnerClassView extends InheritanceView
 {

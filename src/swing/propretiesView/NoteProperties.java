@@ -10,6 +10,7 @@ import javax.swing.JList;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -30,6 +31,9 @@ import swing.Slyum;
 import utility.PersonalizedIcon;
 import javax.swing.border.EmptyBorder;
 import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import swing.JPanelRounded;
 
 public class NoteProperties extends GlobalPropreties
@@ -50,13 +54,16 @@ public class NoteProperties extends GlobalPropreties
 
 	public NoteProperties()
 	{
-		setBorder(new EmptyBorder(5, 10, 10, 10));
+		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		JPanel p = new JPanel();
+		
+		p.setBorder(new EmptyBorder(5, 10, 10, 10));
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
-		setLayout(gridBagLayout);
+		p.setLayout(gridBagLayout);
 		
 		JPanelRounded panel = new JPanelRounded();
 		panel.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -65,11 +72,10 @@ public class NoteProperties extends GlobalPropreties
 		gbc_panel.insets = new Insets(0, 0, 0, 5);
 		gbc_panel.gridx = 0;
 		gbc_panel.gridy = 0;
-		add(panel, gbc_panel);
+		p.add(panel);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setPreferredSize(new Dimension(200, 0));
 		panel.add(scrollPane);
 		
 		list = new JList<>();
@@ -106,32 +112,56 @@ public class NoteProperties extends GlobalPropreties
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				int i = list.getSelectedIndex();
+				final int i = list.getSelectedIndex();
 
 				for (LineCommentary lc : list.getSelectedValuesList())
 					lc.delete();
 				
 				updateComponentInformations(null);
 				
-				if (i >= list.getModel().getSize())
-					i--;
-				
-				list.setSelectedIndex(i);
+				SwingUtilities.invokeLater(new Runnable() {
+
+					@Override
+					public void run()
+					{
+						int j = i;
+						if (i >= list.getModel().getSize())
+							j--;
+
+						list.setSelectedIndex(j);
+					}
+				});
 			}
 		});
 		btnDelete.setEnabled(false);
 		panel.add(btnDelete);
+		
+		add(p);
 	}
 
 	@Override
 	public void updateComponentInformations(UpdateMessage msg)
 	{
-		list.setModel(new ListLineCommentaryModel());
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run()
+			{
+				list.setModel(new ListLineCommentaryModel());
+			}
+		});
 	}
 	
-	public void setSelectedItem(LineCommentary lc)
+	public void setSelectedItem(final LineCommentary lc)
 	{
-		list.setSelectedValue(lc, true);
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run()
+			{
+				list.setSelectedValue(lc, true);
+			}
+		});
 	}
 	
 	private class ListLineCommentaryModel extends AbstractListModel<LineCommentary>
