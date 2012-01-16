@@ -1834,29 +1834,53 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 			current = 0; max = -1;
 		}
 		
+		boolean isRecord = Change.isRecord();
+		Change.record();
+		
 		for (EntityView ev : evsSorted)
 			getClassDiagram().changeZOrder(ev.getComponent(), getEntitiesView().indexOf(ev) + 1);
+		
+		if (!isRecord)
+			Change.stopRecord();
 	}
 	
 	public void moveZOrderDownSelectedEntities()
 	{
+		boolean isRecord = Change.isRecord();
+		Change.record();
+		
 		for (EntityView ev : getSelectedEntities())
 			
 			getClassDiagram().changeZOrder(ev.getComponent(), getEntitiesView().indexOf(ev) - 1);
+		
+		if (!isRecord)
+			Change.stopRecord();
 	}
 	
 	public void moveZOrderTopSelectedEntities()
 	{
+		boolean isRecord = Change.isRecord();
+		Change.record();
+		
 		for (EntityView ev : getSelectedEntities())
 			
 			getClassDiagram().changeZOrder(ev.getComponent(), getEntitiesView().size() - 1);
+		
+		if (!isRecord)
+			Change.stopRecord();
 	}
 	
 	public void moveZOrderBottomSelectedEntities()
 	{
+		boolean isRecord = Change.isRecord();
+		Change.record();
+		
 		for (EntityView ev : getSelectedEntities())
 			
 			getClassDiagram().changeZOrder(ev.getComponent(), 0);
+		
+		if (!isRecord)
+			Change.stopRecord();
 	}
 	
 	protected MouseEvent adapteMouseEvent(MouseEvent e)

@@ -1,5 +1,9 @@
 package classDiagram;
 
+import change.BufferAttribute;
+import change.BufferIndex;
+import change.BufferZOrder;
+import change.Change;
 import java.util.LinkedList;
 
 import utility.Utility;
@@ -34,10 +38,10 @@ public class ClassDiagram implements IComponentsObserver
 		return ++currentID;
 	}
 
-	LinkedList<IDiagramComponent> components = new LinkedList<IDiagramComponent>();
-	LinkedList<Entity> entities = new LinkedList<Entity>();
+	LinkedList<IDiagramComponent> components = new LinkedList<>();
+	LinkedList<Entity> entities = new LinkedList<>();
 	private String name;
-	LinkedList<IComponentsObserver> observers = new LinkedList<IComponentsObserver>();
+	LinkedList<IComponentsObserver> observers = new LinkedList<>();
 
 	/**
 	 * Creates a new class diagram with the specified name.
@@ -189,9 +193,13 @@ public class ClassDiagram implements IComponentsObserver
 	{
 		if (index < 0 || index >= entities.size())
 			return;
+		
+		Change.push(new BufferZOrder(entity, entities.indexOf(entity)));
 
 		entities.remove(entity);
 		entities.add(index, entity);
+		
+		Change.push(new BufferZOrder(entity, index));
 
 		for (final IComponentsObserver c : observers)
 			c.changeZOrder(entity, index);
