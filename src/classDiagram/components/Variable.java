@@ -1,5 +1,7 @@
 package classDiagram.components;
 
+import change.BufferVariable;
+import change.Change;
 import java.util.Observable;
 
 import utility.Utility;
@@ -25,7 +27,7 @@ public class Variable extends Observable implements IDiagramComponent
 
 	protected final int id = ClassDiagram.getNextId();
 	protected String name;
-	protected Type type;
+	protected Type type = PrimitiveType.VOID_TYPE;
 
 	/**
 	 * Create a new variable with the given name and type.
@@ -37,16 +39,39 @@ public class Variable extends Observable implements IDiagramComponent
 	 */
 	public Variable(String name, Type type)
 	{
+		boolean isBlocked = Change.isBlocked();
+		Change.setBlocked(true);
+		
 		if (!setName(name))
 			throw new IllegalArgumentException("semantic name incorrect");
 		
 		setType(type);
+		
+		Change.setBlocked(isBlocked);
 	}
 	
+	/**
+	 * Constructor of copy.
+	 * @param variable variable
+	 */
 	public Variable(Variable variable)
 	{
 		this.name = variable.name;
-		this.type = variable.type;
+		this.type = new Type(variable.type.getName());
+	}
+	
+	public void setVariable(Variable variable)
+	{
+		boolean isRecord = Change.isRecord();
+		Change.record();
+		
+		setName(variable.getName());
+		setType(variable.getType());
+		
+		if(!isRecord)
+			Change.stopRecord();
+		
+		notifyObservers();
 	}
 
 	@Override
@@ -91,10 +116,13 @@ public class Variable extends Observable implements IDiagramComponent
 	 */
 	public boolean setName(String name)
 	{
-		if (!checkSemantic(name))
+		if (!checkSemantic(name) || name.equals(getName()))
 			return false;
 
+		System.out.println(Change.isBlocked());
+		Change.push(new BufferVariable(this));
 		this.name = name;
+		Change.push(new BufferVariable(this));
 
 		setChanged();
 
@@ -108,8 +136,13 @@ public class Variable extends Observable implements IDiagramComponent
 	 *            the new type for this variable
 	 */
 	public void setType(Type type)
-	{
+	{		
+		if (getType()!= null && type.getName().equals(getType().getName()))
+			return;
+		
+		Change.push(new BufferVariable(this));
 		this.type = type;
+		Change.push(new BufferVariable(this));
 
 		setChanged();
 	}

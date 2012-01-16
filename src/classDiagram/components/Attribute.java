@@ -1,5 +1,7 @@
 package classDiagram.components;
 
+import change.BufferAttribute;
+import change.Change;
 import utility.Utility;
 
 /**
@@ -27,7 +29,51 @@ public class Attribute extends Variable
 	{
 		super(name, type);
 
+		boolean isBlocked = Change.isBlocked();
+		Change.setBlocked(true);
+		
 		setDefaultValue("");
+		
+		Change.setBlocked(isBlocked);
+	}
+	
+	/**
+	 * Constructor of copy.
+	 * @param attribute attribute
+	 */
+	public Attribute(Attribute attribute)
+	{
+		super(attribute.getName(), new Type(attribute.getType().getName()));
+		
+		boolean isBlocked = Change.isBlocked();
+		Change.setBlocked(true);
+		
+		name = attribute.name;
+		type = new Type(attribute.getType().getName());
+		defaultValue = attribute.defaultValue;
+		visibility = attribute.visibility;
+		_isStatic = attribute._isStatic;
+		_isConstant = attribute._isConstant;
+		
+		Change.setBlocked(isBlocked);
+	}
+	
+	public void setAttribute(Attribute attribute)
+	{
+		boolean isRecord = Change.isRecord();
+		Change.record();
+		
+		setName(attribute.getName());
+		setType(new Type(attribute.getType().getName()));
+		setDefaultValue(attribute.getDefaultValue());
+		setVisibility(attribute.getVisibility());
+		setStatic(attribute.isStatic());
+		setConstant(attribute.isConstant());
+		
+		if(!isRecord)
+			Change.stopRecord();
+		
+		notifyObservers();
 	}
 
 	/**
@@ -78,7 +124,9 @@ public class Attribute extends Variable
 	 */
 	public void setConstant(boolean isConst)
 	{
+		Change.push(new BufferAttribute(this));
 		_isConstant = isConst;
+		Change.push(new BufferAttribute(this));
 		setChanged();
 	}
 
@@ -90,7 +138,9 @@ public class Attribute extends Variable
 	 */
 	public void setDefaultValue(String defaultValue)
 	{
+		Change.push(new BufferAttribute(this));
 		this.defaultValue = defaultValue;
+		Change.push(new BufferAttribute(this));
 		setChanged();
 	}
 
@@ -102,7 +152,9 @@ public class Attribute extends Variable
 	 */
 	public void setStatic(boolean isStatic)
 	{
+		Change.push(new BufferAttribute(this));
 		_isStatic = isStatic;
+		Change.push(new BufferAttribute(this));
 		setChanged();
 	}
 
@@ -119,6 +171,7 @@ public class Attribute extends Variable
 			return;
 
 		String newName;
+		Type type = getType();
 		text = text.trim();
 		Visibility newVisibility = Visibility.getVisibility(text.charAt(0));
 
@@ -131,9 +184,6 @@ public class Attribute extends Variable
 
 		newName = subString[0].trim();
 
-		if (!setName(newName))
-			newName = getName();
-
 		if (subString.length == 2)
 		{
 			subString[1] = subString[1].trim();
@@ -141,11 +191,19 @@ public class Attribute extends Variable
 			if (!Type.checkSemantic(subString[1]))
 				return;
 			
-			setType(new Type(subString[1]));
+			type = new Type(subString[1]);
 		}
-
+		
+		boolean isRecord = Change.isRecord();
+		Change.record();
+		
+		setType(type);
 		setName(newName);
 		setVisibility(newVisibility);
+		
+		if(!isRecord)
+			Change.stopRecord();
+		
 		notifyObservers();
 	}
 
@@ -159,8 +217,13 @@ public class Attribute extends Variable
 	{
 		if (visibility == null)
 			throw new IllegalArgumentException("visibility is null");
+		
+		if (visibility.getName().equals(getVisibility().getName()))
+			return;
 
+		Change.push(new BufferAttribute(this));
 		this.visibility = visibility;
+		Change.push(new BufferAttribute(this));
 		setChanged();
 	}
 

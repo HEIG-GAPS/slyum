@@ -1,5 +1,7 @@
 package classDiagram.components;
 
+import change.BufferMethod;
+import change.Change;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
@@ -8,6 +10,7 @@ import utility.SMessageDialog;
 import utility.Utility;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
+import graphic.textbox.TextBoxMethod;
 
 /**
  * Represent a method in UML structure.
@@ -29,7 +32,7 @@ public class Method extends Observable implements IDiagramComponent, Observer
 	private final Entity entity;
 	protected final int id = ClassDiagram.getNextId();
 	private String name;
-	private final LinkedList<Variable> parameters = new LinkedList<Variable>();
+	private final LinkedList<Variable> parameters = new LinkedList<>();
 	private Type returnType;
 	private Visibility visibility;
 
@@ -51,12 +54,17 @@ public class Method extends Observable implements IDiagramComponent, Observer
 		if (visibility == null)
 			throw new IllegalArgumentException("visibility is null");
 		
+		boolean isBlocked = Change.isBlocked();
+		Change.setBlocked(true);
+		
 		if (!setName(name))
 			throw new IllegalArgumentException("semantic name incorrect");
 			
 		this.entity = entity;
 		setReturnType(returnType);
 		this.visibility = visibility;
+		
+		Change.setBlocked(isBlocked);
 	}
 	
 	public Method(Method method, Entity newEntity)
@@ -72,6 +80,38 @@ public class Method extends Observable implements IDiagramComponent, Observer
 			
 			this.parameters.add(new Variable(parameter));
 	}
+	
+	/**
+	 * Constructor of copy.
+	 * @param method method
+	 */
+	public Method(Method method)
+	{
+		this(method, method.entity);
+	}
+	
+	public void setMethod(Method method)
+	{
+		boolean isRecord = Change.isRecord();
+		Change.record();
+		
+		this.name = method.name;
+		this.returnType = method.returnType;
+		this.visibility = method.visibility;
+		this._isAbstract = method._isAbstract;
+		this._isStatic = method._isStatic;
+		
+		clearParameters();
+		
+		for (Variable parameter : method.parameters)
+			
+			this.parameters.add(new Variable(parameter));
+		
+		if (!isRecord)
+			Change.stopRecord();		
+		
+		notifyObservers();
+	}
 
 	/**
 	 * Add a new parameter.
@@ -81,8 +121,14 @@ public class Method extends Observable implements IDiagramComponent, Observer
 	 */
 	public void addParameter(Variable parameter)
 	{
+		Change.push(new BufferMethod(this));
+		
 		parameters.add(parameter);
+		
+		Change.push(new BufferMethod(this));
+		
 		parameter.addObserver(this);
+		
 		setChanged();
 	}
 
@@ -91,10 +137,15 @@ public class Method extends Observable implements IDiagramComponent, Observer
 	 */
 	public void clearParameters()
 	{
-		for (final Variable p : parameters)
-			p.deleteObserver(this);
-
-		parameters.clear();
+		boolean isRecord = Change.isRecord();
+		Change.record();
+		
+		while (parameters.size() > 0)
+			removeParameters(parameters.getFirst());
+		
+		if (!isRecord)
+			Change.stopRecord();
+		
 		setChanged();
 	}
 
@@ -182,7 +233,10 @@ public class Method extends Observable implements IDiagramComponent, Observer
 
 	public void removeParameters(Variable parameter)
 	{
+		Change.push(new BufferMethod(this));
 		parameters.remove(parameter);
+		parameter.deleteObserver(this);
+		Change.push(new BufferMethod(this));
 
 		setChanged();
 	}
@@ -201,13 +255,18 @@ public class Method extends Observable implements IDiagramComponent, Observer
 	 */
 	public void setAbstract(boolean isAbstract)
 	{
+		if (isAbstract() == isAbstract)
+			return;
+		
 		if (isAbstract && !entity.isAbstract())
 		{
 			SMessageDialog.showErrorMessage("Class must be abstract.");
 			return;
 		}
 
+		Change.push(new BufferMethod(this));
 		_isAbstract = isAbstract;
+		Change.push(new BufferMethod(this));
 
 		setChanged();
 	}
@@ -220,10 +279,12 @@ public class Method extends Observable implements IDiagramComponent, Observer
 	 */
 	public boolean setName(String name)
 	{
-		if (name.isEmpty() || !checkSemantic(name))
+		if (name.isEmpty() || !checkSemantic(name) || name.equals(getName()))
 			return false;
 
+		Change.push(new BufferMethod(this));
 		this.name = name;
+		Change.push(new BufferMethod(this));
 
 		setChanged();
 
@@ -240,11 +301,13 @@ public class Method extends Observable implements IDiagramComponent, Observer
 	{
 		if (returnType == null)
 			throw new IllegalArgumentException("returnType is null");
+		
+		if (getReturnType() != null && returnType.getName().equals(getReturnType().getName()))
+			return false;
 
-		//if (!returnType.getName().matches("([a-zA-Z|_])(\\w)*"))
-			//return false;
-
+		Change.push(new BufferMethod(this));
 		this.returnType = returnType;
+		Change.push(new BufferMethod(this));
 
 		setChanged();
 
@@ -259,15 +322,23 @@ public class Method extends Observable implements IDiagramComponent, Observer
 	 */
 	public void setStatic(boolean isStatic)
 	{
+		if (isStatic() == isStatic)
+			return;
+		
+		Change.push(new BufferMethod(this));
 		_isStatic = isStatic;
+		Change.push(new BufferMethod(this));
+		
 		setChanged();
 	}
 
 	public void setText(String text)
 	{
-		if (text.length() == 0)
+		if (text.length() == 0 || text.equals(TextBoxMethod.getStringFromMethod(this, TextBoxMethod.ParametersViewStyle.TYPE_AND_NAME)))
 			return;
 
+		String returnType = getReturnType().getName();
+		LinkedList<Variable> par = new LinkedList<>();
 		text = text.trim();
 		String newName;
 		Visibility newVisibility = Visibility.getVisibility(text.charAt(0));
@@ -287,7 +358,6 @@ public class Method extends Observable implements IDiagramComponent, Observer
 		if (subString.length == 2)
 		{
 			final String[] arguments = subString[1].trim().split("\\)");
-			clearParameters();
 
 			if (arguments.length > 0 && arguments[0].trim().length() > 0)
 			{
@@ -308,21 +378,35 @@ public class Method extends Observable implements IDiagramComponent, Observer
 						if (!Variable.checkSemantic(name) || !Type.checkSemantic(type))
 							continue;
 
-						addParameter(new Variable(name, new Type(type)));
+						par.add(new Variable(name, new Type(type)));
 					}
 				}
 			}
 
 			if (arguments.length > 1)
 			{
-				final String returnType = arguments[1].substring(arguments[1].indexOf(":") + 1).trim();
-				if (Type.checkSemantic(returnType))
-					setReturnType(new Type(returnType));
+				String rt = arguments[1].substring(arguments[1].indexOf(":") + 1).trim();
+				if (Type.checkSemantic(rt))
+					returnType = rt;
 			}
 		}
 
+		boolean isRecord = Change.isRecord();
+		Change.record();
+		
+		if (subString.length == 2)
+			clearParameters();
+		
 		setName(newName);
 		setVisibility(newVisibility);
+		setReturnType(new Type(returnType));
+		
+		for (Variable v : par)
+			addParameter(v);
+		
+		if(!isRecord)
+			Change.stopRecord();
+		
 		notifyObservers();
 	}
 
@@ -337,7 +421,12 @@ public class Method extends Observable implements IDiagramComponent, Observer
 		if (visibility == null)
 			throw new IllegalArgumentException("visibility is null");
 
+		if (getVisibility() == visibility)
+			return;
+		
+		Change.push(new BufferMethod(this));
 		this.visibility = visibility;
+		Change.push(new BufferMethod(this));
 
 		setChanged();
 	}

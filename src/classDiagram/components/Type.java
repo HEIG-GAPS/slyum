@@ -89,8 +89,10 @@ public class Type extends Observable implements IDiagramComponent
 	
 	private void initialize(String name)
 	{
-		if (!setName(name))
+		if (!Type.checkSemantic(name))
 			throw new IllegalArgumentException("semantic incorrect");
+		
+		setName(name);
 	}
 
 	@Override
@@ -129,7 +131,7 @@ public class Type extends Observable implements IDiagramComponent
 	 */
 	public boolean setName(String name)
 	{
-		if (!checkSemantic(name))
+		if (!checkSemantic(name) || name.equals(getName()))
 			return false;
 		
 		int state = 0; // 0 = name, 1 = array

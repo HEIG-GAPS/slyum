@@ -1,5 +1,6 @@
 package swing.propretiesView;
 
+import change.BufferClass;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -214,8 +215,12 @@ public class EntityPropreties extends GlobalPropreties
 					break;
 
 				case 1: // type
-					if (!attribute.getType().setName((String) data))
+					String s = (String) data;
+					
+					if (!Type.checkSemantic(s))
 						setValueAt(attribute.getType().getName(), row, column);
+					else
+						attribute.setType(new Type(s));
 
 					break;
 
@@ -425,8 +430,11 @@ public class EntityPropreties extends GlobalPropreties
 					break;
 
 				case 1: // type
-					if (!method.getReturnType().setName((String) data))
+					String s = (String) data;
+					if (!Type.checkSemantic(s))
 						setValueAt(method.getReturnType().getName(), row, column);
+					else
+						method.setReturnType(new Type(s));
 
 					break;
 
@@ -493,7 +501,7 @@ public class EntityPropreties extends GlobalPropreties
 
 		private Variable currentParameter;
 
-		private final LinkedList<Object[]> data = new LinkedList<Object[]>();
+		private final LinkedList<Object[]> data = new LinkedList<>();
 
 		@Override
 		public void actionPerformed(ActionEvent e)
@@ -509,6 +517,10 @@ public class EntityPropreties extends GlobalPropreties
 
 		public void clearAll()
 		{
+			if (currentMethod != null)
+				for (Variable v : currentMethod.getParameters())
+					v.deleteObserver(this);
+			
 			data.clear();
 			fireTableDataChanged();
 		}
@@ -632,9 +644,15 @@ public class EntityPropreties extends GlobalPropreties
 
 		public void setParameter(Method method)
 		{
+			if (method == null)
+				return;
+			
+			clearAll();
 			for (final Variable v : method.getParameters())
-
+			{
+				v.addObserver(this);
 				data.add(new Object[] { v.getName(), v.getType().getName() });
+			}
 
 			fireTableRowsInserted(0, data.size());
 		}
@@ -669,7 +687,7 @@ public class EntityPropreties extends GlobalPropreties
 					break;
 
 				case 1: // type
-					currentMethod.getParameters().get(row).getType().setName((String) data);
+					currentMethod.getParameters().get(row).setType(new Type((String) data));
 					break;
 			}
 
@@ -687,8 +705,9 @@ public class EntityPropreties extends GlobalPropreties
 
 		@Override
 		public void update(Observable arg0, Object arg1)
-		{
+		{			
 			if (arg1 != null && arg1 instanceof UpdateMessage)
+			{
 				switch ((UpdateMessage) arg1)
 				{
 					case SELECT:
@@ -714,6 +733,9 @@ public class EntityPropreties extends GlobalPropreties
 						btnRightParameters.setEnabled(false);
 						break;
 				}
+			}
+			else
+				setParameter(currentMethod);
 		}
 	}
 
@@ -1291,7 +1313,7 @@ public class EntityPropreties extends GlobalPropreties
 			{
 				final Visibility newVisibility = Visibility.valueOf(comboBox.getSelectedItem().toString().toUpperCase());
 
-				if (newVisibility != Visibility.valueOf(((Entity) currentObject).getVisibility().toUpperCase()))
+				if (newVisibility != Visibility.valueOf(((Entity) currentObject).getVisibility().getName().toUpperCase()))
 				{
 					((Entity) currentObject).setVisibility(newVisibility);
 					((Entity) currentObject).notifyObservers();
@@ -1305,7 +1327,7 @@ public class EntityPropreties extends GlobalPropreties
 		panel.add(comboBox);
 
 		return panel;
-	}
+	}	
 
 	public JLabel createTitleLabel(String text)
 	{
@@ -1349,7 +1371,7 @@ public class EntityPropreties extends GlobalPropreties
 		textName.setText(entity.getName());
 		checkBoxAbstract.setSelected(entity.isAbstract());
 		checkBoxAbstract.setEnabled(currentObject.getClass() != InterfaceEntity.class);
-		comboBox.setSelectedItem(entity.getVisibility());
+		comboBox.setSelectedItem(entity.getVisibility().getName());
 
 		modelAttributes.clearAll();
 		modelMethods.clearAll();

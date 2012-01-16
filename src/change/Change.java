@@ -16,6 +16,7 @@ public class Change
 	private static LinkedList<Boolean> record = new LinkedList<>();
 	
 	private static boolean isRecord = false;
+	private static boolean addSinceLastRecord = false;
 
 	private static void printStackState()
 	{
@@ -48,6 +49,9 @@ public class Change
 
 		stack.add(ch);
 		record.add(isRecord);
+		
+		if (isRecord())
+			addSinceLastRecord = true;
 		
 		pointer = stack.size() - 1;
 
@@ -109,6 +113,7 @@ public class Change
 	 */
 	public static void record()
 	{
+		addSinceLastRecord = false;
 		isRecord = true;
 	}
 	
@@ -116,19 +121,25 @@ public class Change
 	 * Stop the current record. If no record is currently running this method have no effect.
 	 */
 	public static void stopRecord()
-	{
+	{		
 		int size = stack.size();
 		
-		if (isRecord = false || size < 1)
-			return;
+		boolean b1 = addSinceLastRecord, b2 = isRecord;
 		
+		addSinceLastRecord = false;
 		isRecord = false;
+		
+		if (b2 == false || size < 1 || !b1)
+		
+			return;
 
 		int b = pointer-2;
 		while (b >= 0 && b < size-1 && record.get(b)) b--;
 		
 		record.set(b+1, false);
 		record.set(pointer, false);
+		
+		printStackState();
 	}
 	
 	public static boolean isRecord()
