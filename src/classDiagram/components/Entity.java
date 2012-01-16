@@ -31,7 +31,7 @@ public abstract class Entity extends Type
 
 	protected String stereotype = "";
 
-	protected Visibility visibility;
+	protected Visibility visibility = Visibility.PUBLIC;
 
 	public Entity(String name, Visibility visibility)
 	{
@@ -54,7 +54,7 @@ public abstract class Entity extends Type
 		initComponent(e.visibility);
 	}
 	
-	final private void initComponent(Visibility visibility)
+	private void initComponent(Visibility visibility)
 	{
 		if (visibility == null)
 			throw new IllegalArgumentException("visibility is null");

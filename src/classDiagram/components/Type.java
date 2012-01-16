@@ -1,5 +1,6 @@
 package classDiagram.components;
 
+import change.Change;
 import java.util.LinkedList;
 import java.util.Observable;
 
@@ -92,7 +93,12 @@ public class Type extends Observable implements IDiagramComponent
 		if (!Type.checkSemantic(name))
 			throw new IllegalArgumentException("semantic incorrect");
 		
+		boolean isBlocked = Change.isBlocked();
+		Change.setBlocked(true);
+		
 		setName(name);
+		
+		Change.setBlocked(isBlocked);
 	}
 
 	@Override
