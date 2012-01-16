@@ -1,6 +1,5 @@
 package swing.propretiesView;
 
-import change.BufferClass;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -237,7 +236,7 @@ public class EntityPropreties extends GlobalPropreties
 					break;
 			}
 
-			attribute.notifyObservers();
+			attribute.notifyObservers(UpdateMessage.SELECT);
 			attribute.getType().notifyObservers();
 
 			attributesTable.addRowSelectionInterval(row, row);
@@ -451,7 +450,7 @@ public class EntityPropreties extends GlobalPropreties
 					break;
 			}
 
-			method.notifyObservers();
+			method.notifyObservers(UpdateMessage.SELECT);
 			method.getReturnType().notifyObservers();
 
 			methodsTable.addRowSelectionInterval(row, row);

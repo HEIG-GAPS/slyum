@@ -1,6 +1,7 @@
 package classDiagram.components;
 
 import change.BufferClass;
+import change.BufferIndex;
 import change.Change;
 import java.util.LinkedList;
 import java.util.List;
@@ -331,8 +332,12 @@ public abstract class Entity extends Type
 
 		if (index != -1)
 		{
+			Change.push(new BufferIndex(this, list, o));
+			
 			list.remove(o);
 			list.add(index + offset, o);
+			
+			Change.push(new BufferIndex(this, list, o));
 
 			setChanged();
 		}
