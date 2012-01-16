@@ -1,5 +1,7 @@
 package classDiagram.components;
 
+import change.BufferClass;
+import change.Change;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,16 +36,25 @@ public abstract class Entity extends Type
 	{
 		super(name);
 
-		if (visibility == null)
-			throw new IllegalArgumentException("visibility is null");
-
-		this.visibility = visibility;
+		initComponent(visibility);
 	}
 
 	public Entity(String name, Visibility visibility, int id)
 	{
 		super(name, id);
-
+		
+		initComponent(visibility);
+	}
+	
+	public Entity(Entity e)
+	{
+		super(e.name, e.id);
+		
+		initComponent(e.visibility);
+	}
+	
+	final private void initComponent(Visibility visibility)
+	{
 		if (visibility == null)
 			throw new IllegalArgumentException("visibility is null");
 
@@ -238,9 +249,9 @@ public abstract class Entity extends Type
 	 * 
 	 * @return the visibility of the entity
 	 */
-	public String getVisibility()
+	public Visibility getVisibility()
 	{
-		return visibility.getName();
+		return visibility;
 	}
 
 	/**
@@ -429,9 +440,28 @@ public abstract class Entity extends Type
 					if (m.isAbstract())
 						m.setAbstract(false);
 
+		Change.push(new BufferClass(this));
 		_isAbstract = isAbstract;
+		Change.push(new BufferClass(this));
 
 		setChanged();
+	}
+	
+	@Override
+	public boolean setName(String name)
+	{
+		BufferClass bc = new BufferClass(this);
+		boolean b;
+		
+		b = super.setName(name);
+		
+		if (b)
+		{
+			Change.push(bc);
+			Change.push(new BufferClass(this));
+		}
+		
+		return b;
 	}
 
 	/**
@@ -459,7 +489,12 @@ public abstract class Entity extends Type
 		if (visibility == null)
 			throw new IllegalArgumentException("visibility is null");
 
+		if (visibility.equals(getVisibility()))
+			return;
+		
+		Change.push(new BufferClass(this));		
 		this.visibility = visibility;
+		Change.push(new BufferClass(this));
 
 		setChanged();
 	}
