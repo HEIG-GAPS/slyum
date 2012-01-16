@@ -119,7 +119,6 @@ public class Variable extends Observable implements IDiagramComponent
 		if (!checkSemantic(name) || name.equals(getName()))
 			return false;
 
-		System.out.println(Change.isBlocked());
 		Change.push(new BufferVariable(this));
 		this.name = name;
 		Change.push(new BufferVariable(this));

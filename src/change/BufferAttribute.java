@@ -4,6 +4,7 @@
  */
 package change;
 
+import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Attribute;
 
 /**
@@ -26,6 +27,9 @@ public class BufferAttribute extends BufferVariable
 	{
 		super.restore();
 		attribute.setAttribute(copy);
+		
+		attribute.select();
+		attribute.notifyObservers(UpdateMessage.SELECT);
 	}
 	
 }
