@@ -5,8 +5,6 @@
 package change;
 
 import classDiagram.IDiagramComponent;
-import classDiagram.components.Entity;
-import com.sun.xml.internal.bind.v2.runtime.reflect.Accessor.SetterOnlyReflection;
 import java.util.LinkedList;
 
 /**
@@ -15,12 +13,12 @@ import java.util.LinkedList;
  */
 public class BufferIndex<T extends Object> implements Changeable
 {
-	private Entity entity;
+	private IDiagramComponent entity;
 	private T o;
 	private int index;
 	private LinkedList<T> list;
 	
-	public BufferIndex(Entity e, LinkedList<T> list, T o)
+	public BufferIndex(IDiagramComponent e, LinkedList<T> list, T o)
 	{
 		entity = e;
 		this.o = o;
