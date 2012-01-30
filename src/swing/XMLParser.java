@@ -35,7 +35,6 @@ import classDiagram.relationships.Binary;
 import classDiagram.relationships.Composition;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Multiplicity;
-import javax.swing.SwingUtilities;
 
 /**
  * This class read the XML file and create the diagram UML structured from this.
