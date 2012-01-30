@@ -42,6 +42,7 @@ import utility.SMessageDialog;
  */
 public class Slyum extends JFrame implements ActionListener
 {
+	private static final long serialVersionUID = 1L;
 	private static final String APP_NAME = "Slyum";
 	public static final float version = 1.3f;
 	public final static String EXTENTION = "sly";
@@ -500,6 +501,11 @@ public class Slyum extends JFrame implements ActionListener
 	private void createJMenuBar()
 	{
 		final JMenuBar menuBar = new JMenuBar() {
+
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void paintComponent(Graphics g)

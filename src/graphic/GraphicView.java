@@ -62,7 +62,6 @@ import swing.Slyum;
 import swing.SColorChooser;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
-import utility.SSlider;
 import utility.SizedCursor;
 import utility.Utility;
 import change.BufferBounds;
@@ -83,8 +82,6 @@ import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Role;
-import java.awt.image.renderable.RenderableImageProducer;
-import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 
 /**

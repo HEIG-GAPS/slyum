@@ -23,6 +23,7 @@ import classDiagram.components.Method;
  */
 public class NodeEntity extends DefaultMutableTreeNode implements Observer, IClassDiagramNode, ICustomizedIconNode
 {
+	private static final long serialVersionUID = 1L;
 	private final Entity entity;
 	private final ImageIcon icon;
 	private final JTree tree;

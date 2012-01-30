@@ -9,8 +9,6 @@ import java.awt.GridBagLayout;
 import javax.swing.JList;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -32,7 +30,6 @@ import utility.PersonalizedIcon;
 import javax.swing.border.EmptyBorder;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import swing.JPanelRounded;
 

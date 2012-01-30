@@ -14,7 +14,6 @@ import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Inheritance;
-import swing.PanelClassDiagram;
 
 /**
  * A JTree node associated with an inheritance.
