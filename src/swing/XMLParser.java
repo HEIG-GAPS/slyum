@@ -172,8 +172,6 @@ public class XMLParser extends DefaultHandler
 		@SuppressWarnings("unused")
 		LinkedList<ComponentView> componentView = new LinkedList<>();
 		
-		int grid = 0;
-		
 		@SuppressWarnings("unused")
 		String name = null;
 
@@ -993,7 +991,6 @@ public class XMLParser extends DefaultHandler
 			{
 				uMLClassDiagram.uMLView.add(new UMLView());
 				uMLClassDiagram.uMLView.getLast().name = attributes.getValue("name");
-				uMLClassDiagram.uMLView.getLast().grid = Integer.parseInt(attributes.getValue("grid"));
 			} catch (final Exception e)
 			{
 				throw new SAXException(e);
