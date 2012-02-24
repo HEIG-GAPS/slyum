@@ -38,7 +38,7 @@ public class MultiView extends MovableComponent implements Observer
 {
 	private Rectangle bounds = new Rectangle(50, 50);
 
-	LinkedList<MultiLineView> mlvs = new LinkedList<>();
+	LinkedList<MultiLineView> mlvs = new LinkedList<MultiLineView>();
 
 	private final Multi multi;
 

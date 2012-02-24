@@ -188,7 +188,7 @@ public class NoteProperties extends GlobalPropreties
 	{
 		GraphicComponent gc = (GraphicComponent)currentObject;
 		
-		LinkedList<LineCommentary> ll = new LinkedList<>();
+		LinkedList<LineCommentary> ll = new LinkedList<LineCommentary>();
 		
 		for (LineView lv : gc.getGraphicView().getLinesViewAssociedWith(gc))
 			

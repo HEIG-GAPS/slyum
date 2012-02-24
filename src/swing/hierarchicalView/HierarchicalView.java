@@ -286,7 +286,7 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 	@Override
 	public void valueChanged(TreeSelectionEvent e)
 	{
-		final LinkedList<TreePath> paths = new LinkedList<>();
+		final LinkedList<TreePath> paths = new LinkedList<TreePath>();
 		final TreePath[] treePaths = e.getPaths();
 
 		// sort unselect first, select next

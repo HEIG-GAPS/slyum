@@ -32,7 +32,7 @@ public class Method extends Observable implements IDiagramComponent, Observer
 	private final Entity entity;
 	protected final int id = ClassDiagram.getNextId();
 	private String name;
-	private final LinkedList<Variable> parameters = new LinkedList<>();
+	private final LinkedList<Variable> parameters = new LinkedList<Variable>();
 	private Type returnType;
 	private Visibility visibility;
 
@@ -338,7 +338,7 @@ public class Method extends Observable implements IDiagramComponent, Observer
 			return;
 
 		String returnType = getReturnType().getName();
-		LinkedList<Variable> par = new LinkedList<>();
+		LinkedList<Variable> par = new LinkedList<Variable>();
 		text = text.trim();
 		String newName;
 		Visibility newVisibility = Visibility.getVisibility(text.charAt(0));

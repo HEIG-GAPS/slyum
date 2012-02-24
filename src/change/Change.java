@@ -11,9 +11,9 @@ public class Change
 	
 	private static boolean _hasChange = false;
 
-	private static LinkedList<Changeable> stack = new LinkedList<>();
+	private static LinkedList<Changeable> stack = new LinkedList<Changeable>();
 
-	private static LinkedList<Boolean> record = new LinkedList<>();
+	private static LinkedList<Boolean> record = new LinkedList<Boolean>();
 	
 	private static boolean isRecord = false;
 	private static boolean addSinceLastRecord = false;

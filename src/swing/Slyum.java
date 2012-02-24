@@ -16,10 +16,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.IOException;
 import java.net.URI;
 
-import java.net.URISyntaxException;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -386,58 +384,54 @@ public class Slyum extends JFrame implements ActionListener
 	{
 		PanelClassDiagram p = PanelClassDiagram.getInstance();
 		GraphicView gv = p.getCurrentGraphicView();
-                
-            switch (e.getActionCommand())
-            {
-                case Slyum.ACTION_SAVE_AS:
-                    p.saveToXML(true);
-                    break;
-                case ACTION_ABOUT:
-                    new AboutBox(this);
-                    break;
-                case ACTION_HELP:
-                    openHelp();
-                    break;
-                case ACTION_EXIT:
-                    exit();
-                    break;
-                case ACTION_PROPERTIES:
-                    new SProperties();
-                    break;
-                case ACTION_UPDATE:
-                    openURL(URL_UPDATE_PAGE);
-                    break;
-                case ACTION_SELECT_ALL:
-                    gv.selectAll();
-                    break;
-                case ACTION_UNSELECT_ALL:
-                    gv.unselectAll();
-                    break;
-				case ACTION_ZOOM_PLUS:
-					PanelClassDiagram.getInstance().getCurrentGraphicView().forwardScale();
-					break;
-				case ACTION_ZOOM_MINUS:
-					PanelClassDiagram.getInstance().getCurrentGraphicView().backScale();
-					break;
-				case ACTION_ZOOM_ADAPT:
-					PanelClassDiagram.getInstance().getCurrentGraphicView().adaptDiagramToWindow();
-					break;
-				case ACTION_ZOOM_ADAPT_SELECTION:
-					PanelClassDiagram.getInstance().getCurrentGraphicView().adaptSelectionToWindow();
-					break;
-				case ACTION_ZOOM_1:
-					PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(1.0);
-					break;
-				case ACTION_ZOOM_0_5:
-					PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(0.5);
-					break;
-				case ACTION_ZOOM_1_5:
-					PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(1.5);
-					break;
-				case ACTION_ZOOM_2:
-					PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(2.0);
-					break;
-            }
+    
+		if (e.getActionCommand().equals(Slyum.ACTION_SAVE_AS))
+		  p.saveToXML(true);
+		
+		else if (e.getActionCommand().equals(ACTION_ZOOM_2))
+      PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(2.0);
+		
+		else if (e.getActionCommand().equals(ACTION_ZOOM_1_5))
+      PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(1.5);
+		
+		else if (e.getActionCommand().equals(ACTION_ZOOM_0_5))
+      PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(0.5);
+		
+		else if (e.getActionCommand().equals(ACTION_ZOOM_1))
+      PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(1.0);
+		
+		else if (e.getActionCommand().equals(ACTION_ZOOM_ADAPT_SELECTION))
+      PanelClassDiagram.getInstance().getCurrentGraphicView().adaptSelectionToWindow();
+		
+		else if (e.getActionCommand().equals(ACTION_ZOOM_ADAPT))
+      PanelClassDiagram.getInstance().getCurrentGraphicView().adaptDiagramToWindow();
+		
+		else if (e.getActionCommand().equals(ACTION_ZOOM_MINUS))
+      PanelClassDiagram.getInstance().getCurrentGraphicView().backScale();
+		
+		else if (e.getActionCommand().equals(ACTION_ZOOM_PLUS))
+      PanelClassDiagram.getInstance().getCurrentGraphicView().forwardScale();
+		
+		else if (e.getActionCommand().equals(ACTION_UNSELECT_ALL))
+      gv.unselectAll();
+		
+		else if (e.getActionCommand().equals(ACTION_SELECT_ALL))
+      gv.selectAll();
+		
+		else if (e.getActionCommand().equals(ACTION_UPDATE))
+      openURL(URL_UPDATE_PAGE);
+		
+		else if (e.getActionCommand().equals(ACTION_PROPERTIES))
+      new SProperties();
+		
+		else if (e.getActionCommand().equals(ACTION_EXIT))
+      exit();
+		
+		else if (e.getActionCommand().equals(ACTION_HELP))
+        openHelp();
+		
+		else if (e.getActionCommand().equals(ACTION_ABOUT))
+		  new AboutBox(this);
 	}
 
 	/**
@@ -489,7 +483,7 @@ public class Slyum extends JFrame implements ActionListener
 		{
 			java.awt.Desktop.getDesktop().browse(new URI(url));
 		}
-		catch (URISyntaxException | IOException e)
+		catch (Exception e)
 		{
 			SMessageDialog.showErrorMessage("Unable to open " + URL_UPDATE_PAGE + ".");
 		}

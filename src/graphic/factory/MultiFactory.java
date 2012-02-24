@@ -43,7 +43,7 @@ public class MultiFactory extends CreateComponent
 {
 	private final JButton[] buttons = new JButton[2];
 	private ClassView classMouseHover = null;
-	private final LinkedList<ClassView> classSelected = new LinkedList<>();
+	private final LinkedList<ClassView> classSelected = new LinkedList<ClassView>();
 	private final KeyAdapter keyListener;
 	private boolean onButton = false;
 
