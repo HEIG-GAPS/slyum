@@ -19,6 +19,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
 import swing.PanelClassDiagram;
+import swing.SPanelDiagramComponent;
 import swing.Slyum;
 import swing.SColorChooser;
 import utility.PersonalizedIcon;
@@ -85,6 +86,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 			
 			askNewColorForSelectedItems();
 
+    SPanelDiagramComponent.getInstance().actionPerformed(e);
 	}
 	
 	public static void askNewColorForSelectedItems()
