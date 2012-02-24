@@ -783,7 +783,7 @@ public class EntityPropreties extends GlobalPropreties
 
 	JCheckBox checkBoxAbstract = new JCheckBox("Abstract");
 
-	JComboBox<String> comboBox = Utility.getVisibilityComboBox();
+	JComboBox comboBox = Utility.getVisibilityComboBox();
 
 	private final JLabel imgNoAttribute, imgNoMethod, imgMethodSelected,
 			imgNoParameter;

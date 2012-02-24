@@ -32,7 +32,7 @@ public class SDialogProjectLoading extends JDialog
 	private static Slyum s = Slyum.getInstance();
 	
 	private JLabel lblCurrentPhase;
-	private JList<String> list;
+	private JList list;
 	private JProgressBar progressBar;
 	private JScrollPane scrollPane;
 	private JButton btnCancel;
@@ -108,7 +108,7 @@ public class SDialogProjectLoading extends JDialog
 		gbc_scrollPane.gridy = 3;
 		panel.add(scrollPane, gbc_scrollPane);
 		
-		list = new JList<String>();
+		list = new JList();
 		scrollPane.setViewportView(list);
 		list.setModel(new StringListModel());
 		list.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -161,7 +161,7 @@ public class SDialogProjectLoading extends JDialog
 		progressBar.setValue(progressBar.getValue()+1);
 	}
 
-	private class StringListModel extends AbstractListModel<String>
+	private class StringListModel extends AbstractListModel
 	{
 		private static final long serialVersionUID = -3126417577301749576L;
 		

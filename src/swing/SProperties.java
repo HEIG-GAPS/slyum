@@ -57,8 +57,8 @@ public class SProperties extends JDialog
 	private JButton btnDefaultClassColor;
 	private final JPanel contentPanel = new JPanel();
 	private JLabel lblPreviewFont = new JLabel();
-	private JList<String> listName;
-	private JList<Integer> listSize;
+	private JList listName;
+	private JList listSize;
 	private JRadioButton rdbtnAutomaticcolor;
 	private JRadioButton rdbtnLow;
 	private JRadioButton rdbtnMax;
@@ -429,7 +429,7 @@ public class SProperties extends JDialog
 						gbc_scrollPane.gridy = 0;
 						panel.add(scrollPane, gbc_scrollPane);
 						{
-							listName = new JList<String>();
+							listName = new JList();
 							listName.addListSelectionListener(new ListSelectionListener() {
 								public void valueChanged(ListSelectionEvent arg0)
 								{
@@ -440,18 +440,20 @@ public class SProperties extends JDialog
 							scrollPane.setViewportView(listName);
 							listName.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 							listName.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-							listName.setModel(new AbstractListModel<String>() {
+							listName.setModel(new AbstractListModel() {
 
 								private static final long serialVersionUID = -8806070481194611567L;
 								
 								GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 								String[] values = ge.getAvailableFontFamilyNames();
 
+								@Override
 								public String getElementAt(int index)
 								{
 									return values[index];
 								}
-
+								
+								@Override
 								public int getSize()
 								{
 									return values.length;
@@ -470,18 +472,20 @@ public class SProperties extends JDialog
 						gbc_scrollPane.gridy = 0;
 						panel.add(scrollPane, gbc_scrollPane);
 						{
-							listSize = new JList<Integer>();
-							listSize.setModel(new AbstractListModel<Integer>() {
+							listSize = new JList();
+							listSize.setModel(new AbstractListModel() {
 								
 								private static final long serialVersionUID = -2073589127443911972L;
 								
 								int[] values = new int[] { 8, 9, 10, 12, 14, 16, 18, 20, 24, 28, 32, 48, 72 };
 
+								@Override
 								public Integer getElementAt(int index)
 								{
 									return values[index];
 								}
 
+								@Override
 								public int getSize()
 								{
 									return values.length;
