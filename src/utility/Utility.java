@@ -366,9 +366,9 @@ public class Utility
 	 * 
 	 * @return a JComboBox containing all default multiplicities
 	 */
-	public static JComboBox<Multiplicity> getMultiplicityComboBox()
+	public static JComboBox getMultiplicityComboBox()
 	{
-		final JComboBox<Multiplicity> cmb = new JComboBox<Multiplicity>();
+		final JComboBox cmb = new JComboBox();
 		cmb.setEditable(true);
 
 		cmb.addItem(Multiplicity.ONE_ONLY);
@@ -387,14 +387,14 @@ public class Utility
 	 * 
 	 * @return a JComboBox containing all default visibilities
 	 */
-	public static JComboBox<String> getVisibilityComboBox()
+	public static JComboBox getVisibilityComboBox()
 	{
 		final String[] list = new String[Visibility.values().length];
 
 		for (int i = 0; i < list.length; i++)
 			list[i] = Visibility.values()[i].getName();
 
-		return new JComboBox<String>(list);
+		return new JComboBox(list);
 	}
 
 	/**

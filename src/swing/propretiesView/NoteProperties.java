@@ -16,7 +16,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.AbstractListModel;
 import javax.swing.JScrollPane;
@@ -38,7 +37,7 @@ public class NoteProperties extends GlobalPropreties
 	private static final long serialVersionUID = -8359058855177837879L;
 	private static NoteProperties instance;
 	
-	private JList<LineCommentary> list;
+	private JList list;
 	private SButton btnDelete;
 	
 	public static NoteProperties getInstance()
@@ -75,7 +74,7 @@ public class NoteProperties extends GlobalPropreties
 		JScrollPane scrollPane = new JScrollPane();
 		panel.add(scrollPane);
 		
-		list = new JList<>();
+		list = new JList();
 		list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(list);
 		list.setModel(new ListLineCommentaryModel());
@@ -86,11 +85,20 @@ public class NoteProperties extends GlobalPropreties
 			{
 				super.mousePressed(e);
 
-				List<LineCommentary> l = list.getSelectedValuesList();
+				Object[] l = list.getSelectedValues();
 				
 				for (LineCommentary lc : getLineCommentary())
 					
-					lc.setSelected(l.contains(lc));
+					lc.setSelected(contains(l, lc));
+			}
+			
+			private boolean contains(Object[] l, Object o)
+			{
+			  for (Object ob : l)
+			    if (ob.equals(o))
+			      return true;
+			  
+			  return false;
 			}
 		});
 		
@@ -111,8 +119,9 @@ public class NoteProperties extends GlobalPropreties
 			{
 				final int i = list.getSelectedIndex();
 
-				for (LineCommentary lc : list.getSelectedValuesList())
-					lc.delete();
+				// TODO HUMMMMM??
+				for (Object lc : list.getSelectedValues())
+					((LineCommentary)lc).delete();
 				
 				updateComponentInformations(null);
 				
@@ -161,7 +170,7 @@ public class NoteProperties extends GlobalPropreties
 		});
 	}
 	
-	private class ListLineCommentaryModel extends AbstractListModel<LineCommentary>
+	private class ListLineCommentaryModel extends AbstractListModel
 	{
 		private static final long serialVersionUID = -2384833149044855296L;
 
