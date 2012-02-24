@@ -332,12 +332,12 @@ public abstract class Entity extends Type
 
 		if (index != -1)
 		{
-			Change.push(new BufferIndex(this, list, o));
+			Change.push(new BufferIndex<T>(this, list, o));
 			
 			list.remove(o);
 			list.add(index + offset, o);
 			
-			Change.push(new BufferIndex(this, list, o));
+			Change.push(new BufferIndex<T>(this, list, o));
 
 			setChanged();
 		}
