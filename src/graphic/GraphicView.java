@@ -368,20 +368,20 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 	private CreateComponent currentFactory;
 
-	private final LinkedList<EntityView> entities = new LinkedList<>();
+	private final LinkedList<EntityView> entities = new LinkedList<EntityView>();
 
-	private final LinkedList<LineView> linesView = new LinkedList<>();
+	private final LinkedList<LineView> linesView = new LinkedList<LineView>();
 
 	// use in printing
 	private int m_maxNumPage = 1;
 
 	private Point mousePressedLocation = new Point();
-	private final LinkedList<MultiView> multiViews = new LinkedList<>();
+	private final LinkedList<MultiView> multiViews = new LinkedList<MultiView>();
 	private String name;
 
-	private final LinkedList<TextBoxCommentary> notes = new LinkedList<>();
+	private final LinkedList<TextBoxCommentary> notes = new LinkedList<TextBoxCommentary>();
 
-	private final LinkedList<GraphicComponent> othersComponents = new LinkedList<>();
+	private final LinkedList<GraphicComponent> othersComponents = new LinkedList<GraphicComponent>();
 
 	// Selection rectangle.
 	private Rectangle rubberBand = new Rectangle();
@@ -399,7 +399,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	private Rectangle visibleRect = new Rectangle();
 	private int mouseButton = 0;
 	
-	private LinkedList<IListenerComponentSelectionChanged> lcsc = new LinkedList<>();
+	private LinkedList<IListenerComponentSelectionChanged> lcsc = new LinkedList<IListenerComponentSelectionChanged>();
 	
 	public double getScale()
 	{
@@ -1812,7 +1812,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	public void moveZOrderUpSelectedEntities()
 	{
 		LinkedList<EntityView> evs = getSelectedEntities();
-		LinkedList<EntityView> evsSorted = new LinkedList<>();
+		LinkedList<EntityView> evsSorted = new LinkedList<EntityView>();
 		int current = 0, max = -1, size = evs.size();
 		
 		for (int i = 0; i < size; i++)

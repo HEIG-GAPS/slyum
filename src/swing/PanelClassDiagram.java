@@ -25,11 +25,8 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
-import org.xml.sax.SAXException;
 
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.PropretiesChanger;
@@ -378,7 +375,7 @@ public class PanelClassDiagram extends JPanel
 
 					handler.createDiagram();
 				}
-				catch (ParserConfigurationException | SAXException | IOException e)
+				catch (Exception e)
 				{
 					showErrorImportationMessage(e);
 				}

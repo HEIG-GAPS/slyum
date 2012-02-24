@@ -70,7 +70,7 @@ public abstract class LineView extends GraphicComponent
 
 	protected Stroke lineStroke = new BasicStroke(1.2f);
 
-	protected LinkedList<RelationGrip> points = new LinkedList<>();
+	protected LinkedList<RelationGrip> points = new LinkedList<RelationGrip>();
 
 	private Cursor previousCursor;
 
@@ -84,7 +84,7 @@ public abstract class LineView extends GraphicComponent
 	// will be adjusted.
 	public final int SMOOTH_RATIO = 15;
 
-	protected LinkedList<TextBox> tbRoles = new LinkedList<>();
+	protected LinkedList<TextBox> tbRoles = new LinkedList<TextBox>();
 
 	public LineView (
 				final GraphicView parent,

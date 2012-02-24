@@ -500,7 +500,7 @@ public class EntityPropreties extends GlobalPropreties
 
 		private Variable currentParameter;
 
-		private final LinkedList<Object[]> data = new LinkedList<>();
+		private final LinkedList<Object[]> data = new LinkedList<Object[]>();
 
 		@Override
 		public void actionPerformed(ActionEvent e)

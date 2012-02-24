@@ -58,7 +58,7 @@ public class Type extends Observable implements IDiagramComponent
 
 	protected String name = "void";
 	
-	LinkedList<Integer> arraysSize = new LinkedList<>();
+	LinkedList<Integer> arraysSize = new LinkedList<Integer>();
 
 	/**
 	 * Create a new type with the specified name.
@@ -142,7 +142,7 @@ public class Type extends Observable implements IDiagramComponent
 		
 		int state = 0; // 0 = name, 1 = array
 		String buff = "", n = "";
-		LinkedList<Integer> a = new LinkedList<>();
+		LinkedList<Integer> a = new LinkedList<Integer>();
 		char c;
 		for (int i = 0; i < name.length(); i++)
 		{

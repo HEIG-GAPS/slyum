@@ -26,7 +26,7 @@ public class SButton extends JButton implements MouseListener
 	
 	private Color themeColor;
 	
-	private LinkedList<Component> linkedComponents = new LinkedList<>();
+	private LinkedList<Component> linkedComponents = new LinkedList<Component>();
 	
 	public SButton(Icon icon, Color color, String tooltip)
 	{

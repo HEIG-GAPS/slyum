@@ -34,10 +34,10 @@ public class ClassDiagram implements IComponentsObserver
 		return ++currentID;
 	}
 
-	LinkedList<IDiagramComponent> components = new LinkedList<>();
-	LinkedList<Entity> entities = new LinkedList<>();
+	LinkedList<IDiagramComponent> components = new LinkedList<IDiagramComponent>();
+	LinkedList<Entity> entities = new LinkedList<Entity>();
 	private String name;
-	LinkedList<IComponentsObserver> observers = new LinkedList<>();
+	LinkedList<IComponentsObserver> observers = new LinkedList<IComponentsObserver>();
 
 	/**
 	 * Creates a new class diagram with the specified name.
