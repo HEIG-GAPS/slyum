@@ -1,6 +1,8 @@
 package classDiagram.components;
 
 import change.BufferClass;
+import change.BufferCreationAttribute;
+import change.BufferCreationMethod;
 import change.BufferIndex;
 import change.Change;
 import java.util.LinkedList;
@@ -73,7 +75,9 @@ public abstract class Entity extends Type
 		if (attribute == null)
 			throw new IllegalArgumentException("attribute is null");
 
+		Change.push(new BufferCreationAttribute(this, attribute, true));
 		attributes.add(attribute);
+		Change.push(new BufferCreationAttribute(this, attribute, false));
 
 		setChanged();
 	}
@@ -111,7 +115,9 @@ public abstract class Entity extends Type
 		
 		method.setAbstract(isAbstract());
 
+		Change.push(new BufferCreationMethod(this, method, true));
 		methods.add(method);
+		Change.push(new BufferCreationMethod(this, method, false));
 
 		setChanged();
 
