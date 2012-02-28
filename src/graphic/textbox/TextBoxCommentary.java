@@ -26,6 +26,8 @@ import swing.Slyum;
 import swing.propretiesView.NoteProperties;
 import utility.PersonalizedIcon;
 import utility.Utility;
+import change.BufferNote;
+import change.Change;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 
@@ -386,7 +388,9 @@ public class TextBoxCommentary extends MovableComponent
 	 */
 	public void setText(String text)
 	{
+	  Change.push(new BufferNote(this));
 		this.text = text;
+		Change.push(new BufferNote(this));
 
 		repaint();
 	}

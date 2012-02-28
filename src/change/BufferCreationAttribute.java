@@ -9,12 +9,14 @@ public class BufferCreationAttribute implements Changeable
   private Entity entity;
   private Attribute attribute;
   private boolean isCreated;
+  private int index;
   
-  public BufferCreationAttribute(Entity e, Attribute a, Boolean isCreated)
+  public BufferCreationAttribute(Entity e, Attribute a, Boolean isCreated, int index)
   {
     entity = e;
     attribute = a;
     this.isCreated = isCreated;
+    this.index = index;
   }
 
   @Override
@@ -25,6 +27,9 @@ public class BufferCreationAttribute implements Changeable
     {
       entity.addAttribute(attribute);
       entity.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
+      
+      entity.moveAttributePosition(attribute, index - entity.getAttributes().size() + 1);
+      entity.notifyObservers();
     }
     else
     {

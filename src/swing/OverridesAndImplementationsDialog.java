@@ -12,6 +12,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -23,6 +24,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
+
+import utility.Utility;
 
 import classDiagram.components.Entity;
 import classDiagram.components.Method;
@@ -110,6 +113,16 @@ public class OverridesAndImplementationsDialog extends JDialog
 	 */
 	public OverridesAndImplementationsDialog(Entity parent, Entity child)
 	{
+	  Utility.setRootPaneActionOnEsc(getRootPane(), new AbstractAction() {
+	    
+      private static final long serialVersionUID = -9137055482704631902L;
+
+      public void actionPerformed(ActionEvent e)
+            {
+              setVisible(false);
+            }
+    });
+	  
 		this.parent = parent;
 		this.child = child;
 		setTitle("Overrides & Implementations");

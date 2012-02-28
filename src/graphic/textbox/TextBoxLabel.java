@@ -13,6 +13,7 @@ import java.util.Observer;
 
 import change.BufferDeplacement;
 import change.Change;
+import change.Changeable;
 
 
 /**
@@ -130,7 +131,9 @@ public abstract class TextBoxLabel extends TextBox implements Observer
 
 		parent.getScene().setCursor(previousCursor);
 		
-		if (!((BufferDeplacement)Change.getLast()).getDeplacement().equals(getDeplacement()))
+		Changeable c = Change.getLast();
+		
+		if (c instanceof BufferDeplacement && !((BufferDeplacement)Change.getLast()).getDeplacement().equals(getDeplacement()))
 			
 			Change.push(new BufferDeplacement(this));
 		else

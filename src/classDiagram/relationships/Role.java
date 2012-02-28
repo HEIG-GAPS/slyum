@@ -3,6 +3,8 @@ package classDiagram.relationships;
 import java.util.Observable;
 
 import utility.Utility;
+import change.BufferRole;
+import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
 import classDiagram.components.Entity;
@@ -149,8 +151,10 @@ public class Role extends Observable implements IDiagramComponent
 		if (multiplicity == null)
 			return;
 
+		//saveState();
 		this.multiplicity.setLowerBound(multiplicity.getLowerBound());
 		this.multiplicity.setUpperBound(multiplicity.getUpperBound());
+		//saveState();
 
 		setChanged();
 	}
@@ -162,9 +166,11 @@ public class Role extends Observable implements IDiagramComponent
 	 *            the new name for this role
 	 */
 	public void setName(String name)
-	{
+	{	  
+	  //saveState();
 		this.name = name;
-
+		//saveState();
+		
 		setChanged();
 	}
 
@@ -176,9 +182,17 @@ public class Role extends Observable implements IDiagramComponent
 	 */
 	public void setVisibility(Visibility visibility)
 	{
+	  saveState();
 		this.visibility = visibility;
+		saveState();
 		setChanged();
 	}
+  
+  private void saveState()
+  {
+    Multiplicity m = getMultiplicity();
+    Change.push(new BufferRole(this, getName(), getVisibility().name(), m.getLowerBound(), m.getUpperBound()));
+  }
 
 	@Override
 	public String toString()

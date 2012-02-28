@@ -71,16 +71,17 @@ public abstract class Entity extends Type
 	 *            the new attribute.
 	 */
 	public void addAttribute(Attribute attribute)
-	{
-		if (attribute == null)
-			throw new IllegalArgumentException("attribute is null");
+  {
+    if (attribute == null)
+      throw new IllegalArgumentException("attribute is null");
 
-		Change.push(new BufferCreationAttribute(this, attribute, true));
-		attributes.add(attribute);
-		Change.push(new BufferCreationAttribute(this, attribute, false));
+    attributes.add(attribute);
+    int i = attributes.indexOf(attribute);
+    Change.push(new BufferCreationAttribute(this, attribute, true, i));
+    Change.push(new BufferCreationAttribute(this, attribute, false, i));
 
-		setChanged();
-	}
+    setChanged();
+  }
 
 	/**
 	 * Add a new child.
@@ -115,9 +116,11 @@ public abstract class Entity extends Type
 		
 		method.setAbstract(isAbstract());
 
-		Change.push(new BufferCreationMethod(this, method, true));
 		methods.add(method);
-		Change.push(new BufferCreationMethod(this, method, false));
+		
+		int i = methods.indexOf(method);
+    Change.push(new BufferCreationMethod(this, method, true, i));
+		Change.push(new BufferCreationMethod(this, method, false, i));
 
 		setChanged();
 
@@ -376,8 +379,13 @@ public abstract class Entity extends Type
 		if (attribute == null)
 			throw new IllegalArgumentException("attribute is null");
 
+		int i = attributes.indexOf(attribute);
+		
 		if (attributes.remove(attribute))
 		{
+	    Change.push(new BufferCreationAttribute(this, attribute, false, i));
+	    Change.push(new BufferCreationAttribute(this, attribute, true, i));
+	    
 			setChanged();
 			return true;
 		}
@@ -410,8 +418,13 @@ public abstract class Entity extends Type
 		if (method == null)
 			throw new IllegalArgumentException("method is null");
 
+		int i = methods.indexOf(method);
+		
 		if (methods.remove(method))
 		{
+      Change.push(new BufferCreationMethod(this, method, false, i));
+      Change.push(new BufferCreationMethod(this, method, true, i));
+      
 			setChanged();
 			notifyObservers();
 			return true;
