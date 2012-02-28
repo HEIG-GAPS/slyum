@@ -407,7 +407,6 @@ public abstract class EntityView extends MovableComponent implements Observer
 	 */
 	public void addAttribute(Attribute attribute, boolean editing)
 	{
-
 		final TextBoxAttribute newTextBox = new TextBoxAttribute(parent, attribute);
 		attributesView.add(newTextBox);
 
