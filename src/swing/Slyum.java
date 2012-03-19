@@ -165,14 +165,20 @@ public class Slyum extends JFrame implements ActionListener
 	public final static String KEY_LINK_NOTE = "ctrl shift L";
 
 	public final static String KEY_HELP = "F1";
+	
+  private static final String ARGUMENT_PRINT_CHANGE_STACK_STATE = "-printChanges";
 
 	private static Slyum instance;
 	private static JMenuItem undo, redo;
 
 	private static String windowTitle = APP_NAME;
+	
+	private static String[] arguments;
 
 	public static void main(String[] args)
 	{
+	  arguments = args;
+	  
 		showWarningForOpenJDK();
 	
 		instance = new Slyum();
@@ -186,6 +192,15 @@ public class Slyum extends JFrame implements ActionListener
 				instance.setVisible(true);
 			}
 		});
+	}
+	
+	public static boolean isChangeStackStatePrinted()
+	{
+	  for (String s : arguments)
+	    if (s.equals(ARGUMENT_PRINT_CHANGE_STACK_STATE))
+	      return true;
+	  
+	  return false;
 	}
 
 	/**
