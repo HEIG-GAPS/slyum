@@ -176,19 +176,13 @@ public class TextBoxMultiplicity extends TextBoxLabel
 		// search a multiplicity corresponding to the textBox multiplicity...
 		for (final LineView av : parent.getLinesView())
 			// take all line view
-
-			if (av instanceof AssociationView) // test if it's an
-				// associationView (have some
-				// role)
+			if (av instanceof AssociationView) // test if it's an associationView (have some role)
 
 				for (final Role r : ((Association) ((AssociationView) av).getAssociedComponent()).getRoles())
 					// iterate through roles
 
 					if (r.getMultiplicity().equals(multiplicity)) // multiplicity's
-						// role is the
-						// same than
-						// textBoxMultiplicity
-						// multiplicity?
+						// role is the same than textBoxMultiplicity multiplicity?
 
 						((AssociationView) av).setSelected(true);
 	}

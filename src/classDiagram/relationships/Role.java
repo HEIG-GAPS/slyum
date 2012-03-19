@@ -182,17 +182,27 @@ public class Role extends Observable implements IDiagramComponent
 	 */
 	public void setVisibility(Visibility visibility)
 	{
-	  saveState();
+	  System.out.println("ssksks");
+	  //saveState();
+
 		this.visibility = visibility;
-		saveState();
+
+		//saveState();
+
 		setChanged();
 	}
+
   
   private void saveState()
   {
     Multiplicity m = getMultiplicity();
+
+    Change.push(new BufferRole(this, name, visibility.name(), m.getLowerBound(), m.getUpperBound()));
+
     Change.push(new BufferRole(this, getName(), getVisibility().name(), m.getLowerBound(), m.getUpperBound()));
+
   }
+
 
 	@Override
 	public String toString()
