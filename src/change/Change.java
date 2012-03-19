@@ -20,8 +20,9 @@ public class Change
 
 	private static void printStackState()
 	{
-		/*
-
+	  if (!Slyum.isChangeStackStatePrinted())
+	    return;
+	  
 		System.out.println("Etat de la pile");
 
 		for (int i = 0; i < stack.size(); i++)
@@ -30,8 +31,6 @@ public class Change
 		
 
 		System.out.println("--------------");
-
-		*/
 	}
 
 	public static void push(Changeable ch)
