@@ -34,22 +34,22 @@ public class NodeAssociation extends DefaultMutableTreeNode implements IClassDia
 	 */
 	public static String generateName(Association association)
 	{
-		if (!association.getName().isEmpty())
-			return association.getName();
+	  String label = association.getName();
+		if (!label.isEmpty())
+			return label;
 
 		final LinkedList<Role> roles = association.getRoles();
-		
 		String text = "";
+		String PREFIX = " - ";
 		
 		if (roles.isEmpty())
 			return "";
+
+		for (Role role : roles)
+			text += " - " + role.getEntity().getName();
 		
-		text = roles.getFirst().getName();
-
-		for (int i = 1; i < roles.size(); i++)
-			text += " - " + roles.get(i).getName();
-
-		return text;
+		// On efface le premier préfixe.
+		return text.substring(PREFIX.length());
 	}
 
 	private final Association association;
@@ -85,7 +85,7 @@ public class NodeAssociation extends DefaultMutableTreeNode implements IClassDia
 		association.addObserver(this);
 
 		for (final Role role : association.getRoles())
-			role.addObserver(this);
+			role.getEntity().addObserver(this);
 
 		this.treeModel = treeModel;
 		imageIcon = icon;

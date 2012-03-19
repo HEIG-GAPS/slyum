@@ -185,4 +185,10 @@ public abstract class Association extends Observable implements IDiagramComponen
 
 		return xml + tab + "</association>";
 	}
+	
+	@Override
+	public String toString()
+	{
+	  return getClass().getSimpleName() + (getName().isEmpty() ? "" : ": " + getLabel());
+	}
 }
