@@ -16,12 +16,12 @@ public class BufferClass implements Changeable
 	private Entity entity;
 	private String name;
 	private boolean isAbstract;
-	private Visibility visibility;
+    private Visibility visibility;
 	
 	
 	public BufferClass(Entity e)
 	{
-		entity = e;
+	    entity = e;
 		name = e.getName();
 		isAbstract = e.isAbstract();
 		visibility = e.getVisibility();

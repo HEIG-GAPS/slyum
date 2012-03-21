@@ -61,7 +61,6 @@ public class SPanelFileComponent extends JPanelRounded implements ActionListener
 
 	private SPanelFileComponent()
 	{
-		System.out.println(Slyum.ICON_PATH);
 		setLayout(new GridLayout(1, 6, 5, 5));
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		setBackground(/*Color.WHITE*/ new Color(0, 0, 255, 10));

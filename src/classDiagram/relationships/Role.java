@@ -3,8 +3,6 @@ package classDiagram.relationships;
 import java.util.Observable;
 
 import utility.Utility;
-import change.BufferRole;
-import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
 import classDiagram.components.Entity;
@@ -182,8 +180,7 @@ public class Role extends Observable implements IDiagramComponent
 	 */
 	public void setVisibility(Visibility visibility)
 	{
-	  System.out.println("ssksks");
-	  //saveState();
+	    //saveState();
 
 		this.visibility = visibility;
 
@@ -192,16 +189,16 @@ public class Role extends Observable implements IDiagramComponent
 		setChanged();
 	}
 
-  
-  private void saveState()
-  {
-    Multiplicity m = getMultiplicity();
-
-    Change.push(new BufferRole(this, name, visibility.name(), m.getLowerBound(), m.getUpperBound()));
-
-    Change.push(new BufferRole(this, getName(), getVisibility().name(), m.getLowerBound(), m.getUpperBound()));
-
-  }
+  /*
+	private void saveState()
+	{
+	  Multiplicity m = getMultiplicity();
+	
+	  Change.push(new BufferRole(this, name, visibility.name(), m.getLowerBound(), m.getUpperBound()));
+	
+	  Change.push(new BufferRole(this, getName(), getVisibility().name(), m.getLowerBound(), m.getUpperBound()));
+	}
+	*/
 
 
 	@Override
