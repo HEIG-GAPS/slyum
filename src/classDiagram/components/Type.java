@@ -90,8 +90,8 @@ public class Type extends Observable implements IDiagramComponent
 	
 	private void initialize(String name)
 	{
-		if (!Type.checkSemantic(name))
-			throw new IllegalArgumentException("semantic incorrect");
+//		if (!Type.checkSemantic(name))
+//			throw new IllegalArgumentException("semantic incorrect");
 		
 		boolean isBlocked = Change.isBlocked();
 		Change.setBlocked(true);
@@ -137,8 +137,8 @@ public class Type extends Observable implements IDiagramComponent
 	 */
 	public boolean setName(String name)
 	{
-		if (!checkSemantic(name) || name.equals(getName()))
-			return false;
+//		if (!checkSemantic(name) || name.equals(getName()))
+//			return false;
 		
 		int state = 0; // 0 = name, 1 = array
 		String buff = "", n = "";

@@ -53,7 +53,7 @@ public class Change
 		
 		pointer = stack.size() - 1;
 
-		printStackState();
+		//printStackState();
 		
 		checkToolbarButtonState();
 		
@@ -72,7 +72,7 @@ public class Change
 		stack.get(pointer += increment).restore();
 		setBlocked(isBlocked);
 
-		printStackState();
+		//printStackState();
 		
 		checkToolbarButtonState();
 		
@@ -94,7 +94,7 @@ public class Change
 		stack.get(pointer -= decrement).restore();
 		setBlocked(isBlocked);
 
-		printStackState();
+		//printStackState();
 
 		checkToolbarButtonState();
 		
@@ -137,7 +137,7 @@ public class Change
 		record.set(b+1, false);
 		record.set(pointer, false);
 		
-		printStackState();
+		//printStackState();
 	}
 	
 	public static boolean isRecord()
@@ -166,7 +166,7 @@ public class Change
 		stack.clear();
 		record.clear();
 		
-		printStackState();
+		//printStackState();
 	}
 
 	public static boolean hasChange()
