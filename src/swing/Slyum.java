@@ -117,6 +117,10 @@ public class Slyum extends JFrame implements ActionListener
 	public static final String ACTION_TEXTBOX_UP = "MoveTextBoxUp";
 	public static final String ACTION_TEXTBOX_DOWN = "MoveTextBoxDown";
 	
+	// Import Export diagramme
+	public static final String ACTION_IMPORT = "Import code";
+	public static final String ACTION_EXPORT_PROJECT = "Export diagram";
+	
 	// Accelerator
 	public final static String KEY_NEW_PROJECT = "ctrl alt N";
 	public final static String KEY_OPEN_PROJECT = "ctrl O";
@@ -163,6 +167,9 @@ public class Slyum extends JFrame implements ActionListener
 	public final static String KEY_LINK_NOTE = "ctrl shift L";
 
 	public final static String KEY_HELP = "F1";
+	
+	public static final String KEY_IMPORT_CODE = "ctrl shift M";
+	public static final String KEY_EXPORT_DIAGRAM = "ctrl shift T";
 
 	private static Slyum instance;
 	private static JMenuItem undo, redo;
@@ -432,6 +439,12 @@ public class Slyum extends JFrame implements ActionListener
 		
 		else if (e.getActionCommand().equals(ACTION_ABOUT))
 		  new AboutBox(this);
+		
+		else if (e.getActionCommand().equals(ACTION_IMPORT))
+			  new AboutBox(this);
+		
+		else if (e.getActionCommand().equals(ACTION_EXPORT_PROJECT))
+			  new AboutBox(this);
 	}
 
 	/**
@@ -780,6 +793,17 @@ public class Slyum extends JFrame implements ActionListener
 			// Menu item link note
 			menuItem = createMenuItem("Link Note", "linkNote16", KeyEvent.VK_L, KEY_LINK_NOTE, ACTION_NEW_LINK_NOTE, p.getBtnLinkNote());
 			menu.add(menuItem);
+			
+			menu.addSeparator();
+			
+			// Menu item import code
+			menuItem = createMenuItem("Import Code", "import16", KeyEvent.VK_M, KEY_IMPORT_CODE, ACTION_IMPORT, SPanelFileComponent.getInstance().getBtnImportCode());
+			menu.add(menuItem);
+	
+			// Menu item export diagram
+			menuItem = createMenuItem("Export Diagram", "exportCode", KeyEvent.VK_T, KEY_EXPORT_DIAGRAM, ACTION_EXPORT_PROJECT, SPanelFileComponent.getInstance().getBtnExportDiagram());
+			menu.add(menuItem);
+			
 		}
 
 		// Menu Element

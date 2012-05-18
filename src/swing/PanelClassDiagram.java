@@ -6,6 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.JobAttributes.DialogType;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -36,6 +37,10 @@ import utility.SSlider;
 import utility.Utility;
 import change.Change;
 import classDiagram.ClassDiagram;
+import classDiagram.components.ClassEntity;
+import classDiagram.components.Visibility;
+import dataRecord.ExportData;
+import dataRecord.ImportData;
 
 /**
  * Show the panel containing all views (hierarchical, properties and graphic)
@@ -125,6 +130,10 @@ public class PanelClassDiagram extends JPanel
 	 */
 	public void exportAsImage()
 	{
+		ClassEntity ce = new ClassEntity("Coucou", Visibility.PROTECTED);
+		PanelClassDiagram.getInstance().getClassDiagram().addClass(ce);
+		ce.notifyObservers();
+		
 		final JFileChooser fc = new JFileChooser(Slyum.getCurrentDirectoryFileChooser());
 		fc.setAcceptAllFileFilterUsed(false);
 
@@ -575,4 +584,38 @@ public class PanelClassDiagram extends JPanel
 		
 		return l;
 	}
+
+	public void importCode()
+	{
+		new ImportData("C:/Users/Fabrizio/workspace/CompUnit/testFiles");
+	}
+
+	public void exportCode()
+	{
+		final JFileChooser fc = new JFileChooser(Slyum.getCurrentDirectoryFileChooser());
+		fc.setDialogType(JFileChooser.SAVE_DIALOG);
+		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fc.setAcceptAllFileFilterUsed(false);
+
+		final int result = fc.showOpenDialog(this);
+
+		if (result == JFileChooser.APPROVE_OPTION)
+		{
+			File dir = fc.getSelectedFile();
+			
+			if(!dir.canWrite())
+				SMessageDialog.showErrorMessage("Cannot open directory");
+				
+			System.out.println(dir.getPath());
+			System.out.println("------------");
+			
+			if(classDiagram.getComponents().isEmpty())
+				SMessageDialog.showErrorMessage("Cannot export empty diagram");
+			else
+				new ExportData(dir.getPath());
+		}
+		
+	}
+	
+	
 }
