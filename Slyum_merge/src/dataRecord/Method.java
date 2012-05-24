@@ -14,10 +14,22 @@ public class Method extends Member
 		this.returnType = returnType;
 	}
 
-	public Method(String name, Keyword access, String returnType,
-			String methodBody)
+	public Method(String name, Keyword access, String returnType, String methodBody)
 	{
 		super(name, access);
+		this.returnType = returnType;
+		setMethodBody(methodBody);
+	}
+	
+	public Method(String name, Keyword access, String returnType, int id)
+	{
+		super(name, access, id);
+		this.returnType = returnType;
+	}
+
+	public Method(String name, Keyword access, String returnType, String methodBody, int id)
+	{
+		super(name, access, id);
 		this.returnType = returnType;
 		setMethodBody(methodBody);
 	}
@@ -33,6 +45,7 @@ public class Method extends Member
 		setAbstract(isAbstract);
 		setThrowClauses(m.getThrowClauses());
 		setParams(m.getParams());
+		setID(m.getID());
 	}
 
 	@Override
@@ -62,6 +75,11 @@ public class Method extends Member
 		s += ParamToString();
 		s += throwClausesToString();
 
+		if (isAbstract)
+			s+= methodBody;
+		else
+			s += "\n" + methodBody;
+		
 		return s;
 	}
 

@@ -28,10 +28,17 @@ import classDiagram.relationships.Multi;
 public class ClassDiagram implements IComponentsObserver
 {
 	private static int currentID = 0;
+	
+	private static int elementID = 0;
 
 	public static int getNextId()
 	{
 		return ++currentID;
+	}
+	
+	public static int getElementID()
+	{
+		return ++elementID;
 	}
 
 	LinkedList<IDiagramComponent> components = new LinkedList<IDiagramComponent>();

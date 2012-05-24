@@ -2,13 +2,18 @@ package dataRecord;
 
 import java.util.LinkedList;
 
-public class EnumType extends Type implements ElementType
+public class EnumType extends Type
 {
 	private LinkedList<EnumField> enums = new LinkedList<EnumField>();
 
 	public EnumType(String name, Keyword access)
 	{
 		super(name, access, Keyword.ENUM);
+	}
+	
+	public EnumType(String name, Keyword access, int id)
+	{
+		super(name, access, Keyword.ENUM, id);
 	}
 	
 	// constructeur de recopie
@@ -18,6 +23,7 @@ public class EnumType extends Type implements ElementType
 		implList = e.getImplList();
 		setStatic(e.isStatic());
 		setElements(e.getElements());
+		setID(e.getID());
 	}
 
 	@Override
@@ -37,7 +43,10 @@ public class EnumType extends Type implements ElementType
 			tmp += " implements ";
 			for (Implementable ex : implList)
 			{
-				tmp += ex.getClass().getSimpleName();
+				if (ex.getClass() == APIinterface.class)
+					tmp += ((APIinterface)ex).getElementType();
+				else
+					tmp += ex.getClass().getSimpleName();
 				if (!ex.equals(implList.get(implList.size() - 1)))
 					tmp += ", ";
 			}

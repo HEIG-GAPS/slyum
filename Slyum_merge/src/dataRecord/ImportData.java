@@ -1,5 +1,6 @@
 package dataRecord;
 
+import java.io.File;
 import java.util.HashMap;
 
 import classDiagram.IDiagramComponent.UpdateMessage;
@@ -21,28 +22,22 @@ public class ImportData
 	private ParserScanner ps;
 	private HashMap<String, Integer> findIdByName = new HashMap<String, Integer>();
 	
-	public ImportData(String path)
+	public ImportData(File[] files)
 	{
-		getData(path);
+		getData(files);
 		doTranslation();
 	}
 	
-	public void getData(String path)
+	public void getData(File[] files)
 	{
-		ps = new ParserScanner(path);
-		project.setFilesRecord(ps.getProjectFromFiles());
-		
-//		try
-//		{
-//			ps.printDebug();
-//		} catch (FileNotFoundException e)
-//		{
-//			e.printStackTrace();
-//		}
+		project.getFilesRecord().clear();
+		ps = new ParserScanner(files);
+		ps.printDebug();
 	}
 	
 	private void doTranslation()
 	{
+		System.out.println("DO TRANSATION for " + project.getFilesRecord().size() + " file(s)");
 		project.setName(classDiagram.getName());
 			
 		for (CompilationUnit cu : project.getFilesRecord())
@@ -54,7 +49,7 @@ public class ImportData
 				if(e.getClass() == ClassType.class)
 				{
 					ClassType ct = new ClassType((ClassType)e);
-					ce = new ClassEntity(ct.getName(), translateAccessModifiers(ct.getAccess()));
+					ce = new ClassEntity(ct.getName(), translateAccessModifiers(ct.getAccess()),ct.getID());
 					classDiagram.addClass((ClassEntity) ce);
 					findIdByName.put(ce.getName(), new Integer(ce.getId()));
 					
@@ -87,7 +82,7 @@ public class ImportData
 				else if(e.getClass() == InterfaceType.class)
 				{
 					InterfaceType it = new InterfaceType((InterfaceType)e);
-					ce = new InterfaceEntity(it.getName(), translateAccessModifiers(it.getAccess()));
+					ce = new InterfaceEntity(it.getName(), translateAccessModifiers(it.getAccess()),it.getID());
 					classDiagram.addInterface((InterfaceEntity) ce);
 					findIdByName.put(ce.getName(), new Integer(ce.getId()));
 					
@@ -167,9 +162,7 @@ public class ImportData
 						}
 					}
 			}
-		}	
-		
-		
+		}		
 	}
 	
 	

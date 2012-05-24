@@ -1,10 +1,15 @@
 package dataRecord;
 
-public class InterfaceType extends Type implements Implementable, ElementType
+public class InterfaceType extends Type implements Implementable
 {
 	public InterfaceType(String name, Keyword access)
 	{
 		super(name, access, Keyword.INTERFACE);
+	}
+	
+	public InterfaceType(String name, Keyword access, int id)
+	{
+		super(name, access, Keyword.INTERFACE, id);
 	}
 	
 	// constructeur de recopie
@@ -14,6 +19,7 @@ public class InterfaceType extends Type implements Implementable, ElementType
 		implList = i.getImplList();
 		setStatic(i.isStatic());
 		setElements(i.getElements());
+		setID(i.getID());
 	}
 
 	@Override
@@ -33,7 +39,10 @@ public class InterfaceType extends Type implements Implementable, ElementType
 			tmp += " extends ";
 			for (Implementable ex : implList)
 			{
-				tmp += ex.getClass().getSimpleName();
+				if (ex.getClass() == APIinterface.class)
+					tmp += ((APIinterface)ex).getElementType();
+				else
+					tmp += ex.getClass().getSimpleName();
 				if (!ex.equals(implList.get(implList.size() - 1)))
 					tmp += ", ";
 			}

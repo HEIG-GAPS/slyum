@@ -3,7 +3,7 @@ package dataRecord;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ClassType extends Type implements Extendable, ElementType
+public class ClassType extends Type implements Extendable
 {
 	private boolean isFinal = false;
 	private boolean isAbstract = false;
@@ -12,6 +12,11 @@ public class ClassType extends Type implements Extendable, ElementType
 	public ClassType(String name, Keyword access)
 	{
 		super(name, access, Keyword.CLASS);
+	}
+	
+	public ClassType(String name, Keyword access, int id)
+	{
+		super(name, access, Keyword.CLASS, id);
 	}
 	
 	// constructeur de recopie
@@ -24,6 +29,7 @@ public class ClassType extends Type implements Extendable, ElementType
 		setAbstract(c.isAbstract);
 		setFinal(c.isFinal);
 		setElements(c.getElements());
+		setID(c.getID());
 	}
 
 	public String toString()
@@ -43,8 +49,8 @@ public class ClassType extends Type implements Extendable, ElementType
 			tmp += "extends ";
 			for (Extendable ex : extendList)
 			{
-				if (ex.getClass() == APItype.class)
-					tmp += ex.getClass().getSimpleName();
+				if (ex.getClass() == APIclass.class)
+					tmp += ((APIclass)ex).getElementType();
 				else
 					tmp += ((ClassType) ex).getName();
 				if (!ex.equals(extendList.get(extendList.size() - 1)))
@@ -57,8 +63,8 @@ public class ClassType extends Type implements Extendable, ElementType
 			tmp += "implements ";
 			for (Implementable ex : implList)
 			{
-				if (ex.getClass() == APItype.class)
-					tmp += ex.getClass().getSimpleName();
+				if (ex.getClass() == APIinterface.class)
+					tmp += ((APIinterface)ex).getElementType();
 				else
 					tmp += ((InterfaceType) ex).getName();
 				if (!ex.equals(implList.get(implList.size() - 1)))

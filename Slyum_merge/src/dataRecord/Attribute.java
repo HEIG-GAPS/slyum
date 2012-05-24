@@ -13,6 +13,15 @@ public class Attribute extends Field
 		else
 			throw new IllegalArgumentException(" access is not legal");
 	}
+	
+	public Attribute(String name, Keyword access, ElementType type, int id)
+	{
+		super(name, type, id);
+		if (Keyword.isAccess(access))
+			this.setAccess(access);
+		else
+			throw new IllegalArgumentException(" access is not legal");
+	}
 
 	@Override
 	public void accept(ElementVisitor visitor)

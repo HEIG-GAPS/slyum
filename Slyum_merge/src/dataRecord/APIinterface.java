@@ -1,6 +1,6 @@
 package dataRecord;
 
-public class APIinterface extends APIclass implements Implementable
+public class APIinterface extends APItype implements Implementable
 {
 	@SuppressWarnings("rawtypes")
 	public APIinterface(Class c)

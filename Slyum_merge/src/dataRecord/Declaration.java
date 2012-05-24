@@ -3,11 +3,14 @@ package dataRecord;
 import java.util.LinkedList;
 import java.util.List;
 
+import classDiagram.ClassDiagram;
+
 public abstract class Declaration implements Element
 {
 	private String name;
 	private Keyword access;
 	private List<Element> elements;
+	private int ID;
 
 	public Declaration(String name, Keyword access)
 	{
@@ -17,6 +20,20 @@ public abstract class Declaration implements Element
 			this.access = access;
 		else
 			throw new IllegalArgumentException("access is not valid");
+		
+		ID = ClassDiagram.getElementID();
+	}
+	
+	public Declaration(String name, Keyword access, int id)
+	{
+		this.name = name;
+		elements = new LinkedList<Element>();
+		if (Keyword.isAccess(access))
+			this.access = access;
+		else
+			throw new IllegalArgumentException("access is not valid");
+		
+		this.ID = id;
 	}
 
 	public void addElement(Element e)
@@ -34,11 +51,11 @@ public abstract class Declaration implements Element
 		return elements;
 	}
 
-	public Element getElement(String name)
+	public Element getElement(int id)
 	{
 		for (Element e : elements)
 		{
-			if (e.getName().equals(name))
+			if (e.getID() == id)
 				return e;
 		}
 		return null;
@@ -67,6 +84,16 @@ public abstract class Declaration implements Element
 	public void setAccess(Keyword access)
 	{
 		this.access = access;
+	}
+	
+	public int getID()
+	{
+		return ID;
+	}
+	
+	public void setID(int id)
+	{
+		this.ID = id;
 	}
 
 	@Override
