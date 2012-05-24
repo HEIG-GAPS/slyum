@@ -7,7 +7,7 @@ public abstract class Member extends Declaration
 {
 	private List<Parametre> params;
 	private List<String> throwClauses;
-	private String methodBody;
+	protected String methodBody;
 
 	public Member(String name, Keyword access)
 	{
@@ -19,6 +19,21 @@ public abstract class Member extends Declaration
 	public Member(String name, Keyword access, String methodBody)
 	{
 		super(name, access);
+		params = new LinkedList<Parametre>();
+		setThrowClauses(new LinkedList<String>());
+		this.methodBody = methodBody;
+	}
+	
+	public Member(String name, Keyword access, int ID)
+	{
+		super(name, access, ID);
+		params = new LinkedList<Parametre>();
+		throwClauses = new LinkedList<String>();
+	}
+
+	public Member(String name, Keyword access, String methodBody, int id)
+	{
+		super(name, access, id);
 		params = new LinkedList<Parametre>();
 		setThrowClauses(new LinkedList<String>());
 		this.methodBody = methodBody;

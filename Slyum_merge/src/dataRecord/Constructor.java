@@ -7,12 +7,18 @@ public class Constructor extends Member
 		super(name, access);
 	}
 	
+	public Constructor(String name, Keyword access, int id)
+	{
+		super(name, access, id);
+	}
+	
 	public Constructor(Constructor m)
 	{
 		super(m.getName(), m.getAccess());
 		setMethodBody(m.getMethodBody());
 		setThrowClauses(m.getThrowClauses());
 		setParams(m.getParams());
+		setID(m.getID());
 	}
 
 	@Override
@@ -31,7 +37,8 @@ public class Constructor extends Member
 		s += getName();
 		s += ParamToString();
 		s += throwClausesToString();
-
+		s += "\n" + methodBody;
+		
 		return s;
 	}
 

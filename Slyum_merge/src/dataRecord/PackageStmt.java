@@ -8,6 +8,11 @@ public class PackageStmt extends Statement
 	{
 		super(kw, packageName);
 	}
+	
+	public PackageStmt(String packageName, int id)
+	{
+		super(kw, packageName, id);
+	}
 
 	public void accept(ElementVisitor visitor)
 	{

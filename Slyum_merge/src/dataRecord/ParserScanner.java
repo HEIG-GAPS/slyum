@@ -6,26 +6,28 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import utility.SMessageDialog;
+
 public class ParserScanner
 {
-	private LinkedList<CompilationUnit> project = new LinkedList<CompilationUnit>();
+	
+	//private LinkedList<CompilationUnit> project = new LinkedList<CompilationUnit>();
+	private final ProjectManager project = ProjectManager.getInstance();
 	private Scanner pageScanner;
 	private String theNextLine;
 	private File fFile;
 	private String extendsInfo = ""; // nomClasse,superclasse% and so on
 	private String implInfo = "";
-	private String attrInfo = "";  //  nom de classe d'appartenance, etype, nom attr,  asssoc%
-	private String paramInfo = ""; // nomElement, nom memeber, nom param, etype,  asssoc%
-	private String currentElemName = "";
-	private String currentMembername = "";
-
-	// private boolean isEnum = false;
-	// private boolean isInterface = false;
+	private String attrInfo = "";  
+	private String paramInfo = ""; 
+	private int currentElemId;
+	private int currentMemberID;
+	private boolean isInterface = false;
 
 	public void printDebug() 
 	{
-		 System.out.println("!!!!! DEBUG EXPORT");
-		for (CompilationUnit unit : project)
+		System.out.println("!!!!! DEBUG");
+		for (CompilationUnit unit : project.getFilesRecord())
 		{
 			System.out.println("///// Debut de: " + unit.getName());
 			for (Element e : unit.getElements())
@@ -36,37 +38,36 @@ public class ParserScanner
 		}
 	}
 
-	public LinkedList<CompilationUnit> getProjectFromFiles()
-	{
-		return project;
-	}
-
 	/**
 	 * Constructor.
 	 * 
 	 * @param aFileName
 	 *            full name of an existing, readable file.
 	 */
-	public ParserScanner(String aFileName)
+	public ParserScanner(File[] files)
 	{
-		fFile = new File(aFileName);
-
-		try
+		for (File file : files)
 		{
-			if (fFile.isFile())
-				project.add(processLineByLine(fFile));
-			else
-				parseFile(fFile);
+			fFile = new File(file.getPath());
 
-			setParent();
-			setInterfaces();
-			setAttributes();
-			setParametres();
+			try
+			{
+				if (fFile.isFile())
+					project.getFilesRecord().add(processLineByLine(fFile));
+				else
+					parseFile(fFile);
 
-		} catch (FileNotFoundException e)
-		{
-			e.printStackTrace();
+			} catch (FileNotFoundException e)
+			{
+				SMessageDialog.showErrorMessage("file is not readable");
+			}
 		}
+		
+		setParent();
+		setInterfaces();
+		setAttributes();
+		setParametres();
+
 	}
 
 	private void parseFile(File file) throws FileNotFoundException
@@ -78,7 +79,7 @@ public class ParserScanner
 			{
 				parseFile(f);
 			} else
-				project.add(processLineByLine(f));
+				project.getFilesRecord().add(processLineByLine(f));
 		}
 	}
 
@@ -98,6 +99,7 @@ public class ParserScanner
 			}
 		} finally
 		{
+			System.out.println(file.getName());
 			// ensure the underlying stream is always closed
 			// this only has any effect if the item passed to the Scanner
 			// constructor implements Closeable (which it does in this case).
@@ -138,23 +140,27 @@ public class ParserScanner
 
 	private Element getElementFromFile(String aLine)
 	{
-		while (aLine.trim().isEmpty())
-			// skip empty line
+		while (aLine.trim().isEmpty() || aLine.contains("@")) // skip empty line
 			aLine = pageScanner.nextLine();
 
-		if (aLine.contains("class"))
+		if (Pattern.matches(".*\\s*class\\s+.*", aLine))
 		{
 			return buildClass(aLine);
-		} else if (aLine.contains("enum"))
+		} if (Pattern.matches(".*\\s*enum\\s+.*", aLine))
 		{
 			return buildEnum(aLine);
-		} else if (aLine.contains("interface"))
+		} if (Pattern.matches(".*\\s*interface\\s+.*", aLine))
 		{
 			return buildInterface(aLine);
 		} else if (aLine.contains("("))
 		{
 			return buildMember(aLine);
-		}
+		}else if (aLine.contains("}"))
+		{
+			return null;
+		}else if (aLine.contains("//") || aLine.contains("/*"))
+			return buildComment(aLine);
+
 		return builAttribute(aLine);
 	}
 
@@ -220,15 +226,15 @@ public class ParserScanner
 		}
 		i++;
 
-		currentElemName = name;
 		ClassType ct = new ClassType(name, access);
 		ct.setAbstract(isAbstract);
 		ct.setStatic(isStatic);
 		ct.setFinal(isFinal);
+		currentElemId = ct.getID();
 
 		if (i + 1 < tab.length && tab[i + 1].equals("extends"))
 		{
-			extendsInfo += name;
+			extendsInfo += ct.getID();
 			extendsInfo += ",";
 			extendsInfo += tab[i + 2];
 			extendsInfo += "%";
@@ -237,7 +243,7 @@ public class ParserScanner
 
 		if (i + 1 < tab.length && tab[i + 1].equals("implements"))
 		{
-			implInfo += name;
+			implInfo += ct.getID();
 
 			for (i++; i < tab.length - 1; i++)
 			{
@@ -251,7 +257,12 @@ public class ParserScanner
 		theNextLine = pageScanner.nextLine();
 		while (!theNextLine.contains("}"))
 		{
-			ct.addElement(getElementFromFile(theNextLine));
+			Element elementToAdd = getElementFromFile(theNextLine);
+			if (elementToAdd == null)
+				break;
+			else
+				ct.addElement(elementToAdd);
+			
 			theNextLine = pageScanner.nextLine();
 		}
 		return ct;
@@ -285,14 +296,20 @@ public class ParserScanner
 			}
 		}
 
-		currentElemName = name;
+		
 		EnumType et = new EnumType(name, access);
 		et.setStatic(isStatic);
+		currentElemId = et.getID();
 
 		theNextLine = pageScanner.nextLine();
 		while (!theNextLine.contains("}"))
 		{
-			et.addElement(getElementFromFile(theNextLine));
+			Element elementToAdd = getElementFromFile(theNextLine);
+			if (elementToAdd == null)
+				break;
+			else
+				et.addElement(elementToAdd);
+
 			theNextLine = pageScanner.nextLine();
 		}
 
@@ -324,24 +341,61 @@ public class ParserScanner
 			}
 		}
 
-		currentElemName = name;
+		
 		InterfaceType it = new InterfaceType(name, access);
-
+		currentElemId = it.getID();
+		isInterface = true;
+		
 		theNextLine = pageScanner.nextLine();
 		while (!theNextLine.contains("}"))
 		{
-			it.addElement(getElementFromFile(theNextLine));
-			theNextLine = pageScanner.nextLine();
-		}
+			
+			Element elementToAdd = getElementFromFile(theNextLine);
+			if (elementToAdd == null)
+				break;
+			else
+				it.addElement(elementToAdd);
 
+			theNextLine = pageScanner.nextLine();
+			
+		}
+		isInterface = false;
+		
 		return it;
+	}
+	
+	private Comment buildComment(String line)
+	{
+		line = line.trim();
+		if (line.contains("//"))
+		{
+			return new Comment(line, false);	
+		}
+		else
+		{
+			if (line.contains("*/"))
+				return new Comment(line, true);
+			else
+			{
+				theNextLine = pageScanner.nextLine();
+				line += "\n";
+				while(true)
+				{
+					if(theNextLine.contains("*/"))
+					{
+						line += theNextLine;
+						break;
+					}
+					line += theNextLine + "\n";
+					theNextLine = pageScanner.nextLine();
+				}	
+				return new Comment(line, true);
+			}
+		}
 	}
 
 	private Member buildMember(String line)
 	{
-		// method regex =
-		// (public|protected|private|\s|static|final|abstract|synchronized)*
-		// +[\w\<\>\[\]]+\s+(\w+) *\([^\)]*\) *(\{?|[^;])
 		String[] tab = line.trim().split("\\s+");
 		boolean isAbstract = false;
 		boolean isStatic = false;
@@ -376,9 +430,7 @@ public class ParserScanner
 			line = line.replace(";", "");
 
 		Member m = null;
-		// if
-		// (Pattern.matches("(public|protected|private|\\s|static|final|abstract|synchronized)* [\\w\\<\\>\\[\\]]+\\s+(\\w+) *\\([^\\)]*\\)*(\\s+|\\w|,)*\\{?\\}?",
-		// line))
+
 		if (!Pattern.matches("(public|protected|private|\\s)*[A-Z]+\\w*\\s*\\(+.*", line))
 		{
 			int index = tab[i + 1].indexOf("(");
@@ -391,9 +443,8 @@ public class ParserScanner
 			((Method) m).setFinal(isFinal);
 			((Method) m).setSynchronized(isSync);
 			// System.out.println( "M:"+line+"--"+m);
-		} else
-		// if(Pattern.matches("(public|protected|private|\\s)* [\\w\\<\\>\\[\\]]+\\s+ *\\([^\\)]*\\)*(\\s+|\\w|,)*\\{?\\}?",
-		// line))
+		} 
+		else
 		{
 			int index = tab[i].indexOf("(");
 			if (index == -1)
@@ -403,7 +454,7 @@ public class ParserScanner
 			// System.out.println("C:"+line+"--"+m);
 		}
 		// System.out.println("D:"+line+m);
-		currentMembername = m.getName();
+		currentMemberID = m.getID();
 		
 		String params = (String) line.subSequence(line.indexOf("(") + 1, line.indexOf(")"));
 
@@ -421,6 +472,45 @@ public class ParserScanner
 				m.getThrowClauses().add(tabExcpt[j]);
 			}
 		}
+		
+		
+		if (!isAbstract && !isInterface)
+		{
+			m.methodBody = "";
+			
+			//System.out.println("meth line: "+line);
+			
+			int brackets = 0;
+			
+			if(line.contains("{"))
+			{
+				brackets++;
+				m.methodBody += "{";
+			}
+			if(line.contains("}"))
+			{
+				brackets--;
+				m.methodBody += "}";
+			}
+			
+			theNextLine = pageScanner.nextLine();
+			do
+			{
+				if (theNextLine.contains("{"))
+					brackets++;
+				if (theNextLine.contains("}"))
+					brackets--;	
+				
+				m.methodBody += theNextLine;
+				m.methodBody += "\n";
+				if(brackets == 0)
+					break;
+				else
+					theNextLine = pageScanner.nextLine();
+			}while(true);
+		}
+		else
+			m.methodBody =";";
 		
 		return m;
 	}
@@ -459,7 +549,8 @@ public class ParserScanner
 			ass = Association.N_FIXED;
 			aParam = aParam.replace("...", "");
 			isEllipse = true;
-		} else if (aParam.contains("<"))
+		} 
+		else if (aParam.contains("<"))
 			ass = Association.ONE_MANY;
 		else
 			ass = Association.ONE;
@@ -493,9 +584,9 @@ public class ParserScanner
 			else
 			{
 				p = new Parametre(smalltab[index+1], PrimitiveType.BYTE);
-				paramInfo += currentElemName + ",";
-				paramInfo += currentMembername + ",";
-				paramInfo += smalltab[index+1] + ","; // the param name
+				paramInfo += currentElemId + ",";
+				paramInfo += currentMemberID + ",";
+				paramInfo += p.getID() + ","; // the param name
 				paramInfo += smalltab[index] + ","; // the param type
 				paramInfo += ass + "%";
 			}
@@ -504,7 +595,8 @@ public class ParserScanner
 		case N_FIXED:
 			if (isPrimitive(smalltab[index]))
 				p = new Parametre(smalltab[index + 1], new ArrayType(getPrimitive(smalltab[index]), dimension, isEllipse));
-			else if (smalltab[index] == "String")
+			
+			else if (smalltab[index].equals("String"))
 			{
 				try
 				{
@@ -514,15 +606,16 @@ public class ParserScanner
 			}
 			else
 			{
-				p = new Parametre(smalltab[index + 1], new ArrayType(dimension, isEllipse));
-				paramInfo += currentElemName + ",";
-				paramInfo += currentMembername + ",";
-				paramInfo += smalltab[index + 1] + ",";
+				p = new Parametre(smalltab[index + 1], new ArrayType(PrimitiveType.BYTE,dimension, isEllipse));
+				paramInfo += currentElemId + ",";
+				paramInfo += currentMemberID + ",";
+				paramInfo += p.getID() + ",";
 				paramInfo += smalltab[index] + ",";
 				paramInfo += ass + "%";
 			}
 			break;
 		case ONE_MANY:
+			//System.out.println("param is a list");
 			String t = (String) aParam.subSequence(aParam.indexOf("<") + 1, aParam.indexOf(">"));
 			if (t.trim() == "String")
 			{
@@ -534,10 +627,10 @@ public class ParserScanner
 			}
 			else
 			{
-				p = new Parametre(aParam.substring(aParam.indexOf(">") + 2), new ListType());
-				paramInfo += currentElemName + ",";
-				paramInfo += currentMembername + ",";
-				paramInfo += smalltab[index + 1] + ",";
+				p = new Parametre(aParam.substring(aParam.indexOf(">") + 2), new ListType(PrimitiveType.BYTE));
+				paramInfo += currentElemId + ",";
+				paramInfo += currentMemberID + ",";
+				paramInfo += p.getID() + ",";
 				paramInfo += t + ",";
 				paramInfo += ass + "%";
 			}
@@ -613,9 +706,9 @@ public class ParserScanner
 			else
 			{
 				a = new Attribute(line.substring(line.indexOf(">") + 2), access, new ListType());
-				attrInfo += currentElemName + ",";
+				attrInfo += currentElemId + ",";
 				attrInfo += t + ","; // the type to set
-				attrInfo += line.substring(line.indexOf(">") + 2) + ","; //the name
+				attrInfo += a.getID()+ ",";
 				attrInfo += ass + "%";
 			}
 			
@@ -634,9 +727,9 @@ public class ParserScanner
 			else
 			{
 				a = new Attribute(smalltab[index + 1], access, new ArrayType(dims, false));
-				attrInfo += currentElemName + ",";
+				attrInfo += currentElemId + ",";
 				attrInfo += smalltab[index]+ ",";
-				attrInfo += smalltab[index+1]+ ",";
+				attrInfo += a.getID()+ ",";
 				attrInfo += ass + "%";
 			}
 		}
@@ -654,9 +747,9 @@ public class ParserScanner
 			else
 			{
 				a = new Attribute(smalltab[index + 1], access, PrimitiveType.BYTE);
-				attrInfo += currentElemName + ",";
+				attrInfo += currentElemId + ",";
 				attrInfo += smalltab[index]+ ",";
-				attrInfo += smalltab[index+1]+ ",";
+				attrInfo += a.getID()+ ",";
 				attrInfo += ass + "%";
 			}
 		}
@@ -697,7 +790,7 @@ public class ParserScanner
 
 	private ClassType getClassType(String name)
 	{
-		for (CompilationUnit cuts : project)
+		for (CompilationUnit cuts : project.getFilesRecord())
 		{
 			for (Element e : cuts.getElements())
 			{
@@ -711,7 +804,7 @@ public class ParserScanner
 
 	private InterfaceType getInterface(String name)
 	{
-		for (CompilationUnit cuts : project)
+		for (CompilationUnit cuts : project.getFilesRecord())
 		{
 			for (Element e : cuts.getElements())
 			{
@@ -726,14 +819,17 @@ public class ParserScanner
 	private void setParent()
 	{
 		String[] tabAT = extendsInfo.split("%");
-
 		try
 		{
+			if(!extendsInfo.isEmpty())
 			for (int i = 0; i < tabAT.length; i++)
 			{
 				String[] tabColumn = tabAT[i].split(",");
 				// add the super class to his child
-				getClassType(tabColumn[0]).getExtendList().add(getClassType(tabColumn[1]));
+				if(getClassType(tabColumn[1]) == null)
+					((ClassType) project.getElementByID(Integer.valueOf(tabColumn[0]))).getExtendList().add(new APIclass(Object.class, tabColumn[1]));
+				else
+					((ClassType) project.getElementByID(Integer.valueOf(tabColumn[0]))).getExtendList().add(getClassType(tabColumn[1]));
 			}
 
 		} catch (Exception e)
@@ -755,7 +851,10 @@ public class ParserScanner
 				// add the interface(s)
 				for (int j = 1; j < tabColumn.length; j++)
 				{
-					getClassType(tabColumn[0]).getImplList().add(getInterface(tabColumn[j]));
+					if(getInterface(tabColumn[1]) == null)
+						((ClassType) project.getElementByID(Integer.valueOf(tabColumn[0]))).getImplList().add(new APIinterface(Object.class, tabColumn[j]));
+					else
+						((ClassType) project.getElementByID(Integer.valueOf(tabColumn[0]))).getImplList().add(getInterface(tabColumn[j]));
 				}
 			}
 
@@ -766,51 +865,39 @@ public class ParserScanner
 		}
 	}
 	
-	private Element getElementFromProject(String name)
-	{
-		for (CompilationUnit cuts : project)
-		{
-			for (Element e : cuts.getElements())
-			{
-				if (e.getName().equals(name))
-						return e;
-			}
-		}
-		return null;
-	}
-	
 	private void setAttributes()
 	{
 		String[] tabAT = attrInfo.split("%");
 		
-		// [0]: nom de classe d'appartenance, [1]: etype, [2]: nom attr, [3]:  asssoc%
-		try
-		{
-			for (int i = 0; i < tabAT.length; i++)
-			{
-				String[] tabColumn = tabAT[i].split(",");
-				
-				for (int j = 1; j < tabColumn.length; j++)
-				{
-					Type from = (Type)getElementFromProject((tabColumn[0]));
-					ElementType madeOf = (ElementType)getElementFromProject((tabColumn[1]));
-					Attribute ax = (Attribute)from.getElement(tabColumn[2]);
-					
-					if(tabColumn[3].equals("ONE"))
-						ax.setType(madeOf);
-					else if(tabColumn[3].equals("N_FIXED"))
-						((ArrayType)ax.getType()).seteType(madeOf);
-					else 
-						((ListType)ax.getType()).seteType(madeOf);
-					
-					//System.out.println("attr:" +ax);
-				}
-			}
+		// [0]: id de classe d'appartenance, [1]: etype, [2]: id attr, [3]:  asssoc%
 
-		} catch (Exception e)
+		for (int i = 0; i < tabAT.length; i++)
 		{
-			// TODO: look to imports must be a java api whatever
-			System.err.println("error Attributes");
+			String[] tabColumn = tabAT[i].split(",");
+			
+			for (int j = 1; j < tabColumn.length; j++)
+			{
+				Type from = (Type)project.getElementByID(Integer.valueOf(tabColumn[0]));
+				ElementType madeOf = null; 
+				Attribute ax = (Attribute)from.getElement(Integer.valueOf(tabColumn[2]));
+				try
+				{
+					if ((madeOf = (ElementType)project.getElementFromProject(tabColumn[1])) == null);
+						madeOf = new APIclass(Object.class, tabColumn[1]);
+				
+				} catch (Exception e)
+				{
+					System.err.println("error Attributes " + ax + e.getMessage());		
+				}
+				
+				if(tabColumn[3].equals("ONE"))
+					ax.setType(madeOf);
+				else if(tabColumn[3].equals("N_FIXED"))
+					((ArrayType)ax.getType()).seteType(madeOf);
+				else 
+					((ListType)ax.getType()).seteType(madeOf);			
+				//System.out.println("attr:" +ax);
+			}
 		}
 	}
 	
@@ -818,44 +905,42 @@ public class ParserScanner
 	{
 		String[] tabAT = paramInfo.split("%");
 		
-		// [0]: nom de classe d'appartenance, [1]: nom de la methode, [2]: nom param, [3]:  etype, [4]: assoc%
-		try
-		{
-			for (int i = 0; i < tabAT.length; i++)
-			{
-				String[] tabColumn = tabAT[i].split(",");
-				
-				for (int j = 1; j < tabColumn.length; j++)
-				{
-					Type tx = (Type)getElementFromProject((tabColumn[0]));
-					ElementType madeOf = (ElementType)getElementFromProject((tabColumn[3]));
-					Member mx = (Member)tx.getElement(tabColumn[1]);
-					Parametre px = null;
-					for (Parametre p : mx.getParams()) 
-					{
-						if(p.getName().equals(tabColumn[2]))
-						{
-							px = p;
-							break;
-						}
-					}
-					
-					if(tabColumn[4].equals("ONE"))
-						px.setType(madeOf);
-					else if(tabColumn[4].equals("N_FIXED"))
-						((ArrayType)px.getType()).seteType(madeOf);
-					else 
-						((ListType)px.getType()).seteType(madeOf);
-					
-					//System.out.println("param:" +px);
-				}
-			}
-			
+		// [0]: id de classe d'appartenance, [1]: id de la methode, [2]: id param, [3]:  etype, [4]: assoc%
 
-		} catch (Exception e)
+		for (int i = 0; i < tabAT.length; i++)
 		{
-			// TODO: look to imports must be a java api whatever
-			System.err.println("error Params");
+			String[] tabColumn = tabAT[i].split(",");
+			
+			for (int j = 1; j < tabColumn.length; j++)
+			{
+				Type tx = (Type)project.getElementByID(Integer.valueOf(tabColumn[0]));
+				ElementType madeOf = (ElementType)project.getElementFromProject((tabColumn[3]));
+				Member mx = (Member)tx.getElement(Integer.valueOf(tabColumn[1]));
+				try
+				{
+					if ((madeOf = (ElementType)project.getElementFromProject((tabColumn[3]))) == null);
+						madeOf = new APIclass(Object.class, tabColumn[3]);
+				}
+				catch(Exception e)
+				{
+					System.err.println("param error " + e.getMessage() );
+				}
+				for (Parametre p : mx.getParams()) 
+				{
+					if(p.getID() == Integer.valueOf(tabColumn[2]));
+					{
+						//System.out.println(p);
+						if(tabColumn[4].equals("ONE"))
+							p.setType(madeOf);
+						else if(tabColumn[4].equals("N_FIXED"))
+							((ArrayType)p.getType()).seteType(madeOf);
+						else 
+							((ListType)p.getType()).seteType(madeOf);
+						break;
+					}
+				}
+				//System.out.println("param:" +px);
+			}
 		}
 	}
 }

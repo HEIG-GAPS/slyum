@@ -2,6 +2,12 @@ package dataRecord;
 
 public class InterfaceField extends Field
 {
+	public InterfaceField(String name, ElementType type,String value, int id)
+	{
+		super(name, type, value, id);
+		setFinal(true);
+	}
+	
 	public InterfaceField(String name, ElementType type,String value)
 	{
 		super(name, type, value);

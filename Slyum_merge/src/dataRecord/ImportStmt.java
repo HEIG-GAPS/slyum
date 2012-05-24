@@ -15,6 +15,17 @@ public class ImportStmt extends Statement
 		this(importName);
 		this.isStatic = isStatic;
 	}
+	
+	public ImportStmt(String importName, int id)
+	{
+		super(kw, importName, id);
+	}
+
+	public ImportStmt(String importName, boolean isStatic, int id)
+	{
+		super(kw, importName, id);
+		this.isStatic = isStatic;
+	}
 
 	public void accept(ElementVisitor visitor)
 	{

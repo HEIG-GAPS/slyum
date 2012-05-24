@@ -7,7 +7,7 @@ public class ProjectManager
 {
 	private String name;
 	private LinkedList<CompilationUnit> filesRecord = new LinkedList<CompilationUnit>();
-	private static ProjectManager instance;
+	private static ProjectManager instance = new ProjectManager();
 
 	private ProjectManager()
 	{}
@@ -54,9 +54,57 @@ public class ProjectManager
 
 	public static ProjectManager getInstance()
 	{
-		if (instance == null)
-			return new ProjectManager();
 		return instance;
 	}
+	
+	public Element getElementByID(int id)
+	{
+		for (CompilationUnit cu : filesRecord)
+		{
+			for (Element e : cu.getElements())
+			{
+				if(e.getID() == id)
+					return e;
+			}
+			
+			for (Element e : cu.getElements())
+			{
+				Type inner = null;
+				if(e instanceof Type)
+					inner = (Type) e;
+				for (Element t : inner.getElements())
+				{
+					if(t.getID() == id)
+						return e;
+				}
+			}
+			
+		}
+		return null;
+	}
+	
+	public Element getElementFromProject(String name)
+	{
+		for (CompilationUnit cuts : filesRecord)
+		{
+			for (Element e : cuts.getElements())
+			{
+				if (e.getName().equals(name))
+						return e;
+			}
+			
+		}
+		return null;
+	}
+	
+	
+//	public void removeElement(Element e)
+//	{
+//		for (CompilationUnit cu : filesRecord)
+//		{
+//			if(cu.removeElement(e))
+//				break;
+//		}
+//	}
 
 }

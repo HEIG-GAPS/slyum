@@ -2,7 +2,7 @@ package dataRecord;
 
 import java.util.LinkedList;
 
-public abstract class Type extends Declaration implements Implementable
+public class Type extends Declaration implements Implementable, ElementType
 {
 	private Keyword type;
 	private boolean isStatic = false; // only nested types
@@ -14,8 +14,17 @@ public abstract class Type extends Declaration implements Implementable
 		super(name, access);
 		this.type = type;
 	}
+	
+	public Type(String name, Keyword access, Keyword type, int id)
+	{
+		super(name, access, id);
+		this.type = type;
+	}
 
-	public abstract void accept(ElementVisitor v);
+	public void accept(ElementVisitor v)
+	{
+		v.visit(this);
+	}
 
 	public Keyword getType()
 	{
@@ -50,6 +59,22 @@ public abstract class Type extends Declaration implements Implementable
 	public void setImplList(LinkedList<Implementable> implList)
 	{
 		this.implList = implList;
+	}
+
+	@Override
+	public String getElementType()
+	{
+		return getName();
+	}
+	
+	public Element getElementByID(int id)
+	{
+		for (Element e : getElements())
+		{
+			if(e.getID() == id)
+				return e;
+		}
+		return null;
 	}
 
 }

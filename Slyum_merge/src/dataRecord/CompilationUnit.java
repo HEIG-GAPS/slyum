@@ -52,9 +52,9 @@ public class CompilationUnit implements Element
 		elements.add(e);
 	}
 
-	public void removeElement(Element e)
+	public boolean removeElement(Element e)
 	{
-		elements.remove(e);
+		return elements.remove(e);
 	}
 
 	public List<Element> getElements()
@@ -82,5 +82,11 @@ public class CompilationUnit implements Element
 		}
 
 		return tmp;
+	}
+
+	@Override
+	public int getID()
+	{
+		return 0;
 	}
 }

@@ -587,12 +587,57 @@ public class PanelClassDiagram extends JPanel
 
 	public void importCode()
 	{
-		new ImportData("C:/Users/Fabrizio/workspace/CompUnit/testFiles");
+		final JFileChooser fc = new JFileChooser(System.getProperty("user.home"));
+		fc.setDialogType(JFileChooser.OPEN_DIALOG);
+		fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		fc.setMultiSelectionEnabled(true);
+//		FileFilter filter = new FileFilter()
+//		{
+//			
+//			@Override
+//			public String getDescription()
+//			{
+//				return "Java source code";
+//			}
+//			
+//			@Override
+//			public boolean accept(File f)
+//			{
+//				final String extension = Utility.getExtension(f);
+//				
+//				return extension.equals(".java");
+//			}
+//		};
+		//fc.setFileFilter(filter);
+		
+		final int result = fc.showOpenDialog(this);
+		
+		if (result == JFileChooser.APPROVE_OPTION)
+		{
+			File[] files = fc.getSelectedFiles();
+			
+			for (File file : files)
+			{
+				System.out.println(file.getPath());
+			}
+			
+			try
+			{
+				new ImportData(files);
+				
+			} catch (Exception e)
+			{
+				SMessageDialog.showErrorMessage("import failed\n" + "error : " +e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		
+		//new ImportData("C:/Users/Fabrizio/workspace/CompUnit/testFiles");
 	}
 
 	public void exportCode()
 	{
-		final JFileChooser fc = new JFileChooser(Slyum.getCurrentDirectoryFileChooser());
+		final JFileChooser fc = new JFileChooser(System.getProperty("user.home"));
 		fc.setDialogType(JFileChooser.SAVE_DIALOG);
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fc.setAcceptAllFileFilterUsed(false);
@@ -612,7 +657,7 @@ public class PanelClassDiagram extends JPanel
 			if(classDiagram.getComponents().isEmpty())
 				SMessageDialog.showErrorMessage("Cannot export empty diagram");
 			else
-				new ExportData(dir.getPath());
+				new ExportData(dir.getPath()).start();
 		}
 		
 	}

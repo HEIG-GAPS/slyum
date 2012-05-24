@@ -13,6 +13,16 @@ public class Parametre extends Field
 	{
 		super(name, type, value);
 	}
+	
+	public Parametre(String name, ElementType type, int id)
+	{
+		super(name, type, id);
+	}
+
+	public Parametre(String name, ElementType type, String value, int ID)
+	{
+		super(name, type, value, ID);
+	}
 
 	@Override
 	public void accept(ElementVisitor visitor)
