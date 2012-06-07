@@ -44,6 +44,7 @@ public class Slyum extends JFrame implements ActionListener
 	private static final String APP_NAME = "Slyum";
 	public static final float version = 1.3f;
 	public final static String EXTENTION = "sly";
+	public final static String JAVA_EXTENSION = "java";
 	public final static String APP_DIR_NAME = APP_NAME;
 	public final static String FILE_SEPARATOR = System.getProperty("file.separator");
 	public final static Point DEFAULT_SIZE = new Point(1024, 760);
@@ -119,7 +120,8 @@ public class Slyum extends JFrame implements ActionListener
 	
 	// Import Export diagramme
 	public static final String ACTION_IMPORT = "Import code";
-	public static final String ACTION_EXPORT_PROJECT = "Export diagram";
+	public static final String ACTION_EXPORT_PROJECT = "Export diagram (Java)";
+	public static final String ACTION_EXPORT_CPP = "Export diagram (C++)";
 	
 	// Accelerator
 	public final static String KEY_NEW_PROJECT = "ctrl alt N";
@@ -170,6 +172,7 @@ public class Slyum extends JFrame implements ActionListener
 	
 	public static final String KEY_IMPORT_CODE = "ctrl shift M";
 	public static final String KEY_EXPORT_DIAGRAM = "ctrl shift T";
+	public static final String KEY_EXPORT_CPP = "ctrl shift Y";
 
 	private static Slyum instance;
 	private static JMenuItem undo, redo;
@@ -439,12 +442,6 @@ public class Slyum extends JFrame implements ActionListener
 		
 		else if (e.getActionCommand().equals(ACTION_ABOUT))
 		  new AboutBox(this);
-		
-		else if (e.getActionCommand().equals(ACTION_IMPORT))
-			  new AboutBox(this);
-		
-		else if (e.getActionCommand().equals(ACTION_EXPORT_PROJECT))
-			  new AboutBox(this);
 	}
 
 	/**
@@ -799,11 +796,18 @@ public class Slyum extends JFrame implements ActionListener
 			// Menu item import code
 			menuItem = createMenuItem("Import Code", "import16", KeyEvent.VK_M, KEY_IMPORT_CODE, ACTION_IMPORT, SPanelFileComponent.getInstance().getBtnImportCode());
 			menu.add(menuItem);
+			
+			// subMenu export diagram
+			JMenu subMenuExport = new JMenu("Export Diagram");
+			menu.add(subMenuExport);
 	
 			// Menu item export diagram
-			menuItem = createMenuItem("Export Diagram", "exportCode", KeyEvent.VK_T, KEY_EXPORT_DIAGRAM, ACTION_EXPORT_PROJECT, SPanelFileComponent.getInstance().getBtnExportDiagram());
-			menu.add(menuItem);
+			menuItem = createMenuItem(" Java", "exportCode", KeyEvent.VK_T, KEY_EXPORT_DIAGRAM, ACTION_EXPORT_PROJECT, SPanelFileComponent.getInstance().getBtnExportDiagram());
+			subMenuExport.add(menuItem);
 			
+			// Menu export C++
+			menuItem = createMenuItem(" C++", "ExportCpp", KeyEvent.VK_Y, KEY_EXPORT_CPP, ACTION_EXPORT_CPP, SPanelFileComponent.getInstance().getBtnExportCpp());
+			subMenuExport.add(menuItem);
 		}
 
 		// Menu Element

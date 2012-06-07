@@ -2,27 +2,31 @@ package dataRecord;
 
 public interface ElementVisitor
 {
-	void visit(PackageStmt ps);
+	String visit(PackageStmt ps);
 
-	void visit(ImportStmt importStmt);
+	String visit(ImportStmt importStmt);
 
-	void visit(Comment comment);
+	String visit(Comment comment);
 
-	void visit(Type header);
+	String visit(Type header);
 
-	void visit(EnumType eh);
+	String visit(EnumType eh);
 
-	void visit(InterfaceType ih);
+	String visit(InterfaceType ih);
 
-	void visit(Constructor constructorHeader);
+	String visit(Constructor constructorHeader);
 
-	void visit(Method methodHeader);
+	String visit(Method methodHeader);
 
-	void visit(CompilationUnit compilationUnit);
+	String visit(CompilationUnit compilationUnit);
 
-	void visit(Attribute attribute);
+	String visit(Attribute attribute);
 
-	void visit(Parametre parametre);
+	String visit(Parametre parametre);
 
-	void visit(InterfaceField interfaceField);
+	String visit(InterfaceField interfaceField);
+	
+	String visit(ClassType ct);
+
+	//String visit(ListType listType);
 }

@@ -95,7 +95,7 @@ public abstract class Field implements Element
 	}
 
 	@Override
-	public abstract void accept(ElementVisitor visitor);
+	public abstract String accept(ElementVisitor visitor);
 
 	public ElementType getType()
 	{

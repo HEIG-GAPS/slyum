@@ -16,10 +16,12 @@ public class ExportData extends Thread
 	private final classDiagram.ClassDiagram classDiagram = PanelClassDiagram.getInstance().getClassDiagram();
 	private final ProjectManager project = ProjectManager.getInstance();
 	private IDiagramComponent currentComponent;
+	private ElementVisitor v;
 	
-	public ExportData( String path)
+	public ExportData(String path, ElementVisitor v)
 	{
 		this.path = path;
+		this.v = v;
 	}
 	
 	private void export()
@@ -186,7 +188,7 @@ public class ExportData extends Thread
 			}
 		}
 		
-		project.generateFiles(new JavaWriter(path));
+		project.generateFiles(new Writer(path,v));
 	}
 
 	

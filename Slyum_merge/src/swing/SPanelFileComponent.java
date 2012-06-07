@@ -24,10 +24,11 @@ public class SPanelFileComponent extends JPanelRounded implements ActionListener
 	private static final String TT_PRINT = "Print " + Utility.keystrokeToString(Slyum.KEY_PRINT);
 	private static final String TT_IMPORT_CODE = "Import code "+ Utility.keystrokeToString(Slyum.KEY_IMPORT_CODE);
 	private static final String TT_EXPORT_DIAGRAM = "Export diagram "+ Utility.keystrokeToString(Slyum.KEY_EXPORT_DIAGRAM);
+	private static final String TT_EXPORT_CPP = "Export diagram cpp" + Utility.keystrokeToString(Slyum.KEY_EXPORT_CPP);
 	
 	private SButton newProject, open, save, export, klipper, print;
 	
-	private SButton importCode, exportDiagram;
+	private SButton importCode, exportDiagram, exportDiagramCpp;
 	
 	private static SPanelFileComponent instance;
 	
@@ -66,7 +67,10 @@ public class SPanelFileComponent extends JPanelRounded implements ActionListener
 			p.importCode();
 		
 		if (Slyum.ACTION_EXPORT_PROJECT.equals(e.getActionCommand()))
-			p.exportCode();	
+			p.exportCode(Slyum.JAVA_EXTENSION);	
+		
+		if (Slyum.ACTION_EXPORT_CPP.equals(e.getActionCommand()))
+			p.exportCode("cpp");
 	}
 
 	private SPanelFileComponent()
@@ -86,6 +90,7 @@ public class SPanelFileComponent extends JPanelRounded implements ActionListener
 		add(print = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "print.png"), Slyum.ACTION_PRINT, Color.BLUE, TT_PRINT));
 		add(importCode = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "import16.png"), Slyum.ACTION_IMPORT, Color.BLUE, TT_IMPORT_CODE));
 		add(exportDiagram = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "exportCode.png"), Slyum.ACTION_EXPORT_PROJECT, Color.BLUE, TT_EXPORT_DIAGRAM));
+		add(exportDiagramCpp = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "ExportCpp.png"), Slyum.ACTION_EXPORT_CPP, Color.BLUE, TT_EXPORT_CPP));
 		
 		setMaximumSize(new Dimension(43 * ((GridLayout)getLayout()).getColumns(), 50));
 	}
@@ -133,5 +138,10 @@ public class SPanelFileComponent extends JPanelRounded implements ActionListener
 	public SButton getBtnExportDiagram()
 	{
 		return exportDiagram;
+	}
+	
+	public SButton getBtnExportCpp()
+	{
+		return exportDiagramCpp;
 	}
 }

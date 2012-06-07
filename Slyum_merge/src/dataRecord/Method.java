@@ -49,9 +49,9 @@ public class Method extends Member
 	}
 
 	@Override
-	public void accept(ElementVisitor visitor)
+	public String accept(ElementVisitor visitor)
 	{
-		visitor.visit(this);
+		return visitor.visit(this);
 	}
 
 	@Override
@@ -75,11 +75,19 @@ public class Method extends Member
 		s += ParamToString();
 		s += throwClausesToString();
 
+
 		if (isAbstract)
 			s+= methodBody;
 		else
-			s += "\n" + methodBody;
-		
+		{	
+			String tabs = "";
+			for (int i = 0; i < depth; i++)
+			{
+				tabs += "\t";
+			}
+			s += "\n"+ tabs + methodBody;
+		}
+
 		return s;
 	}
 

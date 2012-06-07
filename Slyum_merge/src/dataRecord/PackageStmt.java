@@ -14,9 +14,9 @@ public class PackageStmt extends Statement
 		super(kw, packageName, id);
 	}
 
-	public void accept(ElementVisitor visitor)
+	public String accept(ElementVisitor visitor)
 	{
-		visitor.visit(this);
+		return visitor.visit(this);
 	}
 
 	public String toString()

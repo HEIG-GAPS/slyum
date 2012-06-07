@@ -10,8 +10,6 @@ import utility.SMessageDialog;
 
 public class ParserScanner
 {
-	
-	//private LinkedList<CompilationUnit> project = new LinkedList<CompilationUnit>();
 	private final ProjectManager project = ProjectManager.getInstance();
 	private Scanner pageScanner;
 	private String theNextLine;
@@ -300,7 +298,7 @@ public class ParserScanner
 		EnumType et = new EnumType(name, access);
 		et.setStatic(isStatic);
 		currentElemId = et.getID();
-
+		
 		theNextLine = pageScanner.nextLine();
 		while (!theNextLine.contains("}"))
 		{
@@ -431,6 +429,7 @@ public class ParserScanner
 
 		Member m = null;
 
+		// it's a method
 		if (!Pattern.matches("(public|protected|private|\\s)*[A-Z]+\\w*\\s*\\(+.*", line))
 		{
 			int index = tab[i + 1].indexOf("(");
@@ -444,7 +443,7 @@ public class ParserScanner
 			((Method) m).setSynchronized(isSync);
 			// System.out.println( "M:"+line+"--"+m);
 		} 
-		else
+		else // it's a constructor
 		{
 			int index = tab[i].indexOf("(");
 			if (index == -1)
@@ -460,7 +459,7 @@ public class ParserScanner
 
 		if (params.length() != 0)
 			m.setParams(buildParams(params));
-
+		
 		String excpt = (String) line.substring(line.indexOf(")") + 1);
 
 		if (excpt.length() > 3)
@@ -540,6 +539,7 @@ public class ParserScanner
 
 	private Parametre buildParam(String aParam)
 	{
+		aParam = aParam.trim();
 		Association ass;
 		boolean isEllipse = false;
 		int dimension = 0;
@@ -834,7 +834,6 @@ public class ParserScanner
 
 		} catch (Exception e)
 		{
-			// TODO: look to imports must be a java api class
 			System.err.println("error setParent");
 		}
 	}
@@ -867,6 +866,9 @@ public class ParserScanner
 	
 	private void setAttributes()
 	{
+		if (attrInfo.isEmpty())
+				return;
+		
 		String[] tabAT = attrInfo.split("%");
 		
 		// [0]: id de classe d'appartenance, [1]: etype, [2]: id attr, [3]:  asssoc%
@@ -903,6 +905,9 @@ public class ParserScanner
 	
 	private void setParametres()
 	{
+		if (paramInfo.isEmpty())
+			return;
+		
 		String[] tabAT = paramInfo.split("%");
 		
 		// [0]: id de classe d'appartenance, [1]: id de la methode, [2]: id param, [3]:  etype, [4]: assoc%
@@ -910,36 +915,32 @@ public class ParserScanner
 		for (int i = 0; i < tabAT.length; i++)
 		{
 			String[] tabColumn = tabAT[i].split(",");
-			
-			for (int j = 1; j < tabColumn.length; j++)
+
+			Type tx = (Type)project.getElementByID(Integer.valueOf(tabColumn[0]));
+			ElementType madeOf = (ElementType)project.getElementFromProject((tabColumn[3]));
+			Member mx = (Member)tx.getElement(Integer.valueOf(tabColumn[1]));
+	
+			try
 			{
-				Type tx = (Type)project.getElementByID(Integer.valueOf(tabColumn[0]));
-				ElementType madeOf = (ElementType)project.getElementFromProject((tabColumn[3]));
-				Member mx = (Member)tx.getElement(Integer.valueOf(tabColumn[1]));
-				try
+				if (madeOf == null);
+					madeOf = new APIclass(Object.class, tabColumn[3]);
+			}
+			catch(Exception e)
+			{
+				System.err.println("param error " + e.getMessage() );
+			}
+			
+			for (Parametre p : mx.getParams()) 
+			{
+				if(p.getID() == Integer.valueOf(tabColumn[2]))
 				{
-					if ((madeOf = (ElementType)project.getElementFromProject((tabColumn[3]))) == null);
-						madeOf = new APIclass(Object.class, tabColumn[3]);
+					if(tabColumn[4].equals("ONE"))
+						p.setType(madeOf);
+					else if(tabColumn[4].equals("N_FIXED"))
+						((ArrayType)p.getType()).seteType(madeOf);
+					else 
+						((ListType)p.getType()).seteType(madeOf);
 				}
-				catch(Exception e)
-				{
-					System.err.println("param error " + e.getMessage() );
-				}
-				for (Parametre p : mx.getParams()) 
-				{
-					if(p.getID() == Integer.valueOf(tabColumn[2]));
-					{
-						//System.out.println(p);
-						if(tabColumn[4].equals("ONE"))
-							p.setType(madeOf);
-						else if(tabColumn[4].equals("N_FIXED"))
-							((ArrayType)p.getType()).seteType(madeOf);
-						else 
-							((ListType)p.getType()).seteType(madeOf);
-						break;
-					}
-				}
-				//System.out.println("param:" +px);
 			}
 		}
 	}

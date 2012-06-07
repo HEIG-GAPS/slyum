@@ -27,9 +27,9 @@ public class EnumType extends Type
 	}
 
 	@Override
-	public void accept(ElementVisitor v)
+	public String accept(ElementVisitor v)
 	{
-		v.visit(this);
+		return v.visit(this);
 	}
 
 	public String toString()

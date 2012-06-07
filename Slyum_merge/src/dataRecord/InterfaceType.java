@@ -23,9 +23,9 @@ public class InterfaceType extends Type implements Implementable
 	}
 
 	@Override
-	public void accept(ElementVisitor v)
+	public String accept(ElementVisitor v)
 	{
-		v.visit(this);
+		return v.visit(this);
 	}
 
 	public String toString()
