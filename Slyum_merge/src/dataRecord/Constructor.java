@@ -22,9 +22,9 @@ public class Constructor extends Member
 	}
 
 	@Override
-	public void accept(ElementVisitor visitor)
+	public String accept(ElementVisitor visitor)
 	{
-		visitor.visit(this);
+		return visitor.visit(this);
 	}
 
 	@Override

@@ -10,6 +10,7 @@ public abstract class Declaration implements Element
 	private String name;
 	private Keyword access;
 	private List<Element> elements;
+	protected static int depth = 0;
 	private int ID;
 
 	public Declaration(String name, Keyword access)
@@ -97,6 +98,6 @@ public abstract class Declaration implements Element
 	}
 
 	@Override
-	public abstract void accept(ElementVisitor visitor);
+	public abstract String accept(ElementVisitor visitor);
 
 }

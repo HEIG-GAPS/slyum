@@ -42,6 +42,6 @@ public abstract class Statement implements Element
 		return ID;
 	}
 	
-	public abstract void accept(ElementVisitor visitor);
+	public abstract String accept(ElementVisitor visitor);
 
 }

@@ -72,10 +72,16 @@ public class ProjectManager
 				Type inner = null;
 				if(e instanceof Type)
 					inner = (Type) e;
-				for (Element t : inner.getElements())
+				try
 				{
-					if(t.getID() == id)
-						return e;
+					for (Element t : inner.getElements())
+					{
+						if(t.getID() == id)
+							return e;
+					}
+				} catch (Exception e2)
+				{
+					// TODO: handle exception
 				}
 			}
 			

@@ -68,7 +68,7 @@ public abstract class Member extends Declaration
 	}
 
 	@Override
-	public abstract void accept(ElementVisitor visitor);
+	public abstract String accept(ElementVisitor visitor);
 
 	public List<Parametre> getParams()
 	{

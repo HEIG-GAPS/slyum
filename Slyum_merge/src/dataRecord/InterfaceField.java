@@ -15,9 +15,9 @@ public class InterfaceField extends Field
 	}
 
 	@Override
-	public void accept(ElementVisitor visitor)
+	public String accept(ElementVisitor visitor)
 	{
-		visitor.visit(this);
+		return visitor.visit(this);
 	}
 
 	@Override

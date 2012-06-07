@@ -6,7 +6,7 @@ public class Type extends Declaration implements Implementable, ElementType
 {
 	private Keyword type;
 	private boolean isStatic = false; // only nested types
-	protected static int depth = 0;
+	//protected static int depth = 0;
 	protected LinkedList<Implementable> implList = new LinkedList<Implementable>();
 
 	public Type(String name, Keyword access, Keyword type)
@@ -21,9 +21,9 @@ public class Type extends Declaration implements Implementable, ElementType
 		this.type = type;
 	}
 
-	public void accept(ElementVisitor v)
+	public String accept(ElementVisitor v)
 	{
-		v.visit(this);
+		return v.visit(this);
 	}
 
 	public Keyword getType()

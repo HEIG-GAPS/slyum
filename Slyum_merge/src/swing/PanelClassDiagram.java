@@ -6,7 +6,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.JobAttributes.DialogType;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -39,8 +38,10 @@ import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Visibility;
+import dataRecord.CppVisitor;
 import dataRecord.ExportData;
 import dataRecord.ImportData;
+import dataRecord.JavaVisitor;
 
 /**
  * Show the panel containing all views (hierarchical, properties and graphic)
@@ -591,24 +592,28 @@ public class PanelClassDiagram extends JPanel
 		fc.setDialogType(JFileChooser.OPEN_DIALOG);
 		fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		fc.setMultiSelectionEnabled(true);
-//		FileFilter filter = new FileFilter()
-//		{
-//			
-//			@Override
-//			public String getDescription()
-//			{
-//				return "Java source code";
-//			}
-//			
-//			@Override
-//			public boolean accept(File f)
-//			{
-//				final String extension = Utility.getExtension(f);
-//				
-//				return extension.equals(".java");
-//			}
-//		};
-		//fc.setFileFilter(filter);
+		FileFilter filter = new FileFilter()
+		{
+			
+			@Override
+			public String getDescription()
+			{
+				return "Java source code";
+			}
+			
+			@Override
+			public boolean accept(File f)
+			{
+				if (f.isDirectory())
+					return true;
+				
+				final String extension = Utility.getExtension(f);
+				
+				return extension==null?false:extension.equals(Slyum.JAVA_EXTENSION);
+			}
+		};
+		
+		fc.setFileFilter(filter);
 		
 		final int result = fc.showOpenDialog(this);
 		
@@ -623,7 +628,7 @@ public class PanelClassDiagram extends JPanel
 			
 			try
 			{
-				new ImportData(files);
+				new ImportData(files).start();
 				
 			} catch (Exception e)
 			{
@@ -635,7 +640,7 @@ public class PanelClassDiagram extends JPanel
 		//new ImportData("C:/Users/Fabrizio/workspace/CompUnit/testFiles");
 	}
 
-	public void exportCode()
+	public void exportCode(String s)
 	{
 		final JFileChooser fc = new JFileChooser(System.getProperty("user.home"));
 		fc.setDialogType(JFileChooser.SAVE_DIALOG);
@@ -657,7 +662,12 @@ public class PanelClassDiagram extends JPanel
 			if(classDiagram.getComponents().isEmpty())
 				SMessageDialog.showErrorMessage("Cannot export empty diagram");
 			else
-				new ExportData(dir.getPath()).start();
+			{
+				if (s.equals(Slyum.JAVA_EXTENSION))
+					new ExportData(dir.getPath(), new JavaVisitor()).start();
+				else
+					new ExportData(dir.getPath(), new CppVisitor()).start();
+			}
 		}
 		
 	}
