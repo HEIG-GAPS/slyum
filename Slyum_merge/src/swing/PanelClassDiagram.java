@@ -84,6 +84,7 @@ public class PanelClassDiagram extends JPanel
 		panelToolBar.add(SPanelElement.getInstance());
 		panelToolBar.add(SPanelStyleComponent.getInstance());
 		panelToolBar.add(SPanelZOrder.getInstance());
+		panelToolBar.add(SPanelIOComponent.getInstance());
 		panelToolBar.add(sSlider = new SSlider(Color.YELLOW, 100, 50, 200){
 
 			@Override

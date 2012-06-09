@@ -790,11 +790,15 @@ public class Slyum extends JFrame implements ActionListener
 			// Menu item link note
 			menuItem = createMenuItem("Link Note", "linkNote16", KeyEvent.VK_L, KEY_LINK_NOTE, ACTION_NEW_LINK_NOTE, p.getBtnLinkNote());
 			menu.add(menuItem);
-			
+		}
+		
+		{
 			menu.addSeparator();
 			
+			SPanelIOComponent p = SPanelIOComponent.getInstance();
+			
 			// Menu item import code
-			menuItem = createMenuItem("Import Code", "import16", KeyEvent.VK_M, KEY_IMPORT_CODE, ACTION_IMPORT, SPanelFileComponent.getInstance().getBtnImportCode());
+			menuItem = createMenuItem("Import Code", "import16", KeyEvent.VK_M, KEY_IMPORT_CODE, ACTION_IMPORT, p.getBtnImportCode());
 			menu.add(menuItem);
 			
 			// subMenu export diagram
@@ -802,11 +806,11 @@ public class Slyum extends JFrame implements ActionListener
 			menu.add(subMenuExport);
 	
 			// Menu item export diagram
-			menuItem = createMenuItem(" Java", "exportCode", KeyEvent.VK_T, KEY_EXPORT_DIAGRAM, ACTION_EXPORT_PROJECT, SPanelFileComponent.getInstance().getBtnExportDiagram());
+			menuItem = createMenuItem(" Java", "exportCode", KeyEvent.VK_T, KEY_EXPORT_DIAGRAM, ACTION_EXPORT_PROJECT, p.getBtnExportDiagram());
 			subMenuExport.add(menuItem);
 			
 			// Menu export C++
-			menuItem = createMenuItem(" C++", "ExportCpp", KeyEvent.VK_Y, KEY_EXPORT_CPP, ACTION_EXPORT_CPP, SPanelFileComponent.getInstance().getBtnExportCpp());
+			menuItem = createMenuItem(" C++", "ExportCpp", KeyEvent.VK_Y, KEY_EXPORT_CPP, ACTION_EXPORT_CPP, p.getBtnExportCpp());
 			subMenuExport.add(menuItem);
 		}
 
