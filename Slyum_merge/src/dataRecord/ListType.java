@@ -3,6 +3,7 @@ package dataRecord;
 public class ListType implements ElementType
 {
 	private ElementType eType;
+	private Collection collection;
 	
 	public ListType(ElementType et)
 	{

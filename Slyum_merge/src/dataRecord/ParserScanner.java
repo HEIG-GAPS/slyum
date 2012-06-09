@@ -712,6 +712,9 @@ public class ParserScanner
 				attrInfo += ass + "%";
 			}
 			
+//			if (isCollection(line))
+//				setCollectionType(line, a);
+			
 		}
 		else if (ass.equals(Association.N_FIXED))
 		{
@@ -762,6 +765,7 @@ public class ParserScanner
 
 		return a;
 	}
+
 
 	private boolean isPrimitive(String key)
 	{
