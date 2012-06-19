@@ -11,12 +11,12 @@ import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Method;
 import classDiagram.components.Type;
-import classDiagram.components.Variable;
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
+import classDiagram.relationships.Multiplicity;
 import swing.PanelClassDiagram;
 
 public class ImportData extends Thread
@@ -47,6 +47,10 @@ public class ImportData extends Thread
 		setAssociations();
 		
 		PanelClassDiagram.getInstance().getCurrentGraphicView().adjustWidthAllEntities();
+		
+		Layout layout = new Layout();
+		layout.layout();
+		
 	}
 	
 	private void doTranslation()
@@ -96,6 +100,7 @@ public class ImportData extends Thread
 		}
 		
 		// add Inheritance 
+		//TODO api
 		for (CompilationUnit cu : project.getFilesRecord())
 		{
 			for (Element e : cu.getElements())
@@ -104,26 +109,23 @@ public class ImportData extends Thread
 					if(!((ClassType)e).getExtendList().isEmpty())
 					{
 						Entity child = (Entity)classDiagram.searchComponentById(e.getID());
-						if(((ClassType) e).getExtendList().get(0).getClass() == ClassType.class)
-						{
-							ClassType parent = (ClassType) ((ClassType)e).getExtendList().get(0);
-							Entity parent1 = (Entity)classDiagram.searchComponentById(parent.getID());
-							classDiagram.addInheritance(new Inheritance(child, parent1));
+						for(int z=0; z < ((ClassType)e).getExtendList().size(); z++)
+						{	
+							ClassType dataChild = (ClassType)e;
+							if(dataChild.getExtendList().get(z).getClass() == ClassType.class)
+							{
+								ClassType parent = (ClassType) ((ClassType)e).getExtendList().get(z);
+								Entity parent1 = (Entity)classDiagram.searchComponentById(parent.getID());
+								classDiagram.addInheritance(new Inheritance(child, parent1));
+							}
 						}
-						else
-						{
-							ClassEntity ce2 = new ClassEntity(((APIclass)((ClassType)e).getExtendList().get(0)).getElementType(),Visibility.PUBLIC);
-							classDiagram.addClass(ce2);
-							ce2.notifyObservers();
-							classDiagram.addInheritance(new Inheritance(child, ce2));
-						}		
 					}
 			}
 		}
 		
 		
-		// add interfaces 
-		//TODO add APIInterfaces
+		// add interfaces
+		//TODO api
 		for (CompilationUnit cu : project.getFilesRecord())
 		{
 			for (Element e : cu.getElements())
@@ -143,7 +145,8 @@ public class ImportData extends Thread
 						}
 					}
 			}
-		}		
+		}
+		
 	}
 	
 	private void addClass(ClassType clazz)
@@ -178,7 +181,6 @@ public class ImportData extends Thread
 				Entity parent = (Entity) classDiagram.searchComponentById(inner.getID());
 				classDiagram.addInnerClass(new InnerClass(parent, ce));
 			}
-				
 		}
 		ce.notifyObservers();
 	}
@@ -193,7 +195,7 @@ public class ImportData extends Thread
 		{
 			ListType lt = (ListType)inner.type;
 			a.getType().setCollection(lt.getCollection());
-			System.err.println(a.getName() + a.getType().getCollection());
+			//System.err.println(a.getName() + a.getType().getCollection());
 		}
 		ce.addAttribute(a);
 		ce.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
@@ -241,7 +243,7 @@ public class ImportData extends Thread
 	}
 	
 	private void setAssociations()
-	{
+	{	
 		for (IDiagramComponent component : classDiagram.getComponents())
 		{
 			if (component.getClass() == ClassEntity.class)
@@ -249,22 +251,29 @@ public class ImportData extends Thread
 				ClassEntity source = (ClassEntity)component;
 				for (Attribute ax : source.getAttributes())
 				{
-					System.out.println("nom: " + ax.getName() + " nom type: "+ ax.getType() + " " + ax.getType().getCollection());
+					//System.out.println("nom: " + ax.getName() + " nom type: "+ ax.getType() + " " + ax.getType().getCollection());
 					for (Entity target : association)
 					{
 						if(target.getName().equals(ax.getType().getName()))
 						{
 							Binary b2 = new Binary(source , target, true);
 							if(ax.getType().getCollection()!= null)
-								b2.getRoles().getLast().setName("{"+ ax.getType().getCollection() +"}");
-							classDiagram.addBinary(b2); 
+							{
+								b2.getRoles().getLast().setName("{"+ ax.getType().getCollection() +"} "+ ax.getName());
+								b2.getRoles().getLast().setMultiplicity(Multiplicity.ZERO_OR_MORE);
+							}
+							classDiagram.addBinary(b2);
+							
+							//remove the attribute from the box, leave only the link
+							source.removeAttribute(ax);
+							source.notifyObservers();
 						}
 					}
 				}
 			}
 		}
 	}
-	
+
 	
 	private Visibility translateAccessModifiers(Keyword kw)
 	{
