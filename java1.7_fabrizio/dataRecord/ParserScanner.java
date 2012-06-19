@@ -7,6 +7,7 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import utility.SMessageDialog;
+import utility.Utility;
 
 public class ParserScanner
 {
@@ -21,6 +22,7 @@ public class ParserScanner
 	private int currentElemId;
 	private int currentMemberID;
 	private boolean isInterface = false;
+	private boolean excpt = false;
 
 	public void printDebug() 
 	{
@@ -50,21 +52,27 @@ public class ParserScanner
 
 			try
 			{
+
 				if (fFile.isFile())
 					project.getFilesRecord().add(processLineByLine(fFile));
 				else
 					parseFile(fFile);
-
+				
 			} catch (FileNotFoundException e)
 			{
 				SMessageDialog.showErrorMessage("file is not readable");
 			}
 		}
 		
-		setParent();
-		setInterfaces();
-		setAttributes();
-		setParametres();
+		try
+		{
+			setParent();
+			setInterfaces();
+			setAttributes();
+			setParametres();
+		} catch (Exception e)
+		{
+		}
 
 	}
 
@@ -76,8 +84,13 @@ public class ParserScanner
 			if (f.isDirectory())
 			{
 				parseFile(f);
-			} else
-				project.getFilesRecord().add(processLineByLine(f));
+			} 
+			else 
+			{
+				if(Utility.getExtension(f).equals("java"))
+					project.getFilesRecord().add(processLineByLine(f));
+			}
+				
 		}
 	}
 
@@ -95,7 +108,15 @@ public class ParserScanner
 				theNextLine = pageScanner.nextLine();
 				processLine(theNextLine, unit);
 			}
-		} finally
+		}
+		catch(Exception e)
+		{
+			System.err.println("file: " + file.getName() + " could not be parsed");
+			SMessageDialog.showErrorMessage("file: " + file.getName() + " could not be parsed");
+			unit.setFile(file);
+			return unit;
+		}
+		finally
 		{
 			System.out.println(file.getName());
 			// ensure the underlying stream is always closed
@@ -112,9 +133,10 @@ public class ParserScanner
 	 * Overridable method for processing lines in different ways.
 	 * 
 	 * @param <T>
+	 * @throws Exception 
 	 * 
 	 */
-	protected void processLine(String aLine, CompilationUnit compil)
+	protected void processLine(String aLine, CompilationUnit compil) throws Exception
 	{
 		// use a second Scanner to parse the content of each line
 		Scanner scanner = new Scanner(aLine);
@@ -131,7 +153,16 @@ public class ParserScanner
 			{
 				getBrackets();
 			} else
-				compil.addElement(getElementFromFile(aLine));
+			{
+				try
+				{
+					compil.addElement(getElementFromFile(aLine));
+				} catch (Exception e)
+				{
+					throw new Exception();
+				}
+			}
+				
 		}
 		// no need to call scanner.close(), since the source is a String
 	}
@@ -893,7 +924,7 @@ public class ParserScanner
 	
 	private void setAttributes()
 	{
-		if (attrInfo.isEmpty())
+		if (attrInfo.trim().isEmpty())
 				return;
 		
 		String[] tabAT = attrInfo.split("%");
@@ -906,25 +937,28 @@ public class ParserScanner
 			
 			for (int j = 1; j < tabColumn.length; j++)
 			{
-				Type from = (Type)project.getElementByID(Integer.valueOf(tabColumn[0]));
-				ElementType madeOf = null; 
-				Attribute ax = (Attribute)from.getElement(Integer.valueOf(tabColumn[2]));
 				try
 				{
+					Type from = (Type)project.getElementByID(Integer.valueOf(tabColumn[0]));
+					ElementType madeOf = null; 
+					Attribute ax = (Attribute)from.getElement(Integer.valueOf(tabColumn[2]));
+					
 					if ((madeOf = (ElementType)project.getElementFromProject(tabColumn[1])) == null);
 						madeOf = new APIclass(Object.class, tabColumn[1]);
+						
+					if(tabColumn[3].equals("ONE"))
+						ax.setType(madeOf);
+					else if(tabColumn[3].equals("N_FIXED"))
+						((ArrayType)ax.getType()).seteType(madeOf);
+					else if(tabColumn[3].equals("ONE_MANY"))
+						((ListType)ax.getType()).seteType(madeOf);	
 				
 				} catch (Exception e)
 				{
-					System.err.println("error Attributes " + ax + e.getMessage());		
+					System.err.println("error Attributes "+ fFile.getName() + e.getMessage());		
 				}
 				
-				if(tabColumn[3].equals("ONE"))
-					ax.setType(madeOf);
-				else if(tabColumn[3].equals("N_FIXED"))
-					((ArrayType)ax.getType()).seteType(madeOf);
-				else if(tabColumn[3].equals("ONE_MANY"))
-					((ListType)ax.getType()).seteType(madeOf);			
+		
 				//System.out.println("attr:" +ax);
 			}
 		}
@@ -954,7 +988,7 @@ public class ParserScanner
 			}
 			catch(Exception e)
 			{
-				System.err.println("param error " + e.getMessage() );
+				System.err.println("param error " + e.getMessage());
 			}
 			
 			for (Parametre p : mx.getParams()) 
