@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import swing.Slyum;
 import utility.SMessageDialog;
 import utility.Utility;
 
@@ -22,7 +23,6 @@ public class ParserScanner
 	private int currentElemId;
 	private int currentMemberID;
 	private boolean isInterface = false;
-	private boolean excpt = false;
 
 	public void printDebug() 
 	{
@@ -46,33 +46,28 @@ public class ParserScanner
 	 */
 	public ParserScanner(File[] files)
 	{
-		for (File file : files)
-		{
-			fFile = new File(file.getPath());
-
-			try
-			{
-
-				if (fFile.isFile())
-					project.getFilesRecord().add(processLineByLine(fFile));
-				else
-					parseFile(fFile);
-				
-			} catch (FileNotFoundException e)
-			{
-				SMessageDialog.showErrorMessage("file is not readable");
-			}
-		}
-		
 		try
 		{
+			for (File file : files)
+			{
+				fFile = new File(file.getPath());
+
+					if (fFile.isFile())
+						project.getFilesRecord().add(processLineByLine(fFile));
+					else
+						parseFile(fFile);
+			}
+			
 			setParent();
 			setInterfaces();
 			setAttributes();
 			setParametres();
+			
 		} catch (Exception e)
 		{
+			//SMessageDialog.showErrorMessage("file is not readable");
 		}
+
 
 	}
 
@@ -87,7 +82,7 @@ public class ParserScanner
 			} 
 			else 
 			{
-				if(Utility.getExtension(f).equals("java"))
+				if(Utility.getExtension(f).equals(Slyum.JAVA_EXTENSION))
 					project.getFilesRecord().add(processLineByLine(f));
 			}
 				
@@ -151,7 +146,7 @@ public class ParserScanner
 				compil.addElement(buildPackage(aLine));
 			} else if (Pattern.matches("(\\{|\\s+\\{|\\}|\\s+\\}|\\s*)", aLine))
 			{
-				getBrackets();
+				//compil.addElement(getBrackets(aLine));
 			} else
 			{
 				try
@@ -193,9 +188,9 @@ public class ParserScanner
 		return builAttribute(aLine);
 	}
 
-	private void getBrackets()
+	private Attribute getBrackets(String aLine)
 	{
-
+		return builAttribute(aLine);
 	}
 
 	private PackageStmt buildPackage(String line)
