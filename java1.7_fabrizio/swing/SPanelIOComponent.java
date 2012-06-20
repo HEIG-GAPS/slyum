@@ -20,8 +20,11 @@ public class SPanelIOComponent extends JPanelRounded implements ActionListener
 	private static final String TT_IMPORT_CODE = "Import code "+ Utility.keystrokeToString(Slyum.KEY_IMPORT_CODE);
 	private static final String TT_EXPORT_DIAGRAM = "Export diagram "+ Utility.keystrokeToString(Slyum.KEY_EXPORT_DIAGRAM);
 	private static final String TT_EXPORT_CPP = "Export diagram cpp" + Utility.keystrokeToString(Slyum.KEY_EXPORT_CPP);
+	private static final String TT_LAYOUT = "Layout" + Utility.keystrokeToString(Slyum.KEY_LAYOUT);
 	
 	private SButton importCode, exportDiagram, exportDiagramCpp;
+	
+	private SButton layout;
 		
 	private static SPanelIOComponent instance;
 		
@@ -46,6 +49,9 @@ public class SPanelIOComponent extends JPanelRounded implements ActionListener
 		
 		if (Slyum.ACTION_EXPORT_CPP.equals(e.getActionCommand()))
 			p.exportCode("cpp");
+		
+		if (Slyum.ACTION_LAYOUT.equals(e.getActionCommand()))
+				p.drawLayout();
 	}
 
 	private SPanelIOComponent()
@@ -59,6 +65,7 @@ public class SPanelIOComponent extends JPanelRounded implements ActionListener
 		add(importCode = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "import16.png"), Slyum.ACTION_IMPORT, Color.BLUE, TT_IMPORT_CODE));
 		add(exportDiagram = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "exportCode.png"), Slyum.ACTION_EXPORT_PROJECT, Color.BLUE, TT_EXPORT_DIAGRAM));
 		add(exportDiagramCpp = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "ExportCpp.png"), Slyum.ACTION_EXPORT_CPP, Color.BLUE, TT_EXPORT_CPP));
+		add(layout = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "layout1.png"), Slyum.ACTION_LAYOUT, Color.BLUE, TT_LAYOUT));
 		
 		setMaximumSize(new Dimension(43 * ((GridLayout)getLayout()).getColumns(), 50));
 	}
@@ -81,5 +88,10 @@ public class SPanelIOComponent extends JPanelRounded implements ActionListener
 	public SButton getBtnExportCpp()
 	{
 		return exportDiagramCpp;
+	}
+	
+	public SButton getBtnLayout()
+	{
+		return layout;
 	}
 }

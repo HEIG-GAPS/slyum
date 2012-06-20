@@ -122,6 +122,7 @@ public class Slyum extends JFrame implements ActionListener
 	public static final String ACTION_IMPORT = "Import code";
 	public static final String ACTION_EXPORT_PROJECT = "Export diagram (Java)";
 	public static final String ACTION_EXPORT_CPP = "Export diagram (C++)";
+	public static final String ACTION_LAYOUT = "Layout";
 	
 	// Accelerator
 	public final static String KEY_NEW_PROJECT = "ctrl alt N";
@@ -173,6 +174,7 @@ public class Slyum extends JFrame implements ActionListener
 	public static final String KEY_IMPORT_CODE = "ctrl shift M";
 	public static final String KEY_EXPORT_DIAGRAM = "ctrl shift T";
 	public static final String KEY_EXPORT_CPP = "ctrl shift Y";
+	public static final String KEY_LAYOUT = "ctrl alt shift L";
 
 	private static Slyum instance;
 	private static JMenuItem undo, redo;
@@ -812,6 +814,10 @@ public class Slyum extends JFrame implements ActionListener
 			// Menu export C++
 			menuItem = createMenuItem(" C++", "ExportCpp", KeyEvent.VK_Y, KEY_EXPORT_CPP, ACTION_EXPORT_CPP, p.getBtnExportCpp());
 			subMenuExport.add(menuItem);
+			
+			menuItem = createMenuItem("Layout", "layout1", KeyEvent.VK_L, KEY_LAYOUT, ACTION_LAYOUT, p.getBtnLayout());
+			menu.add(menuItem);
+			
 		}
 
 		// Menu Element

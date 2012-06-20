@@ -23,7 +23,6 @@ public class ImportData extends Thread
 {
 	private final classDiagram.ClassDiagram classDiagram = PanelClassDiagram.getInstance().getClassDiagram();
 	private final ProjectManager project = ProjectManager.getInstance();
-	private ParserScanner ps;
 	private File[] files;
 	private LinkedList<Entity> association = new LinkedList<Entity>();
 	
@@ -35,7 +34,7 @@ public class ImportData extends Thread
 	public void getData(File[] files)
 	{
 		project.getFilesRecord().clear();
-		ps = new ParserScanner(files);
+		new ParserScanner(files);
 		//ps.printDebug();
 	}
 	

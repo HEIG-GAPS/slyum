@@ -42,6 +42,7 @@ import dataRecord.CppVisitor;
 import dataRecord.ExportData;
 import dataRecord.ImportData;
 import dataRecord.JavaVisitor;
+import dataRecord.Layout;
 
 /**
  * Show the panel containing all views (hierarchical, properties and graphic)
@@ -637,8 +638,6 @@ public class PanelClassDiagram extends JPanel
 				e.printStackTrace();
 			}
 		}
-		
-		//new ImportData("C:/Users/Fabrizio/workspace/CompUnit/testFiles");
 	}
 
 	public void exportCode(String s)
@@ -671,6 +670,11 @@ public class PanelClassDiagram extends JPanel
 			}
 		}
 		
+	}
+
+	public void drawLayout()
+	{
+		new Layout().layout();
 	}
 	
 	

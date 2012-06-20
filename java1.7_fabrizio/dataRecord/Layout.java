@@ -3,15 +3,15 @@ package dataRecord;
 import graphic.GraphicComponent;
 import graphic.relations.DependencyView;
 import graphic.relations.InheritanceView;
+import graphic.relations.RelationGrip;
 import graphic.relations.RelationView;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
-
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 
 import swing.PanelClassDiagram;
 import classDiagram.IDiagramComponent;
@@ -29,7 +29,8 @@ public class Layout
 	LinkedList<LinkedList<Entity>>	mListe = new LinkedList<LinkedList<Entity>>();
 	private final int distanceH = 250;
 	private final int wWidth = PanelClassDiagram.getInstance().getCurrentGraphicView().getGraphicView().getScene().getWidth();
-	private final int wHeight = PanelClassDiagram.getInstance().getCurrentGraphicView().getGraphicView().getScene().getHeight();
+	private final int ScreenWidth =  Toolkit.getDefaultToolkit().getScreenSize().width-300;
+	//private final int wHeight = PanelClassDiagram.getInstance().getCurrentGraphicView().getGraphicView().getScene().getHeight();
 	
 	public void layout()
 	{
@@ -48,23 +49,22 @@ public class Layout
 		improveTreePosition();
 			
 		//draw
-		int dy = 40;
+		int dy = 50;
 		int globalDx = 0;
-		int maxGlobalX = getMaxGlobalX();
+		int setSize=0;
 		for (LinkedList<Entity> set : mListe)
 		{
 			globalDx = 0;
 			int maxHeight = 0;
 			int w = 0;
 			int oldW = 0;
-			maxGlobalX = getMaxGlobalX();
+			int index = 1;
 			for (Entity entity : set)
 			{
-				if(maxGlobalX < wWidth)
-					maxGlobalX = wWidth;
-				globalDx += maxGlobalX / (set.size() +1);
+				setSize = set.size()+1;
+				globalDx = (ScreenWidth / setSize)*index;
 				oldW = w;
-				w += getWidth(entity);
+				w = getWidth(entity);
 				while(globalDx < oldW)
 				{
 					globalDx+=50;
@@ -73,19 +73,22 @@ public class Layout
 				int tmp = getHeight(entity);
 				if(maxHeight < tmp)
 					maxHeight = tmp;
+				index++;
 			}
 			dy+= maxHeight;
 			dy+= distanceH;
-//			System.out.println("----------");
+			System.out.println("----------");
 		}
-		System.out.println("OUT");
+		
+		
+		if(getMaxLvl() > 2)
+			PanelClassDiagram.getInstance().getCurrentGraphicView().adaptDiagramToWindow();
 		
 		fixRelationLines();
 		
 		PanelClassDiagram.getInstance().getCurrentGraphicView().goRepaint();
 		
-		if(getMaxLvl() > 2)
-			PanelClassDiagram.getInstance().getCurrentGraphicView().adaptDiagramToWindow();
+		System.out.println("OUT");
 	}
 	
 	
@@ -267,19 +270,25 @@ public class Layout
 				RelationView dv = (RelationView)gc;
 				
 				//fix target point
-				int posX = dv.getLastPoint().getAnchor().x;
+				int posX = (int) dv.getLastPoint().getAnchor().getX();
 				int posY = dv.getLastPoint().getAnchor().y;
-				int newX = (int) dv.getGraphicView().getComponentAtPosition(new Point(posX, posY+20)).getBounds().getCenterX();
-				int newY = (int) dv.getGraphicView().getComponentAtPosition(new Point(posX, posY+20)).getBounds().getMaxY();
+				int newX = (int) dv.getGraphicView().getComponentAtPosition(new Point(posX, posY-40)).getBounds().getCenterX();
+				int newY = (int) dv.getGraphicView().getComponentAtPosition(new Point(posX, posY-40)).getBounds().getMaxY();
+				//System.out.println(dv.getGraphicView().getComponentAtPosition(new Point(posX, posY-40)) + " x "+posX+" y "+posY);
 	
 				dv.getLastPoint().setAnchor(new Point(newX, newY));
+				
 				
 				//fix source point
 				int pos2X = dv.getFirstPoint().getAnchor().x;
 				int pos2Y = dv.getFirstPoint().getAnchor().y;
-				int new2X = (int) dv.getGraphicView().getComponentAtPosition(new Point(pos2X, pos2Y)).getBounds().getCenterX();
-				int new2Y = (int) dv.getGraphicView().getComponentAtPosition(new Point(posX, posY)).getBounds().getMinY();
-	
+				int new2X = (int) dv.getGraphicView().getComponentAtPosition(new Point(pos2X, pos2Y+20)).getBounds().getCenterX();
+				int new2Y = (int) dv.getGraphicView().getComponentAtPosition(new Point(pos2X, pos2Y+20)).getBounds().getMinY();
+				
+//				System.out.println("T: "+newX+" "+newY);
+//				System.out.println("S: "+new2X+" "+new2Y);
+//				
+//				System.out.println("--------");
 				dv.getFirstPoint().setAnchor(new Point(new2X, new2Y));
 	
 			}
@@ -404,19 +413,19 @@ public class Layout
 		}
 	}
 	
-	private int getMaxGlobalX()
-	{
-		int max = 0;	
-		for (LinkedList<Entity> list : mListe)
-		{
-			int i = list.isEmpty()?0:getWidth(list.getLast());
-			if(i > max)
-				max = i;
-		}
-		
-		System.out.println("Max: " + max);
-		return max;
-	}
+//	private int getMaxGlobalX()
+//	{
+//		int max = 0;	
+//		for (LinkedList<Entity> list : mListe)
+//		{
+//			int i = list.isEmpty()?0:getWidth(list.getLast());
+//			if(i > max)
+//				max = i;
+//		}
+//		
+//		System.out.println("Max: " + max);
+//		return max;
+//	}
 	
 	
 	private boolean isInterfaceChild(Entity target, Entity source)
