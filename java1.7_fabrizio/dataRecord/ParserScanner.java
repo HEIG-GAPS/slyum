@@ -85,7 +85,6 @@ public class ParserScanner
 				if(Utility.getExtension(f).equals(Slyum.JAVA_EXTENSION))
 					project.getFilesRecord().add(processLineByLine(f));
 			}
-				
 		}
 	}
 
@@ -176,7 +175,7 @@ public class ParserScanner
 		} if (Pattern.matches(".*\\s*interface\\s+.*", aLine))
 		{
 			return buildInterface(aLine);
-		} else if (aLine.contains("("))
+		} else if (aLine.contains("(") && !aLine.contains("="))
 		{
 			return buildMember(aLine);
 		}else if (aLine.contains("}"))
@@ -216,9 +215,15 @@ public class ParserScanner
 
 	private ClassType buildClass(String line)
 	{
-		theNextLine = pageScanner.nextLine();
-		if (Pattern.matches("(\\{|\\s+\\{)", line))
-			line = theNextLine;
+		if(!line.contains("{"))
+		{
+			theNextLine = pageScanner.nextLine();
+			while(!theNextLine.contains("{"))
+			{
+				line += theNextLine.trim();
+				theNextLine = pageScanner.nextLine();
+			}
+		}
 
 		String[] tab = line.trim().split("\\s+");
 		boolean isAbstract = false;
@@ -277,26 +282,36 @@ public class ParserScanner
 
 			implInfo += "%";
 		}
-
-		theNextLine = pageScanner.nextLine();
-		while (!theNextLine.contains("}"))
+		
+		if(!line.contains("}") && !theNextLine.contains("}"))
 		{
-			Element elementToAdd = getElementFromFile(theNextLine);
-			if (elementToAdd == null)
-				break;
-			else
-				ct.addElement(elementToAdd);
-			
 			theNextLine = pageScanner.nextLine();
+			while (!theNextLine.contains("}"))
+			{
+				Element elementToAdd = getElementFromFile(theNextLine);
+				if (elementToAdd == null)
+					break;
+				else
+					ct.addElement(elementToAdd);
+				
+				theNextLine = pageScanner.nextLine();
+			}
 		}
+
 		return ct;
 	}
 
 	private EnumType buildEnum(String line)
 	{
-		theNextLine = pageScanner.nextLine();
-		if (Pattern.matches("(\\{|\\s+\\{)", line))
-			line = theNextLine;
+		if(!line.contains("{"))
+		{
+			theNextLine = pageScanner.nextLine();
+			while(!theNextLine.contains("{"))
+			{
+				line += theNextLine.trim();
+				theNextLine = pageScanner.nextLine();
+			}
+		}
 
 		String[] tab = line.split("\\s+");
 		boolean isStatic = false;
@@ -325,16 +340,19 @@ public class ParserScanner
 		et.setStatic(isStatic);
 		currentElemId = et.getID();
 		
-		theNextLine = pageScanner.nextLine();
-		while (!theNextLine.contains("}"))
+		if(!line.contains("}") && !theNextLine.contains("}"))
 		{
-			Element elementToAdd = getElementFromFile(theNextLine);
-			if (elementToAdd == null)
-				break;
-			else
-				et.addElement(elementToAdd);
-
 			theNextLine = pageScanner.nextLine();
+			while (!theNextLine.contains("}"))
+			{
+				Element elementToAdd = getElementFromFile(theNextLine);
+				if (elementToAdd == null)
+					break;
+				else
+					et.addElement(elementToAdd);
+				
+				theNextLine = pageScanner.nextLine();
+			}
 		}
 
 		return et;
@@ -342,9 +360,15 @@ public class ParserScanner
 
 	private InterfaceType buildInterface(String line)
 	{
-		theNextLine = pageScanner.nextLine();
-		if (Pattern.matches("(\\{|\\s+\\{)", line))
-			line = theNextLine;
+		if(!line.contains("{"))
+		{
+			theNextLine = pageScanner.nextLine();
+			while(!theNextLine.contains("{"))
+			{
+				line += theNextLine.trim();
+				theNextLine = pageScanner.nextLine();
+			}
+		}
 
 		String[] tab = line.split("\\s+");
 		String name = "";
@@ -370,18 +394,19 @@ public class ParserScanner
 		currentElemId = it.getID();
 		isInterface = true;
 		
-		theNextLine = pageScanner.nextLine();
-		while (!theNextLine.contains("}"))
+		if(!line.contains("}") && !theNextLine.contains("}"))
 		{
-			
-			Element elementToAdd = getElementFromFile(theNextLine);
-			if (elementToAdd == null)
-				break;
-			else
-				it.addElement(elementToAdd);
-
 			theNextLine = pageScanner.nextLine();
-			
+			while (!theNextLine.contains("}"))
+			{
+				Element elementToAdd = getElementFromFile(theNextLine);
+				if (elementToAdd == null)
+					break;
+				else
+					it.addElement(elementToAdd);
+				
+				theNextLine = pageScanner.nextLine();
+			}
 		}
 		isInterface = false;
 		
@@ -420,6 +445,31 @@ public class ParserScanner
 
 	private Member buildMember(String line)
 	{
+		if(line.contains("abstract") || isInterface)
+		{
+			if(!line.contains(";"))
+			{
+				theNextLine = pageScanner.nextLine();
+				while(!theNextLine.contains(";"))
+				{
+					line += theNextLine.trim();
+					theNextLine = pageScanner.nextLine();
+				}
+			}
+		}
+		else 
+		{
+			if(!line.contains("{"))
+			{
+				theNextLine = pageScanner.nextLine();
+				while(!theNextLine.contains("{"))
+				{
+					line += theNextLine.trim();
+					theNextLine = pageScanner.nextLine();
+				}
+			}
+		}
+		
 		String[] tab = line.trim().split("\\s+");
 		boolean isAbstract = false;
 		boolean isStatic = false;
@@ -517,8 +567,7 @@ public class ParserScanner
 				brackets--;
 				m.methodBody += "}";
 			}
-			
-			theNextLine = pageScanner.nextLine();
+
 			do
 			{
 				if (theNextLine.contains("{"))
@@ -535,7 +584,9 @@ public class ParserScanner
 			}while(true);
 		}
 		else
+		{
 			m.methodBody =";";
+		}
 		
 		return m;
 	}
