@@ -23,5 +23,4 @@ public class EnumField
 	{
 		return name;
 	}
-
 }

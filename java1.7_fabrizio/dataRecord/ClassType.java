@@ -1,3 +1,14 @@
+/**
+ * This class represent a class in an object-oriented language
+ * 
+ * visit http://docs.oracle.com/javase/tutorial/java/concepts/class.html
+ * for a good explaination of "Class"
+ * 
+ * A class can inherit from an other class and can implement from many other classes
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 2-lug-2012
+ */
 package dataRecord;
 
 import java.util.LinkedList;
@@ -9,17 +20,35 @@ public class ClassType extends Type implements Extendable
 	private boolean isAbstract = false;
 	private List<Extendable> extendList = new LinkedList<Extendable>();
 
+	/**
+	 * creates a class with a name and a access modifier
+	 * 
+	 * @param name
+	 * @param access
+	 */
 	public ClassType(String name, Keyword access)
 	{
 		super(name, access, Keyword.CLASS);
 	}
 	
+	/**
+	 * creates a class with a name and a access modifier
+	 * an id can be set 
+	 * 
+	 * @param name
+	 * @param access
+	 * @param id
+	 */
 	public ClassType(String name, Keyword access, int id)
 	{
 		super(name, access, Keyword.CLASS, id);
 	}
 	
-	// constructeur de recopie
+	/**
+	 * creates a clone of the class given in argument
+	 * 
+	 * @param c	the class to clone
+	 */
 	public ClassType(ClassType c)
 	{
 		super(c.getName(), c.getAccess(), Keyword.CLASS);
@@ -74,7 +103,12 @@ public class ClassType extends Type implements Extendable
 		return getName();
 	}
 	
-	// for debug only
+	
+	/**
+	 * for debug only
+	 * 
+	 * give a String representation of the object
+	 */
 	public String toString()
 	{
 		String tmp = getAccess().toString();

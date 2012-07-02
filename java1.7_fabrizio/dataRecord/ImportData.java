@@ -1,5 +1,9 @@
 package dataRecord;
 
+import graphic.entity.EntityView;
+
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.File;
 import java.util.LinkedList;
 
@@ -25,39 +29,67 @@ public class ImportData extends Thread
 	private final ProjectManager project = ProjectManager.getInstance();
 	private File[] files;
 	private LinkedList<Entity> association = new LinkedList<Entity>();
+	private boolean doLayout = false;
+	private Rectangle r;
 	
 	public ImportData(File[] files)
 	{
 		this.files = files;
 	}
 	
-	public void getData(File[] files)
+	public ImportData(File[] files, boolean dolayout, Rectangle r)
 	{
-		project.getFilesRecord().clear();
-		new ParserScanner(files);
-		//ps.printDebug();
+		this(files);
+		this.doLayout = dolayout;
+		this.r = r;
 	}
 	
 	public void run()
 	{
-		getData(files);
-		doTranslation();
+		if(doLayout)
+		{
+			//remove the old CU
+			int index = files[0].getName().lastIndexOf('.');
+			project.removeCUnit(files[0].getName().substring(0, index));
+		}
+		ParserScanner ps = new ParserScanner();
 		
-		setAssociations();
+		LinkedList<CompilationUnit> units = ps.parse(files);
 		
-		PanelClassDiagram.getInstance().getCurrentGraphicView().adjustWidthAllEntities();
+		doTranslation(units);
 		
-		Layout layout = new Layout();
-		layout.layout();
-		
+		if(!doLayout)
+		{
+			setAssociations();
+			
+			PanelClassDiagram.getInstance().getCurrentGraphicView().adjustWidthAllEntities();
+			
+			Layout layout = new Layout();
+			layout.layout();
+		}
+		else
+		{
+			PanelClassDiagram.getInstance().getCurrentGraphicView().repaint();
+			EntityView ev = null;
+			do
+			{
+				ev = PanelClassDiagram.getInstance().getCurrentGraphicView().getEntityAtPosition(new Point(0,0));
+			}while (ev == null);
+			
+			ev.setBounds(r);
+			ev.adjustWidth();
+			//addHierarchicalLines(units);
+			//setAssociations();
+			PanelClassDiagram.getInstance().getCurrentGraphicView().repaint();	
+		}
 	}
 	
-	private void doTranslation()
+	private void doTranslation(LinkedList<CompilationUnit> units)
 	{
-		System.out.println("DO TRANSLATION for " + project.getFilesRecord().size() + " file(s)");
+		System.out.println("DO TRANSLATION for " + units.size() + " file(s)");
 		project.setName(classDiagram.getName());
 			
-		for (CompilationUnit cu : project.getFilesRecord())
+		for (CompilationUnit cu : units)
 		{
 			for (Element e : cu.getElements())
 			{
@@ -65,13 +97,14 @@ public class ImportData extends Thread
 				
 				if(e.getClass() == ClassType.class)
 				{
-					addClass((ClassType)e);
+					addClass((ClassType)e, cu.getFile());
 				}
 				
 				else if(e.getClass() == InterfaceType.class)
 				{
 					InterfaceType it = new InterfaceType((InterfaceType)e);
 					ce = new InterfaceEntity(it.getName(), translateAccessModifiers(it.getAccess()),it.getID());
+					ce.setReferenceFile(cu.getFile());
 					classDiagram.addInterface((InterfaceEntity) ce);
 					association.add(ce);
 					
@@ -98,9 +131,14 @@ public class ImportData extends Thread
 			
 		}
 		
+		addHierarchicalLines(units);
+	}
+	
+	private void addHierarchicalLines(LinkedList<CompilationUnit> units)
+	{
 		// add Inheritance 
 		//TODO api
-		for (CompilationUnit cu : project.getFilesRecord())
+		for (CompilationUnit cu : units)
 		{
 			for (Element e : cu.getElements())
 			{
@@ -125,7 +163,7 @@ public class ImportData extends Thread
 		
 		// add interfaces
 		//TODO api
-		for (CompilationUnit cu : project.getFilesRecord())
+		for (CompilationUnit cu : units)
 		{
 			for (Element e : cu.getElements())
 			{
@@ -145,15 +183,15 @@ public class ImportData extends Thread
 					}
 			}
 		}
-		
 	}
 	
-	private void addClass(ClassType clazz)
+	private void addClass(ClassType clazz, File file)
 	{
 		classDiagram.components.Entity ce = null;
 		ClassType ct = new ClassType((ClassType)clazz);
 		ce = new ClassEntity(ct.getName(), translateAccessModifiers(ct.getAccess()),ct.getID());
 		ce.setAbstract(ct.isAbstract());
+		ce.setReferenceFile(file);
 		classDiagram.addClass((ClassEntity) ce);
 		association.add(ce);
 		
@@ -176,7 +214,7 @@ public class ImportData extends Thread
 			}
 			else if(inner.getClass() == ClassType.class) // classe interne
 			{
-				addClass((ClassType)inner);
+				addClass((ClassType)inner, file);
 				Entity parent = (Entity) classDiagram.searchComponentById(inner.getID());
 				classDiagram.addInnerClass(new InnerClass(parent, ce));
 			}
@@ -199,7 +237,7 @@ public class ImportData extends Thread
 		ce.addAttribute(a);
 		ce.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
 		a.setConstant(inner.isFinal());
-		a.setDefaultValue(inner.getValue());
+		//a.setDefaultValue(inner.getValue()); // error if value is a String in the xml file
 		a.setStatic(inner.isStatic());
 		a.setVisibility(translateAccessModifiers(inner.getAccess()));
 

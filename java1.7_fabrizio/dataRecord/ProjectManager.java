@@ -1,7 +1,6 @@
 package dataRecord;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public class ProjectManager
 {
@@ -12,7 +11,7 @@ public class ProjectManager
 	private ProjectManager()
 	{}
 
-	public List<CompilationUnit> getFilesRecord()
+	public LinkedList<CompilationUnit> getFilesRecord()
 	{
 		return filesRecord;
 	}
@@ -101,6 +100,21 @@ public class ProjectManager
 			
 		}
 		return null;
+	}
+	
+	public Element getCU(String name)
+	{
+		for (CompilationUnit cuts : filesRecord)
+		{
+			if( cuts.getName().equals(name))
+				return cuts;
+		}
+		return null;
+	}
+	
+	public static ProjectManager getEmptyClone()
+	{
+		return new ProjectManager();
 	}
 	
 	

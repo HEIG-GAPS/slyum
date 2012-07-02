@@ -8,8 +8,7 @@ import java.util.List;
 public class CompilationUnit implements Element
 {
 	// private String name; // a deduire depuis le file name
-	private List<Element> elements; // TODO une liste<Element> avec les stat et
-									// decl ?
+	private List<Element> elements; 
 	private File file;
 
 	public CompilationUnit()
@@ -66,6 +65,16 @@ public class CompilationUnit implements Element
 	{
 		return elements.get(index);
 	}
+	
+	public Element getElement(String name)
+	{
+		for (Element e : elements)
+		{
+			if(e.getName().equals(name))
+				return e;
+		}
+		return null;
+	}
 
 	public void setElements(List<Element> liste)
 	{
@@ -89,4 +98,20 @@ public class CompilationUnit implements Element
 	{
 		return 0;
 	}
+	
+//	public boolean equals(Object o)
+//	{
+//		if (elements.size() != ((CompilationUnit)o).elements.size())
+//			return false;
+//		
+//		else 
+//		{
+//			for (Element e : elements)
+//			{
+//				if(!((CompilationUnit)o).elements.contains(e))
+//					return false;
+//			}
+//			return true;
+//		}
+//	}
 }

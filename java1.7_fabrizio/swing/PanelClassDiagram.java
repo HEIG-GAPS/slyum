@@ -6,6 +6,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -14,7 +18,9 @@ import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -30,19 +36,24 @@ import javax.xml.parsers.SAXParserFactory;
 
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.PropretiesChanger;
+import utility.OSValidator;
 import utility.SDialogProjectLoading;
 import utility.SMessageDialog;
 import utility.SSlider;
 import utility.Utility;
 import change.Change;
 import classDiagram.ClassDiagram;
+import classDiagram.IDiagramComponent;
 import classDiagram.components.ClassEntity;
+import classDiagram.components.Entity;
 import classDiagram.components.Visibility;
 import dataRecord.CppVisitor;
 import dataRecord.ExportData;
 import dataRecord.ImportData;
 import dataRecord.JavaVisitor;
 import dataRecord.Layout;
+import dataRecord.ParserScanner;
+import dataRecord.ProjectManager;
 
 /**
  * Show the panel containing all views (hierarchical, properties and graphic)
@@ -50,6 +61,8 @@ import dataRecord.Layout;
  * 
  * @author David Miserez
  * @version 1.0 - 25.07.2011
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 - 01.07.2012
  */
 @SuppressWarnings("serial")
 public class PanelClassDiagram extends JPanel
@@ -115,6 +128,27 @@ public class PanelClassDiagram extends JPanel
 		graphicView.getScene().setMinimumSize(new Dimension(200, 150));
 
 		add(leftSplitPanel, BorderLayout.CENTER);
+		
+		/**
+		 * Enable file drag and drop <b>/!\ Windows only </b> 
+		 * 
+		 * @author Fabrizio Beretta Piccoli
+		 */
+		if(OSValidator.isWindows())
+			graphicView.getScene().setDropTarget(new DropTarget() {
+			    public synchronized void drop(DropTargetDropEvent evt) {
+			        try {
+			            evt.acceptDrop(DnDConstants.ACTION_COPY);
+			            @SuppressWarnings("unchecked")
+						List<File> droppedFiles = (List<File>)
+			                evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+			            File[] tab = (File[]) droppedFiles.toArray();
+			            new ImportData(tab).start();
+			        } catch (Exception ex) {
+			            ex.printStackTrace();
+			        }
+			    }
+			});
 	}
 
 	/**
@@ -302,6 +336,7 @@ public class PanelClassDiagram extends JPanel
 			return;
 		
 		cleanApplication();
+		ProjectManager.getInstance().getFilesRecord().clear();
 	}
 	
 	public void cleanApplication()
@@ -410,6 +445,30 @@ public class PanelClassDiagram extends JPanel
 				graphicView.paintBackgroundFirst();
 			}
 		});
+		
+		/**
+		 * Parse the files to fill ProjectManager
+		 * 
+		 * @author Fabrizio 
+		 */
+		ArrayList<File> fileListe = new ArrayList<>();
+		for(IDiagramComponent comp : getClassDiagram().getComponents())
+		{
+			if(comp instanceof Entity)
+			{
+				Entity entity = (Entity)comp;
+				if(entity.getReferenceFile() != null)
+					fileListe.add(entity.getReferenceFile());
+			}
+		}
+		File[] tabFile = fileListe.toArray(new File[0]);
+		
+		//Parse
+		new ParserScanner().parse(tabFile);
+		
+		System.out.print("ProjectManager with " );
+		System.out.print(ProjectManager.getInstance().getFilesRecord().size());
+		System.out.println(" file(s)");
 	}
 
 	/**
@@ -638,6 +697,7 @@ public class PanelClassDiagram extends JPanel
 				e.printStackTrace();
 			}
 		}
+		
 	}
 
 	public void exportCode(String s)
@@ -647,7 +707,7 @@ public class PanelClassDiagram extends JPanel
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fc.setAcceptAllFileFilterUsed(false);
 
-		final int result = fc.showOpenDialog(this);
+		final int result = fc.showSaveDialog(this);
 
 		if (result == JFileChooser.APPROVE_OPTION)
 		{

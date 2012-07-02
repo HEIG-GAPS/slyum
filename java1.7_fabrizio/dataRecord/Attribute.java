@@ -1,3 +1,17 @@
+/**
+ * Each datafield has a specific type. This type can be a "Primitive type" (int, double, char, etc)
+ * a user defined type (an object created by the user) or an API type.
+ * This class represent a data field. A data field is usually with the following format
+ * {AccessModifier} {static} {final} type name {= value}
+ * example: final String a = "un attribute"
+ * 			private int entier
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 2-lug-2012
+ * @see Field
+ * @see Element
+ */
+
 package dataRecord;
 
 public class Attribute extends Field
