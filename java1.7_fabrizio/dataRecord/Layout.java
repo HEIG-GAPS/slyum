@@ -3,7 +3,6 @@ package dataRecord;
 import graphic.GraphicComponent;
 import graphic.relations.DependencyView;
 import graphic.relations.InheritanceView;
-import graphic.relations.RelationGrip;
 import graphic.relations.RelationView;
 
 import java.awt.Point;
@@ -28,7 +27,6 @@ public class Layout
 	private LinkedList<LinkedList<Entity>> implSources = new LinkedList<LinkedList<Entity>>();
 	LinkedList<LinkedList<Entity>>	mListe = new LinkedList<LinkedList<Entity>>();
 	private final int distanceH = 250;
-	private final int wWidth = PanelClassDiagram.getInstance().getCurrentGraphicView().getGraphicView().getScene().getWidth();
 	private final int ScreenWidth =  Toolkit.getDefaultToolkit().getScreenSize().width-300;
 	//private final int wHeight = PanelClassDiagram.getInstance().getCurrentGraphicView().getGraphicView().getScene().getHeight();
 	
@@ -77,7 +75,6 @@ public class Layout
 			}
 			dy+= maxHeight;
 			dy+= distanceH;
-			System.out.println("----------");
 		}
 		
 		

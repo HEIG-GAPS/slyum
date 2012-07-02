@@ -1,3 +1,9 @@
+/**
+ * Add import and export on the menu
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 2-lug-2012
+ */
 package swing;
 
 import java.awt.Color;

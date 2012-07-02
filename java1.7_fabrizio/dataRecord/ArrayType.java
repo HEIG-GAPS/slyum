@@ -1,3 +1,12 @@
+/**
+ * Each datafield has a specific type. This type can be a "Primitive type" (int, double, char, etc)
+ * a user defined type (an object created by the user) or an API type.
+ * This class represent an Array of the choosen type
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 2-lug-2012
+ * @see ElementType
+ */
 package dataRecord;
 
 public class ArrayType implements ElementType

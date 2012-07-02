@@ -13,6 +13,7 @@ import graphic.textbox.TextBoxRole;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -100,6 +101,7 @@ public class XMLParser extends DefaultHandler
 		LinkedList<Operation> method = new LinkedList<Operation>();
 		String name = null;
 		Visibility visibility = Visibility.PUBLIC;
+		File file = null;
 	}
 
 	public enum EntityType
@@ -228,6 +230,8 @@ public class XMLParser extends DefaultHandler
 	RelationView currentRelationView;
 
 	Role currentRole;
+	
+	File currentFile;
 
 	LinkedList<Dependency> dependency = new LinkedList<Dependency>();
 
@@ -286,6 +290,7 @@ public class XMLParser extends DefaultHandler
 				ce = new ClassEntity(e.name, e.visibility, e.id);
 				classDiagram.addClass((ClassEntity) ce);
 				ce.setAbstract(e.isAbstract);
+				ce.setReferenceFile(e.file);
 
 				break;
 
@@ -396,6 +401,8 @@ public class XMLParser extends DefaultHandler
 			currentEntity = null;
 		else if (qName.equals("method"))
 			currentMethod = null;
+		else if (qName.equals("file"))
+			currentFile = null;
 		else if (qName.equals("associationClassID"))
 			currentEntity.associationClassID = Integer.parseInt(buffer.toString());
 		else if (qName.equals("association"))
@@ -879,6 +886,16 @@ public class XMLParser extends DefaultHandler
 				currentEntity.isAbstract = Boolean.parseBoolean(attributes.getValue("isAbstract"));
 
 				uMLClassDiagram.diagrameElement.entity.add(currentEntity);
+			} catch (final Exception e)
+			{
+				throw new SAXException(e);
+			}
+		else if (qName.equals("file"))
+			try
+			{
+				currentFile = new File(attributes.getValue("path"));
+
+				currentEntity.file = currentFile;
 			} catch (final Exception e)
 			{
 				throw new SAXException(e);

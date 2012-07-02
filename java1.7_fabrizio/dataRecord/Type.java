@@ -76,5 +76,15 @@ public class Type extends Declaration implements Implementable, ElementType
 		}
 		return null;
 	}
+	
+	public Element getElementByName(String name)
+	{
+		for (Element e : getElements())
+		{
+			if(e.getName().equals(name))
+				return e;
+		}
+		return null;
+	}
 
 }

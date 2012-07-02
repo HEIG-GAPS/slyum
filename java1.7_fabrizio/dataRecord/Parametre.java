@@ -1,3 +1,14 @@
+/**
+ * This class represent a parameter. A parameter is a value that is passed to 
+ * a method so that the method can use that value in its processing. 
+ * A parameter has a name, a type and in some languages even a value.
+ * It can be set has a constant value (final).
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 2-lug-2012
+ * @see Field
+ * @see Element
+ */ 
 package dataRecord;
 
 public class Parametre extends Field

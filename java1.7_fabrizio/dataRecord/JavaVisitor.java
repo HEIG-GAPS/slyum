@@ -6,13 +6,13 @@ public class JavaVisitor implements ElementVisitor
 	@Override
 	public String visit(PackageStmt ps)
 	{
-		return ps.toString();
+		return ps.toString() + "\n";
 	}
 
 	@Override
 	public String visit(ImportStmt importStmt)
 	{
-		return importStmt.toString();
+		return importStmt.toString() + "\n";
 	}
 
 	@Override

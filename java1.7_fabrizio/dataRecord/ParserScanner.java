@@ -44,8 +44,14 @@ public class ParserScanner
 	 * @param aFileName
 	 *            full name of an existing, readable file.
 	 */
-	public ParserScanner(File[] files)
+	public ParserScanner()
 	{
+	}
+	
+	public LinkedList<CompilationUnit> parse(File[] files)
+	{
+		LinkedList<CompilationUnit> myUnits = new LinkedList<>();
+		
 		try
 		{
 			for (File file : files)
@@ -53,10 +59,12 @@ public class ParserScanner
 				fFile = new File(file.getPath());
 
 					if (fFile.isFile())
-						project.getFilesRecord().add(processLineByLine(fFile));
+						myUnits.add(processLineByLine(fFile));
 					else
-						parseFile(fFile);
+						myUnits.addAll(parseFile(fFile));
 			}
+			
+			project.getFilesRecord().addAll(myUnits);
 			
 			setParent();
 			setInterfaces();
@@ -67,12 +75,13 @@ public class ParserScanner
 		{
 			//SMessageDialog.showErrorMessage("file is not readable");
 		}
-
-
+		
+		return myUnits;
 	}
 
-	private void parseFile(File file) throws FileNotFoundException
+	private LinkedList<CompilationUnit> parseFile(File file) throws FileNotFoundException
 	{
+		LinkedList<CompilationUnit> myUnits = new LinkedList<>();
 		File[] dir = file.listFiles();
 		for (File f : dir)
 		{
@@ -83,9 +92,10 @@ public class ParserScanner
 			else 
 			{
 				if(Utility.getExtension(f).equals(Slyum.JAVA_EXTENSION))
-					project.getFilesRecord().add(processLineByLine(f));
+					myUnits.add(processLineByLine(f));
 			}
 		}
+		return myUnits;
 	}
 
 	/** Template method that calls {@link #processLine(String)}. */
@@ -187,6 +197,7 @@ public class ParserScanner
 		return builAttribute(aLine);
 	}
 
+	@SuppressWarnings("unused")
 	private Attribute getBrackets(String aLine)
 	{
 		return builAttribute(aLine);

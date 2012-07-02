@@ -1,3 +1,16 @@
+/**
+ * Each datafield has a specific type. This type can be a "Primitive type" (int, double, char, etc)
+ * a user defined type (an object created by the user) or an API type.
+ * This class represent a model of a field. A field may be a class's variable, 
+ * an object's variable, an object's method's variable, or a parameter of a method.
+ * This class has two childs : Attribute and Parametre
+ *
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 2-lug-2012
+ * @see Element
+ * @see Attribute
+ * @see Parametre
+ */
 package dataRecord;
 
 import classDiagram.ClassDiagram;
@@ -10,6 +23,12 @@ public abstract class Field implements Element
 	protected ElementType type;
 	private int ID;
 
+	/**
+	 * Creates a Field with the name and a Element type
+	 * 
+	 * @param name
+	 * @param type
+	 */
 	public Field(String name, ElementType type)
 	{
 		this.setName(name);

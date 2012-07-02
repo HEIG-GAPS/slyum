@@ -1,5 +1,7 @@
 package dataRecord;
 
+import java.util.LinkedList;
+
 import classDiagram.IDiagramComponent;
 import classDiagram.components.Attribute;
 import classDiagram.components.ClassEntity;
@@ -26,14 +28,91 @@ public class ExportData extends Thread
 	
 	private void export()
 	{
-		createNewProject();
+		//createNewProject();
+		update();
+		//project.generateFiles(new Writer(path,v));
 	}
 	
-	private void createNewProject()
+	private void update()
 	{
-		project.getFilesRecord().clear();
+		// the latest state of the classDiagram
+		ProjectManager copie = createNewProject();
+		//if the classDiagram has been modified, need to report the modification to the project manager.
 		
-		project.setName(classDiagram.getName());
+		// parcourir la copie et rajouter les infos manquantes
+		for(int cu=0; cu<copie.getFilesRecord().size(); cu++)
+		{
+			CompilationUnit cuOld = (CompilationUnit) project.getCU(copie.getFilesRecord().get(cu).getName());
+			CompilationUnit cuNew = copie.getFilesRecord().get(cu);
+			
+			if(cuOld != null)
+			{
+				int insert=0;
+				for (Element e : cuOld.getElements())
+				{
+					if(e instanceof Statement || e.getClass() == Comment.class)
+					{
+						cuNew.getElements().add(insert, e);
+						insert++;
+					}
+				}
+				
+				for(int i=0; i<cuOld.getElements().size(); i++)
+				{
+					if(cuOld.getElements().get(i).getClass() == Comment.class)
+						cuNew.getElements().add(i, cuOld.getElements().get(i));
+				}
+				
+				for(int index=0; index<cuNew.getElements().size(); index++)
+				{	
+					Element old = cuOld.getElement(cuNew.getElements().get(index).getName());
+					Element recent = cuNew.getElements().get(index);
+
+					if(old != null)
+					{
+						if (recent instanceof Type)
+						{
+							Type tn = (Type)recent;
+							Type to = (Type)old;
+							
+							for (Element latestElement : tn.getElements())
+							{
+								Element older = to.getElementByName(latestElement.getName());
+								
+								if(older != null)
+								{	
+									if(latestElement instanceof Member)
+									{
+										Member mo = (Member) to.getElementByName(latestElement.getName());
+										Member mn = (Member)latestElement;
+										mn.setThrowClauses(mo.getThrowClauses());
+										mn.setMethodBody(mo.getMethodBody());
+									}
+							
+									else if(latestElement instanceof Field)
+									{
+										Field fo = (Field) to.getElementByName(latestElement.getName());
+										Field fn = (Field)latestElement;
+										fn.setValue(fo.getValue());
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		copie.generateFiles(new Writer(path,v));
+	}
+	
+	private ProjectManager createNewProject()
+	{
+		ProjectManager tmp = ProjectManager.getEmptyClone();
+		LinkedList<CompilationUnit> tmpFiles = tmp.getFilesRecord();
+		//project.getFilesRecord().clear();
+		
+		//project.setName(classDiagram.getName());
 		
 		// add and create all class and interfaces entity
 		// so all C/I will be known for further add of parents / methods / field / etc
@@ -49,7 +128,7 @@ public class ExportData extends Thread
 						
 				ct.setAbstract(((ClassEntity)currentComponent).isAbstract());
 				cux.addElement(ct);
-				project.addCUnit(cux);
+				tmpFiles.add(cux);
 			} 
 			
 			else if(currentComponent.getClass() == InterfaceEntity.class)
@@ -59,7 +138,7 @@ public class ExportData extends Thread
 								translateAccessModifiers(((InterfaceEntity)currentComponent).getVisibility()), currentComponent.getId());
 				
 				cux.addElement(it);
-				project.addCUnit(cux);
+				tmpFiles.add(cux);
 			} 
 		}
 		
@@ -73,8 +152,8 @@ public class ExportData extends Thread
 			{
 				Inheritance inherit = (Inheritance)currentComponent;
 				
-				ClassType child = (ClassType)project.getElementByID(inherit.getChild().getId());
-				ClassType parent = (ClassType)project.getElementByID(inherit.getParent().getId());
+				ClassType child = (ClassType)tmp.getElementByID(inherit.getChild().getId());
+				ClassType parent = (ClassType)tmp.getElementByID(inherit.getParent().getId());
 				
 				child.getExtendList().add(parent);
 			}
@@ -84,8 +163,8 @@ public class ExportData extends Thread
 			{
 				Dependency d = (Dependency)currentComponent;
 				
-				ClassType child = (ClassType)project.getElementByID(d.getSource().getId());
-				InterfaceType parent = (InterfaceType)project.getElementByID(d.getTarget().getId());
+				ClassType child = (ClassType)tmp.getElementByID(d.getSource().getId());
+				InterfaceType parent = (InterfaceType)tmp.getElementByID(d.getTarget().getId());
 				
 				child.getImplList().add(parent);
 			}
@@ -94,7 +173,7 @@ public class ExportData extends Thread
 			if (currentComponent.getClass() == ClassEntity.class || currentComponent.getClass() == InterfaceEntity.class)
 			{
 				Entity centity = (Entity)currentComponent;
-				dataRecord.Type parent = (dataRecord.Type)project.getElementByID(currentComponent.getId());
+				dataRecord.Type parent = (dataRecord.Type)tmp.getElementByID(currentComponent.getId());
 				
 				if(!centity.getAttributes().isEmpty())
 				{
@@ -157,11 +236,11 @@ public class ExportData extends Thread
 			if(currentComponent.getClass() == InnerClass.class)
 			{
 				InnerClass innerc = (InnerClass)currentComponent;
-				ClassType child = new ClassType((ClassType)project.getElementByID(innerc.getChild().getId()));
-				ClassType parent = (ClassType)project.getElementByID(innerc.getParent().getId());
+				ClassType child = new ClassType((ClassType)tmp.getElementByID(innerc.getChild().getId()));
+				ClassType parent = (ClassType)tmp.getElementByID(innerc.getParent().getId());
 				
 				parent.addElement(child);
-				project.removeCUnit(child.getName());
+				tmp.removeCUnit(child.getName());
 			}
 			
 			// add relationships
@@ -171,15 +250,15 @@ public class ExportData extends Thread
 				Role from = b.getRoles().getFirst();
 				Role to = b.getRoles().getLast();
 				
-				ClassType classInto = (ClassType) project.getElementByID(from.getEntity().getId());
+				ClassType classInto = (ClassType) tmp.getElementByID(from.getEntity().getId());
 				
-				classInto.addElement(getAttrFromRole(from, to));
+				classInto.addElement(getAttrFromRole(tmp, from, to));
 				
 				if(!b.isDirected())
 				{
-					ClassType classInto2 = (ClassType) project.getElementByID(to.getEntity().getId());
+					ClassType classInto2 = (ClassType) tmp.getElementByID(to.getEntity().getId());
 
-					classInto2.addElement(getAttrFromRole(to, from));
+					classInto2.addElement(getAttrFromRole(tmp, to, from));
 				}
 				
 				System.out.println(from.getEntity().getName()+ " : "+ from.getMultiplicity());
@@ -187,13 +266,13 @@ public class ExportData extends Thread
 				
 			}
 		}
+		return tmp;
 		
-		project.generateFiles(new Writer(path,v));
 	}
 
 	
 	
-	private dataRecord.Attribute getAttrFromRole(Role from, Role to)
+	private dataRecord.Attribute getAttrFromRole(ProjectManager project, Role from, Role to)
 	{
 		String name = to.getName().isEmpty()?to.getEntity().getName().toLowerCase():to.getName();
 		ElementType etype = null;
@@ -216,12 +295,12 @@ public class ExportData extends Thread
 						lt.setCollection(c);
 						name = to.getName().replace(c.toString(), "");
 						name = name.replace("{}", "");
-						System.err.println("before"+name);
+						//System.err.println("before"+name);
 						if(!name.matches(".*[a-zA-Z]+.*"))
 						{
 							name = to.getEntity().getName().toLowerCase();
-							System.err.println("match " + name);
-							System.out.println("---");
+//							System.err.println("match " + name);
+//							System.out.println("---");
 						}
 						break;
 					}
@@ -233,7 +312,6 @@ public class ExportData extends Thread
 															translateAccessModifiers(to.getVisibility()),
 															etype,
 															to.getId());
-		
 		return dRa;
 	}
 	
@@ -275,7 +353,7 @@ public class ExportData extends Thread
 	
 	public void printDebug() 
 	{
-		 System.out.println("!!!!! DEBUG EXPORT");
+		System.out.println("!!!!! DEBUG EXPORT");
 		for (CompilationUnit unit : project.getFilesRecord())
 		{
 			System.out.println("///// Debut de: " + unit.getName());

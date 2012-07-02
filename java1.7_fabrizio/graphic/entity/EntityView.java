@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
@@ -34,6 +35,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
+import swing.PanelClassDiagram;
 import swing.PropertyLoader;
 import swing.SPanelZOrder;
 import swing.Slyum;
@@ -49,6 +51,10 @@ import classDiagram.components.Entity;
 import classDiagram.components.Method;
 import classDiagram.components.PrimitiveType;
 import classDiagram.components.Visibility;
+import classDiagram.relationships.Binary;
+import classDiagram.relationships.Dependency;
+import classDiagram.relationships.Inheritance;
+import dataRecord.ImportData;
 
 /**
  * Represent the view of an entity in UML structure.
@@ -302,7 +308,14 @@ public abstract class EntityView extends MovableComponent implements Observer
 		menuItem = makeMenuItem("Move bottom", "ZOrderBottom", "bottom");
 		p.getBtnBottom().linkComponent(menuItem);
 		popupMenu.add(menuItem);
-
+		
+//		sync with code
+		popupMenu.addSeparator();
+		
+		menuItem = makeMenuItem("synchronize with code", "sync", "sync");
+		
+		popupMenu.add(menuItem);
+		
 		component.addObserver(this);
 
 		setColor(getBasicColor());
@@ -329,7 +342,6 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 				removeTextBox(pressedTextBox);
 			else
-
 				delete();
 		}
 		else if ("ViewAttribute".equals(e.getActionCommand()))
@@ -381,6 +393,10 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 			component.notifyObservers();
 		}
+		
+		else if("sync".equals(e.getActionCommand()))
+			sync();
+			
 	}
 	
 	/**
@@ -393,6 +409,54 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 		component.addAttribute(attribute);
 		component.notifyObservers(UpdateMessage.ADD_ATTRIBUTE);
+	}
+	
+	/**
+	 * Synchronize the componenet with the related source code file
+	 * 
+	 * @author Fabrizio Beretta Piccoli
+	 */
+	public void sync()
+	{
+		if(component.getReferenceFile() != null && component.getReferenceFile().canRead())
+		{
+			for (IDiagramComponent comp : PanelClassDiagram.getInstance().getClassDiagram().getComponents())
+			{
+				if(comp.getClass() == Dependency.class)
+				{
+					Dependency dv = (Dependency) comp;
+					if (dv.getSource().equals(component))
+						PanelClassDiagram.getInstance().getClassDiagram().removeComponent(dv);
+				}
+				if(comp.getClass() == Inheritance.class)
+				{
+					Inheritance dv = (Inheritance) comp;
+					if (dv.getChild().equals(component))
+						PanelClassDiagram.getInstance().getClassDiagram().removeComponent(dv);
+				}
+				if(comp.getClass() == Binary.class)
+				{
+					Binary dv = (Binary) comp;
+					if (dv.getRoles().getFirst().getEntity().equals(component) && dv.getRoles().getLast().getEntity().equals(component))
+						PanelClassDiagram.getInstance().getClassDiagram().removeComponent(dv);
+				}
+			}
+			
+			// to synchronize we must replace the component and parse the 
+			// reference source file
+			File[] f = new File[1];
+			f[0] = component.getReferenceFile();
+			Rectangle r = getBounds();
+			
+			PanelClassDiagram.getInstance().getClassDiagram().removeComponent(component);
+
+			Thread t  = new ImportData(f, true, r);
+			t.start();
+		}
+		else
+		{
+			SMessageDialog.showErrorMessage("sync error !");
+		}
 	}
 
 	/**
