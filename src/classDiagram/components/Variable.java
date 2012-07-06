@@ -116,7 +116,7 @@ public class Variable extends Observable implements IDiagramComponent
 	 */
 	public boolean setName(String name)
 	{
-		if (!checkSemantic(name) || name.equals(getName()))
+		if ( name.equals(getName()))
 			return false;
 
 		Change.push(new BufferVariable(this));

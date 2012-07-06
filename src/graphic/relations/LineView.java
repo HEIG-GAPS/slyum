@@ -144,7 +144,7 @@ public abstract class LineView extends GraphicComponent
 
 		if ("Delete".equals(e.getActionCommand()))
 		{
-			if (SMessageDialog.showQuestionMessageYesNo("Are you sur to delete this component and all its associated components?") == JOptionPane.NO_OPTION)
+			if (SMessageDialog.showQuestionMessageYesNo("Are you sure to delete this component and all its associated components?") == JOptionPane.NO_OPTION)
 
 				return;
 

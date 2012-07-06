@@ -109,7 +109,7 @@ public class MagneticGrip extends RelationGrip implements Observer
 			relation.componentChanged();
 		}
 		else
-			System.err.println("Grip connexion impossible.");
+			System.err.println("Grip connexion impossible." + e.getPoint());
 
 		setAnchor(e.getPoint());
 

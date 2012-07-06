@@ -6,6 +6,7 @@ import java.util.Observable;
 
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
+import dataRecord.elementType.Collection;
 
 /**
  * Represent a type in UML structure.
@@ -17,6 +18,7 @@ public class Type extends Observable implements IDiagramComponent
 {
 	public final static String REGEX_SEMANTIC_TYPE =  "([a-zA-Z|_])[\\w<>.\\[\\]]*";
 	public final static String REGEX_DIGIT = "[0-9]*";
+	private Collection collection;
 	
 	public static boolean checkSemantic(String type)
 	{
@@ -248,5 +250,15 @@ public class Type extends Observable implements IDiagramComponent
 	public String toXML(int depth)
 	{		
 		return getName().replace("<", "&lt;").replace(">", "&gt;");
+	}
+
+	public Collection getCollection()
+	{
+		return collection;
+	}
+
+	public void setCollection(Collection collection)
+	{
+		this.collection = collection;
 	}
 }
