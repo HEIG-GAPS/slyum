@@ -6,6 +6,7 @@ import graphic.MovableComponent;
 import graphic.textbox.TextBox;
 import graphic.textbox.TextBoxAttribute;
 import graphic.textbox.TextBoxEntityName;
+import graphic.textbox.TextBoxGenericType;
 import graphic.textbox.TextBoxMethod;
 import graphic.textbox.TextBoxMethod.ParametersViewStyle;
 
@@ -23,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
@@ -34,6 +36,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
+import swing.PanelClassDiagram;
 import swing.PropertyLoader;
 import swing.SPanelZOrder;
 import swing.Slyum;
@@ -49,12 +52,20 @@ import classDiagram.components.Entity;
 import classDiagram.components.Method;
 import classDiagram.components.PrimitiveType;
 import classDiagram.components.Visibility;
+import classDiagram.relationships.Binary;
+import classDiagram.relationships.Dependency;
+import classDiagram.relationships.Inheritance;
+import dataRecord.io.ImportData;
 
 /**
  * Represent the view of an entity in UML structure.
  * 
  * @author David Miserez
  * @version 1.0 - 25.07.2011
+ * 
+ * modified by
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 5-lug-2012
  */
 public abstract class EntityView extends MovableComponent implements Observer
 {
@@ -193,11 +204,13 @@ public abstract class EntityView extends MovableComponent implements Observer
 	protected boolean displayMethods = true;
 
 	private final TextBoxEntityName entityName;
+	private final TextBoxGenericType generic;
 
 	protected LinkedList<TextBoxMethod> methodsView = new LinkedList<TextBoxMethod>();
 
 	private TextBox pressedTextBox;
 	private JMenuItem menuItemDelete, menuItemMoveUp, menuItemMoveDown;
+	private JMenuItem syncEntity;
 
 	private Cursor saveCursor = Cursor.getDefaultCursor();
 
@@ -217,7 +230,10 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 		// Create a textBox for display the entity name.
 		entityName = new TextBoxEntityName(parent, component);
-
+		
+		//Create a textBox to display the generic type
+		generic = new TextBoxGenericType(parent, component);
+		
 		// Create the popup menu.
 		JMenuItem menuItem;
 
@@ -227,6 +243,14 @@ public abstract class EntityView extends MovableComponent implements Observer
 		popupMenu.add(menuItem);
 
 		menuItem = makeMenuItem("Add method", "AddMethod", "method");
+		popupMenu.add(menuItem);
+		
+		popupMenu.addSeparator();
+		
+		menuItem = makeMenuItem("Add generic", "AddGeneric", "generic");
+		popupMenu.add(menuItem);
+		
+		menuItem = makeMenuItem("Remove generic", "rGeneric", "noGeneric");
 		popupMenu.add(menuItem);
 
 		popupMenu.addSeparator();
@@ -302,7 +326,14 @@ public abstract class EntityView extends MovableComponent implements Observer
 		menuItem = makeMenuItem("Move bottom", "ZOrderBottom", "bottom");
 		p.getBtnBottom().linkComponent(menuItem);
 		popupMenu.add(menuItem);
-
+		
+//		sync with code
+		popupMenu.addSeparator();
+		
+		syncEntity = menuItem = makeMenuItem("synchronize with code", "sync", "sync");
+		
+		popupMenu.add(menuItem);
+		
 		component.addObserver(this);
 
 		setColor(getBasicColor());
@@ -329,7 +360,6 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 				removeTextBox(pressedTextBox);
 			else
-
 				delete();
 		}
 		else if ("ViewAttribute".equals(e.getActionCommand()))
@@ -381,6 +411,16 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 			component.notifyObservers();
 		}
+		
+		else if("sync".equals(e.getActionCommand()))
+			sync();
+		
+		else if ("AddGeneric".equals(e.getActionCommand()))
+			component.setGeneric(" T ");
+		
+		else if ("rGeneric".equals(e.getActionCommand()))
+			component.setGeneric("");
+			
 	}
 	
 	/**
@@ -393,6 +433,66 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 		component.addAttribute(attribute);
 		component.notifyObservers(UpdateMessage.ADD_ATTRIBUTE);
+	}
+	
+	/**
+	 * Synchronize the componenet with the related source code file
+	 * 
+	 * @author Fabrizio Beretta Piccoli
+	 */
+	public void sync()
+	{
+		LinkedList<Entity> referendeToUpdate = new LinkedList<Entity>();
+		
+		if(component.getReferenceFile() != null && component.getReferenceFile().canRead())
+		{
+			for (IDiagramComponent comp : PanelClassDiagram.getInstance().getClassDiagram().getComponents())
+			{
+				if(comp.getClass() == Dependency.class)
+				{
+					Dependency dv = (Dependency) comp;
+					if (dv.getSource().equals(component))
+						PanelClassDiagram.getInstance().getClassDiagram().removeComponent(dv);
+					if (dv.getTarget().equals(component))
+					{
+						PanelClassDiagram.getInstance().getClassDiagram().removeComponent(dv);
+						referendeToUpdate.add(dv.getSource());
+					}	
+				}
+				if(comp.getClass() == Inheritance.class)
+				{
+					Inheritance dv = (Inheritance) comp;
+					if (dv.getChild().equals(component))
+						PanelClassDiagram.getInstance().getClassDiagram().removeComponent(dv);
+					if (dv.getParent().equals(component))
+					{
+						PanelClassDiagram.getInstance().getClassDiagram().removeComponent(dv);
+						referendeToUpdate.add(dv.getChild());
+					}
+				}
+				if(comp.getClass() == Binary.class)
+				{
+					Binary dv = (Binary) comp;
+					if (dv.getRoles().getFirst().getEntity().equals(component) || dv.getRoles().getLast().getEntity().equals(component))
+						PanelClassDiagram.getInstance().getClassDiagram().removeComponent(dv);
+				}
+			}
+			
+			// to synchronize we must replace the component and parse the 
+			// reference source file
+			File[] f = new File[1];
+			f[0] = component.getReferenceFile();
+			Rectangle r = getBounds();
+			
+			PanelClassDiagram.getInstance().getClassDiagram().removeComponent(component);
+
+			Thread t  = new ImportData(f, true, r, referendeToUpdate);
+			t.start();
+		}
+		else
+		{
+			SMessageDialog.showErrorMessage("sync error !");
+		}
 	}
 
 	/**
@@ -456,7 +556,12 @@ public abstract class EntityView extends MovableComponent implements Observer
 	public void adjustWidth()
 	{
 		int width = Short.MIN_VALUE;
-
+		int gen = 48;
+		final int nameGen = getAllTextBox().getFirst().getTextDim().width + gen;
+		
+		if (nameGen > width && !component.getGeneric().isEmpty())
+			width = nameGen; 
+		
 		for (final TextBox tb : getAllTextBox())
 		{
 			final int tbWidth = tb.getTextDim().width;
@@ -569,6 +674,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 		final LinkedList<TextBox> tb = new LinkedList<TextBox>();
 
 		tb.add(entityName);
+		tb.add(generic);
 		tb.addAll(methodsView);
 		tb.addAll(attributesView);
 
@@ -676,6 +782,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 	{
 		final LinkedList<TextBox> tb = getAllTextBox();
 		tb.remove(entityName);
+		tb.remove(generic);
 		return GraphicView.searchComponentWithPosition(tb, location);
 	}
 
@@ -726,6 +833,11 @@ public abstract class EntityView extends MovableComponent implements Observer
 				menuItemMoveDown.setEnabled(false);
 			}
 			menuItemDelete.setText(text);
+			
+			if(component.getReferenceFile() == null)
+				syncEntity.setEnabled(false);
+			else
+				syncEntity.setEnabled(true);
 		}
 		
 		super.maybeShowPopup(e, popupMenu);
@@ -779,7 +891,10 @@ public abstract class EntityView extends MovableComponent implements Observer
 		final FontMetrics classNameMetrics = g2.getFontMetrics(entityName.getEffectivFont());
 		final int classNameWidth = classNameMetrics.stringWidth(className);
 		final int classNameHeight = classNameMetrics.getHeight();
-
+//		final FontMetrics classGenMetrics = g2.getFontMetrics(generic.getEffectivFont());
+//		final int classGenWidth = classGenMetrics.stringWidth(component.getGeneric())*2;
+//		System.out.println(classGenWidth);
+		
 		final Dimension classNameSize = new Dimension(classNameWidth, classNameHeight);
 
 		stereotypeFont = stereotypeFont.deriveFont(stereotypeFontBasic.getSize() * parent.getZoom());
@@ -831,6 +946,17 @@ public abstract class EntityView extends MovableComponent implements Observer
 
 		entityName.setBounds(new Rectangle(classNameLocationX, offset, bounds.width - 15, textBoxHeight + 2));
 		entityName.paintComponent(g2);
+		
+		//draw generic type 
+		if(!component.getGeneric().isEmpty())
+		{
+			g2.setStroke(new BasicStroke(BORDER_WIDTH,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+			g2.setColor(Color.RED);
+			g2.drawRect(bounds.x+bounds.width-30, offset, 28 , textBoxHeight);
+			
+		}
+		generic.setBounds(new Rectangle(bounds.x+bounds.width-25, offset, bounds.width - 10, textBoxHeight + 2));
+		generic.paintComponent(g2);
 
 		offset += entityNameBounds.height;
 
@@ -903,6 +1029,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 		attributesView.clear();
 
 		entityName.setText(component.getName());
+		generic.setText(" T ");
 
 		for (final Attribute a : component.getAttributes())
 			addAttribute(a, false);

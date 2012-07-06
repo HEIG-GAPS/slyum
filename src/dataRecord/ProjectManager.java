@@ -1,18 +1,31 @@
+/**
+ * The class represent the starting point for the whole structure
+ * It contains a data structures representing a project made of one or
+ * several source code files. Each file of source code is parsed and represent
+ * a compilation unit.
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 5-lug-2012
+ */
 package dataRecord;
 
 import java.util.LinkedList;
-import java.util.List;
+
+import dataRecord.elements.CompilationUnit;
+import dataRecord.elements.Element;
+import dataRecord.elements.Type;
+import dataRecord.io.Writer;
 
 public class ProjectManager
 {
 	private String name;
 	private LinkedList<CompilationUnit> filesRecord = new LinkedList<CompilationUnit>();
-	private static ProjectManager instance;
+	private static ProjectManager instance = new ProjectManager();
 
 	private ProjectManager()
 	{}
 
-	public List<CompilationUnit> getFilesRecord()
+	public LinkedList<CompilationUnit> getFilesRecord()
 	{
 		return filesRecord;
 	}
@@ -54,8 +67,6 @@ public class ProjectManager
 
 	public static ProjectManager getInstance()
 	{
-		if (instance == null)
-			return new ProjectManager();
 		return instance;
 	}
 	
@@ -68,9 +79,58 @@ public class ProjectManager
 				if(e.getID() == id)
 					return e;
 			}
+			
+			for (Element e : cu.getElements())
+			{
+				Type inner = null;
+				if(e instanceof Type)
+					inner = (Type) e;
+				try
+				{
+					for (Element t : inner.getElements())
+					{
+						if(t.getID() == id)
+							return e;
+					}
+				} catch (Exception e2)
+				{
+					// TODO: handle exception
+				}
+			}
+			
 		}
 		return null;
 	}
+	
+	public Element getElementFromProject(String name)
+	{
+		for (CompilationUnit cuts : filesRecord)
+		{
+			for (Element e : cuts.getElements())
+			{
+				if (e.getName().equals(name))
+						return e;
+			}
+			
+		}
+		return null;
+	}
+	
+	public Element getCU(String name)
+	{
+		for (CompilationUnit cuts : filesRecord)
+		{
+			if( cuts.getName().equals(name))
+				return cuts;
+		}
+		return null;
+	}
+	
+	public static ProjectManager getEmptyClone()
+	{
+		return new ProjectManager();
+	}
+	
 	
 //	public void removeElement(Element e)
 //	{

@@ -3,6 +3,9 @@ package classDiagram.components;
 import change.BufferClass;
 import change.BufferIndex;
 import change.Change;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,6 +31,8 @@ public abstract class Entity extends Type
 	protected LinkedList<Method> methods = new LinkedList<Method>();
 	protected List<Inheritance> parents = new LinkedList<Inheritance>();
 	protected List<Role> roles = new LinkedList<Role>();
+	private  File referenceFile;
+	private String generic = "";
 
 	protected String stereotype = "";
 
@@ -511,7 +516,7 @@ public abstract class Entity extends Type
 
 		String xml = tab + "<entity " + "id=\"" + getId() + "\" " + "name=\"" + super.toXML(0) + "\" " + "visibility=\"" + visibility + "\" " + "entityType=\"" + getEntityType() + "\" " + "isAbstract=\"" + isAbstract() + "\" ";
 
-		if (attributes.size() == 0 && methods.size() == 0 && getLastBalise(depth).isEmpty())
+		if (attributes.size() == 0 && methods.size() == 0 && getLastBalise(depth).isEmpty() && referenceFile == null)
 			return xml + "/>";
 
 		xml += ">\n";
@@ -521,9 +526,38 @@ public abstract class Entity extends Type
 
 		for (final Method operation : methods)
 			xml += operation.toXML(depth + 1) + "\n";
+		
+		try
+		{
+			if (referenceFile != null)
+				xml += tab + "\t<file path=\"" + referenceFile.getCanonicalPath() + "\"" + " />\n";
+		} catch (IOException e)
+		{
+			System.err.println("unknown file " + e.getMessage());
+		}
 
 		xml += getLastBalise(depth + 1);
 
 		return xml + tab + "</entity>";
+	}
+
+	public File getReferenceFile()
+	{
+		return referenceFile;
+	}
+
+	public void setReferenceFile(File referenceFile)
+	{
+		this.referenceFile = referenceFile;
+	}
+
+	public String getGeneric()
+	{
+		return generic;
+	}
+
+	public void setGeneric(String generic)
+	{
+		this.generic = generic;
 	}
 }
