@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$classswing_1_1propreties_view_1_1_global_propreties.html" title="This is a JPanel that is notified when an UML component is selected." alt="" coords="6,81,250,108"/>
+<area shape="rect" id="node3" href="$classswing_1_1propreties_view_1_1_entity_propreties.html" title="Show the propreties of an UML entity with Swing components." alt="" coords="314,5,555,32"/>
+<area shape="rect" id="node5" href="$classswing_1_1propreties_view_1_1_inheritance_properties.html" title="swing.propretiesView.InheritanceProperties" alt="" coords="299,56,570,83"/>
+<area shape="rect" id="node7" href="$classswing_1_1propreties_view_1_1_note_properties.html" title="swing.propretiesView.NoteProperties" alt="" coords="317,107,552,133"/>
+<area shape="rect" id="node9" href="$classswing_1_1propreties_view_1_1_relation_propreties.html" title="Show the propreties of an association and its roles with Swing components." alt="" coords="307,157,562,184"/>
+</map>

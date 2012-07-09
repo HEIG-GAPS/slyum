@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classswing_1_1_j_panel_rounded.html" title="swing.JPanelRounded" alt="" coords="1056,56,1205,83"/>
+<area shape="rect" id="node12" href="$classclass_diagram_1_1relationships_1_1_role.html" title="Represent a Role in UML structure." alt="" coords="1027,317,1235,344"/>
+<area shape="rect" id="node20" href="$classclass_diagram_1_1components_1_1_type.html" title="Represent a type in UML structure." alt="" coords="368,713,576,740"/>
+<area shape="rect" id="node41" href="$classclass_diagram_1_1relationships_1_1_association.html" title="This abstract class is the upper&#45;class for all associations in UML structure." alt="" coords="347,317,597,344"/>
+<area shape="rect" id="node49" href="$classclass_diagram_1_1relationships_1_1_multiplicity.html" title="Represent a multiplicity in UML structure." alt="" coords="350,255,594,281"/>
+<area shape="rect" id="node16" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="7,380,230,407"/>
+<area shape="rect" id="node18" href="$classclass_diagram_1_1components_1_1_entity.html" title="Abstract class containing all classes parameters (attributes, methods, visibility, ...)" alt="" coords="726,593,941,620"/>
+<area shape="rect" id="node24" href="$enumdata_record_1_1element_type_1_1_collection.html" title="dataRecord.elementType.Collection" alt="" coords="5,739,232,765"/>
+<area shape="rect" id="node28" href="$enumclass_diagram_1_1components_1_1_visibility.html" title="Represent a visibility in UML structure." alt="" coords="357,433,587,460"/>
+<area shape="rect" id="node45" href="$interfacegraphic_1_1textbox_1_1_i_label_title.html" title="Interface uses by component containing a label." alt="" coords="32,323,205,349"/>
+</map>

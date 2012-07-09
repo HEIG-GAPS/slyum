@@ -1,0 +1,21 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classclass_diagram_1_1components_1_1_method.html" title="Represent a method in UML structure." alt="" coords="294,17,517,44"/>
+<area shape="rect" id="node5" href="$classclass_diagram_1_1components_1_1_type.html" title="Represent a type in UML structure." alt="" coords="301,68,509,95"/>
+<area shape="rect" id="node17" href="$classclass_diagram_1_1components_1_1_variable.html" title="Represent a variable in UML structure." alt="" coords="292,119,519,145"/>
+<area shape="rect" id="node21" href="$classclass_diagram_1_1relationships_1_1_association.html" title="This abstract class is the upper&#45;class for all associations in UML structure." alt="" coords="280,169,531,196"/>
+<area shape="rect" id="node31" href="$classclass_diagram_1_1relationships_1_1_dependency.html" title="Represent a dependency in UML structure." alt="" coords="278,220,533,247"/>
+<area shape="rect" id="node33" href="$classclass_diagram_1_1relationships_1_1_inheritance.html" title="Represent a inheritance in UML structure." alt="" coords="283,271,528,297"/>
+<area shape="rect" id="node37" href="$classclass_diagram_1_1relationships_1_1_multiplicity.html" title="Represent a multiplicity in UML structure." alt="" coords="283,321,527,348"/>
+<area shape="rect" id="node39" href="$classclass_diagram_1_1relationships_1_1_role.html" title="Represent a Role in UML structure." alt="" coords="301,372,509,399"/>
+<area shape="rect" id="node7" href="$classclass_diagram_1_1components_1_1_entity.html" title="Abstract class containing all classes parameters (attributes, methods, visibility, ...)" alt="" coords="603,17,818,44"/>
+<area shape="rect" id="node15" href="$classclass_diagram_1_1components_1_1_primitive_type.html" title="This class, extent of Type contains a list of final attributes representing the primitives types..." alt="" coords="582,68,839,95"/>
+<area shape="rect" id="node9" href="$classclass_diagram_1_1components_1_1_class_entity.html" title="Represent a class in UML structure." alt="" coords="897,5,1143,32"/>
+<area shape="rect" id="node13" href="$classclass_diagram_1_1components_1_1_interface_entity.html" title="Represent an interface in UML structure." alt="" coords="889,56,1151,83"/>
+<area shape="rect" id="node11" href="$classclass_diagram_1_1components_1_1_association_class.html" title="Represent an association class in UML structure." alt="" coords="1201,5,1482,32"/>
+<area shape="rect" id="node19" href="$classclass_diagram_1_1components_1_1_attribute.html" title="Represent an attribute in UML structure." alt="" coords="596,119,825,145"/>
+<area shape="rect" id="node23" href="$classclass_diagram_1_1relationships_1_1_binary.html" title="Represent a binary association in UML structure." alt="" coords="601,169,820,196"/>
+<area shape="rect" id="node29" href="$classclass_diagram_1_1relationships_1_1_multi.html" title="Represent a multi&#45;association in UML structure." alt="" coords="605,220,816,247"/>
+<area shape="rect" id="node25" href="$classclass_diagram_1_1relationships_1_1_aggregation.html" title="This class, extent from Binary, represent an aggregation in UML structure." alt="" coords="895,132,1145,159"/>
+<area shape="rect" id="node27" href="$classclass_diagram_1_1relationships_1_1_composition.html" title="Represent a composition in UML structure." alt="" coords="893,183,1147,209"/>
+<area shape="rect" id="node35" href="$classclass_diagram_1_1relationships_1_1_inner_class.html" title="classDiagram.relationships.InnerClass" alt="" coords="589,271,832,297"/>
+</map>

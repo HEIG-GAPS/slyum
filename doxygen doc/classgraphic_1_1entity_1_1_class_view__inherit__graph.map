@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node15" href="$classgraphic_1_1entity_1_1_association_class_view.html" title="Represent the view of an association class in UML structure." alt="" coords="67,379,300,405"/>
+<area shape="rect" id="node2" href="$classgraphic_1_1entity_1_1_entity_view.html" title="Represent the view of an entity in UML structure." alt="" coords="101,229,267,256"/>
+<area shape="rect" id="node4" href="$classgraphic_1_1_movable_component.html" title="This graphic class represant all movable and resizable component with a ghost representation." alt="" coords="17,155,199,181"/>
+<area shape="rect" id="node6" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="19,80,197,107"/>
+</map>

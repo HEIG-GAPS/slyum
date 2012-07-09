@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$enumdata_record_1_1elements_1_1_primitive_type.html" title="dataRecord.elements.PrimitiveType" alt="" coords="303,56,529,83"/>
+<area shape="rect" id="node5" href="$classdata_record_1_1elements_1_1_type.html" title="dataRecord.elements.Type" alt="" coords="327,107,505,133"/>
+<area shape="rect" id="node13" href="$classdata_record_1_1element_type_1_1_a_p_itype.html" title="dataRecord.elementType.APItype" alt="" coords="308,157,524,184"/>
+<area shape="rect" id="node19" href="$classdata_record_1_1element_type_1_1_array_type.html" title="dataRecord.elementType.ArrayType" alt="" coords="301,208,531,235"/>
+<area shape="rect" id="node21" href="$classdata_record_1_1element_type_1_1_list_type.html" title="dataRecord.elementType.ListType" alt="" coords="307,259,525,285"/>
+<area shape="rect" id="node7" href="$classdata_record_1_1elements_1_1_class_type.html" title="dataRecord.elements.ClassType" alt="" coords="593,5,804,32"/>
+<area shape="rect" id="node9" href="$classdata_record_1_1elements_1_1_enum_type.html" title="dataRecord.elements.EnumType" alt="" coords="593,56,804,83"/>
+<area shape="rect" id="node11" href="$classdata_record_1_1elements_1_1_interface_type.html" title="dataRecord.elements.InterfaceType" alt="" coords="585,107,812,133"/>
+<area shape="rect" id="node15" href="$classdata_record_1_1element_type_1_1_a_p_iclass.html" title="dataRecord.elementType.APIclass" alt="" coords="587,157,810,184"/>
+<area shape="rect" id="node17" href="$classdata_record_1_1element_type_1_1_a_p_iinterface.html" title="dataRecord.elementType.APIinterface" alt="" coords="579,208,819,235"/>
+</map>

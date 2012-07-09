@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node11" href="$classclass_diagram_1_1components_1_1_association_class.html" title="Represent an association class in UML structure." alt="" coords="5,304,285,331"/>
+<area shape="rect" id="node2" href="$classclass_diagram_1_1components_1_1_entity.html" title="Abstract class containing all classes parameters (attributes, methods, visibility, ...)" alt="" coords="38,155,252,181"/>
+<area shape="rect" id="node4" href="$classclass_diagram_1_1components_1_1_type.html" title="Represent a type in UML structure." alt="" coords="41,80,249,107"/>
+<area shape="rect" id="node8" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="123,5,345,32"/>
+</map>

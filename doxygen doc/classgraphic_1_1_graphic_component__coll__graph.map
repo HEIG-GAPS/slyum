@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node12" href="$classgraphic_1_1_graphic_view.html" title="This class is the main container for all diagrams components view (classComponent, interfaceComponent, relation, ...)." alt="" coords="1243,617,1384,644"/>
+<area shape="rect" id="node31" href="$classgraphic_1_1factory_1_1_create_component.html" title="CreateComponent allows to create a new graphic component view." alt="" coords="810,389,1025,416"/>
+<area shape="rect" id="node19" href="$interfaceclass_diagram_1_1_i_components_observer.html" title="Interface implemented by all listeners of class diagram." alt="" coords="5,979,237,1005"/>
+<area shape="rect" id="node34" href="$classclass_diagram_1_1_class_diagram.html" title="This class contains all structurals UML components." alt="" coords="379,745,565,772"/>
+</map>

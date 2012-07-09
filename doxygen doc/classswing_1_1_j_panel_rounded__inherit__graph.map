@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node5" href="$classswing_1_1hierarchical_view_1_1_hierarchical_view.html" title="This class is a hierarchical view of the class diagram." alt="" coords="312,5,565,32"/>
+<area shape="rect" id="node7" href="$classswing_1_1propreties_view_1_1_slyum_role_panel.html" title="Represent a JPanel containing all Swing components for edit role." alt="" coords="317,56,561,83"/>
+<area shape="rect" id="node9" href="$classswing_1_1_s_panel_diagram_component.html" title="swing.SPanelDiagramComponent" alt="" coords="331,107,546,133"/>
+<area shape="rect" id="node11" href="$classswing_1_1_s_panel_element.html" title="swing.SPanelElement" alt="" coords="364,157,513,184"/>
+<area shape="rect" id="node13" href="$classswing_1_1_s_panel_file_component.html" title="swing.SPanelFileComponent" alt="" coords="345,208,533,235"/>
+<area shape="rect" id="node15" href="$classswing_1_1_s_panel_i_o_component.html" title="swing.SPanelIOComponent" alt="" coords="349,259,529,285"/>
+<area shape="rect" id="node17" href="$classswing_1_1_s_panel_style_component.html" title="swing.SPanelStyleComponent" alt="" coords="340,309,537,336"/>
+<area shape="rect" id="node19" href="$classswing_1_1_s_panel_undo_redo.html" title="swing.SPanelUndoRedo" alt="" coords="358,360,519,387"/>
+<area shape="rect" id="node21" href="$classswing_1_1_s_panel_z_order.html" title="swing.SPanelZOrder" alt="" coords="369,411,509,437"/>
+<area shape="rect" id="node23" href="$classutility_1_1_s_slider.html" title="utility.SSlider" alt="" coords="389,461,488,488"/>
+</map>

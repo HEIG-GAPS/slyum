@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node7" href="$classswing_1_1propreties_view_1_1_entity_propreties.html" title="Show the propreties of an UML entity with Swing components." alt="" coords="437,5,678,32"/>
+<area shape="rect" id="node9" href="$classswing_1_1propreties_view_1_1_inheritance_properties.html" title="swing.propretiesView.InheritanceProperties" alt="" coords="422,56,693,83"/>
+<area shape="rect" id="node11" href="$classswing_1_1propreties_view_1_1_note_properties.html" title="swing.propretiesView.NoteProperties" alt="" coords="440,107,675,133"/>
+<area shape="rect" id="node13" href="$classswing_1_1propreties_view_1_1_relation_propreties.html" title="Show the propreties of an association and its roles with Swing components." alt="" coords="430,157,685,184"/>
+</map>

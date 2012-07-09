@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classgraphic_1_1factory_1_1_relation_factory.html" title="RelationFactory allows to create a new relation view associated with a new relation UML..." alt="" coords="2256,285,2459,312"/>
+<area shape="rect" id="node4" href="$classgraphic_1_1factory_1_1_component_factory.html" title="ComponentFactory allows to create a new component view associated with a new component UML..." alt="" coords="1944,323,2165,349"/>
+<area shape="rect" id="node6" href="$classgraphic_1_1factory_1_1_create_component.html" title="CreateComponent allows to create a new graphic component view." alt="" coords="738,1275,953,1301"/>
+<area shape="rect" id="node20" href="$classgraphic_1_1_graphic_view.html" title="This class is the main container for all diagrams components view (classComponent, interfaceComponent, relation, ...)." alt="" coords="1197,729,1339,756"/>
+<area shape="rect" id="node8" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="1555,323,1733,349"/>
+<area shape="rect" id="node27" href="$interfaceclass_diagram_1_1_i_components_observer.html" title="Interface implemented by all listeners of class diagram." alt="" coords="5,860,237,887"/>
+<area shape="rect" id="node46" href="$classclass_diagram_1_1_class_diagram.html" title="This class contains all structurals UML components." alt="" coords="363,945,549,972"/>
+</map>

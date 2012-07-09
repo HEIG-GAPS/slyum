@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node11" href="$classclass_diagram_1_1relationships_1_1_aggregation.html" title="This class, extent from Binary, represent an aggregation in UML structure." alt="" coords="5,229,256,256"/>
+<area shape="rect" id="node13" href="$classclass_diagram_1_1relationships_1_1_composition.html" title="Represent a composition in UML structure." alt="" coords="281,229,535,256"/>
+<area shape="rect" id="node2" href="$classclass_diagram_1_1relationships_1_1_association.html" title="This abstract class is the upper&#45;class for all associations in UML structure." alt="" coords="144,80,395,107"/>
+<area shape="rect" id="node6" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="158,5,380,32"/>
+<area shape="rect" id="node8" href="$interfacegraphic_1_1textbox_1_1_i_label_title.html" title="Interface uses by component containing a label." alt="" coords="405,5,579,32"/>
+</map>

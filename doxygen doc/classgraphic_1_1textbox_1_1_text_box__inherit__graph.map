@@ -1,0 +1,11 @@
+<map id="G" name="G">
+<area shape="rect" id="node9" href="$classgraphic_1_1textbox_1_1_text_box_attribute.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="610,5,822,32"/>
+<area shape="rect" id="node11" href="$classgraphic_1_1textbox_1_1_text_box_entity_name.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="601,56,831,83"/>
+<area shape="rect" id="node13" href="$classgraphic_1_1textbox_1_1_text_box_generic_type.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="598,107,834,133"/>
+<area shape="rect" id="node15" href="$classgraphic_1_1textbox_1_1_text_box_label.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="619,157,813,184"/>
+<area shape="rect" id="node23" href="$classgraphic_1_1textbox_1_1_text_box_method.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="613,208,819,235"/>
+<area shape="rect" id="node2" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="160,107,339,133"/>
+<area shape="rect" id="node17" href="$classgraphic_1_1textbox_1_1_text_box_label_title.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="887,107,1105,133"/>
+<area shape="rect" id="node19" href="$classgraphic_1_1textbox_1_1_text_box_multiplicity.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="883,157,1109,184"/>
+<area shape="rect" id="node21" href="$classgraphic_1_1textbox_1_1_text_box_role.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="901,208,1091,235"/>
+</map>

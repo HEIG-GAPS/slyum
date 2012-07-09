@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classgraphic_1_1relations_1_1_relation_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="1611,343,1807,369"/>
+<area shape="rect" id="node4" href="$classgraphic_1_1relations_1_1_line_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="1268,177,1441,204"/>
+<area shape="rect" id="node6" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="383,651,561,677"/>
+<area shape="rect" id="node18" href="$classgraphic_1_1_graphic_view.html" title="This class is the main container for all diagrams components view (classComponent, interfaceComponent, relation, ...)." alt="" coords="1284,1003,1425,1029"/>
+<area shape="rect" id="node37" href="$classgraphic_1_1factory_1_1_create_component.html" title="CreateComponent allows to create a new graphic component view." alt="" coords="810,1484,1025,1511"/>
+<area shape="rect" id="node69" href="$classchange_1_1_buffer_bounds.html" title="change.BufferBounds" alt="" coords="845,304,990,331"/>
+<area shape="rect" id="node88" href="$classclass_diagram_1_1relationships_1_1_association.html" title="This abstract class is the upper&#45;class for all associations in UML structure." alt="" coords="1584,437,1835,464"/>
+<area shape="rect" id="node25" href="$interfaceclass_diagram_1_1_i_components_observer.html" title="Interface implemented by all listeners of class diagram." alt="" coords="5,1243,237,1269"/>
+<area shape="rect" id="node40" href="$classclass_diagram_1_1_class_diagram.html" title="This class contains all structurals UML components." alt="" coords="379,1484,565,1511"/>
+<area shape="rect" id="node71" href="$interfacechange_1_1_changeable.html" title="change.Changeable" alt="" coords="404,299,540,325"/>
+<area shape="rect" id="node86" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="1243,381,1466,408"/>
+<area shape="rect" id="node92" href="$interfacegraphic_1_1textbox_1_1_i_label_title.html" title="Interface uses by component containing a label." alt="" coords="1268,539,1441,565"/>
+</map>

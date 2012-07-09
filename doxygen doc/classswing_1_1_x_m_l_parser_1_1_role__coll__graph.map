@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$enumclass_diagram_1_1components_1_1_visibility.html" title="Represent a visibility in UML structure." alt="" coords="5,105,235,132"/>
+<area shape="rect" id="node4" href="$classclass_diagram_1_1relationships_1_1_multiplicity.html" title="Represent a multiplicity in UML structure." alt="" coords="259,105,503,132"/>
+<area shape="rect" id="node8" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="359,5,581,32"/>
+</map>

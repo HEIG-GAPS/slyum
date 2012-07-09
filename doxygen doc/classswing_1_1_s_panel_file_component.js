@@ -1,0 +1,27 @@
+var classswing_1_1_s_panel_file_component =
+[
+    [ "SPanelFileComponent", "classswing_1_1_s_panel_file_component.html#a3aff932cc10ef5f74679fce7a13e7f86", null ],
+    [ "actionPerformed", "classswing_1_1_s_panel_file_component.html#a1f8a6fa3c7a6fdaf3efb50b4b96246ed", null ],
+    [ "createSButton", "classswing_1_1_s_panel_file_component.html#ae0b56174bf71f65203e6fe38ee6134a7", null ],
+    [ "getBtnExport", "classswing_1_1_s_panel_file_component.html#a24abbfb01118cb446ee49c542b23f779", null ],
+    [ "getBtnKlipper", "classswing_1_1_s_panel_file_component.html#aa1cb680d129ce3204331179e2cf28780", null ],
+    [ "getBtnNewProject", "classswing_1_1_s_panel_file_component.html#a4e35d86e435160a079d76d2c2c251ce0", null ],
+    [ "getBtnOpen", "classswing_1_1_s_panel_file_component.html#a205d844d2b561344c53a660cc0c8728a", null ],
+    [ "getBtnPrint", "classswing_1_1_s_panel_file_component.html#abc5b1fc2e154a0927ca0eca054ab274d", null ],
+    [ "getBtnSave", "classswing_1_1_s_panel_file_component.html#ab9f71d68c3a5ce6c6f6fedbd5c01a28a", null ],
+    [ "getInstance", "classswing_1_1_s_panel_file_component.html#ac9d04a157a4a212f70e42e3c53be87dd", null ],
+    [ "export", "classswing_1_1_s_panel_file_component.html#a70853cc71b916cf2d2df549f9c063490", null ],
+    [ "instance", "classswing_1_1_s_panel_file_component.html#af5cab2cb073d976d2cea474674dae92e", null ],
+    [ "klipper", "classswing_1_1_s_panel_file_component.html#a97d47d019cd792c381fef26d84f7ff8a", null ],
+    [ "newProject", "classswing_1_1_s_panel_file_component.html#ad1bbabcb0d1d490c734bce2d904b2fdf", null ],
+    [ "open", "classswing_1_1_s_panel_file_component.html#ae37fd463cc0e938a7c50ac59d5e90010", null ],
+    [ "print", "classswing_1_1_s_panel_file_component.html#a5445345f83869231297b42944f9638bd", null ],
+    [ "save", "classswing_1_1_s_panel_file_component.html#ae4de1049ac2e55df3c1735fd6f00934c", null ],
+    [ "serialVersionUID", "classswing_1_1_s_panel_file_component.html#a78ab8ba6038ba635490f00903e1cc02a", null ],
+    [ "TT_CLIPBOARD", "classswing_1_1_s_panel_file_component.html#a578d1a867a67dcf51f6c6567febdd4e8", null ],
+    [ "TT_EXPORT", "classswing_1_1_s_panel_file_component.html#ae60ea9dd011fd8627e053c443df2d974", null ],
+    [ "TT_NEW_PROJECT", "classswing_1_1_s_panel_file_component.html#a459f3eaba9999d070dee39c51a3e6476", null ],
+    [ "TT_OPEN", "classswing_1_1_s_panel_file_component.html#a564d4c1e35fe5ad57d55e2a26c558540", null ],
+    [ "TT_PRINT", "classswing_1_1_s_panel_file_component.html#ac09b67e1b48b7f2c1c9ef46d8c52c79a", null ],
+    [ "TT_SAVE", "classswing_1_1_s_panel_file_component.html#a547780ecb2ac7661b35d61a8e144351a", null ]
+];

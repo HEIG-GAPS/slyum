@@ -1,0 +1,5 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classswing_1_1hierarchical_view_1_1_node_inheritance.html" title="A JTree node associated with an inheritance." alt="" coords="336,81,587,108"/>
+<area shape="rect" id="node6" href="$interfaceswing_1_1hierarchical_view_1_1_i_customized_icon_node.html" title="This class is implemented by node in JTree that have a customized icon." alt="" coords="5,56,288,83"/>
+<area shape="rect" id="node10" href="$interfaceswing_1_1hierarchical_view_1_1_i_class_diagram_node.html" title="This interface is implemented by node (in JTree) that are associated with a UML component." alt="" coords="11,157,282,184"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="383,450,561,477"/>
+<area shape="rect" id="node14" href="$classgraphic_1_1_graphic_view.html" title="This class is the main container for all diagrams components view (classComponent, interfaceComponent, relation, ...)." alt="" coords="1253,673,1395,699"/>
+<area shape="rect" id="node33" href="$classgraphic_1_1factory_1_1_create_component.html" title="CreateComponent allows to create a new graphic component view." alt="" coords="810,406,1025,433"/>
+<area shape="rect" id="node67" href="$classgraphic_1_1_square_grip.html" title="The SquareGrip class represent a (little) gray square." alt="" coords="851,141,984,167"/>
+<area shape="rect" id="node21" href="$interfaceclass_diagram_1_1_i_components_observer.html" title="Interface implemented by all listeners of class diagram." alt="" coords="5,47,237,74"/>
+<area shape="rect" id="node36" href="$classclass_diagram_1_1_class_diagram.html" title="This class contains all structurals UML components." alt="" coords="379,226,565,253"/>
+<area shape="rect" id="node65" href="$classgraphic_1_1entity_1_1_grip_entity.html" title="Represent a grip (gray square) using for resizing entities." alt="" coords="1243,330,1405,357"/>
+</map>

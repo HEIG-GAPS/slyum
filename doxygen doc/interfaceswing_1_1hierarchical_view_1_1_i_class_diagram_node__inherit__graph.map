@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classswing_1_1hierarchical_view_1_1_node_association.html" title="A JTree node associated with an association UML." alt="" coords="326,5,581,32"/>
+<area shape="rect" id="node5" href="$classswing_1_1hierarchical_view_1_1_node_attribute.html" title="A JTree node associated with an attribute UML." alt="" coords="335,56,571,83"/>
+<area shape="rect" id="node7" href="$classswing_1_1hierarchical_view_1_1_node_depedency.html" title="A JTree node associated with a dependency UML." alt="" coords="327,107,579,133"/>
+<area shape="rect" id="node9" href="$classswing_1_1hierarchical_view_1_1_node_entity.html" title="A JTree node associated with an entity UML." alt="" coords="343,157,564,184"/>
+<area shape="rect" id="node11" href="$classswing_1_1hierarchical_view_1_1_node_inheritance.html" title="A JTree node associated with an inheritance." alt="" coords="328,208,579,235"/>
+<area shape="rect" id="node15" href="$classswing_1_1hierarchical_view_1_1_node_method.html" title="A JTree node associated with a method UML." alt="" coords="338,259,569,285"/>
+<area shape="rect" id="node13" href="$classswing_1_1hierarchical_view_1_1_node_inner_class.html" title="swing.hierarchicalView.NodeInnerClass" alt="" coords="629,208,877,235"/>
+</map>
