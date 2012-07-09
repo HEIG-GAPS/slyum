@@ -1,0 +1,69 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="56,461,235,488"/>
+<area shape="rect" id="node3" href="$classgraphic_1_1_button_cross.html" title="graphic.ButtonCross" alt="" coords="391,487,531,513"/>
+<area shape="rect" id="node5" href="$classgraphic_1_1factory_1_1_create_component.html" title="CreateComponent allows to create a new graphic component view." alt="" coords="354,563,569,589"/>
+<area shape="rect" id="node37" href="$classgraphic_1_1_graphic_view.html" title="This class is the main container for all diagrams components view (classComponent, interfaceComponent, relation, ...)." alt="" coords="391,715,532,741"/>
+<area shape="rect" id="node39" href="$classgraphic_1_1_movable_component.html" title="This graphic class represant all movable and resizable component with a ghost representation." alt="" coords="371,664,552,691"/>
+<area shape="rect" id="node53" href="$classgraphic_1_1relations_1_1_line_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="375,107,548,133"/>
+<area shape="rect" id="node77" href="$classgraphic_1_1_square_grip.html" title="The SquareGrip class represent a (little) gray square." alt="" coords="395,259,528,285"/>
+<area shape="rect" id="node85" href="$classgraphic_1_1_style_cross.html" title="graphic.StyleCross" alt="" coords="395,385,527,412"/>
+<area shape="rect" id="node87" href="$classgraphic_1_1textbox_1_1_text_box.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="380,436,543,463"/>
+<area shape="rect" id="node7" href="$classgraphic_1_1factory_1_1_component_factory.html" title="ComponentFactory allows to create a new component view associated with a new component UML..." alt="" coords="653,563,875,589"/>
+<area shape="rect" id="node35" href="$classgraphic_1_1factory_1_1_multi_factory.html" title="MultiFactory allows to create a new multi&#45;association view associated with a new association UML..." alt="" coords="673,613,855,640"/>
+<area shape="rect" id="node9" href="$classgraphic_1_1factory_1_1_entity_factory.html" title="EntityFactory allows to create a new entity view associated with a new entity UML." alt="" coords="957,461,1147,488"/>
+<area shape="rect" id="node15" href="$classgraphic_1_1factory_1_1_relation_factory.html" title="RelationFactory allows to create a new relation view associated with a new relation UML..." alt="" coords="951,613,1153,640"/>
+<area shape="rect" id="node11" href="$classgraphic_1_1factory_1_1_class_factory.html" title="ClassFactory allows to create a new class view associated with a new class UML." alt="" coords="1247,360,1435,387"/>
+<area shape="rect" id="node13" href="$classgraphic_1_1factory_1_1_interface_factory.html" title="InterfaceFactory allows to create a new interface view associated with a new class UML..." alt="" coords="1239,411,1443,437"/>
+<area shape="rect" id="node17" href="$classgraphic_1_1factory_1_1_aggregation_factory.html" title="AggregationFactory allows to create a new aggregation view associated with a new association UML..." alt="" coords="1229,563,1453,589"/>
+<area shape="rect" id="node19" href="$classgraphic_1_1factory_1_1_association_class_factory.html" title="AssociationClassFactory allows to create a new association class view associated with a new associati..." alt="" coords="1213,613,1469,640"/>
+<area shape="rect" id="node21" href="$classgraphic_1_1factory_1_1_binary_factory.html" title="BinaryFactory allows to create a new binary view associated with a new association UML..." alt="" coords="1245,664,1437,691"/>
+<area shape="rect" id="node23" href="$classgraphic_1_1factory_1_1_composition_factory.html" title="CompositionFactpry allows to create a new composition view associated with a new association UML..." alt="" coords="1228,715,1455,741"/>
+<area shape="rect" id="node25" href="$classgraphic_1_1factory_1_1_dependency_factory.html" title="DependencyFactory allows to create a new dependency view associated with a new association UML..." alt="" coords="1228,765,1455,792"/>
+<area shape="rect" id="node27" href="$classgraphic_1_1factory_1_1_inheritance_factory.html" title="InheritanceFactory allows to create a new inheritance view associated with a new association UML..." alt="" coords="1232,816,1451,843"/>
+<area shape="rect" id="node31" href="$classgraphic_1_1factory_1_1_line_commentary_factory.html" title="LineCommentaryFactory allows to create a new line between a note and a graphic component." alt="" coords="1215,461,1468,488"/>
+<area shape="rect" id="node33" href="$classgraphic_1_1factory_1_1_note_factory.html" title="NoteFactory allows to create a new note." alt="" coords="1250,512,1433,539"/>
+<area shape="rect" id="node29" href="$classgraphic_1_1factory_1_1_inner_class_factory.html" title="graphic.factory.InnerClassFactory" alt="" coords="1520,816,1736,843"/>
+<area shape="rect" id="node41" href="$classgraphic_1_1entity_1_1_entity_view.html" title="Represent the view of an entity in UML structure." alt="" coords="681,791,847,817"/>
+<area shape="rect" id="node49" href="$classgraphic_1_1relations_1_1_multi_view.html" title="MultiView is represented by a diamond and it represents a multi&#45;association UML." alt="" coords="675,664,853,691"/>
+<area shape="rect" id="node51" href="$classgraphic_1_1textbox_1_1_text_box_commentary.html" title="A TextBoxCommentary is not a subclass of TextBox becauseit is not on signle line." alt="" coords="645,715,883,741"/>
+<area shape="rect" id="node43" href="$classgraphic_1_1entity_1_1_class_view.html" title="Represent the view of a class in UML structure." alt="" coords="969,791,1135,817"/>
+<area shape="rect" id="node47" href="$classgraphic_1_1entity_1_1_interface_view.html" title="Represent the view of an interface in UML structure." alt="" coords="961,841,1143,868"/>
+<area shape="rect" id="node45" href="$classgraphic_1_1entity_1_1_association_class_view.html" title="Represent the view of an association class in UML structure." alt="" coords="1225,867,1458,893"/>
+<area shape="rect" id="node55" href="$classgraphic_1_1relations_1_1_association_classe_line.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="637,5,891,32"/>
+<area shape="rect" id="node57" href="$classgraphic_1_1relations_1_1_line_commentary.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="655,56,873,83"/>
+<area shape="rect" id="node59" href="$classgraphic_1_1relations_1_1_multi_line_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="663,107,865,133"/>
+<area shape="rect" id="node61" href="$classgraphic_1_1relations_1_1_relation_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="666,157,862,184"/>
+<area shape="rect" id="node63" href="$classgraphic_1_1relations_1_1_association_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="943,107,1161,133"/>
+<area shape="rect" id="node71" href="$classgraphic_1_1relations_1_1_dependency_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="941,157,1163,184"/>
+<area shape="rect" id="node73" href="$classgraphic_1_1relations_1_1_inheritance_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="946,208,1158,235"/>
+<area shape="rect" id="node65" href="$classgraphic_1_1relations_1_1_binary_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="1248,107,1435,133"/>
+<area shape="rect" id="node67" href="$classgraphic_1_1relations_1_1_aggregation_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="1519,132,1737,159"/>
+<area shape="rect" id="node69" href="$classgraphic_1_1relations_1_1_composition_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="1517,81,1739,108"/>
+<area shape="rect" id="node75" href="$classgraphic_1_1relations_1_1_inner_class_view.html" title="graphic.relations.InnerClassView" alt="" coords="1236,208,1447,235"/>
+<area shape="rect" id="node79" href="$classgraphic_1_1entity_1_1_grip_entity.html" title="Represent a grip (gray square) using for resizing entities." alt="" coords="683,208,845,235"/>
+<area shape="rect" id="node81" href="$classgraphic_1_1relations_1_1_relation_grip.html" title="The relationGrip is a grip who customize a LineView." alt="" coords="668,259,860,285"/>
+<area shape="rect" id="node83" href="$classgraphic_1_1relations_1_1_magnetic_grip.html" title="The relationGrip is a grip who customize a LineView." alt="" coords="953,259,1151,285"/>
+<area shape="rect" id="node89" href="$classgraphic_1_1textbox_1_1_text_box_attribute.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="658,461,870,488"/>
+<area shape="rect" id="node91" href="$classgraphic_1_1textbox_1_1_text_box_entity_name.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="649,512,879,539"/>
+<area shape="rect" id="node93" href="$classgraphic_1_1textbox_1_1_text_box_generic_type.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="646,309,882,336"/>
+<area shape="rect" id="node95" href="$classgraphic_1_1textbox_1_1_text_box_label.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="667,360,861,387"/>
+<area shape="rect" id="node103" href="$classgraphic_1_1textbox_1_1_text_box_method.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="661,411,867,437"/>
+<area shape="rect" id="node97" href="$classgraphic_1_1textbox_1_1_text_box_label_title.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="943,309,1161,336"/>
+<area shape="rect" id="node99" href="$classgraphic_1_1textbox_1_1_text_box_multiplicity.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="939,360,1165,387"/>
+<area shape="rect" id="node101" href="$classgraphic_1_1textbox_1_1_text_box_role.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="957,411,1147,437"/>
+<area shape="rect" id="node104" href="$interfaceclass_diagram_1_1_i_components_observer.html" title="Interface implemented by all listeners of class diagram." alt="" coords="29,791,261,817"/>
+<area shape="rect" id="node106" href="$classclass_diagram_1_1_class_diagram.html" title="This class contains all structurals UML components." alt="" coords="368,765,555,792"/>
+<area shape="rect" id="node109" href="$classswing_1_1hierarchical_view_1_1_hierarchical_view.html" title="This class is a hierarchical view of the class diagram." alt="" coords="335,867,588,893"/>
+<area shape="rect" id="node111" href="$classswing_1_1propreties_view_1_1_propreties_changer.html" title="Represent a view in Slyum implementing IComponentsObserver." alt="" coords="334,816,589,843"/>
+<area shape="rect" id="node112" href="$interfaceswing_1_1_i_listener_component_selection_changed.html" title="swing.IListenerComponentSelectionChanged" alt="" coords="6,968,285,995"/>
+<area shape="rect" id="node114" href="$classswing_1_1_s_panel_element.html" title="swing.SPanelElement" alt="" coords="387,917,536,944"/>
+<area shape="rect" id="node116" href="$classswing_1_1_s_panel_style_component.html" title="swing.SPanelStyleComponent" alt="" coords="363,968,560,995"/>
+<area shape="rect" id="node118" href="$classswing_1_1_s_panel_z_order.html" title="swing.SPanelZOrder" alt="" coords="391,1019,531,1045"/>
+<area shape="rect" id="node119" href="$classswing_1_1_j_panel_rounded.html" title="swing.JPanelRounded" alt="" coords="71,1095,220,1121"/>
+<area shape="rect" id="node122" href="$classswing_1_1propreties_view_1_1_slyum_role_panel.html" title="Represent a JPanel containing all Swing components for edit role." alt="" coords="339,1069,583,1096"/>
+<area shape="rect" id="node124" href="$classswing_1_1_s_panel_diagram_component.html" title="swing.SPanelDiagramComponent" alt="" coords="354,1120,569,1147"/>
+<area shape="rect" id="node127" href="$classswing_1_1_s_panel_file_component.html" title="swing.SPanelFileComponent" alt="" coords="367,1171,555,1197"/>
+<area shape="rect" id="node129" href="$classswing_1_1_s_panel_i_o_component.html" title="swing.SPanelIOComponent" alt="" coords="371,1221,551,1248"/>
+<area shape="rect" id="node132" href="$classswing_1_1_s_panel_undo_redo.html" title="swing.SPanelUndoRedo" alt="" coords="381,1272,542,1299"/>
+<area shape="rect" id="node135" href="$classutility_1_1_s_slider.html" title="utility.SSlider" alt="" coords="412,1323,511,1349"/>
+</map>

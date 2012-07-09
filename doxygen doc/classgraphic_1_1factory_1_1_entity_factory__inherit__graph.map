@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node13" href="$classgraphic_1_1factory_1_1_class_factory.html" title="ClassFactory allows to create a new class view associated with a new class UML." alt="" coords="5,379,192,405"/>
+<area shape="rect" id="node15" href="$classgraphic_1_1factory_1_1_interface_factory.html" title="InterfaceFactory allows to create a new interface view associated with a new class UML..." alt="" coords="217,379,420,405"/>
+<area shape="rect" id="node2" href="$classgraphic_1_1factory_1_1_component_factory.html" title="ComponentFactory allows to create a new component view associated with a new component UML..." alt="" coords="97,229,319,256"/>
+<area shape="rect" id="node4" href="$classgraphic_1_1factory_1_1_create_component.html" title="CreateComponent allows to create a new graphic component view." alt="" coords="101,155,315,181"/>
+<area shape="rect" id="node6" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="119,80,297,107"/>
+</map>

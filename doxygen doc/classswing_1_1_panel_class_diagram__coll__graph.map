@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node17" href="$classswing_1_1_j_panel_rounded.html" title="swing.JPanelRounded" alt="" coords="451,172,600,199"/>
+<area shape="rect" id="node26" href="$classutility_1_1_s_slider_1_1_s_ticker.html" title="utility.SSlider.STicker" alt="" coords="1251,104,1397,131"/>
+<area shape="rect" id="node33" href="$classgraphic_1_1_graphic_view.html" title="This class is the main container for all diagrams components view (classComponent, interfaceComponent, relation, ...)." alt="" coords="877,639,1019,666"/>
+<area shape="rect" id="node4" href="$classclass_diagram_1_1_class_diagram.html" title="This class contains all structurals UML components." alt="" coords="432,1115,619,1142"/>
+<area shape="rect" id="node62" href="$classgraphic_1_1factory_1_1_create_component.html" title="CreateComponent allows to create a new graphic component view." alt="" coords="1465,874,1679,900"/>
+<area shape="rect" id="node6" href="$interfaceclass_diagram_1_1_i_components_observer.html" title="Interface implemented by all listeners of class diagram." alt="" coords="5,692,237,719"/>
+<area shape="rect" id="node15" href="$classutility_1_1_s_slider.html" title="utility.SSlider" alt="" coords="899,178,997,204"/>
+<area shape="rect" id="node35" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="1235,874,1413,900"/>
+</map>

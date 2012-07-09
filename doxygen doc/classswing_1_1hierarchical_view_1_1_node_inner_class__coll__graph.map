@@ -1,0 +1,11 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classswing_1_1hierarchical_view_1_1_node_inheritance.html" title="A JTree node associated with an inheritance." alt="" coords="1405,157,1656,184"/>
+<area shape="rect" id="node6" href="$interfaceswing_1_1hierarchical_view_1_1_i_customized_icon_node.html" title="This class is implemented by node in JTree that have a customized icon." alt="" coords="1005,56,1288,83"/>
+<area shape="rect" id="node10" href="$interfaceswing_1_1hierarchical_view_1_1_i_class_diagram_node.html" title="This interface is implemented by node (in JTree) that are associated with a UML component." alt="" coords="1011,157,1282,184"/>
+<area shape="rect" id="node14" href="$classclass_diagram_1_1relationships_1_1_inheritance.html" title="Represent a inheritance in UML structure." alt="" coords="1024,259,1269,285"/>
+<area shape="rect" id="node22" href="$classclass_diagram_1_1components_1_1_type.html" title="Represent a type in UML structure." alt="" coords="357,325,565,352"/>
+<area shape="rect" id="node18" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="7,284,230,311"/>
+<area shape="rect" id="node20" href="$classclass_diagram_1_1components_1_1_entity.html" title="Abstract class containing all classes parameters (attributes, methods, visibility, ...)" alt="" coords="705,452,919,479"/>
+<area shape="rect" id="node26" href="$enumdata_record_1_1element_type_1_1_collection.html" title="dataRecord.elementType.Collection" alt="" coords="5,360,232,387"/>
+<area shape="rect" id="node30" href="$enumclass_diagram_1_1components_1_1_visibility.html" title="Represent a visibility in UML structure." alt="" coords="347,376,576,403"/>
+</map>

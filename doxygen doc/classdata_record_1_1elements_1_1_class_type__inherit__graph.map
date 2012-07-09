@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classdata_record_1_1elements_1_1_type.html" title="dataRecord.elements.Type" alt="" coords="583,56,761,83"/>
+<area shape="rect" id="node4" href="$classdata_record_1_1elements_1_1_declaration.html" title="dataRecord.elements.Declaration" alt="" coords="271,5,486,32"/>
+<area shape="rect" id="node6" href="$interfacedata_record_1_1elements_1_1_element.html" title="dataRecord.elements.Element" alt="" coords="5,5,203,32"/>
+<area shape="rect" id="node8" href="$interfacedata_record_1_1element_type_1_1_implementable.html" title="dataRecord.elementType.Implementable" alt="" coords="251,56,506,83"/>
+<area shape="rect" id="node10" href="$interfacedata_record_1_1element_type_1_1_element_type.html" title="dataRecord.elementType.ElementType" alt="" coords="255,107,502,133"/>
+<area shape="rect" id="node12" href="$interfacedata_record_1_1element_type_1_1_extendable.html" title="dataRecord.elementType.Extendable" alt="" coords="555,107,789,133"/>
+</map>

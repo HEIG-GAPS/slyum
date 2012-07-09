@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node9" href="$classgraphic_1_1entity_1_1_grip_entity.html" title="Represent a grip (gray square) using for resizing entities." alt="" coords="5,229,168,256"/>
+<area shape="rect" id="node11" href="$classgraphic_1_1relations_1_1_relation_grip.html" title="The relationGrip is a grip who customize a LineView." alt="" coords="192,229,384,256"/>
+<area shape="rect" id="node2" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="97,80,276,107"/>
+<area shape="rect" id="node13" href="$classgraphic_1_1relations_1_1_magnetic_grip.html" title="The relationGrip is a grip who customize a LineView." alt="" coords="189,304,387,331"/>
+</map>

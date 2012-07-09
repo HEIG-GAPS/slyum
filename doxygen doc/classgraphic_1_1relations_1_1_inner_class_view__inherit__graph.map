@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classgraphic_1_1relations_1_1_inheritance_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="75,304,287,331"/>
+<area shape="rect" id="node4" href="$classgraphic_1_1relations_1_1_relation_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="83,229,279,256"/>
+<area shape="rect" id="node6" href="$classgraphic_1_1relations_1_1_line_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="21,155,195,181"/>
+<area shape="rect" id="node8" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="19,80,197,107"/>
+</map>

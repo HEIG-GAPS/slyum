@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node4" href="$interfaceswing_1_1hierarchical_view_1_1_i_class_diagram_node.html" title="This interface is implemented by node (in JTree) that are associated with a UML component." alt="" coords="318,56,589,83"/>
+<area shape="rect" id="node6" href="$interfaceswing_1_1hierarchical_view_1_1_i_customized_icon_node.html" title="This class is implemented by node in JTree that have a customized icon." alt="" coords="312,107,595,133"/>
+<area shape="rect" id="node14" href="$classclass_diagram_1_1relationships_1_1_association.html" title="This abstract class is the upper&#45;class for all associations in UML structure." alt="" coords="328,309,579,336"/>
+<area shape="rect" id="node18" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="6,284,229,311"/>
+<area shape="rect" id="node20" href="$interfacegraphic_1_1textbox_1_1_i_label_title.html" title="Interface uses by component containing a label." alt="" coords="31,335,204,361"/>
+</map>

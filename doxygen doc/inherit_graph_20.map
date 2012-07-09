@@ -1,0 +1,11 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$interfaceswing_1_1hierarchical_view_1_1_i_class_diagram_node.html" title="This interface is implemented by node (in JTree) that are associated with a UML component." alt="" coords="11,107,282,133"/>
+<area shape="rect" id="node3" href="$classswing_1_1hierarchical_view_1_1_node_association.html" title="A JTree node associated with an association UML." alt="" coords="337,5,591,32"/>
+<area shape="rect" id="node5" href="$classswing_1_1hierarchical_view_1_1_node_attribute.html" title="A JTree node associated with an attribute UML." alt="" coords="346,56,582,83"/>
+<area shape="rect" id="node7" href="$classswing_1_1hierarchical_view_1_1_node_depedency.html" title="A JTree node associated with a dependency UML." alt="" coords="338,107,590,133"/>
+<area shape="rect" id="node9" href="$classswing_1_1hierarchical_view_1_1_node_entity.html" title="A JTree node associated with an entity UML." alt="" coords="353,157,575,184"/>
+<area shape="rect" id="node11" href="$classswing_1_1hierarchical_view_1_1_node_inheritance.html" title="A JTree node associated with an inheritance." alt="" coords="339,208,589,235"/>
+<area shape="rect" id="node15" href="$classswing_1_1hierarchical_view_1_1_node_method.html" title="A JTree node associated with a method UML." alt="" coords="349,259,579,285"/>
+<area shape="rect" id="node13" href="$classswing_1_1hierarchical_view_1_1_node_inner_class.html" title="swing.hierarchicalView.NodeInnerClass" alt="" coords="640,208,888,235"/>
+<area shape="rect" id="node16" href="$interfaceswing_1_1hierarchical_view_1_1_i_customized_icon_node.html" title="This class is implemented by node in JTree that have a customized icon." alt="" coords="5,157,288,184"/>
+</map>

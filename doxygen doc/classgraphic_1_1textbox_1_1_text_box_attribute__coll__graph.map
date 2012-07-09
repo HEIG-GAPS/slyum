@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classgraphic_1_1textbox_1_1_text_box.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="1297,1339,1460,1365"/>
+<area shape="rect" id="node4" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="393,588,572,615"/>
+<area shape="rect" id="node16" href="$classgraphic_1_1_graphic_view.html" title="This class is the main container for all diagrams components view (classComponent, interfaceComponent, relation, ...)." alt="" coords="1308,560,1449,587"/>
+<area shape="rect" id="node35" href="$classgraphic_1_1factory_1_1_create_component.html" title="CreateComponent allows to create a new graphic component view." alt="" coords="831,483,1046,509"/>
+<area shape="rect" id="node80" href="$classclass_diagram_1_1components_1_1_variable.html" title="Represent a variable in UML structure." alt="" coords="825,1285,1052,1312"/>
+<area shape="rect" id="node85" href="$classclass_diagram_1_1components_1_1_type.html" title="Represent a type in UML structure." alt="" coords="379,1385,587,1412"/>
+<area shape="rect" id="node23" href="$interfaceclass_diagram_1_1_i_components_observer.html" title="Interface implemented by all listeners of class diagram." alt="" coords="5,224,237,251"/>
+<area shape="rect" id="node38" href="$classclass_diagram_1_1_class_diagram.html" title="This class contains all structurals UML components." alt="" coords="389,325,576,352"/>
+<area shape="rect" id="node78" href="$classclass_diagram_1_1components_1_1_attribute.html" title="Represent an attribute in UML structure." alt="" coords="1264,1225,1493,1252"/>
+<area shape="rect" id="node83" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="10,1343,233,1369"/>
+<area shape="rect" id="node89" href="$enumdata_record_1_1element_type_1_1_collection.html" title="dataRecord.elementType.Collection" alt="" coords="8,1453,235,1480"/>
+<area shape="rect" id="node93" href="$enumclass_diagram_1_1components_1_1_visibility.html" title="Represent a visibility in UML structure." alt="" coords="824,1129,1053,1156"/>
+</map>

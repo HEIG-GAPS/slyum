@@ -1,0 +1,23 @@
+<map id="G" name="G">
+<area shape="rect" id="node6" href="$classswing_1_1_x_m_l_parser_1_1_multi_view.html" title="swing.XMLParser.MultiView" alt="" coords="905,839,1087,866"/>
+<area shape="rect" id="node120" href="$classswing_1_1_x_m_l_parser_1_1_note.html" title="swing.XMLParser.Note" alt="" coords="919,890,1073,916"/>
+<area shape="rect" id="node46" href="$classswing_1_1_x_m_l_parser_1_1_relation_view.html" title="swing.XMLParser.RelationView" alt="" coords="895,1068,1097,1095"/>
+<area shape="rect" id="node54" href="$classgraphic_1_1_graphic_view.html" title="This class is the main container for all diagrams components view (classComponent, interfaceComponent, relation, ...)." alt="" coords="925,370,1067,396"/>
+<area shape="rect" id="node107" href="$classswing_1_1_x_m_l_parser_1_1_component_view.html" title="swing.XMLParser.ComponentView" alt="" coords="886,1008,1106,1035"/>
+<area shape="rect" id="node18" href="$classswing_1_1_x_m_l_parser_1_1_diagram_elements.html" title="swing.XMLParser.DiagramElements" alt="" coords="408,1400,637,1427"/>
+<area shape="rect" id="node14" href="$classswing_1_1_x_m_l_parser_1_1_class_diagram.html" title="swing.XMLParser.ClassDiagram" alt="" coords="893,1283,1099,1310"/>
+<area shape="rect" id="node31" href="$classswing_1_1_x_m_l_parser_1_1_inheritance.html" title="swing.XMLParser.Inheritance" alt="" coords="901,1915,1091,1942"/>
+<area shape="rect" id="node33" href="$classswing_1_1_x_m_l_parser_1_1_operation.html" title="swing.XMLParser.Operation" alt="" coords="905,2067,1087,2094"/>
+<area shape="rect" id="node35" href="$enumclass_diagram_1_1components_1_1_visibility.html" title="Represent a visibility in UML structure." alt="" coords="408,2019,637,2046"/>
+<area shape="rect" id="node102" href="$classswing_1_1_x_m_l_parser_1_1_entity.html" title="swing.XMLParser.Entity" alt="" coords="916,1966,1076,1992"/>
+<area shape="rect" id="node116" href="$classswing_1_1_x_m_l_parser_1_1_role.html" title="swing.XMLParser.Role" alt="" coords="920,2016,1072,2043"/>
+<area shape="rect" id="node39" href="$classclass_diagram_1_1components_1_1_type.html" title="Represent a type in UML structure." alt="" coords="419,2110,627,2136"/>
+<area shape="rect" id="node44" href="$classswing_1_1_x_m_l_parser_1_1_dependency.html" title="swing.XMLParser.Dependency" alt="" coords="897,1232,1095,1259"/>
+<area shape="rect" id="node56" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="1333,231,1512,258"/>
+<area shape="rect" id="node79" href="$classgraphic_1_1factory_1_1_create_component.html" title="CreateComponent allows to create a new graphic component view." alt="" coords="1563,231,1778,258"/>
+<area shape="rect" id="node67" href="$interfaceclass_diagram_1_1_i_components_observer.html" title="Interface implemented by all listeners of class diagram." alt="" coords="5,491,237,518"/>
+<area shape="rect" id="node82" href="$classclass_diagram_1_1_class_diagram.html" title="This class contains all structurals UML components." alt="" coords="429,6,616,32"/>
+<area shape="rect" id="node97" href="$classswing_1_1_x_m_l_parser_1_1_association.html" title="swing.XMLParser.Association" alt="" coords="899,1384,1093,1411"/>
+<area shape="rect" id="node99" href="$classclass_diagram_1_1relationships_1_1_multiplicity.html" title="Represent a multiplicity in UML structure." alt="" coords="401,1807,645,1834"/>
+<area shape="rect" id="node110" href="$classutility_1_1_s_dialog_project_loading.html" title="utility.SDialogProjectLoading" alt="" coords="902,1435,1090,1462"/>
+</map>

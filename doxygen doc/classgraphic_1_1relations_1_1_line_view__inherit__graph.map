@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node9" href="$classgraphic_1_1relations_1_1_association_classe_line.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="608,5,861,32"/>
+<area shape="rect" id="node11" href="$classgraphic_1_1relations_1_1_line_commentary.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="625,56,844,83"/>
+<area shape="rect" id="node13" href="$classgraphic_1_1relations_1_1_multi_line_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="634,107,835,133"/>
+<area shape="rect" id="node15" href="$classgraphic_1_1relations_1_1_relation_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="637,157,833,184"/>
+<area shape="rect" id="node2" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="160,81,339,108"/>
+<area shape="rect" id="node17" href="$classgraphic_1_1relations_1_1_association_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="911,107,1129,133"/>
+<area shape="rect" id="node25" href="$classgraphic_1_1relations_1_1_dependency_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="909,157,1131,184"/>
+<area shape="rect" id="node27" href="$classgraphic_1_1relations_1_1_inheritance_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="914,208,1126,235"/>
+<area shape="rect" id="node19" href="$classgraphic_1_1relations_1_1_binary_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="1191,107,1377,133"/>
+<area shape="rect" id="node21" href="$classgraphic_1_1relations_1_1_aggregation_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="1439,81,1657,108"/>
+<area shape="rect" id="node23" href="$classgraphic_1_1relations_1_1_composition_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="1437,132,1659,159"/>
+<area shape="rect" id="node29" href="$classgraphic_1_1relations_1_1_inner_class_view.html" title="graphic.relations.InnerClassView" alt="" coords="1179,208,1389,235"/>
+</map>

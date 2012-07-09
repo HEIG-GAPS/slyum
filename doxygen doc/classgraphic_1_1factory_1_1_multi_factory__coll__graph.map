@@ -1,0 +1,17 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classgraphic_1_1factory_1_1_create_component.html" title="CreateComponent allows to create a new graphic component view." alt="" coords="738,1120,953,1147"/>
+<area shape="rect" id="node16" href="$classgraphic_1_1_graphic_view.html" title="This class is the main container for all diagrams components view (classComponent, interfaceComponent, relation, ...)." alt="" coords="1197,611,1339,637"/>
+<area shape="rect" id="node4" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="1580,539,1759,565"/>
+<area shape="rect" id="node75" href="$classgraphic_1_1entity_1_1_entity_view.html" title="Represent the view of an entity in UML structure." alt="" coords="2734,792,2901,819"/>
+<area shape="rect" id="node77" href="$classgraphic_1_1_movable_component.html" title="This graphic class represant all movable and resizable component with a ghost representation." alt="" coords="1964,489,2145,516"/>
+<area shape="rect" id="node102" href="$classgraphic_1_1textbox_1_1_text_box.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="1973,811,2136,837"/>
+<area shape="rect" id="node91" href="$classclass_diagram_1_1components_1_1_type.html" title="Represent a type in UML structure." alt="" coords="1565,640,1773,667"/>
+<area shape="rect" id="node23" href="$interfaceclass_diagram_1_1_i_components_observer.html" title="Interface implemented by all listeners of class diagram." alt="" coords="5,501,237,528"/>
+<area shape="rect" id="node42" href="$classclass_diagram_1_1_class_diagram.html" title="This class contains all structurals UML components." alt="" coords="363,805,549,832"/>
+<area shape="rect" id="node73" href="$classgraphic_1_1entity_1_1_class_view.html" title="Represent the view of a class in UML structure." alt="" coords="2953,975,3119,1001"/>
+<area shape="rect" id="node80" href="$classgraphic_1_1entity_1_1_grip_entity.html" title="Represent a grip (gray square) using for resizing entities." alt="" coords="1588,437,1751,464"/>
+<area shape="rect" id="node89" href="$classclass_diagram_1_1components_1_1_entity.html" title="Abstract class containing all classes parameters (attributes, methods, visibility, ...)" alt="" coords="1947,691,2162,717"/>
+<area shape="rect" id="node100" href="$classgraphic_1_1textbox_1_1_text_box_entity_name.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="2363,741,2594,768"/>
+<area shape="rect" id="node118" href="$classgraphic_1_1textbox_1_1_text_box_generic_type.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="2361,792,2597,819"/>
+<area shape="rect" id="node94" href="$enumclass_diagram_1_1components_1_1_visibility.html" title="Represent a visibility in UML structure." alt="" coords="1555,741,1784,768"/>
+</map>

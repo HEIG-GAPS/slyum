@@ -1,0 +1,14 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classgraphic_1_1_movable_component.html" title="This graphic class represant all movable and resizable component with a ghost representation." alt="" coords="1731,259,1912,285"/>
+<area shape="rect" id="node4" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="415,920,593,947"/>
+<area shape="rect" id="node16" href="$classgraphic_1_1_graphic_view.html" title="This class is the main container for all diagrams components view (classComponent, interfaceComponent, relation, ...)." alt="" coords="1413,920,1555,947"/>
+<area shape="rect" id="node35" href="$classgraphic_1_1factory_1_1_create_component.html" title="CreateComponent allows to create a new graphic component view." alt="" coords="874,1033,1089,1060"/>
+<area shape="rect" id="node69" href="$classgraphic_1_1_square_grip.html" title="The SquareGrip class represent a (little) gray square." alt="" coords="915,208,1048,235"/>
+<area shape="rect" id="node81" href="$classclass_diagram_1_1relationships_1_1_association.html" title="This abstract class is the upper&#45;class for all associations in UML structure." alt="" coords="379,1531,629,1557"/>
+<area shape="rect" id="node23" href="$interfaceclass_diagram_1_1_i_components_observer.html" title="Interface implemented by all listeners of class diagram." alt="" coords="5,1339,237,1365"/>
+<area shape="rect" id="node38" href="$classclass_diagram_1_1_class_diagram.html" title="This class contains all structurals UML components." alt="" coords="411,1207,597,1233"/>
+<area shape="rect" id="node67" href="$classgraphic_1_1entity_1_1_grip_entity.html" title="Represent a grip (gray square) using for resizing entities." alt="" coords="1403,208,1565,235"/>
+<area shape="rect" id="node79" href="$classclass_diagram_1_1relationships_1_1_multi.html" title="Represent a multi&#45;association in UML structure." alt="" coords="1168,1543,1379,1569"/>
+<area shape="rect" id="node84" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="10,1480,233,1507"/>
+<area shape="rect" id="node86" href="$interfacegraphic_1_1textbox_1_1_i_label_title.html" title="Interface uses by component containing a label." alt="" coords="35,1531,208,1557"/>
+</map>

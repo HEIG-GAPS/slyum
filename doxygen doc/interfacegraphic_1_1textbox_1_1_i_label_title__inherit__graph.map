@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classclass_diagram_1_1relationships_1_1_association.html" title="This abstract class is the upper&#45;class for all associations in UML structure." alt="" coords="263,80,513,107"/>
+<area shape="rect" id="node13" href="$classclass_diagram_1_1relationships_1_1_dependency.html" title="Represent a dependency in UML structure." alt="" coords="538,80,792,107"/>
+<area shape="rect" id="node5" href="$classclass_diagram_1_1relationships_1_1_binary.html" title="Represent a binary association in UML structure." alt="" coords="160,155,379,181"/>
+<area shape="rect" id="node11" href="$classclass_diagram_1_1relationships_1_1_multi.html" title="Represent a multi&#45;association in UML structure." alt="" coords="403,155,613,181"/>
+<area shape="rect" id="node7" href="$classclass_diagram_1_1relationships_1_1_aggregation.html" title="This class, extent from Binary, represent an aggregation in UML structure." alt="" coords="5,229,256,256"/>
+<area shape="rect" id="node9" href="$classclass_diagram_1_1relationships_1_1_composition.html" title="Represent a composition in UML structure." alt="" coords="281,229,535,256"/>
+</map>

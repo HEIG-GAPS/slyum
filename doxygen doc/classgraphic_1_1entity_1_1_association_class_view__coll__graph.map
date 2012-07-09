@@ -1,0 +1,26 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classgraphic_1_1entity_1_1_class_view.html" title="Represent the view of a class in UML structure." alt="" coords="2339,1212,2504,1239"/>
+<area shape="rect" id="node4" href="$classgraphic_1_1entity_1_1_entity_view.html" title="Represent the view of an entity in UML structure." alt="" coords="2066,839,2233,865"/>
+<area shape="rect" id="node6" href="$classgraphic_1_1_movable_component.html" title="This graphic class represant all movable and resizable component with a ghost representation." alt="" coords="1529,379,1711,405"/>
+<area shape="rect" id="node8" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="277,671,456,697"/>
+<area shape="rect" id="node20" href="$classgraphic_1_1_graphic_view.html" title="This class is the main container for all diagrams components view (classComponent, interfaceComponent, relation, ...)." alt="" coords="751,328,892,355"/>
+<area shape="rect" id="node34" href="$classgraphic_1_1_square_grip.html" title="The SquareGrip class represent a (little) gray square." alt="" coords="755,429,888,456"/>
+<area shape="rect" id="node71" href="$classgraphic_1_1textbox_1_1_text_box.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="1141,889,1304,916"/>
+<area shape="rect" id="node102" href="$classgraphic_1_1relations_1_1_line_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="1136,1391,1309,1417"/>
+<area shape="rect" id="node105" href="$classchange_1_1_buffer_bounds.html" title="change.BufferBounds" alt="" coords="749,1088,894,1115"/>
+<area shape="rect" id="node48" href="$classclass_diagram_1_1components_1_1_type.html" title="Represent a type in UML structure." alt="" coords="717,1189,925,1216"/>
+<area shape="rect" id="node121" href="$classclass_diagram_1_1relationships_1_1_association.html" title="This abstract class is the upper&#45;class for all associations in UML structure." alt="" coords="696,1687,947,1713"/>
+<area shape="rect" id="node32" href="$classgraphic_1_1entity_1_1_grip_entity.html" title="Represent a grip (gray square) using for resizing entities." alt="" coords="1141,429,1304,456"/>
+<area shape="rect" id="node100" href="$classgraphic_1_1relations_1_1_relation_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="1522,1481,1718,1508"/>
+<area shape="rect" id="node46" href="$classclass_diagram_1_1components_1_1_entity.html" title="Abstract class containing all classes parameters (attributes, methods, visibility, ...)" alt="" coords="1115,643,1330,669"/>
+<area shape="rect" id="node69" href="$classgraphic_1_1textbox_1_1_text_box_entity_name.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="1505,889,1735,916"/>
+<area shape="rect" id="node91" href="$classgraphic_1_1textbox_1_1_text_box_generic_type.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="1502,687,1738,713"/>
+<area shape="rect" id="node51" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="255,1619,478,1645"/>
+<area shape="rect" id="node53" href="$enumdata_record_1_1element_type_1_1_collection.html" title="dataRecord.elementType.Collection" alt="" coords="253,1225,480,1252"/>
+<area shape="rect" id="node57" href="$enumclass_diagram_1_1components_1_1_visibility.html" title="Represent a visibility in UML structure." alt="" coords="707,581,936,608"/>
+<area shape="rect" id="node96" href="$classgraphic_1_1relations_1_1_binary_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="2328,1489,2515,1516"/>
+<area shape="rect" id="node98" href="$classgraphic_1_1relations_1_1_association_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="2041,1591,2258,1617"/>
+<area shape="rect" id="node129" href="$classgraphic_1_1relations_1_1_association_classe_line.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="1763,1391,2016,1417"/>
+<area shape="rect" id="node107" href="$interfacechange_1_1_changeable.html" title="change.Changeable" alt="" coords="299,1085,435,1112"/>
+<area shape="rect" id="node125" href="$interfacegraphic_1_1textbox_1_1_i_label_title.html" title="Interface uses by component containing a label." alt="" coords="280,1731,453,1757"/>
+</map>

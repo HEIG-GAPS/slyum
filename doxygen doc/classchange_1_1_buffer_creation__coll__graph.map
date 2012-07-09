@@ -1,0 +1,8 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$interfacechange_1_1_changeable.html" title="change.Changeable" alt="" coords="404,5,540,32"/>
+<area shape="rect" id="node4" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="383,197,561,224"/>
+<area shape="rect" id="node16" href="$classgraphic_1_1_graphic_view.html" title="This class is the main container for all diagrams components view (classComponent, interfaceComponent, relation, ...)." alt="" coords="1243,639,1384,665"/>
+<area shape="rect" id="node35" href="$classgraphic_1_1factory_1_1_create_component.html" title="CreateComponent allows to create a new graphic component view." alt="" coords="810,259,1025,285"/>
+<area shape="rect" id="node23" href="$interfaceclass_diagram_1_1_i_components_observer.html" title="Interface implemented by all listeners of class diagram." alt="" coords="5,1000,237,1027"/>
+<area shape="rect" id="node38" href="$classclass_diagram_1_1_class_diagram.html" title="This class contains all structurals UML components." alt="" coords="379,767,565,793"/>
+</map>

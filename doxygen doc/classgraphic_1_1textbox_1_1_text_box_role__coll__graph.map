@@ -1,0 +1,22 @@
+<map id="G" name="G">
+<area shape="rect" id="node2" href="$classgraphic_1_1textbox_1_1_text_box_label.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="1391,237,1585,264"/>
+<area shape="rect" id="node62" href="$classgraphic_1_1textbox_1_1_text_box_multiplicity.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="2225,411,2450,437"/>
+<area shape="rect" id="node4" href="$classgraphic_1_1textbox_1_1_text_box.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="996,207,1159,233"/>
+<area shape="rect" id="node6" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="407,1028,585,1055"/>
+<area shape="rect" id="node18" href="$classgraphic_1_1_graphic_view.html" title="This class is the main container for all diagrams components view (classComponent, interfaceComponent, relation, ...)." alt="" coords="1417,1511,1559,1537"/>
+<area shape="rect" id="node37" href="$classgraphic_1_1factory_1_1_create_component.html" title="CreateComponent allows to create a new graphic component view." alt="" coords="970,1852,1185,1879"/>
+<area shape="rect" id="node65" href="$classgraphic_1_1relations_1_1_magnetic_grip.html" title="The relationGrip is a grip who customize a LineView." alt="" coords="1950,440,2149,467"/>
+<area shape="rect" id="node69" href="$classgraphic_1_1_square_grip.html" title="The SquareGrip class represent a (little) gray square." alt="" coords="1011,723,1144,749"/>
+<area shape="rect" id="node77" href="$classgraphic_1_1relations_1_1_line_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="1401,849,1575,876"/>
+<area shape="rect" id="node80" href="$classchange_1_1_buffer_bounds.html" title="change.BufferBounds" alt="" coords="1005,773,1150,800"/>
+<area shape="rect" id="node96" href="$classclass_diagram_1_1relationships_1_1_multiplicity.html" title="Represent a multiplicity in UML structure." alt="" coords="646,2151,890,2177"/>
+<area shape="rect" id="node103" href="$classclass_diagram_1_1relationships_1_1_role.html" title="Represent a Role in UML structure." alt="" coords="1384,2337,1592,2364"/>
+<area shape="rect" id="node109" href="$classclass_diagram_1_1components_1_1_type.html" title="Represent a type in UML structure." alt="" coords="392,2388,600,2415"/>
+<area shape="rect" id="node126" href="$classclass_diagram_1_1relationships_1_1_association.html" title="This abstract class is the upper&#45;class for all associations in UML structure." alt="" coords="371,2540,621,2567"/>
+<area shape="rect" id="node67" href="$classgraphic_1_1relations_1_1_relation_grip.html" title="The relationGrip is a grip who customize a LineView." alt="" coords="1707,609,1899,636"/>
+<area shape="rect" id="node25" href="$interfaceclass_diagram_1_1_i_components_observer.html" title="Interface implemented by all listeners of class diagram." alt="" coords="961,1435,1193,1461"/>
+<area shape="rect" id="node99" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="6,2436,229,2463"/>
+<area shape="rect" id="node107" href="$classclass_diagram_1_1components_1_1_entity.html" title="Abstract class containing all classes parameters (attributes, methods, visibility, ...)" alt="" coords="970,2337,1185,2364"/>
+<area shape="rect" id="node113" href="$enumclass_diagram_1_1components_1_1_visibility.html" title="Represent a visibility in UML structure." alt="" coords="381,2489,611,2516"/>
+<area shape="rect" id="node130" href="$interfacegraphic_1_1textbox_1_1_i_label_title.html" title="Interface uses by component containing a label." alt="" coords="31,2555,204,2581"/>
+</map>

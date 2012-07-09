@@ -1,0 +1,18 @@
+<map id="G" name="G">
+<area shape="rect" id="node9" href="$classgraphic_1_1factory_1_1_component_factory.html" title="ComponentFactory allows to create a new component view associated with a new component UML..." alt="" coords="651,157,872,184"/>
+<area shape="rect" id="node37" href="$classgraphic_1_1factory_1_1_multi_factory.html" title="MultiFactory allows to create a new multi&#45;association view associated with a new association UML..." alt="" coords="670,208,853,235"/>
+<area shape="rect" id="node2" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="160,183,339,209"/>
+<area shape="rect" id="node11" href="$classgraphic_1_1factory_1_1_entity_factory.html" title="EntityFactory allows to create a new entity view associated with a new entity UML." alt="" coords="927,56,1116,83"/>
+<area shape="rect" id="node17" href="$classgraphic_1_1factory_1_1_relation_factory.html" title="RelationFactory allows to create a new relation view associated with a new relation UML..." alt="" coords="920,259,1123,285"/>
+<area shape="rect" id="node13" href="$classgraphic_1_1factory_1_1_class_factory.html" title="ClassFactory allows to create a new class view associated with a new class UML." alt="" coords="1205,5,1393,32"/>
+<area shape="rect" id="node15" href="$classgraphic_1_1factory_1_1_interface_factory.html" title="InterfaceFactory allows to create a new interface view associated with a new class UML..." alt="" coords="1197,56,1401,83"/>
+<area shape="rect" id="node19" href="$classgraphic_1_1factory_1_1_aggregation_factory.html" title="AggregationFactory allows to create a new aggregation view associated with a new association UML..." alt="" coords="1187,107,1411,133"/>
+<area shape="rect" id="node21" href="$classgraphic_1_1factory_1_1_association_class_factory.html" title="AssociationClassFactory allows to create a new association class view associated with a new associati..." alt="" coords="1171,157,1427,184"/>
+<area shape="rect" id="node23" href="$classgraphic_1_1factory_1_1_binary_factory.html" title="BinaryFactory allows to create a new binary view associated with a new association UML..." alt="" coords="1203,208,1395,235"/>
+<area shape="rect" id="node25" href="$classgraphic_1_1factory_1_1_composition_factory.html" title="CompositionFactpry allows to create a new composition view associated with a new association UML..." alt="" coords="1185,259,1412,285"/>
+<area shape="rect" id="node27" href="$classgraphic_1_1factory_1_1_dependency_factory.html" title="DependencyFactory allows to create a new dependency view associated with a new association UML..." alt="" coords="1185,309,1412,336"/>
+<area shape="rect" id="node29" href="$classgraphic_1_1factory_1_1_inheritance_factory.html" title="InheritanceFactory allows to create a new inheritance view associated with a new association UML..." alt="" coords="1189,360,1408,387"/>
+<area shape="rect" id="node33" href="$classgraphic_1_1factory_1_1_line_commentary_factory.html" title="LineCommentaryFactory allows to create a new line between a note and a graphic component." alt="" coords="1172,411,1425,437"/>
+<area shape="rect" id="node35" href="$classgraphic_1_1factory_1_1_note_factory.html" title="NoteFactory allows to create a new note." alt="" coords="1207,461,1390,488"/>
+<area shape="rect" id="node31" href="$classgraphic_1_1factory_1_1_inner_class_factory.html" title="graphic.factory.InnerClassFactory" alt="" coords="1475,360,1691,387"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="G" name="G">
+<area shape="rect" id="node5" href="$classdata_record_1_1elements_1_1_member.html" title="dataRecord.elements.Member" alt="" coords="515,56,711,83"/>
+<area shape="rect" id="node11" href="$classdata_record_1_1elements_1_1_type.html" title="dataRecord.elements.Type" alt="" coords="525,132,702,159"/>
+<area shape="rect" id="node2" href="$interfacedata_record_1_1elements_1_1_element.html" title="dataRecord.elements.Element" alt="" coords="5,81,203,108"/>
+<area shape="rect" id="node7" href="$classdata_record_1_1elements_1_1_constructor.html" title="dataRecord.elements.Constructor" alt="" coords="765,5,981,32"/>
+<area shape="rect" id="node9" href="$classdata_record_1_1elements_1_1_method.html" title="dataRecord.elements.Method" alt="" coords="777,56,969,83"/>
+<area shape="rect" id="node13" href="$classdata_record_1_1elements_1_1_class_type.html" title="dataRecord.elements.ClassType" alt="" coords="768,107,979,133"/>
+<area shape="rect" id="node15" href="$classdata_record_1_1elements_1_1_enum_type.html" title="dataRecord.elements.EnumType" alt="" coords="768,157,979,184"/>
+<area shape="rect" id="node17" href="$classdata_record_1_1elements_1_1_interface_type.html" title="dataRecord.elements.InterfaceType" alt="" coords="760,208,987,235"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node9" href="$classgraphic_1_1entity_1_1_entity_view.html" title="Represent the view of an entity in UML structure." alt="" coords="651,31,818,57"/>
+<area shape="rect" id="node17" href="$classgraphic_1_1relations_1_1_multi_view.html" title="MultiView is represented by a diamond and it represents a multi&#45;association UML." alt="" coords="646,81,823,108"/>
+<area shape="rect" id="node19" href="$classgraphic_1_1textbox_1_1_text_box_commentary.html" title="A TextBoxCommentary is not a subclass of TextBox becauseit is not on signle line." alt="" coords="616,132,853,159"/>
+<area shape="rect" id="node2" href="$classgraphic_1_1_graphic_component.html" title="Represent a graphic component in Slyum." alt="" coords="160,81,339,108"/>
+<area shape="rect" id="node11" href="$classgraphic_1_1entity_1_1_class_view.html" title="Represent the view of a class in UML structure." alt="" coords="909,5,1075,32"/>
+<area shape="rect" id="node15" href="$classgraphic_1_1entity_1_1_interface_view.html" title="Represent the view of an interface in UML structure." alt="" coords="901,56,1083,83"/>
+<area shape="rect" id="node13" href="$classgraphic_1_1entity_1_1_association_class_view.html" title="Represent the view of an association class in UML structure." alt="" coords="1131,5,1365,32"/>
+</map>

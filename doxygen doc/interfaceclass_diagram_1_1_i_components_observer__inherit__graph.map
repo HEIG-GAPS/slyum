@@ -1,0 +1,6 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$classclass_diagram_1_1_class_diagram.html" title="This class contains all structurals UML components." alt="" coords="320,5,507,32"/>
+<area shape="rect" id="node5" href="$classgraphic_1_1_graphic_view.html" title="This class is the main container for all diagrams components view (classComponent, interfaceComponent, relation, ...)." alt="" coords="343,56,484,83"/>
+<area shape="rect" id="node7" href="$classswing_1_1hierarchical_view_1_1_hierarchical_view.html" title="This class is a hierarchical view of the class diagram." alt="" coords="287,107,540,133"/>
+<area shape="rect" id="node9" href="$classswing_1_1propreties_view_1_1_propreties_changer.html" title="Represent a view in Slyum implementing IComponentsObserver." alt="" coords="286,157,541,184"/>
+</map>

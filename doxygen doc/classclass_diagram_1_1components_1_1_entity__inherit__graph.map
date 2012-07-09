@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node9" href="$classclass_diagram_1_1components_1_1_class_entity.html" title="Represent a class in UML structure." alt="" coords="22,229,268,256"/>
+<area shape="rect" id="node13" href="$classclass_diagram_1_1components_1_1_interface_entity.html" title="Represent an interface in UML structure." alt="" coords="293,229,555,256"/>
+<area shape="rect" id="node2" href="$classclass_diagram_1_1components_1_1_type.html" title="Represent a type in UML structure." alt="" coords="180,80,388,107"/>
+<area shape="rect" id="node6" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="262,5,484,32"/>
+<area shape="rect" id="node11" href="$classclass_diagram_1_1components_1_1_association_class.html" title="Represent an association class in UML structure." alt="" coords="5,304,285,331"/>
+</map>
