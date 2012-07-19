@@ -1,19 +1,19 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$classdata_record_1_1elements_1_1_comment.html" title="dataRecord.elements.Comment" alt="" coords="268,44,473,71"/>
-<area shape="rect" id="node5" href="$classdata_record_1_1elements_1_1_compilation_unit.html" title="dataRecord.elements.CompilationUnit" alt="" coords="251,95,491,121"/>
-<area shape="rect" id="node7" href="$classdata_record_1_1elements_1_1_declaration.html" title="dataRecord.elements.Declaration" alt="" coords="263,145,478,172"/>
+<area shape="rect" id="node3" href="$classdata_record_1_1elements_1_1_comment.html" title="This class represent a comment made in a source code file A code can be of one single line or multili..." alt="" coords="268,44,473,71"/>
+<area shape="rect" id="node5" href="$classdata_record_1_1elements_1_1_compilation_unit.html" title="This class represent a source code file It contain a list of elements." alt="" coords="251,95,491,121"/>
+<area shape="rect" id="node7" href="$classdata_record_1_1elements_1_1_declaration.html" title="This class represent a declaration." alt="" coords="263,145,478,172"/>
 <area shape="rect" id="node23" href="$classdata_record_1_1elements_1_1_field.html" title="dataRecord.elements.Field" alt="" coords="282,221,459,248"/>
-<area shape="rect" id="node31" href="$classdata_record_1_1elements_1_1_statement.html" title="dataRecord.elements.Statement" alt="" coords="266,335,475,361"/>
-<area shape="rect" id="node9" href="$classdata_record_1_1elements_1_1_member.html" title="dataRecord.elements.Member" alt="" coords="555,56,751,83"/>
-<area shape="rect" id="node15" href="$classdata_record_1_1elements_1_1_type.html" title="dataRecord.elements.Type" alt="" coords="565,132,742,159"/>
-<area shape="rect" id="node11" href="$classdata_record_1_1elements_1_1_constructor.html" title="dataRecord.elements.Constructor" alt="" coords="821,5,1037,32"/>
-<area shape="rect" id="node13" href="$classdata_record_1_1elements_1_1_method.html" title="dataRecord.elements.Method" alt="" coords="833,56,1025,83"/>
-<area shape="rect" id="node17" href="$classdata_record_1_1elements_1_1_class_type.html" title="dataRecord.elements.ClassType" alt="" coords="824,107,1035,133"/>
+<area shape="rect" id="node31" href="$classdata_record_1_1elements_1_1_statement.html" title="This class represent both import statement and package statement." alt="" coords="266,335,475,361"/>
+<area shape="rect" id="node9" href="$classdata_record_1_1elements_1_1_member.html" title="A Member represent an operation by an object (Method) or the creation of that object (Constructor)..." alt="" coords="555,56,751,83"/>
+<area shape="rect" id="node15" href="$classdata_record_1_1elements_1_1_type.html" title="This class represent the type of the object (class / interface / enums)" alt="" coords="565,132,742,159"/>
+<area shape="rect" id="node11" href="$classdata_record_1_1elements_1_1_constructor.html" title="This class represent a constructor." alt="" coords="821,5,1037,32"/>
+<area shape="rect" id="node13" href="$classdata_record_1_1elements_1_1_method.html" title="A Method represent an operation by an object." alt="" coords="833,56,1025,83"/>
+<area shape="rect" id="node17" href="$classdata_record_1_1elements_1_1_class_type.html" title="This class represent a class in an object&#45;oriented language." alt="" coords="824,107,1035,133"/>
 <area shape="rect" id="node19" href="$classdata_record_1_1elements_1_1_enum_type.html" title="dataRecord.elements.EnumType" alt="" coords="824,157,1035,184"/>
-<area shape="rect" id="node21" href="$classdata_record_1_1elements_1_1_interface_type.html" title="dataRecord.elements.InterfaceType" alt="" coords="816,208,1043,235"/>
-<area shape="rect" id="node25" href="$classdata_record_1_1elements_1_1_attribute.html" title="dataRecord.elements.Attribute" alt="" coords="554,183,753,209"/>
+<area shape="rect" id="node21" href="$classdata_record_1_1elements_1_1_interface_type.html" title="This class represent an interface in an object&#45;oriented language." alt="" coords="816,208,1043,235"/>
+<area shape="rect" id="node25" href="$classdata_record_1_1elements_1_1_attribute.html" title="Each datafield has a specific type." alt="" coords="554,183,753,209"/>
 <area shape="rect" id="node27" href="$classdata_record_1_1elements_1_1_interface_field.html" title="dataRecord.elements.InterfaceField" alt="" coords="540,233,767,260"/>
-<area shape="rect" id="node29" href="$classdata_record_1_1elements_1_1_parametre.html" title="dataRecord.elements.Parametre" alt="" coords="549,284,758,311"/>
-<area shape="rect" id="node33" href="$classdata_record_1_1elements_1_1_import_stmt.html" title="dataRecord.elements.ImportStmt" alt="" coords="547,335,760,361"/>
-<area shape="rect" id="node35" href="$classdata_record_1_1elements_1_1_package_stmt.html" title="dataRecord.elements.PackageStmt" alt="" coords="539,385,767,412"/>
+<area shape="rect" id="node29" href="$classdata_record_1_1elements_1_1_parametre.html" title="This class represent a parameter." alt="" coords="549,284,758,311"/>
+<area shape="rect" id="node33" href="$classdata_record_1_1elements_1_1_import_stmt.html" title="This class represent which library your program you must have." alt="" coords="547,335,760,361"/>
+<area shape="rect" id="node35" href="$classdata_record_1_1elements_1_1_package_stmt.html" title="This class represent a Java package." alt="" coords="539,385,767,412"/>
 </map>

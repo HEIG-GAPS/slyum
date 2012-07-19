@@ -3,6 +3,6 @@
 <area shape="rect" id="node4" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="7,68,230,95"/>
 <area shape="rect" id="node6" href="$interfacegraphic_1_1textbox_1_1_i_label_title.html" title="Interface uses by component containing a label." alt="" coords="725,93,899,120"/>
 <area shape="rect" id="node8" href="$classclass_diagram_1_1components_1_1_entity.html" title="Abstract class containing all classes parameters (attributes, methods, visibility, ...)" alt="" coords="705,236,919,263"/>
-<area shape="rect" id="node14" href="$enumdata_record_1_1element_type_1_1_collection.html" title="dataRecord.elementType.Collection" alt="" coords="5,144,232,171"/>
+<area shape="rect" id="node14" href="$enumdata_record_1_1element_type_1_1_collection.html" title="This enum type represent the differents kinds of collection in the Java language." alt="" coords="5,144,232,171"/>
 <area shape="rect" id="node18" href="$enumclass_diagram_1_1components_1_1_visibility.html" title="Represent a visibility in UML structure." alt="" coords="347,160,576,187"/>
 </map>

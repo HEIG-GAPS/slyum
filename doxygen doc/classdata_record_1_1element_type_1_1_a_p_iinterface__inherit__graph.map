@@ -1,5 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classdata_record_1_1element_type_1_1_a_p_itype.html" title="dataRecord.elementType.APItype" alt="" coords="20,80,236,107"/>
-<area shape="rect" id="node4" href="$interfacedata_record_1_1element_type_1_1_element_type.html" title="dataRecord.elementType.ElementType" alt="" coords="5,5,251,32"/>
-<area shape="rect" id="node6" href="$interfacedata_record_1_1element_type_1_1_implementable.html" title="dataRecord.elementType.Implementable" alt="" coords="261,80,515,107"/>
+<area shape="rect" id="node2" href="$classdata_record_1_1element_type_1_1_a_p_itype.html" title="Each datafield has a specific type." alt="" coords="20,80,236,107"/>
+<area shape="rect" id="node4" href="$interfacedata_record_1_1element_type_1_1_element_type.html" title="Each datafield has a specific type." alt="" coords="5,5,251,32"/>
+<area shape="rect" id="node6" href="$interfacedata_record_1_1element_type_1_1_implementable.html" title="Implementable represent an interface regrouping the API interfaces and the user defined intefaces..." alt="" coords="261,80,515,107"/>
 </map>

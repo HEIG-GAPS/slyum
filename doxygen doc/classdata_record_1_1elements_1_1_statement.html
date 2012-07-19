@@ -105,19 +105,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">dataRecord.elements.Statement Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="dataRecord::elements::Statement" --><!-- doxytag: inherits="dataRecord::elements::Element" --><div class="dynheader">
+<!-- doxytag: class="dataRecord::elements::Statement" --><!-- doxytag: inherits="dataRecord::elements::Element" -->
+<p>This class represent both import statement and package statement.  
+ <a href="classdata_record_1_1elements_1_1_statement.html#details">More...</a></p>
+<div class="dynheader">
 Inheritance diagram for dataRecord.elements.Statement:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdata_record_1_1elements_1_1_statement__inherit__graph.png" border="0" usemap="#data_record_8elements_8_statement_inherit__map" alt="Inheritance graph"/></div>
 <map name="data_record_8elements_8_statement_inherit__map" id="data_record_8elements_8_statement_inherit__map">
-<area shape="rect" id="node5" href="classdata_record_1_1elements_1_1_import_stmt.html" title="dataRecord.elements.ImportStmt" alt="" coords="5,155,219,181"/><area shape="rect" id="node7" href="classdata_record_1_1elements_1_1_package_stmt.html" title="dataRecord.elements.PackageStmt" alt="" coords="243,155,471,181"/><area shape="rect" id="node2" href="interfacedata_record_1_1elements_1_1_element.html" title="dataRecord.elements.Element" alt="" coords="136,5,333,32"/></map>
+<area shape="rect" id="node5" href="classdata_record_1_1elements_1_1_import_stmt.html" title="This class represent which library your program you must have." alt="" coords="5,155,219,181"/><area shape="rect" id="node7" href="classdata_record_1_1elements_1_1_package_stmt.html" title="This class represent a Java package." alt="" coords="243,155,471,181"/><area shape="rect" id="node2" href="interfacedata_record_1_1elements_1_1_element.html" title="An Element is whatever is written in a source code file (except for the member body) So a comment..." alt="" coords="136,5,333,32"/></map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for dataRecord.elements.Statement:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdata_record_1_1elements_1_1_statement__coll__graph.png" border="0" usemap="#data_record_8elements_8_statement_coll__map" alt="Collaboration graph"/></div>
 <map name="data_record_8elements_8_statement_coll__map" id="data_record_8elements_8_statement_coll__map">
-<area shape="rect" id="node2" href="interfacedata_record_1_1elements_1_1_element.html" title="dataRecord.elements.Element" alt="" coords="5,5,203,32"/><area shape="rect" id="node4" href="enumdata_record_1_1_keyword.html" title="dataRecord.Keyword" alt="" coords="227,5,369,32"/></map>
+<area shape="rect" id="node2" href="interfacedata_record_1_1elements_1_1_element.html" title="An Element is whatever is written in a source code file (except for the member body) So a comment..." alt="" coords="5,5,203,32"/><area shape="rect" id="node4" href="enumdata_record_1_1_keyword.html" title="This enum show all the keyword used in the java language for declaration." alt="" coords="227,5,369,32"/></map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classdata_record_1_1elements_1_1_statement-members.html">List of all members.</a></p>
@@ -131,13 +134,21 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_statement.html#a313b19ebc0cb8c22d590b103a0a76e6b">getName</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_statement.html#aaf08a5d57f6d1316d1b0f3c702433b21">getID</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">abstract String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_statement.html#a0e755d18c99600f7fb99502b7962fb14">accept</a> (<a class="el" href="interfacedata_record_1_1io_1_1_element_visitor.html">ElementVisitor</a> visitor)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">this method will be called by the writer to know how to write this object.  <a href="#a0e755d18c99600f7fb99502b7962fb14"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="enumdata_record_1_1_keyword.html">Keyword</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_statement.html#acf013632f89cd17f18e93610d67cbdb7">kw</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_statement.html#ab5f52c2f331fa3bdf6d51ddf9bf3d033">packageName</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_statement.html#a4fbd38ded9058d1b8d47d170f324468e">ID</a></td></tr>
 </table>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>This class represent both import statement and package statement. </p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classdata_record_1_1elements_1_1_import_stmt.html" title="This class represent which library your program you must have.">ImportStmt</a> </dd>
+<dd>
+<a class="el" href="classdata_record_1_1elements_1_1_package_stmt.html" title="This class represent a Java package.">PackageStmt</a></dd></dl>
+<dl class="author"><dt><b>Author:</b></dt><dd>Fabrizio Beretta Piccoli </dd></dl>
+<dl class="version"><dt><b>Version:</b></dt><dd>2.0 | 10-lug-2012 </dd></dl>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="aa748b3307cc05f5677a74b8538cdd66e"></a><!-- doxytag: member="dataRecord::elements::Statement::Statement" ref="aa748b3307cc05f5677a74b8538cdd66e" args="(Keyword kw, String packageName)" -->
 <div class="memitem">
 <div class="memproto">
@@ -213,6 +224,9 @@ Private Attributes</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
+
+<p>this method will be called by the writer to know how to write this object. </p>
+<dl class="see"><dt><b>See also:</b></dt><dd>ElementVisitor </dd></dl>
 
 <p>Implements <a class="el" href="interfacedata_record_1_1elements_1_1_element.html#af29215f35f4bc997f85cbf2b4d10e9ba">dataRecord.elements.Element</a>.</p>
 
@@ -315,7 +329,7 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Reimplemented in <a class="el" href="classdata_record_1_1elements_1_1_import_stmt.html#a8def48b60eaba7fa4ee6fbfdd2e31c1d">dataRecord.elements.ImportStmt</a>, and <a class="el" href="classdata_record_1_1elements_1_1_package_stmt.html#a6a17fff31d876afa4310b2edf293410e">dataRecord.elements.PackageStmt</a>.</p>
+<p>Reimplemented in <a class="el" href="classdata_record_1_1elements_1_1_package_stmt.html#a6a17fff31d876afa4310b2edf293410e">dataRecord.elements.PackageStmt</a>, and <a class="el" href="classdata_record_1_1elements_1_1_import_stmt.html#a8def48b60eaba7fa4ee6fbfdd2e31c1d">dataRecord.elements.ImportStmt</a>.</p>
 
 </div>
 </div>
@@ -357,7 +371,7 @@ Private Attributes</h2></td></tr>
       <li class="navelem"><a class="el" href="namespacedata_record_1_1elements.html">elements</a>      </li>
       <li class="navelem"><a class="el" href="classdata_record_1_1elements_1_1_statement.html">Statement</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 9 2012 14:29:43 for Slyum by
+    <li class="footer">Generated on Wed Jul 11 2012 13:39:34 for Slyum by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

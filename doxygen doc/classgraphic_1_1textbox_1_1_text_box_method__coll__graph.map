@@ -10,6 +10,6 @@
 <area shape="rect" id="node78" href="$enumgraphic_1_1textbox_1_1_text_box_method_1_1_parameters_view_style.html" title="Enumeration class for the mode of display parameters in methods." alt="" coords="1286,553,1621,580"/>
 <area shape="rect" id="node83" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="10,457,233,484"/>
 <area shape="rect" id="node86" href="$classclass_diagram_1_1components_1_1_entity.html" title="Abstract class containing all classes parameters (attributes, methods, visibility, ...)" alt="" coords="853,325,1067,352"/>
-<area shape="rect" id="node92" href="$enumdata_record_1_1element_type_1_1_collection.html" title="dataRecord.elementType.Collection" alt="" coords="8,145,235,172"/>
+<area shape="rect" id="node92" href="$enumdata_record_1_1element_type_1_1_collection.html" title="This enum type represent the differents kinds of collection in the Java language." alt="" coords="8,145,235,172"/>
 <area shape="rect" id="node96" href="$enumclass_diagram_1_1components_1_1_visibility.html" title="Represent a visibility in UML structure." alt="" coords="379,481,608,508"/>
 </map>

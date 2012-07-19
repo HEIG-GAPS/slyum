@@ -1,9 +1,9 @@
 <map id="G" name="G">
-<area shape="rect" id="node2" href="$classdata_record_1_1elements_1_1_type.html" title="dataRecord.elements.Type" alt="" coords="693,196,870,223"/>
-<area shape="rect" id="node4" href="$classdata_record_1_1elements_1_1_declaration.html" title="dataRecord.elements.Declaration" alt="" coords="330,67,545,93"/>
-<area shape="rect" id="node6" href="$interfacedata_record_1_1elements_1_1_element.html" title="dataRecord.elements.Element" alt="" coords="5,56,203,83"/>
-<area shape="rect" id="node8" href="$enumdata_record_1_1_keyword.html" title="dataRecord.Keyword" alt="" coords="33,120,175,147"/>
-<area shape="rect" id="node12" href="$interfacedata_record_1_1element_type_1_1_implementable.html" title="dataRecord.elementType.Implementable" alt="" coords="310,196,565,223"/>
-<area shape="rect" id="node14" href="$interfacedata_record_1_1element_type_1_1_element_type.html" title="dataRecord.elementType.ElementType" alt="" coords="314,247,561,273"/>
-<area shape="rect" id="node19" href="$interfacedata_record_1_1element_type_1_1_extendable.html" title="dataRecord.elementType.Extendable" alt="" coords="664,247,899,273"/>
+<area shape="rect" id="node2" href="$classdata_record_1_1elements_1_1_type.html" title="This class represent the type of the object (class / interface / enums)" alt="" coords="693,196,870,223"/>
+<area shape="rect" id="node4" href="$classdata_record_1_1elements_1_1_declaration.html" title="This class represent a declaration." alt="" coords="330,67,545,93"/>
+<area shape="rect" id="node6" href="$interfacedata_record_1_1elements_1_1_element.html" title="An Element is whatever is written in a source code file (except for the member body) So a comment..." alt="" coords="5,56,203,83"/>
+<area shape="rect" id="node8" href="$enumdata_record_1_1_keyword.html" title="This enum show all the keyword used in the java language for declaration." alt="" coords="33,120,175,147"/>
+<area shape="rect" id="node12" href="$interfacedata_record_1_1element_type_1_1_implementable.html" title="Implementable represent an interface regrouping the API interfaces and the user defined intefaces..." alt="" coords="310,196,565,223"/>
+<area shape="rect" id="node14" href="$interfacedata_record_1_1element_type_1_1_element_type.html" title="Each datafield has a specific type." alt="" coords="314,247,561,273"/>
+<area shape="rect" id="node19" href="$interfacedata_record_1_1element_type_1_1_extendable.html" title="Extendable represent an interface regrouping the APIclasses and the user defined classes." alt="" coords="664,247,899,273"/>
 </map>

@@ -236,7 +236,7 @@ var searchData=
   ['squaregrip',['SquareGrip',['../classgraphic_1_1_square_grip.html',1,'graphic']]],
   ['squaregrip',['SquareGrip',['../classgraphic_1_1_square_grip.html#a10529acb768e85d0477eafb0d9c3acdb',1,'graphic::SquareGrip']]],
   ['squaregrip_2ejava',['SquareGrip.java',['../_square_grip_8java.html',1,'']]],
-  ['sslider',['SSlider',['../classutility_1_1_s_slider.html#aaa5021ef51d419cb7d7ec98a10257c56',1,'utility::SSlider.SSlider()'],['../classutility_1_1_s_slider_1_1_s_ticker.html#ad01625890bf140f69931742022b847dc',1,'utility::SSlider::STicker.sslider()'],['../classswing_1_1_panel_class_diagram.html#aa76ce5f753c8d96054a3655fa0beb707',1,'swing::PanelClassDiagram.sSlider()']]],
+  ['sslider',['SSlider',['../classutility_1_1_s_slider.html#aaa5021ef51d419cb7d7ec98a10257c56',1,'utility::SSlider.SSlider()'],['../classswing_1_1_panel_class_diagram.html#aa76ce5f753c8d96054a3655fa0beb707',1,'swing::PanelClassDiagram.sSlider()'],['../classutility_1_1_s_slider_1_1_s_ticker.html#ad01625890bf140f69931742022b847dc',1,'utility::SSlider::STicker.sslider()']]],
   ['sslider',['SSlider',['../classutility_1_1_s_slider.html',1,'utility']]],
   ['sslider_2ejava',['SSlider.java',['../_s_slider_8java.html',1,'']]],
   ['ssplitpane',['SSplitPane',['../classswing_1_1_s_split_pane.html#a7cd86d0c322e4eb0747e5954fc87b185',1,'swing::SSplitPane']]],

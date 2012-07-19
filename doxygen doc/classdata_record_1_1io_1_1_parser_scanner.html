@@ -108,7 +108,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">dataRecord.io.ParserScanner Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="dataRecord::io::ParserScanner" --><div class="dynheader">
+<!-- doxytag: class="dataRecord::io::ParserScanner" -->
+<p>This class scan one or many java source code file(s) to extract all the informations.  
+ <a href="classdata_record_1_1io_1_1_parser_scanner.html#details">More...</a></p>
+<div class="dynheader">
 Collaboration diagram for dataRecord.io.ParserScanner:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdata_record_1_1io_1_1_parser_scanner__coll__graph.png" border="0" usemap="#data_record_8io_8_parser_scanner_coll__map" alt="Collaboration graph"/></div>
@@ -123,19 +126,22 @@ Classes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="enumdata_record_1_1io_1_1_parser_scanner_1_1_association.html">Association</a></td></tr>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1io_1_1_parser_scanner.html#a0b862e69f6b62efa94b90ae96c1204c2">printDebug</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1io_1_1_parser_scanner.html#a976e5d442d6d19eeedc7ee435642fb28">ParserScanner</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <a href="#a976e5d442d6d19eeedc7ee435642fb28"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">LinkedList&lt; <a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html">CompilationUnit</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1io_1_1_parser_scanner.html#a2281cde930dd600340f51c6ebd727d34">parse</a> (File[] files)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Extract all the file and add them to the project.  <a href="#a2281cde930dd600340f51c6ebd727d34"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html">CompilationUnit</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1io_1_1_parser_scanner.html#ae6aef9944dcb87d6789e28820e8b946c">processLineByLine</a> (File file)  throws FileNotFoundException 	</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Template method that calls <a class="el" href="">processLine(String)</a>.  <a href="#ae6aef9944dcb87d6789e28820e8b946c"></a><br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">set the scanner to the file  <a href="#ae6aef9944dcb87d6789e28820e8b946c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1io_1_1_parser_scanner.html#a0b862e69f6b62efa94b90ae96c1204c2">printDebug</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">print the data structure.  <a href="#a0b862e69f6b62efa94b90ae96c1204c2"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1io_1_1_parser_scanner.html#acd075d99c9d0153dc550c5d81103aca6">processLine</a> (String aLine, <a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html">CompilationUnit</a> compil)  throws Exception 	</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Overridable method for processing lines in different ways.  <a href="#acd075d99c9d0153dc550c5d81103aca6"></a><br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Start scanning a line.  <a href="#acd075d99c9d0153dc550c5d81103aca6"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">LinkedList&lt; <a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html">CompilationUnit</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1io_1_1_parser_scanner.html#a23635bdd693dcffb6957e8ddc09c22cf">parseFile</a> (File file)  throws FileNotFoundException 	</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Extract the file recursively from sub diretories.  <a href="#a23635bdd693dcffb6957e8ddc09c22cf"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="interfacedata_record_1_1elements_1_1_element.html">Element</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1io_1_1_parser_scanner.html#a7e3abad536f3419856ed62f3a4609723">getElementFromFile</a> (String aLine)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classclass_diagram_1_1components_1_1_attribute.html">Attribute</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1io_1_1_parser_scanner.html#a89d7c80769ccf55aa74e04260dda0b22">getBrackets</a> (String aLine)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdata_record_1_1elements_1_1_package_stmt.html">PackageStmt</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1io_1_1_parser_scanner.html#a1d85d266980b6d42e2a50dedd1e50a8f">buildPackage</a> (String line)</td></tr>
@@ -171,8 +177,14 @@ Private Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1io_1_1_parser_scanner.html#a9aac4d690302b504a0585208cbaa882d">currentElemId</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1io_1_1_parser_scanner.html#aedfe3fb5aed9dfd42c1d54c09ce973c6">currentMemberID</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1io_1_1_parser_scanner.html#a93cd9a5365746fce007d58ec1df48ca5">isInterface</a> = false</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1io_1_1_parser_scanner.html#af40b76b4fea3fa558ac78f33edb3466a">generic</a> = &quot;&quot;</td></tr>
 </table>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>This class scan one or many java source code file(s) to extract all the informations. </p>
+<p>The informations are stored in several compilation unit (one compilation unit for file) Once the work done it gives all the compilation units to the project manager. The next step will be to display those compilation units, this work will be done by the class named : <a class="el" href="classdata_record_1_1io_1_1_layout.html" title="This class do the layout.">Layout</a></p>
+<dl class="author"><dt><b>Author:</b></dt><dd>Fabrizio Beretta Piccoli </dd></dl>
+<dl class="version"><dt><b>Version:</b></dt><dd>2.0 | 10-lug-2012 </dd></dl>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a976e5d442d6d19eeedc7ee435642fb28"></a><!-- doxytag: member="dataRecord::io::ParserScanner::ParserScanner" ref="a976e5d442d6d19eeedc7ee435642fb28" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -188,12 +200,6 @@ Private Attributes</h2></td></tr>
 <div class="memdoc">
 
 <p>Constructor. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">aFileName</td><td>full name of an existing, readable file. </td></tr>
-  </table>
-  </dd>
-</dl>
 
 </div>
 </div>
@@ -502,6 +508,15 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
+<p>Extract all the file and add them to the project. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">files</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>the compilation units </dd></dl>
+
 </div>
 </div>
 <a class="anchor" id="a23635bdd693dcffb6957e8ddc09c22cf"></a><!-- doxytag: member="dataRecord::io::ParserScanner::parseFile" ref="a23635bdd693dcffb6957e8ddc09c22cf" args="(File file)" -->
@@ -519,6 +534,21 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
+<p>Extract the file recursively from sub diretories. </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">file</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd></dd></dl>
+<dl class="exception"><dt><b>Exceptions:</b></dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">FileNotFoundException</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a class="anchor" id="a0b862e69f6b62efa94b90ae96c1204c2"></a><!-- doxytag: member="dataRecord::io::ParserScanner::printDebug" ref="a0b862e69f6b62efa94b90ae96c1204c2" args="()" -->
@@ -534,6 +564,9 @@ Private Attributes</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
+
+<p>print the data structure. </p>
+<p>For debugging only </p>
 
 </div>
 </div>
@@ -562,13 +595,8 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Overridable method for processing lines in different ways. </p>
-<dl class="params"><dt><b>Parameters:</b></dt><dd>
-  <table class="params">
-    <tr><td class="paramname">&lt;T&gt;</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
+<p>Start scanning a line. </p>
+<p>Overridable method for processing lines in different ways.</p>
 <dl class="exception"><dt><b>Exceptions:</b></dt><dd>
   <table class="exception">
     <tr><td class="paramname">Exception</td><td></td></tr>
@@ -593,7 +621,7 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Template method that calls <a class="el" href="">processLine(String)</a>. </p>
+<p>set the scanner to the file </p>
 
 </div>
 </div>
@@ -754,6 +782,19 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="af40b76b4fea3fa558ac78f33edb3466a"></a><!-- doxytag: member="dataRecord::io::ParserScanner::generic" ref="af40b76b4fea3fa558ac78f33edb3466a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">String <a class="el" href="classdata_record_1_1io_1_1_parser_scanner.html#af40b76b4fea3fa558ac78f33edb3466a">dataRecord.io.ParserScanner.generic</a> = &quot;&quot;<code> [private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+</div>
+</div>
 <a class="anchor" id="a8b762da0085457261cbea0fe3cd813b1"></a><!-- doxytag: member="dataRecord::io::ParserScanner::implInfo" ref="a8b762da0085457261cbea0fe3cd813b1" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -857,7 +898,7 @@ Private Attributes</h2></td></tr>
       <li class="navelem"><a class="el" href="namespacedata_record_1_1io.html">io</a>      </li>
       <li class="navelem"><a class="el" href="classdata_record_1_1io_1_1_parser_scanner.html">ParserScanner</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 9 2012 14:29:43 for Slyum by
+    <li class="footer">Generated on Wed Jul 11 2012 13:39:35 for Slyum by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

@@ -109,14 +109,14 @@ Inheritance diagram for dataRecord.elements.InterfaceField:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdata_record_1_1elements_1_1_interface_field__inherit__graph.png" border="0" usemap="#data_record_8elements_8_interface_field_inherit__map" alt="Inheritance graph"/></div>
 <map name="data_record_8elements_8_interface_field_inherit__map" id="data_record_8elements_8_interface_field_inherit__map">
-<area shape="rect" id="node2" href="classdata_record_1_1elements_1_1_field.html" title="dataRecord.elements.Field" alt="" coords="30,80,207,107"/><area shape="rect" id="node4" href="interfacedata_record_1_1elements_1_1_element.html" title="dataRecord.elements.Element" alt="" coords="20,5,217,32"/></map>
+<area shape="rect" id="node2" href="classdata_record_1_1elements_1_1_field.html" title="dataRecord.elements.Field" alt="" coords="30,80,207,107"/><area shape="rect" id="node4" href="interfacedata_record_1_1elements_1_1_element.html" title="An Element is whatever is written in a source code file (except for the member body) So a comment..." alt="" coords="20,5,217,32"/></map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for dataRecord.elements.InterfaceField:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdata_record_1_1elements_1_1_interface_field__coll__graph.png" border="0" usemap="#data_record_8elements_8_interface_field_coll__map" alt="Collaboration graph"/></div>
 <map name="data_record_8elements_8_interface_field_coll__map" id="data_record_8elements_8_interface_field_coll__map">
-<area shape="rect" id="node2" href="classdata_record_1_1elements_1_1_field.html" title="dataRecord.elements.Field" alt="" coords="138,96,315,123"/><area shape="rect" id="node4" href="interfacedata_record_1_1elements_1_1_element.html" title="dataRecord.elements.Element" alt="" coords="5,5,203,32"/><area shape="rect" id="node6" href="interfacedata_record_1_1element_type_1_1_element_type.html" title="dataRecord.elementType.ElementType" alt="" coords="227,5,473,32"/></map>
+<area shape="rect" id="node2" href="classdata_record_1_1elements_1_1_field.html" title="dataRecord.elements.Field" alt="" coords="138,96,315,123"/><area shape="rect" id="node4" href="interfacedata_record_1_1elements_1_1_element.html" title="An Element is whatever is written in a source code file (except for the member body) So a comment..." alt="" coords="5,5,203,32"/><area shape="rect" id="node6" href="interfacedata_record_1_1element_type_1_1_element_type.html" title="Each datafield has a specific type." alt="" coords="227,5,473,32"/></map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classdata_record_1_1elements_1_1_interface_field-members.html">List of all members.</a></p>
@@ -126,6 +126,7 @@ Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_interface_field.html#a430dba784c7d6ee8859756dac9dbca1b">InterfaceField</a> (String <a class="el" href="classdata_record_1_1elements_1_1_field.html#a8bb5116ab25771eda7e73c988e9587d5">name</a>, <a class="el" href="interfacedata_record_1_1element_type_1_1_element_type.html">ElementType</a> <a class="el" href="classdata_record_1_1elements_1_1_field.html#a14446d1bff50fe11e684c7c734f08cd0">type</a>, String <a class="el" href="classdata_record_1_1elements_1_1_field.html#acc1005125f67c179e1a20599fdb5af68">value</a>, int id)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_interface_field.html#ad083c073f1ae867dce8aecdf1b29a3a6">InterfaceField</a> (String <a class="el" href="classdata_record_1_1elements_1_1_field.html#a8bb5116ab25771eda7e73c988e9587d5">name</a>, <a class="el" href="interfacedata_record_1_1element_type_1_1_element_type.html">ElementType</a> <a class="el" href="classdata_record_1_1elements_1_1_field.html#a14446d1bff50fe11e684c7c734f08cd0">type</a>, String <a class="el" href="classdata_record_1_1elements_1_1_field.html#acc1005125f67c179e1a20599fdb5af68">value</a>)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_interface_field.html#a83a0d30939d9d37ef9621fa5c62b1bf6">accept</a> (<a class="el" href="interfacedata_record_1_1io_1_1_element_visitor.html">ElementVisitor</a> visitor)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">this method will be called by the writer to know how to write this object.  <a href="#a83a0d30939d9d37ef9621fa5c62b1bf6"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_interface_field.html#a0d421be512f4a0fc5877e6f0d6422ee4">toString</a> ()</td></tr>
 </table>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
@@ -217,6 +218,9 @@ Public Member Functions</h2></td></tr>
 </div>
 <div class="memdoc">
 
+<p>this method will be called by the writer to know how to write this object. </p>
+<dl class="see"><dt><b>See also:</b></dt><dd>ElementVisitor </dd></dl>
+
 <p>Implements <a class="el" href="classdata_record_1_1elements_1_1_field.html#a1da517a3375dfc4ab2951a243962cad6">dataRecord.elements.Field</a>.</p>
 
 </div>
@@ -264,7 +268,7 @@ Public Member Functions</h2></td></tr>
       <li class="navelem"><a class="el" href="namespacedata_record_1_1elements.html">elements</a>      </li>
       <li class="navelem"><a class="el" href="classdata_record_1_1elements_1_1_interface_field.html">InterfaceField</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 9 2012 14:29:43 for Slyum by
+    <li class="footer">Generated on Wed Jul 11 2012 13:39:34 for Slyum by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>
