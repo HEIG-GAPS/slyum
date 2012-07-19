@@ -29,7 +29,7 @@ var searchData=
   ['small_5ficon',['SMALL_ICON',['../classswing_1_1_property_loader.html#a553c9750bdc185f0a28ee1bb1790a234',1,'swing::PropertyLoader.SMALL_ICON()'],['../classswing_1_1_slyum.html#aa39a1e51fbe27d489368e27214b93fbb',1,'swing::Slyum.SMALL_ICON()']]],
   ['smooth_5fratio',['SMOOTH_RATIO',['../classgraphic_1_1relations_1_1_line_view.html#abf9e12849eb8631bc7f12b7f8b534a50',1,'graphic::relations::LineView']]],
   ['source',['source',['../classclass_diagram_1_1relationships_1_1_dependency.html#ab72ed1bac0ff59c28e05e853d3c828d2',1,'classDiagram::relationships::Dependency.source()'],['../classswing_1_1_x_m_l_parser_1_1_dependency.html#ad86be91cf7e8a51f52648a267c10db0a',1,'swing::XMLParser::Dependency.source()']]],
-  ['sslider',['sslider',['../classutility_1_1_s_slider_1_1_s_ticker.html#ad01625890bf140f69931742022b847dc',1,'utility::SSlider::STicker.sslider()'],['../classswing_1_1_panel_class_diagram.html#aa76ce5f753c8d96054a3655fa0beb707',1,'swing::PanelClassDiagram.sSlider()']]],
+  ['sslider',['sSlider',['../classswing_1_1_panel_class_diagram.html#aa76ce5f753c8d96054a3655fa0beb707',1,'swing::PanelClassDiagram.sSlider()'],['../classutility_1_1_s_slider_1_1_s_ticker.html#ad01625890bf140f69931742022b847dc',1,'utility::SSlider::STicker.sslider()']]],
   ['stack',['stack',['../classchange_1_1_change.html#a44ac89043fedf88d69caadf14131970d',1,'change::Change']]],
   ['static',['STATIC',['../enumdata_record_1_1_keyword.html#aab28af66c0e9cdaa1f1181248f2f380a',1,'dataRecord::Keyword']]],
   ['stereotype',['stereotype',['../classclass_diagram_1_1components_1_1_entity.html#a64c3d137a63d3a7b1f889d7ed40c139b',1,'classDiagram::components::Entity']]],

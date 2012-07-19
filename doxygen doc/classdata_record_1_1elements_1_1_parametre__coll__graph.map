@@ -1,5 +1,5 @@
 <map id="G" name="G">
 <area shape="rect" id="node2" href="$classdata_record_1_1elements_1_1_field.html" title="dataRecord.elements.Field" alt="" coords="138,96,315,123"/>
-<area shape="rect" id="node4" href="$interfacedata_record_1_1elements_1_1_element.html" title="dataRecord.elements.Element" alt="" coords="5,5,203,32"/>
-<area shape="rect" id="node6" href="$interfacedata_record_1_1element_type_1_1_element_type.html" title="dataRecord.elementType.ElementType" alt="" coords="227,5,473,32"/>
+<area shape="rect" id="node4" href="$interfacedata_record_1_1elements_1_1_element.html" title="An Element is whatever is written in a source code file (except for the member body) So a comment..." alt="" coords="5,5,203,32"/>
+<area shape="rect" id="node6" href="$interfacedata_record_1_1element_type_1_1_element_type.html" title="Each datafield has a specific type." alt="" coords="227,5,473,32"/>
 </map>

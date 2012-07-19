@@ -106,19 +106,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">dataRecord.elements.ImportStmt Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="dataRecord::elements::ImportStmt" --><!-- doxytag: inherits="dataRecord::elements::Statement" --><div class="dynheader">
+<!-- doxytag: class="dataRecord::elements::ImportStmt" --><!-- doxytag: inherits="dataRecord::elements::Statement" -->
+<p>This class represent which library your program you must have.  
+ <a href="classdata_record_1_1elements_1_1_import_stmt.html#details">More...</a></p>
+<div class="dynheader">
 Inheritance diagram for dataRecord.elements.ImportStmt:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdata_record_1_1elements_1_1_import_stmt__inherit__graph.png" border="0" usemap="#data_record_8elements_8_import_stmt_inherit__map" alt="Inheritance graph"/></div>
 <map name="data_record_8elements_8_import_stmt_inherit__map" id="data_record_8elements_8_import_stmt_inherit__map">
-<area shape="rect" id="node2" href="classdata_record_1_1elements_1_1_statement.html" title="dataRecord.elements.Statement" alt="" coords="7,80,216,107"/><area shape="rect" id="node4" href="interfacedata_record_1_1elements_1_1_element.html" title="dataRecord.elements.Element" alt="" coords="13,5,211,32"/></map>
+<area shape="rect" id="node2" href="classdata_record_1_1elements_1_1_statement.html" title="This class represent both import statement and package statement." alt="" coords="7,80,216,107"/><area shape="rect" id="node4" href="interfacedata_record_1_1elements_1_1_element.html" title="An Element is whatever is written in a source code file (except for the member body) So a comment..." alt="" coords="13,5,211,32"/></map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for dataRecord.elements.ImportStmt:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdata_record_1_1elements_1_1_import_stmt__coll__graph.png" border="0" usemap="#data_record_8elements_8_import_stmt_coll__map" alt="Collaboration graph"/></div>
 <map name="data_record_8elements_8_import_stmt_coll__map" id="data_record_8elements_8_import_stmt_coll__map">
-<area shape="rect" id="node2" href="classdata_record_1_1elements_1_1_statement.html" title="dataRecord.elements.Statement" alt="" coords="41,96,249,123"/><area shape="rect" id="node4" href="interfacedata_record_1_1elements_1_1_element.html" title="dataRecord.elements.Element" alt="" coords="5,5,203,32"/><area shape="rect" id="node6" href="enumdata_record_1_1_keyword.html" title="dataRecord.Keyword" alt="" coords="227,5,369,32"/></map>
+<area shape="rect" id="node2" href="classdata_record_1_1elements_1_1_statement.html" title="This class represent both import statement and package statement." alt="" coords="41,96,249,123"/><area shape="rect" id="node4" href="interfacedata_record_1_1elements_1_1_element.html" title="An Element is whatever is written in a source code file (except for the member body) So a comment..." alt="" coords="5,5,203,32"/><area shape="rect" id="node6" href="enumdata_record_1_1_keyword.html" title="This enum show all the keyword used in the java language for declaration." alt="" coords="227,5,369,32"/></map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classdata_record_1_1elements_1_1_import_stmt-members.html">List of all members.</a></p>
@@ -126,10 +129,12 @@ Collaboration diagram for dataRecord.elements.ImportStmt:</div>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_import_stmt.html#adab5cef67111005e699376fb0cf5ea57">ImportStmt</a> (String importName)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">creates a new import statement with the package name  <a href="#adab5cef67111005e699376fb0cf5ea57"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_import_stmt.html#a2b5441cbc31aaf79339c93f198413c54">ImportStmt</a> (String importName, boolean <a class="el" href="classdata_record_1_1elements_1_1_import_stmt.html#a5d96b095040f72ac9e2bd9584fa952ea">isStatic</a>)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_import_stmt.html#aafdd61bf43e96ac976a9e5e72179c8cf">ImportStmt</a> (String importName, int id)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_import_stmt.html#a1ebbfeb822e9d21dd8257b0c417ca033">ImportStmt</a> (String importName, boolean <a class="el" href="classdata_record_1_1elements_1_1_import_stmt.html#a5d96b095040f72ac9e2bd9584fa952ea">isStatic</a>, int id)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_import_stmt.html#afd3daae7b6a028403444944f77db1302">accept</a> (<a class="el" href="interfacedata_record_1_1io_1_1_element_visitor.html">ElementVisitor</a> visitor)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">this method will be called by the writer to know how to write this object.  <a href="#afd3daae7b6a028403444944f77db1302"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_import_stmt.html#a5254e14528a999a42e857e6074025d02">toString</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">boolean&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_import_stmt.html#a95207f865e3115726fe1493a2f74a1ee">isStatic</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_import_stmt.html#a81bd2f3dd8fff84443569dbc577af256">setStatic</a> (boolean <a class="el" href="classdata_record_1_1elements_1_1_import_stmt.html#a5d96b095040f72ac9e2bd9584fa952ea">isStatic</a>)</td></tr>
@@ -140,7 +145,12 @@ Private Attributes</h2></td></tr>
 Static Private Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="enumdata_record_1_1_keyword.html">Keyword</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_import_stmt.html#a8def48b60eaba7fa4ee6fbfdd2e31c1d">kw</a> = <a class="el" href="enumdata_record_1_1_keyword.html#a52aea5e2459bd6ea4cb23b59a9a9af2d">Keyword.IMPORT</a></td></tr>
 </table>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>This class represent which library your program you must have. </p>
+<p>Usually they are represented with an import statement. Ex : import <a class="el" href="enumdata_record_1_1_keyword.html" title="This enum show all the keyword used in the java language for declaration.">dataRecord.Keyword</a>;</p>
+<dl class="author"><dt><b>Author:</b></dt><dd>Fabrizio Beretta Piccoli </dd></dl>
+<dl class="version"><dt><b>Version:</b></dt><dd>2.0 | 5-lug-2012 </dd></dl>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="adab5cef67111005e699376fb0cf5ea57"></a><!-- doxytag: member="dataRecord::elements::ImportStmt::ImportStmt" ref="adab5cef67111005e699376fb0cf5ea57" args="(String importName)" -->
 <div class="memitem">
 <div class="memproto">
@@ -155,6 +165,14 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
+
+<p>creates a new import statement with the package name </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">importName</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -260,6 +278,9 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
+
+<p>this method will be called by the writer to know how to write this object. </p>
+<dl class="see"><dt><b>See also:</b></dt><dd>ElementVisitor </dd></dl>
 
 <p>Implements <a class="el" href="classdata_record_1_1elements_1_1_statement.html#a0e755d18c99600f7fb99502b7962fb14">dataRecord.elements.Statement</a>.</p>
 
@@ -370,7 +391,7 @@ Static Private Attributes</h2></td></tr>
       <li class="navelem"><a class="el" href="namespacedata_record_1_1elements.html">elements</a>      </li>
       <li class="navelem"><a class="el" href="classdata_record_1_1elements_1_1_import_stmt.html">ImportStmt</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 9 2012 14:29:43 for Slyum by
+    <li class="footer">Generated on Wed Jul 11 2012 13:39:34 for Slyum by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

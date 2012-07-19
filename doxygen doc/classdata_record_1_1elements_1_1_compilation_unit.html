@@ -105,19 +105,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">dataRecord.elements.CompilationUnit Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<!-- doxytag: class="dataRecord::elements::CompilationUnit" --><!-- doxytag: inherits="dataRecord::elements::Element" --><div class="dynheader">
+<!-- doxytag: class="dataRecord::elements::CompilationUnit" --><!-- doxytag: inherits="dataRecord::elements::Element" -->
+<p>This class represent a source code file It contain a list of elements.  
+ <a href="classdata_record_1_1elements_1_1_compilation_unit.html#details">More...</a></p>
+<div class="dynheader">
 Inheritance diagram for dataRecord.elements.CompilationUnit:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdata_record_1_1elements_1_1_compilation_unit__inherit__graph.png" border="0" usemap="#data_record_8elements_8_compilation_unit_inherit__map" alt="Inheritance graph"/></div>
 <map name="data_record_8elements_8_compilation_unit_inherit__map" id="data_record_8elements_8_compilation_unit_inherit__map">
-<area shape="rect" id="node2" href="interfacedata_record_1_1elements_1_1_element.html" title="dataRecord.elements.Element" alt="" coords="27,5,224,32"/></map>
+<area shape="rect" id="node2" href="interfacedata_record_1_1elements_1_1_element.html" title="An Element is whatever is written in a source code file (except for the member body) So a comment..." alt="" coords="27,5,224,32"/></map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
 Collaboration diagram for dataRecord.elements.CompilationUnit:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdata_record_1_1elements_1_1_compilation_unit__coll__graph.png" border="0" usemap="#data_record_8elements_8_compilation_unit_coll__map" alt="Collaboration graph"/></div>
 <map name="data_record_8elements_8_compilation_unit_coll__map" id="data_record_8elements_8_compilation_unit_coll__map">
-<area shape="rect" id="node2" href="interfacedata_record_1_1elements_1_1_element.html" title="dataRecord.elements.Element" alt="" coords="5,5,203,32"/></map>
+<area shape="rect" id="node2" href="interfacedata_record_1_1elements_1_1_element.html" title="An Element is whatever is written in a source code file (except for the member body) So a comment..." alt="" coords="5,5,203,32"/></map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 
 <p><a href="classdata_record_1_1elements_1_1_compilation_unit-members.html">List of all members.</a></p>
@@ -126,7 +129,9 @@ Collaboration diagram for dataRecord.elements.CompilationUnit:</div>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html#ac794a26b6d5722ff0a69adbe4b61ff69">CompilationUnit</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html#a457bf4fdef416b645d19545207868f5f">accept</a> (<a class="el" href="interfacedata_record_1_1io_1_1_element_visitor.html">ElementVisitor</a> visitor)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">this method will be called by the writer to know how to write this object.  <a href="#a457bf4fdef416b645d19545207868f5f"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html#a889068a9990e090cb7665b4f518d9eb0">getName</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">return the name, (same as the file name without the extension) if any file return the name of the first class/interface  <a href="#a889068a9990e090cb7665b4f518d9eb0"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">File&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html#a0b5d4a3e201502f3b22bab50ae280039">getFile</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html#aaa509b8be9a7f82195f468b726c3a930">setFile</a> (File <a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html#a445cd337eeefffd657bcbaa794f8862b">file</a>)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html#ad4d63ea7b0930d6472ac101ae64a5a62">addElement</a> (<a class="el" href="interfacedata_record_1_1elements_1_1_element.html">Element</a> e)</td></tr>
@@ -141,8 +146,14 @@ Public Member Functions</h2></td></tr>
 Private Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">List&lt; <a class="el" href="interfacedata_record_1_1elements_1_1_element.html">Element</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html#a4073f42b97ec759eaac3bfb1acdb0373">elements</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">File&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html#a445cd337eeefffd657bcbaa794f8862b">file</a></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">the related file  <a href="#a445cd337eeefffd657bcbaa794f8862b"></a><br/></td></tr>
 </table>
-<hr/><h2>Constructor &amp; Destructor Documentation</h2>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>This class represent a source code file It contain a list of elements. </p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="interfacedata_record_1_1elements_1_1_element.html" title="An Element is whatever is written in a source code file (except for the member body) So a comment...">Element</a> </dd></dl>
+<dl class="author"><dt><b>Author:</b></dt><dd>Fabrizio Beretta Piccoli </dd></dl>
+<dl class="version"><dt><b>Version:</b></dt><dd>2.0 | 10-lug-2012 </dd></dl>
+</div><hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ac794a26b6d5722ff0a69adbe4b61ff69"></a><!-- doxytag: member="dataRecord::elements::CompilationUnit::CompilationUnit" ref="ac794a26b6d5722ff0a69adbe4b61ff69" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -174,6 +185,9 @@ Private Attributes</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
+
+<p>this method will be called by the writer to know how to write this object. </p>
+<dl class="see"><dt><b>See also:</b></dt><dd>ElementVisitor </dd></dl>
 
 <p>Implements <a class="el" href="interfacedata_record_1_1elements_1_1_element.html#af29215f35f4bc997f85cbf2b4d10e9ba">dataRecord.elements.Element</a>.</p>
 
@@ -294,6 +308,8 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
+<p>return the name, (same as the file name without the extension) if any file return the name of the first class/interface </p>
+
 <p>Implements <a class="el" href="interfacedata_record_1_1elements_1_1_element.html#af186b976ef47ab17d436e7e36c2d44d2">dataRecord.elements.Element</a>.</p>
 
 </div>
@@ -390,6 +406,8 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
+<p>the related file </p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
@@ -417,7 +435,7 @@ Private Attributes</h2></td></tr>
       <li class="navelem"><a class="el" href="namespacedata_record_1_1elements.html">elements</a>      </li>
       <li class="navelem"><a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html">CompilationUnit</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 9 2012 14:29:43 for Slyum by
+    <li class="footer">Generated on Wed Jul 11 2012 13:39:34 for Slyum by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

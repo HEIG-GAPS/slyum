@@ -33,6 +33,7 @@ var classdata_record_1_1io_1_1_parser_scanner =
     [ "currentMemberID", "classdata_record_1_1io_1_1_parser_scanner.html#aedfe3fb5aed9dfd42c1d54c09ce973c6", null ],
     [ "extendsInfo", "classdata_record_1_1io_1_1_parser_scanner.html#a9d6b5eae1d86edc6feb34950bb6bc845", null ],
     [ "fFile", "classdata_record_1_1io_1_1_parser_scanner.html#acde88a191bc6b8b92afb8a05cd3f8782", null ],
+    [ "generic", "classdata_record_1_1io_1_1_parser_scanner.html#af40b76b4fea3fa558ac78f33edb3466a", null ],
     [ "implInfo", "classdata_record_1_1io_1_1_parser_scanner.html#a8b762da0085457261cbea0fe3cd813b1", null ],
     [ "isInterface", "classdata_record_1_1io_1_1_parser_scanner.html#a93cd9a5365746fce007d58ec1df48ca5", null ],
     [ "pageScanner", "classdata_record_1_1io_1_1_parser_scanner.html#acb95586ee838b55f72e41b7e7752231f", null ],

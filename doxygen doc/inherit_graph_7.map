@@ -1,5 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node1" href="$interfacedata_record_1_1io_1_1_element_visitor.html" title="dataRecord.io.ElementVisitor" alt="" coords="6,31,197,57"/>
-<area shape="rect" id="node3" href="$classdata_record_1_1io_1_1_cpp_visitor.html" title="dataRecord.io.CppVisitor" alt="" coords="246,5,413,32"/>
-<area shape="rect" id="node5" href="$classdata_record_1_1io_1_1_java_visitor.html" title="dataRecord.io.JavaVisitor" alt="" coords="245,56,413,83"/>
+<area shape="rect" id="node1" href="$interfacedata_record_1_1io_1_1_element_visitor.html" title="To be able to write a souce code file, the syntax of the choosen language must be known..." alt="" coords="6,31,197,57"/>
+<area shape="rect" id="node3" href="$classdata_record_1_1io_1_1_cpp_visitor.html" title="This class specify how to write a souce code file using the C++ language." alt="" coords="246,5,413,32"/>
+<area shape="rect" id="node5" href="$classdata_record_1_1io_1_1_java_visitor.html" title="This class specify how to write a souce code file using the Java language." alt="" coords="245,56,413,83"/>
 </map>

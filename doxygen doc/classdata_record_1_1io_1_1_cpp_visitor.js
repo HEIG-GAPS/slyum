@@ -1,6 +1,5 @@
 var classdata_record_1_1io_1_1_cpp_visitor =
 [
-    [ "CppVisitor", "classdata_record_1_1io_1_1_cpp_visitor.html#ac411f32fa6a5bfa1eb67ad75b0fa057a", null ],
     [ "visit", "classdata_record_1_1io_1_1_cpp_visitor.html#a5d4423de95573b59fadba78d12aec8fe", null ],
     [ "visit", "classdata_record_1_1io_1_1_cpp_visitor.html#a7e27a6e9220a58589abb561b6e4f4df9", null ],
     [ "visit", "classdata_record_1_1io_1_1_cpp_visitor.html#a154b7e1e73226a3a1d709baa2fbccf61", null ],

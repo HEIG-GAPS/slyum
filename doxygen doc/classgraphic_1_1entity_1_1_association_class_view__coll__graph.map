@@ -16,7 +16,7 @@
 <area shape="rect" id="node69" href="$classgraphic_1_1textbox_1_1_text_box_entity_name.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="1505,889,1735,916"/>
 <area shape="rect" id="node91" href="$classgraphic_1_1textbox_1_1_text_box_generic_type.html" title="A TextBox is a graphic component from Slyum containing a String." alt="" coords="1502,687,1738,713"/>
 <area shape="rect" id="node51" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="255,1619,478,1645"/>
-<area shape="rect" id="node53" href="$enumdata_record_1_1element_type_1_1_collection.html" title="dataRecord.elementType.Collection" alt="" coords="253,1225,480,1252"/>
+<area shape="rect" id="node53" href="$enumdata_record_1_1element_type_1_1_collection.html" title="This enum type represent the differents kinds of collection in the Java language." alt="" coords="253,1225,480,1252"/>
 <area shape="rect" id="node57" href="$enumclass_diagram_1_1components_1_1_visibility.html" title="Represent a visibility in UML structure." alt="" coords="707,581,936,608"/>
 <area shape="rect" id="node96" href="$classgraphic_1_1relations_1_1_binary_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="2328,1489,2515,1516"/>
 <area shape="rect" id="node98" href="$classgraphic_1_1relations_1_1_association_view.html" title="The LineView class represent a collection of lines making a link between two GraphicComponent." alt="" coords="2041,1591,2258,1617"/>

@@ -1,4 +1,4 @@
 <map id="G" name="G">
 <area shape="rect" id="node4" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="7,56,230,83"/>
-<area shape="rect" id="node6" href="$enumdata_record_1_1element_type_1_1_collection.html" title="dataRecord.elementType.Collection" alt="" coords="5,107,232,133"/>
+<area shape="rect" id="node6" href="$enumdata_record_1_1element_type_1_1_collection.html" title="This enum type represent the differents kinds of collection in the Java language." alt="" coords="5,107,232,133"/>
 </map>

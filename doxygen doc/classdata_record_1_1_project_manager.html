@@ -121,14 +121,22 @@ Collaboration diagram for dataRecord.ProjectManager:</div>
 <tr><td colspan="2"><h2><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">LinkedList&lt; <a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html">CompilationUnit</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1_project_manager.html#a5d26c974dfd5ff742edbd18bccb30a34">getFilesRecord</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">return all the compilation units  <a href="#a5d26c974dfd5ff742edbd18bccb30a34"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1_project_manager.html#ab997b3471bf6c90787c83683d8e99d22">setFilesRecord</a> (LinkedList&lt; <a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html">CompilationUnit</a> &gt; <a class="el" href="classdata_record_1_1_project_manager.html#a49c3daa7b6e248d7c4c886f8a5e166ca">filesRecord</a>)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">set a new list of compilation units (change project)  <a href="#ab997b3471bf6c90787c83683d8e99d22"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1_project_manager.html#a1908cbe951ed353818290a8e2be0ce61">getName</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">return the project name  <a href="#a1908cbe951ed353818290a8e2be0ce61"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1_project_manager.html#ad0ed6f4db1b940f1be5e5a17189964dd">setName</a> (String <a class="el" href="classdata_record_1_1_project_manager.html#aa24a9dbaef2456f64556f7709ea8e7a0">name</a>)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1_project_manager.html#a6bf3f119c76171e8934e0d2c7eab4bd8">addCUnit</a> (<a class="el" href="classdata_record_1_1elements_1_1_compilation_unit.html">CompilationUnit</a> cu)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">add a new compilation unit, a new parsed file  <a href="#a6bf3f119c76171e8934e0d2c7eab4bd8"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1_project_manager.html#aa8efc5aeb8b28fd7fbbbea8a790c2080">removeCUnit</a> (String <a class="el" href="classdata_record_1_1_project_manager.html#aa24a9dbaef2456f64556f7709ea8e7a0">name</a>)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">retrieve and remove a compilation unit given by his name  <a href="#aa8efc5aeb8b28fd7fbbbea8a790c2080"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1_project_manager.html#a7b738d471bb36d484597eac25a6acf36">generateFiles</a> (<a class="el" href="classdata_record_1_1io_1_1_writer.html">Writer</a> writer)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">generate the concrete file in the selected language  <a href="#a7b738d471bb36d484597eac25a6acf36"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="interfacedata_record_1_1elements_1_1_element.html">Element</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1_project_manager.html#a7755136098d1cdb7bdad8d24e0e94a2c">getElementByID</a> (int id)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">return a specific element chosen by ID  <a href="#a7755136098d1cdb7bdad8d24e0e94a2c"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="interfacedata_record_1_1elements_1_1_element.html">Element</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1_project_manager.html#acbd5081e42552ceee947c07ab6fcf266">getElementFromProject</a> (String <a class="el" href="classdata_record_1_1_project_manager.html#aa24a9dbaef2456f64556f7709ea8e7a0">name</a>)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">return a specific element chosen by name  <a href="#acbd5081e42552ceee947c07ab6fcf266"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="interfacedata_record_1_1elements_1_1_element.html">Element</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1_project_manager.html#ab975466ca1a08d0aba911bf792a034b4">getCU</a> (String <a class="el" href="classdata_record_1_1_project_manager.html#aa24a9dbaef2456f64556f7709ea8e7a0">name</a>)</td></tr>
 <tr><td colspan="2"><h2><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -137,6 +145,7 @@ Static Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><h2><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1_project_manager.html#aba7866b65c3e41f31de6fbcf659528e0">ProjectManager</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">the constructor  <a href="#aba7866b65c3e41f31de6fbcf659528e0"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdata_record_1_1_project_manager.html#aa24a9dbaef2456f64556f7709ea8e7a0">name</a></td></tr>
@@ -160,6 +169,8 @@ Static Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
+<p>the constructor </p>
+
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
@@ -178,6 +189,14 @@ Static Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
+<p>add a new compilation unit, a new parsed file </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cu</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a class="anchor" id="a7b738d471bb36d484597eac25a6acf36"></a><!-- doxytag: member="dataRecord::ProjectManager::generateFiles" ref="a7b738d471bb36d484597eac25a6acf36" args="(Writer writer)" -->
@@ -194,6 +213,14 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
+
+<p>generate the concrete file in the selected language </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">writer</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -229,6 +256,15 @@ Static Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
+<p>return a specific element chosen by ID </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd></dd></dl>
+
 </div>
 </div>
 <a class="anchor" id="acbd5081e42552ceee947c07ab6fcf266"></a><!-- doxytag: member="dataRecord::ProjectManager::getElementFromProject" ref="acbd5081e42552ceee947c07ab6fcf266" args="(String name)" -->
@@ -245,6 +281,15 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
+
+<p>return a specific element chosen by name </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd></dd></dl>
 
 </div>
 </div>
@@ -278,6 +323,9 @@ Static Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
+<p>return all the compilation units </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd></dd></dl>
+
 </div>
 </div>
 <a class="anchor" id="a8c9562ef0ab55c4670eccd388f94e698"></a><!-- doxytag: member="dataRecord::ProjectManager::getInstance" ref="a8c9562ef0ab55c4670eccd388f94e698" args="()" -->
@@ -310,6 +358,9 @@ Static Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
+<p>return the project name </p>
+<dl class="return"><dt><b>Returns:</b></dt><dd></dd></dl>
+
 </div>
 </div>
 <a class="anchor" id="aa8efc5aeb8b28fd7fbbbea8a790c2080"></a><!-- doxytag: member="dataRecord::ProjectManager::removeCUnit" ref="aa8efc5aeb8b28fd7fbbbea8a790c2080" args="(String name)" -->
@@ -327,6 +378,14 @@ Static Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
+<p>retrieve and remove a compilation unit given by his name </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a class="anchor" id="ab997b3471bf6c90787c83683d8e99d22"></a><!-- doxytag: member="dataRecord::ProjectManager::setFilesRecord" ref="ab997b3471bf6c90787c83683d8e99d22" args="(LinkedList&lt; CompilationUnit &gt; filesRecord)" -->
@@ -343,6 +402,14 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div>
 <div class="memdoc">
+
+<p>set a new list of compilation units (change project) </p>
+<dl class="params"><dt><b>Parameters:</b></dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filesRecord</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -427,7 +494,7 @@ Static Private Attributes</h2></td></tr>
       <li class="navelem"><a class="el" href="namespacedata_record.html">dataRecord</a>      </li>
       <li class="navelem"><a class="el" href="classdata_record_1_1_project_manager.html">ProjectManager</a>      </li>
 
-    <li class="footer">Generated on Mon Jul 9 2012 14:29:43 for Slyum by
+    <li class="footer">Generated on Wed Jul 11 2012 13:39:34 for Slyum by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.6.1 </li>
    </ul>

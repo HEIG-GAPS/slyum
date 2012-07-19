@@ -13,6 +13,6 @@
 <area shape="rect" id="node71" href="$interfacechange_1_1_changeable.html" title="change.Changeable" alt="" coords="425,2019,561,2045"/>
 <area shape="rect" id="node86" href="$interfaceclass_diagram_1_1_i_diagram_component.html" title="Interface implemented by all class diagram component." alt="" coords="10,468,233,495"/>
 <area shape="rect" id="node93" href="$classclass_diagram_1_1components_1_1_entity.html" title="Abstract class containing all classes parameters (attributes, methods, visibility, ...)" alt="" coords="853,205,1067,232"/>
-<area shape="rect" id="node99" href="$enumdata_record_1_1element_type_1_1_collection.html" title="dataRecord.elementType.Collection" alt="" coords="8,56,235,83"/>
+<area shape="rect" id="node99" href="$enumdata_record_1_1element_type_1_1_collection.html" title="This enum type represent the differents kinds of collection in the Java language." alt="" coords="8,56,235,83"/>
 <area shape="rect" id="node103" href="$enumclass_diagram_1_1components_1_1_visibility.html" title="Represent a visibility in UML structure." alt="" coords="379,81,608,108"/>
 </map>
