@@ -48,6 +48,7 @@ public class NoteProperties extends GlobalPropreties
 		return instance;
 	}
 
+	@SuppressWarnings("deprecation")
 	public NoteProperties()
 	{
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));

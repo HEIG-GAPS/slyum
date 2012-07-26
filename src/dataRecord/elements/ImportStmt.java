@@ -3,11 +3,24 @@ package dataRecord.elements;
 import dataRecord.Keyword;
 import dataRecord.io.ElementVisitor;
 
+/**
+ * This class represent which library your program you must have.
+ * Usually they are represented with an import statement.
+ * Ex : import dataRecord.Keyword;
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 5-lug-2012
+ */
 public class ImportStmt extends Statement
 {
 	private static Keyword kw = Keyword.IMPORT;
 	private boolean isStatic = false;
 
+	/**
+	 * creates a new import statement with the package name
+	 * 
+	 * @param importName
+	 */
 	public ImportStmt(String importName)
 	{
 		super(kw, importName);
@@ -30,6 +43,13 @@ public class ImportStmt extends Statement
 		this.isStatic = isStatic;
 	}
 
+	/**
+	 * this method will be called by the writer to know
+	 * how to write this object.
+	 * 
+	 * @see ElementVisitor
+	 * 
+	 */
 	public String accept(ElementVisitor visitor)
 	{
 		return visitor.visit(this);

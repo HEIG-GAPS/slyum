@@ -659,7 +659,7 @@ public class PanelClassDiagram extends JPanel
 			@Override
 			public String getDescription()
 			{
-				return "Java source code";
+				return "Java files | C++ header files";
 			}
 			
 			@Override
@@ -670,7 +670,7 @@ public class PanelClassDiagram extends JPanel
 				
 				final String extension = Utility.getExtension(f);
 				
-				return extension==null?false:extension.equals(Slyum.JAVA_EXTENSION);
+				return extension==null?false:(extension.equals(Slyum.JAVA_EXTENSION) || extension.equals("h"));
 			}
 		};
 		

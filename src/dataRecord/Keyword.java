@@ -1,3 +1,4 @@
+package dataRecord;
 /**
  * This enum show all the keyword used in the java language for declaration.
  * Keyword used inside a method are not mentioned, like "if", "for", "return", etc.
@@ -5,8 +6,6 @@
  * @author Fabrizio Beretta Piccoli
  * @version 2.0 | 5-lug-2012
  */
-package dataRecord;
-
 public enum Keyword
 {
 	ABSTRACT, 
@@ -51,7 +50,7 @@ public enum Keyword
 	 * return if a keyword is an Access modifier (package, private, protected or public)
 	 * 
 	 * @param kw
-	 * @return
+	 * @return true is is a access modifier
 	 */
 	public static boolean isAccess(Keyword kw)
 	{
@@ -61,7 +60,7 @@ public enum Keyword
 	/**
 	 * return if a keyword is a primitive type (int, double, char, etc)
 	 * @param type
-	 * @return
+	 * @return true if is a primitive type
 	 */
 	public static boolean isPrimitive(Keyword type)
 	{

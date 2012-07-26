@@ -211,7 +211,8 @@ public abstract class EntityView extends MovableComponent implements Observer
 	private TextBox pressedTextBox;
 	private JMenuItem menuItemDelete, menuItemMoveUp, menuItemMoveDown;
 	private JMenuItem syncEntity;
-
+	private JMenuItem addGen, removeGen;
+	
 	private Cursor saveCursor = Cursor.getDefaultCursor();
 
 	protected GraphicComponent saveTextBoxMouseHover;
@@ -247,10 +248,10 @@ public abstract class EntityView extends MovableComponent implements Observer
 		
 		popupMenu.addSeparator();
 		
-		menuItem = makeMenuItem("Add generic", "AddGeneric", "generic");
+		addGen = menuItem = makeMenuItem("Add generic", "AddGeneric", "generic");
 		popupMenu.add(menuItem);
 		
-		menuItem = makeMenuItem("Remove generic", "rGeneric", "noGeneric");
+		removeGen = menuItem = makeMenuItem("Remove generic", "rGeneric", "noGeneric");
 		popupMenu.add(menuItem);
 
 		popupMenu.addSeparator();
@@ -327,7 +328,7 @@ public abstract class EntityView extends MovableComponent implements Observer
 		p.getBtnBottom().linkComponent(menuItem);
 		popupMenu.add(menuItem);
 		
-//		sync with code
+		//	sync with code
 		popupMenu.addSeparator();
 		
 		syncEntity = menuItem = makeMenuItem("synchronize with code", "sync", "sync");
@@ -834,10 +835,23 @@ public abstract class EntityView extends MovableComponent implements Observer
 			}
 			menuItemDelete.setText(text);
 			
+			//enable / disable sync 
 			if(component.getReferenceFile() == null)
 				syncEntity.setEnabled(false);
 			else
 				syncEntity.setEnabled(true);
+			
+			//enable / disable genericity options
+			if(component.getGeneric().isEmpty())
+			{
+				addGen.setEnabled(true);
+				removeGen.setEnabled(false);
+			}
+			else
+			{
+				addGen.setEnabled(false);
+				removeGen.setEnabled(true);
+			}
 		}
 		
 		super.maybeShowPopup(e, popupMenu);
@@ -891,9 +905,6 @@ public abstract class EntityView extends MovableComponent implements Observer
 		final FontMetrics classNameMetrics = g2.getFontMetrics(entityName.getEffectivFont());
 		final int classNameWidth = classNameMetrics.stringWidth(className);
 		final int classNameHeight = classNameMetrics.getHeight();
-//		final FontMetrics classGenMetrics = g2.getFontMetrics(generic.getEffectivFont());
-//		final int classGenWidth = classGenMetrics.stringWidth(component.getGeneric())*2;
-//		System.out.println(classGenWidth);
 		
 		final Dimension classNameSize = new Dimension(classNameWidth, classNameHeight);
 

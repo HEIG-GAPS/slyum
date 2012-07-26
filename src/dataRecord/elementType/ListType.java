@@ -1,3 +1,4 @@
+package dataRecord.elementType;
 /**
  * Each datafield has a specific type. This type can be a "Primitive type" (int, double, char, etc)
  * a user defined type (an object created by the user) or an API type.
@@ -9,8 +10,6 @@
  * @see ElementType
  * @see Collection
  */
-package dataRecord.elementType;
-
 public class ListType implements ElementType
 {
 	private ElementType eType;

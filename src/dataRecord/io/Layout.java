@@ -1,8 +1,10 @@
 package dataRecord.io;
 
 import graphic.GraphicComponent;
+import graphic.relations.BinaryView;
 import graphic.relations.DependencyView;
 import graphic.relations.InheritanceView;
+import graphic.relations.RelationGrip;
 
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -17,7 +19,18 @@ import classDiagram.components.Entity;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Inheritance;
+import classDiagram.relationships.InnerClass;
 
+/**
+ * This class do the layout. In others words it take the entire uml diagram and move 
+ * each element to a better position, for exemple it will take every interfaces and put them 
+ * on the top of the window and put the classes implementing those interfaces in the bottom
+ * of the window. It also does a change in the relationship lines: they are not straight but with 
+ * angles of 90° for a better understanding. 
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 9-lug-2012
+ */
 public class Layout
 {
 	private final classDiagram.ClassDiagram classDiagram = PanelClassDiagram.getInstance().getClassDiagram();
@@ -29,7 +42,6 @@ public class Layout
 	private final int ScreenWidth =  Toolkit.getDefaultToolkit().getScreenSize().width-200;
 	private double currentWidth = ScreenWidth;
 	private final int INCREASE_DX = 35;
-	
 	public void layout()
 	{
 		PanelClassDiagram.getInstance().getCurrentGraphicView().setStopRepaint(true);
@@ -46,12 +58,13 @@ public class Layout
 		
 		improveTreePosition();
 		
-		if(getMaxLvl() > 2)
+		
+		if(getMaxLvl() > 3)
 			currentWidth = ScreenWidth*2;
 		
 		draw();
 		
-		if(getMaxLvl() > 2)
+		if(getMaxLvl() > 3)
 			PanelClassDiagram.getInstance().getCurrentGraphicView().adaptDiagramToWindow();
 		
 		fixRelationLines();
@@ -62,6 +75,9 @@ public class Layout
 		System.out.println("-END-");
 	}
 	
+	 /**
+	  * move the elements to a better position
+	  */
 	private void draw()
 	{
 		//draw
@@ -155,7 +171,7 @@ public class Layout
 					if (nroPasse == 1)
 					{
 						pater.get(0).add(inh.getParent());
-						pater.get(1).add(inh.getChild());		
+						pater.get(1).add(inh.getChild());
 					}
 					else
 					{
@@ -169,7 +185,34 @@ public class Layout
 						}
 					}
 				}
+				
+				if(component.getClass() == InnerClass.class)
+				{
+					InnerClass inner = (InnerClass)component;
+					if (nroPasse == 1)
+					{
+						pater.get(0).add(inner.getParent());
+						pater.get(0).add(inner.getChild());		
+					}
+					else
+					{
+						int parentLvl = getLvl(inner.getParent());
+						int childLvl = getLvl(inner.getChild());
+						if(parentLvl != childLvl)
+						{
+							pater.get(childLvl).remove(inner.getChild());
+							pater.get(parentLvl).add(inner.getChild());
+						}
+					}
+				}
 			}	
+//			if(component.getClass() == Binary.class)
+//			{
+//				Binary b = (Binary)component;
+//				Entity first = b.getRoles().getFirst().getEntity();
+//				Entity last = b.getRoles().getLast().getEntity();
+//				System.err.println(first.getName() +" - " + last.getName());
+//			}
 		}
 	}
 	
@@ -343,7 +386,13 @@ public class Layout
 					dv.getPoints().get(2).setAnchor(new Point(newX,middleBound.y-20));
 				}
 			}
-	
+			
+			if(gc.getClass() == BinaryView.class)
+			{
+				BinaryView bv = (BinaryView) gc;
+				RelationGrip rel = bv.getNearestGrip((RelationGrip)bv.getLastPoint());
+				bv.getLastPoint().setAnchor(rel.getAnchor());
+			}
 		}
 	}
 	
@@ -374,12 +423,11 @@ public class Layout
 				if(newlyTwo)
 					pater.get(max).add(last);
 			}
-		}
-		
+		}	
 	}
 
 	/**
-	 * add the entities that havent been added because they have no relation ship lines
+	 * add the entities that havent been added because they have no relationship lines
 	 */
 	private void addOtherComponent()
 	{

@@ -20,20 +20,39 @@ import dataRecord.elements.ClassType;
 import dataRecord.elements.Comment;
 import dataRecord.elements.CompilationUnit;
 import dataRecord.elements.Element;
-import dataRecord.elements.Field;
 import dataRecord.elements.InterfaceType;
 import dataRecord.elements.Member;
-import dataRecord.elements.Parametre;
+import dataRecord.elements.Parameter;
 import dataRecord.elements.Statement;
 import dataRecord.elements.Type;
 import swing.PanelClassDiagram;
 
+/**
+ * This class job is to get the uml diagram and to transform it into source code files.
+ * If the uml diagram is the result of an importation, the exportation take in consideration
+ * the code already written.
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 11-lug-2012
+ */
 public class ExportData extends Thread
 {
+	/**
+	 * the destination path
+	 */
 	final String path;
+	/**
+	 * the uml class diagram
+	 */
 	private final classDiagram.ClassDiagram classDiagram = PanelClassDiagram.getInstance().getClassDiagram();
+	/**
+	 * the project manager
+	 */
 	private final ProjectManager project = ProjectManager.getInstance();
 	private IDiagramComponent currentComponent;
+	/**
+	 * the selected language
+	*/
 	private ElementVisitor v;
 	
 	public ExportData(String path, ElementVisitor v)
@@ -45,8 +64,10 @@ public class ExportData extends Thread
 	private void export()
 	{
 		//createNewProject();
-		update();
-		//project.generateFiles(new Writer(path,v));
+		if(v.getClass() == JavaVisitor.class)
+			update();
+		else
+			project.generateFiles(new Writer(path,v));
 	}
 	
 	private void update()
@@ -73,12 +94,6 @@ public class ExportData extends Thread
 					}
 				}
 				
-				for(int i=0; i<cuOld.getElements().size(); i++)
-				{
-					if(cuOld.getElements().get(i).getClass() == Comment.class)
-						cuNew.getElements().add(i, cuOld.getElements().get(i));
-				}
-				
 				for(int index=0; index<cuNew.getElements().size(); index++)
 				{	
 					Element old = cuOld.getElement(cuNew.getElements().get(index).getName());
@@ -90,6 +105,7 @@ public class ExportData extends Thread
 						{
 							Type tn = (Type)recent;
 							Type to = (Type)old;
+							LinkedList<CommentWrapper> cw = new LinkedList<>();
 							
 							for (Element latestElement : tn.getElements())
 							{
@@ -97,6 +113,11 @@ public class ExportData extends Thread
 								
 								if(older != null)
 								{	
+									// add the comment
+									int commentIndex = to.getElements().indexOf(older);
+									int commentInsertIndex = tn.getElements().indexOf(latestElement);
+									if(to.getElements().get(commentIndex-1).getClass() == Comment.class)
+										cw.add(new CommentWrapper((Comment) to.getElements().get(commentIndex-1), commentInsertIndex));
 									if(latestElement instanceof Member)
 									{
 										Member mo = (Member) to.getMemberByName(latestElement.getName());
@@ -105,13 +126,18 @@ public class ExportData extends Thread
 										mn.setMethodBody(mo.getMethodBody());
 									}
 							
-									else if(latestElement instanceof Field)
+									else if(latestElement instanceof Variable)
 									{
-										Field fo = (Field) to.getFieldByName(latestElement.getName());
-										Field fn = (Field)latestElement;
+										dataRecord.elements.Variable fo = (dataRecord.elements.Variable) to.getFieldByName(latestElement.getName());
+										dataRecord.elements.Variable fn = (dataRecord.elements.Variable)latestElement;
 										fn.setValue(fo.getValue());
 									}
 								}
+							}
+							
+							for(int c=cw.size()-1; c >= 0; c--)
+							{
+								tn.getElements().add(cw.get(c).index, cw.get(c).c);
 							}
 						}
 					}
@@ -229,7 +255,7 @@ public class ExportData extends Thread
 							for(int p=0; p<mEntity.getParameters().size(); p++)
 							{
 								Variable v = mEntity.getParameters().get(p);
-								Parametre param = new Parametre(v.getName(), new dataRecord.elements.Type(v.getType().getName(),access,Keyword.CLASS), v.getId());
+								Parameter param = new Parameter(v.getName(), new dataRecord.elements.Type(v.getType().getName(),access,Keyword.CLASS), v.getId());
 								
 								meth.addParam(param);
 							}
@@ -374,6 +400,18 @@ public class ExportData extends Thread
 				System.out.println(e);
 			}
 			System.out.println("///////////////////////////////////////////////////////\n");
+		}
+	}
+	
+	private class CommentWrapper
+	{
+		Comment c;
+		int index;
+		
+		CommentWrapper(Comment c, int index)
+		{
+			this.c = c;
+			this.index = index;
 		}
 	}
 }

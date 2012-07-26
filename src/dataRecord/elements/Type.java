@@ -4,16 +4,23 @@ import java.util.LinkedList;
 
 import dataRecord.Keyword;
 import dataRecord.elementType.ElementType;
-import dataRecord.elementType.Implementable;
+import dataRecord.elementType.InterfaceKind;
 import dataRecord.io.ElementVisitor;
 
-public class Type extends Declaration implements Implementable, ElementType
+/**
+ * This class represent the type of the object (class / interface / enums)
+ *  
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 2-lug-2012
+ *
+ */
+public class Type extends Declaration implements InterfaceKind, ElementType
 {
 	private Keyword type;
 	private boolean isStatic = false; // only nested types
 	private String generic = "";
 	//protected static int depth = 0;
-	protected LinkedList<Implementable> implList = new LinkedList<Implementable>();
+	protected LinkedList<InterfaceKind> implList = new LinkedList<InterfaceKind>();
 
 	public Type(String name, Keyword access, Keyword type)
 	{
@@ -27,6 +34,12 @@ public class Type extends Declaration implements Implementable, ElementType
 		this.type = type;
 	}
 
+	/**
+	 * this method will be called by the writer to know
+	 * how to write this object.
+	 * 
+	 * @see ElementVisitor
+	 */
 	public String accept(ElementVisitor v)
 	{
 		return v.visit(this);
@@ -57,12 +70,12 @@ public class Type extends Declaration implements Implementable, ElementType
 		implList.add(i);
 	}
 
-	public LinkedList<Implementable> getImplList()
+	public LinkedList<InterfaceKind> getImplList()
 	{
 		return implList;
 	}
 
-	public void setImplList(LinkedList<Implementable> implList)
+	public void setImplList(LinkedList<InterfaceKind> implList)
 	{
 		this.implList = implList;
 	}
@@ -115,12 +128,12 @@ public class Type extends Declaration implements Implementable, ElementType
 	 * @param name the name to find
 	 * @return the meber
 	 */
-	public Field getFieldByName(String name)
+	public Variable getFieldByName(String name)
 	{
 		for (Element e : getElements())
 		{
-			if(e instanceof Field && e.getName().equals(name))
-				return (Field)e;
+			if(e instanceof Variable && e.getName().equals(name))
+				return (Variable)e;
 		}
 		return null;
 	}

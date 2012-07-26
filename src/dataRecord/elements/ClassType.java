@@ -1,3 +1,16 @@
+
+package dataRecord.elements;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import dataRecord.Keyword;
+import dataRecord.elementType.APIclass;
+import dataRecord.elementType.APIinterface;
+import dataRecord.elementType.ClassKind;
+import dataRecord.elementType.InterfaceKind;
+import dataRecord.io.ElementVisitor;
+
 /**
  * This class represent a class in an object-oriented language
  * 
@@ -8,24 +21,14 @@
  * 
  * @author Fabrizio Beretta Piccoli
  * @version 2.0 | 2-lug-2012
+ * @see Type
+ * @see ClassKind
  */
-package dataRecord.elements;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import dataRecord.Keyword;
-import dataRecord.elementType.APIclass;
-import dataRecord.elementType.APIinterface;
-import dataRecord.elementType.Extendable;
-import dataRecord.elementType.Implementable;
-import dataRecord.io.ElementVisitor;
-
-public class ClassType extends Type implements Extendable
+public class ClassType extends Type implements ClassKind
 {
 	private boolean isFinal = false;
 	private boolean isAbstract = false;
-	private List<Extendable> extendList = new LinkedList<Extendable>();
+	private List<ClassKind> extendList = new LinkedList<ClassKind>();
 
 	/**
 	 * creates a class with a name and a access modifier
@@ -69,6 +72,13 @@ public class ClassType extends Type implements Extendable
 		setID(c.getID());
 	}
 
+	/**
+	 * this method will be called by the writer to know
+	 * how to write this object.
+	 * 
+	 * @see ElementVisitor
+	 * 
+	 */
 	@Override
 	public String accept(ElementVisitor v)
 	{
@@ -85,12 +95,12 @@ public class ClassType extends Type implements Extendable
 		this.isFinal = isFinal;
 	}
 
-	public List<Extendable> getExtendList()
+	public List<ClassKind> getExtendList()
 	{
 		return extendList;
 	}
 
-	public void setExtendList(List<Extendable> extendList)
+	public void setExtendList(List<ClassKind> extendList)
 	{
 		this.extendList = extendList;
 	}
@@ -132,7 +142,7 @@ public class ClassType extends Type implements Extendable
 		if (!extendList.isEmpty())
 		{
 			tmp += "extends ";
-			for (Extendable ex : extendList)
+			for (ClassKind ex : extendList)
 			{
 				if (ex.getClass() == APIclass.class)
 					tmp += ((APIclass)ex).getElementType();
@@ -146,7 +156,7 @@ public class ClassType extends Type implements Extendable
 		if (!implList.isEmpty())
 		{
 			tmp += "implements ";
-			for (Implementable ex : implList)
+			for (InterfaceKind ex : implList)
 			{
 				if (ex.getClass() == APIinterface.class)
 					tmp += ((APIinterface)ex).getElementType();

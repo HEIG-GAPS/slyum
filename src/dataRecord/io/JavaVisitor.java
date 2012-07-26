@@ -3,8 +3,8 @@ package dataRecord.io;
 import dataRecord.Keyword;
 import dataRecord.elementType.APIclass;
 import dataRecord.elementType.APIinterface;
-import dataRecord.elementType.Extendable;
-import dataRecord.elementType.Implementable;
+import dataRecord.elementType.ClassKind;
+import dataRecord.elementType.InterfaceKind;
 import dataRecord.elementType.ListType;
 import dataRecord.elements.Attribute;
 import dataRecord.elements.ClassType;
@@ -19,9 +19,17 @@ import dataRecord.elements.InterfaceField;
 import dataRecord.elements.InterfaceType;
 import dataRecord.elements.Method;
 import dataRecord.elements.PackageStmt;
-import dataRecord.elements.Parametre;
+import dataRecord.elements.Parameter;
+import dataRecord.elements.PreprocessorStmt;
 import dataRecord.elements.Type;
-
+/**
+ * This class specify how to write a souce code file using the Java language
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 11-lug-2012
+ * @see ElementVisitor
+ *
+ */
 public class JavaVisitor implements ElementVisitor
 {
 
@@ -40,7 +48,10 @@ public class JavaVisitor implements ElementVisitor
 	@Override
 	public String visit(Comment comment)
 	{
-		return comment.toString();
+//		if(comment.isMultiLine())
+//			return comment.getComment() + "\n";
+//		else
+			return comment.getComment();
 	}
 
 	@Override
@@ -119,7 +130,7 @@ public class JavaVisitor implements ElementVisitor
 	}
 
 	@Override
-	public String visit(Parametre parametre)
+	public String visit(Parameter parametre)
 	{
 		return parametre.toString();
 	}
@@ -133,7 +144,7 @@ public class JavaVisitor implements ElementVisitor
 	@Override
 	public String visit(ClassType ct)
 	{
-		String tmp = ct.getAccess().toString();
+		String tmp = "\n"+ct.getAccess().toString();
 
 		tmp += " ";
 		if (ct.isFinal())
@@ -148,7 +159,7 @@ public class JavaVisitor implements ElementVisitor
 		if (!ct.getExtendList().isEmpty())
 		{
 			tmp += "extends ";
-			for (Extendable ex : ct.getExtendList())
+			for (ClassKind ex : ct.getExtendList())
 			{
 				if (ex.getClass() == APIclass.class)
 					tmp += ((APIclass)ex).getElementType();
@@ -162,7 +173,7 @@ public class JavaVisitor implements ElementVisitor
 		if (!ct.getImplList().isEmpty())
 		{
 			tmp += "implements ";
-			for (Implementable ex : ct.getImplList())
+			for (InterfaceKind ex : ct.getImplList())
 			{
 				if (ex.getClass() == APIinterface.class)
 					tmp += ((APIinterface)ex).getElementType();
@@ -197,6 +208,12 @@ public class JavaVisitor implements ElementVisitor
 		tmp += "}";
 
 		return tmp;
+	}
+
+	@Override
+	public String visit(PreprocessorStmt preprocessorStmt)
+	{
+		return null;
 	}
 
 }

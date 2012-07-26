@@ -6,6 +6,7 @@ import graphic.entity.EntityView;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 
 import classDiagram.IDiagramComponent;
@@ -30,9 +31,19 @@ import dataRecord.elements.CompilationUnit;
 import dataRecord.elements.Constructor;
 import dataRecord.elements.Element;
 import dataRecord.elements.InterfaceType;
-import dataRecord.elements.Parametre;
+import dataRecord.elements.Parameter;
 import swing.PanelClassDiagram;
+import swing.Slyum;
+import utility.SMessageDialog;
+import utility.Utility;
 
+/**
+ * This class manage all the importation of a source code project, from the parsing
+ * to the displaying,
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 11-lug-2012
+ */
 public class ImportData extends Thread
 {
 	private final classDiagram.ClassDiagram classDiagram = PanelClassDiagram.getInstance().getClassDiagram();
@@ -65,9 +76,36 @@ public class ImportData extends Thread
 			int index = files[0].getName().lastIndexOf('.');
 			project.removeCUnit(files[0].getName().substring(0, index));
 		}
-		ParserScanner ps = new ParserScanner();
 		
-		LinkedList<CompilationUnit> units = ps.parse(files);
+		// select the right parser (Java / C++)
+		Parser parser = null;
+		for(File file : files)
+		{
+			try{
+				System.out.println(files.length);
+				String extension = getExtension(file);
+				if(!extension.isEmpty())
+				{
+					if(extension.equals(Slyum.JAVA_EXTENSION))
+						parser = new ParserScanner();
+					else if (extension.equals("h"))
+						parser = new ParserCpp();
+					else
+						throw new IllegalArgumentException(" Must be a Java / C++ header source code file.");
+					break;
+				}
+				
+			}
+			catch (IllegalArgumentException e) 
+			{
+				SMessageDialog.showErrorMessage(e.getMessage());
+				return;
+			}
+			catch (FileNotFoundException e)
+			{e.printStackTrace();}
+		}	
+			
+		LinkedList<CompilationUnit> units = parser.parse(files);
 		
 		doTranslation(units);
 		
@@ -271,7 +309,7 @@ public class ImportData extends Thread
 		m.setAbstract(data.isAbstract());
 		
 		// add params
-		for (final Parametre p : data.getParams())
+		for (final Parameter p : data.getParams())
 		{
 			final classDiagram.components.Variable va = new classDiagram.components.Variable(p.getName(), new Type(p.getType().getElementType()));
 
@@ -288,7 +326,7 @@ public class ImportData extends Thread
 		m.setAbstract(false);
 		
 		// add params
-		for (final Parametre p : c.getParams())
+		for (final Parameter p : c.getParams())
 		{
 			final classDiagram.components.Variable va = new classDiagram.components.Variable(p.getName(), new Type(p.getType().getElementType()));
 
@@ -375,5 +413,29 @@ public class ImportData extends Thread
 				classDiagram.addDependency(new Dependency(cu, updated));
 			}
 		}
+	}
+	
+	private String getExtension(File file) throws FileNotFoundException
+	{
+		if (file.isDirectory())
+		{
+			File[] dir = file.listFiles();
+			for (File f : dir)
+			{
+				if (f.isDirectory())
+				{
+					getExtension(f);
+				} 
+				else 
+				{
+					return Utility.getExtension(f);
+				}
+			}
+		}
+		else
+			return Utility.getExtension(file);
+
+		// empty directory
+		return "";
 	}
 }

@@ -11,6 +11,12 @@ import dataRecord.elements.CompilationUnit;
 import swing.Slyum;
 import utility.SMessageDialog;
 
+/**
+ * This class job is to generate the concrete file written with the selected language.
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 11-lug-2012
+ */
 public class Writer 
 {
 	private String dirPath = "";
@@ -26,16 +32,15 @@ public class Writer
 		dir = new File(dirPath);
 		
 		if( visitor.getClass() == JavaVisitor.class)
-			outputCode = "java";
+			outputCode = Slyum.JAVA_EXTENSION;
 		else
-			outputCode = "cpp";
+			outputCode = "h";
 	}
 
 	public void write(LinkedList<CompilationUnit> units)
 	{
 		if(!dir.exists())
 			dir.mkdir();
-		if( visitor.getClass() == JavaVisitor.class)
 		log += "Output code: "+outputCode+"\n";
 		
 		for (CompilationUnit unit : units)

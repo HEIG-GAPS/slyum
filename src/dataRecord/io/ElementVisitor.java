@@ -11,9 +11,18 @@ import dataRecord.elements.InterfaceField;
 import dataRecord.elements.InterfaceType;
 import dataRecord.elements.Method;
 import dataRecord.elements.PackageStmt;
-import dataRecord.elements.Parametre;
+import dataRecord.elements.Parameter;
+import dataRecord.elements.PreprocessorStmt;
 import dataRecord.elements.Type;
-
+/**
+ * To be able to write a souce code file, the syntax of the choosen
+ * language must be known, this interface represent all the element that have to 
+ * be redefined.
+ *  
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 11-lug-2012
+ *
+ */
 public interface ElementVisitor
 {
 	String visit(PackageStmt ps);
@@ -36,11 +45,13 @@ public interface ElementVisitor
 
 	String visit(Attribute attribute);
 
-	String visit(Parametre parametre);
+	String visit(Parameter parametre);
 
 	String visit(InterfaceField interfaceField);
 	
 	String visit(ClassType ct);
+
+	String visit(PreprocessorStmt preprocessorStmt);
 
 	//String visit(ListType listType);
 }

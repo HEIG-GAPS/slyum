@@ -3,7 +3,7 @@ package dataRecord.elements;
 import dataRecord.elementType.ElementType;
 import dataRecord.io.ElementVisitor;
 
-public class InterfaceField extends Field
+public class InterfaceField extends Variable
 {
 	public InterfaceField(String name, ElementType type,String value, int id)
 	{
@@ -18,6 +18,13 @@ public class InterfaceField extends Field
 	}
 
 	@Override
+	/**
+	 * this method will be called by the writer to know
+	 * how to write this object.
+	 * 
+	 * @see ElementVisitor
+	 * 
+	 */
 	public String accept(ElementVisitor visitor)
 	{
 		return visitor.visit(this);
