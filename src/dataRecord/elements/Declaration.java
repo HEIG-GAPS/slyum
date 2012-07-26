@@ -6,7 +6,24 @@ import java.util.List;
 import classDiagram.ClassDiagram;
 import dataRecord.Keyword;
 import dataRecord.io.ElementVisitor;
-
+/**
+ * This class represent a declaration.
+ * A declaration can be a new object (class/interface/enum) or 
+ * an operation on this new object. 
+ * A Declaration has a name, an access modifier and a list of 
+ * elements.
+ * The childs of Declaration are
+ * 	+ Type
+ * 		- ClassType
+ * 		- Interfacetype
+ * 		- EnumType
+ *  + Member
+ *  	- Constructor
+ *  	- Method
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 5-lug-2012
+ */
 public abstract class Declaration implements Element
 {
 	private String name;
@@ -100,6 +117,13 @@ public abstract class Declaration implements Element
 	}
 
 	@Override
+	/**
+	 * this method will be called by the writer to know
+	 * how to write this object.
+	 * 
+	 * @see ElementVisitor
+	 * 
+	 */
 	public abstract String accept(ElementVisitor visitor);
 
 	public static int getDepth()

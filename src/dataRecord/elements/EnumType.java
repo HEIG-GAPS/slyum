@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import dataRecord.Keyword;
 import dataRecord.elementType.APIinterface;
-import dataRecord.elementType.Implementable;
+import dataRecord.elementType.InterfaceKind;
 import dataRecord.io.ElementVisitor;
 
 public class EnumType extends Type
@@ -46,7 +46,7 @@ public class EnumType extends Type
 		if (!implList.isEmpty())
 		{
 			tmp += " implements ";
-			for (Implementable ex : implList)
+			for (InterfaceKind ex : implList)
 			{
 				if (ex.getClass() == APIinterface.class)
 					tmp += ((APIinterface)ex).getElementType();

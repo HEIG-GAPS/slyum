@@ -6,11 +6,21 @@ import java.util.List;
 
 import dataRecord.io.ElementVisitor;
 
-// le composant
+/**
+ * This class represent a source code file 
+ * It contain a list of elements.
+ * 
+ * @see Element
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 10-lug-2012
+ */
 public class CompilationUnit implements Element
 {
 	// private String name; // a deduire depuis le file name
 	private List<Element> elements; 
+	/**
+	 * the related file 
+	 */
 	private File file;
 
 	public CompilationUnit()
@@ -19,11 +29,22 @@ public class CompilationUnit implements Element
 	}
 
 	@Override
+	/**
+	 * this method will be called by the writer to know
+	 * how to write this object.
+	 * 
+	 * @see ElementVisitor
+	 * 
+	 */
 	public String accept(ElementVisitor visitor)
 	{
 		return visitor.visit(this);
 	}
 
+	/**
+	 * return the name, (same as the file name without the extension)
+	 * if any file return the name of the first class/interface
+	 */
 	public String getName()
 	{
 		if (file == null)

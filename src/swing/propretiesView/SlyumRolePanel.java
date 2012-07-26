@@ -31,8 +31,8 @@ import classDiagram.relationships.Role;
 public class SlyumRolePanel extends JPanelRounded implements Observer
 {
 	private static final long serialVersionUID = -8176389461299256256L;
-	private JComboBox comboBoxMultiplicity = Utility.getMultiplicityComboBox();
-	private final JComboBox comboBoxVisibility = Utility.getVisibilityComboBox();
+	private JComboBox<?> comboBoxMultiplicity = Utility.getMultiplicityComboBox();
+	private final JComboBox<?> comboBoxVisibility = Utility.getVisibilityComboBox();
 	private final JLabel lblRolename;
 	private final Role role;
 	private final JTextField txtRolename;

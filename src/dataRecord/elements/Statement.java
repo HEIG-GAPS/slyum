@@ -4,6 +4,16 @@ import classDiagram.ClassDiagram;
 import dataRecord.Keyword;
 import dataRecord.io.ElementVisitor;
 
+/**
+ * This class represent both import statement and package statement
+ * 
+ * @see ImportStmt 
+ * @see PackageStmt 
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 10-lug-2012
+ *
+ */
 public abstract class Statement implements Element
 {
 	private Keyword kw;
@@ -44,6 +54,12 @@ public abstract class Statement implements Element
 		return ID;
 	}
 	
+	/**
+	 * this method will be called by the writer to know
+	 * how to write this object.
+	 * 
+	 * @see ElementVisitor
+	 */
 	public abstract String accept(ElementVisitor visitor);
 
 }

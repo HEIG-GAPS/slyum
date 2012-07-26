@@ -1,3 +1,4 @@
+package dataRecord.elementType;
 /**
  * Each datafield has a specific type. This type can be a "Primitive type" (int, double, char, etc)
  * a user defined type (an object created by the user) or an API type.
@@ -7,8 +8,6 @@
  * @version 2.0 | 2-lug-2012
  * @see ElementType
  */
-package dataRecord.elementType;
-
 public class ArrayType implements ElementType
 {
 	private int dimension = 0;

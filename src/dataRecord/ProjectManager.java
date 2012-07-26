@@ -1,7 +1,7 @@
 /**
  * The class represent the starting point for the whole structure
  * It contains a data structures representing a project made of one or
- * several source code files. Each file of source code is parsed and represent
+ * many source code files. Each file of source code is parsed and represent
  * a compilation unit.
  * 
  * @author Fabrizio Beretta Piccoli
@@ -22,19 +22,37 @@ public class ProjectManager
 	private LinkedList<CompilationUnit> filesRecord = new LinkedList<CompilationUnit>();
 	private static ProjectManager instance = new ProjectManager();
 
+	/**
+	 * the constructor
+	 */
 	private ProjectManager()
 	{}
 
+	/**
+	 * return all the compilation units
+	 * 
+	 * @return
+	 */
 	public LinkedList<CompilationUnit> getFilesRecord()
 	{
 		return filesRecord;
 	}
 
+	/**
+	 * set a new list of compilation units (change project)
+	 * 
+	 * @param filesRecord
+	 */
 	public void setFilesRecord(LinkedList<CompilationUnit> filesRecord)
 	{
 		this.filesRecord = filesRecord;
 	}
 
+	/**
+	 * return the project name
+	 * 
+	 * @return
+	 */
 	public String getName()
 	{
 		return name;
@@ -46,11 +64,20 @@ public class ProjectManager
 		
 	}
 
+	/**
+	 * add a new compilation unit, a new parsed file
+	 * @param cu
+	 */
 	public void addCUnit(CompilationUnit cu)
 	{
 		filesRecord.add(cu);
 	}
 
+	/**
+	 * retrieve and remove a compilation unit given by his name
+	 * 
+	 * @param name
+	 */
 	public void removeCUnit(String name)
 	{
 		for (int i = 0; i < filesRecord.size(); i++)
@@ -60,6 +87,11 @@ public class ProjectManager
 		}
 	}
 
+	/**
+	 * generate the concrete file in the selected language
+	 * 
+	 * @param writer
+	 */
 	public void generateFiles(Writer writer)
 	{
 		writer.write(filesRecord);
@@ -70,6 +102,12 @@ public class ProjectManager
 		return instance;
 	}
 	
+	/**
+	 * return a specific element chosen by ID
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public Element getElementByID(int id)
 	{
 		for (CompilationUnit cu : filesRecord)
@@ -102,6 +140,12 @@ public class ProjectManager
 		return null;
 	}
 	
+	/**
+	 * return a specific element chosen by name
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public Element getElementFromProject(String name)
 	{
 		for (CompilationUnit cuts : filesRecord)

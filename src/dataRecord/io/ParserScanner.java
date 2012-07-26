@@ -26,52 +26,53 @@ import dataRecord.elements.InterfaceType;
 import dataRecord.elements.Member;
 import dataRecord.elements.Method;
 import dataRecord.elements.PackageStmt;
-import dataRecord.elements.Parametre;
+import dataRecord.elements.Parameter;
 import dataRecord.elements.PrimitiveType;
 import dataRecord.elements.Type;
 
 import swing.Slyum;
 import utility.SMessageDialog;
 import utility.Utility;
-
-public class ParserScanner
+/**
+ * This class scan one or many java source code file(s) to extract all the informations.
+ * The informations are stored in several compilation unit (one compilation unit for file)
+ * Once the work done it gives all the compilation units to the project manager.
+ * The next step will be to display those compilation units, this work will be done by 
+ * the class named : Layout
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 10-lug-2012
+ *
+ */
+public class ParserScanner implements Parser
 {
 	private final ProjectManager project = ProjectManager.getInstance();
 	private Scanner pageScanner;
 	private String theNextLine;
 	private File fFile;
-	private String extendsInfo = ""; // nomClasse,superclasse% and so on
+	private String extendsInfo = ""; 
 	private String implInfo = "";
 	private String attrInfo = "";  
 	private String paramInfo = ""; 
 	private int currentElemId;
 	private int currentMemberID;
 	private boolean isInterface = false;
-
-	public void printDebug() 
-	{
-		System.out.println("!!!!! DEBUG");
-		for (CompilationUnit unit : project.getFilesRecord())
-		{
-			System.out.println("///// Debut de: " + unit.getName());
-			for (Element e : unit.getElements())
-			{
-				System.out.println(e);
-			}
-			System.out.println("///////////////////////////////////////////////////////\n");
-		}
-	}
+	private String generic = "";
 
 	/**
 	 * Constructor.
 	 * 
-	 * @param aFileName
-	 *            full name of an existing, readable file.
 	 */
 	public ParserScanner()
 	{
 	}
 	
+	/**
+	 * Extract all the file and add them to the project 
+	 * 
+	 * @param files
+	 * @return the compilation units
+	 */
 	public LinkedList<CompilationUnit> parse(File[] files)
 	{
 		LinkedList<CompilationUnit> myUnits = new LinkedList<>();
@@ -83,7 +84,12 @@ public class ParserScanner
 				fFile = new File(file.getPath());
 
 					if (fFile.isFile())
+					{
+						if(!Utility.getExtension(fFile).equals(Slyum.JAVA_EXTENSION))
+							throw new IllegalArgumentException(" Must be a Java source code file (.java)");
+						
 						myUnits.add(processLineByLine(fFile));
+					}
 					else
 						myUnits.addAll(parseFile(fFile));
 			}
@@ -95,7 +101,11 @@ public class ParserScanner
 			setAttributes();
 			setParametres();
 			
-		} catch (Exception e)
+		}catch (IllegalArgumentException e) 
+		{
+			SMessageDialog.showErrorMessage(e.getMessage());
+		} 
+		catch (Exception e)
 		{
 			//SMessageDialog.showErrorMessage("file is not readable");
 		}
@@ -103,6 +113,13 @@ public class ParserScanner
 		return myUnits;
 	}
 
+	/**
+	 * Extract the file recursively from sub diretories
+	 * 
+	 * @param file
+	 * @return
+	 * @throws FileNotFoundException
+	 */
 	private LinkedList<CompilationUnit> parseFile(File file) throws FileNotFoundException
 	{
 		LinkedList<CompilationUnit> myUnits = new LinkedList<>();
@@ -122,7 +139,9 @@ public class ParserScanner
 		return myUnits;
 	}
 
-	/** Template method that calls {@link #processLine(String)}. */
+	/**
+	 * set the scanner to the file 
+	 */
 	public CompilationUnit processLineByLine(File file) throws FileNotFoundException
 	{
 		CompilationUnit unit = new CompilationUnit();
@@ -158,11 +177,10 @@ public class ParserScanner
 	}
 
 	/**
+	 * Start scanning a line.
 	 * Overridable method for processing lines in different ways.
 	 * 
-	 * @param <T>
 	 * @throws Exception 
-	 * 
 	 */
 	protected void processLine(String aLine, CompilationUnit compil) throws Exception
 	{
@@ -257,9 +275,10 @@ public class ParserScanner
 			theNextLine = pageScanner.nextLine();
 			while(!theNextLine.contains("{"))
 			{
-				line += theNextLine.trim();
+				line += " "+ theNextLine.trim();
 				theNextLine = pageScanner.nextLine();
 			}
+			line += " "+ theNextLine.trim().replace("{", "");
 		}
 		
 		String gen = "";
@@ -271,6 +290,7 @@ public class ParserScanner
 			gen = (String) sub.subSequence(1, sub.length()-1);
 			line = line.replace(sub, "");
 		}
+		
 		String[] tab = line.trim().split("\\s+");
 		boolean isAbstract = false;
 		boolean isStatic = false;
@@ -305,7 +325,6 @@ public class ParserScanner
 		ct.setAbstract(isAbstract);
 		ct.setStatic(isStatic);
 		ct.setFinal(isFinal);
-		ct.setGeneric(gen);
 		currentElemId = ct.getID();
 
 		if (i + 1 < tab.length && tab[i + 1].equals("extends"))
@@ -344,10 +363,17 @@ public class ParserScanner
 				theNextLine = pageScanner.nextLine();
 			}
 		}
-
+		if (!generic.isEmpty())
+		{
+			gen = generic;
+			generic = "";
+			ct.setGeneric(gen);
+		}
+		
 		return ct;
 	}
 
+	@SuppressWarnings("unused")
 	private EnumType buildEnum(String line)
 	{
 		if(!line.contains("{"))
@@ -511,9 +537,30 @@ public class ParserScanner
 				theNextLine = pageScanner.nextLine();
 				while(!theNextLine.contains("{"))
 				{
-					line += theNextLine.trim();
+					line += " "+ theNextLine.trim();
 					theNextLine = pageScanner.nextLine();
 				}
+				line += " "+ theNextLine.trim().replace("{", "");
+			}
+			else
+				theNextLine = pageScanner.nextLine();
+		}
+		
+		//check for genericity
+		String gen = (String) line.subSequence(0, line.indexOf("("));
+		if (gen.contains(">"))
+		{
+			int begin = line.indexOf("<");
+			int end = line.indexOf(">");
+			boolean g = true;
+			for(Collection c: Collection.values())
+				if(gen.toLowerCase().contains(c.toString().toLowerCase()))
+					g = false;
+			if(g)
+			{
+				String sub = line.substring(begin,end+1);
+				generic = (String) sub.subSequence(1, sub.length()-1);
+				line = line.replace(sub, "");
 			}
 		}
 		
@@ -522,6 +569,7 @@ public class ParserScanner
 		boolean isStatic = false;
 		boolean isFinal = false;
 		boolean isSync = false;
+		
 		Keyword access = Keyword.PACKAGE;
 		int i;
 
@@ -591,7 +639,7 @@ public class ParserScanner
 			String[] tabExcpt = excpt.trim().split(",");
 			for (int j = 0; j < tabExcpt.length; j++)
 			{
-				m.getThrowClauses().add(tabExcpt[j]);
+				m.getThrowClauses().add(new ClassType(tabExcpt[j], Keyword.PUBLIC));
 			}
 		}
 		
@@ -638,9 +686,9 @@ public class ParserScanner
 		return m;
 	}
 
-	private List<Parametre> buildParams(String params)
+	private List<Parameter> buildParams(String params)
 	{
-		List<Parametre> tmp = new LinkedList<Parametre>();
+		List<Parameter> tmp = new LinkedList<Parameter>();
 
 		// plusieurs params
 		if (params.contains(","))
@@ -661,7 +709,7 @@ public class ParserScanner
 
 	private enum Association {ONE, N_FIXED, ONE_MANY}
 
-	private Parametre buildParam(String aParam)
+	private Parameter buildParam(String aParam)
 	{
 		aParam = aParam.trim();
 		Association ass;
@@ -691,23 +739,23 @@ public class ParserScanner
 		boolean isFinal = smalltab[0].equals("final");
 		int index = isFinal ? 1 : 0;
 
-		Parametre p = null;
+		Parameter p = null;
 		switch (ass)
 		{
 		case ONE:
 			if (isPrimitive(smalltab[index]))
-				p = new Parametre(smalltab[index + 1], getPrimitive(smalltab[index]));
+				p = new Parameter(smalltab[index + 1], getPrimitive(smalltab[index]));
 			else if (smalltab[index] == "String")
 			{
 				try
 				{
-					p = new Parametre(smalltab[index + 1], new APIclass(Class.forName("java.lang.String"), "String"));
+					p = new Parameter(smalltab[index + 1], new APIclass(Class.forName("java.lang.String"), "String"));
 				} 
 				catch (ClassNotFoundException e1){e1.printStackTrace();}
 			}
 			else
 			{
-				p = new Parametre(smalltab[index+1], PrimitiveType.BYTE);
+				p = new Parameter(smalltab[index+1], PrimitiveType.BYTE);
 				paramInfo += currentElemId + ",";
 				paramInfo += currentMemberID + ",";
 				paramInfo += p.getID() + ","; // the param name
@@ -718,19 +766,19 @@ public class ParserScanner
 
 		case N_FIXED:
 			if (isPrimitive(smalltab[index]))
-				p = new Parametre(smalltab[index + 1], new ArrayType(getPrimitive(smalltab[index]), dimension, isEllipse));
+				p = new Parameter(smalltab[index + 1], new ArrayType(getPrimitive(smalltab[index]), dimension, isEllipse));
 			
 			else if (smalltab[index].equals("String"))
 			{
 				try
 				{
-					p = new Parametre(smalltab[index + 1], new ArrayType(new APIclass(Class.forName("java.lang.String"),"String"),dimension,isEllipse));
+					p = new Parameter(smalltab[index + 1], new ArrayType(new APIclass(Class.forName("java.lang.String"),"String"),dimension,isEllipse));
 				} 
 				catch (ClassNotFoundException e1){e1.printStackTrace();}
 			}
 			else
 			{
-				p = new Parametre(smalltab[index + 1], new ArrayType(PrimitiveType.BYTE,dimension, isEllipse));
+				p = new Parameter(smalltab[index + 1], new ArrayType(PrimitiveType.BYTE,dimension, isEllipse));
 				paramInfo += currentElemId + ",";
 				paramInfo += currentMemberID + ",";
 				paramInfo += p.getID() + ",";
@@ -745,13 +793,13 @@ public class ParserScanner
 			{
 				try
 				{
-					p = new Parametre(aParam.substring(aParam.indexOf(">") + 2), new ListType(new APIclass(Class.forName("java.lang.String"), "String")));
+					p = new Parameter(aParam.substring(aParam.indexOf(">") + 2), new ListType(new APIclass(Class.forName("java.lang.String"), "String")));
 				}
 				catch (ClassNotFoundException e1){e1.printStackTrace();}
 			}
 			else
 			{
-				p = new Parametre(aParam.substring(aParam.indexOf(">") + 2), new ListType(PrimitiveType.BYTE));
+				p = new Parameter(aParam.substring(aParam.indexOf(">") + 2), new ListType(PrimitiveType.BYTE));
 				paramInfo += currentElemId + ",";
 				paramInfo += currentMemberID + ",";
 				paramInfo += p.getID() + ",";
@@ -775,11 +823,10 @@ public class ParserScanner
 		int index = 0;
 		Association ass;
 		int dims = 0;
-		@SuppressWarnings("unused")
 		String right = "";
 
 		String line = aline.replace(";", "");
-		String[] lr = aline.split("=");
+		String[] lr = line.split("=");
 		// get the left side of the assignement
 		line = lr[0];
 		if (aline.contains("="))
@@ -992,7 +1039,7 @@ public class ParserScanner
 
 		} catch (Exception e)
 		{
-			System.err.println("error setParent");
+			System.err.println("error setParent -> " + e.getMessage());
 		}
 	}
 
@@ -1091,7 +1138,7 @@ public class ParserScanner
 				System.err.println("param error " + e.getMessage());
 			}
 			
-			for (Parametre p : mx.getParams()) 
+			for (Parameter p : mx.getParams()) 
 			{
 				if(p.getID() == Integer.valueOf(tabColumn[2]))
 				{
@@ -1103,6 +1150,23 @@ public class ParserScanner
 						((ListType)p.getType()).seteType(madeOf);
 				}
 			}
+		}
+	}
+	
+	/**
+	 * print the data structure. For debugging only
+	 */
+	public void printDebug() 
+	{
+		System.out.println("!!!!! DEBUG");
+		for (CompilationUnit unit : project.getFilesRecord())
+		{
+			System.out.println("///// Debut de: " + unit.getName());
+			for (Element e : unit.getElements())
+			{
+				System.out.println(e);
+			}
+			System.out.println("///////////////////////////////////////////////////////\n");
 		}
 	}
 }

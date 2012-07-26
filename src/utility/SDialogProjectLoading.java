@@ -32,11 +32,13 @@ public class SDialogProjectLoading extends JDialog
 	private static Slyum s = Slyum.getInstance();
 	
 	private JLabel lblCurrentPhase;
+	@SuppressWarnings("rawtypes")
 	private JList list;
 	private JProgressBar progressBar;
 	private JScrollPane scrollPane;
 	private JButton btnCancel;
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public SDialogProjectLoading(String projectName)
 	{
 		super(s, TITLE_DIALOG_PROJECT_LOADING, true);
@@ -161,6 +163,7 @@ public class SDialogProjectLoading extends JDialog
 		progressBar.setValue(progressBar.getValue()+1);
 	}
 
+	@SuppressWarnings("rawtypes")
 	private class StringListModel extends AbstractListModel
 	{
 		private static final long serialVersionUID = -3126417577301749576L;

@@ -3,6 +3,14 @@ package dataRecord.elements;
 import dataRecord.Keyword;
 import dataRecord.io.ElementVisitor;
 
+/**
+ * A Method represent an operation by an object 
+ * 
+ * It has a return type, can be static, constant or abstract.
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 10-lug-2012
+ */
 public class Method extends Member
 {
 	private String returnType;
@@ -52,6 +60,12 @@ public class Method extends Member
 	}
 
 	@Override
+	/**
+	 * this method will be called by the writer to know
+	 * how to write this object.
+	 * 
+	 * @see ElementVisitor
+	 */
 	public String accept(ElementVisitor visitor)
 	{
 		return visitor.visit(this);
@@ -72,7 +86,7 @@ public class Method extends Member
 			s += "static ";
 		if (isAbstract)
 			s += "abstract ";
-		s += returnType;
+		s += returnType.equals("c")?"":returnType;
 		s += " ";
 		s += getName();
 		s += ParamToString();

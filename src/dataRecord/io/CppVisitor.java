@@ -3,8 +3,8 @@ package dataRecord.io;
 import dataRecord.Keyword;
 import dataRecord.elementType.APIclass;
 import dataRecord.elementType.APIinterface;
-import dataRecord.elementType.Extendable;
-import dataRecord.elementType.Implementable;
+import dataRecord.elementType.ClassKind;
+import dataRecord.elementType.InterfaceKind;
 import dataRecord.elements.Attribute;
 import dataRecord.elements.ClassType;
 import dataRecord.elements.Comment;
@@ -18,16 +18,21 @@ import dataRecord.elements.InterfaceField;
 import dataRecord.elements.InterfaceType;
 import dataRecord.elements.Method;
 import dataRecord.elements.PackageStmt;
-import dataRecord.elements.Parametre;
+import dataRecord.elements.Parameter;
+import dataRecord.elements.PreprocessorStmt;
 import dataRecord.elements.Type;
 
+/**
+ * This class specify how to write a souce code file using the C++ language
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 11-lug-2012
+ * @see ElementVisitor
+ *
+ */
 public class CppVisitor implements ElementVisitor
 {	
 	private Keyword currentAccess = Keyword.PACKAGE; 
-	
-	public CppVisitor()
-	{
-	}
 	
 	@Override
 	public String visit(PackageStmt ps)
@@ -63,46 +68,7 @@ public class CppVisitor implements ElementVisitor
 	// actually there is no interface on C++
 	public String visit(InterfaceType it)
 	{
-		String tmp = "class ";
-		if (!it.getImplList().isEmpty())
-		{
-			tmp += " : ";
-			for (Implementable ex : it.getImplList())
-			{
-				if (ex.getClass() == APIinterface.class)
-					tmp += ((APIinterface)ex).getElementType();
-				else
-					tmp += ex.getClass().getSimpleName();
-				if (!ex.equals(it.getImplList().get(it.getImplList().size() - 1)))
-					tmp += ", ";
-			}
-		}
-		tmp += "\n";
-		for (int i = 0; i < Declaration.getDepth(); i++)
-		{
-			tmp += "\t";
-		}
-		tmp += "{";
-		Declaration.setDepth(Declaration.getDepth() + 1);
-		for (Element e : it.getElements())
-		{
-			tmp += "\n";
-			for (int i = 0; i < Declaration.getDepth(); i++)
-			{
-				tmp += "\t";
-			}
-			tmp += e.accept(this);
-		}
-		Declaration.setDepth(Declaration.getDepth() - 1);
-		tmp += "\n";
-		for (int i = 0; i < Declaration.getDepth(); i++)
-		{
-			tmp += "\t";
-		}
-
-		tmp += "}";
-
-		return tmp;
+		return null;
 	}
 
 	@Override
@@ -185,12 +151,14 @@ public class CppVisitor implements ElementVisitor
 
 		if (!attr.getValue().isEmpty())
 			tmp += " =" + attr.getValue();
+		
+		tmp += ";";
 
 		return tmp;
 	}
 
 	@Override
-	public String visit(Parametre parametre)
+	public String visit(Parameter parametre)
 	{
 		String tmp = "";
 
@@ -228,7 +196,7 @@ public class CppVisitor implements ElementVisitor
 		if (!ct.getExtendList().isEmpty() || !ct.getImplList().isEmpty())
 		{
 			tmp += ": ";
-			for (Extendable ex : ct.getExtendList())
+			for (ClassKind ex : ct.getExtendList())
 			{
 				if (ex.getClass() == APIclass.class)
 				{
@@ -243,7 +211,7 @@ public class CppVisitor implements ElementVisitor
 				if (!ex.equals(ct.getExtendList().get(ct.getExtendList().size() - 1)) || !ct.getImplList().isEmpty())
 					tmp += ", ";
 			}
-			for (Implementable ex : ct.getImplList())
+			for (InterfaceKind ex : ct.getImplList())
 			{
 				if (ex.getClass() == APIinterface.class)
 					tmp += ((APIinterface)ex).getElementType();
@@ -282,6 +250,12 @@ public class CppVisitor implements ElementVisitor
 
 		currentAccess = Keyword.PACKAGE;
 		return tmp;
+	}
+
+	@Override
+	public String visit(PreprocessorStmt preprocessorStmt)
+	{
+		return preprocessorStmt.getP() +" "+ preprocessorStmt.getPackageName() + "\n";
 	}
 
 }

@@ -18,6 +18,7 @@ public class Change
 	private static boolean isRecord = false;
 	private static boolean addSinceLastRecord = false;
 
+	@SuppressWarnings("unused")
 	private static void printStackState()
 	{
 		System.out.println("Etat de la pile");

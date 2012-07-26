@@ -1,3 +1,7 @@
+package dataRecord.elements;
+
+import classDiagram.ClassDiagram;
+import dataRecord.io.ElementVisitor;
 /**
  * This class represent a comment made in a source code file
  * A code can be of one single line or multiline
@@ -6,11 +10,6 @@
  * @author Fabrizio Beretta Piccoli
  * @version 2.0 | 5-lug-2012
  */
-package dataRecord.elements;
-
-import classDiagram.ClassDiagram;
-import dataRecord.io.ElementVisitor;
-
 public class Comment implements Element
 {
 	private String comment;
@@ -31,6 +30,13 @@ public class Comment implements Element
 		this.ID = id;
 	}
 
+	/**
+	 * this method will be called by the writer to know
+	 * how to write this object.
+	 * 
+	 * @see ElementVisitor
+	 * 
+	 */
 	@Override
 	public String accept(ElementVisitor visitor)
 	{

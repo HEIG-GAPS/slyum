@@ -2,10 +2,23 @@ package dataRecord.elements;
 
 import dataRecord.Keyword;
 import dataRecord.elementType.APIinterface;
-import dataRecord.elementType.Implementable;
+import dataRecord.elementType.InterfaceKind;
 import dataRecord.io.ElementVisitor;
 
-public class InterfaceType extends Type implements Implementable
+/**
+ * This class represent an interface in an object-oriented language
+ * 
+ * visit http://docs.oracle.com/javase/tutorial/java/concepts/interface.html
+ * for a good explaination of "Interface"
+ * 
+ * An interface can implements from an other interface
+ * 
+ * @author Fabrizio Beretta Piccoli
+ * @version 2.0 | 2-lug-2012
+ * @see Type
+ * @see InterfaceKind
+ */
+public class InterfaceType extends Type implements InterfaceKind
 {
 	public InterfaceType(String name, Keyword access)
 	{
@@ -28,7 +41,13 @@ public class InterfaceType extends Type implements Implementable
 	}
 
 	@Override
-	public String accept(ElementVisitor v)
+	/**
+	 * this method will be called by the writer to know
+	 * how to write this object.
+	 * 
+	 * @see ElementVisitor
+	 */ 
+	 public String accept(ElementVisitor v)
 	{
 		return v.visit(this);
 	}
@@ -42,7 +61,7 @@ public class InterfaceType extends Type implements Implementable
 		if (!implList.isEmpty())
 		{
 			tmp += " extends ";
-			for (Implementable ex : implList)
+			for (InterfaceKind ex : implList)
 			{
 				if (ex.getClass() == APIinterface.class)
 					tmp += ((APIinterface)ex).getElementType();

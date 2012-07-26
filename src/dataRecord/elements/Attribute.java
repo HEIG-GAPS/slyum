@@ -1,3 +1,8 @@
+package dataRecord.elements;
+
+import dataRecord.*;
+import dataRecord.elementType.ElementType;
+import dataRecord.io.ElementVisitor;
 /**
  * Each datafield has a specific type. This type can be a "Primitive type" (int, double, char, etc)
  * a user defined type (an object created by the user) or an API type.
@@ -8,17 +13,10 @@
  * 
  * @author Fabrizio Beretta Piccoli
  * @version 2.0 | 2-lug-2012
- * @see Field
+ * @see Variable
  * @see Element
  */
-
-package dataRecord.elements;
-
-import dataRecord.*;
-import dataRecord.elementType.ElementType;
-import dataRecord.io.ElementVisitor;
-
-public class Attribute extends Field
+public class Attribute extends Variable
 {
 	private Keyword access;
 	private boolean isStatic = false;
@@ -47,6 +45,13 @@ public class Attribute extends Field
 			throw new IllegalArgumentException(" access is not legal");
 	}
 
+	/**
+	 * this method will be called by the writer to know
+	 * how to write this object.
+	 * 
+	 * @see ElementVisitor
+	 * 
+	 */
 	@Override
 	public String accept(ElementVisitor visitor)
 	{
