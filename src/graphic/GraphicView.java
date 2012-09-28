@@ -2173,6 +2173,9 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 */
 	public GraphicComponent searchAssociedComponent(Object search)
 	{
+	    if (search == null)
+	        return null;
+	    
 		for (final GraphicComponent c : getAllComponents())
 			if (c.getAssociedComponent() == search)
 				return c;

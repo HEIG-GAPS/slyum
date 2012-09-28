@@ -3,6 +3,7 @@ package classDiagram.components;
 import swing.XMLParser.EntityType;
 import utility.Utility;
 import classDiagram.relationships.Binary;
+import classDiagram.relationships.Role;
 
 /**
  * Represent an association class in UML structure.
@@ -29,7 +30,8 @@ public class AssociationClass extends ClassEntity
 	public AssociationClass(String name, Visibility visibility, Binary binary)
 	{
 		super(name, visibility);
-
+		checkAssociationCreation(binary);
+		
 		// Use an existing association.
 		association = binary;
 	}
@@ -52,7 +54,8 @@ public class AssociationClass extends ClassEntity
 	public AssociationClass(String name, Visibility visibility, Binary binary, int id)
 	{
 		super(name, visibility, id);
-
+		checkAssociationCreation(binary);
+		
 		association = binary;
 	}
 
@@ -73,10 +76,27 @@ public class AssociationClass extends ClassEntity
 	public AssociationClass(String name, Visibility visibility, Entity source, Entity target)
 	{
 		super(name, visibility);
+		checkAssociationCreation(source, target);
 
 		// Create a new association.
 		association = new Binary(source, target, false);
 	}
+	
+	private void checkAssociationCreation(Binary binary)
+	{
+        if (binary == null)
+            throw new IllegalArgumentException("Creation of association " + name + " failed because binary is null.");
+
+        for (Role r : binary.getRoles())
+            if (r.getEntity() instanceof AssociationClass)
+               throw new IllegalArgumentException("Creation of association " + name + " failed.\nAn association class cannot be associed with another association class.");
+	}
+	
+	private void checkAssociationCreation(Entity source, Entity target)
+    {
+        if (source instanceof AssociationClass || target instanceof AssociationClass)
+           throw new IllegalArgumentException("Creation of association " + name + " failed.\nAn association class cannot be associed with another association class.");
+    }
 
 	/**
 	 * Get the association of the association class.

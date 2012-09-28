@@ -378,9 +378,12 @@ public class PanelClassDiagram extends JPanel
 
 					handler.createDiagram();
 				}
-				catch (ParserConfigurationException | SAXException | IOException e)
+				catch (Exception e)
 				{
 					showErrorImportationMessage(e);
+					
+			        graphicView.setPaintBackgroundLast(true);
+			        graphicView.goRepaint();
 				}
 				
 				Change.setBlocked(isBlocked);

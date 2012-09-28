@@ -31,6 +31,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
 
+import swing.EditCommentaryDialog;
 import swing.PropertyLoader;
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Multiplicity;
@@ -49,6 +50,13 @@ public class Utility
 	{
 		LOW, MAX, MEDIUM
 	};
+	
+	public static String proposeNewName(String message) {
+	    EditCommentaryDialog ecd = new EditCommentaryDialog("", "Slyum - Change name", message);
+	    ecd.setVisible(true);
+	    
+	    return ecd.isAccepted() ? ecd.getText() : "-1";
+	}
 	
 	/**
 	 * Scale the given rectangle with the given scale.
