@@ -16,13 +16,13 @@ import classDiagram.IDiagramComponent;
  */
 public class Variable extends Observable implements IDiagramComponent
 {
-	public static final String REGEX_SEMANTIC_ATTRIBUTE = "([a-zA-Z|_])(\\w)*";
+	public static final String REGEX_SEMANTIC_ATTRIBUTE = "([a-zA-Z0-9|_])(\\w)*";
 	
 	public static boolean checkSemantic(String name)
 	{
 		return !name.isEmpty() && name.matches(REGEX_SEMANTIC_ATTRIBUTE);
 	}
-	
+
 	protected boolean constant = false;
 
 	protected final int id = ClassDiagram.getNextId();
@@ -36,14 +36,15 @@ public class Variable extends Observable implements IDiagramComponent
 	 *            the name for the variable
 	 * @param type
 	 *            the type for the variable
+	 * @throws SyntaxeException 
 	 */
 	public Variable(String name, Type type)
 	{
 		boolean isBlocked = Change.isBlocked();
 		Change.setBlocked(true);
 		
-		if (!setName(name))
-			throw new IllegalArgumentException("semantic name incorrect");
+		while (!setName(name))
+		    throw new IllegalArgumentException("Syntaxe error.");
 		
 		setType(type);
 		

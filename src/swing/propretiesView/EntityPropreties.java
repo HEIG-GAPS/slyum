@@ -208,7 +208,8 @@ public class EntityPropreties extends GlobalPropreties
 			switch (column)
 			{
 				case 0: // nom
-					if (!attribute.setName((String) data))
+				    
+					if (attribute.setName((String) data))
 						setValueAt(attribute.getName(), row, column);
 
 					break;
@@ -423,7 +424,7 @@ public class EntityPropreties extends GlobalPropreties
 			switch (column)
 			{
 				case 0: // nom
-					if (!method.setName((String) data))
+					if (method.setName((String) data))
 						setValueAt(method.getName(), row, column);
 
 					break;
@@ -686,7 +687,11 @@ public class EntityPropreties extends GlobalPropreties
 					break;
 
 				case 1: // type
-					currentMethod.getParameters().get(row).setType(new Type((String) data));
+				    try
+				    {
+				        currentMethod.getParameters().get(row).setType(new Type((String) data));
+				    }
+				    catch (Exception ex){}
 					break;
 			}
 

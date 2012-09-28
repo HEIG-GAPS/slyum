@@ -283,7 +283,7 @@ public class TextBoxCommentary extends MovableComponent
 
 		if (e.getClickCount() == 2)
 		{
-			final EditCommentaryDialog ecd = new EditCommentaryDialog(text);
+			final EditCommentaryDialog ecd = new EditCommentaryDialog(text, "Slyum - Commentary editor", "Edit commentary : ");
 			ecd.setVisible(true);
 
 			if (ecd.isAccepted())
