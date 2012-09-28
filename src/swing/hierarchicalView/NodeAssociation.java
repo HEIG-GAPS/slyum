@@ -85,7 +85,7 @@ public class NodeAssociation extends DefaultMutableTreeNode implements IClassDia
 		association.addObserver(this);
 
 		for (final Role role : association.getRoles())
-			role.getEntity().addObserver(this);
+		    role.addObserver(this);
 
 		this.treeModel = treeModel;
 		imageIcon = icon;
