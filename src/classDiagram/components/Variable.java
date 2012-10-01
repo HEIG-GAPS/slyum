@@ -16,7 +16,7 @@ import classDiagram.IDiagramComponent;
  */
 public class Variable extends Observable implements IDiagramComponent
 {
-	public static final String REGEX_SEMANTIC_ATTRIBUTE = "([a-zA-Z0-9|_])(\\w)*";
+	public static final String REGEX_SEMANTIC_ATTRIBUTE = "[a-zA-Z_"+Type.accents+"][\\w_"+Type.accents+"]*";
 	
 	public static boolean checkSemantic(String name)
 	{
