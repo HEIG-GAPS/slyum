@@ -15,43 +15,14 @@ import classDiagram.IDiagramComponent;
  */
 public class Type extends Observable implements IDiagramComponent
 {
-	public final static String REGEX_SEMANTIC_TYPE =  "([a-zA-Z|_])[\\w<>.\\[\\]]*";
-	public final static String REGEX_DIGIT = "[0-9]*";
+    public static final String accents = "ÀàÁáÂâÃãÄäÅåÒòÓóÔôÕõÖöØøÈèÉéÊêËëÇçÌìÍíÎîÏïÙùÚúÛûÜüÑñ";
+    public static final String CARACTERES_VALID = "a-zA-Z_" + accents;
+    public final static String REGEX_DIGIT = "[0-9]*";
+    public final static String REGEX_SEMANTIC_TYPE = Variable.REGEX_SEMANTIC_ATTRIBUTE + "(<("+Variable.REGEX_SEMANTIC_ATTRIBUTE+")(,\\s*("+Variable.REGEX_SEMANTIC_ATTRIBUTE+"))*>)?((\\["+REGEX_DIGIT+"])*)*";
 	
 	public static boolean checkSemantic(String type)
 	{
-		int state = 0;
-		char c;
-		for (int i = 0; i < type.length(); i++)
-		{
-			c = type.charAt(i);
-			switch (state)
-			{
-			case 0:				
-				if (c == '[')
-				{
-					state = 1;
-					continue;
-				}
-				else if (i == type.length()-1)
-				
-					continue;
-				
-				break;
-				
-			case 1:
-				
-				if (c == ']' || c == '[')
-					continue;
-				
-				else if (!String.valueOf(c).matches(REGEX_DIGIT))
-					return false;
-				
-				break;
-			}
-		}
-		
-		return !type.isEmpty() && type.matches(REGEX_SEMANTIC_TYPE);
+	    return !type.isEmpty() && type.matches(REGEX_SEMANTIC_TYPE);
 	}
 	
 	protected final int id;
@@ -137,9 +108,9 @@ public class Type extends Observable implements IDiagramComponent
 	 */
 	public boolean setName(String name)
 	{
-		if (!checkSemantic(name) || name.equals(getName()))
+		if (!checkSemantic(name))
 			return false;
-		
+
 		int state = 0; // 0 = name, 1 = array
 		String buff = "", n = "";
 		LinkedList<Integer> a = new LinkedList<>();
@@ -189,13 +160,16 @@ public class Type extends Observable implements IDiagramComponent
 					continue;
 				}
 				else if (!String.valueOf(c).matches(REGEX_DIGIT))
-					
-					return false;
+                    
+                    return false;
 				
 				buff += name.charAt(i);
 				break;
 			}
 		}
+
+        if (name.equals(getName()) && arraysSize.containsAll(a))
+            return false;
 		
 		arraysSize = a;
 
