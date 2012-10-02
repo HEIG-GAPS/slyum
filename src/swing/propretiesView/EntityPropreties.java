@@ -53,6 +53,7 @@ import classDiagram.components.PrimitiveType;
 import classDiagram.components.Type;
 import classDiagram.components.Variable;
 import classDiagram.components.Visibility;
+import classDiagram.verifyName.TypeName;
 
 /**
  * Show the propreties of an UML entity with Swing components. All inner classes
@@ -217,7 +218,7 @@ public class EntityPropreties extends GlobalPropreties
 				case 1: // type
 					String s = (String) data;
 					
-					if (!Type.checkSemantic(s))
+					if (!TypeName.getInstance().verifyName(s))
 						setValueAt(attribute.getType().getName(), row, column);
 					else
 						attribute.setType(new Type(s));
@@ -431,7 +432,7 @@ public class EntityPropreties extends GlobalPropreties
 
 				case 1: // type
 					String s = (String) data;
-					if (!Type.checkSemantic(s))
+					if (!TypeName.getInstance().verifyName(s))
 						setValueAt(method.getReturnType().getName(), row, column);
 					else
 						method.setReturnType(new Type(s));

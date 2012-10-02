@@ -22,7 +22,6 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import utility.SDialogProjectLoading;
 import utility.SMessageDialog;
-import utility.Utility;
 
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
@@ -37,6 +36,10 @@ import classDiagram.relationships.Binary;
 import classDiagram.relationships.Composition;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Multiplicity;
+import classDiagram.verifyName.MethodName;
+import classDiagram.verifyName.SyntaxeNameException;
+import classDiagram.verifyName.TypeName;
+import classDiagram.verifyName.VariableName;
 
 /**
  * This class read the XML file and create the diagram UML structured from this.
@@ -46,6 +49,7 @@ import classDiagram.relationships.Multiplicity;
  */
 public class XMLParser extends DefaultHandler
 {
+    
 	public enum Aggregation
 	{
 		AGGREGATE, COMPOSE, MULTI, NONE
@@ -273,11 +277,13 @@ public class XMLParser extends DefaultHandler
 			buffer.append(reader);
 	}
 
-	private void createEntity(Entity e)
+	private void createEntity(Entity e) throws SyntaxeNameException
 	{
 		dpl.addStep("Create entity " + e.name + "...");
 		
 		classDiagram.components.Entity ce = null;
+		
+		e.name = TypeName.verifyAndAskNewName(e.name);
 
 		switch (e.entityType)
 		{
@@ -325,44 +331,28 @@ public class XMLParser extends DefaultHandler
 		for (final Variable v : e.attribute)
 		{
 			dpl.addStep("Create attribute " + v.name + "...");
-			String bufferName = v.name,  name = v.name;
-
-            while (true) {
-                try
-                {
-                    final Attribute a = new Attribute(name, v.type);
-                    
-                    ce.addAttribute(a);
-                    ce.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
-                    a.setConstant(v.constant);
-                    a.setDefaultValue(v.defaultValue);
-                    a.setStatic(v.isStatic);
-                    a.setVisibility(v.visibility);
-
-                    a.notifyObservers();
-                    
-                    break;
-                }
-                catch (IllegalArgumentException ex)
-                {
-                    if (name.isEmpty())
-                        name = Utility.proposeNewName("Please enter a name for rename \"" + bufferName + "\": ");
-                    else
-                    {
-                        bufferName = name;
-                        name = Utility.proposeNewName("The syntaxe for \"" + name + "\" is incorrect. Please enter a new name: ");
-                    }
-                        
-                    if (name.equals("-1"))
-                        throw ex;
-                }
-            }
+			
+    	    final Attribute a = new Attribute(VariableName.verifyAndAskNewName(v.name), v.type);
+             
+            ce.addAttribute(a);
+            ce.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
+            a.setConstant(v.constant);
+            a.setDefaultValue(v.defaultValue);
+            a.setStatic(v.isStatic);
+            a.setVisibility(v.visibility);
+    
+            a.notifyObservers();
 		}
 
 		for (final Operation o : e.method)
 		{
 			dpl.addStep("Create method " + o.name + "...");
-			final Method m = new Method(o.name, o.returnType, o.visibility, ce);
+			final Method m = new Method(
+			        MethodName.verifyAndAskNewName(o.name),
+			        o.returnType,
+			        o.visibility,
+			        ce);
+			
 			ce.addMethod(m);
 			ce.notifyObservers(UpdateMessage.ADD_METHOD_NO_EDIT);
 			m.setStatic(o.isStatic);
@@ -370,28 +360,10 @@ public class XMLParser extends DefaultHandler
 
 			for (final Variable v : o.variable)
 			{
-		        String bufferName = v.name,  name = v.name;
-
-                while (true) {
-                    try
-                    {
-                        final classDiagram.components.Variable va = new classDiagram.components.Variable(name, v.type);
-                        m.addParameter(va);
-                        break;
-                    } catch (IllegalArgumentException ex)
-                    {
-                        if (name.isEmpty())
-                            name = Utility.proposeNewName("Please enter a name for rename \"" + bufferName + "\": ");
-                        else
-                        {
-                            bufferName = name;
-                            name = Utility.proposeNewName("The syntaxe for \"" + name + "\" is incorrect. Please enter a new name: ");
-                        }
-                            
-                        if (name.equals("-1"))
-                            throw ex;
-                    }
-                }			    
+                final classDiagram.components.Variable va = new classDiagram.components.Variable(
+                        VariableName.verifyAndAskNewName(v.name), 
+                        v.type);
+                m.addParameter(va);
 			}
 
 			m.notifyObservers();
@@ -423,16 +395,14 @@ public class XMLParser extends DefaultHandler
 		dpl.setProgressBarMaximum(count);
 	}
 	
-	public void createDiagram()
+	public void createDiagram() throws SyntaxeNameException
 	{
 		// Don't change order !!
 		importClassesAndInterfaces(); // <- need nothing :D
 	
 		importAssociations(); // <- need importation classes
-		importAssociationClass(); // <- need importation classes and
-		// associations
+		importAssociationClass(); // <- need importation classes and associations
 		importAssociations(); // Import associations that cannot be imported first time
-		// first time
 		importInheritances(); // <- ...
 		importDepedency();
 		
@@ -612,7 +582,7 @@ public class XMLParser extends DefaultHandler
 		}
 	}
 
-	private void importAssociationClass()
+	private void importAssociationClass() throws SyntaxeNameException
 	{
 		dpl.setPhase("Import association classes...");
 		for (final Entity e : uMLClassDiagram.diagrameElement.entity)
@@ -692,7 +662,7 @@ public class XMLParser extends DefaultHandler
 		uMLClassDiagram.diagrameElement.association = associationsNotAdded;
 	}
 
-	private void importClassesAndInterfaces()
+	private void importClassesAndInterfaces() throws SyntaxeNameException
 	{
 		dpl.setPhase("Import classes and interfaces...");
 		
@@ -945,7 +915,7 @@ public class XMLParser extends DefaultHandler
 			{
 				currentMethod = new Operation();
 				currentMethod.name = attributes.getValue("name");
-				currentMethod.returnType = new Type(attributes.getValue("returnType"));
+				currentMethod.returnType = new Type(TypeName.verifyAndAskNewName(attributes.getValue("returnType")));
 				currentMethod.visibility = Visibility.valueOf(attributes.getValue("visibility"));
 				currentMethod.isStatic = Boolean.parseBoolean(attributes.getValue("isStatic"));
 				currentMethod.isAbstract = Boolean.parseBoolean(attributes.getValue("isAbstract"));
@@ -960,7 +930,7 @@ public class XMLParser extends DefaultHandler
 			{
 				final Variable variable = new Variable();
 				variable.name = attributes.getValue("name");
-				variable.type = new Type(attributes.getValue("type"));
+				variable.type = new Type(TypeName.verifyAndAskNewName(attributes.getValue("type")));
 				variable.constant = Boolean.parseBoolean(attributes.getValue("const"));
 
 				currentMethod.variable.add(variable);
@@ -973,7 +943,7 @@ public class XMLParser extends DefaultHandler
 			{
 				final Variable variable = new Variable();
 				variable.name = attributes.getValue("name");
-				variable.type = new Type(attributes.getValue("type"));
+				variable.type = new Type(TypeName.verifyAndAskNewName(attributes.getValue("type")));
 				variable.constant = Boolean.parseBoolean(attributes.getValue("const"));
 				variable.visibility = Visibility.valueOf(attributes.getValue("visibility"));
 				variable.defaultValue = attributes.getValue("defaultValue");

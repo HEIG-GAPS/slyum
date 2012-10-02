@@ -1,5 +1,6 @@
 package classDiagram.components;
 
+import classDiagram.verifyName.TypeName;
 import change.BufferAttribute;
 import change.Change;
 import utility.Utility;
@@ -188,7 +189,7 @@ public class Attribute extends Variable
 		{
 			subString[1] = subString[1].trim();
 			
-			if (!Type.checkSemantic(subString[1]))
+			if (!TypeName.getInstance().verifyName(subString[1]))
 				return;
 			
 			type = new Type(subString[1]);

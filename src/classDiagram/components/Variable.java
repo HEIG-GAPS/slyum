@@ -7,6 +7,7 @@ import java.util.Observable;
 import utility.Utility;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
+import classDiagram.verifyName.VariableName;
 
 /**
  * Represent a variable in UML structure.
@@ -20,7 +21,7 @@ public class Variable extends Observable implements IDiagramComponent
 	
 	public static boolean checkSemantic(String name)
 	{
-		return !name.isEmpty() && name.matches(REGEX_SEMANTIC_ATTRIBUTE);
+		return name.matches(REGEX_SEMANTIC_ATTRIBUTE);
 	}
 
 	protected boolean constant = false;
@@ -117,7 +118,7 @@ public class Variable extends Observable implements IDiagramComponent
 	 */
 	public boolean setName(String name)
 	{
-		if (!checkSemantic(name) || name.equals(getName()))
+		if (!VariableName.getInstance().verifyName(name) || name.equals(getName()))
 			return false;
 
 		Change.push(new BufferVariable(this));
@@ -137,7 +138,7 @@ public class Variable extends Observable implements IDiagramComponent
 	 */
 	public void setType(Type type)
 	{		
-		if (getType()!= null && type.getName().equals(getType().getName()))
+		if (getType() != null && type.getName().equals(getType().getName()))
 			return;
 		
 		Change.push(new BufferVariable(this));

@@ -10,6 +10,9 @@ import utility.SMessageDialog;
 import utility.Utility;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
+import classDiagram.verifyName.MethodName;
+import classDiagram.verifyName.TypeName;
+import classDiagram.verifyName.VariableName;
 import graphic.textbox.TextBoxMethod;
 
 /**
@@ -24,7 +27,7 @@ public class Method extends Observable implements IDiagramComponent, Observer
 	
 	public static boolean checkSemantic(String name)
 	{
-		return !name.isEmpty() && name.matches(REGEX_SEMANTIC_METHOD);
+		return name.matches(REGEX_SEMANTIC_METHOD);
 	}
 	
 	private boolean _isAbstract = false;
@@ -279,7 +282,7 @@ public class Method extends Observable implements IDiagramComponent, Observer
 	 */
 	public boolean setName(String name)
 	{
-		if (name.isEmpty() || !checkSemantic(name) || name.equals(getName()))
+		if (!MethodName.getInstance().verifyName(name) || name.equals(getName()))
 			return false;
 
 		Change.push(new BufferMethod(this));
@@ -352,7 +355,7 @@ public class Method extends Observable implements IDiagramComponent, Observer
 
 		newName = subString[0].trim();
 
-		if (!checkSemantic(newName))
+		if (!MethodName.getInstance().verifyName(newName))
 			newName = getName();
 
 		if (subString.length == 2)
@@ -375,7 +378,7 @@ public class Method extends Observable implements IDiagramComponent, Observer
 						String name = variable[0].trim(), 
 							   type = variable[1].trim();
 						
-						if (!Variable.checkSemantic(name) || !Type.checkSemantic(type))
+						if (!VariableName.getInstance().verifyName(name) || !TypeName.getInstance().verifyName(type))
 							continue;
 
 						par.add(new Variable(name, new Type(type)));
@@ -386,7 +389,7 @@ public class Method extends Observable implements IDiagramComponent, Observer
 			if (arguments.length > 1)
 			{
 				String rt = arguments[1].substring(arguments[1].indexOf(":") + 1).trim();
-				if (Type.checkSemantic(rt))
+				if (TypeName.getInstance().verifyName(rt))
 					returnType = rt;
 			}
 		}

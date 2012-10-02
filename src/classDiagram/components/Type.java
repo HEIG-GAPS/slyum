@@ -6,6 +6,7 @@ import java.util.Observable;
 
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
+import classDiagram.verifyName.TypeName;
 
 /**
  * Represent a type in UML structure.
@@ -22,7 +23,7 @@ public class Type extends Observable implements IDiagramComponent
 	
 	public static boolean checkSemantic(String type)
 	{
-	    return !type.isEmpty() && type.matches(REGEX_SEMANTIC_TYPE);
+	    return type.matches(REGEX_SEMANTIC_TYPE);
 	}
 	
 	protected final int id;
@@ -61,7 +62,7 @@ public class Type extends Observable implements IDiagramComponent
 	
 	private void initialize(String name)
 	{
-		if (!Type.checkSemantic(name))
+		if (!TypeName.getInstance().verifyName(name))
 			throw new IllegalArgumentException("semantic incorrect");
 		
 		boolean isBlocked = Change.isBlocked();
@@ -108,7 +109,7 @@ public class Type extends Observable implements IDiagramComponent
 	 */
 	public boolean setName(String name)
 	{
-		if (!checkSemantic(name))
+		if (!TypeName.getInstance().verifyName(name))
 			return false;
 
 		int state = 0; // 0 = name, 1 = array
