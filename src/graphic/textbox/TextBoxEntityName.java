@@ -8,7 +8,7 @@ import java.awt.Rectangle;
 
 import utility.Utility;
 import classDiagram.components.Entity;
-import classDiagram.components.Type;
+import classDiagram.verifyName.TypeName;
 
 /**
  * A TextBox is a graphic component from Slyum containing a String. The
@@ -81,7 +81,7 @@ public class TextBoxEntityName extends TextBox
 	@Override
 	public void setText(String text)
 	{
-		if (!Type.checkSemantic(text))
+		if (!TypeName.getInstance().verifyName(text))
 			return;
 
 		entity.setName(text);
