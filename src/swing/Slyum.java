@@ -146,8 +146,8 @@ public class Slyum extends JFrame implements ActionListener
 	public static final String KEY_MOVE_DOWN = "ctrl alt LEFT";
 	public static final String KEY_MOVE_BOTTOM = "ctrl alt DOWN";
 	
-	public final static String KEY_ZOOM_PLUS = "PLUS";
-	public final static String KEY_ZOOM_MINUS = "MINUS";
+	public final static String KEY_ZOOM_PLUS = "ctrl PLUS";
+	public final static String KEY_ZOOM_MINUS = "ctrl MINUS";
 	public final static String KEY_ZOOM_ADAPT = "ctrl shift E";
 	public final static String KEY_ZOOM_1 = "1";
 
@@ -711,11 +711,11 @@ public class Slyum extends JFrame implements ActionListener
 			
 			
 			// Menu item back zoom
-			menuItem = createMenuItem("Zoom in", "zoomMinus", KeyEvent.VK_I, KEY_ZOOM_MINUS, ACTION_ZOOM_PLUS);
+			menuItem = createMenuItem("Zoom in", "zoomMinus", KeyEvent.VK_I, KEY_ZOOM_PLUS, ACTION_ZOOM_MINUS);
 			subMenu.add(menuItem);
 			
 			// Menu item foreward zoom
-			menuItem = createMenuItem("Zoom out", "zoomPlus", KeyEvent.VK_O, KEY_ZOOM_PLUS, ACTION_ZOOM_MINUS);
+			menuItem = createMenuItem("Zoom out", "zoomPlus", KeyEvent.VK_O, KEY_ZOOM_MINUS, ACTION_ZOOM_PLUS);
 			subMenu.add(menuItem);
 			
 			subMenu.addSeparator();
