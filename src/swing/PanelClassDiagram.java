@@ -409,6 +409,8 @@ public class PanelClassDiagram extends JPanel
 				graphicView.paintBackgroundFirst();
 			}
 		});
+
+        RecentProjectManager.addhistoryEntry(file.getAbsolutePath());
 	}
 
 	/**
@@ -562,6 +564,8 @@ public class PanelClassDiagram extends JPanel
 		}
 		
 		Change.setHasChange(false);
+		
+		RecentProjectManager.addhistoryEntry(currentFile.getAbsolutePath());
 	}
 
 	private void showErrorImportationMessage(Exception e)
@@ -587,7 +591,7 @@ public class PanelClassDiagram extends JPanel
 		return l;
 	}
 	
-	private void openFromDrop(File file)
+	public void openFromXmlAndAsk(File file)
 	{
         if (!askForSave())
             return;
@@ -618,7 +622,7 @@ public class PanelClassDiagram extends JPanel
                 List<File> dropppedFiles = (List<File>)t.getTransferData(DataFlavor.javaFileListFlavor);
                 
                 // Open just the last of the list.
-                openFromDrop((File)dropppedFiles.get(dropppedFiles.size() - 1));
+                openFromXmlAndAsk((File)dropppedFiles.get(dropppedFiles.size() - 1));
                 return true;
                 
             } catch (UnsupportedFlavorException | IOException e)
