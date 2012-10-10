@@ -69,6 +69,7 @@ public class Slyum extends JFrame implements ActionListener
 	public static final String ACTION_ABOUT = "About";
 	public static final String ACTION_HELP = "Help";
 	public static final String ACTION_EXIT = "Exit";
+	public static final String ACTION_OPEN_RECENT_RPOJECT = "openRecentProject";
 	public static final String ACTION_PROPERTIES = "Properties";
 	public static final String ACTION_UPDATE = "Update";
 	public static final String ACTION_SELECT_ALL = "SelectAll";
@@ -174,6 +175,7 @@ public class Slyum extends JFrame implements ActionListener
 	private static String windowTitle = APP_NAME;
 	
 	private static String[] arguments;
+	private JMenu menuFile;
 
 	public static void main(String[] args)
 	{
@@ -401,7 +403,7 @@ public class Slyum extends JFrame implements ActionListener
 	{
 		PanelClassDiagram p = PanelClassDiagram.getInstance();
 		GraphicView gv = p.getCurrentGraphicView();
-                
+		
             switch (e.getActionCommand())
             {
                 case Slyum.ACTION_SAVE_AS:
@@ -415,6 +417,9 @@ public class Slyum extends JFrame implements ActionListener
                     break;
                 case ACTION_EXIT:
                     exit();
+                    break;
+                case ACTION_OPEN_RECENT_RPOJECT:
+                    PanelClassDiagram.getInstance().openFromXmlAndAsk(new File(((JMenuItem)e.getSource()).getText()));
                     break;
                 case ACTION_PROPERTIES:
                     new SProperties();
@@ -544,11 +549,11 @@ public class Slyum extends JFrame implements ActionListener
 
 		menuBar.setBorder(null);
 
-		JMenu menu;
 		JMenuItem menuItem;
 
 		// Menu file
-		menu = new JMenu("File");
+		JMenu menu = menuFile = new JMenu("File");
+		
 		menu.setMnemonic(KeyEvent.VK_F);
 		menuBar.add(menu);
 
@@ -613,6 +618,11 @@ public class Slyum extends JFrame implements ActionListener
 			menu.add(menuItem);
 	
 			menu.addSeparator();
+			
+			// Menu recent project
+			updateMenuItemHistory();
+			
+            menu.addSeparator();
 	
 			// Menu item exit
 			menuItem = createMenuItem("Exit", "exit", KeyEvent.VK_X, KEY_EXIT, ACTION_EXIT);
@@ -826,8 +836,29 @@ public class Slyum extends JFrame implements ActionListener
 		// Menu item About
 		menuItem = createMenuItem("About Slyum...", null, KeyEvent.VK_A, null, ACTION_ABOUT);
 		menu.add(menuItem);
+        setJMenuBar(menuBar);
 
-		setJMenuBar(menuBar);
+	}
+	
+	public void deleteMenuItemHistory()
+	{
+        for (int i = 0; i < menuFile.getItemCount(); i++)
+        {
+            JMenuItem m = menuFile.getItem(i);
+            if (m != null && m.getActionCommand().equals(ACTION_OPEN_RECENT_RPOJECT))
+            {
+                menuFile.remove(m);
+                i--;
+            }
+        }
+	}
+	
+	public void updateMenuItemHistory()
+	{
+	    deleteMenuItemHistory();
+	    
+        for (String s : RecentProjectManager.getHistoryList())
+            menuFile.add(createMenuItem(s, "history", 0, "", ACTION_OPEN_RECENT_RPOJECT), 13);
 	}
 	
 	public JMenuItem createMenuItem(String text, String iconName, int mnemonic, String accelerator, String actionCommand, ActionListener al)

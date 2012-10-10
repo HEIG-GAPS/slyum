@@ -155,26 +155,26 @@
 			<method name="restore" returnType="void" visibility="PUBLIC" isStatic="false" isAbstract="true" />
 		</entity>
 	</diagramElements>
-	<umlView name="view no name" grid="41">
+	<umlView name="view no name" grid="10">
 		<componentView componentID="25" color="-3355393">
 				<geometry>
-					<x>984</x>
-					<y>205</y>
-					<w>123</w>
+					<x>980</x>
+					<y>200</y>
+					<w>120</w>
 					<h>87</h>
 				</geometry>
 		</componentView>
 		<componentView componentID="28" color="-3355393">
 				<geometry>
-					<x>1189</x>
+					<x>1180</x>
 					<y>410</y>
-					<w>287</w>
+					<w>280</w>
 					<h>120</h>
 				</geometry>
 		</componentView>
 		<componentView componentID="47" color="-3355393">
 				<geometry>
-					<x>779</x>
+					<x>770</x>
 					<y>410</y>
 					<w>410</w>
 					<h>136</h>
@@ -182,77 +182,77 @@
 		</componentView>
 		<componentView componentID="77" color="-3355393">
 				<geometry>
-					<x>451</x>
+					<x>450</x>
 					<y>410</y>
-					<w>287</w>
+					<w>280</w>
 					<h>120</h>
 				</geometry>
 		</componentView>
 		<componentView componentID="96" color="-3355393">
 				<geometry>
-					<x>697</x>
-					<y>164</y>
-					<w>164</w>
+					<x>690</x>
+					<y>160</y>
+					<w>160</w>
 					<h>168</h>
 				</geometry>
 		</componentView>
 		<componentView componentID="258" color="-13108">
 				<geometry>
-					<x>615</x>
-					<y>697</y>
-					<w>205</w>
+					<x>610</x>
+					<y>690</y>
+					<w>200</w>
 					<h>120</h>
 				</geometry>
 		</componentView>
 		<componentView componentID="289" color="-13108">
 				<geometry>
-					<x>615</x>
-					<y>902</y>
-					<w>123</w>
+					<x>610</x>
+					<y>900</y>
+					<w>120</w>
 					<h>104</h>
 				</geometry>
 		</componentView>
 		<componentView componentID="294" color="-13108">
 				<geometry>
-					<x>984</x>
-					<y>861</y>
-					<w>123</w>
+					<x>980</x>
+					<y>860</y>
+					<w>120</w>
 					<h>56</h>
 				</geometry>
 		</componentView>
 		<componentView componentID="308" color="-13108">
 				<geometry>
-					<x>943</x>
-					<y>943</y>
-					<w>123</w>
+					<x>940</x>
+					<y>940</y>
+					<w>120</w>
 					<h>56</h>
 				</geometry>
 		</componentView>
 		<componentView componentID="322" color="-13108">
 				<geometry>
-					<x>779</x>
-					<y>1025</y>
-					<w>123</w>
+					<x>770</x>
+					<y>1020</y>
+					<w>120</w>
 					<h>56</h>
 				</geometry>
 		</componentView>
 		<componentView componentID="342" color="-13108">
 				<geometry>
-					<x>984</x>
-					<y>697</y>
-					<w>205</w>
+					<x>980</x>
+					<y>690</y>
+					<w>200</w>
 					<h>136</h>
 				</geometry>
 		</componentView>
 		<relationView relationId="151" color="-12566464">
 			<line>
 				<point>
-					<x>861</x>
+					<x>850</x>
 					<y>244</y>
 				</point>
 				<point>
-					<x>984</x>
-					<y>251</y>
+					<x>980</x>
+					<y>250</y>
 				</point>
 			</line>
 			<labelAssociation>
@@ -289,11 +289,11 @@
 		<relationView relationId="295" color="-12566464">
 			<line>
 				<point>
-					<x>738</x>
-					<y>951</y>
+					<x>730</x>
+					<y>950</y>
 				</point>
 				<point>
-					<x>984</x>
+					<x>980</x>
 					<y>907</y>
 				</point>
 			</line>
@@ -331,12 +331,12 @@
 		<relationView relationId="309" color="-12566464">
 			<line>
 				<point>
-					<x>738</x>
+					<x>730</x>
 					<y>959</y>
 				</point>
 				<point>
-					<x>943</x>
-					<y>967</y>
+					<x>940</x>
+					<y>966</y>
 				</point>
 			</line>
 			<labelAssociation>
@@ -373,12 +373,12 @@
 		<relationView relationId="323" color="-12566464">
 			<line>
 				<point>
-					<x>738</x>
+					<x>730</x>
 					<y>983</y>
 				</point>
 				<point>
-					<x>791</x>
-					<y>1025</y>
+					<x>783</x>
+					<y>1020</y>
 				</point>
 			</line>
 			<labelAssociation>
@@ -415,12 +415,12 @@
 		<relationView relationId="343" color="-12566464">
 			<line>
 				<point>
-					<x>719</x>
-					<y>902</y>
+					<x>723</x>
+					<y>900</y>
 				</point>
 				<point>
-					<x>984</x>
-					<y>781</y>
+					<x>980</x>
+					<y>782</y>
 				</point>
 			</line>
 			<labelAssociation>
@@ -469,8 +469,8 @@
 					<y>380</y>
 				</point>
 				<point>
-					<x>1106</x>
-					<y>292</y>
+					<x>1099</x>
+					<y>287</y>
 				</point>
 			</line>
 		</relationView>
@@ -482,7 +482,7 @@
 				</point>
 				<point>
 					<x>1070</x>
-					<y>292</y>
+					<y>287</y>
 				</point>
 			</line>
 		</relationView>
@@ -502,21 +502,21 @@
 				</point>
 				<point>
 					<x>1015</x>
-					<y>292</y>
+					<y>287</y>
 				</point>
 			</line>
 		</relationView>
 		<note content="gc est le composant correspondant aux modifications du status." color="-3355393">
 			<noteGeometry>
-				<x>525</x>
-				<y>237</y>
+				<x>315</x>
+				<y>117</y>
 				<w>107</w>
 				<h>111</h>
 			</noteGeometry>
 			<noteLine relationId="47" color="-12566464">
 				<point>
-					<x>525</x>
-					<y>314</y>
+					<x>351</x>
+					<y>228</y>
 				</point>
 				<point>
 					<x>443</x>
@@ -537,8 +537,8 @@
 			</noteLine>
 			<noteLine relationId="77" color="-12566464">
 				<point>
-					<x>632</x>
-					<y>304</y>
+					<x>422</x>
+					<y>184</y>
 				</point>
 				<point>
 					<x>668</x>
