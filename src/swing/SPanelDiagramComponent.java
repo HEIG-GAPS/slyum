@@ -70,7 +70,7 @@ public class SPanelDiagramComponent extends JPanelRounded implements ActionListe
 		setBorder(BorderFactory.createEmptyBorder(10, 10, 15, 10));
 		setBackground(new Color(255, 0, 0, 10));
 		setForeground(Color.GRAY);
-		
+
 		JPanel panelTop = new JPanel();
 		panelTop.setOpaque(false);
 		

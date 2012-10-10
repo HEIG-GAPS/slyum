@@ -6,6 +6,9 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -15,15 +18,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
 import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -68,6 +74,8 @@ public class PanelClassDiagram extends JPanel
 
 		// Create new graphiView, contain class diagram.
 		graphicView = new GraphicView(getClassDiagram());
+        
+        setTransferHandler(new FileHandler());
 		
 		// Personalized ToolBar Layout
 		JPanel panelToolBar = new JPanel();
@@ -330,7 +338,7 @@ public class PanelClassDiagram extends JPanel
 	}
 	
 	public void openFromXML(final File file)
-	{		
+	{        
 		final String extension = Utility.getExtension(file);
 
 		if (!file.exists())
@@ -408,9 +416,9 @@ public class PanelClassDiagram extends JPanel
 	 */
 	public void openFromXML()
 	{
-		if (!askForSave())
-			return;
-		
+        if (!askForSave())
+            return;
+        
 		final JFileChooser fc = new JFileChooser(Slyum.getCurrentDirectoryFileChooser());
 		fc.setAcceptAllFileFilterUsed(false);
 
@@ -578,4 +586,46 @@ public class PanelClassDiagram extends JPanel
 		
 		return l;
 	}
+	
+	private void openFromDrop(File file)
+	{
+        if (!askForSave())
+            return;
+        
+        openFromXML(file);
+	}
+    
+    private class FileHandler extends TransferHandler
+    {
+        private static final long serialVersionUID = 5606903424194929527L;
+
+        @Override
+        public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) 
+        {
+            for (DataFlavor flavor : transferFlavors)
+                if (!flavor.isFlavorJavaFileListType())
+                    return false;
+            
+            return true;
+        }
+        
+        @Override
+        public boolean importData(JComponent comp, Transferable t)
+        {
+            try
+            {
+                @SuppressWarnings("unchecked")
+                List<File> dropppedFiles = (List<File>)t.getTransferData(DataFlavor.javaFileListFlavor);
+                
+                // Open just the last of the list.
+                openFromDrop((File)dropppedFiles.get(dropppedFiles.size() - 1));
+                return true;
+                
+            } catch (UnsupportedFlavorException | IOException e)
+            {
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
 }
