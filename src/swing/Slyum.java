@@ -17,7 +17,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.lang.instrument.IllegalClassFormatException;
 import java.net.URI;
 
 import java.net.URISyntaxException;
@@ -25,8 +24,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import javax.swing.Action;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -966,27 +963,8 @@ public class Slyum extends JFrame implements ActionListener
 	
 	private class JMenuItemHistory extends JMenuItem
 	{
+		private static final long serialVersionUID = -6696714308788403479L;
 		private Path historyPath;
-
-		public JMenuItemHistory() {
-			super();
-		}
-
-		public JMenuItemHistory(Action a) {
-			super(a);
-		}
-
-		public JMenuItemHistory(Icon icon) {
-			super(icon);
-		}
-
-		public JMenuItemHistory(String text, Icon icon) {
-			super(text, icon);
-		}
-
-		public JMenuItemHistory(String text, int mnemonic) {
-			super(text, mnemonic);
-		}
 
 		public JMenuItemHistory(String text) {
 			super(text);
