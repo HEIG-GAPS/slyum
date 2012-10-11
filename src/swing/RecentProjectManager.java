@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.List;
 
 import utility.SMessageDialog;
@@ -57,12 +58,19 @@ public class RecentProjectManager {
     
     private List<String> cleanHistory(List<String> files)
     {
+    	// Évite les modifications concurrantes dans la liste files
+    	// (on ne peut pas itérer sur une liste et simultanément en supprimer des éléments).
+    	List<String> filesToRemove = new LinkedList<>();
+    	
         for (String entry : files)
         {
             Path p = Paths.get(entry);
             if (!Files.exists(p))
-                files.remove(entry);
+            	filesToRemove.add(entry);            	
         }
+        
+        for (String file : filesToRemove)
+        	files.remove(file);
         
         return files;
     }

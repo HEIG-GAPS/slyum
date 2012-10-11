@@ -17,15 +17,23 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.lang.instrument.IllegalClassFormatException;
 import java.net.URI;
 
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
+import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -419,7 +427,10 @@ public class Slyum extends JFrame implements ActionListener
                     exit();
                     break;
                 case ACTION_OPEN_RECENT_RPOJECT:
-                    PanelClassDiagram.getInstance().openFromXmlAndAsk(new File(((JMenuItem)e.getSource()).getText()));
+                	if (e.getSource() instanceof JMenuItemHistory)
+                		PanelClassDiagram.getInstance().openFromXmlAndAsk(new File(((JMenuItemHistory)e.getSource()).getHistoryPath().toString()));
+                	else
+                		SMessageDialog.showErrorMessage("Impossible d'effectuer cette action. Veuillez reporter ce bug.");
                     break;
                 case ACTION_PROPERTIES:
                     new SProperties();
@@ -616,8 +627,6 @@ public class Slyum extends JFrame implements ActionListener
 			// Menu item Properties
 			menuItem = createMenuItem("Properties...", "Properties", KeyEvent.VK_R, KEY_PROPERTIES, ACTION_PROPERTIES);
 			menu.add(menuItem);
-	
-			menu.addSeparator();
 			
 			// Menu recent project
 			updateMenuItemHistory();
@@ -842,23 +851,57 @@ public class Slyum extends JFrame implements ActionListener
 	
 	public void deleteMenuItemHistory()
 	{
+		boolean remove = false;
         for (int i = 0; i < menuFile.getItemCount(); i++)
         {
             JMenuItem m = menuFile.getItem(i);
             if (m != null && m.getActionCommand().equals(ACTION_OPEN_RECENT_RPOJECT))
             {
+            	remove= true;
                 menuFile.remove(m);
                 i--;
             }
         }
+        
+        // Suppression du séparateur.
+        if (remove)
+        	menuFile.remove(12);
 	}
 	
 	public void updateMenuItemHistory()
 	{
 	    deleteMenuItemHistory();
 	    
-        for (String s : RecentProjectManager.getHistoryList())
-            menuFile.add(createMenuItem(s, "history", 0, "", ACTION_OPEN_RECENT_RPOJECT), 13);
+	    List<String> histories = RecentProjectManager.getHistoryList();
+		
+	    if (histories.size() > 0)
+	    	menuFile.add(new JSeparator(), 12);
+	    
+        for (String s : histories)
+        {
+        	JMenuItemHistory menuItem = new JMenuItemHistory(formatHistoryEntry(s));
+        	menuItem.setActionCommand(ACTION_OPEN_RECENT_RPOJECT);
+        	menuItem.addActionListener(this);
+        	menuItem.setHistoryPath(Paths.get(s));
+    		
+            menuFile.add(menuItem, 13);
+        }
+	}
+	
+	private String formatHistoryEntry(String entry)
+	{
+		final int VISIBLE_CAR = 10;
+		Path p = Paths.get(entry);
+		String parent = p.getParent().toString();
+		String text = p.getFileName().toString();
+		int parentLength = parent.length();
+		
+		if (parentLength > 20)
+			text += " [" + parent.substring(0, VISIBLE_CAR) + "..." + parent.substring(parentLength - VISIBLE_CAR) + "]";
+		else
+			text += " [" + parent + "]";
+		
+		return text;
 	}
 	
 	public JMenuItem createMenuItem(String text, String iconName, int mnemonic, String accelerator, String actionCommand, ActionListener al)
@@ -919,6 +962,46 @@ public class Slyum extends JFrame implements ActionListener
 				System.exit(0);
 				break;
 		}
+	}
+	
+	private class JMenuItemHistory extends JMenuItem
+	{
+		private Path historyPath;
+
+		public JMenuItemHistory() {
+			super();
+		}
+
+		public JMenuItemHistory(Action a) {
+			super(a);
+		}
+
+		public JMenuItemHistory(Icon icon) {
+			super(icon);
+		}
+
+		public JMenuItemHistory(String text, Icon icon) {
+			super(text, icon);
+		}
+
+		public JMenuItemHistory(String text, int mnemonic) {
+			super(text, mnemonic);
+		}
+
+		public JMenuItemHistory(String text) {
+			super(text);
+		}
+		
+		public void setHistoryPath(Path path)
+		{
+			historyPath = path;
+		}
+		
+		public Path getHistoryPath()
+		{
+			return historyPath;
+		}
+		
 	}
 
 	/**

@@ -561,6 +561,7 @@ public class PanelClassDiagram extends JPanel
 		} catch (final IOException e)
 		{
 			e.printStackTrace();
+			SMessageDialog.showErrorMessage(e.getLocalizedMessage());
 		}
 		
 		Change.setHasChange(false);
