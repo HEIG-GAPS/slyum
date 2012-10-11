@@ -1,0 +1,21 @@
+syntax: glob
+.classpath
+bin
+.project
+build
+src/swing/JPanelRounded.java.orig
+src/graphic/GraphicView.java.orig
+Slyum1.3 beta.jar
+nbproject/project.xml
+nbproject/project.properties
+nbproject/private/private.properties
+nbproject/private/config.properties
+nbproject/genfiles.properties
+nbproject/build-impl.xml
+manifest.mf
+build.xml
+dist/README.TXT
+dist/Slyum.jar
+nbproject/private/private.xml
+nbproject/private/profiler/configurations.xml
+dist/slyum.jar

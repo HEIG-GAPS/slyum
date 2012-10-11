@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="343pt"
+   height="340pt"
+   id="svg2985"
+   version="1.1"
+   inkscape:version="0.48.1 "
+   sodipodi:docname="class.svg">
+  <defs
+     id="defs2987">
+    <linearGradient
+       id="linearGradient3920">
+      <stop
+         style="stop-color:#f09f00;stop-opacity:1;"
+         offset="0"
+         id="stop3922" />
+      <stop
+         style="stop-color:#ffffdb;stop-opacity:1;"
+         offset="1"
+         id="stop3924" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient3772">
+      <stop
+         style="stop-color:#e4ff71;stop-opacity:1;"
+         offset="0"
+         id="stop3774" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0;"
+         offset="1"
+         id="stop3776" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3920"
+       id="linearGradient3926"
+       x1="255"
+       y1="271.25"
+       x2="-107.5"
+       y2="-126.25"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.04002765,0,0,0.04002765,-144.98836,329.56104)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3920-5"
+       id="linearGradient3926-1"
+       x1="255"
+       y1="271.25"
+       x2="-107.5"
+       y2="-126.25"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.58368,0,0,0.58368,-17.471536,158.97597)" />
+    <linearGradient
+       id="linearGradient3920-5">
+      <stop
+         style="stop-color:#f09f00;stop-opacity:1;"
+         offset="0"
+         id="stop3922-9" />
+      <stop
+         style="stop-color:#ffffdb;stop-opacity:1;"
+         offset="1"
+         id="stop3924-5" />
+    </linearGradient>
+    <linearGradient
+       y2="-126.25"
+       x2="-107.5"
+       y1="271.25"
+       x1="255"
+       gradientTransform="matrix(0.58368,0,0,0.58368,718.77106,540.19119)"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient4534"
+       xlink:href="#linearGradient3920-5"
+       inkscape:collect="always" />
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="398.67269"
+     inkscape:cy="251.829"
+     inkscape:document-units="pt"
+     inkscape:current-layer="layer4"
+     id="namedview2989"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1018"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     showguides="false"
+     inkscape:snap-global="false">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3862" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata2991">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="ombre">
+    <rect
+       style="opacity:0.43410854;fill:#000000;fill-opacity:1;stroke:none"
+       id="rect3889-8"
+       width="16.726629"
+       height="10.426264"
+       x="369.6774"
+       y="-513.41071"
+       transform="matrix(0.9999073,0.01361603,0.69107178,-0.72278613,0,0)"
+       inkscape:transform-center-x="-11.968114"
+       inkscape:transform-center-y="-3.649184" />
+  </g>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:url(#linearGradient3926);fill-opacity:1;stroke:none"
+       id="rect3918"
+       width="17.912373"
+       height="17.712234"
+       x="-145.28856"
+       y="329.26083"
+       transform="matrix(0.9060335,-0.42320598,0.42320598,0.9060335,0,0)"
+       inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\class.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="effet">
+    <path
+       style="fill:#ffb900;fill-opacity:1;stroke:none"
+       d="m 26.64845,358.03033 -6.221434,15.05524 10.783285,-4.81595"
+       id="path3892"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\class.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Cadre">
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.50034559;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3784-1"
+       width="17.354317"
+       height="7.194819"
+       x="-144.97562"
+       y="333.77972"
+       transform="matrix(0.9060335,-0.42320598,0.42320598,0.9060335,0,0)"
+       inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\class.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:1.00069118;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3889"
+       width="17.361992"
+       height="17.261923"
+       x="-145.03839"
+       y="329.46097"
+       transform="matrix(0.9060335,-0.42320598,0.42320598,0.9060335,0,0)"
+       inkscape:export-filename="D:\Mes documents\workspace\slyum\SlyUML\GUI\resources\icon\class.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+</svg>
