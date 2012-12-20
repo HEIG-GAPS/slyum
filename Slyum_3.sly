@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="iso-8859-15"?>
+
+<classDiagram name="Class diagram">
+	<diagramElements>
+		<entity id="4675" name="Class" visibility="PUBLIC" entityType="CLASS" isAbstract="false" />
+	</diagramElements>
+	<umlView name="view no name" grid="10">
+		<componentView componentID="4675" color="-1">
+				<geometry>
+					<x>390</x>
+					<y>310</y>
+					<w>150</w>
+					<h>56</h>
+				</geometry>
+		</componentView>
+	</umlView>
+</classDiagram>
