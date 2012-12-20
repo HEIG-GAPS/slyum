@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="iso-8859-15"?>
+
+<classDiagram name="Class diagram">
+	<diagramElements>
+		<entity id="1" name="Class" visibility="PUBLIC" entityType="CLASS" isAbstract="false" >
+			<attribute name="id" type="void" const="false" visibility="PRIVATE" defaultValue="" isStatic="false" />
+			<attribute name="max" type="void" const="false" visibility="PRIVATE" defaultValue="" isStatic="false" />
+			<attribute name="min" type="void" const="false" visibility="PRIVATE" defaultValue="" isStatic="false" />
+			<attribute name="default" type="void" const="false" visibility="PRIVATE" defaultValue="" isStatic="false" />
+			<attribute name="lines" type="void" const="false" visibility="PRIVATE" defaultValue="" isStatic="false" />
+		</entity>
+	</diagramElements>
+	<umlView name="view no name" grid="10">
+		<componentView componentID="1" color="-2079">
+				<geometry>
+					<x>180</x>
+					<y>50</y>
+					<w>150</w>
+					<h>136</h>
+				</geometry>
+		</componentView>
+	</umlView>
+</classDiagram>
