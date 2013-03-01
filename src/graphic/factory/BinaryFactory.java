@@ -96,10 +96,10 @@ public class BinaryFactory extends RelationFactory
 
 			final MultiLineView mlv = new MultiLineView(parent, multiView, classView, role, multiPos, classPos, false);
 			multiView.addMultiLineView(mlv);
-		}
 
-		repaint();
-		return null;
+	        repaint();
+			return mlv;
+		}
 	}
 	
 	@Override
