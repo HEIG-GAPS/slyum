@@ -1,0 +1,151 @@
+Note de patch 1.3 :
+
+ - Enregistrer la vue des méthodes et des paramètres.
+ 
+ - Intégration du Annuler / Refaire
+
+ - Corriger les issues de google code
+
+ - Ajouter une vue des propriétés pour d'autres composants (comme les héritage ou les notes).
+ 
+ - Ajouter d'autres barres d'outils et menus.
+ 
+ - Tester sur Mac Os X
+ 
+ - Pouvoir éditer les éléments de la vue hiérarchique.
+ 
+ - Easter eggs!
+
+Futures implémentations :
+
+ - Trouver pourquoi le déplacement des associations est plus lent que le déplacement d'autres composants qui nécessitent la même taille pour la zone de dessin.
+
+ - Refonte des classes internes.
+ 
+ - Adapter les barres d'outils en fonction de la taille de la fenêtre.
+
+ - Permettre de glisser et déposer les classes de la vue hiérarchique sur le diagramme de classes.
+
+ - Utiliser une précision en float (ou double) au lieu de int pour le dessin.
+
+ - Pouvoir ouvrir plusieurs projets.
+
+ - Pouvoir ouvrir plusieurs diagrammes de classes dans un même projet.
+
+ - Revoir l'enregistrement en format xml et son importation proprement.
+
+ - Revoir la classe EntityProperties proprement.
+
+Déjà implémentées :
+
+ - Refonte de la fenêtre de propriétés et de l'emplacement du fichier de configuration.
+
+ - Refonte du système d'importation et d'exportation des propriétés.
+
+ - Ajout d'un bouton "Reset" dans les propriétés qui remettront à leur valeur initiale TOUS les paramètres de l'application.
+
+ - Ajout de la possibilité de rendre transparent la grille.
+
+ - Ajout la possibilité de choisir la couleur de la grille.
+
+ - Ajout de la possibilité de choisir la qualité du rendu.
+
+ - Ajout de messages d'erreur lorsqu'un composant ne se crée pas.
+
+ - Ajout de la possibilité de supprimer l'affichage des messages d'erreur cités ci-dessus.
+
+ - Ajout d'un menu en croix qui s'affiche au niveau du curseur de la souris lors de la sélection d'entité. Ce menu permet de changer la mise en forme des entités sélectionnées.
+
+ - Ajout de la possibilité de ne pas afficher le menu cité ci-dessus.
+
+ - Ajout de la possibilité d'afficher des petits icônes dans la vue des propriétés.
+
+ - Unification des polices d'écritures
+
+ - Refonte de l'interface, des barres d'outils et des vues pour un style plus "épuré".
+
+ - Refonte du système d'icône de l'application, ils sont maintenant encapsulés dans une seule classe.
+
+ - Refonte du système de boîte de dialogue de l'application. Elles sont maintenant encapsulées dans une seule classe.
+
+ - Si vous ouvrez, fermez ou quittez l'application, un message vous demandera de sauvegarder votre travail seulement si des modifications ont été effectuées dessus.
+
+ - Le nom du projet actuel est maintenant visible sur la barre de titre.
+
+ - Un astérisque (*) est maintenant affiché sur la barre de titre si le projet en cours comporte des modifications non sauvegardées.
+
+ - L'emplacement du dernier projet sauvegardé ou ouvert est maintenant enregistré. Cela permet de se trouver dans le bon dossier lors de l'ouverture des boîtes de dialogues "Enregistrer" et "Ouvrir". Avant elles pointaient toujours dans votre dossier "home".
+
+ - La fonction "Overrides & Implementations" fait maintenant des copies profondes des méthodes surchargées. Cela permet de modifier le type de retour (covariance) et le status (abstrait ou non) des méthodes sans que cela soit répercuté sur la méthode overridé. Cependant comme il s'agit d'une copie profonde, le changement de nom ou des paramètres ne sera plus repercuté sur la méthode overridé.
+
+ - Refonte du système de raccourcis clavier pour le rendre plus générique.
+
+ - Ajout de tooltip pour les boutons des menus (et affichage des raccourcis clavier dans ceux-ci).
+
+ - Correction du bug qui demande plusieurs fois à l'utilisateur de sauvegarder son projet lors de l'ouverture ou de la sauvegarde d'un projet existant.
+
+ - Suppression du menu permettant de changer la taille de la grille (la taille sera modifiable depuis la fenêtre des propriétés).
+
+ - Suppression des boutons permettant de modifier la taille du texte (la taille du texte sera modifiable depuis la fenêtre des propriétés).
+
+ - La couleur de fond est maintenant propre à la configuration de Slyum et plus à celle d'un projet. Ceci est aussi valable pour la taille de la police.
+
+ - L'exportation sous format gif et jpg se fait maintenant correctement avec un fond blanc. L'exportation au format gif ne prend pas en compte la transparance.
+
+ - Ajout d'un message d'avertissement au lancement du programme pour les utilisateurs Linux pour les décourager d'utiliser OpenJDK.
+
+ - Il est maintenant impossible de mettre une méthode abstraite si la classe ne l'est pas.
+
+ - Si une classe abstraite possédant des méthodes abstraites est "dé-abstraite", une demande de confirmation apparaîtra indiquant que toutes les méthodes abstraites seront également "dé-abstraite".
+
+ - Si une classe non abstraite redéfinie des méthodes abstraites d'une classe parente abstraite, les méthodes abstraites seront automatiquement "dé-abstraite". Un message informant ce processus sera affiché à l'utilisateur.
+
+ - Ajout d'une barre d'outils pour modifier le z-order.
+
+ - Ajout d'une barre d'outils pour modifier la couleur / supprimer ou lier une nouvelle note au éléments sélectionnés.
+
+ - Lorsque l'on crée une nouvelle note depuis le menu contextuel ou depuis la barre d'outils, celle-ci sera liée à tous les composants sélectionnés (pouvant être liés aux notes).
+
+ - Ajout de la possibilité de scroller verticalement avec la souris.
+
+ - Ajout d'une fenêtre de chargement pour l'ouverture des projets.
+
+ - Encodage des caractère ">" et "<".
+
+ - Ajout d'un bouton permetant de copier les éléments sélectionnés du diagramme de classes dans le presse-papier.
+
+ - Ajout du menu pour copier la sélection dans le presse papier.
+
+ - Ajout du menu pour tout sélectionner et tout désélectionner.
+
+ - Création d'une classe SlyFileChooser pour unifier les deux FileChooser anonyme existant pour sélectionner un fichier de type "sly".
+ 
+ - Ascenceur plus rapide et réagissant à la roulette de la souris.
+
+ - Modifier la taille de la grille dans les paramètres (et l'enlever du menu).
+
+ - Le paramètrage de la transparence ne refonctionne plus.
+ 
+ - Utiliser la molette de la souris pour se déplacer sur le diagramme de classe.
+ 
+ - Permetttre d'effectuer des zoom du diagramme de classes.
+ 
+ - Désactiver les boutons (barre d'outils, menu contextuel, etc.) lorsque leur utilisation n'effectue aucune action.
+ 
+ - Support des tableaux et des Listes
+ 
+ - Corriger bugs d'ouverture de projet (à cause du multi-thread).
+ 
+ - Corriger le bug qui ne replace pas correctement le lien des notes après l'ouverture d'un projet.
+ 
+ - Menus contextuels
+ 
+ - Revoir Z-Order
+ 
+ - Bug : Création d'une association -> Ctrl+Z -> Ctrl + Y -> Suppression de l'association -> Ctrl+Z -> Ctrl+Y
+ 
+ - Ajout d'une vue des propriétés aux relations d'héritages.
+ 
+ - Ajout d'une vue des propriétés aux notes.
+ 
+ - Amélioration de l'ergonomie en interdisant des actions qui n'auraient aucun effet.
