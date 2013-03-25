@@ -1,6 +1,9 @@
 package classDiagram;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import utility.Utility;
 import classDiagram.components.AssociationClass;
@@ -210,6 +213,15 @@ public class ClassDiagram implements IComponentsObserver
 	public LinkedList<IDiagramComponent> getComponents()
 	{
 		return (LinkedList<IDiagramComponent>) components.clone();
+	}
+	
+	@SuppressWarnings("unchecked")
+    public <T> List<T> getComponentsByType(Class<T> type) {
+	    LinkedList<T> filteredList = new LinkedList<>();
+	    for (IDiagramComponent c : components)
+	        if (c.getClass().equals(type))
+	            filteredList.add((T)c);
+	    return filteredList;
 	}
 
 	/**

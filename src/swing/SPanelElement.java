@@ -13,6 +13,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 
 import utility.PersonalizedIcon;
+import xml.XmlWriter;
 
 public class SPanelElement extends JPanelRounded implements ActionListener, IListenerComponentSelectionChanged
 {

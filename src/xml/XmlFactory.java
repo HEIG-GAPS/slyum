@@ -2,13 +2,11 @@ package xml;
 
 /**
  * Factory for creating xml views of models.
+ * Factories extended are automatically loaded by XmlWriter.
+ * No need to manually add new factory.
  * @author David Miserez
  */
 public abstract class XmlFactory {
-
-    public XmlFactory() {
-        XmlWriter.getInstance().addXmlFactory(this);
-    }
     
     public String createXml(Object model) {
         if (!isModelCompatible(model))

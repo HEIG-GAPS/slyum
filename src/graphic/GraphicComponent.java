@@ -1,6 +1,5 @@
 package graphic;
 
-import graphic.entity.EntityView;
 import graphic.relations.LineView;
 
 import java.awt.Color;
@@ -21,7 +20,6 @@ import javax.swing.JRadioButtonMenuItem;
 import swing.PanelClassDiagram;
 import swing.SPanelDiagramComponent;
 import swing.Slyum;
-import swing.SColorChooser;
 import utility.PersonalizedIcon;
 import change.BufferCreation;
 import change.Change;
@@ -91,13 +89,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 	
 	public static void askNewColorForSelectedItems()
 	{
-		final SColorChooser scc = new SColorChooser(EntityView.getBasicColor());
-		
-		scc.setVisible(true);
-
-		if (scc.isAccepted())
-			
-			PanelClassDiagram.getInstance().getCurrentGraphicView().changeColorForSelectedItems(scc.getColor());
+		PanelClassDiagram.getInstance().getCurrentGraphicView().changeColorForSelectedItems();
 	}
 
 	/**
