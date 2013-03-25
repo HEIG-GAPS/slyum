@@ -1,5 +1,6 @@
 package graphic.entity;
 
+import graphic.ColoredComponent;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.MovableComponent;
@@ -56,7 +57,7 @@ import classDiagram.components.Visibility;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public abstract class EntityView extends MovableComponent implements Observer
+public abstract class EntityView extends MovableComponent implements Observer, ColoredComponent
 {
 	public static final Color baseColor = new Color(255, 247, 225);
 	private static Color basicColor = new Color(baseColor.getRGB());
@@ -598,6 +599,10 @@ public abstract class EntityView extends MovableComponent implements Observer
 	public Entity getComponent()
 	{
 		return component;
+	}
+	
+	public Color getDefaultColor() {
+	    return getBasicColor();
 	}
 
 	@Override
