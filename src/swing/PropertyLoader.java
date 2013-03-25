@@ -18,7 +18,6 @@ public class PropertyLoader
 	public static final String CTRL_FOR_GRIP = "ctrlForGrip";
 	public static final String GRID_POINT_OPACITY = "GridPointOpacity";
 	public static final String GRID_OPACITY_ENABLE = "gridOpacityEnable";
-	public static final String SMALL_ICON = "SmallIcon";
 	public static final String SHOW_ERROR_MESSAGES = "ShowErrorMessages";
 	public static final String SHOW_CROSS_MENU = "ShowCrossMenu";
 	public static final String GRID_VISIBLE = "GridVisible";

@@ -2,14 +2,15 @@ package change;
 
 import java.awt.Color;
 
+import graphic.ColoredComponent;
 import graphic.GraphicComponent;
 
 public class BufferColor implements Changeable
 {
-	private GraphicComponent gc;
+	private ColoredComponent gc;
 	private Color color;
 	
-	public BufferColor(GraphicComponent gc)
+	public BufferColor(ColoredComponent gc)
 	{
 		this.gc = gc;
 		this.color = gc.getColor();
@@ -19,7 +20,7 @@ public class BufferColor implements Changeable
 	public void restore()
 	{
 		gc.setColor(color);
-		gc.repaint();
+		((GraphicComponent)gc).repaint();
 	}
 
 }

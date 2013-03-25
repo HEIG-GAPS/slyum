@@ -1,5 +1,6 @@
 package graphic.textbox;
 
+import graphic.ColoredComponent;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.MovableComponent;
@@ -40,7 +41,7 @@ import classDiagram.IDiagramComponent.UpdateMessage;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class TextBoxCommentary extends MovableComponent
+public class TextBoxCommentary extends MovableComponent implements ColoredComponent
 {
 	public static final String DEFAULT_TEXT = "Double-click to edit note.";
 	public static final Point MINIMUM_SIZE = new Point(50, 50);
@@ -444,4 +445,9 @@ public class TextBoxCommentary extends MovableComponent
 
 		return xml;
 	}
+
+    @Override
+    public Color getDefaultColor() {
+        return EntityView.getBasicColor();
+    }
 }
