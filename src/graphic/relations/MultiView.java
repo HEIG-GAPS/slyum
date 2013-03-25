@@ -1,5 +1,6 @@
 package graphic.relations;
 
+import graphic.ColoredComponent;
 import graphic.GraphicView;
 import graphic.MovableComponent;
 import graphic.entity.ClassView;
@@ -34,7 +35,7 @@ import classDiagram.relationships.Role;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class MultiView extends MovableComponent implements Observer
+public class MultiView extends MovableComponent implements Observer, ColoredComponent
 {
 	private Rectangle bounds = new Rectangle(50, 50);
 
@@ -192,6 +193,11 @@ public class MultiView extends MovableComponent implements Observer
 
 		return new Rectangle(bounds);
 	}
+    
+    @Override
+    public Color getDefaultColor() {
+        return EntityView.getBasicColor();
+    }
 
 	@SuppressWarnings("unchecked")
 	public LinkedList<MultiLineView> getMultiLinesView()

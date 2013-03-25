@@ -1,5 +1,6 @@
 package graphic.relations;
 
+import graphic.ColoredComponent;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.textbox.TextBox;
@@ -39,7 +40,7 @@ import utility.Utility;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public abstract class LineView extends GraphicComponent
+public abstract class LineView extends GraphicComponent implements ColoredComponent
 {
 	private static Color basicColor = Color.DARK_GRAY;
 
@@ -331,6 +332,11 @@ public abstract class LineView extends GraphicComponent
 
 		return bounds;
 	}
+    
+    @Override
+    public Color getDefaultColor() {
+        return getBasicColor();
+    }
 
 	/**
 	 * Get the first grip.

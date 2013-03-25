@@ -1,5 +1,6 @@
 package swing;
 
+import graphic.ColoredComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.textbox.TextBox;
@@ -51,10 +52,9 @@ import javax.swing.UIManager;
 
 public class SProperties extends JDialog
 {
-	private static final long serialVersionUID = 1739834798588561464L;
-	private JButton btnColor;
-	private JButton btnBackgroundColor;
-	private JButton btnDefaultClassColor;
+	private ButtonColor btnColor;
+	private ButtonColor btnBackgroundColor;
+	private ButtonColor btnDefaultClassColor;
 	private final JPanel contentPanel = new JPanel();
 	private JLabel lblPreviewFont = new JLabel();
 	private JList<String> listName;
@@ -75,6 +75,29 @@ public class SProperties extends JDialog
 	private JCheckBox chckbxShowGrid;
 	private JPanel panel_Grid, panel_grid_color, panel_grid_opacity;
 	private JCheckBox chckbxEnableGrid;
+	
+	private abstract class ButtonColor extends JButton implements ColoredComponent {
+
+        public ButtonColor(String name) {
+            super(name);
+        }
+
+        @Override
+        public Color getColor() {
+            return getBackground();
+        }
+
+        @Override
+        public void setColor(Color color) {
+            setBackground(color);
+        }
+
+        @Override
+        public void setDefaultStyle() {
+            setBackground(getDefaultColor());
+        }
+	    
+	}
 	
 	/**
 	 * Create the dialog.
@@ -129,7 +152,12 @@ public class SProperties extends JDialog
 					gbl_panel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 					gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 					panel.setLayout(gbl_panel);
-					btnDefaultClassColor = new JButton("Default class color");
+					btnDefaultClassColor = new ButtonColor("Default class color") {
+                        @Override
+                        public Color getDefaultColor() {
+                            return EntityView.baseColor;
+                        }
+                    };
 					final GridBagConstraints gbc_btnDefaultClassColor = new GridBagConstraints();
 					gbc_btnDefaultClassColor.fill = GridBagConstraints.HORIZONTAL;
 					gbc_btnDefaultClassColor.insets = new Insets(0, 10, 5, 10);
@@ -137,7 +165,12 @@ public class SProperties extends JDialog
 					gbc_btnDefaultClassColor.gridy = 0;
 					panel.add(btnDefaultClassColor, gbc_btnDefaultClassColor);
 					btnDefaultClassColor.setBackground(EntityView.getBasicColor());
-					btnBackgroundColor = new JButton("Background-color");
+					btnBackgroundColor = new ButtonColor("Background-color") {
+                        @Override
+                        public Color getDefaultColor() {
+                            return GraphicView.BASIC_COLOR;
+                        }
+					};
 					final GridBagConstraints gbc_btnBackgroundColor = new GridBagConstraints();
 					gbc_btnBackgroundColor.fill = GridBagConstraints.HORIZONTAL;
 					gbc_btnBackgroundColor.insets = new Insets(0, 10, 5, 10);
@@ -146,15 +179,8 @@ public class SProperties extends JDialog
 					panel.add(btnBackgroundColor, gbc_btnBackgroundColor);
 					btnBackgroundColor.addActionListener(new ActionListener() {
 
-						public void actionPerformed(ActionEvent arg0)
-						{
-							final SColorChooser scc = new SColorChooser(btnBackgroundColor.getBackground());
-							scc.setVisible(true);
-
-							if (scc.isAccepted())
-
-								btnBackgroundColor.setBackground(scc.getColor());
-
+						public void actionPerformed(ActionEvent e) {
+							new SColorAssigner(btnBackgroundColor);
 						}
 					});
 					{
@@ -170,8 +196,7 @@ public class SProperties extends JDialog
 					{
 						chckbxEnableGrid = new JCheckBox("Enable grid");
 						chckbxEnableGrid.addChangeListener(new ChangeListener() {
-							public void stateChanged(ChangeEvent arg0)
-							{
+							public void stateChanged(ChangeEvent e) {
 								setEnableGrid(chckbxEnableGrid.isSelected());
 							}
 						});
@@ -183,15 +208,10 @@ public class SProperties extends JDialog
 						panel.add(chckbxEnableGrid, gbc_chckbxEnableGrid);
 					}
 					{
-						panel_Grid = new JPanel()
-						{
-							private static final long serialVersionUID = 1L;
-
+						panel_Grid = new JPanel() {
 							@Override
-							public void setEnabled(boolean enabled)
-							{
+							public void setEnabled(boolean enabled) {
 								super.setEnabled(enabled);
-								
 								for (Component c : panel_Grid.getComponents())
 									c.setEnabled(enabled);
 							}
@@ -367,9 +387,12 @@ public class SProperties extends JDialog
 										bgBackgroundGrid.add(rdbtnSelectedColor);
 									}
 									{
-										btnColor = new JButton("Color")
-										{
-											private static final long serialVersionUID = 1L;
+										btnColor = new ButtonColor("Color") {
+                                            
+                                            @Override
+                                            public Color getDefaultColor() {
+                                                return new Color(GraphicView.GRID_COLOR);
+                                            }
 
 											@Override
 											public void setEnabled(boolean b) {
@@ -378,14 +401,8 @@ public class SProperties extends JDialog
 										};
 										panel_3.add(btnColor);
 										btnColor.addActionListener(new ActionListener() {
-											public void actionPerformed(ActionEvent arg0)
-											{
-												final SColorChooser scc = new SColorChooser(new Color(GraphicView.getGridColor()));
-												scc.setVisible(true);
-
-												if (scc.isAccepted())
-												
-													btnColor.setBackground(scc.getColor());
+											public void actionPerformed(ActionEvent e) {
+												new SColorAssigner(btnColor);
 											}
 										});
 									}
@@ -394,15 +411,8 @@ public class SProperties extends JDialog
 						}
 					}
 					btnDefaultClassColor.addActionListener(new ActionListener() {
-
-						public void actionPerformed(ActionEvent arg0)
-						{
-							final SColorChooser scc = new SColorChooser(btnDefaultClassColor.getBackground());
-							scc.setVisible(true);
-
-							if (scc.isAccepted())
-
-								btnDefaultClassColor.setBackground(scc.getColor());
+						public void actionPerformed(ActionEvent e) {
+							new SColorAssigner(btnDefaultClassColor);
 						}
 					});
 				}
@@ -615,15 +625,6 @@ public class SProperties extends JDialog
 						panel.add(chckbxUseCtrlFor, gbc_chckbxUseCtrlFor);
 					}
 					{
-						chckbxUseSmallIcons = new JCheckBox("Use small icons (need restart application)");
-						GridBagConstraints gbc_chckbxUseSmallIcons = new GridBagConstraints();
-						gbc_chckbxUseSmallIcons.anchor = GridBagConstraints.WEST;
-						gbc_chckbxUseSmallIcons.insets = new Insets(0, 5, 5, 0);
-						gbc_chckbxUseSmallIcons.gridx = 0;
-						gbc_chckbxUseSmallIcons.gridy = 1;
-						panel.add(chckbxUseSmallIcons, gbc_chckbxUseSmallIcons);
-					}
-					{
 						chckbxDisableErrorMessage = new JCheckBox("Show error messages during the creation of components");
 						GridBagConstraints gbc_chckbxDisableErrorMessage = new GridBagConstraints();
 						gbc_chckbxDisableErrorMessage.anchor = GridBagConstraints.WEST;
@@ -674,7 +675,6 @@ public class SProperties extends JDialog
 							properties.put(PropertyLoader.CTRL_FOR_GRIP, String.valueOf(chckbxUseCtrlFor.isSelected()));
 							properties.put(PropertyLoader.GRID_POINT_OPACITY, String.valueOf(sliderGridPoint.getValue()));
 							properties.put(PropertyLoader.GRID_OPACITY_ENABLE, String.valueOf(chckbxOpacityGrid.isSelected()));
-							properties.put(PropertyLoader.SMALL_ICON, String.valueOf(chckbxUseSmallIcons.isSelected()));
 							properties.put(PropertyLoader.SHOW_ERROR_MESSAGES, String.valueOf(chckbxDisableErrorMessage.isSelected()));
 							properties.put(PropertyLoader.SHOW_CROSS_MENU, String.valueOf(chckbxDisableCrossPopup.isSelected()));
 							properties.put(PropertyLoader.GRID_VISIBLE, String.valueOf(chckbxShowGrid.isSelected()));
@@ -790,7 +790,6 @@ public class SProperties extends JDialog
 		}
 		chckbxDisableErrorMessage.setSelected(Slyum.isShowErrorMessage());
 		chckbxDisableCrossPopup.setSelected(Slyum.isShowCrossMenu());
-		chckbxUseSmallIcons.setSelected(Slyum.getSmallIcons());
 		chckbxEnableGrid.setSelected(GraphicView.isGridEnable());
 
 		if (GraphicView.isAutomatiqueGridColor())

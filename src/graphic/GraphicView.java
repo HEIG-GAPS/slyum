@@ -41,8 +41,10 @@ import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
@@ -55,17 +57,16 @@ import javax.swing.JScrollPane;
 import swing.IListenerComponentSelectionChanged;
 import swing.PanelClassDiagram;
 import swing.PropertyLoader;
+import swing.SColorAssigner;
 import swing.SPanelElement;
 import swing.SPanelStyleComponent;
 import swing.SPanelZOrder;
 import swing.Slyum;
-import swing.SColorChooser;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.SizedCursor;
 import utility.Utility;
 import change.BufferBounds;
-import change.BufferColor;
 import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IComponentsObserver;
@@ -94,7 +95,14 @@ import javax.swing.SwingUtilities;
  * @version 1.0 - 25.07.2011
  */
 @SuppressWarnings("serial")
-public class GraphicView extends GraphicComponent implements MouseMotionListener, MouseListener, IComponentsObserver, Printable, KeyListener, MouseWheelListener
+public class GraphicView extends GraphicComponent implements
+  MouseMotionListener,
+  MouseListener,
+  IComponentsObserver,
+  Printable,
+  KeyListener,
+  MouseWheelListener,
+  ColoredComponent
 {
 	public final static boolean BACKGROUND_GRADIENT = true;
 	public final static boolean CTRL_FOR_GRIP = false;
@@ -568,13 +576,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	public void actionPerformed(ActionEvent e)
 	{
 		if ("Color".equals(e.getActionCommand()))
-		{
-			final SColorChooser scc = new SColorChooser(getColor());
-			scc.setVisible(true);
-
-			if (scc.isAccepted())
-				setColor(scc.getColor());
-		}
+		    new SColorAssigner(this);
 		else
 			super.actionPerformed(e);
 
@@ -939,32 +941,16 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 	 * @param newColor
 	 *            the new color for selected components
 	 */
-	public void changeColorForSelectedItems(Color newColor)
+	public void changeColorForSelectedItems()
 	{
-		LinkedList<GraphicComponent> gc = getSelectedComponents();
+	    List<GraphicComponent> gc = getSelectedComponents();
+		List<ColoredComponent> colored = getColoredComponents(gc);
 		
 		if (gc.isEmpty())
-			
-			setColor(newColor);
+			colored.add(this);
 		
-		else
-		{
-			boolean isRecord = Change.isRecord();
-			Change.record();
-			
-			for (final GraphicComponent c : getSelectedComponents())
-			{
-				// Set default style before save color.
-				c.setDefaultStyle();
-				
-				Change.push(new BufferColor(c));
-				c.setColor(newColor);
-				Change.push(new BufferColor(c));
-			}
-			
-			if (!isRecord)
-				Change.stopRecord();
-		}
+		new SColorAssigner((ColoredComponent[])colored.toArray(
+		        new ColoredComponent[colored.size()]));
 	}
 
 	/**
@@ -1204,6 +1190,11 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
 		return component;
 	}
+    
+	@Override
+    public Color getDefaultColor() {
+        return BASIC_COLOR;
+    }
 
 	/**
 	 * Same as getComponentListAtPosition(), but search only diagram elements
@@ -1422,6 +1413,15 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 				selected.add(c);
 
 		return selected;
+	}
+	
+	public List<ColoredComponent> getColoredComponents(List<GraphicComponent> components) {
+	    LinkedList<ColoredComponent> c = new LinkedList<>();
+	    for (GraphicComponent g : components)
+	        if (g instanceof ColoredComponent)
+	            c.add((ColoredComponent)g);
+	    return c;
+	    
 	}
 
 	/**
