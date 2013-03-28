@@ -58,8 +58,4 @@ public class XmlWriter {
         }
         return xml;
     }
-    
-    public static void main(String... args) {
-    }
-
 }

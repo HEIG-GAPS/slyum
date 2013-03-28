@@ -6,11 +6,18 @@
 			<source>1</source>
 			<target>168</target>
 		</dependency>
-		<entity id="168" name="classDiagram" visibility="PUBLIC" entityType="CLASS" isAbstract="false" >
-			<method name="getObjectByClass" returnType="void" visibility="PUBLIC" isStatic="false" isAbstract="false" >
-				<variable name="c" type="Object" const="false"/>
-			</method>
-		</entity>
+		<inheritance id="106">
+			<child>103</child>
+			<parent>2</parent>
+		</inheritance>
+		<inheritance id="107">
+			<child>104</child>
+			<parent>2</parent>
+		</inheritance>
+		<inheritance id="108">
+			<child>105</child>
+			<parent>2</parent>
+		</inheritance>
 		<association id="145" name="" direction="true" aggregation="AGGREGATE">
 			<role componentId="1" name="" visibility="PRIVATE">
 				<multiplicity>
@@ -25,49 +32,34 @@
 				</multiplicity>
 			</role>
 		</association>
-		<inheritance id="108">
-			<child>105</child>
-			<parent>2</parent>
-		</inheritance>
-		<inheritance id="107">
-			<child>104</child>
-			<parent>2</parent>
-		</inheritance>
-		<inheritance id="106">
-			<child>103</child>
-			<parent>2</parent>
-		</inheritance>
-		<entity id="105" name="XmlAssociationFactory" visibility="PUBLIC" entityType="CLASS" isAbstract="false" />
-		<entity id="104" name="XmlInterfaceFactory" visibility="PUBLIC" entityType="CLASS" isAbstract="false" />
-		<entity id="103" name="XmlClassFactory" visibility="PUBLIC" entityType="CLASS" isAbstract="false" />
+		<entity id="1" name="XmlWriter" visibility="PUBLIC" entityType="CLASS" isAbstract="false" />
 		<entity id="2" name="XmlFactory" visibility="PUBLIC" entityType="CLASS" isAbstract="true" >
 			<method name="getCreatedClass" returnType="Class" visibility="PUBLIC" isStatic="false" isAbstract="true" />
 			<method name="createXml" returnType="String" visibility="PUBLIC" isStatic="false" isAbstract="true" >
 				<variable name="model" type="Object" const="false"/>
 			</method>
 		</entity>
-		<entity id="1" name="XmlWriter" visibility="PUBLIC" entityType="CLASS" isAbstract="false" />
+		<entity id="103" name="XmlClassFactory" visibility="PUBLIC" entityType="CLASS" isAbstract="false" />
+		<entity id="104" name="XmlInterfaceFactory" visibility="PUBLIC" entityType="CLASS" isAbstract="false" />
+		<entity id="105" name="XmlAssociationFactory" visibility="PUBLIC" entityType="CLASS" isAbstract="false" />
+		<entity id="168" name="classDiagram" visibility="PUBLIC" entityType="CLASS" isAbstract="false" >
+			<method name="getObjectByClass" returnType="void" visibility="PUBLIC" isStatic="false" isAbstract="false" >
+				<variable name="c" type="Object" const="false"/>
+			</method>
+		</entity>
 	</diagramElements>
 	<umlView name="view no name" grid="10">
-		<componentView componentID="1" color="-2079">
+		<componentView componentID="168" color="-2079">
 				<geometry>
-					<x>140</x>
-					<y>120</y>
-					<w>150</w>
-					<h>56</h>
+					<x>120</x>
+					<y>320</y>
+					<w>220</w>
+					<h>72</h>
 				</geometry>
 		</componentView>
-		<componentView componentID="2" color="-2079">
+		<componentView componentID="105" color="-2079">
 				<geometry>
-					<x>530</x>
-					<y>110</y>
-					<w>210</w>
-					<h>88</h>
-				</geometry>
-		</componentView>
-		<componentView componentID="103" color="-2079">
-				<geometry>
-					<x>450</x>
+					<x>800</x>
 					<y>260</y>
 					<w>150</w>
 					<h>56</h>
@@ -81,58 +73,30 @@
 					<h>56</h>
 				</geometry>
 		</componentView>
-		<componentView componentID="105" color="-2079">
+		<componentView componentID="103" color="-2079">
 				<geometry>
-					<x>800</x>
+					<x>450</x>
 					<y>260</y>
 					<w>150</w>
 					<h>56</h>
 				</geometry>
 		</componentView>
-		<componentView componentID="168" color="-2079">
+		<componentView componentID="2" color="-2079">
 				<geometry>
-					<x>120</x>
-					<y>390</y>
-					<w>220</w>
-					<h>72</h>
+					<x>530</x>
+					<y>110</y>
+					<w>210</w>
+					<h>88</h>
 				</geometry>
 		</componentView>
-		<relationView relationId="106" color="-12566464">
-			<line>
-				<point>
-					<x>510</x>
-					<y>260</y>
-				</point>
-				<point>
-					<x>569</x>
-					<y>198</y>
-				</point>
-			</line>
-		</relationView>
-		<relationView relationId="107" color="-12566464">
-			<line>
-				<point>
-					<x>665</x>
-					<y>260</y>
-				</point>
-				<point>
-					<x>647</x>
-					<y>198</y>
-				</point>
-			</line>
-		</relationView>
-		<relationView relationId="108" color="-12566464">
-			<line>
-				<point>
-					<x>846</x>
-					<y>260</y>
-				</point>
-				<point>
-					<x>740</x>
-					<y>195</y>
-				</point>
-			</line>
-		</relationView>
+		<componentView componentID="1" color="-2079">
+				<geometry>
+					<x>140</x>
+					<y>120</y>
+					<w>150</w>
+					<h>56</h>
+				</geometry>
+		</componentView>
 		<relationView relationId="145" color="-12566464">
 			<line>
 				<point>
@@ -175,6 +139,42 @@
 				<h>19</h>
 			</multipliciteAssociation>
 		</relationView>
+		<relationView relationId="108" color="-12566464">
+			<line>
+				<point>
+					<x>846</x>
+					<y>260</y>
+				</point>
+				<point>
+					<x>740</x>
+					<y>195</y>
+				</point>
+			</line>
+		</relationView>
+		<relationView relationId="107" color="-12566464">
+			<line>
+				<point>
+					<x>665</x>
+					<y>260</y>
+				</point>
+				<point>
+					<x>647</x>
+					<y>198</y>
+				</point>
+			</line>
+		</relationView>
+		<relationView relationId="106" color="-12566464">
+			<line>
+				<point>
+					<x>510</x>
+					<y>260</y>
+				</point>
+				<point>
+					<x>569</x>
+					<y>198</y>
+				</point>
+			</line>
+		</relationView>
 		<relationView relationId="210" color="-12566464">
 			<line>
 				<point>
@@ -183,12 +183,12 @@
 				</point>
 				<point>
 					<x>213</x>
-					<y>390</y>
+					<y>320</y>
 				</point>
 			</line>
 			<labelAssociation>
-				<x>225</x>
-				<y>283</y>
+				<x>224</x>
+				<y>239</y>
 				<w>23</w>
 				<h>19</h>
 			</labelAssociation>
