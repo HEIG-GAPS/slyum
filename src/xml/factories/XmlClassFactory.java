@@ -15,5 +15,4 @@ public class XmlClassFactory extends XmlFactory {
         ClassDiagram o = (ClassDiagram)model;
         return o.getName();
     }
-
 }
