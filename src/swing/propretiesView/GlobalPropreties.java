@@ -16,9 +16,7 @@ import classDiagram.IDiagramComponent.UpdateMessage;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public abstract class GlobalPropreties extends JPanel implements Observer
-{
-	private static final long serialVersionUID = -8133405814886981455L;
+public abstract class GlobalPropreties extends JPanel implements Observer {
 	protected Object currentObject = null;
 
 	public GlobalPropreties()

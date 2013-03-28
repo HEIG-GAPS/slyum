@@ -34,8 +34,6 @@ public class RelationPropreties extends GlobalPropreties
 {
 	private static RelationPropreties instance = new RelationPropreties();
 
-	private static final long serialVersionUID = -6963860886146010082L;
-
 	/**
 	 * Get the unique instance of this class.
 	 * 
@@ -168,14 +166,6 @@ public class RelationPropreties extends GlobalPropreties
 		gbl_RolesPanel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
 		gbl_RolesPanel.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
 		RolesPanel.setLayout(gbl_RolesPanel);
-
-		final JLabel lblRoles = new JLabel("Roles");
-		lblRoles.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		final GridBagConstraints gbc_lblRoles = new GridBagConstraints();
-		gbc_lblRoles.insets = new Insets(0, 0, 5, 0);
-		gbc_lblRoles.gridx = 0;
-		gbc_lblRoles.gridy = 0;
-		RolesPanel.add(lblRoles, gbc_lblRoles);
 
 		final JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBorder(null);

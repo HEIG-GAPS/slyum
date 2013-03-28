@@ -63,7 +63,7 @@ public class SlyumRolePanel extends JPanelRounded implements Observer
 		setLayout(gridBagLayout);
 
 		lblRolename = new JLabel(role.getEntity().getName());
-		lblRolename.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblRolename.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		final GridBagConstraints gbc_lblRolename = new GridBagConstraints();
 		gbc_lblRolename.insets = new Insets(0, 0, 5, 0);
 		gbc_lblRolename.gridx = 0;
