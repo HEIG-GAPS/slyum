@@ -23,8 +23,6 @@ import java.awt.event.ActionListener;
 public class InheritanceProperties extends GlobalPropreties implements ActionListener
 {
 	public static final String ACTION_OI = "O&I";
-	
-	private static final long serialVersionUID = -4380508350610568876L;
 
 	private static InheritanceProperties instance;
 	
@@ -49,13 +47,13 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 		add(panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{0, 0};
-		gbl_panel.rowHeights = new int[]{0, 55, 0, 0};
+		gbl_panel.rowHeights = new int[]{0, 10, 0, 0};
 		gbl_panel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
 		gbl_panel.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
 		lblType = new JLabel("inheritanceType");
-		lblType.setFont(lblType.getFont().deriveFont(18.0f));
+		lblType.setFont(lblType.getFont().deriveFont(16.0f));
 		GridBagConstraints gbc_lblInheritancetype = new GridBagConstraints();
 		gbc_lblInheritancetype.insets = new Insets(0, 0, 5, 0);
 		gbc_lblInheritancetype.gridx = 0;
@@ -63,14 +61,13 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 		panel.add(lblType, gbc_lblInheritancetype);
 		
 		lblName = new JLabel("inheritanceName");
-		lblName.setFont(lblName.getFont().deriveFont(15.0f));
+		lblName.setFont(lblName.getFont().deriveFont(13.0f));
 		
 		GridBagConstraints gbc_lblInheritancename = new GridBagConstraints();
 		gbc_lblInheritancename.insets = new Insets(0, 0, 5, 0);
 		gbc_lblInheritancename.gridx = 0;
 		gbc_lblInheritancename.gridy = 1;
 		panel.add(lblName, gbc_lblInheritancename);
-		lblName.setBounds(255, 0, 80, 272);
 		
 		btnOI = new JButton("Overrides & Implementations...");
 		btnOI.setActionCommand(ACTION_OI);
@@ -81,7 +78,6 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 		gbc_btnOverridesImplementations.gridx = 0;
 		gbc_btnOverridesImplementations.gridy = 2;
 		panel.add(btnOI, gbc_btnOverridesImplementations);
-		btnOI.setBounds(204, 277, 183, 23);
 		
 	}
 
