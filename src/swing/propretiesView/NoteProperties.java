@@ -9,6 +9,7 @@ import java.awt.GridBagLayout;
 import javax.swing.JList;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -33,43 +34,22 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import swing.JPanelRounded;
 
-public class NoteProperties extends GlobalPropreties
-{
-	private static final long serialVersionUID = -8359058855177837879L;
+public class NoteProperties extends GlobalPropreties {
 	private static NoteProperties instance;
 	
 	private JList<LineCommentary> list;
 	private SButton btnDelete;
 	
-	public static NoteProperties getInstance()
-	{
+	public static NoteProperties getInstance() {
 		if (instance == null)
 			instance = new NoteProperties();
-		
 		return instance;
 	}
 
-	public NoteProperties()
-	{
+	public NoteProperties() {
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		JPanel p = new JPanel();
-		
-		p.setBorder(new EmptyBorder(5, 10, 10, 10));
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
-		p.setLayout(gridBagLayout);
-		
 		JPanelRounded panel = new JPanelRounded();
 		panel.setBorder(new EmptyBorder(10, 10, 10, 10));
-		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.fill = GridBagConstraints.BOTH;
-		gbc_panel.insets = new Insets(0, 0, 0, 5);
-		gbc_panel.gridx = 0;
-		gbc_panel.gridy = 0;
-		p.add(panel);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -133,7 +113,9 @@ public class NoteProperties extends GlobalPropreties
 		btnDelete.setEnabled(false);
 		panel.add(btnDelete);
 		
-		add(p);
+		panel.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
+		panel.setPreferredSize(new Dimension(10, 10));
+		add(panel);
 	}
 
 	@Override
@@ -163,8 +145,6 @@ public class NoteProperties extends GlobalPropreties
 	
 	private class ListLineCommentaryModel extends AbstractListModel<LineCommentary>
 	{
-		private static final long serialVersionUID = -2384833149044855296L;
-
 		@Override
 		public LineCommentary getElementAt(int i)
 		{

@@ -68,7 +68,7 @@ public class EntityPropreties extends GlobalPropreties
 	{
 		private static final long serialVersionUID = 5735895585153401565L;
 
-		private final String[] columnNames = { "Name", "Type", "Visibility", "Constant", "Static" };
+		private final String[] columnNames = { "Attribute", "Type", "Visibility", "Constant", "Static" };
 
 		private final LinkedList<Object[]> data = new LinkedList<Object[]>();
 
@@ -186,11 +186,13 @@ public class EntityPropreties extends GlobalPropreties
 		}
 
 		@Override
-		public void setValueAt(Object value, int row, int col)
-		{
+		public void setValueAt(Object value, int row, int col) {
+		    try {
 			data.get(row)[col] = value;
-
 			fireTableCellUpdated(row, col);
+		    } catch (Exception e) {
+		        
+		    }
 		}
 
 		@Override
@@ -283,7 +285,7 @@ public class EntityPropreties extends GlobalPropreties
 	{
 		private static final long serialVersionUID = -8935769363179120147L;
 
-		private final String[] columnNames = { "Name", "Type", "Visibility", "Abstract", "Static" };
+		private final String[] columnNames = { "Method", "Type", "Visibility", "Abstract", "Static" };
 
 		private final LinkedList<Object[]> data = new LinkedList<Object[]>();
 
@@ -404,9 +406,12 @@ public class EntityPropreties extends GlobalPropreties
 		@Override
 		public void setValueAt(Object value, int row, int col)
 		{
-			data.get(row)[col] = value;
-
-			fireTableCellUpdated(row, col);
+		    try {
+    			data.get(row)[col] = value;
+    			fireTableCellUpdated(row, col);
+		    } catch (Exception e) {
+		        
+		    }
 		}
 
 		@Override
@@ -725,6 +730,7 @@ public class EntityPropreties extends GlobalPropreties
 						final boolean hasParameters = currentMethod.getParameters().size() > 0;
 						scrollPaneParameters.setVisible(hasParameters);
 						imgNoParameter.setVisible(!hasParameters);
+						labelParameters.setVisible(!hasParameters);
 						imgMethodSelected.setVisible(false);
 						break;
 					case UNSELECT:
@@ -733,6 +739,7 @@ public class EntityPropreties extends GlobalPropreties
 						scrollPaneParameters.setVisible(false);
 						imgMethodSelected.setVisible(true);
 						imgNoParameter.setVisible(false);
+						labelParameters.setVisible(false);
 						btnRemoveParameters.setEnabled(false);
 						btnLeftParameters.setEnabled(false);
 						btnRightParameters.setEnabled(false);
@@ -792,7 +799,7 @@ public class EntityPropreties extends GlobalPropreties
 	JComboBox<String> comboBox = Utility.getVisibilityComboBox();
 
 	private final JLabel imgNoAttribute, imgNoMethod, imgMethodSelected,
-			imgNoParameter;
+			imgNoParameter, labelAttributes, labelMethods, labelParameters;
 
 	JPanel panelParameters;
 
@@ -803,7 +810,7 @@ public class EntityPropreties extends GlobalPropreties
 
 	protected EntityPropreties()
 	{
-		String small = ".png";
+		String small = "_small.png";
 		
 		if (Slyum.getSmallIcons())
 			small = "_small.png";
@@ -923,7 +930,7 @@ public class EntityPropreties extends GlobalPropreties
 		scrollPane.setBorder(new LineBorder(Color.GRAY, 1, true));
 		scrollPane.setBackground(Color.WHITE);
 		scrollPane.setVisible(false);
-		panel.add(createTitleLabel("Attributes"));
+		panel.add(labelAttributes = createTitleLabel("Attributes"));
 		panel.add(scrollPane);
 		panel.add(imgNoAttribute);
 
@@ -1045,7 +1052,7 @@ public class EntityPropreties extends GlobalPropreties
 		scrollPane.setBorder(new LineBorder(Color.GRAY, 1, true));
 		scrollPane.setBackground(Color.WHITE);
 		scrollPane.setVisible(false);
-		panel.add(createTitleLabel("Methods"));
+		panel.add(labelMethods = createTitleLabel("Methods"));
 		panel.add(scrollPane);
 		panel.add(imgNoMethod);
 
@@ -1169,7 +1176,7 @@ public class EntityPropreties extends GlobalPropreties
 		scrollPane.setVisible(false);
 		panel.setMaximumSize(new Dimension(100, Short.MAX_VALUE));
 		panel.setPreferredSize(new Dimension(200, 0));
-		panel.add(createTitleLabel("Parameters"));
+		panel.add(labelParameters = createTitleLabel("Parameters"));
 		panel.add(scrollPane);
 
 		final JPanel btnPanel = new JPanel();
@@ -1391,7 +1398,10 @@ public class EntityPropreties extends GlobalPropreties
 		scrollPaneMethods.setVisible(methods.size() > 0);
 
 		imgNoAttribute.setVisible(attributes.size() <= 0);
+        labelAttributes.setVisible(attributes.size() <= 0);
+        
 		imgNoMethod.setVisible(methods.size() <= 0);
+		labelMethods.setVisible(methods.size() <= 0);
 
 		btnRemoveMethod.setEnabled(false);
 		btnRemoveAttribute.setEnabled(false);
