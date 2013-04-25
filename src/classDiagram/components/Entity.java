@@ -215,7 +215,7 @@ public abstract class Entity extends Type
 	 * 
 	 * @return the type of the entity.
 	 */
-	protected abstract String getEntityType();
+	public abstract String getEntityType();
 
 	/**
 	 * Us in XML exportation. Get a string to add new tags if necessary.

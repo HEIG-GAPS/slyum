@@ -61,7 +61,7 @@ public class ClassEntity extends Entity
 	}
 
 	@Override
-	protected String getEntityType()
+    public String getEntityType()
 	{
 		return EntityType.CLASS.toString();
 	}
