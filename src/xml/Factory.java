@@ -6,19 +6,19 @@ package xml;
  * No need to manually add new factory.
  * @author David Miserez
  */
-public abstract class XmlFactory {
+public abstract class Factory<T> {
     
-    public String createXml(Object model) {
+    final public T create(Object model) {
         if (!isModelCompatible(model))
             throw new IllegalArgumentException(
                     "The model passed by argument is " +
                     "incompatible with this factory");
-        return _createXml(model);
+        return _create(model);
     }
     public abstract Class<?> getCreatedClass();
-    protected abstract String _createXml(Object model);
+    protected abstract T _create(Object model);
     
     private boolean isModelCompatible(Object model) {
-        return getCreatedClass().equals(model.getClass());
+        return getCreatedClass().isInstance(model);
     }
 }

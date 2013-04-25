@@ -219,7 +219,7 @@ public class ClassDiagram implements IComponentsObserver
     public <T> List<T> getComponentsByType(Class<T> type) {
 	    LinkedList<T> filteredList = new LinkedList<>();
 	    for (IDiagramComponent c : components)
-	        if (c.getClass().equals(type))
+	        if (type.isInstance(c))
 	            filteredList.add((T)c);
 	    return filteredList;
 	}

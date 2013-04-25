@@ -1,17 +1,22 @@
 package xml;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import org.reflections.Reflections;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import swing.PanelClassDiagram;
+import xml.factories.XmlEntityFactory;
 
-public class XmlWriter {
+public class XmlWriter extends Writer<XmlEntityFactory, Document> {
     
     /* Champs static */
     private static XmlWriter instance;
+    private Document doc;
     
     public static XmlWriter getInstance() {
         if (instance == null)
@@ -19,43 +24,54 @@ public class XmlWriter {
         return instance;
     }
     /* ----------------------------------------------------------- */
-    private LinkedList<XmlFactory> xmlFactories = new LinkedList<>();
-    
+
     public XmlWriter() {
-        loadXmlFactories();
+        super("xml.factories");
     }
     
-    private void loadXmlFactories() {
-        Reflections reflections = new Reflections("xml.factories");
-        Set<Class<? extends XmlFactory>> allClasses = 
-            reflections.getSubTypesOf(XmlFactory.class);
-        for (Class<?> c : allClasses)
-            try {
-                Object o = Class.forName(c.getName()).newInstance();
-                assert o instanceof XmlFactory;
-                addXmlFactory((XmlFactory)(o));
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+    private void createNewDocument() {
+        
+        // Création du document.
+        try {
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            doc = docBuilder.newDocument();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
     }
     
-    
-    public boolean addXmlFactory(XmlFactory factory) {
-        return xmlFactories.add(factory);
+    public Document getDoc() {
+        return doc;
     }
-    
-    public String getXml() { 
-        String xml = "";
-        for (XmlFactory factory : xmlFactories) {
+
+    @Override
+    public Document generate() {
+        // Réinitialisation du document.
+        createNewDocument();
+        
+        // Elément principal (diagramme de classe).
+        Element classDiagram = doc.createElement("classDiagram");
+        doc.appendChild(classDiagram);
+        
+        // Recherche tous les objets associés à une fabrique existante
+        // et crée la version string de ces objets.
+        for (XmlEntityFactory factory : factories) {
             List<?> objects = PanelClassDiagram.getInstance().getClassDiagram().
                                 getComponentsByType(factory.getCreatedClass());
             for (Object o : objects)
-                xml += factory.createXml(o);
+                classDiagram.appendChild(factory.create(o));
         }
-        return xml;
+        
+        return doc;
+    }
+    
+    /* Accesseurs rapides */
+    public static Document document() {
+        return getInstance().getDoc();
+    }
+    
+    public static Document makeGeneration() {
+        return getInstance().generate();
     }
 }

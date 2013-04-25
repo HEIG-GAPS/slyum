@@ -109,7 +109,7 @@ public class AssociationClass extends ClassEntity
 	}
 
 	@Override
-	protected String getEntityType()
+    public String getEntityType()
 	{
 		return EntityType.ASSOCIATION_CLASS.toString();
 	}

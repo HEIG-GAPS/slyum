@@ -71,7 +71,7 @@ public class InterfaceEntity extends Entity
 	}
 
 	@Override
-	protected String getEntityType()
+    public String getEntityType()
 	{
 		return EntityType.INTERFACE.toString();
 	}
