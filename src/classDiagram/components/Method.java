@@ -1,19 +1,20 @@
 package classDiagram.components;
 
-import change.BufferMethod;
-import change.Change;
+import graphic.textbox.TextBoxMethod;
+
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
 import utility.SMessageDialog;
 import utility.Utility;
+import change.BufferMethod;
+import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
 import classDiagram.verifyName.MethodName;
 import classDiagram.verifyName.TypeName;
 import classDiagram.verifyName.VariableName;
-import graphic.textbox.TextBoxMethod;
 
 /**
  * Represent a method in UML structure.

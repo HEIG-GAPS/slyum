@@ -1,7 +1,7 @@
 package xml.factories;
 
-import classDiagram.ClassDiagram;
 import xml.XmlFactory;
+import classDiagram.ClassDiagram;
 
 public class XmlClassFactory extends XmlFactory {
 

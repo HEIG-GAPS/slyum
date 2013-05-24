@@ -1,9 +1,9 @@
 package change;
 
-import java.awt.Color;
-
 import graphic.ColoredComponent;
 import graphic.GraphicComponent;
+
+import java.awt.Color;
 
 public class BufferColor implements Changeable
 {

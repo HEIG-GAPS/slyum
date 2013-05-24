@@ -5,6 +5,7 @@ import graphic.entity.EntityView;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.LinkedList;
+import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -39,7 +40,6 @@ import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
-import java.util.Observer;
 
 /**
  * This class is a hierarchical view of the class diagram. It represents class
@@ -68,9 +68,8 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 	public HierarchicalView(ClassDiagram classDiagram)
 	{
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		setBackground(Color.WHITE);
+		setBackground(null);
 		setForeground(Color.GRAY);
-		setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
 		final DefaultMutableTreeNode root = new DefaultMutableTreeNode(classDiagram.getName());
 
@@ -96,26 +95,22 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 			}
 		};
 		tree = new JTree(treeModel);
-
 		tree.addTreeSelectionListener(this);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 		tree.setCellRenderer(new TreeRenderer());
-
+		tree.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportView(tree);
 		scrollPane.setBorder(null);
-		
 		add(scrollPane);
-
 		classDiagram.addComponentsObserver(this);
-
 		setMinimumSize(new Dimension(150, 200));
 	}
 
 	@Override
 	public void addAggregation(Aggregation component)
 	{
-		addAssociation(component, "resources/icon/aggregation16.png");
+		addAssociation(component, "resources/icon/aggregation.png");
 	}
 
 	/**
@@ -134,25 +129,25 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 	@Override
 	public void addAssociationClass(AssociationClass component)
 	{
-		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "classAssoc16.png")), entitiesNode);
+		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "classAssoc.png")), entitiesNode);
 	}
 
 	@Override
 	public void addBinary(Binary component)
 	{
-		addAssociation(component, "resources/icon/association16.png");
+		addAssociation(component, "resources/icon/association.png");
 	}
 
 	@Override
 	public void addClass(ClassEntity component)
 	{
-		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "class16.png")), entitiesNode);
+		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "class.png")), entitiesNode);
 	}
 
 	@Override
 	public void addComposition(Composition component)
 	{
-		addAssociation(component, "resources/icon/composition16.png");
+		addAssociation(component, "resources/icon/composition.png");
 	}
 
 	@Override
@@ -177,13 +172,13 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 	@Override
 	public void addInterface(InterfaceEntity component)
 	{
-		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "interface16.png")), entitiesNode);
+		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "interface.png")), entitiesNode);
 	}
 
 	@Override
 	public void addMulti(Multi component)
 	{
-		addAssociation(component, "resources/icon/multi16.png");
+		addAssociation(component, "resources/icon/multi.png");
 	}
 
 	/**
@@ -198,7 +193,6 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 	{
 		parent.insert(leaf, 0);
 		treeModel.reload(parent);
-		tree.scrollPathToVisible(new TreePath(leaf.getPath()));
 	}
 
 	@Override
@@ -308,6 +302,7 @@ public class HierarchicalView extends JPanelRounded implements IComponentsObserv
 
 			final IDiagramComponent component = ((IClassDiagramNode) o).getAssociedComponent();
 			component.select();
+	    tree.scrollPathToVisible(treePath);
 
 			if (e.isAddedPath(treePath))
 				component.notifyObservers(UpdateMessage.SELECT);

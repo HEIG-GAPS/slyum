@@ -1,10 +1,5 @@
 package classDiagram.components;
 
-import change.BufferClass;
-import change.BufferCreationAttribute;
-import change.BufferCreationMethod;
-import change.BufferIndex;
-import change.Change;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,6 +7,11 @@ import javax.swing.JOptionPane;
 
 import utility.SMessageDialog;
 import utility.Utility;
+import change.BufferClass;
+import change.BufferCreationAttribute;
+import change.BufferCreationMethod;
+import change.BufferIndex;
+import change.Change;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.Role;
 

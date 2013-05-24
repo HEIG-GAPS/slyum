@@ -9,7 +9,6 @@ import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 
 import utility.SMessageDialog;
-
 import classDiagram.relationships.Dependency;
 
 /**

@@ -1,14 +1,12 @@
 package swing;
 
 import graphic.ColoredComponent;
-import graphic.GraphicComponent;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -20,11 +18,10 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import change.BufferColor;
-import change.Change;
-
 import utility.PersonalizedIcon;
 import utility.Utility;
+import change.BufferColor;
+import change.Change;
 
 /**
  * Show a dialog for choosing a color.

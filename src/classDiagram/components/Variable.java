@@ -1,10 +1,10 @@
 package classDiagram.components;
 
-import change.BufferVariable;
-import change.Change;
 import java.util.Observable;
 
 import utility.Utility;
+import change.BufferVariable;
+import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
 import classDiagram.verifyName.VariableName;

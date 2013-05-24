@@ -79,17 +79,17 @@ public class NodeDepedency extends DefaultMutableTreeNode implements IClassDiagr
 	@Override
 	public ImageIcon getCustomizedIcon()
 	{
-		return PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "dependency16.png");
+		return PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "dependency.png");
 	}
 
 	@Override
-	public void update(Observable o, Object arg)
+	public void update(Observable observable, Object o)
 	{
-		if (arg != null && arg instanceof UpdateMessage)
+		if (o != null && o instanceof UpdateMessage)
 		{
 			final TreePath path = new TreePath(getPath());
 
-			switch ((UpdateMessage) arg)
+			switch ((UpdateMessage) o)
 			{
 				case SELECT:
 					tree.addSelectionPath(path);
@@ -97,6 +97,8 @@ public class NodeDepedency extends DefaultMutableTreeNode implements IClassDiagr
 				case UNSELECT:
 					tree.removeSelectionPath(path);
 					break;
+        default:
+          break;
 			}
 		}
 		else

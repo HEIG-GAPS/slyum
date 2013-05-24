@@ -26,7 +26,6 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
 import utility.Utility;
-
 import classDiagram.components.Entity;
 import classDiagram.components.Method;
 import classDiagram.components.Variable;

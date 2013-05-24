@@ -31,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -38,10 +39,10 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import swing.SButton;
 import swing.JPanelRounded;
+import swing.SButton;
 import swing.Slyum;
-import swing.propretiesView.GlobalPropreties;
+import utility.MultiBorderLayout;
 import utility.PersonalizedIcon;
 import utility.Utility;
 import classDiagram.IDiagramComponent.UpdateMessage;
@@ -247,9 +248,9 @@ public class EntityPropreties extends GlobalPropreties
 		}
 
 		@Override
-		public void update(Observable arg0, Object arg1)
+		public void update(Observable observable, Object o)
 		{
-			final Attribute attribute = (Attribute) arg0;
+			final Attribute attribute = (Attribute) observable;
 			try
 			{
 				final int index = mapIndex.get(attribute);
@@ -257,8 +258,8 @@ public class EntityPropreties extends GlobalPropreties
 				if (index == -1)
 					return;
 
-				if (arg1 != null && arg1 instanceof UpdateMessage)
-					switch ((UpdateMessage) arg1)
+				if (o != null && o instanceof UpdateMessage)
+					switch ((UpdateMessage) o)
 					{
 						case SELECT:
 							btnRemoveAttribute.setEnabled(true);
@@ -270,6 +271,8 @@ public class EntityPropreties extends GlobalPropreties
 						case UNSELECT:
 							attributesTable.removeRowSelectionInterval(index, index);
 							break;
+            default:
+              break;
 					}
 
 				setAttribute(attribute, index);
@@ -464,17 +467,17 @@ public class EntityPropreties extends GlobalPropreties
 		}
 
 		@Override
-		public void update(Observable arg0, Object arg1)
+		public void update(Observable observable, Object o)
 		{
 			try
 			{
-				final int index = mapIndex.get(arg0);
+				final int index = mapIndex.get(observable);
 
 				if (index == -1)
 					return;
 
-				if (arg1 != null && arg1 instanceof UpdateMessage)
-					switch ((UpdateMessage) arg1)
+				if (o != null && o instanceof UpdateMessage)
+					switch ((UpdateMessage) o)
 					{
 						case SELECT:
 							btnRemoveMethod.setEnabled(true);
@@ -486,9 +489,11 @@ public class EntityPropreties extends GlobalPropreties
 						case UNSELECT:
 							methodsTable.removeRowSelectionInterval(index, index);
 							break;
+            default:
+              break;
 					}
 
-				setMethod((Method) arg0, index);
+				setMethod((Method) observable, index);
 			} catch (final Exception e)
 			{
 
@@ -714,16 +719,16 @@ public class EntityPropreties extends GlobalPropreties
 		}
 
 		@Override
-		public void update(Observable arg0, Object arg1)
+		public void update(Observable observable, Object o)
 		{			
-			if (arg1 != null && arg1 instanceof UpdateMessage)
+			if (o != null && o instanceof UpdateMessage)
 			{
-				switch ((UpdateMessage) arg1)
+				switch ((UpdateMessage) o)
 				{
 					case SELECT:
 						showInProperties();
 						clearAll();
-						currentMethod = (Method) arg0;
+						currentMethod = (Method) observable;
 						setParameter(currentMethod);
 						panelParameters.setVisible(true);
 						btnAddParameters.setEnabled(true);
@@ -739,11 +744,13 @@ public class EntityPropreties extends GlobalPropreties
 						scrollPaneParameters.setVisible(false);
 						imgMethodSelected.setVisible(true);
 						imgNoParameter.setVisible(false);
-						labelParameters.setVisible(false);
+						labelParameters.setVisible(true);
 						btnRemoveParameters.setEnabled(false);
 						btnLeftParameters.setEnabled(false);
 						btnRightParameters.setEnabled(false);
 						break;
+          default:
+            break;
 				}
 			}
 			else
@@ -798,41 +805,30 @@ public class EntityPropreties extends GlobalPropreties
 
 	JComboBox<String> comboBox = Utility.getVisibilityComboBox();
 
-	private final JLabel imgNoAttribute, imgNoMethod, imgMethodSelected,
+	private final JLabel imgMethodSelected,
 			imgNoParameter, labelAttributes, labelMethods, labelParameters;
 
 	JPanel panelParameters;
 
-	private JScrollPane scrollPaneAttributes, scrollPaneMethods,
-			scrollPaneParameters;
+	private JScrollPane scrollPaneParameters;
 
 	JTextField textName = new JTextField();
 
 	protected EntityPropreties()
-	{
-		String small = "_small.png";
-		
-		if (Slyum.getSmallIcons())
-			small = "_small.png";
-			
-		btnAddParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_plus_blue" + small), Color.BLUE, "Add");
-		btnRemoveMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_red_delete" + small), Color.RED, "Remove");
-		btnRemoveAttribute = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_red_delete" + small), Color.RED, "Remove");
-		btnUpAttribute = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_violet_up" + small), Color.MAGENTA, "Up");
-		btnDownAttribute = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_violet_down" + small), Color.MAGENTA, "Down");
-		btnUpMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_violet_up" + small), Color.MAGENTA, "Up");
-		btnDownMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_violet_down" + small), Color.MAGENTA, "Down");
-		btnRemoveParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_red_delete" + small), Color.RED, "Remove");
-		btnRightParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_violet_right" + small), Color.MAGENTA, "Rigth");
-		btnLeftParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_violet_left" + small), Color.MAGENTA, "Left");
-		
-		imgNoAttribute = new JLabel(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "empty_attribute.png"));
-		imgNoMethod = new JLabel(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "empty_method.png"));
+	{			
+		btnAddParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus.png"), Color.BLUE, "Add");
+		btnRemoveMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"), Color.RED, "Remove");
+		btnRemoveAttribute = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"), Color.RED, "Remove");
+		btnUpAttribute = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow_up.png"), Color.MAGENTA, "Up");
+		btnDownAttribute = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow_down.png"), Color.MAGENTA, "Down");
+		btnUpMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow_up.png"), Color.MAGENTA, "Up");
+		btnDownMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow_down.png"), Color.MAGENTA, "Down");
+		btnRemoveParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"), Color.RED, "Remove");
+		btnRightParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow_right.png"), Color.MAGENTA, "Rigth");
+		btnLeftParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow_left.png"), Color.MAGENTA, "Left");
 		imgMethodSelected = new JLabel(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "select_method.png"));
 		imgNoParameter = new JLabel(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "empty_parameter.png"));
-
-		imgNoMethod.setAlignmentX(CENTER_ALIGNMENT);
-		imgNoAttribute.setAlignmentX(CENTER_ALIGNMENT);
+		
 		imgMethodSelected.setAlignmentX(CENTER_ALIGNMENT);
 		imgNoParameter.setAlignmentX(CENTER_ALIGNMENT);
 
@@ -925,21 +921,19 @@ public class EntityPropreties extends GlobalPropreties
 		p.setLayout(new BorderLayout());
 		JPanel panel = createWhitePanel();
 		panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-		JScrollPane scrollPane = scrollPaneAttributes = new JScrollPane(attributesTable);
+		JScrollPane scrollPane = new JScrollPane(attributesTable);
 		scrollPane.getViewport().setOpaque(false);
 		scrollPane.setBorder(new LineBorder(Color.GRAY, 1, true));
 		scrollPane.setBackground(Color.WHITE);
-		scrollPane.setVisible(false);
 		panel.add(labelAttributes = createTitleLabel("Attributes"));
 		panel.add(scrollPane);
-		panel.add(imgNoAttribute);
 
 		JPanel panelButton = new JPanel();
 		panelButton.setOpaque(false);
 		panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.PAGE_AXIS));
 
 		{
-			final JButton button = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_plus_blue" + small), Color.BLUE, "Add");
+			final JButton button = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus.png"), Color.BLUE, "Add");
 			button.setBorderPainted(false);
 			button.setContentAreaFilled(false);
 			button.setAlignmentX(CENTER_ALIGNMENT);
@@ -1047,20 +1041,18 @@ public class EntityPropreties extends GlobalPropreties
 		p.setLayout(new BorderLayout());
 		panel = createWhitePanel();
 		panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-		scrollPane = scrollPaneMethods = new JScrollPane(methodsTable);
+		scrollPane = new JScrollPane(methodsTable);
 		scrollPane.getViewport().setOpaque(false);
 		scrollPane.setBorder(new LineBorder(Color.GRAY, 1, true));
 		scrollPane.setBackground(Color.WHITE);
-		scrollPane.setVisible(false);
 		panel.add(labelMethods = createTitleLabel("Methods"));
 		panel.add(scrollPane);
-		panel.add(imgNoMethod);
 
 		panelButton = new JPanel();
 		panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.PAGE_AXIS));
 		panelButton.setOpaque(false);
 		{
-			final JButton button = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_plus_blue" + small), Color.BLUE, "Add");
+			final JButton button = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus.png"), Color.BLUE, "Add");
 			button.setBorderPainted(false);
 			button.setContentAreaFilled(false);
 			button.setAlignmentX(CENTER_ALIGNMENT);
@@ -1163,7 +1155,7 @@ public class EntityPropreties extends GlobalPropreties
 		add(p);
 
 		panel = panelParameters = new JPanelRounded();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+		panel.setLayout(new MultiBorderLayout());
 		panel.setForeground(Color.GRAY);
 		panel.setBackground(new Color(240, 240, 240));
 		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 2, 5, 2), BorderFactory.createEtchedBorder()));
@@ -1176,11 +1168,12 @@ public class EntityPropreties extends GlobalPropreties
 		scrollPane.setVisible(false);
 		panel.setMaximumSize(new Dimension(100, Short.MAX_VALUE));
 		panel.setPreferredSize(new Dimension(200, 0));
-		panel.add(labelParameters = createTitleLabel("Parameters"));
-		panel.add(scrollPane);
+		panel.add(labelParameters = createTitleLabel("Parameters"), BorderLayout.NORTH);
+    labelParameters.setPreferredSize(new Dimension(190, 20));
+		labelParameters.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(scrollPane, BorderLayout.CENTER);
 
 		final JPanel btnPanel = new JPanel();
-		btnPanel.setLayout(new BoxLayout(btnPanel, BoxLayout.LINE_AXIS));
 
 		btnAddParameters.setAlignmentX(CENTER_ALIGNMENT);
 		btnAddParameters.setBorder(null);
@@ -1256,10 +1249,10 @@ public class EntityPropreties extends GlobalPropreties
 			}
 		});
 		btnPanel.add(btnRemoveParameters);
-
-		panel.add(imgMethodSelected);
-		panel.add(imgNoParameter);
-		panel.add(btnPanel);
+		btnPanel.setPreferredSize(new Dimension(190, 30));
+		panel.add(imgMethodSelected, BorderLayout.CENTER);
+		panel.add(imgNoParameter, BorderLayout.CENTER);
+		panel.add(btnPanel, BorderLayout.SOUTH);
 		add(panel);
 	}
 
@@ -1394,13 +1387,8 @@ public class EntityPropreties extends GlobalPropreties
 		for (int i = 0; i < methods.size(); i++)
 			modelMethods.addMethod(methods.get(i));
 
-		scrollPaneAttributes.setVisible(attributes.size() > 0);
-		scrollPaneMethods.setVisible(methods.size() > 0);
-
-		imgNoAttribute.setVisible(attributes.size() <= 0);
-        labelAttributes.setVisible(attributes.size() <= 0);
+    labelAttributes.setVisible(attributes.size() <= 0);
         
-		imgNoMethod.setVisible(methods.size() <= 0);
 		labelMethods.setVisible(methods.size() <= 0);
 
 		btnRemoveMethod.setEnabled(false);

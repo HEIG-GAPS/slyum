@@ -104,13 +104,13 @@ public class NodeAssociation extends DefaultMutableTreeNode implements IClassDia
 	}
 
 	@Override
-	public void update(Observable o, Object arg1)
+	public void update(Observable observable, Object o)
 	{
-		if (arg1 != null && arg1 instanceof UpdateMessage)
+		if (o != null && o instanceof UpdateMessage)
 		{
 			final TreePath path = new TreePath(getPath());
 
-			switch ((UpdateMessage) arg1)
+			switch ((UpdateMessage) o)
 			{
 				case SELECT:
 					tree.addSelectionPath(path);
@@ -118,6 +118,8 @@ public class NodeAssociation extends DefaultMutableTreeNode implements IClassDia
 				case UNSELECT:
 					tree.removeSelectionPath(path);
 					break;
+      default:
+        break;
 			}
 		}
 		else

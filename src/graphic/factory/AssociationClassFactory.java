@@ -1,6 +1,5 @@
 package graphic.factory;
 
-import change.Change;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.AssociationClassView;
@@ -11,6 +10,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import utility.SMessageDialog;
+import change.Change;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.Entity;
 import classDiagram.components.Visibility;

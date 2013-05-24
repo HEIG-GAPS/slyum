@@ -15,13 +15,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import change.BufferBounds;
-import change.BufferCreation;
-import change.Change;
-
 import swing.Slyum;
 import utility.PersonalizedIcon;
 import utility.Utility;
+import change.BufferBounds;
+import change.BufferCreation;
+import change.Change;
 
 /**
  * The relationGrip is a grip who customize a LineView. The LineView uses
@@ -62,7 +61,7 @@ public class RelationGrip extends SquareGrip implements ActionListener
 
 		popupMenu = new JPopupMenu();
 
-		final ImageIcon imgIcon = PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete16.png");
+		final ImageIcon imgIcon = PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete.png");
 
 		menuItemDelete = new JMenuItem("Delete", imgIcon);
 		menuItemDelete.setActionCommand("delete");

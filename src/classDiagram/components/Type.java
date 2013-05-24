@@ -1,9 +1,9 @@
 package classDiagram.components;
 
-import change.Change;
 import java.util.LinkedList;
 import java.util.Observable;
 
+import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
 import classDiagram.verifyName.TypeName;

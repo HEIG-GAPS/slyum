@@ -3,7 +3,6 @@ package graphic;
 import graphic.entity.GripEntity;
 import graphic.relations.LineView;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;

@@ -328,10 +328,10 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
 		JMenuItem menuItem;
 
-		miNewNote = menuItem = makeMenuItem("New note", Slyum.ACTION_NEW_NOTE_ASSOCIED, "note16");
+		miNewNote = menuItem = makeMenuItem("New note", Slyum.ACTION_NEW_NOTE_ASSOCIED, "note");
 		popupMenu.add(menuItem);
 
-		menuItem = makeMenuItem("Change color...", "Color", "color16");
+		menuItem = makeMenuItem("Change color...", "Color", "color");
 		popupMenu.add(menuItem);
 	}
 

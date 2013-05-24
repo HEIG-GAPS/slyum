@@ -15,7 +15,8 @@ import utility.SMessageDialog;
 
 public class RecentProjectManager {
     
-    public static final String filename = Slyum.getPathAppDir() + Slyum.FILE_SEPARATOR + "history.properties";
+    public static final String filename =
+        Slyum.getPathAppDir() + Slyum.FILE_SEPARATOR + "history.properties";
     final static Charset ENCODING = StandardCharsets.ISO_8859_1;
     
     private static RecentProjectManager instance;
@@ -140,10 +141,17 @@ public class RecentProjectManager {
         }
     }
     
-    public static List<String> getHistoryList()
-    {
-        List<String> list = getInstance().getHistoryListString();
-        return list;
+    public static String getMoreRecentFile() {
+      List<String> list = getHistoryList();
+      
+      if (list.size() < 1)
+        return null;
+      
+      return list.get(list.size() - 1);
+    }
+    
+    public static List<String> getHistoryList() {
+        return getInstance().getHistoryListString();
     }
 
 }

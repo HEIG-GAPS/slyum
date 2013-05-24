@@ -20,9 +20,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import utility.SDialogProjectLoading;
 import utility.SMessageDialog;
-
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.AssociationClass;
@@ -48,8 +46,7 @@ import classDiagram.verifyName.VariableName;
  * @verson 1.0 - 25.07.2011
  */
 public class XMLParser extends DefaultHandler
-{
-    
+{    
 	public enum Aggregation
 	{
 		AGGREGATE, COMPOSE, MULTI, NONE
@@ -93,7 +90,8 @@ public class XMLParser extends DefaultHandler
 		LinkedList<Dependency> dependency = new LinkedList<>();
 		LinkedList<Entity> entity = new LinkedList<>();
 		LinkedList<Inheritance> inheritance = new LinkedList<>();
-		LinkedList<InnerClass> innerClass = new LinkedList<>();
+		@SuppressWarnings("unused")
+    LinkedList<InnerClass> innerClass = new LinkedList<>();
 	}
 
 	private class Entity
@@ -250,9 +248,8 @@ public class XMLParser extends DefaultHandler
 	private final HashMap<Integer, MultiView> multiView = new HashMap<>();
 	private final HashMap<Integer, RelationView> relationView = new HashMap<>();
 	private ClassDiagram uMLClassDiagram;
-	private SDialogProjectLoading dpl;
 
-	public XMLParser(classDiagram.ClassDiagram classDiagram, GraphicView graphicView, SDialogProjectLoading dpl)
+	public XMLParser(classDiagram.ClassDiagram classDiagram, GraphicView graphicView)
 	{
 		super();
 
@@ -264,7 +261,6 @@ public class XMLParser extends DefaultHandler
 
 		this.classDiagram = classDiagram;
 		this.graphicView = graphicView;
-		this.dpl = dpl;
 	}
 
 	@Override
@@ -278,9 +274,7 @@ public class XMLParser extends DefaultHandler
 	}
 
 	private void createEntity(Entity e) throws SyntaxeNameException
-	{
-		dpl.addStep("Create entity " + e.name + "...");
-		
+	{		
 		classDiagram.components.Entity ce = null;
 		
 		e.name = TypeName.verifyAndAskNewName(e.name);
@@ -328,25 +322,21 @@ public class XMLParser extends DefaultHandler
 				break;
 		}
 
-		for (final Variable v : e.attribute)
-		{
-			dpl.addStep("Create attribute " + v.name + "...");
-			
-    	    final Attribute a = new Attribute(VariableName.verifyAndAskNewName(v.name), v.type);
-             
-            ce.addAttribute(a);
-            ce.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
-            a.setConstant(v.constant);
-            a.setDefaultValue(v.defaultValue);
-            a.setStatic(v.isStatic);
-            a.setVisibility(v.visibility);
-    
-            a.notifyObservers();
+		for (final Variable v : e.attribute) {			
+      final Attribute a = new Attribute(VariableName.verifyAndAskNewName(v.name), v.type);
+         
+      ce.addAttribute(a);
+      ce.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
+      a.setConstant(v.constant);
+      a.setDefaultValue(v.defaultValue);
+      a.setStatic(v.isStatic);
+      a.setVisibility(v.visibility);
+
+      a.notifyObservers();
 		}
 
 		for (final Operation o : e.method)
 		{
-			dpl.addStep("Create method " + o.name + "...");
 			final Method m = new Method(
 			        MethodName.verifyAndAskNewName(o.name),
 			        o.returnType,
@@ -377,27 +367,11 @@ public class XMLParser extends DefaultHandler
 	{
 		classDiagram.removeAll();
 		graphicView.removeAll();
-		
-		int count = uMLClassDiagram.diagrameElement.association.size();
-		count += uMLClassDiagram.diagrameElement.dependency.size();
-		count += uMLClassDiagram.diagrameElement.entity.size();
-
-		for (Entity e : uMLClassDiagram.diagrameElement.entity)
-		{
-			count += e.attribute.size();
-			count += e.method.size();
-		}
-		
-		count += uMLClassDiagram.diagrameElement.inheritance.size();
-		count += uMLClassDiagram.diagrameElement.innerClass.size();
-		count += uMLClassDiagram.uMLView.getFirst().notes.size();
-		
-		dpl.setProgressBarMaximum(count);
 	}
 	
 	public void createDiagram() throws SyntaxeNameException
 	{
-		// Don't change order !!
+		// Don't change the order !!
 		importClassesAndInterfaces(); // <- need nothing :D
 	
 		importAssociations(); // <- need importation classes
@@ -405,16 +379,12 @@ public class XMLParser extends DefaultHandler
 		importAssociations(); // Import associations that cannot be imported first time
 		importInheritances(); // <- ...
 		importDepedency();
+    
+    graphicView.setPaintBackgroundLast(true);
+    graphicView.goRepaint();
 		
-		graphicView.setPaintBackgroundLast(true);
-		graphicView.goRepaint();
-		
-		// components locations
 		locateComponentBounds();
 		importNotes();
-		
-		dpl.addStep("Importation complete");
-        dpl.setPhase("Finish");
 	}
 
 	@Override
@@ -584,7 +554,6 @@ public class XMLParser extends DefaultHandler
 
 	private void importAssociationClass() throws SyntaxeNameException
 	{
-		dpl.setPhase("Import association classes...");
 		for (final Entity e : uMLClassDiagram.diagrameElement.entity)
 
 			if (e.entityType == EntityType.ASSOCIATION_CLASS)
@@ -594,7 +563,6 @@ public class XMLParser extends DefaultHandler
 
 	public void importAssociations()
 	{
-		dpl.setPhase("Import associations...");
 		final LinkedList<Association> associationsNotAdded = new LinkedList<>();
 
 		for (final Association a : uMLClassDiagram.diagrameElement.association)
@@ -610,8 +578,6 @@ public class XMLParser extends DefaultHandler
 				associationsNotAdded.add(a);
 				continue;
 			}
-			
-            dpl.addStep("Create association " +  source.getName() + " - " + target.getName()  +"...");
 
 			switch (a.aggregation)
 			{
@@ -664,8 +630,6 @@ public class XMLParser extends DefaultHandler
 
 	private void importClassesAndInterfaces() throws SyntaxeNameException
 	{
-		dpl.setPhase("Import classes and interfaces...");
-		
 		for (final Entity e : uMLClassDiagram.diagrameElement.entity)
 		
 			if (!(e.entityType == EntityType.ASSOCIATION_CLASS))
@@ -675,14 +639,11 @@ public class XMLParser extends DefaultHandler
 
 	public void importDepedency()
 	{
-		dpl.setPhase("Import dependency...");
 		for (final Dependency d : uMLClassDiagram.diagrameElement.dependency)
 		{
-			final classDiagram.components.Entity source = (classDiagram.components.Entity) classDiagram.searchComponentById(d.source);
-			final classDiagram.components.Entity target = (classDiagram.components.Entity) classDiagram.searchComponentById(d.target);
-
-			dpl.addStep("Create dependency " +  source.getName() + " - " + target.getName()  +"...");
-			final classDiagram.relationships.Dependency dr = new classDiagram.relationships.Dependency(source, target, d.id);
+			classDiagram.components.Entity source = (classDiagram.components.Entity) classDiagram.searchComponentById(d.source);
+			classDiagram.components.Entity target = (classDiagram.components.Entity) classDiagram.searchComponentById(d.target);
+			classDiagram.relationships.Dependency dr = new classDiagram.relationships.Dependency(source, target, d.id);
 			classDiagram.addDependency(dr);
 
 			dr.setLabel(d.label);
@@ -694,13 +655,10 @@ public class XMLParser extends DefaultHandler
 
 	public void importInheritances()
 	{
-		dpl.setPhase("Import inheritances...");
 		for (final Inheritance h : uMLClassDiagram.diagrameElement.inheritance)
 		{
 			final classDiagram.components.Entity child = (classDiagram.components.Entity) classDiagram.searchComponentById(h.child);
 			final classDiagram.components.Entity parent = (classDiagram.components.Entity) classDiagram.searchComponentById(h.parent);
-
-			dpl.addStep("Create inheritance " +  child.getName() + " - " + parent.getName()  +"...");
 			
 			if (h.innerClass)
 			{
@@ -719,11 +677,7 @@ public class XMLParser extends DefaultHandler
 
 	private void importNotes()
 	{
-		dpl.setPhase("Import notes...");
-		
-		for (final Note note : uMLClassDiagram.uMLView.getFirst().notes)
-		{
-			dpl.addStep("Import a note.");
+		for (final Note note : uMLClassDiagram.uMLView.getFirst().notes) {
 			final TextBoxCommentary noteView = new TextBoxCommentary(graphicView, note.content);
 
 			noteView.setBounds(note.bounds);
@@ -763,7 +717,6 @@ public class XMLParser extends DefaultHandler
 
 	public void locateComponentBounds()
 	{
-		dpl.setPhase("Locate components...");
 		// Generals bounds
 		for (final GraphicComponent g : graphicView.getAllComponents())
 		{

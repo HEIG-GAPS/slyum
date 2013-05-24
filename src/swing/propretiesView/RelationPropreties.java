@@ -18,7 +18,6 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import swing.JPanelRounded;
-import swing.propretiesView.GlobalPropreties;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Association;
 import classDiagram.relationships.Dependency;

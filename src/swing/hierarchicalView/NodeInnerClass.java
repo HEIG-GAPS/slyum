@@ -5,7 +5,6 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 
 import swing.Slyum;
-import swing.hierarchicalView.NodeInheritance;
 import utility.PersonalizedIcon;
 import classDiagram.relationships.Inheritance;
 
@@ -25,7 +24,7 @@ public class NodeInnerClass extends NodeInheritance
 	@Override
 	public ImageIcon getCustomizedIcon()
 	{
-		return PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "innerClass16.png");
+		return PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "innerClass.png");
 	}
 
 }

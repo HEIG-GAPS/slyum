@@ -19,3 +19,4 @@ dist/Slyum.jar
 nbproject/private/private.xml
 nbproject/private/profiler/configurations.xml
 dist/slyum.jar
+.settings/org.eclipse.jdt.ui.prefs

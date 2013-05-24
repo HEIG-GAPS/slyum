@@ -9,7 +9,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import utility.SMessageDialog;
-
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 

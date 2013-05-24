@@ -1,24 +1,24 @@
 package swing.propretiesView;
 
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.border.EmptyBorder;
+
+import swing.JPanelRounded;
+import swing.Slyum;
+import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.relationships.Inheritance;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import swing.JPanelRounded;
-import swing.Slyum;
-import utility.PersonalizedIcon;
-
-import javax.swing.border.EmptyBorder;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class InheritanceProperties extends GlobalPropreties implements ActionListener
 {

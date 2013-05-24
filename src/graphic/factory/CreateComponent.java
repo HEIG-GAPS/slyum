@@ -3,7 +3,6 @@ package graphic.factory;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 
-import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
