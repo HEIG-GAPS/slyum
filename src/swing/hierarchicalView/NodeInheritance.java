@@ -82,17 +82,17 @@ public class NodeInheritance extends DefaultMutableTreeNode implements ICustomiz
 	@Override
 	public ImageIcon getCustomizedIcon()
 	{
-		return PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "generalize16.png");
+		return PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "generalize.png");
 	}
 
 	@Override
-	public void update(Observable arg0, Object arg1)
+	public void update(Observable observable, Object o)
 	{
-		if (arg1 != null && arg1 instanceof UpdateMessage)
+		if (o != null && o instanceof UpdateMessage)
 		{
 			final TreePath path = new TreePath(getPath());
 
-			switch ((UpdateMessage) arg1)
+			switch ((UpdateMessage) o)
 			{
 				case SELECT:
 					tree.addSelectionPath(path);
@@ -100,6 +100,8 @@ public class NodeInheritance extends DefaultMutableTreeNode implements ICustomiz
 				case UNSELECT:
 					tree.removeSelectionPath(path);
 					break;
+        default:
+          break;
 			}
 		}
 		else

@@ -91,7 +91,7 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 
 		popupMenu.addSeparator();
 
-		final JMenuItem menuItem = makeMenuItem("Delete", "Delete", "delete16");
+		final JMenuItem menuItem = makeMenuItem("Delete", "Delete", "delete");
 		popupMenu.add(menuItem);
 		
 		super.pushBufferCreation();
@@ -405,10 +405,10 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 	}
 
 	@Override
-	public void update(Observable arg0, Object arg1)
+	public void update(Observable observable, Object o)
 	{
-		if (arg1 != null && arg1.getClass() == UpdateMessage.class)
-			switch ((UpdateMessage) arg1)
+		if (o != null && o.getClass() == UpdateMessage.class)
+			switch ((UpdateMessage) o)
 			{
 				case SELECT:
 					setSelected(true);
@@ -417,6 +417,8 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 				case UNSELECT:
 					setSelected(false);
 					break;
+      default:
+        break;
 			}
 		else
 

@@ -14,7 +14,7 @@ public class JPanelRounded extends JPanel
 	private static final long serialVersionUID = 767852553660266730L;
 
 	/** Double values for Horizontal and Vertical radius of corner arcs */
-	protected Dimension arcs = new Dimension(5, 5);
+	protected Dimension arcs = new Dimension(0, 0);
 
 	/** Distance between shadow border and opaque panel border */
 	protected int shadowGap = 5;
@@ -44,7 +44,7 @@ public class JPanelRounded extends JPanel
 
 		graphics.setColor(getForeground());
 		graphics.setStroke(new BasicStroke(strokeSize));
-		graphics.drawRoundRect(shadowGap, shadowGap, width - shadowGap * 2, height - shadowGap * 2, arcs.width, arcs.height);
+		//graphics.drawRoundRect(shadowGap, shadowGap, width - shadowGap * 2, height - shadowGap * 2, arcs.width, arcs.height);
 
 		// Sets strokes to default.
 		graphics.setStroke(new BasicStroke());

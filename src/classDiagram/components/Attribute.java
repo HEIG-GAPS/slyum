@@ -1,9 +1,9 @@
 package classDiagram.components;
 
-import classDiagram.verifyName.TypeName;
+import utility.Utility;
 import change.BufferAttribute;
 import change.Change;
-import utility.Utility;
+import classDiagram.verifyName.TypeName;
 
 /**
  * Represent an attribute in UML structure.

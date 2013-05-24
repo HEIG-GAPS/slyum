@@ -10,8 +10,6 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import swing.Slyum;
-import swing.hierarchicalView.IClassDiagramNode;
-import swing.hierarchicalView.ICustomizedIconNode;
 import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
@@ -70,13 +68,13 @@ public class NodeMethod extends DefaultMutableTreeNode implements Observer, ICla
 	}
 
 	@Override
-	public void update(Observable arg0, Object arg1)
+	public void update(Observable observable, Object o)
 	{
-		if (arg1 != null && arg1 instanceof UpdateMessage)
+		if (o != null && o instanceof UpdateMessage)
 		{
 			final TreePath path = new TreePath(getPath());
 
-			switch ((UpdateMessage) arg1)
+			switch ((UpdateMessage) o)
 			{
 				case SELECT:
 					tree.addSelectionPath(path.getParentPath());
@@ -85,6 +83,8 @@ public class NodeMethod extends DefaultMutableTreeNode implements Observer, ICla
 				case UNSELECT:
 					tree.removeSelectionPath(path);
 					break;
+        default:
+          break;
 			}
 		}
 		else

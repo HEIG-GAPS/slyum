@@ -3,6 +3,7 @@ package swing;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -18,14 +19,9 @@ import javax.swing.JButton;
 
 import utility.Utility;
 
-public class SButton extends JButton implements MouseListener
-{
-	private static final long serialVersionUID = -359453798459739030L;
-	
+public class SButton extends JButton implements MouseListener {	
 	private boolean isMouseHover = false, isMouseClicked = false;
-	
 	private Color themeColor;
-	
 	private LinkedList<Component> linkedComponents = new LinkedList<>();
 	
 	public SButton(Icon icon, Color color, String tooltip)
@@ -48,6 +44,7 @@ public class SButton extends JButton implements MouseListener
 	
 	private void init(String action, Color color, String tooltip, ActionListener al)
 	{
+    setPreferredSize(new Dimension(24, 24));
 		setActionCommand(action);
 		addActionListener(al);
 		setBorderPainted(false);
@@ -56,7 +53,6 @@ public class SButton extends JButton implements MouseListener
 		setToolTipText(tooltip);
 		
 		themeColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), 10);
-		
 		addMouseListener(this);
 	}
 	

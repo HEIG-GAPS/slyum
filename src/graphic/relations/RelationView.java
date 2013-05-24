@@ -6,8 +6,11 @@ import graphic.entity.AssociationClassView;
 import graphic.textbox.TextBoxRole;
 
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.util.Observable;
 import java.util.Observer;
+
+import javax.swing.JMenuItem;
 
 import utility.Utility;
 import classDiagram.IDiagramComponent;
@@ -29,6 +32,7 @@ import classDiagram.IDiagramComponent.UpdateMessage;
  */
 public abstract class RelationView extends LineView implements Observer
 {
+  public final static String ACTION_CHANGE_ORIENTATION = "change-orientation";
 	private final IDiagramComponent component;
 
 	public RelationView(GraphicView graphicView, GraphicComponent source, GraphicComponent target, IDiagramComponent component, Point posSource, Point posTarget, boolean checkRecursivity)
@@ -38,6 +42,12 @@ public abstract class RelationView extends LineView implements Observer
 		if (component == null)
 			throw new IllegalArgumentException("component is null");
 
+
+    popupMenu.addSeparator();
+
+    JMenuItem menuItem = makeMenuItem("Change orientation", ACTION_CHANGE_ORIENTATION, "");
+    popupMenu.add(menuItem);
+    
 		this.component = component;
 		component.addObserver(this);
 	}
@@ -49,6 +59,37 @@ public abstract class RelationView extends LineView implements Observer
 			return false;
 
 		return true;
+	}
+	
+	/**
+	 * Replace the old component by the new if it's possible.
+	 * @param current the magnetic grid having the component to replace.
+	 * @param replace the new component for the magnetic grid.
+	 * @return true if it's ok, false otherwise.
+	 */
+	public boolean changeComponent(MagneticGrip grip, GraphicComponent component) {
+	  
+	  // Vérifiie si le nouveau composant est compatible avec la relation.
+    GraphicComponent c1 = grip.getAssociedComponentView();
+	  if (!relationChanged(c1, component)) {
+	    System.err.println("Relation change impossible.");
+	    return false;
+	  }
+	  
+	  // Changement du composant.
+	  grip.setAssociedComponentView(component);
+	  return true;
+	}
+	
+	/**
+	 * Change the orientation of the association.
+	 * @return true if it's ok, false otherwise.
+	 */
+	public void changeOrientation() {
+	  
+	  // Inversion des composants.
+	  changeComponent(getFirstPoint(), getLastPoint().getAssociedComponentView());
+	  changeComponent(getLastPoint(), getFirstPoint().getAssociedComponentView());
 	}
 
 	@Override
@@ -83,12 +124,20 @@ public abstract class RelationView extends LineView implements Observer
 
 		return xml + tab + "</relationView>\n";
 	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+    if (ACTION_CHANGE_ORIENTATION.equals(e.getActionCommand()))
+      changeOrientation();
+    else
+      super.actionPerformed(e);	  
+	}
 
 	@Override
-	public void update(Observable arg0, Object arg1)
+	public void update(Observable observable, Object o)
 	{
-		if (arg1 != null && arg1.getClass() == UpdateMessage.class)
-			switch ((UpdateMessage) arg1)
+		if (o != null && o.getClass() == UpdateMessage.class)
+			switch ((UpdateMessage)o)
 			{
 				case SELECT:
 					setSelected(true);
@@ -97,9 +146,10 @@ public abstract class RelationView extends LineView implements Observer
 				case UNSELECT:
 					setSelected(false);
 					break;
+        default:
+          break;
 			}
 		else
-
 			repaint();
 	}
 }

@@ -12,7 +12,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 
 import utility.SMessageDialog;
-
 import classDiagram.components.ClassEntity;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Multi;

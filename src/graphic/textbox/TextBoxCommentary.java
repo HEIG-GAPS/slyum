@@ -305,7 +305,7 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
 
 		setColor(EntityView.getBasicColor());
 		popupMenu.addSeparator();
-		final JMenuItem item = new JMenuItem("Delete commentary", PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete16.png"));
+		final JMenuItem item = new JMenuItem("Delete commentary", PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete.png"));
 		item.addActionListener(new ActionListener() {
 
 			@Override

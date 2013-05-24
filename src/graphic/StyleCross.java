@@ -8,11 +8,10 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
-import change.Change;
-
 import swing.Slyum;
 import utility.PersonalizedIcon;
 import utility.Utility;
+import change.Change;
 
 public class StyleCross extends GraphicComponent
 {

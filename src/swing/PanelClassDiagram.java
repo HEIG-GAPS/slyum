@@ -3,14 +3,10 @@ package swing;
 import graphic.GraphicView;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
@@ -21,7 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -36,9 +32,8 @@ import javax.xml.parsers.SAXParserFactory;
 
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.PropretiesChanger;
-import utility.SDialogProjectLoading;
+import utility.MultiBorderLayout;
 import utility.SMessageDialog;
-import utility.SSlider;
 import utility.Utility;
 import change.Change;
 import classDiagram.ClassDiagram;
@@ -65,56 +60,37 @@ public class PanelClassDiagram extends JPanel
 	private File currentFile = null;
 
 	private final GraphicView graphicView;
-	
-	private SSlider sSlider;
 
-	private PanelClassDiagram()
-	{
-		super(new BorderLayout());
-
+	private PanelClassDiagram() {
+    super(new MultiBorderLayout());
+    
+	  SSplitPane splitInner, // Split graphicview part and properties part.
+	             splitOuter; // Split inner split and hierarchical part.
+	  
+	  // Customize style.
+		setBackground(Slyum.DEFAULT_BACKGROUND);
+		
 		// Create new graphiView, contain class diagram.
 		graphicView = new GraphicView(getClassDiagram());
-        
-        setTransferHandler(new FileHandler());
+		setTransferHandler(new FileHandler());
+    
+    // Personalized ToolBar Layout
+    add(SPanelFileComponent.getInstance(), BorderLayout.NORTH);
+    add(SPanelDiagramComponent.getInstance(), BorderLayout.NORTH);
+    add(SPanelElement.getInstance(), BorderLayout.NORTH);
+
+    // Construct inner split pane.
+		splitInner = new SSplitPane(JSplitPane.VERTICAL_SPLIT, 
+		    graphicView.getScrollPane(), PropretiesChanger.getInstance());
+		splitInner.setResizeWeight(1.0);
 		
-		// Personalized ToolBar Layout
-		JPanel panelToolBar = new JPanel();
-		panelToolBar.setLayout(new BoxLayout(panelToolBar, BoxLayout.LINE_AXIS));
+		// Construct outer split pane.
+		splitOuter = new SSplitPane(JSplitPane.HORIZONTAL_SPLIT, 
+		    new HierarchicalView(getClassDiagram()), splitInner);
+		splitOuter.setDividerLocation(200);
+		splitOuter.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, Slyum.THEME_COLOR));
 
-		panelToolBar.add(SPanelFileComponent.getInstance());
-		panelToolBar.add(SPanelUndoRedo.getInstance());
-		panelToolBar.add(SPanelElement.getInstance());
-		panelToolBar.add(SPanelStyleComponent.getInstance());
-		panelToolBar.add(SPanelZOrder.getInstance());
-		panelToolBar.add(sSlider = new SSlider(Color.YELLOW, 100, 50, 200){
-
-			@Override
-			public void setValue(int value)
-			{
-				super.setValue(value);
-				getCurrentGraphicView().repaint();
-			}			
-		});
-		
-		add(panelToolBar, BorderLayout.PAGE_START);
-
-		final SSplitPane mainSplitPane = new SSplitPane(JSplitPane.VERTICAL_SPLIT, graphicView.getScrollPane(), PropretiesChanger.getInstance());
-
-		mainSplitPane.setResizeWeight(1.0);
-
-		JPanel leftPanel = new JPanel();
-		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS));
-		
-		leftPanel.add(SPanelDiagramComponent.getInstance());
-		leftPanel.add(new HierarchicalView(getClassDiagram()));
-		
-		final SSplitPane leftSplitPanel = new SSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, mainSplitPane);
-		leftSplitPanel.setDividerLocation(200);
-		leftSplitPanel.setBorder(null);
-
-		graphicView.getScene().setMinimumSize(new Dimension(200, 150));
-
-		add(leftSplitPanel, BorderLayout.CENTER);
+		add(splitOuter, BorderLayout.CENTER);
 	}
 
 	/**
@@ -195,12 +171,12 @@ public class PanelClassDiagram extends JPanel
 	
 	public JButton getRedoButton()
 	{
-		return SPanelUndoRedo.getInstance().getRedoButton();
+		return SPanelElement.getInstance().getRedoButton();
 	}
 	
 	public JButton getUndoButton()
 	{
-		return SPanelUndoRedo.getInstance().getUndoButton();
+		return SPanelElement.getInstance().getUndoButton();
 	}
 
 	/**
@@ -211,11 +187,6 @@ public class PanelClassDiagram extends JPanel
 	public GraphicView getCurrentGraphicView()
 	{
 		return graphicView;
-	}
-	
-	public SSlider getsSlider()
-	{
-		return sSlider;
 	}
 
 	/**
@@ -337,80 +308,62 @@ public class PanelClassDiagram extends JPanel
 		return true;
 	}
 	
+  public static void openSlyFile(String filename) {
+    getInstance().openFromXML(new File(filename));
+  }
+	
 	public void openFromXML(final File file)
 	{        
 		final String extension = Utility.getExtension(file);
+    final SAXParserFactory factory = SAXParserFactory.newInstance();
 
-		if (!file.exists())
-		{
+		if (!file.exists()) {
 			SMessageDialog.showErrorMessage("File not found. Please select an existing file...");
 			return;
 		}
 
-		if (extension == null || !extension.equals(Slyum.EXTENTION))
-		{
+		if (extension == null || !extension.equals(Slyum.EXTENTION)) {
 			SMessageDialog.showErrorMessage("Invalide file format. Only \"." + Slyum.EXTENTION + "\" files are accepted.");
 			return;
 		}
-
-		final SAXParserFactory factory = SAXParserFactory.newInstance();
-
-		graphicView.setStopRepaint(true);
+		
+		graphicView.getScrollPane().setVisible(false);
 		
 		final boolean isBlocked = Change.isBlocked();
 		Change.setBlocked(true);
 
-		final SDialogProjectLoading dpl = new SDialogProjectLoading(file.getPath());
-		dpl.addWindowListener(new WindowAdapter() {
-			
-			@Override
-			public void windowClosed(WindowEvent e)
-			{
-				cleanApplication();
-			}
-		});
+    setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+    
+    try {
+      SAXParser parser = factory.newSAXParser();
+      XMLParser handler = new XMLParser(classDiagram, graphicView);
+      parser.parse(file, handler);
+      handler.createDiagram();
+    }
+    catch (Exception e) {
+      showErrorImportationMessage(e);
+      graphicView.setPaintBackgroundLast(true);
+      graphicView.goRepaint();
+    }
+    
+    graphicView.getScrollPane().setVisible(true);
+    
+    Change.setBlocked(isBlocked);
+    
+    setCurrentFile(file);
+    Change.setHasChange(false);
+    
+    setCursor(null);
 
-		SwingUtilities.invokeLater(new Runnable() {
-			
-			@Override
-			public void run() 
-			{
-				try
-				{
-					SAXParser parser = factory.newSAXParser();
-					XMLParser handler = new XMLParser(classDiagram, graphicView, dpl);
-					parser.parse(file, handler);
-
-					handler.createDiagram();
-				}
-				catch (Exception e)
-				{
-					showErrorImportationMessage(e);
-					
-			        graphicView.setPaintBackgroundLast(true);
-			        graphicView.goRepaint();
-				}
-				
-				Change.setBlocked(isBlocked);
-				
-				setCurrentFile(file);
-				Change.setHasChange(false);
-				dpl.setVisible(false);
-			}
-		});
-
-		dpl.setVisible(true);
+		RecentProjectManager.addhistoryEntry(file.getAbsolutePath());
 		
 		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run()
-			{
-				graphicView.paintBackgroundFirst();
-			}
-		});
-
-        RecentProjectManager.addhistoryEntry(file.getAbsolutePath());
+      
+      @Override
+      public void run() {
+        graphicView.paintBackgroundFirst();
+      }
+    });
 	}
 
 	/**
@@ -418,8 +371,8 @@ public class PanelClassDiagram extends JPanel
 	 */
 	public void openFromXML()
 	{
-        if (!askForSave())
-            return;
+    if (!askForSave())
+        return;
         
 		final JFileChooser fc = new JFileChooser(Slyum.getCurrentDirectoryFileChooser());
 		fc.setAcceptAllFileFilterUsed(false);

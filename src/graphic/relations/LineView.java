@@ -21,12 +21,11 @@ import java.util.LinkedList;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import utility.SMessageDialog;
+import utility.Utility;
 import change.BufferBounds;
 import change.BufferCreation;
 import change.Change;
-
-import utility.SMessageDialog;
-import utility.Utility;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -40,7 +39,8 @@ import utility.Utility;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public abstract class LineView extends GraphicComponent implements ColoredComponent
+public abstract class LineView extends GraphicComponent 
+                               implements ColoredComponent
 {
 	private static Color basicColor = Color.DARK_GRAY;
 
@@ -129,7 +129,7 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
 
 		popupMenu.addSeparator();
 
-		final JMenuItem menuItem = makeMenuItem("Delete", "Delete", "delete16");
+		JMenuItem menuItem = makeMenuItem("Delete", "Delete", "delete");
 		popupMenu.add(menuItem);
 
 		setColor(getBasicColor());

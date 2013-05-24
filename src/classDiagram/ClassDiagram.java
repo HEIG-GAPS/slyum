@@ -1,9 +1,7 @@
 package classDiagram;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import utility.Utility;
 import classDiagram.components.AssociationClass;
@@ -25,7 +23,7 @@ import classDiagram.relationships.Multi;
  * added, removed or modified.
  * 
  * @author David Miserez
- * @version 1.0 - 24.07.201
+ * @version 1.0 - 24.07.2011
  * 
  */
 public class ClassDiagram implements IComponentsObserver

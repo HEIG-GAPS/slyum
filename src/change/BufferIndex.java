@@ -4,8 +4,9 @@
  */
 package change;
 
-import classDiagram.IDiagramComponent;
 import java.util.LinkedList;
+
+import classDiagram.IDiagramComponent;
 
 /**
  *

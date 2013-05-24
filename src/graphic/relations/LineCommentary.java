@@ -8,10 +8,9 @@ import java.awt.BasicStroke;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
-import classDiagram.IDiagramComponent.UpdateMessage;
-
 import swing.propretiesView.NoteProperties;
 import utility.SMessageDialog;
+import classDiagram.IDiagramComponent.UpdateMessage;
 
 /**
  * The LineView class represent a collection of lines making a link between two

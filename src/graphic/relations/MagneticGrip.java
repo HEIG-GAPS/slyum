@@ -79,6 +79,14 @@ public class MagneticGrip extends RelationGrip implements Observer
 	{
 		return component;
 	}
+	
+	public void setAssociedComponentView(GraphicComponent component) {
+	  this.component.deleteObserver(this);
+	  component.addObserver(this);
+	  this.component = component;
+	  setChanged();
+    notifyObservers();
+	}
 
 	@Override
 	public void gMouseDragged(MouseEvent e)

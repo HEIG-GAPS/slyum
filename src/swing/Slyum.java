@@ -6,9 +6,7 @@ import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.FontFormatException;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,8 +15,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
-
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,20 +43,23 @@ import utility.SMessageDialog;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class Slyum extends JFrame implements ActionListener
-{
+public class Slyum extends JFrame implements ActionListener {
+  
 	private static final long serialVersionUID = 1L;
 	private static final String APP_NAME = "Slyum";
-	public static final float version = 2.3f;
+	public static final float version = 2.4f;
 	public final static String EXTENTION = "sly";
 	public final static String APP_DIR_NAME = APP_NAME;
 	public final static String FILE_SEPARATOR = System.getProperty("file.separator");
 	public final static Point DEFAULT_SIZE = new Point(1024, 760);
+	public final static Color DEFAULT_BACKGROUND = new Color(239, 239, 242);
+	public final static Color THEME_COLOR = new Color(0, 122, 204);
 
 	// Don't use the file separator here. Java resources are get with getResource() and
 	// didn't support back-slash character on Windows.
 	public final static String RESOURCES_PATH = "resources/";
-	public final static String ICON_PATH = RESOURCES_PATH + "icon/";
+  public final static String ICON_PATH = RESOURCES_PATH + "icon/";
+  public final static String FONTS_PATCH = RESOURCES_PATH + "fonts/";
 	
 	public final static int DEFAULT_FONT_SIZE = 12;
 
@@ -190,15 +191,26 @@ public class Slyum extends JFrame implements ActionListener
 	
 		instance = new Slyum();
 		
-		// Launch application from ETD.
-		SwingUtilities.invokeLater(new Runnable() {
-			
-			@Override
-			public void run()
-			{
-				instance.setVisible(true);
-			}
-		});
+	    // Launch application from ETD.
+	    try {
+        SwingUtilities.invokeAndWait(new Runnable() {
+          
+          @Override
+          public void run() {
+            instance.setVisible(true);
+          }
+        });
+      } catch (InvocationTargetException | InterruptedException e) {
+        e.printStackTrace();
+      }
+	    
+      SwingUtilities.invokeLater(new Runnable() {
+        
+        @Override
+        public void run() {
+          Slyum.initializationComplete();
+        }
+      });
 	}
 	
 	public static boolean isChangeStackStatePrinted()
@@ -269,7 +281,7 @@ public class Slyum extends JFrame implements ActionListener
 
 	public static boolean isShowOpenJDKWarning()
 	{
-		final String prop = PropertyLoader.getInstance().getProperties().getProperty("showOpenJDKWarning");
+		String prop = PropertyLoader.getInstance().getProperties().getProperty("showOpenJDKWarning");
 		boolean enable = SHOW_OPENJDK_WARNING;
 
 		if (prop != null)
@@ -360,10 +372,7 @@ public class Slyum extends JFrame implements ActionListener
 
 	private static void showWarningForOpenJDK()
 	{
-		final boolean show = isShowOpenJDKWarning();
-
-		if (show && OSValidator.isUnix())
-
+		if (isShowOpenJDKWarning() && OSValidator.isUnix())
 			new NoRepopDialog("Slowdowns are observed with OpenJDK. If you use OpenJDK, we encourage you to get Sun JDK or put graphic quality to low.").setVisible(true);
 	}
 
@@ -386,9 +395,26 @@ public class Slyum extends JFrame implements ActionListener
 		initEventListener();
 	}
 	
+	public static void initializationComplete() {
+	  final String file = RecentProjectManager.getMoreRecentFile();
+	  if (file != null)
+	    PanelClassDiagram.openSlyFile(file);
+	}
+	
 	private void initFont()
 	{
-		defaultFont = new Font(Font.SANS_SERIF, Font.PLAIN, DEFAULT_FONT_SIZE);
+	  try {
+      defaultFont = 
+          Font.createFont(
+              Font.TRUETYPE_FONT, 
+              new File(Slyum.class.getResource(
+                  String.format("%ssegoeui.ttf", 
+                  FONTS_PATCH)).getFile())).deriveFont(Font.PLAIN,
+                                                       DEFAULT_FONT_SIZE);
+    } catch (FontFormatException | IOException e) {
+      e.printStackTrace();
+      defaultFont = new Font(Font.SANS_SERIF, Font.PLAIN, DEFAULT_FONT_SIZE);
+    }
 	}
 	
 	private void initEventListener()
@@ -409,38 +435,38 @@ public class Slyum extends JFrame implements ActionListener
 		PanelClassDiagram p = PanelClassDiagram.getInstance();
 		GraphicView gv = p.getCurrentGraphicView();
 		
-            switch (e.getActionCommand())
-            {
-                case Slyum.ACTION_SAVE_AS:
-                    p.saveToXML(true);
-                    break;
-                case ACTION_ABOUT:
-                    new AboutBox(this);
-                    break;
-                case ACTION_HELP:
-                    openHelp();
-                    break;
-                case ACTION_EXIT:
-                    exit();
-                    break;
-                case ACTION_OPEN_RECENT_RPOJECT:
-                	if (e.getSource() instanceof JMenuItemHistory)
-                		PanelClassDiagram.getInstance().openFromXmlAndAsk(new File(((JMenuItemHistory)e.getSource()).getHistoryPath().toString()));
-                	else
-                		SMessageDialog.showErrorMessage("Impossible d'effectuer cette action. Veuillez reporter ce bug.");
-                    break;
-                case ACTION_PROPERTIES:
-                    new SProperties();
-                    break;
-                case ACTION_UPDATE:
-                    openURL(URL_UPDATE_PAGE);
-                    break;
-                case ACTION_SELECT_ALL:
-                    gv.selectAll();
-                    break;
-                case ACTION_UNSELECT_ALL:
-                    gv.unselectAll();
-                    break;
+    switch (e.getActionCommand())
+    {
+        case Slyum.ACTION_SAVE_AS:
+            p.saveToXML(true);
+            break;
+        case ACTION_ABOUT:
+            new AboutBox(this);
+            break;
+        case ACTION_HELP:
+            openHelp();
+            break;
+        case ACTION_EXIT:
+            exit();
+            break;
+        case ACTION_OPEN_RECENT_RPOJECT:
+        	if (e.getSource() instanceof JMenuItemHistory)
+        		PanelClassDiagram.getInstance().openFromXmlAndAsk(new File(((JMenuItemHistory)e.getSource()).getHistoryPath().toString()));
+        	else
+        		SMessageDialog.showErrorMessage("Impossible d'effectuer cette action. Veuillez reporter ce bug.");
+            break;
+        case ACTION_PROPERTIES:
+            new SProperties();
+            break;
+        case ACTION_UPDATE:
+            openURL(URL_UPDATE_PAGE);
+            break;
+        case ACTION_SELECT_ALL:
+            gv.selectAll();
+            break;
+        case ACTION_UNSELECT_ALL:
+            gv.unselectAll();
+            break;
 				case ACTION_ZOOM_PLUS:
 					PanelClassDiagram.getInstance().getCurrentGraphicView().forwardScale();
 					break;
@@ -465,7 +491,7 @@ public class Slyum extends JFrame implements ActionListener
 				case ACTION_ZOOM_2:
 					PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(2.0);
 					break;
-            }
+      }
 	}
 
 	/**
@@ -500,7 +526,7 @@ public class Slyum extends JFrame implements ActionListener
         UIManager.put("TabbedPane.font", f);
         UIManager.put("TitledBorder.font", f);
         UIManager.put("List.font", f);
-        UIManager.put("Menu.font", f);
+        UIManager.put("Menu.font", f.deriveFont(14.0f));
         UIManager.put("MenuItem.font", f);
         UIManager.put("ComboBox.font", f);
         UIManager.put("Table.font", f);
@@ -528,40 +554,14 @@ public class Slyum extends JFrame implements ActionListener
 	 */
 	private void createJMenuBar()
 	{
-		final JMenuBar menuBar = new JMenuBar() {
-
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void paintComponent(Graphics g)
-			{
-				final Graphics2D g2 = (Graphics2D) g;
-				final int w = getWidth();
-				final int h = getHeight();
-
-				// Paint a gradient from top to bottom.
-				final Color color = getBackground();
-				final GradientPaint gp = new GradientPaint(0, 0, color.brighter(), 0, h, color);
-
-				g2.setPaint(gp);
-				g2.fillRect(0, 0, w, h);
-
-				// setOpaque(false);
-				// super.paintComponent(g);
-				// setOpaque(true);
-			}
-		};
-
+		final JMenuBar menuBar = new JMenuBar();
+		menuBar.setBackground(DEFAULT_BACKGROUND);
 		menuBar.setBorder(null);
 
 		JMenuItem menuItem;
 
 		// Menu file
-		JMenu menu = menuFile = new JMenu("File");
-		
+		JMenu menu = menuFile = new JMenu("FILE");
 		menu.setMnemonic(KeyEvent.VK_F);
 		menuBar.add(menu);
 
@@ -569,7 +569,7 @@ public class Slyum extends JFrame implements ActionListener
 			SPanelFileComponent p = SPanelFileComponent.getInstance();
 			
 			// Menu item New project
-			menuItem = createMenuItem("New Project", "newProject", KeyEvent.VK_J, KEY_NEW_PROJECT, ACTION_NEW_PROJECT, p.getBtnNewProject());
+			menuItem = createMenuItem("New Project", "new", KeyEvent.VK_J, KEY_NEW_PROJECT, ACTION_NEW_PROJECT, p.getBtnNewProject());
 			menu.add(menuItem);
 	
 			/*
@@ -580,7 +580,7 @@ public class Slyum extends JFrame implements ActionListener
 			*/
 	
 			// Menu item open project
-			menuItem = createMenuItem("Open Project...", "open16", KeyEvent.VK_O, KEY_OPEN_PROJECT, ACTION_OPEN, p.getBtnOpen());
+			menuItem = createMenuItem("Open Project...", "open", KeyEvent.VK_O, KEY_OPEN_PROJECT, ACTION_OPEN, p.getBtnOpen());
 			menu.add(menuItem);
 	
 			menu.addSeparator();
@@ -596,33 +596,33 @@ public class Slyum extends JFrame implements ActionListener
 			*/
 	
 			// Menu item save
-			menuItem = createMenuItem("Save", "save16", KeyEvent.VK_S, KEY_SAVE, ACTION_SAVE, p.getBtnSave());
+			menuItem = createMenuItem("Save", "save", KeyEvent.VK_S, KEY_SAVE, ACTION_SAVE, p.getBtnSave());
 			menu.add(menuItem);
 	
 			// Menu item save as...
-			menuItem = createMenuItem("Save As...", "saveAs16", KeyEvent.VK_A, KEY_SAVE_AS, ACTION_SAVE_AS);
+			menuItem = createMenuItem("Save As...", "save-as", KeyEvent.VK_A, KEY_SAVE_AS, ACTION_SAVE_AS);
 			menu.add(menuItem);
 	
 			menu.addSeparator();
 	
 			// Menu item Export as image...
-			menuItem = createMenuItem("Export as image...", "camera16", KeyEvent.VK_M, KEY_EXPORT, ACTION_EXPORT, p.getBtnExport());
+			menuItem = createMenuItem("Export as image...", "export", KeyEvent.VK_M, KEY_EXPORT, ACTION_EXPORT, p.getBtnExport());
 			menu.add(menuItem);
 			
 			// Menu item Copy to clipboard
-			menuItem = createMenuItem("Copy selection to clipboard", "klipper16", KeyEvent.VK_K, KEY_KLIPPER, ACTION_KLIPPER, p.getBtnKlipper());
+			menuItem = createMenuItem("Copy selection to clipboard", "klipper", KeyEvent.VK_K, KEY_KLIPPER, ACTION_KLIPPER, p.getBtnKlipper());
 			menu.add(menuItem);
 	
 			menu.addSeparator();
 	
 			// Menu item print
-			menuItem = createMenuItem("Print...", "print16", KeyEvent.VK_P, KEY_PRINT, ACTION_PRINT, p.getBtnPrint());
+			menuItem = createMenuItem("Print...", "print", KeyEvent.VK_P, KEY_PRINT, ACTION_PRINT, p.getBtnPrint());
 			menu.add(menuItem);
 	
 			menu.addSeparator();
 	
 			// Menu item Properties
-			menuItem = createMenuItem("Properties...", "Properties", KeyEvent.VK_R, KEY_PROPERTIES, ACTION_PROPERTIES);
+			menuItem = createMenuItem("Properties...", "properties", KeyEvent.VK_R, KEY_PROPERTIES, ACTION_PROPERTIES);
 			menu.add(menuItem);
 			
 			// Menu recent project
@@ -636,19 +636,19 @@ public class Slyum extends JFrame implements ActionListener
 		}
 
 		// Menu edit
-		menu = new JMenu("Edit");
+		menu = new JMenu("EDIT");
 		menu.setMnemonic(KeyEvent.VK_E);
 		menuBar.add(menu);
 
 		{
-			final SPanelUndoRedo p = SPanelUndoRedo.getInstance();
+			final SPanelElement p = SPanelElement.getInstance();
 			// Menu item Undo
-			menuItem = undo = createMenuItem("Undo", "undo16", KeyEvent.VK_U, KEY_UNDO, ACTION_UNDO, p.getUndoButton());
+			menuItem = undo = createMenuItem("Undo", "undo", KeyEvent.VK_U, KEY_UNDO, ACTION_UNDO, p.getUndoButton());
 			menuItem.setEnabled(false);
 			menu.add(menuItem);
 
 			// Menu item Redo
-			menuItem = redo = createMenuItem("Redo", "redo16", KeyEvent.VK_R, KEY_REDO, ACTION_REDO, p.getRedoButton());
+			menuItem = redo = createMenuItem("Redo", "redo", KeyEvent.VK_R, KEY_REDO, ACTION_REDO, p.getRedoButton());
 			menuItem.setEnabled(false);
 			menu.add(menuItem);
 			
@@ -667,33 +667,33 @@ public class Slyum extends JFrame implements ActionListener
 		menu.addSeparator();
 
 		{
-			SPanelStyleComponent p = SPanelStyleComponent.getInstance();
+		  SPanelElement p = SPanelElement.getInstance();
 			
 			// Menu item adjust width
-			menuItem = createMenuItemDisable("Adjust Classes Width", "adjustWidth16", KeyEvent.VK_W, KEY_ADJUST_SIZE, ACTION_ADJUST_WIDTH, p.getBtnAdjust());
+			menuItem = createMenuItemDisable("Adjust Classes Width", "adjustWidth", KeyEvent.VK_W, KEY_ADJUST_SIZE, ACTION_ADJUST_WIDTH, p.getBtnAdjust());
 			menu.add(menuItem);
 	
 			// Menu item align top
-			menuItem = createMenuItemDisable("Align Top", "alignTop16", KeyEvent.VK_O, KEY_ALIGN_UP, ACTION_ALIGN_TOP, p.getBtnTop());
+			menuItem = createMenuItemDisable("Align Top", "alignTop", KeyEvent.VK_O, KEY_ALIGN_UP, ACTION_ALIGN_TOP, p.getBtnAlignTop());
 			menu.add(menuItem);
 	
 			// Menu item align bottom
-			menuItem = createMenuItemDisable("Align Bottom", "alignBottom16", KeyEvent.VK_B, KEY_ALIGN_DOWN, ACTION_ALIGN_BOTTOM, p.getBtnBottom());
+			menuItem = createMenuItemDisable("Align Bottom", "alignBottom", KeyEvent.VK_B, KEY_ALIGN_DOWN, ACTION_ALIGN_BOTTOM, p.getBtnAlignBottom());
 			menu.add(menuItem);
 	
 			// Menu item align left
-			menuItem = createMenuItemDisable("Align Left", "alignLeft16", KeyEvent.VK_F, KEY_ALIGN_LEFT, ACTION_ALIGN_LEFT, p.getBtnLeft());
+			menuItem = createMenuItemDisable("Align Left", "alignLeft", KeyEvent.VK_F, KEY_ALIGN_LEFT, ACTION_ALIGN_LEFT, p.getBtnAlignLeft());
 			menu.add(menuItem);
 	
 			// Menu item align right
-			menuItem = createMenuItemDisable("Align Righ", "alignRight16", KeyEvent.VK_H, KEY_ALIGN_RIGHT, ACTION_ALIGN_RIGHT, p.getBtnRight());
+			menuItem = createMenuItemDisable("Align Righ", "alignRight", KeyEvent.VK_H, KEY_ALIGN_RIGHT, ACTION_ALIGN_RIGHT, p.getBtnAlignRight());
 			menu.add(menuItem);
 		}
 
 		menu.addSeparator();
 		
 		{
-			SPanelZOrder p = SPanelZOrder.getInstance();
+		  SPanelElement p = SPanelElement.getInstance();
 			
 			// Menu item top
 			menuItem = createMenuItemDisable("Move top", "top", KeyEvent.VK_T, KEY_MOVE_TOP, ACTION_MOVE_TOP, p.getBtnTop());
@@ -716,7 +716,7 @@ public class Slyum extends JFrame implements ActionListener
 			SPanelDiagramComponent p = SPanelDiagramComponent.getInstance();
 			
 			// Menu Diagram
-			menu = new JMenu("Diagram");
+			menu = new JMenu("DIAGRAM");
 			menu.setMnemonic(KeyEvent.VK_D);
 			menuBar.add(menu);
 			
@@ -767,65 +767,60 @@ public class Slyum extends JFrame implements ActionListener
 			menu.addSeparator();
 	
 			// Menu item add class
-			menuItem = createMenuItem("Add Class", "class16", KeyEvent.VK_C, KEY_CLASS, ACTION_NEW_CLASS, p.getBtnClass());
+			menuItem = createMenuItem("Add Class", "class", KeyEvent.VK_C, KEY_CLASS, ACTION_NEW_CLASS, p.getBtnClass());
 			menu.add(menuItem);
 	
 			// Menu item add interface
-			menuItem = createMenuItem("Add Interface", "interface16", KeyEvent.VK_I, KEY_INTERFACE, ACTION_NEW_INTERFACE, p.getBtnInterface());
+			menuItem = createMenuItem("Add Interface", "interface", KeyEvent.VK_I, KEY_INTERFACE, ACTION_NEW_INTERFACE, p.getBtnInterface());
 			menu.add(menuItem);
 	
 			// Menu item add class association
-			menuItem = createMenuItem("Add Association class", "classAssoc16", KeyEvent.VK_X, KEY_ASSOCIATION_CLASS, ACTION_NEW_CLASS_ASSOCIATION, p.getBtnAssociation());
+			menuItem = createMenuItem("Add Association class", "classAssoc", KeyEvent.VK_X, KEY_ASSOCIATION_CLASS, ACTION_NEW_CLASS_ASSOCIATION, p.getBtnAssociation());
 			menu.add(menuItem);
 	
 			menu.addSeparator();
 	
 			// Menu item add generalize
-			menuItem = createMenuItem("Add Inheritance", "generalize16", KeyEvent.VK_H, KEY_INHERITANCE, ACTION_NEW_GENERALIZE, p.getBtnGeneralize());
+			menuItem = createMenuItem("Add Inheritance", "generalize", KeyEvent.VK_H, KEY_INHERITANCE, ACTION_NEW_GENERALIZE, p.getBtnGeneralize());
 			menu.add(menuItem);
 	
 			// Menu item add inner class
-			menuItem = createMenuItem("Add inner class", "innerClass16", KeyEvent.VK_N, KEY_INNER_CLASS, ACTION_NEW_INNER_CLASS, p.getBtnInnerClass());
+			menuItem = createMenuItem("Add inner class", "innerClass", KeyEvent.VK_N, KEY_INNER_CLASS, ACTION_NEW_INNER_CLASS, p.getBtnInnerClass());
 			menu.add(menuItem);
 	
 			// Menu item add dependency
-			menuItem = createMenuItem("Add Dependency", "dependency16", KeyEvent.VK_E, KEY_DEPENDENCY, ACTION_NEW_DEPENDENCY, p.getBtnDependency());
+			menuItem = createMenuItem("Add Dependency", "dependency", KeyEvent.VK_E, KEY_DEPENDENCY, ACTION_NEW_DEPENDENCY, p.getBtnDependency());
 			menu.add(menuItem);
 	
 			// Menu item add association
-			menuItem = createMenuItem("Add Association", "association16", KeyEvent.VK_S, KEY_ASSOCIATION, ACTION_NEW_ASSOCIATION, p.getBtnAssociation());
+			menuItem = createMenuItem("Add Association", "association", KeyEvent.VK_S, KEY_ASSOCIATION, ACTION_NEW_ASSOCIATION, p.getBtnAssociation());
 			menu.add(menuItem);
 	
 			// Menu item add aggregation
-			menuItem = createMenuItem("Add Aggregation", "aggregation16", KeyEvent.VK_G, KEY_AGGREGATION, ACTION_NEW_AGGREGATION, p.getBtnAggregation());
+			menuItem = createMenuItem("Add Aggregation", "aggregation", KeyEvent.VK_G, KEY_AGGREGATION, ACTION_NEW_AGGREGATION, p.getBtnAggregation());
 			menu.add(menuItem);
 	
 			// Menu item add composition
-			menuItem = createMenuItem("Add Composition", "composition16", KeyEvent.VK_M, KEY_COMPOSITION, ACTION_NEW_COMPOSITION, p.getBtnComposition());
+			menuItem = createMenuItem("Add Composition", "composition", KeyEvent.VK_M, KEY_COMPOSITION, ACTION_NEW_COMPOSITION, p.getBtnComposition());
 			menu.add(menuItem);
 	
 			// Menu item add multi association
-			menuItem = createMenuItem("Add Multi-association", "multi16", KeyEvent.VK_W, KEY_MULTI_ASSOCIATION, ACTION_NEW_MULTI, p.getBtnMulti());
+			menuItem = createMenuItem("Add Multi-association", "multi", KeyEvent.VK_W, KEY_MULTI_ASSOCIATION, ACTION_NEW_MULTI, p.getBtnMulti());
 			menu.add(menuItem);
 	
 			menu.addSeparator();
 	
 			// Menu item add note
-			menuItem = createMenuItem("Add Note", "note16", KeyEvent.VK_N, KEY_NOTE, ACTION_NEW_NOTE, p.getBtnNote());
+			menuItem = createMenuItem("Add Note", "note", KeyEvent.VK_N, KEY_NOTE, ACTION_NEW_NOTE, p.getBtnNote());
 			menu.add(menuItem);
 	
 			// Menu item link note
-			menuItem = createMenuItem("Link Note", "linkNote16", KeyEvent.VK_L, KEY_LINK_NOTE, ACTION_NEW_LINK_NOTE, p.getBtnLinkNote());
+			menuItem = createMenuItem("Link Note", "linkNote", KeyEvent.VK_L, KEY_LINK_NOTE, ACTION_NEW_LINK_NOTE, p.getBtnLinkNote());
 			menu.add(menuItem);
 		}
 
-		// Menu Element
-		// menu = new JMenu("Element");
-		// menu.setMnemonic(KeyEvent.VK_E);
-		// menuBar.add(menu);
-
 		// Menu Help
-		menu = new JMenu("Help");
+		menu = new JMenu("HELP");
 		menu.setMnemonic(KeyEvent.VK_H);
 		menuBar.add(menu);
 
@@ -840,10 +835,11 @@ public class Slyum extends JFrame implements ActionListener
 		menu.addSeparator();
 
 		// Menu item About
-		menuItem = createMenuItem("About Slyum...", null, KeyEvent.VK_A, null, ACTION_ABOUT);
+		menuItem = createMenuItem("About Slyum...", "about", KeyEvent.VK_A, null, ACTION_ABOUT);
 		menu.add(menuItem);
-        setJMenuBar(menuBar);
-
+		
+		// Apply the menu bar.
+    setJMenuBar(menuBar);
 	}
 	
 	public void deleteMenuItemHistory()
@@ -904,7 +900,6 @@ public class Slyum extends JFrame implements ActionListener
 	public JMenuItem createMenuItem(String text, String iconName, int mnemonic, String accelerator, String actionCommand, ActionListener al)
 	{
 		JMenuItem item;
-	
 		final String imgLocation = ICON_PATH + iconName + ".png";
 	
 		final ImageIcon icon = PersonalizedIcon.createImageIcon(imgLocation);
@@ -914,14 +909,14 @@ public class Slyum extends JFrame implements ActionListener
 		item.setActionCommand(actionCommand);
 		item.setAccelerator(KeyStroke.getKeyStroke(accelerator));
 		item.addActionListener(al);
-	
+
 		return item;
 	}
 	
 	public JMenuItem createMenuItem(String text, String iconName, int mnemonic, String accelerator, String actionCommand, SButton link)
 	{
 		JMenuItem item =  createMenuItem(text, iconName, mnemonic, accelerator, actionCommand, link.getActionListeners()[0]);
-		
+
 		link.linkComponent(item);
 
 		return item;

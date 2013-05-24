@@ -1,9 +1,9 @@
 package change;
 
+import graphic.textbox.TextBoxLabel;
+
 import java.awt.Point;
 import java.awt.Rectangle;
-
-import graphic.textbox.TextBoxLabel;
 
 public class BufferDeplacement implements Changeable
 {

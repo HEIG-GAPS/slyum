@@ -196,10 +196,10 @@ public class TextBoxMethod extends TextBox implements Observer
 	}
 
 	@Override
-	public void update(Observable arg0, Object arg1)
+	public void update(Observable observable, Object o)
 	{
-		if (arg1 != null && arg1 instanceof UpdateMessage)
-			switch ((UpdateMessage) arg1)
+		if (o != null && o instanceof UpdateMessage)
+			switch ((UpdateMessage) o)
 			{
 				case SELECT:
 					setSelected(true);
@@ -207,6 +207,8 @@ public class TextBoxMethod extends TextBox implements Observer
 				case UNSELECT:
 					setSelected(false);
 					break;
+      default:
+        break;
 			}
 		else
 		{

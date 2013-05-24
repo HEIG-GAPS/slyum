@@ -15,97 +15,128 @@ import graphic.factory.MultiFactory;
 import graphic.factory.NoteFactory;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import utility.PersonalizedIcon;
 import utility.Utility;
 
-public class SPanelDiagramComponent extends JPanelRounded implements ActionListener
-{
-	private static final String TITLE = "Class diagram";
+public class SPanelDiagramComponent extends SToolBar implements ActionListener
+{	
+	private static final String TT_CLASS = 
+	    "Class " + Utility.keystrokeToString(Slyum.KEY_CLASS);
 	
-	private static final String TT_CLASS = "Class " + Utility.keystrokeToString(Slyum.KEY_CLASS);
-	private static final String TT_INTERFACE = "Interface " + Utility.keystrokeToString(Slyum.KEY_INTERFACE);
-	private static final String TT_CLASS_ASSOC = "Association class " + Utility.keystrokeToString(Slyum.KEY_ASSOCIATION_CLASS);
+	private static final String TT_INTERFACE = 
+	    "Interface " + Utility.keystrokeToString(Slyum.KEY_INTERFACE);
 	
-	private static final String TT_GENERALIZE = "Generalize & Realize " + Utility.keystrokeToString(Slyum.KEY_INHERITANCE);
-	private static final String TT_DEPENDENCY = "Dependency " + Utility.keystrokeToString(Slyum.KEY_DEPENDENCY);
-	private static final String TT_INNER_CLASS = "Inner class " + Utility.keystrokeToString(Slyum.KEY_INNER_CLASS);
+	private static final String TT_CLASS_ASSOC = 
+	    "Association class " + 
+	    Utility.keystrokeToString(Slyum.KEY_ASSOCIATION_CLASS);
 	
-	private static final String TT_ASSOCIATION = "Association " + Utility.keystrokeToString(Slyum.KEY_ASSOCIATION);
-	private static final String TT_AGGREGATION = "Aggregation " + Utility.keystrokeToString(Slyum.KEY_AGGREGATION);
-	private static final String TT_COMPOSITION = "Composition " + Utility.keystrokeToString(Slyum.KEY_COMPOSITION);
+	private static final String TT_GENERALIZE = 
+	    "Generalize & Realize " + 
+	    Utility.keystrokeToString(Slyum.KEY_INHERITANCE);
 	
-	private static final String TT_MULTI = "Multi-association " + Utility.keystrokeToString(Slyum.KEY_MULTI_ASSOCIATION);
-	private static final String TT_NOTE = "Note " + Utility.keystrokeToString(Slyum.KEY_NOTE);
-	private static final String TT_LINK_NOTE = "Link note " + Utility.keystrokeToString(Slyum.KEY_LINK_NOTE);
+	private static final String TT_DEPENDENCY = 
+	    "Dependency " + Utility.keystrokeToString(Slyum.KEY_DEPENDENCY);
 	
-	private SButton btnClass, btnInterface, btnClassAssociation, btnGeneralize, btnDependeny, btnInnerClass,
-	                btnAssociation, btnAggregation, btnComposition, btnMulti, btnNote, btnLinkNote;
+	private static final String TT_INNER_CLASS = 
+	    "Inner class " + Utility.keystrokeToString(Slyum.KEY_INNER_CLASS);
 	
-	private static final long serialVersionUID = -8198486630670114549L;
+	private static final String TT_ASSOCIATION = 
+	    "Association " + Utility.keystrokeToString(Slyum.KEY_ASSOCIATION);
+	
+	private static final String TT_AGGREGATION = 
+	    "Aggregation " + Utility.keystrokeToString(Slyum.KEY_AGGREGATION);
+	
+	private static final String TT_COMPOSITION = 
+	    "Composition " + Utility.keystrokeToString(Slyum.KEY_COMPOSITION);
+	
+	private static final String TT_MULTI = 
+	    "Multi-association " +
+	    Utility.keystrokeToString(Slyum.KEY_MULTI_ASSOCIATION);
+	
+	private static final String TT_NOTE = 
+	    "Note " + Utility.keystrokeToString(Slyum.KEY_NOTE);
+	
+	private static final String TT_LINK_NOTE = 
+	    "Link note " + Utility.keystrokeToString(Slyum.KEY_LINK_NOTE);
+	
+	private SButton btnClass, btnInterface, btnClassAssociation, btnGeneralize,
+	                btnDependeny, btnInnerClass, btnAssociation, btnAggregation,
+	                btnComposition, btnMulti, btnNote, btnLinkNote;
 
 	private static SPanelDiagramComponent instance;
 	
-	public static SPanelDiagramComponent getInstance()
-	{
+	public static SPanelDiagramComponent getInstance() {
 		if (instance == null)
 			instance = new SPanelDiagramComponent();
 		
 		return instance;
 	}
 	
-	private SPanelDiagramComponent()
-	{
-		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		setBorder(BorderFactory.createEmptyBorder(10, 10, 15, 10));
-		setBackground(new Color(255, 0, 0, 10));
-		setForeground(Color.GRAY);
+	private SPanelDiagramComponent() {
 
-		JPanel panelTop = new JPanel();
-		panelTop.setOpaque(false);
+		add(btnClass = createSButton(PersonalizedIcon.createImageIcon(
+		    Slyum.ICON_PATH + "class.png"), Slyum.ACTION_NEW_CLASS,
+		    Color.RED, TT_CLASS));
 		
-		JPanel panelBottom = new JPanel();
-		panelBottom.setLayout(new GridLayout(4, 3));
-		panelBottom.setOpaque(false);
+		add(btnInterface = createSButton(PersonalizedIcon.createImageIcon(
+		    Slyum.ICON_PATH + "interface.png"), Slyum.ACTION_NEW_INTERFACE,
+		    Color.RED, TT_INTERFACE));
 		
-		JLabel labelTitle = new JLabel(TITLE);
-		panelTop.add(labelTitle);
-
-		panelBottom.add(btnClass = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "class.png"), Slyum.ACTION_NEW_CLASS, Color.RED, TT_CLASS));
-		panelBottom.add(btnInterface = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "interface.png"), Slyum.ACTION_NEW_INTERFACE, Color.RED, TT_INTERFACE));
-		panelBottom.add(btnClassAssociation = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "classAssoc.png"), Slyum.ACTION_NEW_CLASS_ASSOCIATION, Color.RED, TT_CLASS_ASSOC));
+		add(btnClassAssociation = createSButton(PersonalizedIcon.createImageIcon(
+		    Slyum.ICON_PATH + "classAssoc.png"), Slyum.ACTION_NEW_CLASS_ASSOCIATION,
+		    Color.RED, TT_CLASS_ASSOC));
 		
-		panelBottom.add(btnGeneralize = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "generalize.png"), Slyum.ACTION_NEW_GENERALIZE, Color.RED, TT_GENERALIZE));
-		panelBottom.add(btnDependeny = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "dependency.png"), Slyum.ACTION_NEW_DEPENDENCY, Color.RED, TT_DEPENDENCY));
-		panelBottom.add(btnInnerClass = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "innerClass.png"), Slyum.ACTION_NEW_INNER_CLASS, Color.RED, TT_INNER_CLASS));
+		add(new SSeparator());
 		
-		panelBottom.add(btnAssociation = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "association.png"), Slyum.ACTION_NEW_ASSOCIATION, Color.RED, TT_ASSOCIATION));
-		panelBottom.add(btnAggregation = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "aggregation.png"), Slyum.ACTION_NEW_AGGREGATION, Color.RED, TT_AGGREGATION));
-		panelBottom.add(btnComposition = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "composition.png"), Slyum.ACTION_NEW_COMPOSITION, Color.RED, TT_COMPOSITION));
+		add(btnGeneralize = createSButton(PersonalizedIcon.createImageIcon(
+		    Slyum.ICON_PATH + "generalize.png"), Slyum.ACTION_NEW_GENERALIZE,
+		    Color.RED, TT_GENERALIZE));
 		
-		panelBottom.add(btnMulti = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "multi.png"), Slyum.ACTION_NEW_MULTI, Color.RED, TT_MULTI));
-		panelBottom.add(btnNote = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "note.png"), Slyum.ACTION_NEW_NOTE, Color.RED, TT_NOTE));
-		panelBottom.add(btnLinkNote = createSButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "linkNote.png"), Slyum.ACTION_NEW_LINK_NOTE, Color.RED, TT_LINK_NOTE));
+		add(btnDependeny = createSButton(PersonalizedIcon.createImageIcon(
+		    Slyum.ICON_PATH + "dependency.png"), Slyum.ACTION_NEW_DEPENDENCY,
+		    Color.RED, TT_DEPENDENCY));
 		
-		setMaximumSize(new Dimension(200, 150));
+		add(btnInnerClass = createSButton(PersonalizedIcon.createImageIcon(
+		    Slyum.ICON_PATH + "innerClass.png"), Slyum.ACTION_NEW_INNER_CLASS,
+		    Color.RED, TT_INNER_CLASS));
+    
+    add(new SSeparator());
 		
-		add(panelTop);
-		add(panelBottom);
+		add(btnAssociation = createSButton(PersonalizedIcon.createImageIcon(
+		    Slyum.ICON_PATH + "association.png"), Slyum.ACTION_NEW_ASSOCIATION,
+		    Color.RED, TT_ASSOCIATION));
+		
+		add(btnAggregation = createSButton(PersonalizedIcon.createImageIcon(
+		    Slyum.ICON_PATH + "aggregation.png"), Slyum.ACTION_NEW_AGGREGATION,
+		    Color.RED, TT_AGGREGATION));
+		
+		add(btnComposition = createSButton(PersonalizedIcon.createImageIcon(
+		    Slyum.ICON_PATH + "composition.png"), Slyum.ACTION_NEW_COMPOSITION,
+		    Color.RED, TT_COMPOSITION));
+		
+		add(btnMulti = createSButton(PersonalizedIcon.createImageIcon(
+		    Slyum.ICON_PATH + "multi.png"), Slyum.ACTION_NEW_MULTI,
+		    Color.RED, TT_MULTI));
+    
+    add(new SSeparator());
+		
+		add(btnNote = createSButton(PersonalizedIcon.createImageIcon(
+		    Slyum.ICON_PATH + "note.png"), Slyum.ACTION_NEW_NOTE,
+		    Color.RED, TT_NOTE));
+		
+		add(btnLinkNote = createSButton(PersonalizedIcon.createImageIcon(
+		    Slyum.ICON_PATH + "linkNote.png"), Slyum.ACTION_NEW_LINK_NOTE,
+		    Color.RED, TT_LINK_NOTE));
 	}
 	
 	private SButton createSButton(ImageIcon ii, String a, Color c, String tt)
 	{
-		return new SButton(ii, a, c, tt, this);
+		return new SToolBarButton(ii, a, c, tt, this);
 	}
 
 	@Override
