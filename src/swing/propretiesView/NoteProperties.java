@@ -4,7 +4,6 @@ import graphic.GraphicComponent;
 import graphic.relations.LineCommentary;
 import graphic.relations.LineView;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,16 +13,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import swing.JPanelRounded;
+import swing.FlatPanel;
 import swing.SButton;
 import swing.Slyum;
 import utility.PersonalizedIcon;
@@ -42,29 +42,23 @@ public class NoteProperties extends GlobalPropreties {
 	}
 
 	public NoteProperties() {
-		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
-		JPanelRounded panel = new JPanelRounded();
-		panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+		JPanel panel = new FlatPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		
 		JScrollPane scrollPane = new JScrollPane();
 		panel.add(scrollPane);
-		
+		panel.add(Box.createHorizontalStrut(10));
 		list = new JList<>();
 		list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		scrollPane.setViewportView(list);
 		list.setModel(new ListLineCommentaryModel());
-		list.addMouseListener(new MouseAdapter()
-		{
+		list.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mousePressed(MouseEvent e)
-			{
+			public void mousePressed(MouseEvent e) {
 				super.mousePressed(e);
-
 				List<LineCommentary> l = list.getSelectedValuesList();
-				
 				for (LineCommentary lc : getLineCommentary())
-					
 					lc.setSelected(l.contains(lc));
 			}
 		});
@@ -78,7 +72,7 @@ public class NoteProperties extends GlobalPropreties {
 			}
 		});
 		
-		btnDelete = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"), Color.RED, "Remove link");
+		btnDelete = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"), "Remove link");
 		btnDelete.addActionListener(new ActionListener() {
 			
 			@Override
@@ -107,9 +101,7 @@ public class NoteProperties extends GlobalPropreties {
 		});
 		btnDelete.setEnabled(false);
 		panel.add(btnDelete);
-		
 		panel.setMaximumSize(new Dimension(400, Integer.MAX_VALUE));
-		panel.setPreferredSize(new Dimension(10, 10));
 		add(panel);
 	}
 

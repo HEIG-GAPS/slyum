@@ -54,6 +54,7 @@ public class Slyum extends JFrame implements ActionListener {
 	public final static String FILE_SEPARATOR = System.getProperty("file.separator");
 	public final static Point DEFAULT_SIZE = new Point(1024, 760);
 	public final static Color DEFAULT_BACKGROUND = new Color(239, 239, 242);
+	public final static Color BACKGROUND_FORHEAD = new Color(246, 246, 246);
 	public final static Color THEME_COLOR = new Color(0, 122, 204);
 
 	// Don't use the file separator here. Java resources are get with getResource() and

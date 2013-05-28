@@ -59,7 +59,6 @@ import swing.PropertyLoader;
 import swing.SColorAssigner;
 import swing.SPanelElement;
 import swing.Slyum;
-import swing.propretiesView.DiagramPropreties;
 import utility.PersonalizedIcon;
 import utility.SizedCursor;
 import utility.Utility;
@@ -1038,8 +1037,6 @@ public class GraphicView extends GraphicComponent implements
   public void componentSelected(boolean select) {
     for (IListenerComponentSelectionChanged i : lcsc)
       i.componentSelectionChanged();
-
-    DiagramPropreties.updateComponentInformations();
   }
 
   @Override

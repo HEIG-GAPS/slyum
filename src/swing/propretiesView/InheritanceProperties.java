@@ -1,18 +1,17 @@
 package swing.propretiesView;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JPanel;
 
-import swing.JPanelRounded;
+import swing.FlatButton;
+import swing.FlatPanel;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent.UpdateMessage;
@@ -37,48 +36,28 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 		return instance;
 	}
 	
-	public InheritanceProperties()
-	{
-		setBackground(Color.WHITE);		
-		setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		JPanelRounded panel = new JPanelRounded();
-		panel.setBorder(new EmptyBorder(20, 20, 20, 20));
-		panel.setBounds(0, 0, 136, 272);
-		add(panel);
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{0, 0};
-		gbl_panel.rowHeights = new int[]{0, 10, 0, 0};
-		gbl_panel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
-		panel.setLayout(gbl_panel);
+	public InheritanceProperties() {
+		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+		JPanel panel = new FlatPanel();
 		
 		lblType = new JLabel("inheritanceType");
-		lblType.setFont(lblType.getFont().deriveFont(16.0f));
-		GridBagConstraints gbc_lblInheritancetype = new GridBagConstraints();
-		gbc_lblInheritancetype.insets = new Insets(0, 0, 5, 0);
-		gbc_lblInheritancetype.gridx = 0;
-		gbc_lblInheritancetype.gridy = 0;
-		panel.add(lblType, gbc_lblInheritancetype);
+		panel.add(lblType);
 		
 		lblName = new JLabel("inheritanceName");
-		lblName.setFont(lblName.getFont().deriveFont(13.0f));
+		panel.add(lblName);
 		
-		GridBagConstraints gbc_lblInheritancename = new GridBagConstraints();
-		gbc_lblInheritancename.insets = new Insets(0, 0, 5, 0);
-		gbc_lblInheritancename.gridx = 0;
-		gbc_lblInheritancename.gridy = 1;
-		panel.add(lblName, gbc_lblInheritancename);
-		
-		btnOI = new JButton("Overrides & Implementations...");
+		btnOI = new FlatButton("Overrides & Implementations...");
 		btnOI.setActionCommand(ACTION_OI);
 		btnOI.setToolTipText("Open Overrides & Implementations");
 		btnOI.addActionListener(this);
-		btnOI.setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "method.png"));
-		GridBagConstraints gbc_btnOverridesImplementations = new GridBagConstraints();
-		gbc_btnOverridesImplementations.gridx = 0;
-		gbc_btnOverridesImplementations.gridy = 2;
-		panel.add(btnOI, gbc_btnOverridesImplementations);
-		
+		btnOI.setIcon(
+		    PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "method.png"));
+		panel.add(Box.createVerticalGlue());
+		panel.add(btnOI);
+
+    panel.setMaximumSize(new Dimension(250, Short.MAX_VALUE));
+    panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+    add(panel);
 	}
 
 	@Override
@@ -88,14 +67,14 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 		{
 			Inheritance i = (Inheritance)currentObject;
 			Entity parent = i.getParent();
-			String lblTypeText = "Generalize";
+			String lblTypeText = "generalize";
 			
 			if (parent.getClass() == InterfaceEntity.class)
-				lblTypeText = "Realize";
+				lblTypeText = "realize";
 			
 			lblType.setText(lblTypeText);
 			
-			lblName.setText(i.getChild().getName() + " - " + parent.getName());
+			lblName.setText(i.getChild().getName() + " -> " + parent.getName());
 			btnOI.setEnabled(!parent.isEveryMethodsStatic());
 		}
 	}

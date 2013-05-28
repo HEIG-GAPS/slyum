@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
-
-import swing.PanelClassDiagram;
+import javax.swing.SwingUtilities;
 
 import classDiagram.IComponentsObserver;
 import classDiagram.IDiagramComponent;
@@ -32,9 +32,7 @@ import classDiagram.relationships.Role;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-@SuppressWarnings("serial")
-public class PropretiesChanger extends JScrollPane implements IComponentsObserver
-{
+public class PropretiesChanger extends JScrollPane implements IComponentsObserver {
 	private static PropretiesChanger instance = new PropretiesChanger();
 
 	/**
@@ -42,27 +40,32 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 	 * 
 	 * @return instance
 	 */
-	public static PropretiesChanger getInstance()
-	{
+	public static PropretiesChanger getInstance() {
 		return instance;
 	}
+	
+	private JLabel labelNoComponent;
 
 	/**
 	 * Create a new propreties view.
 	 */
-	private PropretiesChanger()
-	{
+	private PropretiesChanger() {
 		setPreferredSize(new Dimension(150, 200));
 		setMinimumSize(new Dimension(150, 60));
     setBackground(null);
 		setBorder(null);
 		getViewport().setBackground(Color.WHITE);
-		setViewportView(DiagramPropreties.getInstance());
+		
+		labelNoComponent = new JLabel(
+		    "Select a component from the class diagram to change its members.");
+		labelNoComponent.setHorizontalAlignment(SwingUtilities.CENTER);
+    labelNoComponent.setVerticalAlignment(SwingUtilities.CENTER);
+    labelNoComponent.setForeground(Color.GRAY.darker());
+		setViewportView(labelNoComponent);
 	}
 
 	@Override
-	public void addAggregation(Aggregation component)
-	{
+	public void addAggregation(Aggregation component) {
 		addAssociation(component);
 	}
 
@@ -72,8 +75,7 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 	 * @param association
 	 *            the association to observe.
 	 */
-	public void addAssociation(Association association)
-	{
+	public void addAssociation(Association association) {
 		association.addObserver(RelationPropreties.getInstance());
 
 		for (final Role role : association.getRoles())
@@ -82,78 +84,65 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 	}
 
 	@Override
-	public void addAssociationClass(AssociationClass component)
-	{
+	public void addAssociationClass(AssociationClass component) {
 		component.addObserver(EntityPropreties.getInstance());
 	}
 
 	@Override
-	public void addBinary(Binary component)
-	{
+	public void addBinary(Binary component) {
 		addAssociation(component);
 	}
 
 	@Override
-	public void addClass(ClassEntity component)
-	{
+	public void addClass(ClassEntity component) {
 		component.addObserver(EntityPropreties.getInstance());
 	}
 
 	@Override
-	public void addComposition(Composition component)
-	{
+	public void addComposition(Composition component) {
 		addAssociation(component);
 	}
 
 	@Override
-	public void addDependency(Dependency component)
-	{
+	public void addDependency(Dependency component) {
 		component.addObserver(RelationPropreties.getInstance());
 	}
 
 	@Override
-	public void addInheritance(Inheritance component)
-	{
+	public void addInheritance(Inheritance component) {
 		component.addObserver(InheritanceProperties.getInstance());
 	}
 
 	@Override
-	public void addInnerClass(InnerClass component)
-	{
+	public void addInnerClass(InnerClass component) {
 		// no view for InnerClass
 	}
 
 	@Override
-	public void addInterface(InterfaceEntity component)
-	{
+	public void addInterface(InterfaceEntity component) {
 		component.addObserver(EntityPropreties.getInstance());
 	}
 
 	@Override
-	public void addMulti(Multi component)
-	{
+	public void addMulti(Multi component) {
 		addAssociation(component);
 	}
 
 	@Override
-	public void changeZOrder(Entity entity, int index)
-	{
+	public void changeZOrder(Entity entity, int index) {
 		// Nothing to do...
-
 	}
 
 	@Override
-	public void removeComponent(IDiagramComponent component)
-	{
+	public void removeComponent(IDiagramComponent component) {
 		// no components saving in this view
 	}
 
 	@Override
 	public void setViewportView(Component view) {
-	  PanelClassDiagram panel = PanelClassDiagram.getInstance(); 
-  		if (view == null || panel != null && PanelClassDiagram.getInstance().getCurrentGraphicView().countSelectedComponents() > 1)
-  			view = DiagramPropreties.getInstance();
-
-		super.setViewportView(view);
+  		if (view == null)
+  	    super.setViewportView(labelNoComponent);
+  		else
+  		  super.setViewportView(view);
 	}
 }

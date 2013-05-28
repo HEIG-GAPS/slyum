@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -80,7 +79,6 @@ public class DiagramPropreties extends GlobalPropreties {
     // Informations générales
     west.add(lblFileName);
     west.add(lblFileAbsolutePath);
-    west.add(Box.createVerticalGlue());
     openInExplorer = new FlatButton(
         "Open in explorer", 
         PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "explore.png"));

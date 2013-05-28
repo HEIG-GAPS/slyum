@@ -31,7 +31,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import swing.hierarchicalView.HierarchicalView;
-import swing.propretiesView.DiagramPropreties;
 import swing.propretiesView.PropretiesChanger;
 import utility.MultiBorderLayout;
 import utility.SMessageDialog;

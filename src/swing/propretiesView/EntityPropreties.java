@@ -2,8 +2,8 @@ package swing.propretiesView;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.SystemColor;
@@ -20,6 +20,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
@@ -31,7 +32,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -39,7 +39,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 
-import swing.JPanelRounded;
+import swing.FlatPanel;
 import swing.SButton;
 import swing.Slyum;
 import utility.MultiBorderLayout;
@@ -67,8 +67,6 @@ public class EntityPropreties extends GlobalPropreties
 {
 	private class AttributeTableModel extends AbstractTableModel implements Observer, TableModelListener, MouseListener
 	{
-		private static final long serialVersionUID = 5735895585153401565L;
-
 		private final String[] columnNames = { "Attribute", "Type", "Visibility", "Constant", "Static" };
 
 		private final LinkedList<Object[]> data = new LinkedList<Object[]>();
@@ -735,7 +733,6 @@ public class EntityPropreties extends GlobalPropreties
 						final boolean hasParameters = currentMethod.getParameters().size() > 0;
 						scrollPaneParameters.setVisible(hasParameters);
 						imgNoParameter.setVisible(!hasParameters);
-						labelParameters.setVisible(!hasParameters);
 						imgMethodSelected.setVisible(false);
 						break;
 					case UNSELECT:
@@ -744,7 +741,6 @@ public class EntityPropreties extends GlobalPropreties
 						scrollPaneParameters.setVisible(false);
 						imgMethodSelected.setVisible(true);
 						imgNoParameter.setVisible(false);
-						labelParameters.setVisible(true);
 						btnRemoveParameters.setEnabled(false);
 						btnLeftParameters.setEnabled(false);
 						btnRightParameters.setEnabled(false);
@@ -760,15 +756,12 @@ public class EntityPropreties extends GlobalPropreties
 
 	private static EntityPropreties instance = new EntityPropreties();
 
-	private static final long serialVersionUID = 7817631106855232540L;
-
 	/**
 	 * Get the unique instance of this class.
 	 * 
 	 * @return the unique instance of EntityPropreties
 	 */
-	public static EntityPropreties getInstance()
-	{
+	public static EntityPropreties getInstance() {
 		return instance;
 	}
 
@@ -805,8 +798,7 @@ public class EntityPropreties extends GlobalPropreties
 
 	JComboBox<String> comboBox = Utility.getVisibilityComboBox();
 
-	private final JLabel imgMethodSelected,
-			imgNoParameter, labelAttributes, labelMethods, labelParameters;
+	private JLabel imgMethodSelected, imgNoParameter;
 
 	JPanel panelParameters;
 
@@ -814,18 +806,17 @@ public class EntityPropreties extends GlobalPropreties
 
 	JTextField textName = new JTextField();
 
-	protected EntityPropreties()
-	{			
-		btnAddParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus.png"), Color.BLUE, "Add");
-		btnRemoveMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"), Color.RED, "Remove");
-		btnRemoveAttribute = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"), Color.RED, "Remove");
-		btnUpAttribute = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow_up.png"), Color.MAGENTA, "Up");
-		btnDownAttribute = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow_down.png"), Color.MAGENTA, "Down");
-		btnUpMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow_up.png"), Color.MAGENTA, "Up");
-		btnDownMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow_down.png"), Color.MAGENTA, "Down");
-		btnRemoveParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"), Color.RED, "Remove");
-		btnRightParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow_right.png"), Color.MAGENTA, "Rigth");
-		btnLeftParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow_left.png"), Color.MAGENTA, "Left");
+	protected EntityPropreties() {
+		btnAddParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus.png"), "Add");
+		btnRemoveMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"), "Remove");
+		btnRemoveAttribute = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"), "Remove");
+		btnUpAttribute = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow-up-24.png"), "Up");
+		btnDownAttribute = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow-down-24.png"), "Down");
+		btnUpMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow-up-24.png"), "Up");
+		btnDownMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow-down-24.png"), "Down");
+		btnRemoveParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"), "Remove");
+		btnRightParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow-right-24.png"), "Rigth");
+		btnLeftParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "arrow-left-24.png"), "Left");
 		imgMethodSelected = new JLabel(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "select_method.png"));
 		imgNoParameter = new JLabel(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "empty_parameter.png"));
 		
@@ -834,7 +825,6 @@ public class EntityPropreties extends GlobalPropreties
 
 		imgNoParameter.setVisible(false);
 
-		setBackground(Color.WHITE);
 		attributesTable = new JTable(new AttributeTableModel());
 		attributesTable.setPreferredScrollableViewportSize(new Dimension(200, 0));
 
@@ -887,11 +877,9 @@ public class EntityPropreties extends GlobalPropreties
 
 		}
 
-		JPanelRounded p = new JPanelRounded();
-		p.setForeground(Color.GRAY);
-		p.setBackground(new Color(240, 240, 240));
+		JPanel p = new FlatPanel();
 		p.setAlignmentY(TOP_ALIGNMENT);
-		p.setBorder(BorderFactory.createEmptyBorder(9, 9, 9, 9));
+    p.setMaximumSize(new Dimension(0, Integer.MAX_VALUE));
 		{
 			final GridBagLayout gbl_panel = new GridBagLayout();
 			gbl_panel.columnWidths = new int[] { 0, 0 };
@@ -900,8 +888,6 @@ public class EntityPropreties extends GlobalPropreties
 			gbl_panel.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
 			p.setLayout(gbl_panel);
 		}
-
-		p.setMaximumSize(new Dimension(0, Integer.MAX_VALUE));
 
 		{
 			final GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
@@ -913,11 +899,8 @@ public class EntityPropreties extends GlobalPropreties
 
 		add(p);
 
-		p = new JPanelRounded();
-		p.setForeground(Color.GRAY);
-		p.setBackground(new Color(240, 240, 240));
+		p = new FlatPanel();
 		p.setAlignmentY(TOP_ALIGNMENT);
-		p.setBorder(BorderFactory.createEmptyBorder(9, 9, 9, 9));
 		p.setLayout(new BorderLayout());
 		JPanel panel = createWhitePanel();
 		panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
@@ -925,7 +908,6 @@ public class EntityPropreties extends GlobalPropreties
 		scrollPane.getViewport().setOpaque(false);
 		scrollPane.setBorder(new LineBorder(Color.GRAY, 1, true));
 		scrollPane.setBackground(Color.WHITE);
-		panel.add(labelAttributes = createTitleLabel("Attributes"));
 		panel.add(scrollPane);
 
 		JPanel panelButton = new JPanel();
@@ -933,7 +915,7 @@ public class EntityPropreties extends GlobalPropreties
 		panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.PAGE_AXIS));
 
 		{
-			final JButton button = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus.png"), Color.BLUE, "Add");
+			final JButton button = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus.png"), "Add");
 			button.setBorderPainted(false);
 			button.setContentAreaFilled(false);
 			button.setAlignmentX(CENTER_ALIGNMENT);
@@ -1033,11 +1015,8 @@ public class EntityPropreties extends GlobalPropreties
 		p.add(panelButton, BorderLayout.EAST);
 		add(p);
 
-		p = new JPanelRounded();
-		p.setForeground(Color.GRAY);
-		p.setBackground(new Color(240, 240, 240));
+		p = new FlatPanel();
 		p.setAlignmentY(TOP_ALIGNMENT);
-		p.setBorder(BorderFactory.createEmptyBorder(9, 9, 9, 9));
 		p.setLayout(new BorderLayout());
 		panel = createWhitePanel();
 		panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
@@ -1045,14 +1024,13 @@ public class EntityPropreties extends GlobalPropreties
 		scrollPane.getViewport().setOpaque(false);
 		scrollPane.setBorder(new LineBorder(Color.GRAY, 1, true));
 		scrollPane.setBackground(Color.WHITE);
-		panel.add(labelMethods = createTitleLabel("Methods"));
 		panel.add(scrollPane);
 
 		panelButton = new JPanel();
 		panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.PAGE_AXIS));
 		panelButton.setOpaque(false);
 		{
-			final JButton button = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus.png"), Color.BLUE, "Add");
+			final JButton button = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus.png"), "Add");
 			button.setBorderPainted(false);
 			button.setContentAreaFilled(false);
 			button.setAlignmentX(CENTER_ALIGNMENT);
@@ -1154,13 +1132,9 @@ public class EntityPropreties extends GlobalPropreties
 		p.add(panelButton, BorderLayout.EAST);
 		add(p);
 
-		panel = panelParameters = new JPanelRounded();
+		panel = panelParameters = new FlatPanel();
 		panel.setLayout(new MultiBorderLayout());
-		panel.setForeground(Color.GRAY);
-		panel.setBackground(new Color(240, 240, 240));
-		panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 2, 5, 2), BorderFactory.createEtchedBorder()));
 		panel.setAlignmentY(TOP_ALIGNMENT);
-		panel.setBorder(BorderFactory.createEmptyBorder(9, 9, 9, 9));
 		scrollPane = scrollPaneParameters = new JScrollPane(parametersTable);
 		scrollPane.getViewport().setOpaque(false);
 		scrollPane.setBorder(new LineBorder(Color.GRAY, 1, true));
@@ -1168,9 +1142,6 @@ public class EntityPropreties extends GlobalPropreties
 		scrollPane.setVisible(false);
 		panel.setMaximumSize(new Dimension(100, Short.MAX_VALUE));
 		panel.setPreferredSize(new Dimension(200, 0));
-		panel.add(labelParameters = createTitleLabel("Parameters"), BorderLayout.NORTH);
-    labelParameters.setPreferredSize(new Dimension(190, 20));
-		labelParameters.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(scrollPane, BorderLayout.CENTER);
 
 		final JPanel btnPanel = new JPanel();
@@ -1249,6 +1220,7 @@ public class EntityPropreties extends GlobalPropreties
 			}
 		});
 		btnPanel.add(btnRemoveParameters);
+		btnPanel.setBackground(null);
 		btnPanel.setPreferredSize(new Dimension(190, 30));
 		panel.add(imgMethodSelected, BorderLayout.CENTER);
 		panel.add(imgNoParameter, BorderLayout.CENTER);
@@ -1258,7 +1230,7 @@ public class EntityPropreties extends GlobalPropreties
 
 	public JPanel createEntityPropreties()
 	{
-		final JPanel panel = new JPanel();
+		JPanel panel = new JPanel();
 		Dimension size = new Dimension(200, 110);
 		setAllSize(panel, size);
 		panel.setOpaque(false);
@@ -1266,17 +1238,11 @@ public class EntityPropreties extends GlobalPropreties
 		panel.setAlignmentY(TOP_ALIGNMENT);
 		panel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 
-		final JPanel panelTitle = new JPanel(new FlowLayout());
-		panelTitle.setOpaque(false);
-		panelTitle.add(createTitleLabel("Entity"));
-
 		size = new Dimension(200, 20);
-		setAllSize(panelTitle, new Dimension((int) size.getWidth(), 40));
 		setAllSize(textName, size);
 		setAllSize(checkBoxAbstract, new Dimension((int) size.getWidth(), 30));
 		setAllSize(comboBox, new Dimension(80, (int) size.getHeight()));
 
-		panelTitle.setAlignmentX(LEFT_ALIGNMENT);
 		textName.setAlignmentX(LEFT_ALIGNMENT);
 		checkBoxAbstract.setAlignmentX(LEFT_ALIGNMENT);
 		comboBox.setAlignmentX(LEFT_ALIGNMENT);
@@ -1304,8 +1270,7 @@ public class EntityPropreties extends GlobalPropreties
 		checkBoxAbstract.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e)
-			{
+			public void actionPerformed(ActionEvent e) {
 				((Entity) currentObject).setAbstract(checkBoxAbstract.isSelected());
 				((Entity) currentObject).notifyObservers();
 			}
@@ -1326,7 +1291,6 @@ public class EntityPropreties extends GlobalPropreties
 			}
 		});
 
-		panel.add(panelTitle);
 		panel.add(textName);
 		panel.add(checkBoxAbstract);
 		panel.add(comboBox);
@@ -1387,10 +1351,6 @@ public class EntityPropreties extends GlobalPropreties
 		for (int i = 0; i < methods.size(); i++)
 			modelMethods.addMethod(methods.get(i));
 
-    labelAttributes.setVisible(attributes.size() <= 0);
-        
-		labelMethods.setVisible(methods.size() <= 0);
-
 		btnRemoveMethod.setEnabled(false);
 		btnRemoveAttribute.setEnabled(false);
 		btnUpAttribute.setEnabled(false);
@@ -1403,4 +1363,11 @@ public class EntityPropreties extends GlobalPropreties
 
 		validate();
 	}
+  
+  @Override
+  public Component add(Component comp) {
+    Component c = super.add(comp);
+    super.add(Box.createHorizontalStrut(5));
+    return c;
+  }
 }
