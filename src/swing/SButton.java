@@ -44,12 +44,11 @@ public class SButton extends JButton implements MouseListener {
 	
 	private void init(String action, Color color, String tooltip, ActionListener al)
 	{
-    setPreferredSize(new Dimension(24, 24));
+    	setPreferredSize(new Dimension(24, 24));
 		setActionCommand(action);
 		addActionListener(al);
 		setBorderPainted(false);
 		setContentAreaFilled(false);
-		setAlignmentX(CENTER_ALIGNMENT);
 		setToolTipText(tooltip);
 		
 		themeColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), 10);

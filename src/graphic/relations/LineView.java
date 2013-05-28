@@ -19,9 +19,7 @@ import java.awt.geom.Point2D;
 import java.util.LinkedList;
 
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 
-import utility.SMessageDialog;
 import utility.Utility;
 import change.BufferBounds;
 import change.BufferCreation;
@@ -139,18 +137,10 @@ public abstract class LineView extends GraphicComponent
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e)
-	{
+	public void actionPerformed(ActionEvent e) {
 		super.actionPerformed(e);
-
 		if ("Delete".equals(e.getActionCommand()))
-		{
-			if (SMessageDialog.showQuestionMessageYesNo("Are you sur to delete this component and all its associated components?") == JOptionPane.NO_OPTION)
-
-				return;
-
 			delete();
-		}
 	}
 
 	/**

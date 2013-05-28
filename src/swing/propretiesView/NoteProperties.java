@@ -78,7 +78,7 @@ public class NoteProperties extends GlobalPropreties {
 			}
 		});
 		
-		btnDelete = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "button_red_delete_small.png"), Color.RED, "Remove link");
+		btnDelete = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"), Color.RED, "Remove link");
 		btnDelete.addActionListener(new ActionListener() {
 			
 			@Override

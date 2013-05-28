@@ -57,6 +57,16 @@ public class Utility
 	    
 	    return ecd.isAccepted() ? ecd.getText() : "-1";
 	}
+  
+  public static <T> int count(Class<?> type, LinkedList<T> list) {
+    int count = 0;
+    
+    for (T component : list)
+      if (type.isInstance(component))
+        count++;
+    return count;
+  }
+
 	
 	/**
 	 * Scale the given rectangle with the given scale.

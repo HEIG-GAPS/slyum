@@ -39,7 +39,11 @@ public class ClassDiagram implements IComponentsObserver
 	LinkedList<Entity> entities = new LinkedList<>();
 	private String name;
 	LinkedList<IComponentsObserver> observers = new LinkedList<>();
-
+	
+	public int countComponents(Class<?> type) {
+	  return Utility.count(type, components);
+	}
+	
 	/**
 	 * Creates a new class diagram with the specified name.
 	 * 

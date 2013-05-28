@@ -11,7 +11,7 @@ public class PersonalizedIcon
 	public final static String PATH_ICON = Slyum.ICON_PATH;
 	public final static String PATH_WARNING_ICON = PATH_ICON + "warning.png";
 	public final static String PATH_QUESTION_ICON = PATH_ICON + "question.png";
-	public final static String PATH_INFO_ICON = PATH_ICON + "get_info.png";
+	public final static String PATH_INFO_ICON = PATH_ICON + "information.png";
 	public final static String PATH_ERROR_ICON = PATH_ICON + "error.png";
 
 	/**
