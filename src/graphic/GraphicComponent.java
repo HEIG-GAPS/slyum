@@ -3,6 +3,7 @@ package graphic;
 import graphic.relations.LineView;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -21,6 +22,7 @@ import swing.PanelClassDiagram;
 import swing.SPanelDiagramComponent;
 import swing.Slyum;
 import utility.PersonalizedIcon;
+import utility.SMessageDialog;
 import change.BufferCreation;
 import change.Change;
 import classDiagram.IDiagramComponent;
@@ -77,14 +79,19 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 	public void actionPerformed(ActionEvent e)
 	{
 		if (Slyum.ACTION_NEW_NOTE_ASSOCIED.equals(e.getActionCommand()))
-
 			parent.linkNewNoteWithSelectedEntities();
 
-		if ("Color".equals(e.getActionCommand()))
-			
+		else if ("Color".equals(e.getActionCommand()))
 			askNewColorForSelectedItems();
 
-    SPanelDiagramComponent.getInstance().actionPerformed(e);
+		else if ("open-in-explorer".equals(e.getActionCommand()))
+      try {
+          Desktop.getDesktop().open(PanelClassDiagram.getFileOpen().getParentFile());
+      } catch (Exception e1) {
+        SMessageDialog.showErrorMessage("No open file!");
+      }
+		else 
+		  SPanelDiagramComponent.getInstance().actionPerformed(e);
 	}
 	
 	public static void askNewColorForSelectedItems()

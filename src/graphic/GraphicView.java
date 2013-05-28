@@ -48,7 +48,6 @@ import java.util.List;
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
@@ -60,8 +59,8 @@ import swing.PropertyLoader;
 import swing.SColorAssigner;
 import swing.SPanelElement;
 import swing.Slyum;
+import swing.propretiesView.DiagramPropreties;
 import utility.PersonalizedIcon;
-import utility.SMessageDialog;
 import utility.SizedCursor;
 import utility.Utility;
 import change.BufferBounds;
@@ -384,6 +383,8 @@ public class GraphicView extends GraphicComponent implements
 
   private final LinkedList<LineView> linesView = new LinkedList<>();
 
+  protected JMenuItem miOpenInExplorer;
+  
   // use in printing
   private int m_maxNumPage = 1;
 
@@ -501,6 +502,11 @@ public class GraphicView extends GraphicComponent implements
 
     JMenuItem menuItem;
 
+    popupMenu.addSeparator();
+
+    miOpenInExplorer = makeMenuItem("Open in explorer", "open-in-explorer", "explore");
+    popupMenu.add(miOpenInExplorer);
+    
     popupMenu.addSeparator();
 
     // Menu item add class
@@ -1032,6 +1038,8 @@ public class GraphicView extends GraphicComponent implements
   public void componentSelected(boolean select) {
     for (IListenerComponentSelectionChanged i : lcsc)
       i.componentSelectionChanged();
+
+    DiagramPropreties.updateComponentInformations();
   }
 
   @Override
@@ -1063,6 +1071,18 @@ public class GraphicView extends GraphicComponent implements
 
   public int countEntities() {
     return getEntitiesView().size();
+  }
+  
+  public int countNotes() {
+    return notes.size();
+  }
+  
+  public int countSelectedNotes() {
+    int count = 0;
+    for (TextBoxCommentary note : notes)
+      if (note.isSelected())
+        count++;
+    return count;
   }
 
   /**
@@ -1548,10 +1568,7 @@ public class GraphicView extends GraphicComponent implements
   public void deleteSelectedComponents() {
     final LinkedList<GraphicComponent> selected = getSelectedComponents();
 
-    if (selected.size() == 0
-        || SMessageDialog
-            .showQuestionMessageYesNo("Are you sur to delete this component and all its associated components?") == JOptionPane.NO_OPTION)
-
+    if (selected.size() == 0)
       return;
 
     boolean isRecord = Change.isRecord();
@@ -1726,8 +1743,9 @@ public class GraphicView extends GraphicComponent implements
     componentMousePressed = component;
 
     if (e.getButton() != MouseEvent.BUTTON2 || component == this)
-
       component.gMousePressed(e);
+    else
+      unselectAll();
   }
 
   @Override
@@ -1923,6 +1941,10 @@ public class GraphicView extends GraphicComponent implements
 
     g2.setColor(color);
     g2.drawRect(rubberBand.x, rubberBand.y, rubberBand.width, rubberBand.height);
+  }
+  
+  public int countSelectedComponents(Class<?> type) {
+    return Utility.count(type, getSelectedComponents());
   }
 
   /**
@@ -2338,6 +2360,10 @@ public class GraphicView extends GraphicComponent implements
     }
 
     return sorted;
+  }
+
+  public JMenuItem getMiOpenInExplorer() {
+    return miOpenInExplorer;
   }
 
   @Override

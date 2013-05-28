@@ -47,7 +47,7 @@ public class NoRepopDialog extends JDialog
 		contentPanel.setLayout(gbl_contentPanel);
 		{
 			final JLabel lblImg = new JLabel("");
-			lblImg.setIcon(new ImageIcon(NoRepopDialog.class.getResource(Slyum.ICON_PATH + "get_info.png")));
+			lblImg.setIcon(new ImageIcon(NoRepopDialog.class.getResource(Slyum.ICON_PATH + "information.png")));
 			final GridBagConstraints gbc_lblImg = new GridBagConstraints();
 			gbc_lblImg.fill = GridBagConstraints.VERTICAL;
 			gbc_lblImg.gridheight = 2;

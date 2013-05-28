@@ -4,12 +4,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
 
-import swing.Slyum;
-import utility.PersonalizedIcon;
+import swing.PanelClassDiagram;
+
 import classDiagram.IComponentsObserver;
 import classDiagram.IDiagramComponent;
 import classDiagram.components.AssociationClass;
@@ -49,8 +47,6 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 		return instance;
 	}
 
-	private final JLabel noComponentLabel;
-
 	/**
 	 * Create a new propreties view.
 	 */
@@ -60,15 +56,8 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 		setMinimumSize(new Dimension(150, 60));
     setBackground(null);
 		setBorder(null);
-		
-		noComponentLabel = new JLabel("No component selected", PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "loupe.png"), SwingConstants.CENTER);
-		noComponentLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-		noComponentLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
-		noComponentLabel.setOpaque(false);
-		noComponentLabel.setFont(noComponentLabel.getFont().deriveFont(16.0f));
 		getViewport().setBackground(Color.WHITE);
-
-		setViewportView(noComponentLabel);
+		setViewportView(DiagramPropreties.getInstance());
 	}
 
 	@Override
@@ -160,10 +149,10 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 	}
 
 	@Override
-	public void setViewportView(Component view)
-	{
-		if (view == null)
-			view = noComponentLabel;
+	public void setViewportView(Component view) {
+	  PanelClassDiagram panel = PanelClassDiagram.getInstance(); 
+  		if (view == null || panel != null && PanelClassDiagram.getInstance().getCurrentGraphicView().countSelectedComponents() > 1)
+  			view = DiagramPropreties.getInstance();
 
 		super.setViewportView(view);
 	}

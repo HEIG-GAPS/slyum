@@ -31,6 +31,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import swing.hierarchicalView.HierarchicalView;
+import swing.propretiesView.DiagramPropreties;
 import swing.propretiesView.PropretiesChanger;
 import utility.MultiBorderLayout;
 import utility.SMessageDialog;
@@ -45,7 +46,6 @@ import classDiagram.ClassDiagram;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-@SuppressWarnings("serial")
 public class PanelClassDiagram extends JPanel
 {
 	private static PanelClassDiagram instance = new PanelClassDiagram();
@@ -53,6 +53,12 @@ public class PanelClassDiagram extends JPanel
 	public static PanelClassDiagram getInstance()
 	{
 		return instance;
+	}
+	
+	public static File getFileOpen() {
+	  if (getInstance() != null)
+	    return getInstance().getCurrentFile();
+	  return null;
 	}
 
 	private ClassDiagram classDiagram;
@@ -158,10 +164,8 @@ public class PanelClassDiagram extends JPanel
 	 * 
 	 * @return the class diagram
 	 */
-	public ClassDiagram getClassDiagram()
-	{
-		if (classDiagram == null)
-		{
+	public ClassDiagram getClassDiagram() {
+		if (classDiagram == null) {
 			classDiagram = new ClassDiagram("Class diagram");
 			classDiagram.addComponentsObserver(PropretiesChanger.getInstance());
 		}
@@ -281,6 +285,7 @@ public class PanelClassDiagram extends JPanel
 	public void setCurrentFile(File file)
 	{
 		currentFile = file;
+		getCurrentGraphicView().getMiOpenInExplorer().setEnabled(file != null);
 		Change.setHasChange(false);
 		Slyum.updateWindowTitle(currentFile);
 		
@@ -288,6 +293,10 @@ public class PanelClassDiagram extends JPanel
 			return;
 		
 		Slyum.setCurrentDirectoryFileChooser(file.getParent());
+	}
+	
+	public File getCurrentFile() {
+	  return currentFile;
 	}
 	
 	public boolean askForSave()
@@ -362,6 +371,7 @@ public class PanelClassDiagram extends JPanel
       @Override
       public void run() {
         graphicView.paintBackgroundFirst();
+        graphicView.unselectAll();
       }
     });
 	}

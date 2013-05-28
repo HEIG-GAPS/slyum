@@ -48,7 +48,8 @@ public class Slyum extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private static final String APP_NAME = "Slyum";
 	public static final float version = 2.4f;
-	public final static String EXTENTION = "sly";
+  public final static String EXTENTION = "sly";
+  public final static String FULL_EXTENTION = String.format(".%s", EXTENTION);
 	public final static String APP_DIR_NAME = APP_NAME;
 	public final static String FILE_SEPARATOR = System.getProperty("file.separator");
 	public final static Point DEFAULT_SIZE = new Point(1024, 760);
@@ -572,28 +573,11 @@ public class Slyum extends JFrame implements ActionListener {
 			menuItem = createMenuItem("New Project", "new", KeyEvent.VK_J, KEY_NEW_PROJECT, ACTION_NEW_PROJECT, p.getBtnNewProject());
 			menu.add(menuItem);
 	
-			/*
-			// Menu item New view
-			menuItem = createMenuItem("New View", "newView", KeyEvent.VK_N, "ctrl N", "newView", null);
-			menuItem.setEnabled(false);
-			menu.add(menuItem);
-			*/
-	
 			// Menu item open project
 			menuItem = createMenuItem("Open Project...", "open", KeyEvent.VK_O, KEY_OPEN_PROJECT, ACTION_OPEN, p.getBtnOpen());
 			menu.add(menuItem);
 	
 			menu.addSeparator();
-	
-			/*
-			// Menu item close
-			menuItem = createMenuItem("Close", "close", KeyEvent.VK_C, "ctrl C", "close", null);
-			menuItem.setEnabled(false);
-			menu.add(menuItem);
-	
-			menuItem = createMenuItem("Close All", "closeAll", KeyEvent.VK_S, "ctrl aS", "closeAll", null);
-			menu.addSeparator();
-			*/
 	
 			// Menu item save
 			menuItem = createMenuItem("Save", "save", KeyEvent.VK_S, KEY_SAVE, ACTION_SAVE, p.getBtnSave());
@@ -657,11 +641,11 @@ public class Slyum extends JFrame implements ActionListener {
 		menu.addSeparator();
 
 		// Menu item Select all
-		menuItem = createMenuItem("Select all", "select16", KeyEvent.VK_S, KEY_SELECT_ALL, ACTION_SELECT_ALL);
+		menuItem = createMenuItem("Select all", "select", KeyEvent.VK_S, KEY_SELECT_ALL, ACTION_SELECT_ALL);
 		menu.add(menuItem);
 
 		// Menu item Unselect all
-		menuItem = createMenuItem("Unselect all", "unselect16", KeyEvent.VK_N, KEY_UNSELECT_ALL, ACTION_UNSELECT_ALL);
+		menuItem = createMenuItem("Unselect all", "unselect", KeyEvent.VK_N, KEY_UNSELECT_ALL, ACTION_UNSELECT_ALL);
 		menu.add(menuItem);
 
 		menu.addSeparator();
@@ -741,7 +725,7 @@ public class Slyum extends JFrame implements ActionListener {
 			subMenu.add(menuItem);
 			
 			// Menu item adapt zoom to selection
-			menuItem = createMenuItem("Adapt selection to window", "zoomAdapt", KeyEvent.VK_S, null, ACTION_ZOOM_ADAPT_SELECTION);
+			menuItem = createMenuItem("Adapt selection to window", "", KeyEvent.VK_S, null, ACTION_ZOOM_ADAPT_SELECTION);
 			subMenu.add(menuItem);
 			
 			subMenu.addSeparator();

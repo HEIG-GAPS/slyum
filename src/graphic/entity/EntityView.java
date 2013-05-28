@@ -32,7 +32,6 @@ import java.util.Observer;
 import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
@@ -40,7 +39,6 @@ import swing.PropertyLoader;
 import swing.SPanelElement;
 import swing.Slyum;
 import utility.PersonalizedIcon;
-import utility.SMessageDialog;
 import utility.Utility;
 import change.BufferBounds;
 import change.Change;
@@ -357,17 +355,11 @@ public abstract class EntityView extends MovableComponent implements Observer,
             addAttribute();
 
         else if ("Delete".equals(e.getActionCommand())) {
-            if (SMessageDialog
-                    .showQuestionMessageYesNo("Are you sur to delete this component and all its associated components?") == JOptionPane.NO_OPTION)
-
-                return;
-
             if (pressedTextBox != null)
-
                 removeTextBox(pressedTextBox);
-            else
-
-                delete();
+            else {
+              _delete(); 
+            }
         } else if ("ViewAttribute".equals(e.getActionCommand())) {
             parent.showAttributsForSelectedEntity(true);
             parent.showMethodsForSelectedEntity(false);
@@ -529,6 +521,17 @@ public abstract class EntityView extends MovableComponent implements Observer,
             height += 10 + elementsHeight * attributesView.size();
 
         return height + 10;
+    }
+    
+    public void _delete() {
+
+      boolean isRecord = Change.isRecord();
+      Change.record();
+      
+      delete();
+
+      if (!isRecord)
+        Change.stopRecord();
     }
 
     @Override
