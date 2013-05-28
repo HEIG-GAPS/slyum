@@ -9,6 +9,7 @@ import java.util.Observer;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
@@ -20,7 +21,6 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import swing.JPanelRounded;
 import swing.PanelClassDiagram;
 import swing.Slyum;
 import utility.PersonalizedIcon;
@@ -50,7 +50,7 @@ import classDiagram.relationships.Multi;
  * @version 1.0 - 28.07.2011
  */
 @SuppressWarnings("serial")
-public class HierarchicalView extends JPanelRounded implements IComponentsObserver, TreeSelectionListener
+public class HierarchicalView extends JPanel implements IComponentsObserver, TreeSelectionListener
 {
 	private final DefaultMutableTreeNode entitiesNode, associationsNode,
 			inheritancesNode, dependenciesNode;

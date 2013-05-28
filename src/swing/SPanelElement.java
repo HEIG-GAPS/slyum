@@ -144,12 +144,13 @@ public class SPanelElement extends SToolBar
         Color.MAGENTA, TT_MOVE_BOTTOM));
     
     add(new SSeparator());
-    
-    add(sliderZoom = new SSlider(Color.YELLOW, 100, 50, 200) {      
+    add(sliderZoom = new SSlider(100, 50, 200) {      
       @Override
       public void setValue(int value) {
         super.setValue(value);
-        //PanelClassDiagram.getInstance().getCurrentGraphicView().repaint();
+        
+        if (PanelClassDiagram.getInstance() != null)
+          PanelClassDiagram.getInstance().getCurrentGraphicView().repaint();
       }
     });
 

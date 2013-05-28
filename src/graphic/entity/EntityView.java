@@ -259,12 +259,12 @@ public abstract class EntityView extends MovableComponent implements Observer,
         popupMenu.addSeparator();
 
         menuItemMoveUp = menuItem = makeMenuItem("Move up",
-                Slyum.ACTION_TEXTBOX_UP, "direction_up");
+                Slyum.ACTION_TEXTBOX_UP, "arrow-up");
         menuItemMoveUp.setEnabled(false);
         popupMenu.add(menuItem);
 
         menuItemMoveDown = menuItem = makeMenuItem("Move down",
-                Slyum.ACTION_TEXTBOX_DOWN, "direction_down");
+                Slyum.ACTION_TEXTBOX_DOWN, "arrow-down");
         menuItemMoveDown.setEnabled(false);
         popupMenu.add(menuItem);
 

@@ -21,8 +21,7 @@ public class Type extends Observable implements IDiagramComponent
     public final static String REGEX_DIGIT = "[0-9]*";
     public final static String REGEX_SEMANTIC_TYPE = Variable.REGEX_SEMANTIC_ATTRIBUTE + "(<("+Variable.REGEX_SEMANTIC_ATTRIBUTE+")(,\\s*("+Variable.REGEX_SEMANTIC_ATTRIBUTE+"))*>)?((\\["+REGEX_DIGIT+"])*)*";
 	
-	public static boolean checkSemantic(String type)
-	{
+	public static boolean checkSemantic(String type) {
 	    return type.matches(REGEX_SEMANTIC_TYPE);
 	}
 	
