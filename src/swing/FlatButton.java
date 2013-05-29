@@ -1,13 +1,17 @@
 package swing;
 
 import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.plaf.metal.MetalButtonUI;
 
 public class FlatButton extends JButton {
 
@@ -42,6 +46,13 @@ public class FlatButton extends JButton {
             BorderFactory.createMatteBorder(0, 5, 0, 0, Slyum.THEME_COLOR),
             BorderFactory.createEmptyBorder(5, 10, 5, 15)));
     setBackground(Slyum.DEFAULT_BACKGROUND);
+    
+    setUI(new MetalButtonUI() {
+      @Override
+      protected void paintFocus(Graphics g, AbstractButton b,
+          Rectangle viewRect, Rectangle textRect, Rectangle iconRect) {
+      }
+    });
     
     addMouseListener(new MouseAdapter() {
       @Override

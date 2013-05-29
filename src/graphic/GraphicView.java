@@ -213,7 +213,7 @@ public class GraphicView extends GraphicComponent implements
     if (prop != null)
       opacity = Integer.parseInt(prop);
 
-    return opacity;
+    return (int)(opacity * 2.55);
   }
 
   public static boolean isAutomatiqueGridColor() {

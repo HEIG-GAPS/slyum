@@ -4,13 +4,17 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 
+import javax.swing.AbstractButton;
 import javax.swing.Icon;
 import javax.swing.JButton;
+import javax.swing.plaf.metal.MetalButtonUI;
 
 public class SButton extends JButton {	
 	private LinkedList<Component> linkedComponents = new LinkedList<>();
@@ -33,13 +37,20 @@ public class SButton extends JButton {
 		init(action, tooltip, al);
 	}
 	
-	private void init(String action, String tooltip, ActionListener al)
-	{
+	private void init(String action, String tooltip, ActionListener al) {
 	  setPreferredSize(new Dimension(24, 24));
 		setActionCommand(action);
 		addActionListener(al);
 		setBorderPainted(false);
 		setToolTipText(tooltip);
+		
+		setUI(new MetalButtonUI() {
+		  @Override
+		  protected void paintFocus(Graphics g, AbstractButton b,
+		      Rectangle viewRect, Rectangle textRect, Rectangle iconRect) {
+		  }
+		});
+		
 		addMouseListener(new MouseAdapter() {
 		  @Override
 		  public void mouseEntered(MouseEvent e) {
