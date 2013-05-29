@@ -114,7 +114,7 @@ public class SProperties extends JDialog {
 
     setTitle("Slyum - Properties");
     setIconImage(PersonalizedIcon.getLogo().getImage());
-    setMinimumSize(new Dimension(600, 600));
+    setMinimumSize(new Dimension(600, 645));
     setModalityType(ModalityType.APPLICATION_MODAL);
     setFocusable(true);
     getContentPane().setLayout(new BorderLayout());
@@ -217,6 +217,7 @@ public class SProperties extends JDialog {
             });
             GridBagConstraints gbc_chckbxEnableGrid = new GridBagConstraints();
             gbc_chckbxEnableGrid.fill = GridBagConstraints.HORIZONTAL;
+            gbc_chckbxEnableGrid.anchor = GridBagConstraints.WEST;
             gbc_chckbxEnableGrid.insets = new Insets(0, 6, 5, 0);
             gbc_chckbxEnableGrid.gridx = 0;
             gbc_chckbxEnableGrid.gridy = 4;
@@ -236,7 +237,7 @@ public class SProperties extends JDialog {
             final GridBagConstraints gbc_panel_1 = new GridBagConstraints();
             gbc_panel_1.fill = GridBagConstraints.VERTICAL;
             gbc_panel_1.gridx = 0;
-            gbc_panel_1.gridy = 4;
+            gbc_panel_1.gridy = 5;
             panel.add(panel_Grid, gbc_panel_1);
             final GridBagLayout gbl_panel_1 = new GridBagLayout();
             gbl_panel_1.columnWidths = new int[] { 0, 0 };
@@ -265,8 +266,11 @@ public class SProperties extends JDialog {
                 sliderGridSize = new JSlider();
                 sliderGridSize.setMaximum(50);
                 sliderGridSize.setMinimum(10);
+                sliderGridSize.setSnapToTicks(true);
                 sliderGridSize.setPaintLabels(true);
                 sliderGridSize.setPaintTicks(true);
+                sliderGridSize.setMajorTickSpacing(10);
+                sliderGridSize.setMinorTickSpacing(5);
                 GridBagConstraints gbc_slider = new GridBagConstraints();
                 gbc_slider.fill = GridBagConstraints.HORIZONTAL;
                 gbc_slider.anchor = GridBagConstraints.NORTHWEST;
@@ -333,17 +337,20 @@ public class SProperties extends JDialog {
                   gbc_sliderGridPoint.gridx = 0;
                   gbc_sliderGridPoint.gridy = 1;
                   panel_grid_opacity.add(sliderGridPoint, gbc_sliderGridPoint);
-                  sliderGridPoint.setValue(200);
-                  sliderGridPoint.setMaximum(255);
+                  sliderGridPoint.setMinimum(0);
+                  sliderGridPoint.setValue(100);
+                  sliderGridPoint.setMaximum(100);
+                  sliderGridPoint.setSnapToTicks(true);
+                  sliderGridPoint.setPaintLabels(true);
+                  sliderGridPoint.setPaintTicks(true);
+                  sliderGridPoint.setMajorTickSpacing(25);
+                  sliderGridPoint.setMinorTickSpacing(5);
                   sliderGridPoint.setBorder(null);
                 }
                 chckbxOpacityGrid.addActionListener(new ActionListener() {
                   public void actionPerformed(ActionEvent arg0) {
-
-                    final boolean isSelected = chckbxOpacityGrid.isSelected();
-
+                    boolean isSelected = chckbxOpacityGrid.isSelected();
                     sliderGridPoint.setEnabled(isSelected);
-
                     if (isSelected)
                       showOpacityWarning();
                   }
@@ -822,7 +829,9 @@ public class SProperties extends JDialog {
     ckbBackgroundGradient.setSelected(GraphicView.isBackgroundGradient());
     ckbEntityGradient.setSelected(GraphicView.isEntityGradient());
     chckbxOpacityGrid.setSelected(GraphicView.isGridOpacityEnable());
-    sliderGridPoint.setValue(GraphicView.getGridOpacity());
+    sliderGridPoint.setValue(
+        Integer.parseInt(PropertyLoader.getInstance().getProperties()
+            .getProperty(PropertyLoader.GRID_POINT_OPACITY)));
     sliderGridPoint.setEnabled(chckbxOpacityGrid.isSelected());
     sliderGridSize.setValue(GraphicView.getGridSize());
     btnColor.setBackground(new Color(GraphicView.getGridColor()));

@@ -4,6 +4,7 @@ import graphic.GraphicComponent;
 import graphic.GraphicView;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -126,6 +127,19 @@ public class SPanelElement extends SToolBar
         Color.GREEN, TT_ADJUST_WIDTH));  
     
     add(new SSeparator());
+    sliderZoom = new SSlider(100, 50, 200) {      
+      @Override
+      public void setValue(int value) {
+        super.setValue(value);
+        
+        if (PanelClassDiagram.getInstance() != null)
+          PanelClassDiagram.getInstance().getCurrentGraphicView().repaint();
+      }
+    };
+    sliderZoom.setPreferredSize(new Dimension(100, getHeight()));
+    add(sliderZoom);
+    
+    add(new SSeparator());
     
     add(top = createEmptyButton(PersonalizedIcon.createImageIcon(
         Slyum.ICON_PATH + "top.png"), Slyum.ACTION_MOVE_TOP,
@@ -142,17 +156,6 @@ public class SPanelElement extends SToolBar
     add(bottom = createEmptyButton(PersonalizedIcon.createImageIcon(
         Slyum.ICON_PATH + "bottom.png"), Slyum.ACTION_MOVE_BOTTOM,
         Color.MAGENTA, TT_MOVE_BOTTOM));
-    
-    add(new SSeparator());
-    add(sliderZoom = new SSlider(100, 50, 200) {      
-      @Override
-      public void setValue(int value) {
-        super.setValue(value);
-        
-        if (PanelClassDiagram.getInstance() != null)
-          PanelClassDiagram.getInstance().getCurrentGraphicView().repaint();
-      }
-    });
 
     alignTop.setEnabled(false);
     alignBottom.setEnabled(false);

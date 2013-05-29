@@ -384,6 +384,14 @@ public class Slyum extends JFrame implements ActionListener {
 	}
 
 	public Font defaultFont;
+	
+	public Font _getDefaultFont() {
+	  return defaultFont;
+	}
+	
+	public static Font getDefaultFont() {
+	  return getInstance()._getDefaultFont();
+	}
 
 	/**
 	 * Create a new JFrame with Slyum :D !
@@ -712,11 +720,11 @@ public class Slyum extends JFrame implements ActionListener {
 			
 			
 			// Menu item back zoom
-			menuItem = createMenuItem("Zoom in", "zoomMinus", KeyEvent.VK_I, KEY_ZOOM_PLUS, ACTION_ZOOM_MINUS);
+			menuItem = createMenuItem("Zoom in", "zoomPlus", KeyEvent.VK_I, KEY_ZOOM_PLUS, ACTION_ZOOM_MINUS);
 			subMenu.add(menuItem);
 			
 			// Menu item foreward zoom
-			menuItem = createMenuItem("Zoom out", "zoomPlus", KeyEvent.VK_O, KEY_ZOOM_MINUS, ACTION_ZOOM_PLUS);
+			menuItem = createMenuItem("Zoom out", "zoomMinus", KeyEvent.VK_O, KEY_ZOOM_MINUS, ACTION_ZOOM_PLUS);
 			subMenu.add(menuItem);
 			
 			subMenu.addSeparator();
