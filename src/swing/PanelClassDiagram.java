@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -49,8 +50,7 @@ public class PanelClassDiagram extends JPanel
 {
 	private static PanelClassDiagram instance = new PanelClassDiagram();
 
-	public static PanelClassDiagram getInstance()
-	{
+	public static PanelClassDiagram getInstance() {
 		return instance;
 	}
 	
@@ -64,13 +64,40 @@ public class PanelClassDiagram extends JPanel
 
 	private File currentFile = null;
 
-	private final GraphicView graphicView;
+	private GraphicView graphicView;
+  
+  SSplitPane splitInner, // Split graphicview part and properties part.
+             splitOuter; // Split inner split and hierarchical part.
+
+  public void setDividerBottom(float location) {
+    splitInner.setDividerLocation(location);
+  }
+  
+  public void setDividerLeft(float location) {
+    splitOuter.setDividerLocation(location);
+  }
+  
+  public void saveSplitLocationInProperties() {
+    Properties properties = PropertyLoader.getInstance().getProperties();
+    float dividerLocationBottom, dividerLocationLeft;
+    
+    dividerLocationBottom = 
+        (float)splitInner.getDividerLocation() / 
+        (float)(splitInner.getHeight() - splitInner.getDividerSize());
+    properties.put(PropertyLoader.DIVIDER_BOTTOM, 
+        String.valueOf(dividerLocationBottom));
+
+    dividerLocationLeft = 
+        (float)splitOuter.getDividerLocation() / 
+        (float)(splitOuter.getWidth() - splitOuter.getDividerSize());
+    properties.put(PropertyLoader.DIVIDER_LEFT, 
+        String.valueOf(dividerLocationLeft));
+    
+    PropertyLoader.getInstance().push();
+  }
 
 	private PanelClassDiagram() {
     super(new MultiBorderLayout());
-    
-	  SSplitPane splitInner, // Split graphicview part and properties part.
-	             splitOuter; // Split inner split and hierarchical part.
 	  
 	  // Customize style.
 		setBackground(Slyum.DEFAULT_BACKGROUND);
@@ -92,8 +119,9 @@ public class PanelClassDiagram extends JPanel
 		// Construct outer split pane.
 		splitOuter = new SSplitPane(JSplitPane.HORIZONTAL_SPLIT, 
 		    new HierarchicalView(getClassDiagram()), splitInner);
-		splitOuter.setDividerLocation(200);
-		splitOuter.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, Slyum.THEME_COLOR));
+		splitOuter.setResizeWeight(0.0);
+		splitOuter.setBorder(
+		    BorderFactory.createMatteBorder(2, 0, 0, 0, Slyum.THEME_COLOR));
 
 		add(splitOuter, BorderLayout.CENTER);
 	}

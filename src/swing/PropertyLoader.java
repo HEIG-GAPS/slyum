@@ -28,6 +28,8 @@ public class PropertyLoader {
     public static final String AUTOMATIC_GRID_COLOR = "AutomaticGridColor";
     public static final String GRID_COLOR = "GridColor";
     public static final String GRID_SIZE = "gridSize";
+    public static final String DIVIDER_LEFT = "dividerLeft";
+    public static final String DIVIDER_BOTTOM = "dividerBottom";
 
     public static final String filename = Slyum.getPathAppDir()
             + Slyum.FILE_SEPARATOR + "config.properties";

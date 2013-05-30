@@ -224,7 +224,8 @@ public abstract class EntityView extends MovableComponent implements Observer,
     protected LinkedList<TextBoxMethod> methodsView = new LinkedList<TextBoxMethod>();
 
     private TextBox pressedTextBox;
-    private JMenuItem menuItemDelete, menuItemMoveUp, menuItemMoveDown;
+    private JMenuItem menuItemDelete, menuItemMoveUp, menuItemMoveDown,
+                      menuItemStatic, menuItemAbstract;
 
     private Cursor saveCursor = Cursor.getDefaultCursor();
 
@@ -250,13 +251,11 @@ public abstract class EntityView extends MovableComponent implements Observer,
 
         popupMenu.addSeparator();
 
-        menuItem = makeMenuItem("Add attribute", "AddAttribute", "attribute");
-        popupMenu.add(menuItem);
-
-        menuItem = makeMenuItem("Add method", "AddMethod", "method");
-        popupMenu.add(menuItem);
-
-        popupMenu.addSeparator();
+        popupMenu.add(
+            menuItemAbstract = makeMenuItem("Abstract", "Abstract", "abstract"));
+        
+        popupMenu.add(
+            menuItemStatic = makeMenuItem("Static", "Static", "static"));
 
         menuItemMoveUp = menuItem = makeMenuItem("Move up",
                 Slyum.ACTION_TEXTBOX_UP, "arrow-up");
@@ -271,6 +270,14 @@ public abstract class EntityView extends MovableComponent implements Observer,
         popupMenu.addSeparator();
 
         menuItemDelete = menuItem = makeMenuItem("Delete", "Delete", "delete");
+        popupMenu.add(menuItem);
+
+        popupMenu.addSeparator();
+
+        menuItem = makeMenuItem("Add attribute", "AddAttribute", "attribute");
+        popupMenu.add(menuItem);
+
+        menuItem = makeMenuItem("Add method", "AddMethod", "method");
         popupMenu.add(menuItem);
 
         popupMenu.addSeparator();
@@ -397,8 +404,24 @@ public abstract class EntityView extends MovableComponent implements Observer,
                         .getAssociedComponent();
                 component.moveMethodPosition(method, offset);
             }
-
             component.notifyObservers();
+        } else if ("Abstract".equals(e.getActionCommand())) {
+          IDiagramComponent component;
+          if (pressedTextBox == null) {
+            component = getAssociedComponent();
+            ((Entity)component).setAbstract(!((Entity)component).isAbstract());
+          } else {
+            component = pressedTextBox.getAssociedComponent();
+            ((Method)component).setAbstract(!((Method)component).isAbstract());
+          }
+          component.notifyObservers();
+        } else if ("Static".equals(e.getActionCommand())) {
+          IDiagramComponent component = pressedTextBox.getAssociedComponent();
+          if (component instanceof Attribute)
+            ((Attribute)component).setStatic(!((Attribute)component).isStatic());
+          else
+            ((Method)component).setStatic(!((Method)component).isStatic());
+          component.notifyObservers();
         }
     }
 
@@ -736,24 +759,32 @@ public abstract class EntityView extends MovableComponent implements Observer,
     public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
         if (e.isPopupTrigger()) {
             String text = "Delete ";
+            menuItemAbstract.setEnabled(false);
 
-            // if context menu is requested on a TextBox, customize popup menu.
+            // If context menu is requested on a TextBox, customize popup menu.
             if (pressedTextBox != null) {
-                text += pressedTextBox.getText();
-                menuItemMoveUp.setEnabled(attributesView
-                        .indexOf(pressedTextBox) != 0
-                        && methodsView.indexOf(pressedTextBox) != 0);
-                menuItemMoveDown
-                        .setEnabled((attributesView.size() == 0 || attributesView
-                                .indexOf(pressedTextBox) != attributesView
-                                .size() - 1)
-                                && (methodsView.size() == 0 || methodsView
-                                        .indexOf(pressedTextBox) != methodsView
-                                        .size() - 1));
+              menuItemStatic.setEnabled(true);
+              
+              text += pressedTextBox.getText();
+              menuItemMoveUp.setEnabled(attributesView
+                      .indexOf(pressedTextBox) != 0
+                      && methodsView.indexOf(pressedTextBox) != 0);
+              menuItemMoveDown
+                      .setEnabled((attributesView.size() == 0 || attributesView
+                              .indexOf(pressedTextBox) != attributesView
+                              .size() - 1)
+                              && (methodsView.size() == 0 || methodsView
+                                      .indexOf(pressedTextBox) != methodsView
+                        .size() - 1));
+              if (pressedTextBox instanceof TextBoxMethod)
+                menuItemAbstract.setEnabled(true);
+                
             } else {
                 text += component.getName();
                 menuItemMoveUp.setEnabled(false);
                 menuItemMoveDown.setEnabled(false);
+                menuItemStatic.setEnabled(false);
+                menuItemAbstract.setEnabled(true);
             }
             menuItemDelete.setText(text);
         }
