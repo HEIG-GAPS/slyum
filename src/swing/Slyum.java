@@ -21,6 +21,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -409,6 +410,13 @@ public class Slyum extends JFrame implements ActionListener {
 	  final String file = RecentProjectManager.getMoreRecentFile();
 	  if (file != null)
 	    PanelClassDiagram.openSlyFile(file);
+	  
+	  PanelClassDiagram panel = PanelClassDiagram.getInstance();
+	  Properties properties = PropertyLoader.getInstance().getProperties();
+	  panel.setDividerBottom(
+	      Float.valueOf(properties.getProperty(PropertyLoader.DIVIDER_BOTTOM)));
+    panel.setDividerLeft(
+        Float.valueOf(properties.getProperty(PropertyLoader.DIVIDER_LEFT)));
 	}
 	
 	private void initFont()
@@ -427,13 +435,11 @@ public class Slyum extends JFrame implements ActionListener {
     }
 	}
 	
-	private void initEventListener()
-	{
+	private void initEventListener() {
 		addWindowListener(new WindowAdapter() {
 
 			@Override
-			public void windowClosing(WindowEvent e)
-			{				
+			public void windowClosing(WindowEvent e) {
 				exit();
 			}
 		});
@@ -929,8 +935,7 @@ public class Slyum extends JFrame implements ActionListener {
 		return createMenuItem(text, iconName, mnemonic, accelerator, actionCommand, this);
 	}
 
-	private void exit()
-	{
+	private void exit() {
 		PanelClassDiagram p = PanelClassDiagram.getInstance();
 		
 		switch (p.askSavingCurrentProject())
@@ -940,13 +945,18 @@ public class Slyum extends JFrame implements ActionListener {
 
 			case JOptionPane.YES_OPTION:
 				p.saveToXML(false);
-				System.exit(0);
+        _exit();
 				break;
 
 			case JOptionPane.NO_OPTION:
-				System.exit(0);
+			  _exit();
 				break;
 		}
+	}
+	
+	private void _exit() {
+    PanelClassDiagram.getInstance().saveSplitLocationInProperties();
+    System.exit(0);
 	}
 	
 	private class JMenuItemHistory extends JMenuItem
