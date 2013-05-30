@@ -45,11 +45,13 @@ public abstract class ButtonCross extends GraphicComponent
 		Rectangle bounds = getBounds();
 		
 		Utility.setRenderQuality(g2);
+		int width = image.getImage().getWidth(null);
+		int height = image.getImage().getHeight(null);
+		g2.drawImage(image.getImage(), 
+		             bounds.x + (bounds.width - width) / 2, 
+		             bounds.y + (bounds.height - height) / 2, null);
 		
-		g2.drawImage(image.getImage(), bounds.x, bounds.y, null);
-		
-		if (isMouseHover || isMousePressed)
-		{
+		if (isMouseHover || isMousePressed) {
 			Color color2 = new Color(0, 255, 0, 20);
 			Color color1;
 			

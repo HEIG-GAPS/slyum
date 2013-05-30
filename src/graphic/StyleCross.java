@@ -15,10 +15,16 @@ import change.Change;
 
 public class StyleCross extends GraphicComponent
 {
-	private final String PATH = "resources/icon/";
+	private final String PATH = Slyum.ICON_PATH;
 	
 	ButtonCross[] btnCross = new ButtonCross[5];
-	String[] paths = new String[]{PATH + "alignTop.png", PATH + "alignLeft.png", PATH + "adjustWidth.png", PATH + "alignRight.png", PATH + "alignBottom.png"};
+	String[] paths = new String[] {
+	    PATH + "alignTop.png", 
+	    PATH + "alignLeft.png", 
+	    PATH + "adjustWidth.png", 
+	    PATH + "alignRight.png", 
+	    PATH + "alignBottom.png"
+	};
 	
 	Point pos = new Point(0, 0);
 	

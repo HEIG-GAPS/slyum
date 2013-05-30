@@ -1878,25 +1878,14 @@ public class GraphicView extends GraphicComponent implements
     g2.fillRect(vr.x, vr.y, vr.width, vr.height);
 
     // Draw grid
-    if (isVisible() && isGridEnable() && isGridVisible() && getGridSize() >= 10) // Don't
-                                                                                 // draw
-                                                                                 // a
-                                                                                 // grid
-                                                                                 // lesser
-                                                                                 // than
-                                                                                 // 10
-                                                                                 // (too
-                                                                                 // slow).
+    if (isVisible() && isGridEnable() && isGridVisible() && getGridSize() >= 10)
     {
       final int grayLevel = Utility.getColorGrayLevel(getColor());
       Color gridColor = new Color(getGridColor());
 
       if (isAutomatiqueGridColor())
-
         gridColor = new Color(grayLevel, grayLevel, grayLevel, getGridOpacity());
-
       else
-
         gridColor = new Color(gridColor.getRed(), gridColor.getGreen(),
             gridColor.getBlue(), getGridOpacity());
 
