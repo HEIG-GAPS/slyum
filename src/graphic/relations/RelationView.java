@@ -86,10 +86,12 @@ public abstract class RelationView extends LineView implements Observer
 	 * @return true if it's ok, false otherwise.
 	 */
 	public void changeOrientation() {
+	  GraphicComponent buffer;
 	  
 	  // Inversion des composants.
+	  buffer = getFirstPoint().getAssociedComponentView();
 	  changeComponent(getFirstPoint(), getLastPoint().getAssociedComponentView());
-	  changeComponent(getLastPoint(), getFirstPoint().getAssociedComponentView());
+	  changeComponent(getLastPoint(), buffer);
 	}
 
 	@Override
