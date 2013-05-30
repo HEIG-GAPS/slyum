@@ -189,8 +189,7 @@ public abstract class LineView extends GraphicComponent
 	{
 		// Remove all intermediate grip.
 		while (points.size() > 2)
-
-			removeGrip(points.get(1));
+		  points.get(1).delete();
 
 		// Verify recursivity.
 		if (getFirstPoint().getAssociedComponentView().equals(getLastPoint().getAssociedComponentView()))

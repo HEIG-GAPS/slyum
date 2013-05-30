@@ -65,7 +65,6 @@ public abstract class AssociationView extends RelationView
 	public boolean relationChanged(GraphicComponent oldCompo, GraphicComponent newCompo)
 	{
 		if (!(newCompo instanceof EntityView) || newCompo.getClass() == AssociationClassView.class)
-
 			return false;
 
 		final Entity oldEntity = (Entity) oldCompo.getAssociedComponent();
