@@ -44,7 +44,7 @@ public class FlatButton extends JButton {
     setBorder(
         BorderFactory.createCompoundBorder(
             BorderFactory.createMatteBorder(0, 5, 0, 0, Slyum.THEME_COLOR),
-            BorderFactory.createEmptyBorder(5, 10, 5, 15)));
+            BorderFactory.createEmptyBorder(5, 15, 5, 15)));
     setBackground(Slyum.DEFAULT_BACKGROUND);
     
     setUI(new MetalButtonUI() {

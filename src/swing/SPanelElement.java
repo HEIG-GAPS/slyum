@@ -93,7 +93,7 @@ public class SPanelElement extends SToolBar
     add(new SSeparator());
 
     add(createSButton(PersonalizedIcon.createImageIcon(
-        Slyum.ICON_PATH + "multinote.png"), Slyum.ACTION_NEW_NOTE_ASSOCIED,
+        Slyum.ICON_PATH + "multiNote.png"), Slyum.ACTION_NEW_NOTE_ASSOCIED,
         Color.CYAN, TT_ADD_NOTE, true));
     
     add(createSButton(PersonalizedIcon.createImageIcon(
@@ -136,7 +136,7 @@ public class SPanelElement extends SToolBar
           PanelClassDiagram.getInstance().getCurrentGraphicView().repaint();
       }
     };
-    sliderZoom.setPreferredSize(new Dimension(100, getHeight()));
+    sliderZoom.setPreferredSize(new Dimension(100, 15));
     add(sliderZoom);
     
     add(new SSeparator());
