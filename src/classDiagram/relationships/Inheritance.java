@@ -6,7 +6,6 @@ import swing.OverridesAndImplementationsDialog;
 import utility.SMessageDialog;
 import utility.Utility;
 import classDiagram.ClassDiagram;
-import classDiagram.IDiagramComponent;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
@@ -20,21 +19,26 @@ import classDiagram.components.Method;
  * @author David Miserez
  * @version 1.0 - 24.07.2011
  */
-public class Inheritance extends Observable implements IDiagramComponent
+public class Inheritance extends Observable 
+                         implements Relation
 {
-	public static boolean validate(Entity child, Entity parent)
-	{
+	public static boolean validate(Entity child, Entity parent) {
+	  /* Cette méthode de validation est a revoir. Désactivation en attendant.
 		boolean valide = true;
 
 		valide &= child != parent;
 
-		for (final Entity e : child.getAllChilds())
-			valide &= !parent.equals(e);
+    for (Entity e : child.getAllChilds())
+      valide &= !parent.equals(e);
 
 		if (!valide)
-			SMessageDialog.showErrorMessage("Error in hierarchical class structure.\nImpossible to create inheritance association.");
+			SMessageDialog.showErrorMessage(
+					"Error in hierarchical class structure.\n" +
+					"Impossible to create inheritance association.");
 
 		return valide;
+		*/
+	  return true;
 	}
 
 	protected Entity child, parent;
@@ -135,6 +139,7 @@ public class Inheritance extends Observable implements IDiagramComponent
 		this.child.removeParent(this);
 		this.child = child;
 		child.addParent(this);
+		setChanged();
 	}
 
 	/**
@@ -148,6 +153,7 @@ public class Inheritance extends Observable implements IDiagramComponent
 		this.parent.removeChild(this);
 		this.parent = parent;
 		parent.addChild(this);
+    setChanged();
 	}
 
 	public void showOverridesAndImplementations()
@@ -177,18 +183,35 @@ public class Inheritance extends Observable implements IDiagramComponent
 		child.notifyObservers();
 	}
 
-	private void showDeAbstractMessage()
-	{
+	private void showDeAbstractMessage() {
 		SMessageDialog.showInformationMessage("Child class is not abstract.\nAbstract methods have been de-abstracted.");
 	}
+
+  @Override
+  public Entity getSource() {
+    return getChild();
+  }
+
+  @Override
+  public Entity getTarget() {
+    return getParent();
+  }
+
+  @Override
+  public void setSource(Entity entity) {
+    setChild(entity);
+  }
+
+  @Override
+  public void setTarget(Entity entity) {
+    setParent(entity);
+  }
 
 	@Override
 	public String toString()
 	{
 		return getChild().getName() + " - " + getParent().getName();
 	}
-	
-	
 
 	@Override
 	public String toXML(int depth)

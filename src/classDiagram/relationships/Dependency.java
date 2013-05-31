@@ -6,7 +6,6 @@ import java.util.Observable;
 
 import utility.Utility;
 import classDiagram.ClassDiagram;
-import classDiagram.IDiagramComponent;
 import classDiagram.components.Entity;
 
 /**
@@ -15,8 +14,9 @@ import classDiagram.components.Entity;
  * @author David Miserez
  * @version 1.0 - 24.07.2011
  */
-public class Dependency extends Observable implements IDiagramComponent, ILabelTitle
-{
+public class Dependency extends Observable 
+                        implements Relation, 
+                                   ILabelTitle {
 	protected final int id;
 
 	private String label = "use";

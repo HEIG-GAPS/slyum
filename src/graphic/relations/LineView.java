@@ -17,6 +17,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JMenuItem;
 
@@ -123,7 +124,7 @@ public abstract class LineView extends GraphicComponent
 		smoothLines();
 
 		if (checkRecursivity)
-			componentChanged();
+			reinitGrips();
 
 		popupMenu.addSeparator();
 
@@ -180,26 +181,30 @@ public abstract class LineView extends GraphicComponent
 		
 		repaint();
 	}
+	
+	/**
+	 * Add all the grips in given list.
+	 * @param grips the list of grips.
+	 * @firstindex the first index (no kidding?).
+	 */
+	public void addAllGrip(List<RelationGrip> grips, int firstIndex) {
+	  for (RelationGrip grip : grips)
+	    addGrip(grip, firstIndex++);
+	}
 
 	/**
-	 * This method is called when the GraphicComponent source or target is
-	 * changed.
+	 * Remove and replace all grips.
 	 */
-	final public void componentChanged()
-	{
+	final public void reinitGrips() {
 		// Remove all intermediate grip.
 		while (points.size() > 2)
 		  points.get(1).delete();
 
-		// Verify recursivity.
-		if (getFirstPoint().getAssociedComponentView().equals(getLastPoint().getAssociedComponentView()))
-		{
-			final int gridSize = 35;
-
-			final MagneticGrip first = getFirstPoint(), last = getLastPoint();
-
-			final Rectangle bounds = getFirstPoint().getAssociedComponentView().getBounds();
-
+		// Create a square with the association to display the recursivity (if any).
+		if (isRecursif()) {
+			int gridSize = 35;
+			MagneticGrip first = getFirstPoint(), last = getLastPoint();
+			Rectangle bounds = getFirstPoint().getAssociedComponentView().getBounds();
 			RelationGrip grip = new RelationGrip(parent, this);
 
 			grip.setAnchor(new Point(bounds.x - gridSize, bounds.y + gridSize));
@@ -216,6 +221,10 @@ public abstract class LineView extends GraphicComponent
 			first.setAnchor(new Point(bounds.x, bounds.y + gridSize));
 			last.setAnchor(new Point(bounds.x + gridSize, bounds.y));
 		}
+	}
+	
+	public boolean isRecursif() {
+	  return getFirstPoint().getAssociedComponentView().equals(getLastPoint().getAssociedComponentView());
 	}
 
 	@Override
@@ -676,8 +685,7 @@ public abstract class LineView extends GraphicComponent
 	 *            the new GraphicComnponent afetr change
 	 * @return true if the new GraphicCOmponent is compatible; false otherwise
 	 */
-	public boolean relationChanged(GraphicComponent oldCompo, GraphicComponent newCompo)
-	{
+	public boolean relationChanged(MagneticGrip gripdSource, GraphicComponent target) {
 		return true;
 	}
 
@@ -833,10 +841,8 @@ public abstract class LineView extends GraphicComponent
 	 * @param show
 	 *            show all grips, or not
 	 */
-	public void showGrips(boolean show)
-	{
+	public void showGrips(boolean show) {
 		for (final RelationGrip g : points)
-
 			g.setVisible(show);
 	}
 
@@ -846,10 +852,8 @@ public abstract class LineView extends GraphicComponent
 	 * line. Use the SMOOTH_RATIO to change the ratio for say if the line must
 	 * be moved or not.
 	 */
-	final public void smoothLines()
-	{
-		for (int i = 0; i < points.size() - 1; i++)
-		{
+	final public void smoothLines() {
+		for (int i = 0; i < points.size() - 1; i++) {
 			final Point anchor1 = points.get(i).getAnchor();
 			final Point anchor2 = points.get(i + 1).getAnchor();
 			final int deltaX = Math.abs(anchor2.x - anchor1.x);
@@ -861,5 +865,17 @@ public abstract class LineView extends GraphicComponent
 			else if (deltaY < SMOOTH_RATIO)
 				points.get(i + 1).setAnchor(new Point(anchor2.x, anchor1.y));
 		}
+	}
+	
+	/**
+	 * Change the component associed to the grip by the new specified.
+	 * @param gripSource the source grip.
+	 * @param target the new component.
+	 * @return if the change is successful.
+	 */
+	protected void changeLinkedComponent(MagneticGrip gripSource,
+                                  	   GraphicComponent target) {
+    gripSource.setAssociedComponentView(target);
+    reinitGrips();
 	}
 }

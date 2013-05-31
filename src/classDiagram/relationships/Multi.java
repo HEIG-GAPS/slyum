@@ -12,8 +12,7 @@ import classDiagram.components.Entity;
  * @author David Miserez
  * @version 1.0 - 24.07.2011
  */
-public class Multi extends Association
-{
+public class Multi extends Association {
 	/**
 	 * Use to know if the creation of a new multi-association will be a success
 	 * or not. Parameters of this method must be the same of given parameters

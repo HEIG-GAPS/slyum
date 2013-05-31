@@ -1,6 +1,5 @@
 package graphic.relations;
 
-import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.textbox.TextBoxLabelTitle;
@@ -116,20 +115,6 @@ public class DependencyView extends RelationView
 	public IDiagramComponent getAssociedComponent()
 	{
 		return dependency;
-	}
-
-	@Override
-	public boolean relationChanged(GraphicComponent oldCompo, GraphicComponent newCompo)
-	{
-		if (!(newCompo instanceof EntityView))
-			return false;
-
-		if (oldCompo.equals(getFirstPoint().getAssociedComponentView()))
-			setSource((EntityView) newCompo);
-		else
-			setTarget((EntityView) newCompo);
-
-		return super.relationChanged(oldCompo, newCompo);
 	}
 
 	@Override

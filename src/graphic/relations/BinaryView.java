@@ -28,8 +28,7 @@ import classDiagram.relationships.Role;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class BinaryView extends AssociationView
-{
+public class BinaryView extends AssociationView {
 	/**
 	 * Create a new BinaryView between source and target.
 	 * 

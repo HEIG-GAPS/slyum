@@ -2,19 +2,26 @@ package graphic.relations;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
-import graphic.entity.AssociationClassView;
+import graphic.entity.EntityView;
 import graphic.textbox.TextBoxRole;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JMenuItem;
 
+import com.google.common.collect.Lists;
+
 import utility.Utility;
-import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.components.Entity;
+import classDiagram.relationships.Relation;
+import classDiagram.relationships.RelationChanger;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -33,52 +40,43 @@ import classDiagram.IDiagramComponent.UpdateMessage;
 public abstract class RelationView extends LineView implements Observer
 {
   public final static String ACTION_CHANGE_ORIENTATION = "change-orientation";
-	private final IDiagramComponent component;
+	private Relation relation;
 
-	public RelationView(GraphicView graphicView, GraphicComponent source, GraphicComponent target, IDiagramComponent component, Point posSource, Point posTarget, boolean checkRecursivity)
+  public RelationView(GraphicView graphicView, 
+	                    GraphicComponent source,
+	                    GraphicComponent target,
+	                    Relation component,
+	                    Point posSource,
+	                    Point posTarget,
+	                    boolean checkRecursivity)
 	{
 		super(graphicView, source, target, posSource, posTarget, checkRecursivity);
 
 		if (component == null)
 			throw new IllegalArgumentException("component is null");
 
-
     popupMenu.addSeparator();
 
-    JMenuItem menuItem = makeMenuItem("Change orientation", ACTION_CHANGE_ORIENTATION, "");
+    JMenuItem menuItem = makeMenuItem("Change orientation", ACTION_CHANGE_ORIENTATION, "orientation");
     popupMenu.add(menuItem);
     
-		this.component = component;
+		relation = component;
 		component.addObserver(this);
 	}
 
 	@Override
-	public boolean relationChanged(GraphicComponent oldCompo, GraphicComponent newCompo)
-	{
-		if (newCompo.getClass() == AssociationClassView.class)
-			return false;
-
+	public boolean relationChanged(
+	    MagneticGrip gripSource, GraphicComponent target) {
+	  
+		if (!(target instanceof EntityView))
+		  return false;
+    
+		RelationChanger.changeRelation(relation, 
+		    gripSource.equals(getFirstPoint()),
+		    (Entity)target.getAssociedComponent());
+		
+	  changeLinkedComponent(gripSource, target);
 		return true;
-	}
-	
-	/**
-	 * Replace the old component by the new if it's possible.
-	 * @param current the magnetic grid having the component to replace.
-	 * @param replace the new component for the magnetic grid.
-	 * @return true if it's ok, false otherwise.
-	 */
-	public boolean changeComponent(MagneticGrip grip, GraphicComponent component) {
-	  
-	  // Vérifiie si le nouveau composant est compatible avec la relation.
-    GraphicComponent c1 = grip.getAssociedComponentView();
-	  if (!relationChanged(c1, component)) {
-	    System.err.println("Relation change impossible.");
-	    return false;
-	  }
-	  
-	  // Changement du composant.
-	  grip.setAssociedComponentView(component);
-	  return true;
 	}
 	
 	/**
@@ -87,11 +85,63 @@ public abstract class RelationView extends LineView implements Observer
 	 */
 	public void changeOrientation() {
 	  GraphicComponent buffer;
-	  
+	  Rectangle bufferBoundsFirst, bufferBoundsLast;
+	  LinkedList<RelationGrip> bufferPoints;
+	  List<RelationGrip> reversePoints;
+
 	  // Inversion des composants.
 	  buffer = getFirstPoint().getAssociedComponentView();
-	  changeComponent(getFirstPoint(), getLastPoint().getAssociedComponentView());
-	  changeComponent(getLastPoint(), buffer);
+    bufferBoundsFirst = getFirstPoint().getBounds();
+    bufferBoundsLast = getLastPoint().getBounds();
+    bufferPoints = getPoints();
+    
+    // Il ne faut pas ré-ajouter par la suite les grips magnétisés. 
+    bufferPoints.removeFirst();
+    bufferPoints.removeLast();
+    
+    // On inverse la liste des points pour pas qu'ils ne se croisent.
+    reversePoints = Lists.reverse(bufferPoints);
+
+	  relationChanged(getFirstPoint(), getLastPoint().getAssociedComponentView());
+	  relationChanged(getLastPoint(), buffer);
+	  
+    getFirstPoint().setBounds(bufferBoundsLast);
+	  getLastPoint().setBounds(bufferBoundsFirst);
+	  addAllGrip(reversePoints, 1);
+	}
+	
+	/**
+	 * Return an array with all gripd bounds.
+	 * @return an array with all gripd bounds.
+	 */
+	public Rectangle[] getPointsBounds() {
+    LinkedList<RelationGrip> grips = getPoints();
+	  Rectangle[] bufferBoundsPoints = new Rectangle[grips.size()];
+	  int i = 0;
+    for (RelationGrip grip : grips) {
+      bufferBoundsPoints[i] = new Rectangle(grip.getBounds());
+      i++;
+    }
+    return bufferBoundsPoints;
+	}
+	
+	/**
+	 * Set all points bounds with the given array. First points will be set with
+	 * the first index in array, second with the second, etc...
+	 * @param pointsBounds an array of bounds, size must be the same than the
+	 *                     number of points.
+	 */
+	public void setAllPointsBounds(Rectangle[] pointsBounds) {
+	  LinkedList<RelationGrip> grips = getPoints();
+	  if (pointsBounds.length != grips.size())
+	    throw new IllegalArgumentException("Array of bounds not the same size " +
+	    		                               "than number of points in relation.");
+	  
+	  int i = 0;
+	  for (RelationGrip grip : grips) {
+	    grip.setBounds(pointsBounds[i]);
+	    i++;
+	  }
 	}
 
 	@Override
@@ -99,7 +149,7 @@ public abstract class RelationView extends LineView implements Observer
 	{
 		final String tab = Utility.generateTab(depth);
 
-		String xml = tab + "<relationView relationId=\"" + component.getId() + "\" color=\"" + getColor().getRGB() + "\">\n";
+		String xml = tab + "<relationView relationId=\"" + relation.getId() + "\" color=\"" + getColor().getRGB() + "\">\n";
 
 		xml += tab + "\t<line>\n";
 
@@ -126,6 +176,10 @@ public abstract class RelationView extends LineView implements Observer
 
 		return xml + tab + "</relationView>\n";
 	}
+	
+  public Relation getRelation() {
+    return relation;
+  }
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {

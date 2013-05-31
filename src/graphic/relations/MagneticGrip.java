@@ -96,40 +96,27 @@ public class MagneticGrip extends RelationGrip implements Observer
 	}
 
 	@Override
-	public void gMouseReleased(MouseEvent e)
-	{
-		magnetism = true;
+	public void gMouseReleased(MouseEvent e) {
+	  // Récupération de l'élément sur lequel l'utilisateur a "lâché" le grip.
+	  GraphicComponent onMouseComponent = 
+	      parent.getDiagramElementAtPosition(e.getPoint(), relation);
+	  
+	  magnetism = true;
+	  
+		// L'utilisateur a "lâché" le grip sur le GraphicView.
+		if (onMouseComponent == null)
+			onMouseComponent = parent;
 
-		final GraphicComponent old = component;
-		GraphicComponent newComponent = parent.getDiagramElementAtPosition(e.getPoint(), relation);
-
-		if (newComponent == null)
-			newComponent = parent;
-
-		// Change component
-		if (!old.equals(newComponent) && relation.relationChanged(old, newComponent))
-		{
-			component = newComponent;
-
-			old.deleteObserver(this);
-			component.addObserver(this);
-
-			relation.componentChanged();
-		}
-		else
-			System.err.println("Grip connexion impossible.");
+		// Est-ce que le composant cible a changé?
+		if (!component.equals(onMouseComponent))
+		  relation.relationChanged(this, onMouseComponent);
 
 		setAnchor(e.getPoint());
-
 		relation.smoothLines();
 		relation.searchUselessAnchor(this);
-
 		pushBufferChangeMouseReleased(e);
-
 		Change.stopRecord();
-		
 		maybeShowPopup(e, popupMenu);
-
 		notifyObservers();
 	}
 
