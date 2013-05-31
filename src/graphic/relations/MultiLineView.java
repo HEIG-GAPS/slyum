@@ -110,17 +110,8 @@ public class MultiLineView extends LineView
 	}
 
 	@Override
-	public boolean relationChanged(GraphicComponent oldCompo, GraphicComponent newCompo)
-	{
-		/*
-		 * // !!!!! JUST GRAPHIC CHANGE, HAVE TO REPERCUT ON CLASS DIAGRAMM
-		 * MODEL
-		 * // if relation change from class side
-		 * if (oldCompo.equals(getLastPoint().getAssociedComponentView()))
-		 * 
-		 * return newCompo.getClass() == ClassView.class;
-		 */
-		// multi side can't be changed.
+	public boolean relationChanged(MagneticGrip gripSource, GraphicComponent tagret) {
+		// Le changement pour les multi-association n'est pas implémenté.
 		return false;
 	}
 

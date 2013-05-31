@@ -48,17 +48,9 @@ public class AssociationClasseLine extends LineView
 	}
 
 	@Override
-	public boolean relationChanged(GraphicComponent oldCompo, GraphicComponent newCompo)
-	{
-		/*
-		 * // ////!!!!\\\\ CHANGEMENT UNIQUEMENT GRAPHIQUE, LES REPERCUTER AUSSI
-		 * // SUR LE DIAGRAMME DE CLASSE (MODEL)
-		 * if (oldCompo.equals(getFirstPoint().getAssociedComponentView())
-		 * && newCompo instanceof EntityView) return true;
-		 * 
-		 * if (oldCompo.equals(getLastPoint().getAssociedComponentView())
-		 * && newCompo instanceof BinaryView) return true;
-		 */
+	public boolean relationChanged(MagneticGrip gripSource, GraphicComponent target) {
+		// Le changement de relation pour les classes d'association 
+	  // n'est pas implémenté.
 		return false;
 	}
 }

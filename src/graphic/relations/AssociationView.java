@@ -1,8 +1,6 @@
 package graphic.relations;
 
-import graphic.GraphicComponent;
 import graphic.GraphicView;
-import graphic.entity.AssociationClassView;
 import graphic.entity.EntityView;
 import graphic.textbox.TextBoxLabelTitle;
 
@@ -11,9 +9,7 @@ import java.awt.Point;
 
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
-import classDiagram.components.Entity;
 import classDiagram.relationships.Association;
-import classDiagram.relationships.Role;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -33,9 +29,12 @@ import classDiagram.relationships.Role;
  */
 public abstract class AssociationView extends RelationView
 {
-	private final Association association;
+	private Association association;
 
-	public AssociationView(GraphicView parent, EntityView source, EntityView target, Association association, Point posSource, Point posTarget, boolean checkRecursivity)
+	public AssociationView(
+	    GraphicView parent, EntityView source, EntityView target, 
+	    Association association, Point posSource, Point posTarget, 
+	    boolean checkRecursivity)
 	{
 		super(parent, source, target, association, posSource, posTarget, checkRecursivity);
 
@@ -59,19 +58,6 @@ public abstract class AssociationView extends RelationView
 
 		if (association.isDirected())
 			DependencyView.paintExtremity(g2, points.get(points.size() - 2).getAnchor(), points.getLast().getAnchor());
-	}
-
-	@Override
-	public boolean relationChanged(GraphicComponent oldCompo, GraphicComponent newCompo)
-	{
-		if (!(newCompo instanceof EntityView) || newCompo.getClass() == AssociationClassView.class)
-			return false;
-
-		final Entity oldEntity = (Entity) oldCompo.getAssociedComponent();
-		final Role role = association.searchRoleByEntity(oldEntity);
-		role.setEntity((Entity) newCompo.getAssociedComponent());
-
-		return super.relationChanged(oldCompo, newCompo);
 	}
 
 	@Override

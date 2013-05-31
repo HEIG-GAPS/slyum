@@ -165,9 +165,16 @@ public class InheritanceView extends RelationView
 	}
 
 	@Override
-	public boolean relationChanged(GraphicComponent oldCompo, GraphicComponent newCompo)
-	{
-		if (newCompo.getClass() != oldCompo.getClass())
+	public boolean relationChanged(
+	    MagneticGrip gripSource, GraphicComponent target) {
+	  if (!(target instanceof EntityView) ||
+	      !Inheritance.validate(
+  	      (Entity)gripSource.getAssociedComponentView().getAssociedComponent(),
+  	      (Entity)target.getAssociedComponent()))
+	    return false;
+	  
+	  return super.relationChanged(gripSource, target);
+		/*if (newCompo.getClass() != oldCompo.getClass())
 			return false;
 
 		inheritance.getChild().removeParent(inheritance);
@@ -179,15 +186,12 @@ public class InheritanceView extends RelationView
 		{
 			newChild = (Entity) newCompo.getAssociedComponent();
 			newParent = inheritance.getParent();
-		}
-		else
-		{
+		} else {
 			newChild = inheritance.getChild();
 			newParent = (Entity) newCompo.getAssociedComponent();
 		}
 
-		if (!Inheritance.validate(newChild, newParent))
-		{
+		if (!Inheritance.validate(newChild, newParent)) {
 			inheritance.getChild().addParent(inheritance);
 			inheritance.getParent().addChild(inheritance);
 			return false;
@@ -196,7 +200,7 @@ public class InheritanceView extends RelationView
 		inheritance.setChild(newChild);
 		inheritance.setParent(newParent);
 
-		return super.relationChanged(oldCompo, newCompo);
+		return super.relationChanged(oldCompo, newCompo);*/
 	}
 
 	/**

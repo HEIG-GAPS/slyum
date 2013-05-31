@@ -17,11 +17,10 @@ import classDiagram.components.Visibility;
  * @author David Miserez
  * @version 1.0 - 24.07.2011
  */
-public class Role extends Observable implements IDiagramComponent
-{
+public class Role extends Observable implements IDiagramComponent {
 	private Association associations;
-
 	private Entity entity;
+	
 	protected final int id = ClassDiagram.getNextId();
 	private final Multiplicity multiplicity;
 

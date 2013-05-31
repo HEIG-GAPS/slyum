@@ -7,7 +7,6 @@ import java.util.Observable;
 
 import utility.Utility;
 import classDiagram.ClassDiagram;
-import classDiagram.IDiagramComponent;
 import classDiagram.components.Entity;
 
 /**
@@ -17,15 +16,16 @@ import classDiagram.components.Entity;
  * @author David Miserez
  * @version 1.0 - 24.07.2011
  */
-public abstract class Association extends Observable implements IDiagramComponent, ILabelTitle
-{
+public abstract class Association extends Observable
+                                  implements Relation,
+                                             ILabelTitle {
 	protected boolean directed;
 
 	protected final int id;
 	protected String name;
 	protected LinkedList<Role> roles;
 
-	public Association()
+  public Association()
 	{
 		roles = new LinkedList<Role>();
 
@@ -125,6 +125,7 @@ public abstract class Association extends Observable implements IDiagramComponen
 	 * @param entity
 	 *            the entity for find a role
 	 * @return the role corresponding to the entity, or null.
+	 * @deprecated Cause probleme when the association is recursive.
 	 */
 	public Role searchRoleByEntity(Entity entity)
 	{
@@ -172,8 +173,34 @@ public abstract class Association extends Observable implements IDiagramComponen
 		this.name = name == null || name.isEmpty() ? "" : name;
 		setChanged();
 	}
+	
+  @Override
+  public Entity getSource() {
+    return roles.getFirst().getEntity();
+  }
 
+  @Override
+  public Entity getTarget() {
+    return roles.getLast().getEntity();
+  }
+  
 	@Override
+  public void setSource(Entity entity) {
+	  Role role = roles.getFirst(); 
+    role.setEntity(entity);
+    role.notifyObservers();
+    setChanged();
+  }
+
+  @Override
+  public void setTarget(Entity entity) {
+    Role role = roles.getLast(); 
+    role.setEntity(entity);
+    role.notifyObservers();
+    setChanged();
+  }
+
+  @Override
 	public String toXML(int depth)
 	{
 		final String tab = Utility.generateTab(depth);

@@ -41,6 +41,7 @@ public class SButton extends JButton {
 	  setPreferredSize(new Dimension(24, 24));
 		setActionCommand(action);
 		addActionListener(al);
+    setContentAreaFilled(false);
 		setBorderPainted(false);
 		setToolTipText(tooltip);
 		
@@ -57,6 +58,7 @@ public class SButton extends JButton {
 		    super.mouseEntered(e);
 		    if (isEnabled()) {
 	        setBackground(Color.WHITE);
+	        setContentAreaFilled(true);
 	        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); 
 		    }
 		  }
@@ -64,7 +66,7 @@ public class SButton extends JButton {
 		  @Override
 		  public void mouseExited(MouseEvent e) {
 		    super.mouseExited(e);
-		    setBackground(null);
+		    setContentAreaFilled(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		  }
     });

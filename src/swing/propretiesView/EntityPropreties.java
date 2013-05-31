@@ -916,8 +916,6 @@ public class EntityPropreties extends GlobalPropreties
 
 		{
 			final JButton button = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus.png"), "Add");
-			button.setBorderPainted(false);
-			button.setContentAreaFilled(false);
 			button.setAlignmentX(CENTER_ALIGNMENT);
 			button.addActionListener(new ActionListener() {
 
@@ -1031,8 +1029,6 @@ public class EntityPropreties extends GlobalPropreties
 		panelButton.setOpaque(false);
 		{
 			final JButton button = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus.png"), "Add");
-			button.setBorderPainted(false);
-			button.setContentAreaFilled(false);
 			button.setAlignmentX(CENTER_ALIGNMENT);
 			button.addActionListener(new ActionListener() {
 
@@ -1147,13 +1143,11 @@ public class EntityPropreties extends GlobalPropreties
 		final JPanel btnPanel = new JPanel();
 
 		btnAddParameters.setAlignmentX(CENTER_ALIGNMENT);
-		btnAddParameters.setBorder(null);
 		btnAddParameters.setEnabled(false);
 		btnAddParameters.addActionListener((ParametersTableModel) parametersTable.getModel());
 		btnPanel.add(btnAddParameters);
 
 		btnLeftParameters.setAlignmentX(CENTER_ALIGNMENT);
-		btnLeftParameters.setBorder(null);
 		btnLeftParameters.setEnabled(false);
 		btnLeftParameters.addActionListener(new ActionListener() {
 
@@ -1181,7 +1175,6 @@ public class EntityPropreties extends GlobalPropreties
 		btnPanel.add(btnLeftParameters);
 
 		btnRightParameters.setAlignmentX(CENTER_ALIGNMENT);
-		btnRightParameters.setBorder(null);
 		btnRightParameters.setEnabled(false);
 		btnRightParameters.addActionListener(new ActionListener() {
 
@@ -1209,7 +1202,6 @@ public class EntityPropreties extends GlobalPropreties
 		btnPanel.add(btnRightParameters);
 
 		btnRemoveParameters.setAlignmentX(CENTER_ALIGNMENT);
-		btnRemoveParameters.setBorder(null);
 		btnRemoveParameters.setEnabled(false);
 		btnRemoveParameters.addActionListener(new ActionListener() {
 
