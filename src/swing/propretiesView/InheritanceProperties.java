@@ -1,5 +1,7 @@
 package swing.propretiesView;
 
+import graphic.relations.InheritanceView;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,9 +11,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import swing.FlatButton;
 import swing.FlatPanel;
+import swing.PanelClassDiagram;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent.UpdateMessage;
@@ -26,7 +30,8 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 	private static InheritanceProperties instance;
 	
 	private JLabel lblName, lblType;
-	private JButton btnOI;
+	private JButton btnOI, btnAdjustInheritance;
+	private ButtonChangeOrientation btnChangeOrientation;
 	
 	public static InheritanceProperties getInstance()
 	{
@@ -37,8 +42,9 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 	}
 	
 	public InheritanceProperties() {
+    JPanel panel = new FlatPanel();
+    
 		setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
-		JPanel panel = new FlatPanel();
 		
 		lblType = new JLabel("inheritanceType");
 		panel.add(lblType);
@@ -46,25 +52,37 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 		lblName = new JLabel("inheritanceName");
 		panel.add(lblName);
 		
-		btnOI = new FlatButton("Overrides & Implementations...");
-		btnOI.setActionCommand(ACTION_OI);
-		btnOI.setToolTipText("Open Overrides & Implementations");
-		btnOI.addActionListener(this);
-		btnOI.setIcon(
+		btnOI = new FlatButton("Overrides & Implementations...",
 		    PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "method.png"));
-		panel.add(Box.createVerticalGlue());
-		panel.add(btnOI);
+    btnOI.setToolTipText("Open Overrides & Implementations");
+		btnOI.setActionCommand(ACTION_OI);
+    btnOI.addActionListener(this);
+		btnOI.setMaximumSize(new Dimension(250, 100));
+    btnOI.setHorizontalAlignment(SwingUtilities.LEFT);
+    
+    btnAdjustInheritance = new FlatButton("Automatic position", 
+        PersonalizedIcon.createImageIcon(
+            Slyum.ICON_PATH + "adjust-inheritance.png"));
+    btnAdjustInheritance.setActionCommand(Slyum.ACTION_ADJUST_INHERITANCE);
+    btnAdjustInheritance.addActionListener(this);
+    btnAdjustInheritance.setMaximumSize(new Dimension(250, 100));
+    btnAdjustInheritance.setHorizontalAlignment(SwingUtilities.LEFT);
 
+    panel.add(Box.createVerticalGlue());
+    panel.add(btnChangeOrientation = new ButtonChangeOrientation());
+    panel.add(Box.createVerticalStrut(5));
+    panel.add(btnOI);
+    panel.add(Box.createVerticalStrut(5));
+    panel.add(btnAdjustInheritance);
+    
     panel.setMaximumSize(new Dimension(250, Short.MAX_VALUE));
     panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
     add(panel);
 	}
 
 	@Override
-	public void updateComponentInformations(UpdateMessage msg)
-	{
-		if (currentObject != null)
-		{
+	public void updateComponentInformations(UpdateMessage msg) {
+		if (currentObject != null) {
 			Inheritance i = (Inheritance)currentObject;
 			Entity parent = i.getParent();
 			String lblTypeText = "generalize";
@@ -76,14 +94,19 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 			
 			lblName.setText(i.getChild().getName() + " -> " + parent.getName());
 			btnOI.setEnabled(!parent.isEveryMethodsStatic());
+			btnChangeOrientation.changeActionListener(
+			    PanelClassDiagram.getInstance().getCurrentGraphicView()
+			        .searchAssociedComponent(currentObject));
 		}
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e)
-	{
+	public void actionPerformed(ActionEvent e) {
+	  Inheritance i = (Inheritance)currentObject;
 		if (ACTION_OI.equals(e.getActionCommand()))
-			
-			((Inheritance)currentObject).showOverridesAndImplementations();
+			i.showOverridesAndImplementations();
+		else if (Slyum.ACTION_ADJUST_INHERITANCE.equals(e.getActionCommand()))
+		  ((InheritanceView)PanelClassDiagram.getInstance().getCurrentGraphicView()
+		      .searchAssociedComponent(i)).adjustInheritance();
 	}
 }

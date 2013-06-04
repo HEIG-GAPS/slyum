@@ -8,12 +8,14 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import swing.Slyum;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
@@ -114,10 +116,10 @@ public class InheritanceView extends RelationView
 
 		this.inheritance = inheritance;
 
-		if (getClass() == InheritanceView.class)
-		{
+		if (getClass() == InheritanceView.class) {
 			popupMenu.addSeparator();
-			popupMenu.add(menuItemOI = makeMenuItem("Overrides & Implementations...", "O&I", "method"));
+      popupMenu.add(menuItemOI = makeMenuItem("Overrides & Implementations...", "O&I", "method"));
+      popupMenu.add(makeMenuItem("Automatic position", Slyum.ACTION_ADJUST_INHERITANCE, "adjust-inheritance"));
 		}
 
 		if (inheritance.getParent().getClass() == InterfaceEntity.class)
@@ -129,18 +131,16 @@ public class InheritanceView extends RelationView
 	{
 		if (menuItemOI != null)
 			menuItemOI.setEnabled(!inheritance.getParent().isEveryMethodsStatic());
-		
 		super.maybeShowPopup(e, popupMenu);
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e)
-	{
+	public void actionPerformed(ActionEvent e) {
 		super.actionPerformed(e);
-
 		if ("O&I".equals(e.getActionCommand()))
 			inheritance.showOverridesAndImplementations();
-
+		else if (Slyum.ACTION_ADJUST_INHERITANCE.equals(e.getActionCommand()))
+		  adjustInheritance();
 	}
 
 	@Override
@@ -209,8 +209,7 @@ public class InheritanceView extends RelationView
 	 * @param child
 	 *            the new child of the inheritance
 	 */
-	public void setChild(EntityView child)
-	{
+	public void setChild(EntityView child) {
 		inheritance.setChild((Entity) child.getAssociedComponent());
 	}
 
@@ -220,21 +219,17 @@ public class InheritanceView extends RelationView
 	 * @param parent
 	 *            the new parent of the inheritance
 	 */
-	public void setParent(EntityView parent)
-	{
+	public void setParent(EntityView parent) {
 		inheritance.setParent((Entity) parent.getAssociedComponent());
 	}
 
 	@Override
-	public void setSelected(boolean select)
-	{
+	public void setSelected(boolean select) {
 		if (isSelected() == select)
 			return;
-
 		super.setSelected(select);
-
 		inheritance.select();
-
+		
 		if (select)
 			inheritance.notifyObservers(UpdateMessage.SELECT);
 		else
@@ -242,11 +237,55 @@ public class InheritanceView extends RelationView
 	}
 	
 	@Override
-	public void restore()
-	{
+	public void restore() {
 		super.restore();
 		parent.getClassDiagram().addInheritance((Inheritance)getAssociedComponent());
 		
 		repaint();
 	}
+  
+  public void adjustInheritance() {
+    final int offset = 40; // px
+    Rectangle
+      boundsParent = getLastPoint().getAssociedComponentView().getBounds(),
+      boundsChild = getFirstPoint().getAssociedComponentView().getBounds();
+    Point
+      ptParent = new Point(boundsParent.x + boundsParent.width / 2,
+                           boundsParent.y + boundsParent.height),
+      ptChild = new Point(boundsChild.x + boundsChild.width / 2,
+                          boundsChild.y);
+    
+    // Supprime tous les grips présents afin de les repositionner correctement.
+    reinitGrips();
+
+    // Positionnement des grip centraux.
+    // Plus haut ou plus bas?
+    if (ptParent.y > ptChild.y - 2 * offset) { // enfant plus haut
+      
+      int horizontal = (ptChild.x - ptParent.x) / 2;
+      addGripAtLocation(1, new Point(ptChild.x, ptChild.y - offset));
+      addGripAtLocation(2, new Point(ptChild.x - horizontal, ptChild.y - offset));
+      addGripAtLocation(3, new Point(ptParent.x + horizontal, ptParent.y + offset));
+      addGripAtLocation(4, new Point(ptParent.x, ptParent.y + offset));
+      
+    } else { // enfant plus bas
+      int vertical = (ptChild.y - ptParent.y) / 2;
+      addGripAtLocation(1, new Point(ptChild.x, ptChild.y - vertical));
+      addGripAtLocation(2, new Point(ptParent.x, ptParent.y + vertical));
+    }
+    
+    // Positionnement des grips d'extremités.
+    getFirstPoint().setAnchor(ptChild);
+    getLastPoint().setAnchor(ptParent);
+    
+    // Remove useless grips (if the entities are aligned).
+    searchUselessAnchor(getFirstPoint());
+  }
+  
+  private void addGripAtLocation(int index, Point anchor) {
+    RelationGrip grip = new RelationGrip(parent, this);
+    grip.setAnchor(anchor);
+    addGrip(grip, index);
+  }
+  
 }

@@ -48,7 +48,7 @@ public class InterfaceView extends EntityView
 		super.restore();
 		
 		parent.addEntity(this);
-		parent.getClassDiagram().addInterface((InterfaceEntity)getAssociedComponent());
+		parent.getClassDiagram().addInterfaceEntity((InterfaceEntity)getAssociedComponent());
 		
 		parent.addOthersComponents(leftMovableSquare);
 		parent.addOthersComponents(rightMovableSquare);

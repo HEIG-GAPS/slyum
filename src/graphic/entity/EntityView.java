@@ -56,13 +56,14 @@ import classDiagram.components.Visibility;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public abstract class EntityView extends MovableComponent implements Observer,
-        ColoredComponent {
-    public static final Color baseColor = new Color(255, 247, 225);
-    private static Color basicColor = new Color(baseColor.getRGB());
+public abstract class EntityView 
+    extends MovableComponent 
+    implements Observer, ColoredComponent, Cloneable {
+  public static final Color baseColor = new Color(255, 247, 225);
+  private static Color basicColor = new Color(baseColor.getRGB());
 
-    public static final float BORDER_WIDTH = 1.2f;
-    public static final int VERTICAL_SPACEMENT = 10; // margin
+  public static final float BORDER_WIDTH = 1.2f;
+  public static final int VERTICAL_SPACEMENT = 10; // margin
 
     /**
      * Get the default color used then a new entity is created.
@@ -206,8 +207,6 @@ public abstract class EntityView extends MovableComponent implements Observer,
         basicColor = new Color(color.getRGB());
     }
 
-    protected LinkedList<TextBoxAttribute> attributesView = new LinkedList<TextBoxAttribute>();
-
     /* Colors */
     public final Color DEFAULT_TEXT_COLOR = new Color(40, 40, 40);
     public final Color DEFAULT_BORDER_COLOR = new Color(65, 65, 65);
@@ -221,6 +220,7 @@ public abstract class EntityView extends MovableComponent implements Observer,
 
     private final TextBoxEntityName entityName;
 
+    protected LinkedList<TextBoxAttribute> attributesView = new LinkedList<TextBoxAttribute>();
     protected LinkedList<TextBoxMethod> methodsView = new LinkedList<TextBoxMethod>();
 
     private TextBox pressedTextBox;
@@ -232,7 +232,7 @@ public abstract class EntityView extends MovableComponent implements Observer,
     protected GraphicComponent saveTextBoxMouseHover;
 
     private static final Font stereotypeFontBasic = new Font(
-            Slyum.getInstance().defaultFont.getFamily(), 0, 11); // TODO
+            Slyum.getInstance().defaultFont.getFamily(), 0, 11);
     private Font stereotypeFont = stereotypeFontBasic;
 
     public EntityView(final GraphicView parent, Entity component) {
@@ -248,38 +248,32 @@ public abstract class EntityView extends MovableComponent implements Observer,
 
         // Create the popup menu.
         JMenuItem menuItem;
-
-        popupMenu.addSeparator();
-
-        popupMenu.add(
-            menuItemAbstract = makeMenuItem("Abstract", "Abstract", "abstract"));
-        
-        popupMenu.add(
-            menuItemStatic = makeMenuItem("Static", "Static", "static"));
-
-        menuItemMoveUp = menuItem = makeMenuItem("Move up",
-                Slyum.ACTION_TEXTBOX_UP, "arrow-up");
-        menuItemMoveUp.setEnabled(false);
-        popupMenu.add(menuItem);
-
-        menuItemMoveDown = menuItem = makeMenuItem("Move down",
-                Slyum.ACTION_TEXTBOX_DOWN, "arrow-down");
-        menuItemMoveDown.setEnabled(false);
-        popupMenu.add(menuItem);
-
-        popupMenu.addSeparator();
-
-        menuItemDelete = menuItem = makeMenuItem("Delete", "Delete", "delete");
-        popupMenu.add(menuItem);
-
         popupMenu.addSeparator();
 
         menuItem = makeMenuItem("Add attribute", "AddAttribute", "attribute");
         popupMenu.add(menuItem);
-
         menuItem = makeMenuItem("Add method", "AddMethod", "method");
         popupMenu.add(menuItem);
+        popupMenu.addSeparator();
 
+        popupMenu.add(menuItemAbstract = 
+            makeMenuItem("Abstract", "Abstract", "abstract"));
+        popupMenu.add( menuItemStatic = 
+            makeMenuItem("Static", "Static", "static"));
+        menuItemMoveUp = menuItem = makeMenuItem("Move up",
+                Slyum.ACTION_TEXTBOX_UP, "arrow-up");
+        menuItemMoveUp.setEnabled(false);
+        popupMenu.add(menuItem);
+        menuItemMoveDown = menuItem = makeMenuItem("Move down",
+                Slyum.ACTION_TEXTBOX_DOWN, "arrow-down");
+        menuItemMoveDown.setEnabled(false);
+        popupMenu.add(menuItem);
+        popupMenu.addSeparator();
+        
+        menuItem = makeMenuItem("Duplicate", Slyum.ACTION_DUPLICATE, "duplicate");
+        popupMenu.add(menuItem);
+        menuItemDelete = menuItem = makeMenuItem("Delete", "Delete", "delete");
+        popupMenu.add(menuItem);
         popupMenu.addSeparator();
 
         JMenu subMenu = new JMenu("View");
@@ -355,18 +349,16 @@ public abstract class EntityView extends MovableComponent implements Observer,
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
 
-        if ("AddMethod".equals(e.getActionCommand()))
+        if ("AddMethod".equals(e.getActionCommand())) {
             addMethod();
-
-        else if ("AddAttribute".equals(e.getActionCommand()))
+        } else if ("AddAttribute".equals(e.getActionCommand())) {
             addAttribute();
-
-        else if ("Delete".equals(e.getActionCommand())) {
-            if (pressedTextBox != null)
-                removeTextBox(pressedTextBox);
-            else {
-              _delete(); 
-            }
+        } else if ("Delete".equals(e.getActionCommand())) {
+          if (pressedTextBox != null)
+              removeTextBox(pressedTextBox);
+          else {
+            _delete(); 
+          }
         } else if ("ViewAttribute".equals(e.getActionCommand())) {
             parent.showAttributsForSelectedEntity(true);
             parent.showMethodsForSelectedEntity(false);
@@ -390,11 +382,8 @@ public abstract class EntityView extends MovableComponent implements Observer,
         else if (Slyum.ACTION_TEXTBOX_UP.equals(e.getActionCommand())
                 || Slyum.ACTION_TEXTBOX_DOWN.equals(e.getActionCommand())) {
             int offset = 1;
-
             if (Slyum.ACTION_TEXTBOX_UP.equals(e.getActionCommand()))
-
                 offset = -1;
-
             if (pressedTextBox.getClass() == TextBoxAttribute.class) {
                 final Attribute attribute = (Attribute) ((TextBoxAttribute) pressedTextBox)
                         .getAssociedComponent();
@@ -422,6 +411,32 @@ public abstract class EntityView extends MovableComponent implements Observer,
           else
             ((Method)component).setStatic(!((Method)component).isStatic());
           component.notifyObservers();
+        } else if (Slyum.ACTION_DUPLICATE.equals(e.getActionCommand())) {
+          if (pressedTextBox == null) {
+            parent.duplicateSelectedEntities();
+          } else {
+            IDiagramComponent component = pressedTextBox.getAssociedComponent();
+            Entity entity = (Entity)getAssociedComponent();
+            if (component instanceof Attribute) {
+              Attribute attribute = new Attribute((Attribute)component);
+              LinkedList<Attribute> attributes = entity.getAttributes();
+              entity.addAttribute(attribute);
+              entity.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
+              entity.moveAttributePosition(
+                  attribute,
+                  attributes.indexOf(component) - attributes.size() + 1);
+              entity.notifyObservers();
+            } else {
+              Method method = new Method((Method)component);
+              LinkedList<Method> methods = entity.getMethods();
+              entity.addMethod(method);
+              entity.notifyObservers(UpdateMessage.ADD_METHOD_NO_EDIT);
+              entity.moveMethodPosition(
+                  method,
+                  methods.indexOf(component) - methods.size() + 1);
+              entity.notifyObservers();
+            }
+          }
         }
     }
 
@@ -567,21 +582,24 @@ public abstract class EntityView extends MovableComponent implements Observer,
 
     @Override
     public void drawSelectedEffect(Graphics2D g2) {
-        final Color backColor = getColor();
-        final Color fill = new Color(backColor.getRed(), backColor.getGreen(),
-                backColor.getBlue(), 100);
-
-        final Color border = backColor.darker();
-        final BasicStroke borderStroke = new BasicStroke(1.0f,
-                BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
-                new float[] { 2.0f }, 0.0f);
-
-        g2.setColor(fill);
-        g2.fillRect(ghost.x, ghost.y, ghost.width, ghost.height);
-
-        g2.setColor(border);
-        g2.setStroke(borderStroke);
-        g2.drawRect(ghost.x, ghost.y, ghost.width - 1, ghost.height - 1);
+      if (pictureMode)
+        return;
+      
+      final Color backColor = getColor();
+      final Color fill = new Color(backColor.getRed(), backColor.getGreen(),
+              backColor.getBlue(), 100);
+      
+      final Color border = backColor.darker();
+      final BasicStroke borderStroke = new BasicStroke(1.0f,
+              BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
+              new float[] { 2.0f }, 0.0f);
+      
+      g2.setColor(fill);
+      g2.fillRect(ghost.x, ghost.y, ghost.width, ghost.height);
+      
+      g2.setColor(border);
+      g2.setStroke(borderStroke);
+      g2.drawRect(ghost.x, ghost.y, ghost.width - 1, ghost.height - 1);
     }
 
     /**
@@ -938,7 +956,7 @@ public abstract class EntityView extends MovableComponent implements Observer,
         }
 
         // is component selected? -> draw selected style
-        if (parent.getSelectedComponents().contains(this))
+        if (!pictureMode && parent.getSelectedComponents().contains(this))
             drawSelectedStyle(g2);
     }
 
@@ -1094,12 +1112,17 @@ public abstract class EntityView extends MovableComponent implements Observer,
         setCurrentColor(defaultColor);
         repaint();
     }
+    
+    @Override
+    public Color getColor() {
+      if (pictureMode)
+        return defaultColor;
+      return super.getColor();
+    }
 
     /**
      * Set the display state for attributes.
-     * 
-     * @param display
-     *            the new display state for attributes.
+     * @param display the new display state for attributes.
      */
     public void setDisplayAttributes(boolean display) {
         displayAttributes = display;
@@ -1108,13 +1131,10 @@ public abstract class EntityView extends MovableComponent implements Observer,
 
     /**
      * Set the display state for methods.
-     * 
-     * @param display
-     *            the new display state for methods.
+     * @param display the new display state for methods.
      */
     public void setDisplayMethods(boolean display) {
         displayMethods = display;
-
         updateHeight();
     }
 
@@ -1153,7 +1173,7 @@ public abstract class EntityView extends MovableComponent implements Observer,
 
         String xml = tab + "<componentView componentID=\""
                 + getAssociedComponent().getId() + "\" color=\""
-                + getColor().getRGB() + "\">\n";
+                + defaultColor.getRGB() + "\">\n";
         xml += Utility.boundsToXML(depth + 1, getBounds(), "geometry");
         xml += tab + "</componentView>\n";
 
@@ -1197,24 +1217,53 @@ public abstract class EntityView extends MovableComponent implements Observer,
      * Udpate the height of the entity and notify all components.
      */
     public void updateHeight() {
-        final Rectangle repaintBounds = getBounds();
+      Rectangle repaintBounds = getBounds();
+      parent.getScene().paintImmediately(repaintBounds);
 
-        parent.getScene().paintImmediately(repaintBounds);
-
-        setBounds(new Rectangle(bounds)); // set new height compute while
-                                          // repainting.
-
-        parent.getScene().repaint(repaintBounds);
-
-        setChanged();
-        notifyObservers();
+      // set new height compute while repainting.
+      setBounds(new Rectangle(bounds));
+      
+      parent.getScene().repaint(repaintBounds);
+      setChanged();
+      notifyObservers();
     }
 
     @Override
     public void restore() {
-        super.restore();
+      super.restore();
 
-        parent.addOthersComponents(leftMovableSquare);
-        parent.addOthersComponents(rightMovableSquare);
+      parent.addOthersComponents(leftMovableSquare);
+      parent.addOthersComponents(rightMovableSquare);
+    }
+    
+    @Override
+    public void setPictureMode(boolean enable) {
+      super.setPictureMode(enable);
+      for (TextBox t : methodsView)
+        t.setPictureMode(enable);
+      for (TextBox t : attributesView)
+        t.setPictureMode(enable);
+    }
+    
+    @Override
+    public EntityView clone() throws CloneNotSupportedException {
+      try {
+        Rectangle newBounds = getBounds();
+        String classToInstanciate = 
+            getClass().equals(AssociationClassView.class) ? 
+                ClassView.class.getName() : getClass().getName();
+        int gridSize = GraphicView.getGridSize();
+        newBounds.translate(gridSize, gridSize);
+        Entity entity = ((Entity)getAssociedComponent()).clone();
+        EntityView view = (EntityView)Class.forName(classToInstanciate)
+            .getConstructor(GraphicView.class, entity.getClass())
+            .newInstance(parent, entity);
+        view.setBounds(newBounds);
+        view.setColor(defaultColor);
+        return view;
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+      return null;
     }
 }

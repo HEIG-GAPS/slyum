@@ -43,7 +43,7 @@ public class InterfaceFactory extends EntityFactory
 		final EntityView i = new InterfaceView(parent, ie);
 
 		parent.addEntity(i);
-		classDiagram.addInterface(ie);
+		classDiagram.addInterfaceEntity(ie);
 
 		i.setBounds(new Rectangle(mouseReleased.x - DEFAULT_SIZE.width / 2, mouseReleased.y - DEFAULT_SIZE.height / 2, DEFAULT_SIZE.width, DEFAULT_SIZE.height));
 		

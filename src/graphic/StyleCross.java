@@ -128,8 +128,10 @@ public class StyleCross extends GraphicComponent
 	}
 
 	@Override
-	public void paintComponent(Graphics2D g2)
-	{		
+	public void paintComponent(Graphics2D g2) {
+	  if (pictureMode)
+	    return;
+	  
 		Utility.setRenderQuality(g2);
 		
 		Rectangle bounds = getBounds();

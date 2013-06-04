@@ -165,8 +165,10 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 	 * @param g2
 	 *            the graphic context
 	 */
-	public void drawGhost(Graphics2D g2)
-	{
+	public void drawGhost(Graphics2D g2) {
+    if (pictureMode)
+      return;
+    
 		final Polygon polygon = getPolygonFromBounds(ghost);
 		final Color color = getColor();
 		final BasicStroke borderStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 2.0f }, 0.0f);
@@ -271,8 +273,7 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 		if (!ghost.isEmpty())
 			drawGhost(g2);
 
-		if (isSelected())
-		{
+		if (!pictureMode && isSelected()) {
 			final int PADDING = 3;
 
 			g2.setColor(Color.DARK_GRAY);

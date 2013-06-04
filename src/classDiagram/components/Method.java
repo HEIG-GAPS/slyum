@@ -22,9 +22,11 @@ import classDiagram.verifyName.VariableName;
  * @author David Miserez
  * @version 1.0 - 24.07.2011
  */
-public class Method extends Observable implements IDiagramComponent, Observer
+public class Method extends Observable 
+                    implements IDiagramComponent, Observer, Cloneable
 {
-	public static final String REGEX_SEMANTIC_METHOD = Variable.REGEX_SEMANTIC_ATTRIBUTE;
+	public static final String REGEX_SEMANTIC_METHOD = 
+	    Variable.REGEX_SEMANTIC_ATTRIBUTE;
 	
 	public static boolean checkSemantic(String name)
 	{
@@ -71,17 +73,14 @@ public class Method extends Observable implements IDiagramComponent, Observer
 		Change.setBlocked(isBlocked);
 	}
 	
-	public Method(Method method, Entity newEntity)
-	{
+	public Method(Method method, Entity newEntity) {
 		this.entity = newEntity;
 		this.name = method.name;
 		this.returnType = method.returnType;
 		this.visibility = method.visibility;
 		this._isAbstract = method._isAbstract;
 		this._isStatic = method._isStatic;
-		
 		for (Variable parameter : method.parameters)
-			
 			this.parameters.add(new Variable(parameter));
 	}
 	
@@ -89,8 +88,7 @@ public class Method extends Observable implements IDiagramComponent, Observer
 	 * Constructor of copy.
 	 * @param method method
 	 */
-	public Method(Method method)
-	{
+	public Method(Method method) {
 		this(method, method.entity);
 	}
 	

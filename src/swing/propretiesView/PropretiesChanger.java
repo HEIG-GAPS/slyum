@@ -94,7 +94,7 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 	}
 
 	@Override
-	public void addClass(ClassEntity component) {
+	public void addClassEntity(ClassEntity component) {
 		component.addObserver(EntityPropreties.getInstance());
 	}
 
@@ -119,7 +119,7 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 	}
 
 	@Override
-	public void addInterface(InterfaceEntity component) {
+	public void addInterfaceEntity(InterfaceEntity component) {
 		component.addObserver(EntityPropreties.getInstance());
 	}
 

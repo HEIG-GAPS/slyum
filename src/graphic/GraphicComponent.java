@@ -52,6 +52,8 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 	private boolean selected = false;
 
 	private boolean visible = true;
+	
+	protected boolean pictureMode = false;
 
 	/**
 	 * !!! This constructor is use for create the graphic view, don't use in
@@ -207,8 +209,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 	 * 
 	 * @return the color of this component.
 	 */
-	public Color getColor()
-	{
+	public Color getColor() {
 		return new Color(color.getRGB());
 	}
 
@@ -566,8 +567,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 	 */
 	public void setSelected(boolean selected)
 	{
-		if (isSelected() != selected)
-		{
+		if (isSelected() != selected) {
 			this.selected = selected;
 			repaint();
 			
@@ -596,6 +596,10 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 	{
 		this.visible = visible;
 		repaint();
+	}
+	
+	public void setPictureMode(boolean enable) {
+	  pictureMode = enable;
 	}
 
 	/**

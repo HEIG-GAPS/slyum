@@ -171,19 +171,7 @@ public class PanelClassDiagram extends JPanel
 		final int result = fc.showSaveDialog(this);
 
 		if (result == JFileChooser.APPROVE_OPTION)
-		{
-			final File file = fc.getSelectedFile();
-
-			if (file.exists())
-			{
-				final int answer = SMessageDialog.showQuestionMessageOkCancel(file + " already exists. Overwrite?");
-
-				if (answer == JOptionPane.OK_OPTION)
-					saveImageTo(file);
-			}
-			else
-				saveImageTo(file);
-		}
+      saveImageTo(fc.getSelectedFile());
 	}
 
 	/**
@@ -475,48 +463,42 @@ public class PanelClassDiagram extends JPanel
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			
 			SMessageDialog.showInformationMessage("Printing completed successfully");
-		}
-
-		catch (final PrinterException e)
-		{
+		} catch (final PrinterException e) {
 			e.printStackTrace();
-
 			System.err.println("Printing error: " + e.toString());
 		}
 	}
 
 	/**
 	 * Save a picture of the diagram in the given file.
-	 * 
-	 * @param file
-	 *            the file where to save a picture.
+	 * @param file the file where to save a picture.
 	 */
-	public void saveImageTo(File file)
-	{
-		try
-		{
+	public void saveImageTo(File file) {
+		try {
 			String extension = Utility.getExtension(file);
 
-			if (extension == null)
-			{
+			if (extension == null) {
 				extension = "png";
 				file = new File(file.getPath() + "." + extension);
 			}
+			
+			if (file.exists()) 
+        if (SMessageDialog.showQuestionMessageOkCancel(
+            file + " already exists. Overwrite?") == JOptionPane.CANCEL_OPTION)
+          return;
 
 			if (extension.equals("png"))
-				
 				ImageIO.write(graphicView.getScreen(BufferedImage.TYPE_INT_ARGB_PRE), extension, file);
-			
 			else if (extension.equals("jpg") || extension.equals("gif"))
-				
 				ImageIO.write(graphicView.getScreen(BufferedImage.TYPE_INT_RGB), extension, file);
-
 			else
-
-				SMessageDialog.showErrorMessage("Extension \"." + extension + "\" not supported.\nSupported extensions : png, jpg, gif.");
-		} catch (final Exception e)
-		{
-			SMessageDialog.showErrorMessage("Class diagram is empty. Empty class diagramm can't be export.");
+				SMessageDialog.showErrorMessage(
+				    "Extension \"." + extension + 
+				    "\" not supported.\nSupported extensions : png, jpg, gif.");
+			
+		} catch (final Exception e) {
+			SMessageDialog.showErrorMessage(
+			    "Class diagram is empty. Empty class diagramm can't be export.");
 		}
 	}
 
@@ -548,8 +530,7 @@ public class PanelClassDiagram extends JPanel
 			out.print(xml);
 
 			out.close();
-		} catch (final IOException e)
-		{
+		} catch (final IOException e) {
 			e.printStackTrace();
 			SMessageDialog.showErrorMessage(e.getLocalizedMessage());
 		}

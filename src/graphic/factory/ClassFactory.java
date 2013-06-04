@@ -45,7 +45,7 @@ public class ClassFactory extends EntityFactory
 		c.setBounds(new Rectangle(mouseReleased.x - DEFAULT_SIZE.width / 2, mouseReleased.y - DEFAULT_SIZE.height / 2, DEFAULT_SIZE.width, DEFAULT_SIZE.height));
 
 		parent.addEntity(c);
-		classDiagram.addClass(classEntity);
+		classDiagram.addClassEntity(classEntity);
 		return c;
 	}
 

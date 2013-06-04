@@ -102,8 +102,12 @@ public abstract class RelationView extends LineView implements Observer
     // On inverse la liste des points pour pas qu'ils ne se croisent.
     reversePoints = Lists.reverse(bufferPoints);
 
+    // On cache la relation pour éviter qu'elle ne se redissne alors que
+    // l'inversion n'est pas terminée.
+    setVisible(false);
 	  relationChanged(getFirstPoint(), getLastPoint().getAssociedComponentView());
 	  relationChanged(getLastPoint(), buffer);
+    setVisible(true);
 	  
     getFirstPoint().setBounds(bufferBoundsLast);
 	  getLastPoint().setBounds(bufferBoundsFirst);

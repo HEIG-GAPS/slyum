@@ -203,9 +203,11 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
 	}
 
 	@Override
-	public void drawSelectedEffect(Graphics2D g2)
-	{
-		final Color backColor = parent.getColor();
+	public void drawSelectedEffect(Graphics2D g2) {
+    if (pictureMode)
+      return;
+    
+		Color backColor = parent.getColor();
 		Color fill = getColor();
 		fill = new Color(fill.getRed(), fill.getGreen(), fill.getBlue(), 100);
 
@@ -329,8 +331,7 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
 	public void paintComponent(Graphics2D g2)
 	{
 		if (ghost.isEmpty())
-
-			computeWidth(g2);
+		  computeWidth(g2);
 
 		drawNote(g2, getBounds(), 15, getColor());
 		drawText(g2);
@@ -338,16 +339,16 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
 
 		final Rectangle bounds = getBounds();
 
-		if (isSelected())
-		{
-			final BasicStroke borderStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 2.0f }, 0.0f);
+    if (!pictureMode && isSelected())
+    {
+      final BasicStroke borderStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 2.0f }, 0.0f);
 
-			g2.setColor(Color.DARK_GRAY);
-			g2.setStroke(borderStroke);
+      g2.setColor(Color.DARK_GRAY);
+      g2.setStroke(borderStroke);
 
-			g2.drawRect(bounds.x - 2, bounds.y - 2, bounds.width + 4, bounds.height + 4);
-			g2.drawRect(bounds.x + 2, bounds.y + 2, bounds.width - 4, bounds.height - 4);
-		}
+      g2.drawRect(bounds.x - 2, bounds.y - 2, bounds.width + 4, bounds.height + 4);
+      g2.drawRect(bounds.x + 2, bounds.y + 2, bounds.width - 4, bounds.height - 4);
+    }
 	}
 
 	@Override

@@ -53,7 +53,7 @@ public interface IComponentsObserver
 	 * @param component
 	 *            the component that was added.
 	 */
-	public void addClass(ClassEntity component);
+	public void addClassEntity(ClassEntity component);
 
 	/**
 	 * Adds a new composition and notify that a new composition has been added.
@@ -87,7 +87,7 @@ public interface IComponentsObserver
 	 * @param component
 	 *            the component that was added.
 	 */
-	public void addInterface(InterfaceEntity component);
+	public void addInterfaceEntity(InterfaceEntity component);
 
 	/**
 	 * Adds a new multi-association and notify that a new multi-association has

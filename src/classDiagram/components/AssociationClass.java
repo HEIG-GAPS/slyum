@@ -11,8 +11,7 @@ import classDiagram.relationships.Role;
  * @author David Miserez
  * @version 1.0 - 24.07.2011
  */
-public class AssociationClass extends ClassEntity
-{
+public class AssociationClass extends ClassEntity {
 	private Binary association;
 
 	/**
@@ -27,8 +26,7 @@ public class AssociationClass extends ClassEntity
 	 * @param binary
 	 *            the binary association associated with the association class
 	 */
-	public AssociationClass(String name, Visibility visibility, Binary binary)
-	{
+	public AssociationClass(String name, Visibility visibility, Binary binary) {
 		super(name, visibility);
 		checkAssociationCreation(binary);
 		

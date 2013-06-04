@@ -108,7 +108,8 @@ public class Multi extends Association {
 	 * 
 	 * @return true if classe has been removed; false otherwise
 	 */
-	public boolean removeClass(Entity component)
+	@SuppressWarnings("deprecation")
+  public boolean removeClass(Entity component)
 	{
 		if (component == null)
 			throw new IllegalArgumentException("component is null");

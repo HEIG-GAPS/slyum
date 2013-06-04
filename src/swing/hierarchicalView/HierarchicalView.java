@@ -139,7 +139,7 @@ public class HierarchicalView extends JPanel implements IComponentsObserver, Tre
 	}
 
 	@Override
-	public void addClass(ClassEntity component)
+	public void addClassEntity(ClassEntity component)
 	{
 		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "class.png")), entitiesNode);
 	}
@@ -170,7 +170,7 @@ public class HierarchicalView extends JPanel implements IComponentsObserver, Tre
 	}
 
 	@Override
-	public void addInterface(InterfaceEntity component)
+	public void addInterfaceEntity(InterfaceEntity component)
 	{
 		addNode(new NodeEntity(component, treeModel, tree, PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "interface.png")), entitiesNode);
 	}

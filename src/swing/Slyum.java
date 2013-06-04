@@ -115,7 +115,10 @@ public class Slyum extends JFrame implements ActionListener {
 	public static final String ACTION_MOVE_DOWN = "MoveDown";
 	public static final String ACTION_MOVE_BOTTOM = "MoveBottom";
 	public static final String ACTION_COLOR = "Color";
-	public static final String ACTION_DELETE = "Delete";
+  public static final String ACTION_DELETE = "Delete";
+  public static final String ACTION_DUPLICATE = "duplicate";
+  
+  public static final String ACTION_ADJUST_INHERITANCE = "adjust-inheritance";
 	
 	public static final String ACTION_ZOOM_ADAPT = "ZoomAdapt";
 	public static final String ACTION_ZOOM_ADAPT_SELECTION = "ZoomAdaptSelection";
@@ -144,6 +147,10 @@ public class Slyum extends JFrame implements ActionListener {
 	public final static String KEY_REDO = "ctrl Y";
 	public static final String KEY_SELECT_ALL = "ctrl A";
 	public static final String KEY_UNSELECT_ALL = "ctrl U";
+
+  public static final String KEY_COLOR = "ctrl L";
+  public static final String KEY_DUPLICATE = "ctrl D";
+  public static final String KEY_DELETE = "DELETE";
 	
 	public final static String KEY_ADJUST_SIZE = "ctrl 1";
 	public final static String KEY_ALIGN_UP = "ctrl UP";
@@ -650,8 +657,30 @@ public class Slyum extends JFrame implements ActionListener {
 			menuItem = redo = createMenuItem("Redo", "redo", KeyEvent.VK_R, KEY_REDO, ACTION_REDO, p.getRedoButton());
 			menuItem.setEnabled(false);
 			menu.add(menuItem);
-			
 		}
+
+    menu.addSeparator();
+
+    {
+      final SPanelElement p = SPanelElement.getInstance();
+      
+      // Menu item Color
+      menuItem = createMenuItem("Color", "color", 
+          KeyEvent.VK_C, KEY_COLOR, ACTION_COLOR, p.getBtnColor());
+      menu.add(menuItem);
+      
+      // Menu item Duplicate
+      menuItem = createMenuItem("Duplicate", "duplicate", 
+          KeyEvent.VK_D, KEY_DUPLICATE, ACTION_DUPLICATE, p.getBtnDuplicate());
+      menuItem.setEnabled(false);
+      menu.add(menuItem);
+      
+      // Menu item Delete
+      menuItem = createMenuItem("Delete", "delete", 
+          KeyEvent.VK_E, KEY_DELETE, ACTION_DELETE, p.getBtnDelete());
+      menuItem.setEnabled(false);
+      menu.add(menuItem);
+    }
 
 		menu.addSeparator();
 
@@ -896,8 +925,8 @@ public class Slyum extends JFrame implements ActionListener {
 		return text;
 	}
 	
-	public JMenuItem createMenuItem(String text, String iconName, int mnemonic, String accelerator, String actionCommand, ActionListener al)
-	{
+	public JMenuItem createMenuItem(String text, String iconName, int mnemonic,
+	    String accelerator, String actionCommand, ActionListener al) {
 		JMenuItem item;
 		final String imgLocation = ICON_PATH + iconName + ".png";
 	

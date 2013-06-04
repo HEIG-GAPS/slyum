@@ -147,17 +147,17 @@ public abstract class TextBoxLabel extends TextBox implements Observer
 	}
 
 	@Override
-	public void paintComponent(Graphics2D g2)
-	{
+	public void paintComponent(Graphics2D g2) {
 		super.paintComponent(g2);
+		
+		Rectangle bounds = getBounds();
+		Point middle = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+		Point middleRelation = computeAnchor();
 
-		final Rectangle bounds = getBounds();
-		final Point middle = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-		final Point middleRelation = computeAnchor();
-
-		if (mouseHover)
-		{
-			g2.setStroke(new BasicStroke(1.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 4.f }, 0.0f));
+		if (!pictureMode && mouseHover) {
+			g2.setStroke(new BasicStroke(
+			    1.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 
+			    10.0f, new float[] { 4.f }, 0.0f));
 			g2.drawLine(middle.x, middle.y, middleRelation.x, middleRelation.y);
 		}
 	}
