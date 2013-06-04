@@ -278,10 +278,8 @@ public abstract class TextBox extends GraphicComponent
 		final Rectangle bounds = getBounds();
 
 		g2.setStroke(new BasicStroke());
-
 		// Draw mouseHover style (same as selected style)
-		if (mouseHover || isSelected())
-		{
+		if (!pictureMode && (mouseHover || isSelected())) {
 			g2.setColor(new Color(150, 150, 150, 150));
 			g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 

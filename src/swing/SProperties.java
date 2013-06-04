@@ -824,14 +824,16 @@ public class SProperties extends JDialog {
   }
 
   private void init() {
+    String gripOpacity = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.GRID_POINT_OPACITY);
+    gripOpacity = gripOpacity == null ? "100" : gripOpacity;
+    
     btnBackgroundColor.setBackground(GraphicView.getBasicColor());
     btnDefaultClassColor.setBackground(EntityView.getBasicColor());
     ckbBackgroundGradient.setSelected(GraphicView.isBackgroundGradient());
     ckbEntityGradient.setSelected(GraphicView.isEntityGradient());
     chckbxOpacityGrid.setSelected(GraphicView.isGridOpacityEnable());
-    sliderGridPoint.setValue(
-        Integer.parseInt(PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.GRID_POINT_OPACITY)));
+    sliderGridPoint.setValue(Integer.parseInt(gripOpacity));
     sliderGridPoint.setEnabled(chckbxOpacityGrid.isSelected());
     sliderGridSize.setValue(GraphicView.getGridSize());
     btnColor.setBackground(new Color(GraphicView.getGridColor()));

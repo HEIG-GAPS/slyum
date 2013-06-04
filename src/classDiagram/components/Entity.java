@@ -22,7 +22,7 @@ import classDiagram.relationships.Role;
  * @author David Miserez
  * @version 1.0 - 24.07.2011
  */
-public abstract class Entity extends Type
+public abstract class Entity extends Type implements Cloneable
 {	
 	private boolean _isAbstract = false;
 	protected LinkedList<Attribute> attributes = new LinkedList<>();
@@ -64,18 +64,29 @@ public abstract class Entity extends Type
 		this.visibility = visibility;
 	}
 
-	/**
-	 * Add a new attribute.
-	 * 
-	 * @param attribute
-	 *            the new attribute.
-	 */
-	public void addAttribute(Attribute attribute)
+  /**
+   * Add a new attribute.
+   * 
+   * @param attribute
+   *            the new attribute.
+   */
+  public void addAttribute(Attribute attribute)
+  {
+    addAttribute(attribute, attributes.size());
+  }
+
+  /**
+   * Add a new attribute.
+   * 
+   * @param attribute
+   *            the new attribute.
+   */
+  public void addAttribute(Attribute attribute, int index)
   {
     if (attribute == null)
       throw new IllegalArgumentException("attribute is null");
 
-    attributes.add(attribute);
+    attributes.add(index, attribute);
     int i = attributes.indexOf(attribute);
     Change.push(new BufferCreationAttribute(this, attribute, true, i));
     Change.push(new BufferCreationAttribute(this, attribute, false, i));
@@ -106,25 +117,28 @@ public abstract class Entity extends Type
 	 *            the new method.
 	 * @return
 	 */
-	public boolean addMethod(Method method)
-	{
-		if (method == null)
-			throw new IllegalArgumentException("method is null");
+	public boolean addMethod(Method method) {
+		return addMethod(method, methods.size());
+	}
+	
+	public boolean addMethod(Method method, int index) {
+    if (method == null)
+      throw new IllegalArgumentException("method is null");
 
-		if (methods.contains(method))
-			return false;
-		
-		method.setAbstract(isAbstract());
+    if (methods.contains(method))
+      return false;
+    
+    method.setAbstract(isAbstract());
 
-		methods.add(method);
-		
-		int i = methods.indexOf(method);
+    methods.add(index, method);
+    
+    int i = methods.indexOf(method);
     Change.push(new BufferCreationMethod(this, method, true, i));
-		Change.push(new BufferCreationMethod(this, method, false, i));
+    Change.push(new BufferCreationMethod(this, method, false, i));
 
-		setChanged();
+    setChanged();
 
-		return true;
+    return true;
 	}
 
 	/**
@@ -472,15 +486,11 @@ public abstract class Entity extends Type
 	}
 	
 	@Override
-	public boolean setName(String name)
-	{
+	public boolean setName(String name) {
 		BufferClass bc = new BufferClass(this);
-		boolean b;
+		boolean b = super.setName(name);
 		
-		b = super.setName(name);
-		
-		if (b)
-		{
+		if (b) {
 			Change.push(bc);
 			Change.push(new BufferClass(this));
 		}
@@ -522,7 +532,41 @@ public abstract class Entity extends Type
 
 		setChanged();
 	}
-
+	
+	@Override
+	public Entity clone() throws CloneNotSupportedException {
+	  try {
+	    // Création de la copie par réflexion.
+	    String classToInstanciate = 
+	        getClass().equals(AssociationClass.class) ? 
+	            ClassEntity.class.getName() : getClass().getName();
+	    Entity entity = 
+	        (Entity)Class.forName(classToInstanciate)
+	                     .getConstructor(String.class, Visibility.class)
+	                     .newInstance(getName(), getVisibility());
+	    
+	    // Copie des attributs primitifs
+	    entity.setAbstract(isAbstract());
+	    entity.setStereotype(getStereotype());
+	    
+	    // Copie en profondeur des attributs et méthodes.
+	    for (Attribute a : getAttributes())
+	      entity.addAttribute(new Attribute(a));
+	    
+	    for (Method m : getMethods())
+	      entity.addMethod(new Method(m, this));
+	    
+	    return entity;
+    } catch (Exception e) {
+      SMessageDialog.showErrorMessage(
+          "Une erreur est survenue lors de la copie " +
+      		"de l'entité.\nMerci de signaler le problème.");
+      e.printStackTrace();
+    }
+	  
+	  return null;
+	}
+	
 	@Override
 	public String toXML(int depth)
 	{

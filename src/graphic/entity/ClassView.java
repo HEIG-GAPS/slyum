@@ -38,18 +38,14 @@ public class ClassView extends EntityView
 	}
 
 	@Override
-	public void restore()
-	{
+	public void restore() {
 		super.restore();
-		
 		parent.addEntity(this);
 		restoreEntity();
-		
 		repaint();
 	}
 	
-	protected void restoreEntity()
-	{
-		parent.getClassDiagram().addClass((ClassEntity)getAssociedComponent());
+	protected void restoreEntity() {
+		parent.getClassDiagram().addClassEntity((ClassEntity)getAssociedComponent());
 	}
 }

@@ -87,12 +87,9 @@ public class ClassDiagram implements IComponentsObserver
 	}
 
 	@Override
-	public void addClass(ClassEntity component)
-	{
+	public void addClassEntity(ClassEntity component) {
 		for (final IComponentsObserver c : observers)
-
-			c.addClass(component);
-
+			c.addClassEntity(component);
 		addComponent(component);
 		entities.addFirst(component);
 	}
@@ -168,10 +165,10 @@ public class ClassDiagram implements IComponentsObserver
 	}
 
 	@Override
-	public void addInterface(InterfaceEntity component)
+	public void addInterfaceEntity(InterfaceEntity component)
 	{
 		for (final IComponentsObserver c : observers)
-			c.addInterface(component);
+			c.addInterfaceEntity(component);
 
 		addComponent(component);
 		entities.addFirst(component);

@@ -633,9 +633,8 @@ public class GraphicView extends GraphicComponent implements
   }
 
   @Override
-  public void addClass(ClassEntity component) {
-    final GraphicComponent result = searchAssociedComponent(component);
-
+  public void addClassEntity(ClassEntity component) {
+    GraphicComponent result = searchAssociedComponent(component);
     if (result == null)
       addComponentIn(new ClassView(this, component), entities);
   }
@@ -730,7 +729,7 @@ public class GraphicView extends GraphicComponent implements
   }
 
   @Override
-  public void addInterface(InterfaceEntity component) {
+  public void addInterfaceEntity(InterfaceEntity component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
     if (result == null)
@@ -981,10 +980,8 @@ public class GraphicView extends GraphicComponent implements
    * Unselect all component.
    */
   public void unselectAll() {
-    final LinkedList<GraphicComponent> components = getAllComponents();
-
-    for (final GraphicComponent c : components)
-
+    LinkedList<GraphicComponent> components = getAllComponents();
+    for (GraphicComponent c : components)
       c.setSelected(false);
   }
 
@@ -1108,21 +1105,34 @@ public class GraphicView extends GraphicComponent implements
     g2.drawRect(limits.x, limits.y, (int) width, (int) height);
   }
 
+  private LinkedList<GraphicComponent> getCurrentComponents() {
+    final LinkedList<GraphicComponent> components = new LinkedList<GraphicComponent>();
+
+    // Order is important, it is used to compute mouse event.
+    components.addAll(linesView);
+    components.addAll(multiViews);
+    components.addAll(entities);
+    components.addAll(notes);
+
+    return components;
+  }
+  
   /**
    * Get all components contains in graphic view.
    * 
    * @return an array of all graphic component
    */
   public LinkedList<GraphicComponent> getAllComponents() {
-    final LinkedList<GraphicComponent> components = new LinkedList<GraphicComponent>();
-
-    // Order is important, this method is used to compute mouse event.
-    components.addAll(entities);
-    components.addAll(linesView);
-    components.addAll(multiViews);
-    components.addAll(notes);
+    final LinkedList<GraphicComponent> components = getCurrentComponents();
     components.addAll(othersComponents);
-
+    return components;
+  }
+  
+  public LinkedList<GraphicComponent> getAllDiagramComponents() {
+    final LinkedList<GraphicComponent> components = getCurrentComponents();    
+    for (GraphicComponent o : othersComponents)
+      if (!(o instanceof SquareGrip))
+        components.add(o);
     return components;
   }
 
@@ -1134,7 +1144,7 @@ public class GraphicView extends GraphicComponent implements
   /**
    * Get the class diagram associated with this graphic view.
    * 
-   * @return
+   * @return the class diagram associated with this graphic view.
    */
   public ClassDiagram getClassDiagram() {
     return classDiagram;
@@ -1323,7 +1333,7 @@ public class GraphicView extends GraphicComponent implements
   public BufferedImage getScreen(int type) {
     final int margin = 20;
     int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxX = 0, maxY = 0;
-    final LinkedList<GraphicComponent> components = getAllComponents();
+    final LinkedList<GraphicComponent> components = getAllDiagramComponents();
 
     // Compute the rectangle englobing all graphic components.
     for (final GraphicComponent c : components) {
@@ -1349,10 +1359,6 @@ public class GraphicView extends GraphicComponent implements
     final Graphics2D g2 = img.createGraphics();
     Utility.setRenderQuality(g2);
 
-    // Unselect all component (we will not see graphic selection style in
-    // image exportation).
-    unselectAll();
-
     // Translate the rectangle containing all graphic components at origin.
     g2.translate(-bounds.x + margin, -bounds.y + margin);
 
@@ -1362,11 +1368,22 @@ public class GraphicView extends GraphicComponent implements
           * 2, bounds.height + margin * 2);
     }
 
+    setPictureMode(true);
     // Paint all components on picture.
     for (final GraphicComponent c : components)
       c.paintComponent(g2);
-
+    setPictureMode(false);
+    
     return img;
+  }
+  
+  
+  @Override
+  public void setPictureMode(boolean enable) {
+    super.setPictureMode(enable);
+    
+    for (GraphicComponent c : getAllComponents())
+      c.setPictureMode(enable);
   }
 
   /**
@@ -1384,18 +1401,16 @@ public class GraphicView extends GraphicComponent implements
    * @return all selected component
    */
   public LinkedList<GraphicComponent> getSelectedComponents() {
-    final LinkedList<GraphicComponent> components = new LinkedList<GraphicComponent>();
-    final LinkedList<GraphicComponent> selected = new LinkedList<GraphicComponent>();
+    LinkedList<GraphicComponent> components = new LinkedList<GraphicComponent>();
+    LinkedList<GraphicComponent> selected = new LinkedList<GraphicComponent>();
 
     components.addAll(entities);
     components.addAll(linesView);
     components.addAll(multiViews);
     components.addAll(notes);
 
-    for (final GraphicComponent c : components)
-
+    for (GraphicComponent c : components)
       if (c.isSelected())
-
         selected.add(c);
 
     return selected;
@@ -1452,31 +1467,26 @@ public class GraphicView extends GraphicComponent implements
         maxY = max.y;
     }
 
-    final Rectangle bounds = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+    Rectangle bounds = new Rectangle(minX, minY, maxX - minX, maxY - minY);
 
     if (bounds.isEmpty())
       return null;
 
     // Create the buffered image with margin.
-    final BufferedImage img = new BufferedImage(bounds.width + margin * 2,
+    BufferedImage img = new BufferedImage(bounds.width + margin * 2,
         bounds.height + margin * 2, BufferedImage.TYPE_INT_ARGB);
-    final Graphics2D g2 = img.createGraphics();
+    Graphics2D g2 = img.createGraphics();
     Utility.setRenderQuality(g2);
-
-    // Unselect all component (we will not see graphic selection style in
-    // image exportation).
-    unselectAll();
 
     // Translate the rectangle containing all graphic components at origin.
     g2.translate(-bounds.x + margin, -bounds.y + margin);
 
+    setPictureMode(true);
     // Paint all components on picture.
-    for (final GraphicComponent c : getAllComponents())
+    for (GraphicComponent c : getAllDiagramComponents())
       c.paintComponent(g2);
-
-    // Reselect selected components.
-    for (final GraphicComponent c : components)
-      c.setSelected(true);
+    
+    setPictureMode(false);
 
     return img;
   }
@@ -1581,12 +1591,7 @@ public class GraphicView extends GraphicComponent implements
 
   @Override
   public void keyPressed(KeyEvent e) {
-    if (e.getKeyCode() == KeyEvent.VK_DELETE)
-
-      deleteSelectedComponents();
-
-    else if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-
+    if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
       unselectAll();
   }
 
@@ -1956,10 +1961,10 @@ public class GraphicView extends GraphicComponent implements
     g2.scale(scale, scale);
 
     // Paint components
-    for (final GraphicComponent c : getAllComponents())
+    for (GraphicComponent c : getAllComponents())
       c.paintComponent(g2);
 
-    for (final GraphicComponent c : getSelectedComponents())
+    for (GraphicComponent c : getSelectedComponents())
       c.drawSelectedEffect(g2);
 
     if (currentFactory != null)
@@ -2364,6 +2369,44 @@ public class GraphicView extends GraphicComponent implements
       xml += c.toXML(depth + 1);
 
     return xml + tab + "</umlView>";
+  }
+  
+  public void duplicateSelectedEntities() {
+
+    boolean isRecord = Change.isRecord();
+    Change.record();
+    
+    for (EntityView entityView : getSelectedEntities()) {
+      try {
+        final EntityView newView = entityView.clone();
+        Entity entity = ((Entity)newView.getAssociedComponent());
+        
+        // Récupération par réflexion de la méthode a appelé pour l'ajout.
+        // Le nom de la méthode doit être add<Type_Class>(<Type_Class> entity);
+        try {
+          parent.addEntity(newView);
+          classDiagram.getClass().getMethod(
+              String.format("add%s", entity.getClass().getSimpleName()), 
+              entity.getClass()).invoke(classDiagram, entity);
+          newView.regenerateEntity();
+          
+          SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+              newView.setSelected(true);
+              newView.repaint();
+            }
+          });
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      } catch (CloneNotSupportedException e) {
+        e.printStackTrace();
+      }
+    }
+
+    if (!isRecord)
+      Change.stopRecord();
   }
 
   /**

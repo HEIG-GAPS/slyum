@@ -11,8 +11,7 @@ import classDiagram.verifyName.TypeName;
  * @author David Miserez
  * @version 1.0 - 24.07.2011
  */
-public class Attribute extends Variable
-{	
+public class Attribute extends Variable {	
 	private boolean _isConstant = false;
 	private boolean _isStatic = false;
 	private String defaultValue;

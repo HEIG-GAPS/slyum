@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import swing.FlatPanel;
+import swing.PanelClassDiagram;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Association;
 import classDiagram.relationships.Dependency;
@@ -36,9 +37,10 @@ public class RelationPropreties extends GlobalPropreties
 		return instance;
 	}
 
-	private final JCheckBox chckbxDirect;
-	private final JPanel pnlRoles;
-	private final JTextField textFieldLabel;
+	private JCheckBox chckbxDirect;
+	private JPanel pnlRoles;
+	private JTextField textFieldLabel;
+	private ButtonChangeOrientation btnChangeOrientation;
 
 	/**
 	 * Create the panel.
@@ -82,6 +84,8 @@ public class RelationPropreties extends GlobalPropreties
     pnlGeneral.setMaximumSize(new Dimension(250, Integer.MAX_VALUE));
     pnlGeneral.add(textFieldLabel);
     pnlGeneral.add(chckbxDirect);
+    pnlGeneral.add(Box.createVerticalGlue());
+    pnlGeneral.add(btnChangeOrientation = new ButtonChangeOrientation());
 
     // Panel roles & ScrollPane
     pnlRoles = new JPanel();
@@ -144,5 +148,8 @@ public class RelationPropreties extends GlobalPropreties
 				chckbxDirect.setEnabled(false);
 				textFieldLabel.setText(dependency.getLabel());
 			}
+      btnChangeOrientation.changeActionListener(
+          PanelClassDiagram.getInstance().getCurrentGraphicView()
+              .searchAssociedComponent(currentObject));
 	}
 }

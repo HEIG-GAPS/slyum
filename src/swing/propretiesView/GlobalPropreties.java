@@ -1,12 +1,20 @@
 package swing.propretiesView;
 
+import graphic.relations.RelationView;
+
+import java.awt.Dimension;
 import java.awt.SystemColor;
+import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
+import swing.FlatButton;
+import swing.Slyum;
+import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent.UpdateMessage;
 
 /**
@@ -17,6 +25,25 @@ import classDiagram.IDiagramComponent.UpdateMessage;
  * @version 1.0 - 28.07.2011
  */
 public abstract class GlobalPropreties extends JPanel implements Observer {
+  
+  class ButtonChangeOrientation extends FlatButton {
+
+    public ButtonChangeOrientation() {
+      super(
+         "Change orientation", 
+         PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "orientation.png"));
+      setActionCommand(RelationView.ACTION_CHANGE_ORIENTATION);
+      setMaximumSize(new Dimension(250, 100));
+      setHorizontalAlignment(SwingUtilities.LEFT);
+    }
+    
+    public void changeActionListener(ActionListener listener) {
+      for (ActionListener l : getActionListeners())
+        removeActionListener(l);
+      addActionListener(listener);
+    }
+  }
+  
 	protected Object currentObject = null;
 
 	public GlobalPropreties()

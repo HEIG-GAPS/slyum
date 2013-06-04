@@ -632,7 +632,7 @@ public abstract class LineView extends GraphicComponent
 	@Override
 	public void paintComponent(Graphics2D g2)
 	{
-		if (points.size() < 2)
+		if (!isVisible() || points.size() < 2)
 			return;
 		
 		g2.setStroke(lineStroke);
@@ -642,8 +642,7 @@ public abstract class LineView extends GraphicComponent
 		final int[] pointsX = new int[nbrPoints];
 		final int[] pointsY = new int[nbrPoints];
 
-		for (int i = 0; i < nbrPoints; i++)
-		{
+		for (int i = 0; i < nbrPoints; i++) {
 			pointsX[i] = points.get(i).getAnchor().x;
 			pointsY[i] = points.get(i).getAnchor().y;
 		}

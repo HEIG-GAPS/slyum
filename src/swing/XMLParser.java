@@ -285,7 +285,7 @@ public class XMLParser extends DefaultHandler
 
 				ce = new ClassEntity(e.name, e.visibility, e.id);
 				
-				classDiagram.addClass((ClassEntity) ce);
+				classDiagram.addClassEntity((ClassEntity) ce);
 				ce.setAbstract(e.isAbstract);
 
 				break;
@@ -293,7 +293,7 @@ public class XMLParser extends DefaultHandler
 			case INTERFACE:
 
 				ce = new InterfaceEntity(e.name, e.visibility, e.id);
-				classDiagram.addInterface((InterfaceEntity) ce);
+				classDiagram.addInterfaceEntity((InterfaceEntity) ce);
 				ce.setAbstract(true);
 
 				break;
@@ -304,7 +304,7 @@ public class XMLParser extends DefaultHandler
 				if (b == null) // création d'une classe normale.
 				{
 	                ce = new ClassEntity(e.name, e.visibility, e.id);
-	                classDiagram.addClass((ClassEntity) ce);
+	                classDiagram.addClassEntity((ClassEntity) ce);
 	                ce.setAbstract(e.isAbstract);
 	                SMessageDialog.showInformationMessage("Association class " + ce.getName() + " has been converted into a normal class.\nIts association no longer exists during importation.");
 	                break;

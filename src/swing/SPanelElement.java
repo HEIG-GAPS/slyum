@@ -25,7 +25,10 @@ public class SPanelElement extends SToolBar
 	    "Redo " + Utility.keystrokeToString(Slyum.KEY_REDO);
 	
   private static final String TT_ADD_NOTE = "Link a note";
-  private static final String TT_CHANGE_COLOR = "Color";
+  private static final String TT_CHANGE_COLOR = 
+      "Color " + Utility.keystrokeToString(Slyum.KEY_COLOR);
+  private static final String TT_DUPLICATE = 
+      "Duplicate " + Utility.keystrokeToString(Slyum.KEY_DUPLICATE);
   private static final String TT_DELETE = "Delete";
   
   private static final String TT_ALIGN_TOP = 
@@ -57,7 +60,9 @@ public class SPanelElement extends SToolBar
 
 	private SButton undo,
 	                redo,
-	                btnDelete,
+	                btnColor,
+	                btnDuplicate,
+                  btnDelete,
 	                alignTop, // Alignments top.
 	                alignBottom, 
 	                alignRight,
@@ -96,9 +101,13 @@ public class SPanelElement extends SToolBar
         Slyum.ICON_PATH + "multiNote.png"), Slyum.ACTION_NEW_NOTE_ASSOCIED,
         Color.CYAN, TT_ADD_NOTE, true));
     
-    add(createSButton(PersonalizedIcon.createImageIcon(
+    add(btnColor = createSButton(PersonalizedIcon.createImageIcon(
         Slyum.ICON_PATH + "color.png"), "Color", Color.CYAN,
         TT_CHANGE_COLOR, true));
+    
+    add(btnDuplicate = createSButton(PersonalizedIcon.createImageIcon(
+        Slyum.ICON_PATH + "duplicate.png"), "duplicate", Color.CYAN,
+        TT_DUPLICATE, false));
     
     add(btnDelete = createSButton(PersonalizedIcon.createImageIcon(
         Slyum.ICON_PATH + "delete.png"), "Delete", Color.CYAN,
@@ -166,28 +175,28 @@ public class SPanelElement extends SToolBar
 		redo.setEnabled(false);
 	}
   
-  private SButton createSButton(ImageIcon ii, String a, Color c, String tt, boolean enable)
-  {
+  private SButton createSButton(
+      ImageIcon ii, String a, Color c, String tt, boolean enable) {
     SButton sb = new SToolBarButton(ii, a, c, tt, this);
     sb.setEnabled(enable);
     return sb;
   }
 
-  private SButton createEmptyButton(ImageIcon ii, String action, Color c, String tt)
-  {
+  private SButton createEmptyButton(
+      ImageIcon ii, String action, Color c, String tt) {
     SButton ee = new SToolBarButton(ii, action, c, tt, this);
     ee.setEnabled(false);
     return ee;
   }
 
-  public void componentSelectionChanged()
-  {
-    btnDelete.setEnabled(PanelClassDiagram.getInstance().getCurrentGraphicView().countSelectedComponents() > 0);
+  public void componentSelectionChanged() {
+    GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+    btnDelete.setEnabled(gv.countSelectedComponents() > 0);
+    btnDuplicate.setEnabled(gv.countSelectedEntities() > 0);
     updateBtnState();
   }
   
-  public void updateBtnState()
-  {
+  public void updateBtnState() {
     GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
     int nb = gv.countSelectedEntities();
     boolean enable = nb > 1;
@@ -207,124 +216,57 @@ public class SPanelElement extends SToolBar
   }
 	
 	@Override
-	public void actionPerformed(ActionEvent e)
-	{
+	public void actionPerformed(ActionEvent e) {
 		GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
 		gv.setStopRepaint(true);
 		
 		if (Slyum.ACTION_UNDO.equals(e.getActionCommand()))
 			Change.undo();
-		
 		else if (Slyum.ACTION_REDO.equals(e.getActionCommand()))
 			Change.redo();
-    
 		else if (e.getActionCommand().equals(Slyum.ACTION_DELETE))
-      
       gv.deleteSelectedComponents();
-    
     else if (e.getActionCommand().equals(Slyum.ACTION_COLOR))
-      
       GraphicComponent.askNewColorForSelectedItems();
-    
     else if (e.getActionCommand().equals(Slyum.ACTION_NEW_NOTE_ASSOCIED))
-      
       gv.linkNewNoteWithSelectedEntities();
-    
     else if (Slyum.ACTION_ALIGN_TOP.equals(e.getActionCommand()))
       gv.alignHorizontal(true);
-
     else if (Slyum.ACTION_ALIGN_BOTTOM.equals(e.getActionCommand()))
       gv.alignHorizontal(false);
-
     else if (Slyum.ACTION_ALIGN_LEFT.equals(e.getActionCommand()))
       gv.alignVertical(true);
-
     else if (Slyum.ACTION_ALIGN_RIGHT.equals(e.getActionCommand()))
       gv.alignVertical(false);
-
     else if (Slyum.ACTION_ADJUST_WIDTH.equals(e.getActionCommand()))
       gv.adjustWidthSelectedEntities();
-    
     else if (Slyum.ACTION_MOVE_TOP.equals(e.getActionCommand()))
-      
       gv.moveZOrderTopSelectedEntities();
-    
     else if (Slyum.ACTION_MOVE_UP.equals(e.getActionCommand()))
-
       gv.moveZOrderUpSelectedEntities();
-    
     else if (Slyum.ACTION_MOVE_DOWN.equals(e.getActionCommand()))
-
       gv.moveZOrderDownSelectedEntities();
-
     else if (Slyum.ACTION_MOVE_BOTTOM.equals(e.getActionCommand()))
-
       gv.moveZOrderBottomSelectedEntities();
+    else if (Slyum.ACTION_DUPLICATE.equals(e.getActionCommand()))
+      gv.duplicateSelectedEntities();
 		
 		gv.goRepaint();
 	}
 
-	public SButton getUndoButton()
-	{
-		return undo;
-	}
-	
-	public SButton getRedoButton()
-	{
-		return redo;
-	}
-  
-  public SButton getBtnDelete()
-  {
-    return btnDelete;
-  }
-  
-  public SButton getBtnAlignTop()
-  {
-    return alignTop;
-  }
-  
-  public SButton getBtnAlignRight()
-  {
-    return alignRight;
-  }
-  
-  public SButton getBtnAlignLeft()
-  {
-    return alignLeft;
-  }
-  
-  public SButton getBtnAlignBottom()
-  {
-    return alignBottom;
-  }
-  
-  public SButton getBtnAdjust()
-  {
-    return adujst;
-  }
-  
-  public SButton getBtnTop()
-  {
-    return top;
-  }
-  
-  public SButton getBtnUp()
-  {
-    return up;
-  }
-  
-  public SButton getBtnDown()
-  {
-    return down;
-  }
-  
-  public SButton getBtnBottom()
-  {
-    return bottom;
-  }
-  
-  public SSlider getSliderZoom() {
-    return sliderZoom;
-  }
+	public SButton getUndoButton() { return undo; }
+	public SButton getRedoButton() { return redo; }
+	public SButton getBtnColor() { return btnColor; }
+  public SButton getBtnDelete() { return btnDelete; }
+  public SButton getBtnDuplicate() { return btnDuplicate; }
+  public SButton getBtnAlignTop() { return alignTop; }
+  public SButton getBtnAlignRight() { return alignRight; }
+  public SButton getBtnAlignLeft() { return alignLeft; }
+  public SButton getBtnAlignBottom() { return alignBottom; }
+  public SButton getBtnAdjust() { return adujst; }
+  public SButton getBtnTop() { return top; }
+  public SButton getBtnUp() { return up; }
+  public SButton getBtnDown() { return down; }
+  public SButton getBtnBottom() { return bottom; }
+  public SSlider getSliderZoom() { return sliderZoom; }
 }
