@@ -466,9 +466,7 @@ public abstract class LineView extends GraphicComponent
 		{
 			createNewGrip(mousePressed);
 			acceptGripCreation = false;
-		}
-		else if (e.isControlDown() && !GraphicView.isCtrlForGrip() || !e.isControlDown() && GraphicView.isCtrlForGrip())
-		{
+		} else {
 			final Point movement = new Point(mouse.x - mousePressed.x, mouse.y - mousePressed.y);
 
 			final RelationGrip grip1 = points.get(saveGrip);
@@ -517,12 +515,10 @@ public abstract class LineView extends GraphicComponent
 		saveMouseLocation(e);
 		saveGrip = getGripBeforeLocation(e.getPoint());
 
-		if ((!e.isControlDown() && !GraphicView.isCtrlForGrip() || e.isControlDown() && GraphicView.isCtrlForGrip()) && e.getButton() == 1)
-
+		if (GraphicView.isAddGripMode())
 			acceptGripCreation = true;
 
-		if (e.getButton() == MouseEvent.BUTTON1)
-		{
+		if (e.getButton() == MouseEvent.BUTTON1) {
 			bb[0] = new BufferBounds(points.get(saveGrip));
 			bb[1] = new BufferBounds(points.get(saveGrip+1));
 		}

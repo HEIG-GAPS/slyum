@@ -34,6 +34,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import swing.SPanelDiagramComponent.Mode;
 import utility.OSValidator;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
@@ -72,9 +73,12 @@ public class Slyum extends JFrame implements ActionListener {
 	public final static boolean SHOW_CROSS_MENU = true;
 	public final static boolean SHOW_ERRORS_MESSAGES = true;
 	public final static boolean SHOW_OPENJDK_WARNING = true;
-	public final static boolean SMALL_ICON = false;
+	public final static boolean IS_AUTO_ADJUST_INHERITANCE = true;
+	public final static Mode MODE_CURSOR = Mode.CURSOR;
 	
 	// Action command
+  public static final String ACTION_MODE_CURSOR = "ModeCursor";
+  public static final String ACTION_MODE_GRIP = "ModeGrip";
 	public static final String ACTION_ABOUT = "About";
 	public static final String ACTION_HELP = "Help";
 	public static final String ACTION_EXIT = "Exit";
@@ -168,6 +172,7 @@ public class Slyum extends JFrame implements ActionListener {
 	public final static String KEY_ZOOM_ADAPT = "ctrl shift E";
 	public final static String KEY_ZOOM_1 = "1";
 
+  public final static String KEY_SWITCH_MODE_CURSOR = "shift";
 	public final static String KEY_CLASS = "ctrl shift C";
 	public final static String KEY_INTERFACE = "ctrl shift I";
 	public final static String KEY_ASSOCIATION_CLASS = "ctrl shift X";
@@ -198,6 +203,11 @@ public class Slyum extends JFrame implements ActionListener {
 	  arguments = args;
 	  
 		showWarningForOpenJDK();
+		
+		// Hack pour mettre à jour le fichier de configuration.
+		if (PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.DIVIDER_BOTTOM) == null)
+		  PropertyLoader.getInstance().reset();
 	
 		instance = new Slyum();
 		
@@ -299,16 +309,27 @@ public class Slyum extends JFrame implements ActionListener {
 
 		return enable;
 	}
+	
+	public static boolean isAutoAdjustInheritance() {
+    String prop = PropertyLoader.getInstance().
+        getProperties().getProperty(PropertyLoader.AUTO_ADJUST_INHERITANCE);
+    boolean enable = IS_AUTO_ADJUST_INHERITANCE;
 
-	public static boolean getSmallIcons()
-	{
-		final String prop = PropertyLoader.getInstance().getProperties().getProperty("SmallIcon");
-		boolean enable = SMALL_ICON;
+    if (prop != null)
+      enable = Boolean.parseBoolean(prop);
 
-		if (prop != null)
-			enable = Boolean.parseBoolean(prop);
+    return enable; 
+	}
+	
+	public static Mode getModeCursor() {
+    String prop = PropertyLoader.getInstance().
+        getProperties().getProperty(PropertyLoader.MODE_CURSOR);
+    Mode mode = MODE_CURSOR;
 
-		return enable;
+    if (prop != null)
+      mode = Mode.valueOf(prop);
+
+    return mode; 
 	}
 
 	public static boolean isShowCrossMenu()
@@ -402,10 +423,9 @@ public class Slyum extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Create a new JFrame with Slyum :D !
+	 * Create a new Slyum :D (slyyy slyy slyyyyy)!
 	 */
-	public Slyum()
-	{
+	public Slyum() {
 		initFont();
 		setUIProperties();
 		createJMenuBar();
@@ -428,6 +448,8 @@ public class Slyum extends JFrame implements ActionListener {
 	  
 	  if (dividerLeft != null)
       panel.setDividerLeft(Float.valueOf(dividerLeft));
+	  
+	  SPanelDiagramComponent.getInstance().setMode(getModeCursor());
 	}
 	
 	private void initFont()

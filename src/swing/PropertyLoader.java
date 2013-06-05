@@ -15,7 +15,6 @@ public class PropertyLoader {
     public static final String COLOR_GRAPHIC_VIEW = "colorGraphicView";
     public static final String BACKGROUND_GRADIENT = "backgroundGradient";
     public static final String ENTITY_GRADIENT = "entityGradient";
-    public static final String CTRL_FOR_GRIP = "ctrlForGrip";
     public static final String GRID_POINT_OPACITY = "GridPointOpacity";
     public static final String GRID_OPACITY_ENABLE = "gridOpacityEnable";
     public static final String SHOW_ERROR_MESSAGES = "ShowErrorMessages";
@@ -30,6 +29,8 @@ public class PropertyLoader {
     public static final String GRID_SIZE = "gridSize";
     public static final String DIVIDER_LEFT = "dividerLeft";
     public static final String DIVIDER_BOTTOM = "dividerBottom";
+    public static final String AUTO_ADJUST_INHERITANCE = "autoAdjustInheritance";
+    public static final String MODE_CURSOR = "ModeCursor";
 
     public static final String filename = Slyum.getPathAppDir()
             + Slyum.FILE_SEPARATOR + "config.properties";

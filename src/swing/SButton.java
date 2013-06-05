@@ -16,7 +16,8 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.plaf.metal.MetalButtonUI;
 
-public class SButton extends JButton {	
+public class SButton extends JButton {
+  private final Color BACKGROUND = Color.WHITE;
 	private LinkedList<Component> linkedComponents = new LinkedList<>();
 	
 	public SButton(Icon icon, String tooltip)
@@ -43,6 +44,7 @@ public class SButton extends JButton {
 		addActionListener(al);
     setContentAreaFilled(false);
 		setBorderPainted(false);
+		setBackground(BACKGROUND);
 		setToolTipText(tooltip);
 		
 		setUI(new MetalButtonUI() {
@@ -57,8 +59,10 @@ public class SButton extends JButton {
 		  public void mouseEntered(MouseEvent e) {
 		    super.mouseEntered(e);
 		    if (isEnabled()) {
-	        setBackground(Color.WHITE);
-	        setContentAreaFilled(true);
+	        if (getBackground().equals(Color.white)) {
+  	        setBackground(BACKGROUND);
+  	        setContentAreaFilled(true);
+	        }
 	        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR)); 
 		    }
 		  }
@@ -66,10 +70,16 @@ public class SButton extends JButton {
 		  @Override
 		  public void mouseExited(MouseEvent e) {
 		    super.mouseExited(e);
-		    setContentAreaFilled(false);
+		    if (getBackground().equals(BACKGROUND))
+		      setContentAreaFilled(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		  }
     });
+	}
+	
+	public void resetBackground() {
+    setContentAreaFilled(false);
+	  setBackground(BACKGROUND);
 	}
 	
 	@Override
