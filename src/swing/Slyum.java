@@ -414,16 +414,20 @@ public class Slyum extends JFrame implements ActionListener {
 	}
 	
 	public static void initializationComplete() {
-	  final String file = RecentProjectManager.getMoreRecentFile();
+	  String file = RecentProjectManager.getMoreRecentFile();
 	  if (file != null)
 	    PanelClassDiagram.openSlyFile(file);
 	  
 	  PanelClassDiagram panel = PanelClassDiagram.getInstance();
 	  Properties properties = PropertyLoader.getInstance().getProperties();
-	  panel.setDividerBottom(
-	      Float.valueOf(properties.getProperty(PropertyLoader.DIVIDER_BOTTOM)));
-    panel.setDividerLeft(
-        Float.valueOf(properties.getProperty(PropertyLoader.DIVIDER_LEFT)));
+	  String dividerBottom = properties.getProperty(PropertyLoader.DIVIDER_BOTTOM),
+           dividerLeft = properties.getProperty(PropertyLoader.DIVIDER_LEFT);
+    
+	  if (dividerBottom != null)
+  	  panel.setDividerBottom(Float.valueOf(dividerBottom));
+	  
+	  if (dividerLeft != null)
+      panel.setDividerLeft(Float.valueOf(dividerLeft));
 	}
 	
 	private void initFont()
