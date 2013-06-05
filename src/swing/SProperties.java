@@ -68,9 +68,9 @@ public class SProperties extends JDialog {
   private JCheckBox chckbxOpacityGrid;
   private JCheckBox chckbxDisableErrorMessage;
   private JCheckBox chckbxDisableCrossPopup;
+  private JCheckBox chckbxAutoAdjustInheritance;
   private JCheckBox ckbBackgroundGradient;
   private JCheckBox ckbEntityGradient;
-  private JCheckBox chckbxUseCtrlFor;
   private JCheckBox chckbxShowGrid;
   private JPanel panel_Grid, panel_grid_color, panel_grid_opacity;
   private JCheckBox chckbxEnableGrid;
@@ -661,25 +661,13 @@ public class SProperties extends JDialog {
               Double.MIN_VALUE };
           panel.setLayout(gbl_panel);
           {
-            chckbxUseCtrlFor = new JCheckBox(
-                "Use Ctrl for adding grips in relations");
-            chckbxUseCtrlFor
-                .setToolTipText("By default, a simple clic adds a new grip on a relation and Ctrl+clic moves the relation. Inverse it by checking this option.");
-            final GridBagConstraints gbc_chckbxUseCtrlFor = new GridBagConstraints();
-            gbc_chckbxUseCtrlFor.anchor = GridBagConstraints.WEST;
-            gbc_chckbxUseCtrlFor.insets = new Insets(0, 5, 5, 0);
-            gbc_chckbxUseCtrlFor.gridx = 0;
-            gbc_chckbxUseCtrlFor.gridy = 0;
-            panel.add(chckbxUseCtrlFor, gbc_chckbxUseCtrlFor);
-          }
-          {
             chckbxDisableErrorMessage = new JCheckBox(
                 "Show error messages during the creation of components");
             GridBagConstraints gbc_chckbxDisableErrorMessage = new GridBagConstraints();
             gbc_chckbxDisableErrorMessage.anchor = GridBagConstraints.WEST;
             gbc_chckbxDisableErrorMessage.insets = new Insets(0, 5, 5, 0);
             gbc_chckbxDisableErrorMessage.gridx = 0;
-            gbc_chckbxDisableErrorMessage.gridy = 2;
+            gbc_chckbxDisableErrorMessage.gridy = 0;
             panel.add(chckbxDisableErrorMessage, gbc_chckbxDisableErrorMessage);
           }
           {
@@ -689,8 +677,18 @@ public class SProperties extends JDialog {
             gbc_chckbxDisableCrossPopup.insets = new Insets(0, 5, 0, 0);
             gbc_chckbxDisableCrossPopup.anchor = GridBagConstraints.WEST;
             gbc_chckbxDisableCrossPopup.gridx = 0;
-            gbc_chckbxDisableCrossPopup.gridy = 3;
+            gbc_chckbxDisableCrossPopup.gridy = 1;
             panel.add(chckbxDisableCrossPopup, gbc_chckbxDisableCrossPopup);
+          }
+          {
+            chckbxAutoAdjustInheritance = new JCheckBox(
+                "Auto locate new inheritance");
+            GridBagConstraints gbc_chckbxAutoAdjustInheritance = new GridBagConstraints();
+            gbc_chckbxAutoAdjustInheritance.insets = new Insets(0, 5, 0, 0);
+            gbc_chckbxAutoAdjustInheritance.anchor = GridBagConstraints.WEST;
+            gbc_chckbxAutoAdjustInheritance.gridx = 0;
+            gbc_chckbxAutoAdjustInheritance.gridy = 2;
+            panel.add(chckbxAutoAdjustInheritance, gbc_chckbxAutoAdjustInheritance);
           }
           tabbedPane.setDisabledIconAt(2, null);
         }
@@ -727,8 +725,6 @@ public class SProperties extends JDialog {
                   String.valueOf(ckbBackgroundGradient.isSelected()));
               properties.put(PropertyLoader.ENTITY_GRADIENT,
                   String.valueOf(ckbEntityGradient.isSelected()));
-              properties.put(PropertyLoader.CTRL_FOR_GRIP,
-                  String.valueOf(chckbxUseCtrlFor.isSelected()));
               properties.put(PropertyLoader.GRID_POINT_OPACITY,
                   String.valueOf(sliderGridPoint.getValue()));
               properties.put(PropertyLoader.GRID_OPACITY_ENABLE,
@@ -737,6 +733,8 @@ public class SProperties extends JDialog {
                   String.valueOf(chckbxDisableErrorMessage.isSelected()));
               properties.put(PropertyLoader.SHOW_CROSS_MENU,
                   String.valueOf(chckbxDisableCrossPopup.isSelected()));
+              properties.put(PropertyLoader.AUTO_ADJUST_INHERITANCE,
+                  String.valueOf(chckbxAutoAdjustInheritance.isSelected()));
               properties.put(PropertyLoader.GRID_VISIBLE,
                   String.valueOf(chckbxShowGrid.isSelected()));
               properties.put(PropertyLoader.GRID_ENABLE,
@@ -839,7 +837,6 @@ public class SProperties extends JDialog {
     btnColor.setBackground(new Color(GraphicView.getGridColor()));
     listName.setSelectedValue(TextBox.getFontName(), true);
     listSize.setSelectedValue(TextBox.getFontSize(), true);
-    chckbxUseCtrlFor.setSelected(GraphicView.isCtrlForGrip());
     chckbxShowGrid.setSelected(GraphicView.isGridVisible());
 
     switch (Utility.getGraphicQualityType()) {
@@ -857,6 +854,7 @@ public class SProperties extends JDialog {
     }
     chckbxDisableErrorMessage.setSelected(Slyum.isShowErrorMessage());
     chckbxDisableCrossPopup.setSelected(Slyum.isShowCrossMenu());
+    chckbxAutoAdjustInheritance.setSelected(Slyum.isAutoAdjustInheritance());
     chckbxEnableGrid.setSelected(GraphicView.isGridEnable());
 
     if (GraphicView.isAutomatiqueGridColor())

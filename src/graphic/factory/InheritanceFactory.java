@@ -8,6 +8,7 @@ import graphic.relations.InheritanceView;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import swing.Slyum;
 import utility.SMessageDialog;
 import classDiagram.relationships.Inheritance;
 
@@ -62,6 +63,9 @@ public class InheritanceFactory extends RelationFactory
 
 				parent.unselectAll();
 				i.setSelected(true);
+				
+				if (Slyum.isAutoAdjustInheritance())
+				  i.adjustInheritance();
 
 				return i;
 			}

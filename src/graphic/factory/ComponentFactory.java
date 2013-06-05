@@ -3,7 +3,6 @@ package graphic.factory;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 
-import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
@@ -48,8 +47,6 @@ public abstract class ComponentFactory extends CreateComponent
 
 		if (create() == null && Slyum.isShowErrorMessage())
 				creationFailed();
-
-		parent.getScene().setCursor(Cursor.getDefaultCursor());
 
 		parent.deleteCurrentFactory();
 	}

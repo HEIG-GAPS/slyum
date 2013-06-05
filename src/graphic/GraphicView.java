@@ -57,8 +57,10 @@ import swing.IListenerComponentSelectionChanged;
 import swing.PanelClassDiagram;
 import swing.PropertyLoader;
 import swing.SColorAssigner;
+import swing.SPanelDiagramComponent;
 import swing.SPanelElement;
 import swing.Slyum;
+import swing.SPanelDiagramComponent.Mode;
 import utility.PersonalizedIcon;
 import utility.SizedCursor;
 import utility.Utility;
@@ -126,6 +128,10 @@ public class GraphicView extends GraphicComponent implements
       if (component != null)
         component.gMouseEntered(e);
     }
+  }
+  
+  public static boolean isAddGripMode() {
+    return SPanelDiagramComponent.getInstance().getMode() == Mode.GRIP;
   }
 
   public static boolean isBackgroundGradient() {
@@ -217,7 +223,7 @@ public class GraphicView extends GraphicComponent implements
   }
 
   public static boolean isAutomatiqueGridColor() {
-    final String prop = PropertyLoader.getInstance().getProperties()
+    String prop = PropertyLoader.getInstance().getProperties()
         .getProperty(PropertyLoader.AUTOMATIC_GRID_COLOR);
     boolean enable = IS_AUTOMATIC_GRID_COLOR;
 
@@ -225,17 +231,6 @@ public class GraphicView extends GraphicComponent implements
       enable = Boolean.parseBoolean(prop);
 
     return enable;
-  }
-
-  public static boolean isCtrlForGrip() {
-    final String ctrlForGrip = PropertyLoader.getInstance().getProperties()
-        .getProperty(PropertyLoader.CTRL_FOR_GRIP);
-    boolean ctrlForGripBool = CTRL_FOR_GRIP;
-
-    if (ctrlForGrip != null)
-      ctrlForGripBool = Boolean.parseBoolean(ctrlForGrip);
-
-    return ctrlForGripBool;
   }
 
   public static boolean isGridOpacityEnable() {
@@ -320,12 +315,6 @@ public class GraphicView extends GraphicComponent implements
   public static void setBasicColor(Color color) {
     PropertyLoader.getInstance().getProperties()
         .put(PropertyLoader.COLOR_GRAPHIC_VIEW, String.valueOf(color.getRGB()));
-    PropertyLoader.getInstance().push();
-  }
-
-  public static void setCtrlForClick(boolean active) {
-    PropertyLoader.getInstance().getProperties()
-        .put(PropertyLoader.CTRL_FOR_GRIP, String.valueOf(active));
     PropertyLoader.getInstance().push();
   }
 
@@ -1083,15 +1072,21 @@ public class GraphicView extends GraphicComponent implements
    * Remove the current factory.
    */
   public void deleteCurrentFactory() {
-    currentFactory.deleteFactory();
-    currentFactory = null;
+    _deleteCurrentFactory();
+    SPanelDiagramComponent.getInstance().applyMode();
+  }
+  
+  public void _deleteCurrentFactory() {
+    if (currentFactory != null) {
+      currentFactory.deleteFactory();
+      currentFactory = null; 
+    }
+    getScene().setCursor(Cursor.getDefaultCursor());
   }
 
   /**
-   * Not use in Slumy 1.0. Draw beta margin of A4 format.
-   * 
-   * @param g2
-   *          the graphic context
+   * Not use in Slyum 1.0. Draw beta margin of A4 format.
+   * @param g2 the graphic context
    */
   public void drawA4Margin(Graphics2D g2) {
     final int screenDpi = Toolkit.getDefaultToolkit().getScreenResolution();
@@ -1588,15 +1583,31 @@ public class GraphicView extends GraphicComponent implements
     if (!isRecord)
       Change.stopRecord();
   }
+  
+  private boolean shiftDown = false;
 
   @Override
   public void keyPressed(KeyEvent e) {
-    if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
       unselectAll();
+    }
+    else if (currentFactory == null && !shiftDown && e.isShiftDown()) {
+      SPanelDiagramComponent panel = SPanelDiagramComponent.getInstance();
+      shiftDown = true;
+      // Inversion du mode.
+      panel.setMode(panel.getMode() == Mode.CURSOR ? Mode.GRIP : Mode.CURSOR);
+    }
   }
 
   @Override
   public void keyReleased(KeyEvent e) {
+    
+    if (currentFactory == null && shiftDown) {
+      shiftDown = false;
+      SPanelDiagramComponent panel = SPanelDiagramComponent.getInstance();
+      // Inversion du mode.
+      panel.setMode(panel.getMode() == Mode.CURSOR ? Mode.GRIP : Mode.CURSOR);
+    }
   }
 
   @Override
