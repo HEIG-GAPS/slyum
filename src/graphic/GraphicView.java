@@ -96,7 +96,7 @@ public class GraphicView extends GraphicComponent implements
   public final static boolean BACKGROUND_GRADIENT = false;
   public final static boolean ENTITY_GRADIENT = false;
   public final static boolean CTRL_FOR_GRIP = false;
-  public final static Color BASIC_COLOR = new Color(170, 190, 240);
+  public final static Color BASIC_COLOR = new Color(241, 241, 243);
   public final static int GRID_COLOR = Color.DARK_GRAY.getRGB();
   public final static int GRID_POINT_OPACITY = 255;
   public final static int GRID_SIZE = 10;
