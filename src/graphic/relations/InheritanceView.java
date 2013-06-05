@@ -245,7 +245,8 @@ public class InheritanceView extends RelationView
 	}
   
   public void adjustInheritance() {
-    final int offset = 40; // px
+    final int offsetChild = 10,
+              offsetParent = offsetChild + 20; // px
     Rectangle
       boundsParent = getLastPoint().getAssociedComponentView().getBounds(),
       boundsChild = getFirstPoint().getAssociedComponentView().getBounds();
@@ -260,18 +261,41 @@ public class InheritanceView extends RelationView
 
     // Positionnement des grip centraux.
     // Plus haut ou plus bas?
-    if (ptParent.y > ptChild.y - 2 * offset) { // enfant plus haut
+    if (ptParent.y > ptChild.y - (offsetChild + offsetParent)) { // enfant plus haut
+      addGripAtLocation(1, new Point(ptChild.x, ptChild.y - offsetChild));
       
-      int horizontal = (ptChild.x - ptParent.x) / 2;
-      addGripAtLocation(1, new Point(ptChild.x, ptChild.y - offset));
-      addGripAtLocation(2, new Point(ptChild.x - horizontal, ptChild.y - offset));
-      addGripAtLocation(3, new Point(ptParent.x + horizontal, ptParent.y + offset));
-      addGripAtLocation(4, new Point(ptParent.x, ptParent.y + offset));
+      // Enfant à gauche ou à droite?
+      if (boundsChild.x > boundsParent.x + boundsParent.width) { // à droite
+        int x = (boundsChild.x + boundsParent.x + boundsParent.width) / 2;
+        addGripAtLocation(2, new Point(x, ptChild.y - offsetChild));
+        addGripAtLocation(3, new Point(x, ptParent.y + offsetParent));
+        
+      } else if (boundsChild.x + boundsChild.width < boundsParent.x) { // à gauche
+        int x = (boundsChild.x + boundsChild.width + boundsParent.x) / 2;
+        addGripAtLocation(2, new Point(x, ptChild.y - offsetChild));
+        addGripAtLocation(3, new Point(x, ptParent.y + offsetParent));
+        
+      } else { // Ils se croisent
+        // Quelle chemin est le plus court?
+        if (Math.abs(boundsChild.x - boundsParent.x) < 
+            Math.abs((boundsChild.x + boundsChild.width) - 
+              (boundsParent.x + boundsParent.width))) { // gauche
+          int min = Math.min(boundsChild.x, boundsParent.x) - offsetChild;
+          addGripAtLocation(2, new Point(min, ptChild.y - offsetChild));
+          addGripAtLocation(3, new Point(min, ptParent.y + offsetParent));
+        } else { // droite
+          int max = Math.max(boundsChild.x + boundsChild.width, 
+                             boundsParent.x + boundsParent.width) + offsetChild;
+          addGripAtLocation(2, new Point(max, ptChild.y - offsetChild));
+          addGripAtLocation(3, new Point(max, ptParent.y + offsetParent));
+        }
+      }
+      addGripAtLocation(4, new Point(ptParent.x, ptParent.y + offsetParent));
       
     } else { // enfant plus bas
-      int vertical = (ptChild.y - ptParent.y) / 2;
+      int vertical = (ptChild.y - (ptParent.y + 20)) / 2;
       addGripAtLocation(1, new Point(ptChild.x, ptChild.y - vertical));
-      addGripAtLocation(2, new Point(ptParent.x, ptParent.y + vertical));
+      addGripAtLocation(2, new Point(ptParent.x, ptChild.y - vertical));
     }
     
     // Positionnement des grips d'extremités.
