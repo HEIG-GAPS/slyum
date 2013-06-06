@@ -164,27 +164,23 @@ public class TextBoxMultiplicity extends TextBoxLabel
 	{
 		return multiplicity.toString();
 	}
-
+	
 	@Override
-	public void gMousePressed(MouseEvent e)
-	{
-		super.gMousePressed(e);
+	public void gMouseClicked(MouseEvent e) {
+	  super.gMouseClicked(e);
 
-		// remove all selected components TODO : AMELIORE
-		parent.unselectAll();
+    // remove all selected components TODO : AMELIORE
+    parent.unselectAll();
 
-		// search a multiplicity corresponding to the textBox multiplicity...
-		for (final LineView av : parent.getLinesView())
-			// take all line view
-			if (av instanceof AssociationView) // test if it's an associationView (have some role)
-
-				for (final Role r : ((Association) ((AssociationView) av).getAssociedComponent()).getRoles())
-					// iterate through roles
-
-					if (r.getMultiplicity().equals(multiplicity)) // multiplicity's
-						// role is the same than textBoxMultiplicity multiplicity?
-
-						((AssociationView) av).setSelected(true);
+    // search a multiplicity corresponding to the textBox multiplicity...
+    for (LineView av : parent.getLinesView())
+      // take all line view
+      if (av instanceof AssociationView) // test if it's an associationView (have some role)
+        for (Role r : ((Association) ((AssociationView) av).getAssociedComponent()).getRoles())
+          // iterate through roles
+          if (r.getMultiplicity().equals(multiplicity)) // multiplicity's
+            // role is the same than textBoxMultiplicity multiplicity?
+            ((AssociationView) av).setSelected(true);
 	}
 
 	@Override

@@ -226,8 +226,7 @@ public abstract class TextBox extends GraphicComponent
 	}
 
 	@Override
-	public void gMouseEntered(MouseEvent e)
-	{
+	public void gMouseEntered(MouseEvent e) {
 		previousCursor = parent.getScene().getCursor();
 		parent.getScene().setCursor(new Cursor(Cursor.TEXT_CURSOR));
 
@@ -235,10 +234,8 @@ public abstract class TextBox extends GraphicComponent
 	}
 
 	@Override
-	public void gMouseExited(MouseEvent e)
-	{
+	public void gMouseExited(MouseEvent e) {
 		parent.getScene().setCursor(previousCursor);
-
 		setMouseHover(false);
 	}
 
@@ -330,8 +327,7 @@ public abstract class TextBox extends GraphicComponent
 	 * @param hover
 	 *            true for set the mouse hover; false otherwise
 	 */
-	public void setMouseHover(boolean hover)
-	{
+	public void setMouseHover(boolean hover) {
 		mouseHover = hover;
 		repaint();
 	}

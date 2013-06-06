@@ -36,15 +36,12 @@ import change.Changeable;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public abstract class TextBoxLabel extends TextBox implements Observer
-{
-	protected Point deplacement = new Point();
+public abstract class TextBoxLabel extends TextBox implements Observer {
 	private Point mousePosition = new Point();
-
 	private Cursor previousCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+  protected Point deplacement = new Point();
 
-	public TextBoxLabel(GraphicView parent, String text)
-	{
+	public TextBoxLabel(GraphicView parent, String text) {
 		super(parent, text);
 	}
 
@@ -66,11 +63,11 @@ public abstract class TextBoxLabel extends TextBox implements Observer
 	 */
 	protected void computeLabelPosition()
 	{
-		final Rectangle repaintBounds = getBounds();
+		Rectangle repaintBounds = getBounds();
+		Point pos = computeAnchor();
 
-		final Point pos = computeAnchor();
-
-		setBounds(new Rectangle(pos.x + deplacement.x, pos.y + deplacement.y, 0, 0));
+		setBounds(
+		    new Rectangle(pos.x + deplacement.x, pos.y + deplacement.y, 0, 0));
 
 		parent.getScene().repaint(repaintBounds);
 		repaint();
@@ -90,76 +87,68 @@ public abstract class TextBoxLabel extends TextBox implements Observer
 	}
 
 	@Override
-	public void gMouseDragged(MouseEvent e)
-	{
+	public void gMouseDragged(MouseEvent e) {
 		parent.getScene().setCursor(new Cursor(Cursor.MOVE_CURSOR));
-
-		final Point mouse = e.getPoint();
-
-		final Rectangle bounds = getBounds();
+		Point mouse = e.getPoint();
+		Rectangle bounds = getBounds();
 		Rectangle repainRectangle = getBounds();
 		repainRectangle.add(computeAnchor());
 
-		setBounds(new Rectangle(bounds.x + mouse.x - mousePosition.x, bounds.y + mouse.y - mousePosition.y, 0, 0));
+		setBounds(new Rectangle(bounds.x + mouse.x - mousePosition.x,
+		                        bounds.y + mouse.y - mousePosition.y, 0, 0));
 
 		parent.getScene().repaint(repainRectangle);
 		repaint();
 
 		mousePosition = e.getPoint();
-
 		setChanged();
 		notifyObservers();
 	}
 
 	@Override
-	public void gMousePressed(MouseEvent e)
-	{
+	public void gMousePressed(MouseEvent e) {
 		super.gMousePressed(e);
-
 		mousePosition = e.getPoint();
-
 		previousCursor = parent.getScene().getCursor();
-		
 		Change.push(new BufferDeplacement(this));
 	}
 	
 	@Override
-	public void gMouseReleased(MouseEvent e)
-	{
-		final Point pos = computeAnchor();
+	public void gMouseReleased(MouseEvent e) {
+		Point pos = computeAnchor();
 		deplacement = new Point(bounds.x - pos.x, bounds.y - pos.y);
-
 		parent.getScene().setCursor(previousCursor);
 		
 		Changeable c = Change.getLast();
-		
-		if (c instanceof BufferDeplacement && !((BufferDeplacement)Change.getLast()).getDeplacement().equals(getDeplacement()))
-			
+		if (c instanceof BufferDeplacement && 
+		    !((BufferDeplacement)Change.getLast()).getDeplacement()
+		                               .equals(getDeplacement()))
 			Change.push(new BufferDeplacement(this));
 		else
-			
 			Change.pop();
 	}
 	
-	public Point getDeplacement()
-	{
+	public Point getDeplacement() {
 		return deplacement;
 	}
 
 	@Override
 	public void paintComponent(Graphics2D g2) {
 		super.paintComponent(g2);
-		
-		Rectangle bounds = getBounds();
-		Point middle = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-		Point middleRelation = computeAnchor();
-
-		if (!pictureMode && mouseHover) {
-			g2.setStroke(new BasicStroke(
-			    1.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 
-			    10.0f, new float[] { 4.f }, 0.0f));
-			g2.drawLine(middle.x, middle.y, middleRelation.x, middleRelation.y);
-		}
+		if (!pictureMode && (mouseHover || isSelected()))
+		  paintLink(g2);
+	}
+	
+	public void paintLink(Graphics2D g2) {
+    
+    Rectangle bounds = getBounds();
+    Point middle = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+    Point middleRelation = computeAnchor();
+    
+    g2.setStroke(new BasicStroke(
+        1.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 
+        10.0f, new float[] { 4.f }, 0.0f));
+    g2.drawLine(middle.x, middle.y, middleRelation.x, middleRelation.y);
 	}
 
 	@Override
@@ -190,5 +179,13 @@ public abstract class TextBoxLabel extends TextBox implements Observer
 	public void update(Observable arg0, Object arg1)
 	{
 		computeLabelPosition();
+	}
+	
+	@Override
+	public Rectangle getBounds() {
+	  Rectangle bounds = super.getBounds();
+	  if (isSelected() && bounds.width == 0)
+	    bounds.width = 50;
+	  return bounds;
 	}
 }

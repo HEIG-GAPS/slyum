@@ -93,32 +93,25 @@ public class TextBoxLabelTitle extends TextBoxLabel
 	{
 		return label.getLabel();
 	}
-
+	
 	@Override
-	public void gMousePressed(MouseEvent e)
-	{
-		super.gMousePressed(e);
-
-		// remove all selected components TODO : AMELIORE
-		parent.unselectAll();
-
-		relationView.setSelected(true);
+	public void gMouseClicked(MouseEvent e) {
+	  super.gMouseClicked(e);
+    // remove all selected components TODO : AMELIORE
+    parent.unselectAll();
+    relationView.setSelected(true);
 	}
 
 	@Override
-	public void setText(String text)
-	{
+	public void setText(String text) {
 		super.setText(text);
-
 		label.setLabel(text);
 		label.notifyObservers();
 	}
 
 	@Override
-	public void update(Observable arg0, Object arg1)
-	{
+	public void update(Observable arg0, Object arg1) {
 		super.update(arg0, arg1);
-
 		super.setText(getText());
 	}
 

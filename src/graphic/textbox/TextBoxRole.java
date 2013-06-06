@@ -166,27 +166,26 @@ public class TextBoxRole extends TextBoxLabel
 	{
 		return role;
 	}
-
+	
 	@Override
-	public void gMousePressed(MouseEvent e)
-	{
-		super.gMousePressed(e);
-
-		// remove all selected components TODO : AMELIORE
-		parent.unselectAll();
-
-		parent.searchAssociedComponent(role.getAssociation()).setSelected(true);
+	public void gMouseClicked(MouseEvent e) {
+	  super.gMouseClicked(e);
+    // remove all selected components TODO : AMELIORE
+    parent.unselectAll();
+    parent.searchAssociedComponent(role.getAssociation()).setSelected(true);
+	}
+	
+	@Override
+	public void setMouseHover(boolean hover) {
+	  super.setMouseHover(hover);
+	  tbm.setMouseHover(hover);
 	}
 
 	@Override
-	public void setText(String text)
-	{
+	public void setText(String text) {
 		convertStringToRole(text, role);
-
 		super.setText(role.toString());
-
 		setChanged();
-
 		role.notifyObservers();
 	}
 
@@ -203,5 +202,11 @@ public class TextBoxRole extends TextBoxLabel
 	{
 		super.restore();
 		tbm.restore();
+	}
+	
+	@Override
+	public void setSelected(boolean selected) {
+	  super.setSelected(selected);
+	  tbm.setSelected(selected);
 	}
 }
