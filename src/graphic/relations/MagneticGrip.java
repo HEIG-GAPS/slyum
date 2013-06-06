@@ -121,18 +121,22 @@ public class MagneticGrip extends RelationGrip implements Observer
 	}
 
 	@Override
-	public void setAnchor(Point anchor)
-	{
-		if (magnetism)
-		{
-			final Rectangle bounds = component.getBounds();
-
+	public void setAnchor(Point anchor) {
+		if (magnetism) {
+			Rectangle bounds = component.getBounds();
+      RelationGrip nearGrip = relation.getNearestGrip(this);
 			preferredAnchor = new Point(anchor.x - bounds.x, anchor.y - bounds.y);
-			final RelationGrip nearGrip = relation.getNearestGrip(this);
 			super.setAnchor(component.computeAnchorLocation(anchor, nearGrip.getAnchor()));
-		}
-		else
+		} else {
 			super.setAnchor(anchor);
+		}
+	}
+	
+	@Override
+	protected Point ajustOnGrid(Point pt) {
+    if (magnetism)
+      return pt;
+    return super.ajustOnGrid(pt);
 	}
 	
 	@Override
