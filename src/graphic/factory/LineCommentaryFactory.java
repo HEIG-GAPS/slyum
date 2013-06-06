@@ -6,6 +6,7 @@ import graphic.relations.LineCommentary;
 
 import java.awt.BasicStroke;
 
+import swing.SPanelDiagramComponent;
 import utility.SMessageDialog;
 
 /**
@@ -30,11 +31,13 @@ public class LineCommentaryFactory extends RelationFactory
 	 * @param classDiagram
 	 *            the class diagram
 	 */
-	public LineCommentaryFactory(GraphicView parent)
-	{
+	public LineCommentaryFactory(GraphicView parent) {
 		super(parent);
-
-		stroke = new BasicStroke(1.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 4.f }, 0.0f);
+		stroke = new BasicStroke(1.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
+		                         10.0f, new float[] { 4.f }, 0.0f);
+    
+    GraphicView.setButtonFactory(
+        SPanelDiagramComponent.getInstance().getBtnLinkNote());
 	}
 
 	@Override

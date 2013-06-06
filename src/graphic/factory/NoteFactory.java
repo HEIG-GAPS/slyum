@@ -8,6 +8,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+import swing.SPanelDiagramComponent;
+
 import change.Change;
 
 /**
@@ -32,6 +34,9 @@ public class NoteFactory extends RelationFactory
 	public NoteFactory(GraphicView parent)
 	{
 		super(parent);
+    
+    GraphicView.setButtonFactory(
+        SPanelDiagramComponent.getInstance().getBtnNote());
 	}
 
 	@Override

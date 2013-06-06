@@ -8,6 +8,7 @@ import graphic.relations.InnerClassView;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import swing.SPanelDiagramComponent;
 import utility.SMessageDialog;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
@@ -19,6 +20,9 @@ public class InnerClassFactory extends InheritanceFactory
 	public InnerClassFactory(GraphicView parent)
 	{
 		super(parent);
+    
+    GraphicView.setButtonFactory(
+        SPanelDiagramComponent.getInstance().getBtnInnerClass());
 	}
 
 	@Override

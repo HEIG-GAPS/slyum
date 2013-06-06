@@ -8,6 +8,7 @@ import graphic.relations.DependencyView;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 
+import swing.SPanelDiagramComponent;
 import utility.SMessageDialog;
 import classDiagram.relationships.Dependency;
 
@@ -33,11 +34,13 @@ public class DependencyFactory extends RelationFactory
 	 * @param classDiagram
 	 *            the class diagram
 	 */
-	public DependencyFactory(GraphicView parent)
-	{
+	public DependencyFactory(GraphicView parent) {
 		super(parent);
-
-		stroke = new BasicStroke(1.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 7.f }, 0.0f);
+		stroke = new BasicStroke(1.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
+		                         10.0f, new float[] { 7.f }, 0.0f);
+    
+    GraphicView.setButtonFactory(
+        SPanelDiagramComponent.getInstance().getBtnDependency());
 	}
 
 	@Override

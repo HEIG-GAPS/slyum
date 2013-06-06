@@ -7,6 +7,8 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import swing.SPanelDiagramComponent;
+
 import classDiagram.ClassDiagram;
 
 /**
@@ -25,7 +27,7 @@ public abstract class CreateComponent extends GraphicComponent
 	public CreateComponent(GraphicView parent)
 	{
 		super(parent);
-
+		parent.deleteCurrentFactory();
 		this.classDiagram = parent.getClassDiagram();
 	}
 
@@ -41,6 +43,7 @@ public abstract class CreateComponent extends GraphicComponent
 	public void deleteFactory()
 	{
 		repaint();
+    SPanelDiagramComponent.getInstance().applyMode();
 	}
 
 	@Override

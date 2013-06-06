@@ -8,6 +8,8 @@ import graphic.relations.AggregationView;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import swing.SPanelDiagramComponent;
+
 import classDiagram.relationships.Aggregation;
 
 /**
@@ -34,6 +36,9 @@ public class AggregationFactory extends RelationFactory
 	public AggregationFactory(GraphicView parent)
 	{
 		super(parent);
+    
+    GraphicView.setButtonFactory(
+        SPanelDiagramComponent.getInstance().getBtnAggregation());
 	}
 
 	@Override

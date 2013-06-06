@@ -11,6 +11,7 @@ import graphic.relations.MultiView;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import swing.SPanelDiagramComponent;
 import utility.SMessageDialog;
 import classDiagram.components.ClassEntity;
 import classDiagram.relationships.Binary;
@@ -42,6 +43,9 @@ public class BinaryFactory extends RelationFactory
 	public BinaryFactory(GraphicView parent)
 	{
 		super(parent);
+    
+    GraphicView.setButtonFactory(
+        SPanelDiagramComponent.getInstance().getBtnAssociation());
 	}
 
 	@Override
