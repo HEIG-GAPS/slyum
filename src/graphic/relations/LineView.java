@@ -4,6 +4,7 @@ import graphic.ColoredComponent;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.textbox.TextBox;
+import graphic.textbox.TextBoxLabel;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -86,7 +87,7 @@ public abstract class LineView extends GraphicComponent
 	// will be adjusted.
 	public final int SMOOTH_RATIO = 15;
 
-	protected LinkedList<TextBox> tbRoles = new LinkedList<>();
+	protected LinkedList<TextBoxLabel> tbRoles = new LinkedList<>();
 
 	public LineView (
 				final GraphicView parent,
@@ -480,6 +481,8 @@ public abstract class LineView extends GraphicComponent
 
 			grip1.notifyObservers();
 			grip2.notifyObservers();
+
+			showGrips(true);
 		}
 	}
 
@@ -492,8 +495,7 @@ public abstract class LineView extends GraphicComponent
 	}
 
 	@Override
-	public void gMouseExited(MouseEvent e)
-	{
+	public void gMouseExited(MouseEvent e) {
 		if (!isSelected())
 			showGrips(false);
 
@@ -501,13 +503,8 @@ public abstract class LineView extends GraphicComponent
 	}
 
 	@Override
-	public void gMousePressed(MouseEvent e)
-	{
+	public void gMousePressed(MouseEvent e) {
 		super.gMousePressed(e);
-		
-		// remove all selected components
-		parent.unselectAll();
-		setSelected(true);
 
 		// save mouse location and current line segment clicked by user.
 		saveMouseLocation(e);
@@ -529,19 +526,15 @@ public abstract class LineView extends GraphicComponent
 	}
 
 	@Override
-	public void gMouseReleased(MouseEvent e)
-	{
+	public void gMouseReleased(MouseEvent e) {
 		super.gMouseReleased(e);
-
 		smoothLines();
-		
-		if (e.getButton() == MouseEvent.BUTTON1)
-		{
+		if (e.getButton() == MouseEvent.BUTTON1) {
 			BufferBounds bb2 = new BufferBounds(points.get(saveGrip)),
-					     bb3 = new BufferBounds(points.get(saveGrip+1));
+					         bb3 = new BufferBounds(points.get(saveGrip+1));
 
-			if (!(bb[0].getBounds().equals(bb2.getBounds()) && bb[1].getBounds().equals(bb3.getBounds())))
-			{
+			if (!(bb[0].getBounds().equals(bb2.getBounds()) && 
+			      bb[1].getBounds().equals(bb3.getBounds()))) {
 				boolean isRecord = Change.isRecord();
 				Change.record();
 				
@@ -558,6 +551,18 @@ public abstract class LineView extends GraphicComponent
 
 		maybeShowPopup(e, popupMenu);
 		acceptGripCreation = false;
+		
+		if (!isSelected())
+		  showGrips(false);
+	}
+	
+	@Override
+	public void gMouseClicked(MouseEvent e) {
+	  super.gMouseClicked(e);
+    
+    // remove all selected components
+    parent.unselectAll();
+    setSelected(true);
 	}
 
 	/**
@@ -787,8 +792,7 @@ public abstract class LineView extends GraphicComponent
 	 * @param sourceGrip
 	 *            the grip to begin to search useless grip
 	 */
-	public void searchUselessAnchor(RelationGrip sourceGrip)
-	{
+	public void searchUselessAnchor(RelationGrip sourceGrip) {
 		int index = points.indexOf(sourceGrip);
 
 		if (index == -1)
@@ -803,22 +807,20 @@ public abstract class LineView extends GraphicComponent
 		for (int i = index; i < points.size() - 1;)
 			if (!removeUselessAnchor(points.get(i)))
 				i++;
-
 	}
 
 	@Override
-	public void setBounds(Rectangle bounds)
-	{
+	public void setBounds(Rectangle bounds) {
 		// Can't change bound from here. LineView bounds depends on grips
 	}
 
 	@Override
-	public void setSelected(boolean selected)
-	{
+	public void setSelected(boolean selected) {
 		super.setSelected(selected);
-
 		showGrips(selected);
-
+		
+		for (TextBoxLabel textbox : tbRoles)
+		  textbox.setSelected(selected);
 	}
 
 	/**
@@ -827,8 +829,7 @@ public abstract class LineView extends GraphicComponent
 	 * @param stroke
 	 *            the new stroke
 	 */
-	public void setStroke(BasicStroke stroke)
-	{
+	public void setStroke(BasicStroke stroke) {
 		lineStroke = stroke;
 	}
 
