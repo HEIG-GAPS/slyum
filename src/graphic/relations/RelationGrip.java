@@ -158,14 +158,12 @@ public class RelationGrip extends SquareGrip implements ActionListener
 	}
 	
 	@Override
-	public void delete()
-	{
+	public void delete() {
 		// save index
 		index = relation.getPoints().indexOf(this);
-		
 		super.delete();
-		
 		relation.removeGrip(this);
+		notifyObservers();
 	}
 	
 	@Override
@@ -181,7 +179,8 @@ public class RelationGrip extends SquareGrip implements ActionListener
 	 * Remove the grip from the LineView.
 	 * 
 	 * @return true if the grip has been removed; false otherwise
-	 *//*
+	 */
+	/*
 	public boolean remove()
 	{
 		if (relation.removeGrip(this))
@@ -200,24 +199,32 @@ public class RelationGrip extends SquareGrip implements ActionListener
 	 * @param anchor
 	 *            the new anchor for this grip.
 	 */
-	public void setAnchor(Point anchor)
-	{
+	public void setAnchor(Point anchor) {
 		if (anchor == null)
 			return;
 
-		final Rectangle repaintBounds = Utility.growRectangle(relation.getBounds(), GraphicView.getGridSize() + 20);
+		Rectangle repaintBounds = Utility.growRectangle(
+		                              relation.getBounds(), 
+		                              GraphicView.getGridSize() + 20);
 
-		this.anchor = new Point(anchor);
+		this.anchor = ajustOnGrid(anchor);
 		relation.gripMoved(repaintBounds);
 
 		setChanged();
 	}
+	
+	public static int adjust(int value) {
+    // Use the integer cast for adjusting value.
+    return value / GraphicView.getGridSize() * GraphicView.getGridSize();
+	}
+	
+  protected Point ajustOnGrid(Point pt) {
+    return new Point(adjust(pt.x), adjust(pt.y));
+  }
 
 	@Override
-	public void setBounds(Rectangle bounds)
-	{
+	public void setBounds(Rectangle bounds){
 		setAnchor(new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2));
-		
 		notifyObservers();
 	}
 }

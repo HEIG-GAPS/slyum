@@ -4,6 +4,7 @@ import graphic.ColoredComponent;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.MovableComponent;
+import graphic.relations.RelationGrip;
 import graphic.textbox.TextBox;
 import graphic.textbox.TextBoxAttribute;
 import graphic.textbox.TextBoxEntityName;
@@ -137,63 +138,82 @@ public abstract class EntityView
      *            the next point
      * @return the intersection point; or null if no points found
      */
-    public static Point searchNearestEgde(Rectangle bounds, Point first,
-            Point next) {
+    public static Point searchNearestEgde(
+        Rectangle bounds, Point first, Point next) {
+      
         // One offset needed to avoid intersection with the wrong line.
-        if (bounds.x + bounds.width < first.x)
+        if (bounds.x + bounds.width <= first.x)
             first.x = bounds.x + bounds.width - 1;
-        else if (bounds.x > first.x)
+        else if (bounds.x >= first.x)
             first.x = bounds.x + 1;
 
-        if (bounds.y + bounds.height < first.y)
+        if (bounds.y + bounds.height <= first.y)
             first.y = bounds.height + bounds.y - 1;
-        else if (bounds.y > first.y)
+        else if (bounds.y >= first.y)
             first.y = bounds.y + 1;
 
-        final Line2D relationLine = new Line2D.Float(first.x, first.y, next.x,
-                next.y);
-        final Line2D lineTop = new Line2D.Float(bounds.x, bounds.y, bounds.x
-                + bounds.width, bounds.y);
-        final Line2D lineRight = new Line2D.Float(bounds.x + bounds.width,
+        Line2D relationLine =  
+            new Line2D.Float(first.x, first.y, next.x, next.y);
+        Line2D lineTop = 
+            new Line2D.Float(bounds.x, bounds.y, bounds.x + bounds.width,
+                             bounds.y);
+        Line2D lineRight = 
+            new Line2D.Float(bounds.x + bounds.width,
                 bounds.y, bounds.x + bounds.width, bounds.y + bounds.height);
-        final Line2D lineBottom = new Line2D.Float(bounds.x + bounds.width,
-                bounds.y + bounds.height, bounds.x, bounds.y + bounds.height);
-        final Line2D lineLeft = new Line2D.Float(bounds.x, bounds.y
-                + bounds.height, bounds.x, bounds.y);
+        Line2D lineBottom = 
+            new Line2D.Float(bounds.x + bounds.width, bounds.y + bounds.height,
+                             bounds.x, bounds.y + bounds.height);
+        Line2D lineLeft = 
+            new Line2D.Float(bounds.x, bounds.y + bounds.height,
+                             bounds.x, bounds.y);
 
-        final Point2D ptIntersectTop = ptIntersectsLines(relationLine, lineTop);
-        final Point2D ptIntersectRight = ptIntersectsLines(relationLine,
-                lineRight);
-        final Point2D ptIntersectBottom = ptIntersectsLines(relationLine,
-                lineBottom);
-        final Point2D ptIntersectLeft = ptIntersectsLines(relationLine,
-                lineLeft);
+        Point2D ptIntersectTop =
+            ptIntersectsLines(relationLine, lineTop);
+        Point2D ptIntersectRight =
+            ptIntersectsLines(relationLine, lineRight);
+        Point2D ptIntersectBottom =
+            ptIntersectsLines(relationLine, lineBottom);
+        Point2D ptIntersectLeft =
+            ptIntersectsLines(relationLine, lineLeft);
 
         // line is to infinite, we must verify that the point find interst the
         // correct edge and the relation.
-        final int distTop = (int) lineTop.ptSegDist(ptIntersectTop)
-                + (int) relationLine.ptSegDist(ptIntersectTop);
-        final int distRight = (int) lineRight.ptSegDist(ptIntersectRight)
-                + (int) relationLine.ptSegDist(ptIntersectRight);
-        final int distBottom = (int) lineBottom.ptSegDist(ptIntersectBottom)
-                + (int) relationLine.ptSegDist(ptIntersectBottom);
-        final int distLeft = (int) lineLeft.ptSegDist(ptIntersectLeft)
-                + (int) relationLine.ptSegDist(ptIntersectLeft);
+        int distTop = 
+            (int) lineTop.ptSegDist(ptIntersectTop) + 
+            (int) relationLine.ptSegDist(ptIntersectTop);
+        int distRight =
+            (int) lineRight.ptSegDist(ptIntersectRight) +
+            (int) relationLine.ptSegDist(ptIntersectRight);
+        int distBottom =
+            (int) lineBottom.ptSegDist(ptIntersectBottom) +
+            (int) relationLine.ptSegDist(ptIntersectBottom);
+        int distLeft = 
+            (int) lineLeft.ptSegDist(ptIntersectLeft) + 
+            (int) relationLine.ptSegDist(ptIntersectLeft);
 
-        if (ptIntersectTop != null && distTop == 0)
-            return new Point((int) ptIntersectTop.getX(),
-                    (int) ptIntersectTop.getY());
-        else if (ptIntersectRight != null && distRight == 0)
-            return new Point((int) ptIntersectRight.getX(),
-                    (int) ptIntersectRight.getY());
-        else if (ptIntersectBottom != null && distBottom == 0)
-            return new Point((int) ptIntersectBottom.getX(),
-                    (int) ptIntersectBottom.getY());
-        else if (ptIntersectLeft != null && distLeft == 0)
-            return new Point((int) ptIntersectLeft.getX(),
-                    (int) ptIntersectLeft.getY());
-        else
+        if (ptIntersectTop != null && distTop == 0) {
+            return new Point(
+                RelationGrip.adjust((int) ptIntersectTop.getX()),
+                (int) ptIntersectTop.getY());
+        
+        } else if (ptIntersectRight != null && distRight == 0) {
+            return new Point(
+                (int) ptIntersectRight.getX(),
+                RelationGrip.adjust((int) ptIntersectRight.getY()));
+        
+        } else if (ptIntersectBottom != null && distBottom == 0) {
+            return new Point(
+                RelationGrip.adjust((int) ptIntersectBottom.getX()),
+                (int) ptIntersectBottom.getY());
+        
+        } else if (ptIntersectLeft != null && distLeft == 0) {
+            return new Point(
+                (int) ptIntersectLeft.getX(),
+                RelationGrip.adjust((int) ptIntersectLeft.getY()));
+        
+        } else {
             return null; // no point found!
+        }
     }
 
     /**

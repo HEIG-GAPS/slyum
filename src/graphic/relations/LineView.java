@@ -79,6 +79,8 @@ public abstract class LineView extends GraphicComponent
 	private boolean acceptGripCreation = false;
 	
 	private BufferBounds[] bb = new BufferBounds[2];
+	
+	private Point anchor1MousePressed, anchor2MousePressed;
 
 	// More ratio is bigger, more the line near horizontal / vertical degree
 	// will be adjusted.
@@ -458,31 +460,27 @@ public abstract class LineView extends GraphicComponent
 	}
 
 	@Override
-	public void gMouseDragged(MouseEvent e)
-	{
-		final Point mouse = e.getPoint();
+	public void gMouseDragged(MouseEvent e) {
+		Point mouse = e.getPoint();
 
-		if (acceptGripCreation)
-		{
+		if (acceptGripCreation) {
 			createNewGrip(mousePressed);
 			acceptGripCreation = false;
 		} else {
-			final Point movement = new Point(mouse.x - mousePressed.x, mouse.y - mousePressed.y);
+			Point movement = new Point(mouse.x - mousePressed.x, 
+			                           mouse.y - mousePressed.y);
 
-			final RelationGrip grip1 = points.get(saveGrip);
-			final RelationGrip grip2 = points.get(saveGrip + 1);
-
-			final Point anchor1 = grip1.getAnchor();
-			final Point anchor2 = grip2.getAnchor();
+			RelationGrip grip1 = points.get(saveGrip);
+			RelationGrip grip2 = points.get(saveGrip + 1);
 		
-			grip1.setAnchor(new Point(anchor1.x + movement.x, anchor1.y + movement.y));
-			grip2.setAnchor(new Point(anchor2.x + movement.x, anchor2.y + movement.y));
+			grip1.setAnchor(new Point(anchor1MousePressed.x + movement.x,
+			                          anchor1MousePressed.y + movement.y));
+			grip2.setAnchor(new Point(anchor2MousePressed.x + movement.x,
+			                          anchor2MousePressed.y + movement.y));
 
 			grip1.notifyObservers();
 			grip2.notifyObservers();
 		}
-
-		mousePressed = mouse;
 	}
 
 	@Override
@@ -514,6 +512,10 @@ public abstract class LineView extends GraphicComponent
 		// save mouse location and current line segment clicked by user.
 		saveMouseLocation(e);
 		saveGrip = getGripBeforeLocation(e.getPoint());
+
+		// save anchor location
+    anchor1MousePressed = points.get(saveGrip).getAnchor();
+    anchor2MousePressed = points.get(saveGrip + 1).getAnchor();
 
 		if (GraphicView.isAddGripMode())
 			acceptGripCreation = true;
