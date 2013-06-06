@@ -9,6 +9,7 @@ import graphic.relations.BinaryView;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import swing.SPanelDiagramComponent;
 import utility.SMessageDialog;
 import change.Change;
 import classDiagram.components.AssociationClass;
@@ -41,6 +42,9 @@ public class AssociationClassFactory extends RelationFactory
 	public AssociationClassFactory(GraphicView parent)
 	{
 		super(parent);
+    
+    GraphicView.setButtonFactory(
+        SPanelDiagramComponent.getInstance().getBtnClassAssociation());
 	}
 
 	@Override

@@ -33,7 +33,6 @@ public abstract class EntityFactory extends ComponentFactory
 	public EntityFactory(GraphicView parent)
 	{
 		super(parent);
-
 		bounds = new Rectangle(0, 0, DEFAULT_SIZE.width, DEFAULT_SIZE.height);
 	}
 

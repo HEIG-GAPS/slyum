@@ -8,6 +8,7 @@ import graphic.relations.InheritanceView;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import swing.SPanelDiagramComponent;
 import swing.Slyum;
 import utility.SMessageDialog;
 import classDiagram.relationships.Inheritance;
@@ -37,6 +38,9 @@ public class InheritanceFactory extends RelationFactory
 	public InheritanceFactory(GraphicView parent)
 	{
 		super(parent);
+    
+    GraphicView.setButtonFactory(
+        SPanelDiagramComponent.getInstance().getBtnGeneralize());
 	}
 
 	@Override

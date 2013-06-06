@@ -56,6 +56,7 @@ import javax.swing.SwingUtilities;
 import swing.IListenerComponentSelectionChanged;
 import swing.PanelClassDiagram;
 import swing.PropertyLoader;
+import swing.SButton;
 import swing.SColorAssigner;
 import swing.SPanelDiagramComponent;
 import swing.SPanelElement;
@@ -128,6 +129,10 @@ public class GraphicView extends GraphicComponent implements
       if (component != null)
         component.gMouseEntered(e);
     }
+  }
+  
+  public static void setButtonFactory(SButton btn) {
+    SPanelDiagramComponent.getInstance().setButtonModeStyle(btn);
   }
   
   public static boolean isAddGripMode() {
@@ -1072,11 +1077,6 @@ public class GraphicView extends GraphicComponent implements
    * Remove the current factory.
    */
   public void deleteCurrentFactory() {
-    _deleteCurrentFactory();
-    SPanelDiagramComponent.getInstance().applyMode();
-  }
-  
-  public void _deleteCurrentFactory() {
     if (currentFactory != null) {
       currentFactory.deleteFactory();
       currentFactory = null; 
@@ -1547,13 +1547,7 @@ public class GraphicView extends GraphicComponent implements
   public void initNewComponent(CreateComponent factory) {
     if (factory == null)
       throw new IllegalArgumentException("factory is null");
-
-    // If current factory exists, delete it!
-    if (currentFactory != null)
-      deleteCurrentFactory();
-
     currentFactory = factory;
-
     scene.setCursor(factory.getCursor());
   }
 
@@ -1591,7 +1585,7 @@ public class GraphicView extends GraphicComponent implements
     if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
       unselectAll();
     }
-    else if (currentFactory == null && !shiftDown && e.isShiftDown()) {
+    else if (!e.isControlDown() && currentFactory == null && !shiftDown && e.isShiftDown()) {
       SPanelDiagramComponent panel = SPanelDiagramComponent.getInstance();
       shiftDown = true;
       // Inversion du mode.

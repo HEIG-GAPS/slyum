@@ -9,6 +9,8 @@ import graphic.relations.CompositionView;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import swing.SPanelDiagramComponent;
+
 import classDiagram.relationships.Composition;
 
 /**
@@ -34,6 +36,9 @@ public class CompositionFactory extends RelationFactory
 	public CompositionFactory(GraphicView parent)
 	{
 		super(parent);
+    
+    GraphicView.setButtonFactory(
+        SPanelDiagramComponent.getInstance().getBtnComposition());
 	}
 
 	@Override

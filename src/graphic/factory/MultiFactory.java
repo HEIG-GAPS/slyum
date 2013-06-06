@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import javax.swing.JButton;
 
 import swing.FlatButton;
+import swing.SPanelDiagramComponent;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 import utility.Utility;
@@ -138,6 +139,9 @@ public class MultiFactory extends CreateComponent
 		parent.getScene().addKeyListener(keyListener);
 		parent.getScene().requestFocusInWindow();
     locateButtons();
+    
+    GraphicView.setButtonFactory(
+        SPanelDiagramComponent.getInstance().getBtnMulti());
 	}
 	
 	private void locateButtons() {

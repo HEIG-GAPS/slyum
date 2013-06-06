@@ -196,15 +196,7 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
 	}
 	
 	private SButton createSButton(ImageIcon ii, String a, Color c, String tt) {
-	  final SButton btn = new SToolBarButton(ii, a, c, tt, this);
-		btn.addMouseListener(new MouseAdapter() {
-		  @Override
-		  public void mouseClicked(MouseEvent e) {
-		    super.mouseReleased(e);
-		    setButtonModeStyle(btn);
-		  }
-    });
-		return btn;
+		return  new SToolBarButton(ii, a, c, tt, this);
 	}
 	
 	public Mode getMode() { return currentMode; }
@@ -215,7 +207,7 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
 	      PropertyLoader.MODE_CURSOR, currentMode.toString());
 	  PropertyLoader.getInstance().push();
 	  PanelClassDiagram.getInstance()
-	      .getCurrentGraphicView()._deleteCurrentFactory();
+	      .getCurrentGraphicView().deleteCurrentFactory();
 	  setButtonModeStyle(newMode.getBtnMode());
 	}
   

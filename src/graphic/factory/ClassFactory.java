@@ -7,6 +7,8 @@ import graphic.entity.EntityView;
 
 import java.awt.Rectangle;
 
+import swing.SPanelDiagramComponent;
+
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Visibility;
 
@@ -34,6 +36,9 @@ public class ClassFactory extends EntityFactory
 	public ClassFactory(GraphicView parent)
 	{
 		super(parent);
+    
+    GraphicView.setButtonFactory(
+        SPanelDiagramComponent.getInstance().getBtnClass());
 	}
 
 	@Override
