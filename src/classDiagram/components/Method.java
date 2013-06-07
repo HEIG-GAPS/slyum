@@ -453,7 +453,7 @@ public class Method extends Observable
 		String xml = tab + 
 		    "<method " + 
 		      "name=\"" + name + 
-		      "\" view=\"" + textbox.getConcretParametersViewStyle().toString() +
+		      "\" view=\"" + textbox.getConcretParametersViewStyle().name() +
 		      "\" returnType=\"" + returnType.toXML(0) + 
 		      "\" visibility=\"" + visibility + 
 		      "\" isStatic=\"" + _isStatic + 
