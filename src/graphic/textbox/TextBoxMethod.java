@@ -38,7 +38,12 @@ public class TextBoxMethod extends TextBox implements Observer {
 	 * @version 1.0 - 25.07.2011
 	 */
 	public enum ParametersViewStyle { 
-	  DEFAULT, NAME, NOTHING , TYPE, TYPE_AND_NAME
+	  DEFAULT, NAME, NOTHING , TYPE, TYPE_AND_NAME;
+	  
+	  @Override
+	  public String toString() {
+	    return super.toString().charAt(0) + super.toString().substring(1).toLowerCase().replace('_', ' ');
+	  };
 	};
 
 	/**
@@ -79,7 +84,7 @@ public class TextBoxMethod extends TextBox implements Observer {
 		return signature + ") : " + method.getReturnType();
 	}
 
-	private ParametersViewStyle currentStyle = ParametersViewStyle.TYPE_AND_NAME;
+	private ParametersViewStyle currentStyle;
 
 	private final Method method;
 
@@ -93,10 +98,11 @@ public class TextBoxMethod extends TextBox implements Observer {
 	 */
 	public TextBoxMethod(GraphicView parent, Method method)
 	{
-		super(parent, getStringFromMethod(method, ParametersViewStyle.TYPE_AND_NAME));
+		super(parent, getStringFromMethod(method, GraphicView.getDefaultViewMethods()));
 
 		this.method = method;
 		method.addObserver(this);
+		currentStyle = ParametersViewStyle.DEFAULT;
 	}
 
 	@Override
@@ -127,13 +133,20 @@ public class TextBoxMethod extends TextBox implements Observer {
 	 */
 	public ParametersViewStyle getParametersViewStyle()
 	{
+	  if (currentStyle == ParametersViewStyle.DEFAULT)
+	    return GraphicView.getDefaultViewMethods();
+	  
 		return currentStyle;
+	}
+	
+	public ParametersViewStyle getConcretParametersViewStyle() {
+    return currentStyle;
 	}
 
 	@Override
 	public String getText()
 	{
-		return getStringFromMethod(method, currentStyle);
+		return getStringFromMethod(method, getParametersViewStyle());
 	}
 
 	@Override
@@ -185,7 +198,7 @@ public class TextBoxMethod extends TextBox implements Observer {
 	public void setText(String text)
 	{
 		method.setText(text);
-		super.setText(getStringFromMethod(method, currentStyle));
+		super.setText(getStringFromMethod(method, getParametersViewStyle()));
 	}
 
 	@Override
@@ -211,7 +224,7 @@ public class TextBoxMethod extends TextBox implements Observer {
 			}
 		else
 		{
-			final String text = getStringFromMethod(method, currentStyle);
+			String text = getStringFromMethod(method, getParametersViewStyle());
 			super.setText(text);
 		}
 

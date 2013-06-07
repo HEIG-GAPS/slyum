@@ -4,6 +4,7 @@ import graphic.ColoredComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.textbox.TextBox;
+import graphic.textbox.TextBoxMethod.ParametersViewStyle;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -22,9 +23,11 @@ import java.util.Properties;
 import javax.swing.AbstractAction;
 import javax.swing.AbstractListModel;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -58,6 +61,7 @@ public class SProperties extends JDialog {
   private JLabel lblPreviewFont = new JLabel();
   private JList<String> listName;
   private JList<Integer> listSize;
+  private JComboBox<ParametersViewStyle> listViewMethods;
   private JRadioButton rdbtnAutomaticcolor;
   private JRadioButton rdbtnLow;
   private JRadioButton rdbtnMax;
@@ -690,6 +694,27 @@ public class SProperties extends JDialog {
             gbc_chckbxAutoAdjustInheritance.gridy = 2;
             panel.add(chckbxAutoAdjustInheritance, gbc_chckbxAutoAdjustInheritance);
           }
+          {
+            JPanel panelViewMethods = new JPanel();
+            //panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            
+            ParametersViewStyle[] values = {
+                ParametersViewStyle.TYPE_AND_NAME,
+                ParametersViewStyle.TYPE,
+                ParametersViewStyle.NAME,
+                ParametersViewStyle.NOTHING };
+            listViewMethods = new JComboBox<>(new DefaultComboBoxModel<>(values));
+            
+            panelViewMethods.add(new JLabel("Methods view type:"));
+            panelViewMethods.add(listViewMethods);
+            
+            GridBagConstraints gbc_panelViewMethods = new GridBagConstraints();
+            gbc_panelViewMethods.insets = new Insets(0, 5, 0, 0);
+            gbc_panelViewMethods.anchor = GridBagConstraints.WEST;
+            gbc_panelViewMethods.gridx = 0;
+            gbc_panelViewMethods.gridy = 3;
+            panel.add(panelViewMethods, gbc_panelViewMethods);
+          }
           tabbedPane.setDisabledIconAt(2, null);
         }
       }
@@ -739,6 +764,8 @@ public class SProperties extends JDialog {
                   String.valueOf(chckbxShowGrid.isSelected()));
               properties.put(PropertyLoader.GRID_ENABLE,
                   String.valueOf(chckbxEnableGrid.isSelected()));
+              properties.put(PropertyLoader.VIEW_METHODS,
+                  String.valueOf(listViewMethods.getSelectedItem()).toUpperCase().replace(' ', '_'));
 
               String quality = "MAX";
 
@@ -856,6 +883,7 @@ public class SProperties extends JDialog {
     chckbxDisableCrossPopup.setSelected(Slyum.isShowCrossMenu());
     chckbxAutoAdjustInheritance.setSelected(Slyum.isAutoAdjustInheritance());
     chckbxEnableGrid.setSelected(GraphicView.isGridEnable());
+    listViewMethods.setSelectedItem(GraphicView.getDefaultViewMethods());
 
     if (GraphicView.isAutomatiqueGridColor())
       rdbtnAutomaticcolor.setSelected(true);
