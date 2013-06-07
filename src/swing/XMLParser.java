@@ -77,7 +77,8 @@ public class XMLParser extends DefaultHandler
 		int color = 0;
 		int componentId = -1;
 		boolean displayAttributes = true,
-		        displayMethods = true;
+		        displayMethods = true,
+		        displayDefault = true;
 		Rectangle geometry = new Rectangle();
 	}
 
@@ -747,6 +748,7 @@ public class XMLParser extends DefaultHandler
 					  EntityView entityView = (EntityView)g;
 					  entityView.setDisplayAttributes(cv.displayAttributes);
 					  entityView.setDisplayMethods(cv.displayMethods);
+					  entityView.setDisplayDefault(cv.displayDefault);
 					}
 				}
 			}
@@ -1009,8 +1011,11 @@ public class XMLParser extends DefaultHandler
 				if (attributes.getValue("displayAttributes") != null)
 				  currentComponentView.displayAttributes = Boolean.parseBoolean(attributes.getValue("displayAttributes"));
 				
-				if (attributes.getValue("displayMethods") != null)
-				  currentComponentView.displayMethods = Boolean.parseBoolean(attributes.getValue("displayMethods"));
+        if (attributes.getValue("displayMethods") != null)
+          currentComponentView.displayMethods = Boolean.parseBoolean(attributes.getValue("displayMethods"));
+				
+        if (attributes.getValue("displayDefault") != null)
+          currentComponentView.displayDefault = Boolean.parseBoolean(attributes.getValue("displayDefault"));
 			} catch (final Exception e)
 			{
 				throw new SAXException(e);
