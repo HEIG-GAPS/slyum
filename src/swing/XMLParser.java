@@ -890,7 +890,9 @@ public class XMLParser extends DefaultHandler
 				currentMethod.visibility = Visibility.valueOf(attributes.getValue("visibility"));
 				currentMethod.isStatic = Boolean.parseBoolean(attributes.getValue("isStatic"));
 				currentMethod.isAbstract = Boolean.parseBoolean(attributes.getValue("isAbstract"));
-				currentMethod.view = ParametersViewStyle.valueOf(attributes.getValue("view"));
+				
+				if (attributes.getValue("view") != null)
+				  currentMethod.view = ParametersViewStyle.valueOf(attributes.getValue("view"));
 
 				currentEntity.method.add(currentMethod);
 			} catch (final Exception e)
@@ -1003,8 +1005,12 @@ public class XMLParser extends DefaultHandler
 				currentComponentView = new ComponentView();
 				currentComponentView.componentId = Integer.parseInt(attributes.getValue("componentID"));
 				currentComponentView.color = Integer.parseInt(attributes.getValue("color"));
-				currentComponentView.displayAttributes = Boolean.parseBoolean(attributes.getValue("displayAttributes"));
-				currentComponentView.displayMethods = Boolean.parseBoolean(attributes.getValue("displayMethods"));
+				
+				if (attributes.getValue("displayAttributes") != null)
+				  currentComponentView.displayAttributes = Boolean.parseBoolean(attributes.getValue("displayAttributes"));
+				
+				if (attributes.getValue("displayMethods") != null)
+				  currentComponentView.displayMethods = Boolean.parseBoolean(attributes.getValue("displayMethods"));
 			} catch (final Exception e)
 			{
 				throw new SAXException(e);

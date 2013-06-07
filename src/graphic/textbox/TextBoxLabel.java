@@ -185,7 +185,7 @@ public abstract class TextBoxLabel extends TextBox implements Observer {
 	public Rectangle getBounds() {
 	  Rectangle bounds = super.getBounds();
 	  if (isSelected() && bounds.width == 0)
-	    bounds.width = 50;
+	    bounds.width = 30;
 	  return bounds;
 	}
 }
