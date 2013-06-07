@@ -247,9 +247,9 @@ public abstract class EntityView
     private JMenuItem menuItemDelete, menuItemMoveUp, menuItemMoveDown,
                       menuItemStatic, menuItemAbstract, menuItemViewAll,
                       menuItemViewAttributes, menuItemViewMethods,
-                      menuItemViewNothing, menuItemMethodsAll,
-                      menuItemMethodsType, menuItemMethodsName,
-                      menuItemMethodsNothing;
+                      menuItemViewNothing, menuItemMethodsDefault,
+                      menuItemMethodsAll, menuItemMethodsType, 
+                      menuItemMethodsName, menuItemMethodsNothing;
     private ButtonGroup groupView, groupViewMethods;
 
     private Cursor saveCursor = Cursor.getDefaultCursor();
@@ -339,17 +339,20 @@ public abstract class EntityView
         subMenu.setIcon(
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "eye.png"));
         groupViewMethods = new ButtonGroup();
+        
+        menuItemMethodsDefault = makeRadioButtonMenuItem(
+            "Default", "ViewMethodsDefault", groupViewMethods);
+        menuItemMethodsDefault.setSelected(true);
+        subMenu.add(menuItemMethodsDefault);
 
-        menuItemMethodsAll = makeRadioButtonMenuItem(
-            "Type and Name", "ViewTypeAndName", groupViewMethods);
-        menuItemMethodsAll.setSelected(true);
-        subMenu.add(menuItemMethodsAll);
+        subMenu.add(menuItemMethodsAll = makeRadioButtonMenuItem(
+            "Type and Name", "ViewTypeAndName", groupViewMethods), 1);
 
         subMenu.add(menuItemMethodsType = 
-            makeRadioButtonMenuItem("Type", "ViewType", groupViewMethods), 1);
+            makeRadioButtonMenuItem("Type", "ViewType", groupViewMethods), 2);
 
         subMenu.add(menuItemMethodsName = 
-            makeRadioButtonMenuItem("Name", "ViewName", groupViewMethods), 2);
+            makeRadioButtonMenuItem("Name", "ViewName", groupViewMethods), 3);
 
         subMenu.add(menuItemMethodsNothing = 
             makeRadioButtonMenuItem(
@@ -406,7 +409,9 @@ public abstract class EntityView
         } else if ("ViewNothing".equals(e.getActionCommand())) {
             parent.showAttributsForSelectedEntity(false);
             parent.showMethodsForSelectedEntity(false);
-        } else if ("ViewTypeAndName".equals(e.getActionCommand()))
+        } else if ("ViewMethodsDefault".equals(e.getActionCommand()))
+          methodViewChangeClicked(ParametersViewStyle.DEFAULT);
+        else if ("ViewTypeAndName".equals(e.getActionCommand()))
             methodViewChangeClicked(ParametersViewStyle.TYPE_AND_NAME);
         else if ("ViewType".equals(e.getActionCommand()))
             methodViewChangeClicked(ParametersViewStyle.TYPE);
@@ -1212,20 +1217,25 @@ public abstract class EntityView
         for (int i = 0; i < textbox.size() - 1; i++) {
           TextBoxMethod current = textbox.get(i),
                         next = textbox.get(i+1);
-          if (!current.getParametersViewStyle().equals(next.getParametersViewStyle())) {
+          if (!current.getConcretParametersViewStyle().equals(
+               next.getConcretParametersViewStyle())) {
             groupViewMethods.clearSelection();
             return;
           }
         }
         
         if (textbox.size() > 0)
-          newView = textbox.get(0).getParametersViewStyle();
+          newView = textbox.get(0).getConcretParametersViewStyle();
       } else if (pressedTextBox instanceof TextBoxMethod) {
-        newView = ((TextBoxMethod)pressedTextBox).getParametersViewStyle();
+        newView = 
+            ((TextBoxMethod)pressedTextBox).getConcretParametersViewStyle();
       }
       
       if (newView != null) {
         switch (newView) {
+          case DEFAULT:
+            itemToSelect = menuItemMethodsDefault;
+            break;
           case NAME:
             itemToSelect = menuItemMethodsName;
             break;
@@ -1242,7 +1252,6 @@ public abstract class EntityView
             itemToSelect = menuItemMethodsAll;
             break;
   
-          case DEFAULT:
           default:
             itemToSelect = menuItemMethodsAll;
             break;

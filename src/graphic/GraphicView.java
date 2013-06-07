@@ -16,6 +16,7 @@ import graphic.relations.LineCommentary;
 import graphic.relations.LineView;
 import graphic.relations.MultiView;
 import graphic.textbox.TextBoxCommentary;
+import graphic.textbox.TextBoxMethod.ParametersViewStyle;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -129,6 +130,17 @@ public class GraphicView extends GraphicComponent implements
       if (component != null)
         component.gMouseEntered(e);
     }
+  }
+  
+  public static ParametersViewStyle getDefaultViewMethods() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.VIEW_METHODS);
+    ParametersViewStyle view = ParametersViewStyle.TYPE_AND_NAME;
+
+    if (prop != null)
+      view = ParametersViewStyle.valueOf(prop);
+
+    return view;
   }
   
   public static void setButtonFactory(SButton btn) {
