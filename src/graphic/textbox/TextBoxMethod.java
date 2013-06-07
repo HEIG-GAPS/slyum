@@ -29,17 +29,16 @@ import classDiagram.components.Variable;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class TextBoxMethod extends TextBox implements Observer
-{
+public class TextBoxMethod extends TextBox implements Observer {
+  
 	/**
 	 * Enumeration class for the mode of display parameters in methods.
 	 * 
 	 * @author David Miserez
 	 * @version 1.0 - 25.07.2011
 	 */
-	public enum ParametersViewStyle
-	{
-		NAME, NOTHING, TYPE, TYPE_AND_NAME
+	public enum ParametersViewStyle { 
+	  DEFAULT, NAME, NOTHING , TYPE, TYPE_AND_NAME
 	};
 
 	/**

@@ -2,6 +2,7 @@ package swing;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
+import graphic.entity.EntityView;
 import graphic.relations.LineCommentary;
 import graphic.relations.LineView;
 import graphic.relations.MultiLineView;
@@ -9,6 +10,8 @@ import graphic.relations.RelationGrip;
 import graphic.textbox.TextBox;
 import graphic.textbox.TextBoxCommentary;
 import graphic.textbox.TextBoxLabel;
+import graphic.textbox.TextBoxMethod;
+import graphic.textbox.TextBoxMethod.ParametersViewStyle;
 import graphic.textbox.TextBoxRole;
 
 import java.awt.Point;
@@ -73,6 +76,8 @@ public class XMLParser extends DefaultHandler
 	{
 		int color = 0;
 		int componentId = -1;
+		boolean displayAttributes = true,
+		        displayMethods = true;
 		Rectangle geometry = new Rectangle();
 	}
 
@@ -147,6 +152,7 @@ public class XMLParser extends DefaultHandler
 	{
 		boolean isAbstract = false;
 		boolean isStatic = false;
+		ParametersViewStyle view = ParametersViewStyle.TYPE_AND_NAME;
 		String name = null;
 		Type returnType = null;
 		LinkedList<Variable> variable = new LinkedList<>();
@@ -276,7 +282,7 @@ public class XMLParser extends DefaultHandler
 	private void createEntity(Entity e) throws SyntaxeNameException
 	{		
 		classDiagram.components.Entity ce = null;
-		
+		EntityView newEntity;
 		e.name = TypeName.verifyAndAskNewName(e.name);
 
 		switch (e.entityType)
@@ -303,11 +309,11 @@ public class XMLParser extends DefaultHandler
 				final Binary b = (Binary) classDiagram.searchComponentById(e.associationClassID);
 				if (b == null) // création d'une classe normale.
 				{
-	                ce = new ClassEntity(e.name, e.visibility, e.id);
-	                classDiagram.addClassEntity((ClassEntity) ce);
-	                ce.setAbstract(e.isAbstract);
-	                SMessageDialog.showInformationMessage("Association class " + ce.getName() + " has been converted into a normal class.\nIts association no longer exists during importation.");
-	                break;
+          ce = new ClassEntity(e.name, e.visibility, e.id);
+          classDiagram.addClassEntity((ClassEntity) ce);
+          ce.setAbstract(e.isAbstract);
+          SMessageDialog.showInformationMessage("Association class " + ce.getName() + " has been converted into a normal class.\nIts association no longer exists during importation.");
+          break;
 				}
 				
 				try
@@ -321,6 +327,9 @@ public class XMLParser extends DefaultHandler
 
 				break;
 		}
+		
+		newEntity = (EntityView)PanelClassDiagram
+		    .getInstance().getCurrentGraphicView().searchAssociedComponent(ce);
 
 		for (final Variable v : e.attribute) {			
       final Attribute a = new Attribute(VariableName.verifyAndAskNewName(v.name), v.type);
@@ -345,15 +354,20 @@ public class XMLParser extends DefaultHandler
 			
 			ce.addMethod(m);
 			ce.notifyObservers(UpdateMessage.ADD_METHOD_NO_EDIT);
+			
+			// Set le type de vue
+			((TextBoxMethod)newEntity.searchAssociedTextBox(m))
+			    .setParametersViewStyle(o.view);
+			
 			m.setStatic(o.isStatic);
 			m.setAbstract(o.isAbstract);
 
 			for (final Variable v : o.variable)
 			{
-                final classDiagram.components.Variable va = new classDiagram.components.Variable(
-                        VariableName.verifyAndAskNewName(v.name), 
-                        v.type);
-                m.addParameter(va);
+        final classDiagram.components.Variable va = new classDiagram.components.Variable(
+                VariableName.verifyAndAskNewName(v.name), 
+                v.type);
+        m.addParameter(va);
 			}
 
 			m.notifyObservers();
@@ -718,18 +732,22 @@ public class XMLParser extends DefaultHandler
 	public void locateComponentBounds()
 	{
 		// Generals bounds
-		for (final GraphicComponent g : graphicView.getAllComponents())
-		{
-			final IDiagramComponent component = g.getAssociedComponent();
+		for (GraphicComponent g : graphicView.getAllComponents()) {
+			IDiagramComponent component = g.getAssociedComponent();
 
-			if (component != null)
-			{
-				final ComponentView cv = componentView.get(component.getId());
+			if (component != null) {
+				ComponentView cv = componentView.get(component.getId());
 
-				if (cv != null)
-				{
+				if (cv != null) {
 					g.setBounds(cv.geometry);
 					g.setColor(cv.color);
+					
+					// Gestion des entités
+					if (g instanceof EntityView) {
+					  EntityView entityView = (EntityView)g;
+					  entityView.setDisplayAttributes(cv.displayAttributes);
+					  entityView.setDisplayMethods(cv.displayMethods);
+					}
 				}
 			}
 		}
@@ -872,6 +890,7 @@ public class XMLParser extends DefaultHandler
 				currentMethod.visibility = Visibility.valueOf(attributes.getValue("visibility"));
 				currentMethod.isStatic = Boolean.parseBoolean(attributes.getValue("isStatic"));
 				currentMethod.isAbstract = Boolean.parseBoolean(attributes.getValue("isAbstract"));
+				currentMethod.view = ParametersViewStyle.valueOf(attributes.getValue("view"));
 
 				currentEntity.method.add(currentMethod);
 			} catch (final Exception e)
@@ -984,6 +1003,8 @@ public class XMLParser extends DefaultHandler
 				currentComponentView = new ComponentView();
 				currentComponentView.componentId = Integer.parseInt(attributes.getValue("componentID"));
 				currentComponentView.color = Integer.parseInt(attributes.getValue("color"));
+				currentComponentView.displayAttributes = Boolean.parseBoolean(attributes.getValue("displayAttributes"));
+				currentComponentView.displayMethods = Boolean.parseBoolean(attributes.getValue("displayMethods"));
 			} catch (final Exception e)
 			{
 				throw new SAXException(e);

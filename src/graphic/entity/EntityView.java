@@ -27,6 +27,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -34,7 +35,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.JRadioButtonMenuItem;
 
 import swing.PropertyLoader;
 import swing.SPanelElement;
@@ -245,7 +245,12 @@ public abstract class EntityView
 
     private TextBox pressedTextBox;
     private JMenuItem menuItemDelete, menuItemMoveUp, menuItemMoveDown,
-                      menuItemStatic, menuItemAbstract;
+                      menuItemStatic, menuItemAbstract, menuItemViewAll,
+                      menuItemViewAttributes, menuItemViewMethods,
+                      menuItemViewNothing, menuItemMethodsAll,
+                      menuItemMethodsType, menuItemMethodsName,
+                      menuItemMethodsNothing;
+    private ButtonGroup groupView, groupViewMethods;
 
     private Cursor saveCursor = Cursor.getDefaultCursor();
 
@@ -262,82 +267,93 @@ public abstract class EntityView
             throw new IllegalArgumentException("component is null");
 
         this.component = component;
+        
+        JMenu subMenu;
+        JMenuItem menuItem;
 
         // Create a textBox for display the entity name.
         entityName = new TextBoxEntityName(parent, component);
 
         // Create the popup menu.
-        JMenuItem menuItem;
         popupMenu.addSeparator();
 
-        menuItem = makeMenuItem("Add attribute", "AddAttribute", "attribute");
-        popupMenu.add(menuItem);
-        menuItem = makeMenuItem("Add method", "AddMethod", "method");
-        popupMenu.add(menuItem);
+        popupMenu.add(
+            makeMenuItem("Add attribute", "AddAttribute", "attribute"));
+        popupMenu.add(makeMenuItem("Add method", "AddMethod", "method"));
+        
         popupMenu.addSeparator();
 
         popupMenu.add(menuItemAbstract = 
             makeMenuItem("Abstract", "Abstract", "abstract"));
         popupMenu.add( menuItemStatic = 
             makeMenuItem("Static", "Static", "static"));
-        menuItemMoveUp = menuItem = makeMenuItem("Move up",
-                Slyum.ACTION_TEXTBOX_UP, "arrow-up");
+        
+        menuItemMoveUp = 
+            makeMenuItem("Move up", Slyum.ACTION_TEXTBOX_UP, "arrow-up");
         menuItemMoveUp.setEnabled(false);
-        popupMenu.add(menuItem);
-        menuItemMoveDown = menuItem = makeMenuItem("Move down",
-                Slyum.ACTION_TEXTBOX_DOWN, "arrow-down");
+        popupMenu.add(menuItemMoveUp);
+        
+        menuItemMoveDown =
+            makeMenuItem("Move down", Slyum.ACTION_TEXTBOX_DOWN, "arrow-down");
         menuItemMoveDown.setEnabled(false);
-        popupMenu.add(menuItem);
+        popupMenu.add(menuItemMoveDown);
+        
         popupMenu.addSeparator();
         
-        menuItem = makeMenuItem("Duplicate", Slyum.ACTION_DUPLICATE, "duplicate");
-        popupMenu.add(menuItem);
-        menuItemDelete = menuItem = makeMenuItem("Delete", "Delete", "delete");
-        popupMenu.add(menuItem);
+        popupMenu.add(
+            makeMenuItem("Duplicate", Slyum.ACTION_DUPLICATE, "duplicate"));
+        popupMenu.add(
+            menuItemDelete = makeMenuItem("Delete", "Delete", "delete"));
+        
         popupMenu.addSeparator();
 
-        JMenu subMenu = new JMenu("View");
-        subMenu.setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
-                + "visibility.png"));
-        ButtonGroup group = new ButtonGroup();
+        // Menu VIEW
+        subMenu = new JMenu("View");
+        subMenu.setIcon(
+            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "eye.png"));
+        groupView = new ButtonGroup();
+        
+        // Item All
+        menuItemViewAll = makeRadioButtonMenuItem("All", "ViewAll", groupView);
+        menuItemViewAll.setSelected(true);
+        subMenu.add(menuItemViewAll);
 
-        JRadioButtonMenuItem rbMenuItem = makeRadioButtonMenuItem("All",
-                "ViewAll", group);
-        rbMenuItem.setSelected(true);
-        subMenu.add(rbMenuItem);
+        // Item Only attributes
+        subMenu.add(
+            menuItemViewAttributes = makeRadioButtonMenuItem(
+                "Only attributes", "ViewAttribute", groupView), 1);
 
-        rbMenuItem = makeRadioButtonMenuItem("Only Attributes",
-                "ViewAttribute", group);
-        subMenu.add(rbMenuItem, 1);
+        // Item Only methods
+        subMenu.add(
+            menuItemViewMethods = makeRadioButtonMenuItem(
+                "Only Methods", "ViewMethods", groupView), 2);
 
-        rbMenuItem = makeRadioButtonMenuItem("Only Methods", "ViewMethods",
-                group);
-        subMenu.add(rbMenuItem, 2);
-
-        rbMenuItem = makeRadioButtonMenuItem("Nothing", "ViewNothing", group);
-        subMenu.add(rbMenuItem);
+        // Item Nothing
+        subMenu.add(menuItemViewNothing = 
+            makeRadioButtonMenuItem("Nothing", "ViewNothing", groupView));
 
         popupMenu.add(subMenu);
 
+        // Menu VIEW METHODS
         subMenu = new JMenu("Methods View");
-        subMenu.setIcon(PersonalizedIcon
-                .createImageIcon("resources/icon/visibility.png"));
-        group = new ButtonGroup();
+        subMenu.setIcon(
+            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "eye.png"));
+        groupViewMethods = new ButtonGroup();
 
-        rbMenuItem = makeRadioButtonMenuItem("Type and Name",
-                "ViewTypeAndName", group);
-        rbMenuItem.setSelected(true);
-        subMenu.add(rbMenuItem);
+        menuItemMethodsAll = makeRadioButtonMenuItem(
+            "Type and Name", "ViewTypeAndName", groupViewMethods);
+        menuItemMethodsAll.setSelected(true);
+        subMenu.add(menuItemMethodsAll);
 
-        rbMenuItem = makeRadioButtonMenuItem("Type", "ViewType", group);
-        subMenu.add(rbMenuItem, 1);
+        subMenu.add(menuItemMethodsType = 
+            makeRadioButtonMenuItem("Type", "ViewType", groupViewMethods), 1);
 
-        rbMenuItem = makeRadioButtonMenuItem("Name", "ViewName", group);
-        subMenu.add(rbMenuItem, 2);
+        subMenu.add(menuItemMethodsName = 
+            makeRadioButtonMenuItem("Name", "ViewName", groupViewMethods), 2);
 
-        rbMenuItem = makeRadioButtonMenuItem("Nothing", "ViewMethodNothing",
-                group);
-        subMenu.add(rbMenuItem);
+        subMenu.add(menuItemMethodsNothing = 
+            makeRadioButtonMenuItem(
+                "Nothing", "ViewMethodNothing", groupViewMethods));
 
         popupMenu.add(subMenu);
 
@@ -361,7 +377,6 @@ public abstract class EntityView
         popupMenu.add(menuItem);
 
         component.addObserver(this);
-
         setColor(getBasicColor());
     }
 
@@ -796,6 +811,9 @@ public abstract class EntityView
     @Override
     public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
         if (e.isPopupTrigger()) {
+            updateMenuItemView();
+            updateMenuItemMethodsView();
+            
             String text = "Delete ";
             menuItemAbstract.setEnabled(false);
 
@@ -837,9 +855,8 @@ public abstract class EntityView
      *            the new display style
      */
     public void methodViewChange(ParametersViewStyle newStyle) {
-        for (final TextBoxMethod tbm : methodsView)
-
-            tbm.setParametersViewStyle(newStyle);
+      for (TextBoxMethod tbm : methodsView)
+        tbm.setParametersViewStyle(newStyle);
     }
 
     /**
@@ -850,15 +867,11 @@ public abstract class EntityView
      *            the new display style
      */
     private void methodViewChangeClicked(ParametersViewStyle newStyle) {
-        if (pressedTextBox instanceof TextBoxMethod)
-
-            ((TextBoxMethod) pressedTextBox).setParametersViewStyle(newStyle);
-
-        else
-
-            for (final EntityView ev : parent.getSelectedEntities())
-
-                ev.methodViewChange(newStyle);
+      if (pressedTextBox instanceof TextBoxMethod)
+        ((TextBoxMethod) pressedTextBox).setParametersViewStyle(newStyle);
+      else
+        for (EntityView ev : parent.getSelectedEntities())
+          ev.methodViewChange(newStyle);
     }
 
     @Override
@@ -1154,46 +1167,127 @@ public abstract class EntityView
      * @param display the new display state for methods.
      */
     public void setDisplayMethods(boolean display) {
-        displayMethods = display;
-        updateHeight();
+      displayMethods = display;
+      updateHeight();
+    }
+    
+    private void updateMenuItemView() {
+      JMenuItem menuItemToSelect;
+      
+      // Check si toutes les entités sélectionnées ont le même type de vue.
+      List<EntityView> selected = parent.getSelectedEntities();
+      for (int i = 0; i < selected.size() - 1; i++) {
+        EntityView view = selected.get(i),
+                   next = selected.get(i+1);
+        if (view.displayAttributes != next.displayAttributes ||
+            view.displayMethods != next.displayMethods) {
+          groupView.clearSelection();
+          return;
+        }
+      }
+      
+      if (displayAttributes && displayMethods)
+        menuItemToSelect = menuItemViewAll;
+      else if (displayAttributes)
+        menuItemToSelect = menuItemViewAttributes;
+      else if (displayMethods)
+        menuItemToSelect = menuItemViewMethods;
+      else
+        menuItemToSelect = menuItemViewNothing;
+      
+      groupView.setSelected(menuItemToSelect.getModel(), true);
+    }
+    
+    private void updateMenuItemMethodsView() {
+      JMenuItem itemToSelect;
+      ParametersViewStyle newView = null;
+
+      if (pressedTextBox == null) {
+        // Check si toutes les méthodes des entités sélectionnées ont la même vue.
+        List<EntityView> selected = parent.getSelectedEntities();
+        List<TextBoxMethod> textbox = new LinkedList<>();
+        for (EntityView view : selected)
+          textbox.addAll(view.methodsView);
+        
+        for (int i = 0; i < textbox.size() - 1; i++) {
+          TextBoxMethod current = textbox.get(i),
+                        next = textbox.get(i+1);
+          if (!current.getParametersViewStyle().equals(next.getParametersViewStyle())) {
+            groupViewMethods.clearSelection();
+            return;
+          }
+        }
+        
+        if (textbox.size() > 0)
+          newView = textbox.get(0).getParametersViewStyle();
+      } else if (pressedTextBox instanceof TextBoxMethod) {
+        newView = ((TextBoxMethod)pressedTextBox).getParametersViewStyle();
+      }
+      
+      if (newView != null) {
+        switch (newView) {
+          case NAME:
+            itemToSelect = menuItemMethodsName;
+            break;
+            
+          case NOTHING:
+            itemToSelect = menuItemMethodsNothing;
+            break;
+            
+          case TYPE:
+            itemToSelect = menuItemMethodsType;
+            break;
+            
+          case TYPE_AND_NAME:
+            itemToSelect = menuItemMethodsAll;
+            break;
+  
+          case DEFAULT:
+          default:
+            itemToSelect = menuItemMethodsAll;
+            break;
+        }
+        
+        groupViewMethods.setSelected(itemToSelect.getModel(), true);
+      }
     }
 
     @Override
     public void setMouseHoverStyle() {
-        setCurrentColor(getColor().brighter());
-        repaint();
+      setCurrentColor(getColor().brighter());
+      repaint();
     }
 
     @Override
     public void setSelected(boolean select) {
-        super.setSelected(select);
+      super.setSelected(select);
+      component.select();
 
-        component.select();
+      if (select)
+        component.notifyObservers(UpdateMessage.SELECT);
+      else
+        component.notifyObservers(UpdateMessage.UNSELECT);
 
-        if (select)
-            component.notifyObservers(UpdateMessage.SELECT);
-        else
-            component.notifyObservers(UpdateMessage.UNSELECT);
-
-        if (!select)
-            for (final TextBox t : getAllTextBox())
-                t.setSelected(false);
-
+      if (!select)
+        for (final TextBox t : getAllTextBox())
+            t.setSelected(false);
     }
 
     @Override
     public void setStyleClicked() {
-        setCurrentColor(getColor().darker());
-        repaint();
+      setCurrentColor(getColor().darker());
+      repaint();
     }
 
     @Override
     public String toXML(int depth) {
         final String tab = Utility.generateTab(depth);
 
-        String xml = tab + "<componentView componentID=\""
-                + getAssociedComponent().getId() + "\" color=\""
-                + defaultColor.getRGB() + "\">\n";
+        String xml = tab + 
+            "<componentView componentID=\"" + getAssociedComponent().getId() + "\" " +
+            		           "color=\"" + defaultColor.getRGB() + "\" " +
+            		           "displayAttributes=\"" + displayAttributes + "\" " +
+            		           "displayMethods=\"" + displayMethods + "\" >\n";
         xml += Utility.boundsToXML(depth + 1, getBounds(), "geometry");
         xml += tab + "</componentView>\n";
 
@@ -1284,6 +1378,14 @@ public abstract class EntityView
       } catch (Exception e) {
         e.printStackTrace();
       }
+      return null;
+    }
+    
+    public TextBox searchAssociedTextBox(IDiagramComponent search) {
+      for (TextBox textbox : getAllTextBox())
+        if (textbox.getAssociedComponent() == search)
+          return textbox;
+      
       return null;
     }
 }
