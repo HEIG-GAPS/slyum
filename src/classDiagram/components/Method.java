@@ -1,11 +1,13 @@
 package classDiagram.components;
 
+import graphic.entity.EntityView;
 import graphic.textbox.TextBoxMethod;
 
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
+import swing.PanelClassDiagram;
 import utility.SMessageDialog;
 import utility.Utility;
 import change.BufferMethod;
@@ -42,7 +44,7 @@ public class Method extends Observable
 	private Type returnType;
 	private Visibility visibility;
 
-	/**
+  /**
 	 * Create a new method.
 	 * 
 	 * @param name
@@ -443,8 +445,19 @@ public class Method extends Observable
 	public String toXML(int depth)
 	{
 		final String tab = Utility.generateTab(depth);
+		TextBoxMethod textbox = 
+		    (TextBoxMethod)((EntityView)PanelClassDiagram.getInstance()
+		        .getCurrentGraphicView().searchAssociedComponent(entity))
+		        .searchAssociedTextBox(this);
 
-		String xml = tab + "<method " + "name=\"" + name + "\" returnType=\"" + returnType.toXML(0) + "\" visibility=\"" + visibility + "\" isStatic=\"" + _isStatic + "\" isAbstract=\"" + _isAbstract + "\" ";
+		String xml = tab + 
+		    "<method " + 
+		      "name=\"" + name + 
+		      "\" view=\"" + textbox.getParametersViewStyle().toString() +
+		      "\" returnType=\"" + returnType.toXML(0) + 
+		      "\" visibility=\"" + visibility + 
+		      "\" isStatic=\"" + _isStatic + 
+		      "\" isAbstract=\"" + _isAbstract + "\" ";
 
 		if (parameters.size() == 0)
 

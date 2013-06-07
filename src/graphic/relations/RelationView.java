@@ -160,7 +160,7 @@ public abstract class RelationView extends LineView implements Observer
 		for (final RelationGrip grip : points)
 		{
 			final Point anchor = grip.getAnchor();
-			xml += tab + "\t\t<point>\n" + tab + "\t\t\t<x>" + anchor.x + "</x>\n" + tab + "\t\t\t<y>" + anchor.y + "</y>\n" + tab + "\t\t</point>\n";
+			xml += tab + "\t\t<point>\n" + tab + "\t\t\t<x>" + (anchor.x + 1) + "</x>\n" + tab + "\t\t\t<y>" + (anchor.y + 1) + "</y>\n" + tab + "\t\t</point>\n";
 		}
 
 		xml += tab + "\t</line>\n";
