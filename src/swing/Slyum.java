@@ -49,7 +49,7 @@ public class Slyum extends JFrame implements ActionListener {
   
 	private static final long serialVersionUID = 1L;
 	private static final String APP_NAME = "Slyum";
-	public static final float version = 2.4f;
+	public static final float version = 3f;
   public final static String EXTENTION = "sly";
   public final static String FULL_EXTENTION = String.format(".%s", EXTENTION);
 	public final static String APP_DIR_NAME = APP_NAME;
