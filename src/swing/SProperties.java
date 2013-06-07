@@ -2,6 +2,7 @@ package swing;
 
 import graphic.ColoredComponent;
 import graphic.GraphicView;
+import graphic.GraphicView.ViewEntity;
 import graphic.entity.EntityView;
 import graphic.textbox.TextBox;
 import graphic.textbox.TextBoxMethod.ParametersViewStyle;
@@ -22,6 +23,8 @@ import java.util.Properties;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractListModel;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -62,6 +65,7 @@ public class SProperties extends JDialog {
   private JList<String> listName;
   private JList<Integer> listSize;
   private JComboBox<ParametersViewStyle> listViewMethods;
+  private JComboBox<ViewEntity> listViewEntities;
   private JRadioButton rdbtnAutomaticcolor;
   private JRadioButton rdbtnLow;
   private JRadioButton rdbtnMax;
@@ -648,7 +652,10 @@ public class SProperties extends JDialog {
           }
         }
         {
-          final JPanel panel = new JPanel();
+          final JPanel panel = new JPanel(),
+                       innerPanel = new JPanel();
+          
+          panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
           panel.setBorder(new CompoundBorder(new EmptyBorder(10, 10, 10, 10),
               new TitledBorder(new LineBorder(new Color(184, 207, 229)),
                   "Generals", TitledBorder.LEADING, TitledBorder.TOP, null,
@@ -663,7 +670,7 @@ public class SProperties extends JDialog {
           gbl_panel.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
           gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0,
               Double.MIN_VALUE };
-          panel.setLayout(gbl_panel);
+          innerPanel.setLayout(gbl_panel);
           {
             chckbxDisableErrorMessage = new JCheckBox(
                 "Show error messages during the creation of components");
@@ -672,7 +679,7 @@ public class SProperties extends JDialog {
             gbc_chckbxDisableErrorMessage.insets = new Insets(0, 5, 5, 0);
             gbc_chckbxDisableErrorMessage.gridx = 0;
             gbc_chckbxDisableErrorMessage.gridy = 0;
-            panel.add(chckbxDisableErrorMessage, gbc_chckbxDisableErrorMessage);
+            innerPanel.add(chckbxDisableErrorMessage, gbc_chckbxDisableErrorMessage);
           }
           {
             chckbxDisableCrossPopup = new JCheckBox(
@@ -682,7 +689,7 @@ public class SProperties extends JDialog {
             gbc_chckbxDisableCrossPopup.anchor = GridBagConstraints.WEST;
             gbc_chckbxDisableCrossPopup.gridx = 0;
             gbc_chckbxDisableCrossPopup.gridy = 1;
-            panel.add(chckbxDisableCrossPopup, gbc_chckbxDisableCrossPopup);
+            innerPanel.add(chckbxDisableCrossPopup, gbc_chckbxDisableCrossPopup);
           }
           {
             chckbxAutoAdjustInheritance = new JCheckBox(
@@ -692,11 +699,24 @@ public class SProperties extends JDialog {
             gbc_chckbxAutoAdjustInheritance.anchor = GridBagConstraints.WEST;
             gbc_chckbxAutoAdjustInheritance.gridx = 0;
             gbc_chckbxAutoAdjustInheritance.gridy = 2;
-            panel.add(chckbxAutoAdjustInheritance, gbc_chckbxAutoAdjustInheritance);
+            innerPanel.add(chckbxAutoAdjustInheritance, gbc_chckbxAutoAdjustInheritance);
+          }
+          {
+            JPanel panelViewEntities = new JPanel();
+
+            listViewEntities = new JComboBox<>(new DefaultComboBoxModel<>(ViewEntity.values()));            
+            panelViewEntities.add(new JLabel("Entities view type:"));
+            panelViewEntities.add(listViewEntities);
+            
+            GridBagConstraints gbc_panelViewEntities = new GridBagConstraints();
+            gbc_panelViewEntities.insets = new Insets(0, 5, 0, 0);
+            gbc_panelViewEntities.anchor = GridBagConstraints.WEST;
+            gbc_panelViewEntities.gridx = 0;
+            gbc_panelViewEntities.gridy = 3;
+            innerPanel.add(panelViewEntities, gbc_panelViewEntities);
           }
           {
             JPanel panelViewMethods = new JPanel();
-            //panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
             
             ParametersViewStyle[] values = {
                 ParametersViewStyle.TYPE_AND_NAME,
@@ -712,9 +732,12 @@ public class SProperties extends JDialog {
             gbc_panelViewMethods.insets = new Insets(0, 5, 0, 0);
             gbc_panelViewMethods.anchor = GridBagConstraints.WEST;
             gbc_panelViewMethods.gridx = 0;
-            gbc_panelViewMethods.gridy = 3;
-            panel.add(panelViewMethods, gbc_panelViewMethods);
+            gbc_panelViewMethods.gridy = 4;
+            innerPanel.add(panelViewMethods, gbc_panelViewMethods);
           }
+          panel.add(innerPanel);
+          innerPanel.setMaximumSize(new Dimension(1000, 0));
+          panel.add(Box.createVerticalGlue());
           tabbedPane.setDisabledIconAt(2, null);
         }
       }
@@ -766,6 +789,8 @@ public class SProperties extends JDialog {
                   String.valueOf(chckbxEnableGrid.isSelected()));
               properties.put(PropertyLoader.VIEW_METHODS,
                   String.valueOf(listViewMethods.getSelectedItem()).toUpperCase().replace(' ', '_'));
+              properties.put(PropertyLoader.VIEW_ENTITIES,
+                  String.valueOf(listViewEntities.getSelectedItem()).toUpperCase().replace(' ', '_'));
 
               String quality = "MAX";
 
@@ -792,6 +817,10 @@ public class SProperties extends JDialog {
             } catch (Exception e1) {
               e1.printStackTrace();
             }
+            
+            for (EntityView entity : PanelClassDiagram.getInstance().
+                getCurrentGraphicView().getEntitiesView())
+              entity.initViewType();
 
             setVisible(false);
             PanelClassDiagram.getInstance().getCurrentGraphicView().repaint();
@@ -884,6 +913,7 @@ public class SProperties extends JDialog {
     chckbxAutoAdjustInheritance.setSelected(Slyum.isAutoAdjustInheritance());
     chckbxEnableGrid.setSelected(GraphicView.isGridEnable());
     listViewMethods.setSelectedItem(GraphicView.getDefaultViewMethods());
+    listViewEntities.setSelectedItem(GraphicView.getDefaultViewEntities());
 
     if (GraphicView.isAutomatiqueGridColor())
       rdbtnAutomaticcolor.setSelected(true);

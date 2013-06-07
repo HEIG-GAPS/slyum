@@ -97,6 +97,17 @@ import classDiagram.relationships.Role;
 public class GraphicView extends GraphicComponent implements
     MouseMotionListener, MouseListener, IComponentsObserver, Printable,
     KeyListener, MouseWheelListener, ColoredComponent {
+  
+  public enum ViewEntity {
+    ALL, ONLY_ATTRIBUTES, ONLY_METHODS, NOTHING;
+    
+    @Override
+    public String toString() {
+      return super.toString().charAt(0) + 
+             super.toString().substring(1).toLowerCase().replace('_', ' ');
+    };
+  }
+  
   public final static boolean BACKGROUND_GRADIENT = false;
   public final static boolean ENTITY_GRADIENT = false;
   public final static boolean CTRL_FOR_GRIP = false;
@@ -139,6 +150,17 @@ public class GraphicView extends GraphicComponent implements
 
     if (prop != null)
       view = ParametersViewStyle.valueOf(prop);
+
+    return view;
+  }
+  
+  public static ViewEntity getDefaultViewEntities() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.VIEW_ENTITIES);
+    ViewEntity view = ViewEntity.ALL;
+
+    if (prop != null)
+      view = ViewEntity.valueOf(prop);
 
     return view;
   }
@@ -2288,6 +2310,11 @@ public class GraphicView extends GraphicComponent implements
   public void showAttributsForSelectedEntity(boolean show) {
     for (final EntityView ev : getSelectedEntities())
       ev.setDisplayAttributes(show);
+  }
+  
+  public void setDefaultForSelectedEntities(boolean show) {
+    for (final EntityView ev : getSelectedEntities())
+      ev.setDisplayDefault(show);
   }
 
   /**

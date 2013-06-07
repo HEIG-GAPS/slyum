@@ -3,6 +3,7 @@ package graphic.entity;
 import graphic.ColoredComponent;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
+import graphic.GraphicView.ViewEntity;
 import graphic.MovableComponent;
 import graphic.relations.RelationGrip;
 import graphic.textbox.TextBox;
@@ -235,6 +236,7 @@ public abstract class EntityView
     protected Entity component;
     private Color defaultColor;
 
+    private boolean displayDefault = true;
     private boolean displayAttributes = true;
     protected boolean displayMethods = true;
 
@@ -245,8 +247,8 @@ public abstract class EntityView
 
     private TextBox pressedTextBox;
     private JMenuItem menuItemDelete, menuItemMoveUp, menuItemMoveDown,
-                      menuItemStatic, menuItemAbstract, menuItemViewAll,
-                      menuItemViewAttributes, menuItemViewMethods,
+                      menuItemStatic, menuItemAbstract, menuItemViewDefault,
+                      menuItemViewAll, menuItemViewAttributes, menuItemViewMethods,
                       menuItemViewNothing, menuItemMethodsDefault,
                       menuItemMethodsAll, menuItemMethodsType, 
                       menuItemMethodsName, menuItemMethodsNothing;
@@ -313,20 +315,24 @@ public abstract class EntityView
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "eye.png"));
         groupView = new ButtonGroup();
         
+        // Item Default
+        menuItemViewDefault = makeRadioButtonMenuItem(
+            "Default", "ViewDefault", groupView);
+        menuItemViewDefault.setSelected(true);
+        subMenu.add(menuItemViewDefault);
+        
         // Item All
-        menuItemViewAll = makeRadioButtonMenuItem("All", "ViewAll", groupView);
-        menuItemViewAll.setSelected(true);
-        subMenu.add(menuItemViewAll);
+        subMenu.add(menuItemViewAll = makeRadioButtonMenuItem("All", "ViewAll", groupView), 1);
 
         // Item Only attributes
         subMenu.add(
             menuItemViewAttributes = makeRadioButtonMenuItem(
-                "Only attributes", "ViewAttribute", groupView), 1);
+                "Only attributes", "ViewAttribute", groupView), 2);
 
         // Item Only methods
         subMenu.add(
             menuItemViewMethods = makeRadioButtonMenuItem(
-                "Only Methods", "ViewMethods", groupView), 2);
+                "Only Methods", "ViewMethods", groupView), 3);
 
         // Item Nothing
         subMenu.add(menuItemViewNothing = 
@@ -381,6 +387,40 @@ public abstract class EntityView
 
         component.addObserver(this);
         setColor(getBasicColor());
+        
+        initViewType();
+    }
+    
+    public void initViewType() {
+      
+      if (displayDefault) {
+        ViewEntity view = GraphicView.getDefaultViewEntities();
+        
+        switch (view) {
+        case ALL:
+          displayAttributes = true;
+          displayMethods = true;
+          break;
+        case NOTHING:
+          displayAttributes = false;
+          displayMethods = false;
+          break;
+        case ONLY_ATTRIBUTES:
+          displayAttributes = true;
+          displayMethods = false;
+          break;
+        case ONLY_METHODS:
+          displayAttributes = false;
+          displayMethods = true;
+          break;
+        default:
+          displayAttributes = true;
+          displayMethods = true;
+          break;
+        
+        }
+        updateHeight();
+      }
     }
 
     @Override
@@ -397,9 +437,11 @@ public abstract class EntityView
           else {
             _delete(); 
           }
+        } else if ("ViewDefault".equals(e.getActionCommand())) {
+          parent.setDefaultForSelectedEntities(true);
         } else if ("ViewAttribute".equals(e.getActionCommand())) {
-            parent.showAttributsForSelectedEntity(true);
-            parent.showMethodsForSelectedEntity(false);
+          parent.showAttributsForSelectedEntity(true);
+          parent.showMethodsForSelectedEntity(false);
         } else if ("ViewMethods".equals(e.getActionCommand())) {
             parent.showAttributsForSelectedEntity(false);
             parent.showMethodsForSelectedEntity(true);
@@ -1157,14 +1199,20 @@ public abstract class EntityView
         return defaultColor;
       return super.getColor();
     }
+    
+    public void setDisplayDefault(boolean display) {
+      displayDefault = display;
+      initViewType();
+    }
 
     /**
      * Set the display state for attributes.
      * @param display the new display state for attributes.
      */
     public void setDisplayAttributes(boolean display) {
-        displayAttributes = display;
-        updateHeight();
+      displayAttributes = display;
+      displayDefault = false;
+      updateHeight();
     }
 
     /**
@@ -1173,6 +1221,7 @@ public abstract class EntityView
      */
     public void setDisplayMethods(boolean display) {
       displayMethods = display;
+      displayDefault = false;
       updateHeight();
     }
     
@@ -1191,7 +1240,9 @@ public abstract class EntityView
         }
       }
       
-      if (displayAttributes && displayMethods)
+      if (displayDefault)
+        menuItemToSelect = menuItemViewDefault;
+      else if (displayAttributes && displayMethods)
         menuItemToSelect = menuItemViewAll;
       else if (displayAttributes)
         menuItemToSelect = menuItemViewAttributes;
@@ -1295,6 +1346,7 @@ public abstract class EntityView
         String xml = tab + 
             "<componentView componentID=\"" + getAssociedComponent().getId() + "\" " +
             		           "color=\"" + defaultColor.getRGB() + "\" " +
+            		           "displayDefault=\"" + displayDefault + "\" " +
             		           "displayAttributes=\"" + displayAttributes + "\" " +
             		           "displayMethods=\"" + displayMethods + "\" >\n";
         xml += Utility.boundsToXML(depth + 1, getBounds(), "geometry");
