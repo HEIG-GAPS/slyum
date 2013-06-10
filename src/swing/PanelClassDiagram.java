@@ -129,8 +129,7 @@ public class PanelClassDiagram extends JPanel
 	/**
 	 * Ask user to save current project.
 	 */
-	public int askSavingCurrentProject()
-	{
+	public int askSavingCurrentProject() {
 		if (!Change.hasChange())
 			return JOptionPane.NO_OPTION;
 		else
@@ -140,22 +139,21 @@ public class PanelClassDiagram extends JPanel
 	/**
 	 * Export the current graphic to an image file.
 	 */
-	public void exportAsImage()
-	{
+	public void exportAsImage() {
 		final JFileChooser fc = new JFileChooser(Slyum.getCurrentDirectoryFileChooser());
 		fc.setAcceptAllFileFilterUsed(false);
 
 		fc.addChoosableFileFilter(new FileFilter() {
 
 			@Override
-			public boolean accept(File f)
-			{
+			public boolean accept(File f) {
 				if (f.isDirectory())
 					return true;
 
 				final String extension = Utility.getExtension(f);
 				if (extension != null)
-					if (extension.equals("jpg") || extension.equals("png") || extension.equals("gif"))
+					if (extension.equals("jpg") || extension.equals("png") || 
+					    extension.equals("gif"))
 						return true;
 
 				return false;

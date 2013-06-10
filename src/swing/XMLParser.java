@@ -791,12 +791,9 @@ public class XMLParser extends DefaultHandler
           
           @Override
           public void run() {
-            if (tb.size() >= 1)
-            {
+            if (tb.size() >= 1) {
               ((TextBoxLabel) tb.getFirst()).computeDeplacement(new Point(rl.labelAssociation.x, rl.labelAssociation.y));
-
-              if (tb.size() >= 3)
-              {
+              if (tb.size() >= 3) {
                 ((TextBoxLabel) tb.get(1)).computeDeplacement(new Point(rl.roleAssociations.get(0).x, rl.roleAssociations.get(0).y));
                 ((TextBoxLabel) tb.get(2)).computeDeplacement(new Point(rl.roleAssociations.get(1).x, rl.roleAssociations.get(1).y));
 

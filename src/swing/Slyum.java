@@ -469,13 +469,14 @@ public class Slyum extends JFrame implements ActionListener {
 	}
 	
 	private void initEventListener() {
-		addWindowListener(new WindowAdapter() {
-
-			@Override
-			public void windowClosing(WindowEvent e) {
-				exit();
-			}
-		});
+    addWindowListener(new WindowAdapter() {
+      
+      @Override
+      public void windowClosing(WindowEvent e) {
+        super.windowClosing(e);
+        exit();
+      }
+    });
 	}
 	
 	@Override
