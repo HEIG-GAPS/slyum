@@ -40,7 +40,7 @@ public abstract class AssociationView extends RelationView
 
 		this.association = association;
 
-		final TextBoxLabelTitle tb = new TextBoxLabelTitle(parent, association, this);
+		TextBoxLabelTitle tb = new TextBoxLabelTitle(parent, association, this);
 		tbRoles.add(tb);
 		parent.addOthersComponents(tb);
 	}

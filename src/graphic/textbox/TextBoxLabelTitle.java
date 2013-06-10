@@ -9,6 +9,8 @@ import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.Observable;
 
+import javax.swing.SwingUtilities;
+
 /**
  * A TextBox is a graphic component from Slyum containing a String. The
  * particularity of a TextBox is it text can be changed by double-clinking on
@@ -48,8 +50,8 @@ public class TextBoxLabelTitle extends TextBoxLabel
 	 * @param relationView
 	 *            the line associated with the TextBox
 	 */
-	public TextBoxLabelTitle(GraphicView parent, ILabelTitle label, LineView relationView)
-	{
+	public TextBoxLabelTitle(
+	    GraphicView parent, ILabelTitle label, LineView relationView) {
 		super(parent, label.getLabel());
 
 		if (relationView == null)
@@ -61,7 +63,17 @@ public class TextBoxLabelTitle extends TextBoxLabel
 
 		relationView.addObserver(this);
 
-		computeLabelPosition();
+		// Permet d'attendre que la taille de la textbox soit définie.
+    SwingUtilities.invokeLater(new Runnable() {
+      
+      @Override
+      public void run() {
+        
+        deplacement.x += TextBox.MARGE;
+        deplacement.y += TextBox.MARGE;
+        computeLabelPosition();
+      }
+    });
 	}
 
 	@Override
