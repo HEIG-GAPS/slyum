@@ -1,0 +1,222 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:simpleType name="Visibility">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="public" />
+			<xs:enumeration value="protected" />
+			<xs:enumeration value="private" />
+			<xs:enumeration value="package" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="Aggregation">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NONE" />
+			<xs:enumeration value="COMPOSE" />
+			<xs:enumeration value="AGGREGATE" />
+			<xs:enumeration value="MULTI" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="EntityType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CLASS" />
+			<xs:enumeration value="INTERFACE" />
+			<xs:enumeration value="ASSOCIATION_CLASS" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:complexType name="Variable">
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="type" type="xs:string" use="required" />
+		<xs:attribute name="const" type="xs:boolean" default="false" />
+		<xs:attribute name="visibility" type="Visibility" />
+		<xs:attribute name="defaultValue" type="xs:string" />
+		<xs:attribute name="collection" type="xs:int" default="0" />
+		<xs:attribute name="isStatic" type="xs:boolean" default="false" />
+	</xs:complexType>
+
+	<xs:complexType name="Operation">
+		<xs:sequence>
+			<xs:element name="variable" type="Variable" minOccurs="0"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="returnType" type="xs:string" use="required" />
+		<xs:attribute name="visibility" type="Visibility"
+			default="public" />
+		<xs:attribute name="isStatic" type="xs:boolean" default="false" />
+		<xs:attribute name="isAbstract" type="xs:boolean"
+			default="false" />
+	</xs:complexType>
+
+	<xs:complexType name="Entity">
+		<xs:sequence>
+			<xs:element name="method" type="Operation" minOccurs="0"
+				maxOccurs="unbounded" />
+			<xs:element name="attribute" type="Variable" minOccurs="0"
+				maxOccurs="unbounded" />
+			<xs:element name="associationClassID" type="xs:int" minOccurs="0"
+				maxOccurs="1" />
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required" />
+		<xs:attribute name="name" type="xs:string" use="required" />
+		<xs:attribute name="entityType" type="EntityType" use="required" />
+		<xs:attribute name="visibility" type="Visibility"
+			default="public" />
+		<xs:attribute name="isAbstract" type="xs:boolean"
+			default="false" />
+	</xs:complexType>
+
+	<xs:complexType name="Association">
+		<xs:sequence>
+			<xs:element name="role" type="Role" minOccurs="2"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required" />
+		<xs:attribute name="name" type="xs:string" />
+		<xs:attribute name="direction" type="xs:boolean" />
+		<xs:attribute name="aggregation" type="Aggregation"
+			default="none" />
+	</xs:complexType>
+
+	<xs:complexType name="Role">
+		<xs:sequence>
+			<xs:element name="multiplicity" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="min" type="xs:int" />
+						<xs:element name="max" type="xs:int" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" />
+		<xs:attribute name="componentId" type="xs:int" use="required" />
+		<xs:attribute name="visibility" type="Visibility"
+			default="public" />
+	</xs:complexType>
+
+	<xs:complexType name="Inheritance">
+		<xs:sequence>
+			<xs:element name="child" type="xs:int" />
+			<xs:element name="parent" type="xs:int" />
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required" />
+		<xs:attribute name="innerClass" type="xs:boolean" default="false"
+	</xs:complexType>
+
+	<xs:complexType name="Dependency">
+		<xs:sequence>
+			<xs:element name="source" type="xs:int" />
+			<xs:element name="target" type="xs:int" />
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required" />
+		<xs:attribute name="label" type="xs:string" />
+	</xs:complexType>
+
+	<xs:element name="classDiagram">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="diagramElements" minOccurs="1"
+					maxOccurs="1">
+					<xs:complexType>
+						<xs:all>
+							<xs:element name="entity" type="Entity" minOccurs="0"
+								maxOccurs="unbounded" />
+							<xs:element name="association" type="Association"
+								minOccurs="0" maxOccurs="unbounded" />
+							<xs:element name="inheritance" type="Inheritance"
+								minOccurs="0" maxOccurs="unbounded" />
+							<xs:element name="dependency" type="Dependency"
+								minOccurs="0" maxOccurs="unbounded" />
+							<xs:element name="innerClass" type="InnerClass"
+								minOccurs="0" maxOccurs="unbounded" />
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="umlView" type="UmlView" minOccurs="1"
+					maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+
+	<!-- Vue -->
+
+	<xs:complexType name="Geometry">
+		<xs:sequence>
+			<xs:element name="x" type="xs:int" />
+			<xs:element name="y" type="xs:int" />
+			<xs:element name="w" type="xs:int" />
+			<xs:element name="h" type="xs:int" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Line">
+		<xs:sequence>
+			<xs:element name="point" minOccurs="2" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="x" type="xs:int" />
+						<xs:element name="y" type="xs:int" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="Note">
+		<xs:sequence>
+			<xs:element name="noteGeometry" type="Geometry" />
+			<xs:element name="noteLine" type="RelationView" />
+		</xs:sequence>
+		<xs:attribute name="content" type="xs:string" />
+	</xs:complexType>
+
+	<xs:complexType name="ComponentView">
+		<xs:sequence>
+			<xs:element name="geometry" type="Geometry" />
+		</xs:sequence>
+		<xs:attribute name="componentId" type="xs:int" />
+		<xs:attribute name="color" type="xs:int" />
+	</xs:complexType>
+
+	<xs:complexType name="RelationView">
+		<xs:sequence>
+			<xs:element name="line" type="Line" />
+			<xs:element name="labelAssociation" type="Geometry" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="roleAssociation" type="Geometry" minOccurs="1" maxOccurs="2"/>
+			<xs:element name="multipliciteAssociation" type="Geometry" minOccurs="1" maxOccurs="2"/>
+		</xs:sequence>
+		<xs:attribute name="relationId" type="xs:int" />
+		<xs:attribute name="color" type="xs:int" />
+	</xs:complexType>
+	
+	<xs:complexType name="MultiView">
+		<xs:sequence>
+			<xs:element name="multiViewBounds" type="Geometry" />
+			<xs:element name="multiLineView" type="RelationView" minOccurs="3" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="relationId" type="xs:int" />
+		<xs:attribute name="color" type="xs:int" />
+	</xs:complexType>
+
+	<xs:complexType name="UmlView">
+		<xs:all>
+			<xs:element name="componentView" type="ComponentView"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="relationView" type="RelationView"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="note" type="Note"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="multiView" type="MultiView"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xs:all>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="grid" type="xs:int" use="required"/>
+		<xs:attribute name="textSize" type="xs:float" use="required"/>
+		<xs:attribute name="bgColor" type="xs:int" use="required"/>
+	</xs:complexType>
+</xs:schema>
