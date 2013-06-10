@@ -166,12 +166,9 @@ public abstract class TextBoxLabel extends TextBox implements Observer {
 		computeLabelPosition();
 	}
 
-	public void computeDeplacement(Point point)
-	{
-		final Point pos = computeAnchor();
-
+	public void computeDeplacement(Point point) {
+		Point pos = computeAnchor();
 		deplacement = new Point(point.x - pos.x, point.y - pos.y);
-
 		computeLabelPosition();
 	}
 

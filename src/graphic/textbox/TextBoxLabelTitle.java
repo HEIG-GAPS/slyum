@@ -43,12 +43,9 @@ public class TextBoxLabelTitle extends TextBoxLabel
 	/**
 	 * Create a new TextBoxLabelTitle associated with a line.
 	 * 
-	 * @param parent
-	 *            the graphic view
-	 * @param label
-	 *            a component implementing the ILabelTitle interface
-	 * @param relationView
-	 *            the line associated with the TextBox
+	 * @param parent the graphic view
+	 * @param label a component implementing the ILabelTitle interface
+	 * @param relationView the line associated with the TextBox
 	 */
 	public TextBoxLabelTitle(
 	    GraphicView parent, ILabelTitle label, LineView relationView) {
@@ -67,8 +64,7 @@ public class TextBoxLabelTitle extends TextBoxLabel
     SwingUtilities.invokeLater(new Runnable() {
       
       @Override
-      public void run() {
-        
+      public void run() {  
         deplacement.x += TextBox.MARGE;
         deplacement.y += TextBox.MARGE;
         computeLabelPosition();
@@ -77,8 +73,7 @@ public class TextBoxLabelTitle extends TextBoxLabel
 	}
 
 	@Override
-	protected Point computeAnchor()
-	{
+	protected Point computeAnchor() {
 		final LinkedList<RelationGrip> points = relationView.getPoints();
 		final int seg = relationView.getNearestSegment(new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2));
 
