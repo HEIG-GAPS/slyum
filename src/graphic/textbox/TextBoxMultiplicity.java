@@ -10,6 +10,8 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.Observable;
 
+import javax.swing.SwingUtilities;
+
 import classDiagram.relationships.Association;
 import classDiagram.relationships.Multiplicity;
 import classDiagram.relationships.Role;
@@ -135,22 +137,36 @@ public class TextBoxMultiplicity extends TextBoxLabel
 		this.multiplicity = multiplicity;
 		multiplicity.addObserver(this);
 
-		final Rectangle classBounds = grip.getAssociedComponentView().getBounds();
-		final Point gripAnchor = grip.getAnchor();
+    final Rectangle classBounds = grip.getAssociedComponentView().getBounds();
+    final Point gripAnchor = grip.getAnchor();
+		
+    // Permet d'attendre que la taille de la textbox soit définie.
+		SwingUtilities.invokeLater(new Runnable() {
+      
+      @Override
+      public void run() {
 
-		if (gripAnchor.x <= classBounds.x)
-			deplacement.x -= getBounds().width;
+        if (gripAnchor.x <= classBounds.x)
+          deplacement.x -= getBounds().width + TextBox.MARGE;
+        else
+          deplacement.x += TextBox.MARGE;
 
-		if (gripAnchor.y <= classBounds.y)
-			deplacement.y -= getBounds().height;
+        if (gripAnchor.y <= classBounds.y)
+          deplacement.y -= getBounds().height + TextBox.MARGE;
+        else
+          deplacement.y += TextBox.MARGE;
 
-		if (gripAnchor.x <= classBounds.x || gripAnchor.x >= classBounds.x + classBounds.width)
-			deplacement.y -= 20;
+        // La classe est alignée horizontalement.
+        if (gripAnchor.x <= classBounds.x || gripAnchor.x >= classBounds.x + classBounds.width)
+          deplacement.y -= getBounds().height + TextBox.MARGE*2;
 
-		if (gripAnchor.y <= classBounds.y || gripAnchor.y >= classBounds.y + classBounds.height)
-			deplacement.x -= 20;
+        // La classe est alignée verticalement.
+        if (gripAnchor.y <= classBounds.y || gripAnchor.y >= classBounds.y + classBounds.height)
+          deplacement.x -= getBounds().width + TextBox.MARGE*2;
 
-		computeLabelPosition();
+        computeLabelPosition();
+      }
+    });
 	}
 
 	@Override

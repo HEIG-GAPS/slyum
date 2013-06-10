@@ -8,6 +8,8 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.Observable;
 
+import javax.swing.SwingUtilities;
+
 import classDiagram.IDiagramComponent;
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Role;
@@ -38,9 +40,9 @@ import classDiagram.relationships.Role;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class TextBoxRole extends TextBoxLabel
-{
-	/**
+public class TextBoxRole extends TextBoxLabel {
+  
+  /**
 	 * Convert ginven string into the given role. If String can't be parsing,
 	 * given role will be inchanged.
 	 * 
@@ -118,14 +120,26 @@ public class TextBoxRole extends TextBoxLabel
 
 		final Rectangle classBounds = grip.getAssociedComponentView().getBounds();
 		final Point gripAnchor = grip.getAnchor();
+		
+		// Permet d'attendre que la taille de la textbox soit définie.
+		SwingUtilities.invokeLater(new Runnable() {
+      
+      @Override
+      public void run() {
 
-		if (gripAnchor.x <= classBounds.x)
-			deplacement.x -= getBounds().width;
+        if (gripAnchor.x <= classBounds.x)
+          deplacement.x -= getBounds().width + TextBox.MARGE;
+        else
+          deplacement.x += TextBox.MARGE;
 
-		if (gripAnchor.y <= classBounds.y)
-			deplacement.y -= getBounds().height;
-
-		computeLabelPosition();
+        if (gripAnchor.y <= classBounds.y)
+          deplacement.y -= getBounds().height + TextBox.MARGE;
+        else
+          deplacement.y += TextBox.MARGE;
+        
+        computeLabelPosition();
+      }
+    });
 
 		parent.addOthersComponents(tbm = new TextBoxMultiplicity(parent, role.getMultiplicity(), grip));
 	}

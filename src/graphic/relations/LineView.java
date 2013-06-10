@@ -95,9 +95,7 @@ public abstract class LineView extends GraphicComponent
 				GraphicComponent target,
 				Point posSource,
 				Point posTarget,
-				boolean checkRecursivity
-			) 
-	{
+				boolean checkRecursivity) {
 		super(parent);
 		if (source == null)
 			throw new IllegalArgumentException("source is null");

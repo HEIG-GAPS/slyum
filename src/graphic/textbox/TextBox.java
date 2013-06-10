@@ -99,6 +99,7 @@ public abstract class TextBox extends GraphicComponent
 	protected Dimension textDim = new Dimension(50, 30);
 
 	private JTextField textField;
+  public static int MARGE = 5;
 
 	public TextBox(GraphicView parent, String text)
 	{
@@ -290,8 +291,7 @@ public abstract class TextBox extends GraphicComponent
 		final AttributedString ats = new AttributedString(truncate(g2, getText(), bounds.width));
 
 		// Draw String
-		if (ats.getIterator().getEndIndex() != 0)
-		{
+		if (ats.getIterator().getEndIndex() != 0) {
 			ats.addAttribute(TextAttribute.FONT, effectivFont);
 			initAttributeString(ats);
 
@@ -300,24 +300,20 @@ public abstract class TextBox extends GraphicComponent
 	}
 
 	@Override
-	public void repaint()
-	{
+	public void repaint() {
 		final Rectangle repaintBounds = getBounds();
 		parent.getScene().repaint(repaintBounds);
 	}
 
 	@Override
-	public void restore()
-	{
+	public void restore() {
 		parent.addOthersComponents(this);
 	}
 
 	@Override
-	public void setBounds(Rectangle bounds)
-	{
+	public void setBounds(Rectangle bounds) {
 		if (bounds == null)
 			throw new IllegalArgumentException("bounds is null");
-
 		this.bounds = new Rectangle(bounds.x, bounds.y, textDim.width, textDim.height);
 	}
 
