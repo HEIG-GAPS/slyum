@@ -16,6 +16,7 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +24,7 @@ import java.util.Properties;
 
 import javax.swing.AbstractAction;
 import javax.swing.AbstractListModel;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -702,38 +704,32 @@ public class SProperties extends JDialog {
             innerPanel.add(chckbxAutoAdjustInheritance, gbc_chckbxAutoAdjustInheritance);
           }
           {
-            JPanel panelViewEntities = new JPanel();
-
-            listViewEntities = new JComboBox<>(new DefaultComboBoxModel<>(ViewEntity.values()));            
-            panelViewEntities.add(new JLabel("Entities view type:"));
-            panelViewEntities.add(listViewEntities);
-            
-            GridBagConstraints gbc_panelViewEntities = new GridBagConstraints();
-            gbc_panelViewEntities.insets = new Insets(0, 5, 0, 0);
-            gbc_panelViewEntities.anchor = GridBagConstraints.WEST;
-            gbc_panelViewEntities.gridx = 0;
-            gbc_panelViewEntities.gridy = 3;
-            innerPanel.add(panelViewEntities, gbc_panelViewEntities);
-          }
-          {
-            JPanel panelViewMethods = new JPanel();
+            JPanel panelViews = new JPanel(new GridLayout(2, 2, 10, 10));
+            panelViews.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             
             ParametersViewStyle[] values = {
                 ParametersViewStyle.TYPE_AND_NAME,
                 ParametersViewStyle.TYPE,
                 ParametersViewStyle.NAME,
                 ParametersViewStyle.NOTHING };
-            listViewMethods = new JComboBox<>(new DefaultComboBoxModel<>(values));
             
-            panelViewMethods.add(new JLabel("Methods view type:"));
-            panelViewMethods.add(listViewMethods);
+            GridBagConstraints gbc_panelViews = new GridBagConstraints();
             
-            GridBagConstraints gbc_panelViewMethods = new GridBagConstraints();
-            gbc_panelViewMethods.insets = new Insets(0, 5, 0, 0);
-            gbc_panelViewMethods.anchor = GridBagConstraints.WEST;
-            gbc_panelViewMethods.gridx = 0;
-            gbc_panelViewMethods.gridy = 4;
-            innerPanel.add(panelViewMethods, gbc_panelViewMethods);
+            listViewMethods = new JComboBox<>(
+                new DefaultComboBoxModel<>(values));
+            listViewEntities = new JComboBox<>(
+                new DefaultComboBoxModel<>(ViewEntity.values()));
+            
+            panelViews.add(new JLabel("Entities view type:"));
+            panelViews.add(listViewEntities);
+            panelViews.add(new JLabel("Methods view type:"));
+            panelViews.add(listViewMethods);
+            
+            gbc_panelViews.insets = new Insets(0, 5, 0, 0);
+            gbc_panelViews.anchor = GridBagConstraints.WEST;
+            gbc_panelViews.gridx = 0;
+            gbc_panelViews.gridy = 3;
+            innerPanel.add(panelViews, gbc_panelViews);
           }
           panel.add(innerPanel);
           innerPanel.setMaximumSize(new Dimension(1000, 0));
