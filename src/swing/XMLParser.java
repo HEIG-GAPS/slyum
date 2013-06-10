@@ -19,6 +19,8 @@ import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import javax.swing.SwingUtilities;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -397,8 +399,8 @@ public class XMLParser extends DefaultHandler
     
     graphicView.setPaintBackgroundLast(true);
     graphicView.goRepaint();
-		
-		locateComponentBounds();
+
+    locateComponentBounds();
 		importNotes();
 	}
 
@@ -785,19 +787,26 @@ public class XMLParser extends DefaultHandler
 				l.setColor(rl.color);
 				final LinkedList<TextBox> tb = l.getTextBoxRole();
 
-				if (tb.size() >= 1)
-				{
-					((TextBoxLabel) tb.getFirst()).computeDeplacement(new Point(rl.labelAssociation.x, rl.labelAssociation.y));
+				SwingUtilities.invokeLater(new Runnable() {
+          
+          @Override
+          public void run() {
+            if (tb.size() >= 1)
+            {
+              ((TextBoxLabel) tb.getFirst()).computeDeplacement(new Point(rl.labelAssociation.x, rl.labelAssociation.y));
 
-					if (tb.size() >= 3)
-					{
-						((TextBoxLabel) tb.get(1)).computeDeplacement(new Point(rl.roleAssociations.get(0).x, rl.roleAssociations.get(0).y));
-						((TextBoxLabel) tb.get(2)).computeDeplacement(new Point(rl.roleAssociations.get(1).x, rl.roleAssociations.get(1).y));
+              if (tb.size() >= 3)
+              {
+                ((TextBoxLabel) tb.get(1)).computeDeplacement(new Point(rl.roleAssociations.get(0).x, rl.roleAssociations.get(0).y));
+                ((TextBoxLabel) tb.get(2)).computeDeplacement(new Point(rl.roleAssociations.get(1).x, rl.roleAssociations.get(1).y));
 
-						((TextBoxRole) tb.get(1)).getTextBoxMultiplicity().computeDeplacement(new Point(rl.multipliciteAssociations.get(0).x, rl.multipliciteAssociations.get(0).y));
-						((TextBoxRole) tb.get(2)).getTextBoxMultiplicity().computeDeplacement(new Point(rl.multipliciteAssociations.get(1).x, rl.multipliciteAssociations.get(1).y));
-					}
-				}
+                ((TextBoxRole) tb.get(1)).getTextBoxMultiplicity().computeDeplacement(new Point(rl.multipliciteAssociations.get(0).x, rl.multipliciteAssociations.get(0).y));
+                ((TextBoxRole) tb.get(2)).getTextBoxMultiplicity().computeDeplacement(new Point(rl.multipliciteAssociations.get(1).x, rl.multipliciteAssociations.get(1).y));
+              }
+            }
+          }
+        });
+				
 			}
 		}
 

@@ -157,12 +157,14 @@ public class TextBoxMultiplicity extends TextBoxLabel
           deplacement.y += TextBox.MARGE;
 
         // La classe est alignée horizontalement.
-        if (gripAnchor.x <= classBounds.x || gripAnchor.x >= classBounds.x + classBounds.width)
-          deplacement.y -= getBounds().height + TextBox.MARGE*2;
+        if (gripAnchor.x <= classBounds.x || 
+            gripAnchor.x >= classBounds.x + classBounds.width)
+          deplacement.y -= getBounds().height + TextBox.MARGE * 2;
 
         // La classe est alignée verticalement.
-        if (gripAnchor.y <= classBounds.y || gripAnchor.y >= classBounds.y + classBounds.height)
-          deplacement.x -= getBounds().width + TextBox.MARGE*2;
+        if (gripAnchor.y <= classBounds.y || 
+            gripAnchor.y >= classBounds.y + classBounds.height)
+          deplacement.x -= getBounds().width + TextBox.MARGE * 2;
 
         computeLabelPosition();
       }
