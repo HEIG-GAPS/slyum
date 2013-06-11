@@ -1236,7 +1236,8 @@ public abstract class EntityView
       for (int i = 0; i < selected.size() - 1; i++) {
         EntityView view = selected.get(i),
                    next = selected.get(i+1);
-        if (view.displayAttributes != next.displayAttributes ||
+        if (view.displayDefault!= next.displayDefault || 
+            view.displayAttributes != next.displayAttributes ||
             view.displayMethods != next.displayMethods) {
           groupView.clearSelection();
           return;
@@ -1441,6 +1442,9 @@ public abstract class EntityView
             .newInstance(parent, entity);
         view.setBounds(newBounds);
         view.setColor(defaultColor);
+        view.displayDefault = displayDefault;
+        view.displayAttributes = displayAttributes;
+        view.displayMethods = displayMethods;
         return view;
       } catch (Exception e) {
         e.printStackTrace();
