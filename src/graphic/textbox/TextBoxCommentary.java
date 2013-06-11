@@ -22,6 +22,9 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JMenuItem;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import swing.EditCommentaryDialog;
 import swing.Slyum;
 import swing.propretiesView.NoteProperties;
@@ -404,47 +407,50 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
 		
 		NoteProperties.getInstance().update(this, selected ? UpdateMessage.SELECT : UpdateMessage.UNSELECT);
 	}
-
+	
 	@Override
-	public String toXML(int depth)
-	{
-		final String tab = Utility.generateTab(depth);
+	public String getXmlTagName() {
+	  return "note";
+	}
+	
+	@Override
+	public Element getXmlElement(Document doc) {
+	  Element note = doc.createElement(getXmlTagName());
+	  note.setAttribute("content", text);
+	  note.setAttribute("color", String.valueOf(getColor().getRGB()));
+	  note.appendChild(
+	      Utility.boundsToXmlElement(doc, getBounds(), "noteGeometry"));
 
-		String xml = tab + "<note content=\"" + text + "\" color=\"" + getColor().getRGB() + "\">\n";
-		xml += Utility.boundsToXML(depth, getBounds(), "noteGeometry");
-
-		for (final LineView lv : parent.getLinesViewAssociedWith(this))
-		{
-			IDiagramComponent associedComponent = lv.getLastPoint().getAssociedComponentView().getAssociedComponent();
-			int id = -1;
-
-			if (associedComponent != null)
-
-				id = associedComponent.getId();
-			
-			else
-			{
-				associedComponent = lv.getFirstPoint().getAssociedComponentView().getAssociedComponent();
-				
-				if (associedComponent != null)
-					
-					id = associedComponent.getId();
-			}
-
-			xml += tab + "\t<noteLine relationId=\"" + id + "\" color=\"" + lv.getColor().getRGB() + "\">\n";
-
-			for (final RelationGrip grip : lv.getPoints())
-			{
-				final Point anchor = grip.getAnchor();
-				xml += tab + "\t\t<point>\n" + tab + "\t\t\t<x>" + anchor.x + "</x>\n" + tab + "\t\t\t<y>" + anchor.y + "</y>\n" + tab + "\t\t</point>\n";
-			}
-
-			xml += tab + "\t</noteLine>\n";
-		}
-
-		xml += tab + "</note>\n";
-
-		return xml;
+    for (LineView lv : parent.getLinesViewAssociedWith(this)) {
+      Element noteLine;
+      int id = -1;
+      
+      // Recherche du composant UML associé.
+      IDiagramComponent associedComponent =
+          lv.getLastPoint().getAssociedComponentView().getAssociedComponent();
+      if (associedComponent != null) {
+        id = associedComponent.getId();
+      } else {
+        associedComponent =
+            lv.getFirstPoint().getAssociedComponentView().getAssociedComponent();
+        if (associedComponent != null)
+          id = associedComponent.getId();
+      }
+      
+      noteLine = doc.createElement("noteLine");
+      noteLine.setAttribute("relationId", String.valueOf(id));
+      noteLine.setAttribute("color", String.valueOf(lv.getColor().getRGB()));
+      
+      for (RelationGrip grip : lv.getPoints()) {
+        Point pt = grip.getAnchor();
+        pt.translate(1, 1);
+        noteLine.appendChild(Utility.pointToXmlElement(pt, "point", doc));
+      }
+      
+      note.appendChild(noteLine);
+    }
+    
+	  return note;
 	}
 
     @Override

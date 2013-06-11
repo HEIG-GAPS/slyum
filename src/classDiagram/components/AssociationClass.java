@@ -1,5 +1,8 @@
 package classDiagram.components;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import swing.XMLParser.EntityType;
 import utility.Utility;
 import classDiagram.relationships.Binary;
@@ -119,6 +122,15 @@ public class AssociationClass extends ClassEntity {
 		final String xml = tab + "<associationClassID>" + association.getId() + "</associationClassID>\n";
 
 		return xml;
+	}
+	
+	@Override
+	public Element getXmlElement(Document doc) {
+	  Element entity = super.getXmlElement(doc),
+	          associationClassID = doc.createElement("associationClassID");
+	  associationClassID.setTextContent(String.valueOf(association.getId()));
+	  entity.appendChild(associationClassID);
+	  return entity;
 	}
 
 	/**

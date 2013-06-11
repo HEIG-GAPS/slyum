@@ -4,7 +4,9 @@ import graphic.textbox.ILabelTitle;
 
 import java.util.Observable;
 
-import utility.Utility;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import classDiagram.ClassDiagram;
 import classDiagram.components.Entity;
 
@@ -153,14 +155,26 @@ public class Dependency extends Observable
 	{
 		return getLabel();
 	}
-
+	
 	@Override
-	public String toXML(int depth)
-	{
-		final String tab = Utility.generateTab(depth);
-
-		final String xml = tab + "<dependency id=\"" + id + "\" label=\"" + getLabel() + "\">\n" + tab + "\t<source>" + source.getId() + "</source>\n" + tab + "\t<target>" + target.getId() + "</target>\n";
-
-		return xml + tab + "</dependency>";
+	public String getXmlTagName() {
+	  return "dependency";
+	}
+	
+	@Override
+	public Element getXmlElement(Document doc) {
+	  Element dependency = doc.createElement(getXmlTagName()),
+	          source = doc.createElement("source"),
+            target = doc.createElement("target");
+	  
+	  dependency.setAttribute("id", String.valueOf(id));
+	  dependency.setAttribute("label", getLabel());
+	  
+	  source.setTextContent(String.valueOf(this.source.getId()));
+	  target.setTextContent(String.valueOf(this.target.getId()));
+	  dependency.appendChild(source);
+	  dependency.appendChild(target);	  
+	  
+	  return dependency;
 	}
 }

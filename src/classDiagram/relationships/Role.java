@@ -2,7 +2,9 @@ package classDiagram.relationships;
 
 import java.util.Observable;
 
-import utility.Utility;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
 import classDiagram.components.Entity;
@@ -208,18 +210,24 @@ public class Role extends Observable implements IDiagramComponent {
 
 		return visibility.toCar() + name;
 	}
-
+	
 	@Override
-	public String toXML(int depth)
-	{
-		final String tab = Utility.generateTab(depth);
-		String role = tab + "<role " + "componentId=\"" + entity.getId() + "\" " + (name == null ? "" : "name=\"" + name.replaceAll("<", "&lt;") + "\" ") + "visibility=\"" + visibility;
-
-		if (multiplicity == null)
-			role += "\"/>";
-		else
-			role += "\">\n" + multiplicity.toXML(depth + 1) + "\n" + tab + "</role>";
-
-		return role;
+	public String getXmlTagName() {
+	  return "role";
+	}
+	
+	@Override
+	public Element getXmlElement(Document doc) {
+	  Element role = doc.createElement(getXmlTagName());
+	  role.setAttribute("componentId", String.valueOf(entity.getId()));
+	  role.setAttribute("visibility", visibility.toString());
+	  
+	  if (name != null)
+	    role.setAttribute("name", name);
+	  
+	  if (multiplicity != null)
+	    role.appendChild(multiplicity.getXmlElement(doc));
+	  
+	  return role;
 	}
 }

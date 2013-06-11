@@ -2,6 +2,8 @@ package classDiagram;
 
 import java.util.Observer;
 
+import swing.XmlElement;
+
 /**
  * Interface implemented by all class diagram component.
  * 
@@ -9,7 +11,7 @@ import java.util.Observer;
  * @version 1.0 - 24.07.2011
  * 
  */
-public interface IDiagramComponent
+public interface IDiagramComponent extends XmlElement
 {
 	public enum UpdateMessage
 	{
@@ -37,13 +39,4 @@ public interface IDiagramComponent
 	 * notify with the UpdateMessage.SELECT for appling change.
 	 */
 	public void select();
-
-	/**
-	 * Get the XML structure of the component (check docs for XSD declaraction).
-	 * 
-	 * @param depth
-	 *            the number of tabs to put before each tag.
-	 * @return the XML structure of the component.
-	 */
-	public String toXML(int depth);
 }

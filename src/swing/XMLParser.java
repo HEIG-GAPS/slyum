@@ -846,12 +846,23 @@ public class XMLParser extends DefaultHandler
 
 					// Role
 					final LinkedList<TextBox> tb = mlv.getTextBoxRole();
-
-					if (tb.size() == 1)
-					{
-						((TextBoxLabel) tb.getFirst()).computeDeplacement(new Point(rl.roleAssociations.get(0).x, rl.roleAssociations.get(0).y));
-						((TextBoxRole) tb.getFirst()).getTextBoxMultiplicity().computeDeplacement(new Point(rl.multipliciteAssociations.get(0).x, rl.multipliciteAssociations.get(0).y));
-					}
+					
+					SwingUtilities.invokeLater(new Runnable() {
+            
+            @Override
+            public void run() {
+              if (tb.size() == 1) {
+                ((TextBoxLabel)tb.getFirst()).computeDeplacement(
+                    new Point(rl.roleAssociations.get(0).x,
+                              rl.roleAssociations.get(0).y));
+                
+                ((TextBoxRole)tb.getFirst()).getTextBoxMultiplicity()
+                                            .computeDeplacement(
+                    new Point(rl.multipliciteAssociations.get(0).x,
+                              rl.multipliciteAssociations.get(0).y));
+              } 
+            }
+          });
 				}
 
 				mv.setColor(xmlMV.color);

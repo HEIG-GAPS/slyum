@@ -12,7 +12,6 @@ import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -30,6 +29,12 @@ import javax.swing.TransferHandler;
 import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.PropretiesChanger;
@@ -514,26 +519,23 @@ public class PanelClassDiagram extends JPanel
 		if (selectFile || currentFile == null || !currentFile.exists())
 			if (!initCurrentSaveFile())
 				return;
-
-		String xml = "<?xml version=\"1.0\" encoding=\"iso-8859-15\"?>\n\n<classDiagram name=\"" + classDiagram.getName() + "\">\n";
-
-		xml += classDiagram.toXML(1) + "\n";
-
-		xml += graphicView.toXML(1) + "\n";
-
-		xml += "</classDiagram>";
-
-		try
-		{
-			final PrintWriter out = new PrintWriter(currentFile);
-
-			out.print(xml);
-
-			out.close();
-		} catch (final IOException e) {
-			e.printStackTrace();
-			SMessageDialog.showErrorMessage(e.getLocalizedMessage());
-		}
+		
+		// Génération du document xml.
+    DOMSource xmlInput = new DOMSource(XmlFactory.getDocument());
+    
+    // Création et configuration du Transformer. Sauvegarde du fichier.
+    try {
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer(); 
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+        transformer.setOutputProperty(OutputKeys.ENCODING, "iso-8859-15");
+        StreamResult xmlOutput = new StreamResult(currentFile);
+        transformer.transform(xmlInput, xmlOutput);
+    } catch (TransformerException e) {
+        e.printStackTrace();
+        SMessageDialog.showErrorMessage(e.getLocalizedMessage());
+    }
 		
 		Change.setHasChange(false);
 		
