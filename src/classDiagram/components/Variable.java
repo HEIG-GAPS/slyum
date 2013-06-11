@@ -2,7 +2,9 @@ package classDiagram.components;
 
 import java.util.Observable;
 
-import utility.Utility;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import change.BufferVariable;
 import change.Change;
 import classDiagram.ClassDiagram;
@@ -153,12 +155,18 @@ public class Variable extends Observable implements IDiagramComponent
 	{
 		return name + " : " + type;
 	}
-
+	
 	@Override
-	public String toXML(int depth)
-	{
-		final String tab = Utility.generateTab(depth);
-
-		return tab + "<variable " + "name=\"" + name + "\" " + "type=\"" + type.toXML(depth+1) + "\" " + "const=\"" + constant + "\"/>";
+	public String getXmlTagName() {
+	  return "variable";
+	}
+	
+	@Override
+	public Element getXmlElement(Document doc) {
+	  Element variable = doc.createElement(getXmlTagName());
+	  variable.setAttribute("name", name);
+	  variable.setAttribute("type", type.toString());
+	  variable.setAttribute("const", String.valueOf(constant));
+	  return variable;
 	}
 }

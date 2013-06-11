@@ -7,9 +7,11 @@ import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import swing.PanelClassDiagram;
 import utility.SMessageDialog;
-import utility.Utility;
 import change.BufferMethod;
 import change.Change;
 import classDiagram.ClassDiagram;
@@ -440,35 +442,32 @@ public class Method extends Observable
 	{
 		return getName();
 	}
-
+	
 	@Override
-	public String toXML(int depth)
-	{
-		final String tab = Utility.generateTab(depth);
-		TextBoxMethod textbox = 
-		    (TextBoxMethod)((EntityView)PanelClassDiagram.getInstance()
-		        .getCurrentGraphicView().searchAssociedComponent(entity))
-		        .searchAssociedTextBox(this);
-
-		String xml = tab + 
-		    "<method " + 
-		      "name=\"" + name + 
-		      "\" view=\"" + textbox.getConcretParametersViewStyle().name() +
-		      "\" returnType=\"" + returnType.toXML(0) + 
-		      "\" visibility=\"" + visibility + 
-		      "\" isStatic=\"" + _isStatic + 
-		      "\" isAbstract=\"" + _isAbstract + "\" ";
-
-		if (parameters.size() == 0)
-
-			return xml += "/>";
-
-		xml += ">\n";
-
-		for (final Variable variable : parameters)
-			xml += variable.toXML(depth + 1) + "\n";
-
-		return xml + tab + "</method>";
+	public String getXmlTagName() {
+	  return "method";
+	}
+	
+	@Override
+	public Element getXmlElement(Document doc) {
+    TextBoxMethod textbox = 
+        (TextBoxMethod)((EntityView)PanelClassDiagram.getInstance()
+            .getCurrentGraphicView().searchAssociedComponent(entity))
+            .searchAssociedTextBox(this);
+    
+    Element variable = doc.createElement(getXmlTagName());
+    
+    variable.setAttribute("name", name);
+    variable.setAttribute("view", textbox.getConcretParametersViewStyle().name());
+    variable.setAttribute("returnType", returnType.toString());
+    variable.setAttribute("visibility", visibility.toString());
+    variable.setAttribute("isStatic", String.valueOf(_isStatic));
+    variable.setAttribute("isAbstract", String.valueOf(_isAbstract));
+    
+    for (Variable parameter : parameters)
+      variable.appendChild(parameter.getXmlElement(doc));
+    
+    return variable;
 	}
 
 	@Override

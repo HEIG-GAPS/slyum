@@ -7,6 +7,9 @@ import graphic.textbox.TextBoxRole;
 
 import java.awt.Point;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import utility.Utility;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Role;
@@ -83,30 +86,42 @@ public class MultiLineView extends LineView
 		
 		mv.restore();
 	}
+	
+	@Override
+	public String getXmlTagName() {
+	  return "multiLineView";
+	}
+	
+	@Override
+	public Element getXmlElement(Document doc) {
+    Element multiLineView = doc.createElement(getXmlTagName()),
+            line = doc.createElement("line");
 
-	public String getXML(int depth)
-	{
-		final String tab = Utility.generateTab(depth);
-
-		String xml = tab + "<multiLineView relationId=\"" + getFirstPoint().getAssociedComponentView().getAssociedComponent().getId() + "\" color=\"" + getColor().getRGB() + "\">\n";
-
-		xml += tab + "\t<line>\n";
-
-		for (final RelationGrip grip : points)
-		{
-			final Point anchor = grip.getAnchor();
-			xml += tab + "\t\t<point>\n" + tab + "\t\t\t<x>" + anchor.x + "</x>\n" + tab + "\t\t\t<y>" + anchor.y + "</y>\n" + tab + "\t\t</point>\n";
-		}
-
-		xml += tab + "\t</line>\n";
-
-		if (tbRoles.size() >= 1)
-		{
-			xml += utility.Utility.boundsToXML(depth, tbRoles.get(0).getBounds(), "roleAssociation");
-			xml += utility.Utility.boundsToXML(depth, ((TextBoxRole) tbRoles.get(0)).getTextBoxMultiplicity().getBounds(), "multipliciteAssociation");
-		}
-
-		return xml + tab + "</multiLineView>\n";
+    multiLineView.setAttribute(
+        "relationId",
+        String.valueOf(getFirstPoint().getAssociedComponentView()
+                                      .getAssociedComponent().getId()));
+    multiLineView.setAttribute("color", String.valueOf(getColor().getRGB()));
+    
+    for (RelationGrip grip : points) {
+      Point pt = grip.getAnchor();
+      pt.translate(1, 1);
+      line.appendChild(Utility.pointToXmlElement(pt, "point", doc));
+    }
+    multiLineView.appendChild(line);
+    
+    // Si l'association a des textbox de rôles.
+    if (tbRoles.size() >= 1) {
+      multiLineView.appendChild(Utility.boundsToXmlElement(
+          doc, tbRoles.get(0).getBounds(), "roleAssociation"));
+      
+      multiLineView.appendChild(Utility.boundsToXmlElement(
+          doc,
+          ((TextBoxRole) tbRoles.get(0)).getTextBoxMultiplicity().getBounds(),
+          "multipliciteAssociation"));
+    }
+    
+    return multiLineView;
 	}
 
 	@Override

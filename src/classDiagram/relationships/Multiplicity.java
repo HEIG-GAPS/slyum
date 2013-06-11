@@ -2,7 +2,9 @@ package classDiagram.relationships;
 
 import java.util.Observable;
 
-import utility.Utility;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
 
@@ -165,11 +167,23 @@ public class Multiplicity extends Observable implements IDiagramComponent
 		else
 			return getLowerBoundChar() + ".." + getUpperBoundChar();
 	}
-
+	
 	@Override
-	public String toXML(int depth)
-	{
-		final String tab = Utility.generateTab(depth);
-		return tab + "<multiplicity>\n" + tab + "\t<min>" + getLowerBound() + "</min>\n" + tab + "\t<max>" + getUpperBound() + "</max>\n" + tab + "</multiplicity>";
+	public String getXmlTagName() {
+	  return "multiplicity";
+	}
+	
+	@Override
+	public Element getXmlElement(Document doc) {
+	  Element multiplicity = doc.createElement(getXmlTagName()),
+	          min = doc.createElement("min"),
+	          max = doc.createElement("max");
+	  
+	  min.setTextContent(String.valueOf(getLowerBound()));
+	  max.setTextContent(String.valueOf(getUpperBound()));
+	  multiplicity.appendChild(min);
+	  multiplicity.appendChild(max);
+	  
+	  return multiplicity;
 	}
 }
