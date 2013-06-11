@@ -1,5 +1,6 @@
 package swing;
 
+import graphic.GraphicComponent;
 import graphic.GraphicView;
 
 import java.awt.BorderLayout;
@@ -392,6 +393,9 @@ public class PanelClassDiagram extends JPanel
       public void run() {
         graphicView.paintBackgroundFirst();
         graphicView.unselectAll();
+        
+        for (GraphicComponent c : getCurrentGraphicView().getAllComponents())
+          c.notifyObservers();
       }
     });
 	}
