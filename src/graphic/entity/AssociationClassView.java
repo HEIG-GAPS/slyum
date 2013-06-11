@@ -22,7 +22,7 @@ public class AssociationClassView extends ClassView
 	private final BinaryView binaryView;
 	private AssociationClasseLine acl;
 
-	/**
+  /**
 	 * Create a new view of the specified association class on an existing
 	 * binary association.
 	 * 
@@ -99,6 +99,8 @@ public class AssociationClassView extends ClassView
 	{
 		parent.getClassDiagram().addAssociationClass((AssociationClass)getAssociedComponent());
 	}
-	
-	
+  
+  public AssociationClasseLine getAcl() {
+    return acl;
+  }
 }

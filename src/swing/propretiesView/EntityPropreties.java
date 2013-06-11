@@ -32,16 +32,20 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.border.LineBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+import javax.swing.text.JTextComponent;
 
 import swing.FlatPanel;
 import swing.SButton;
 import swing.Slyum;
+import utility.EditableCellFocusAction;
 import utility.MultiBorderLayout;
 import utility.PersonalizedIcon;
 import utility.Utility;
@@ -63,8 +67,29 @@ import classDiagram.verifyName.TypeName;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public class EntityPropreties extends GlobalPropreties
-{
+public class EntityPropreties extends GlobalPropreties {  
+  
+  private class STable extends JTable {
+    
+    public STable(TableModel dm) {
+      super(dm);
+    }
+
+    @Override
+    public void changeSelection(
+        int rowIndex, int columnIndex, boolean toggle, boolean extend) {
+      super.changeSelection(rowIndex, columnIndex, toggle, extend);
+      
+      if (editCellAt(rowIndex, columnIndex)) {
+          Component editor = getEditorComponent();
+          editor.requestFocusInWindow();
+          
+          if (editor instanceof JTextComponent)
+            ((JTextComponent)editor).selectAll();
+      }
+    }
+  }
+  
 	private class AttributeTableModel extends AbstractTableModel implements Observer, TableModelListener, MouseListener
 	{
 		private final String[] columnNames = { "Attribute", "Type", "Visibility", "Constant", "Static" };
@@ -825,19 +850,20 @@ public class EntityPropreties extends GlobalPropreties
 
 		imgNoParameter.setVisible(false);
 
-		attributesTable = new JTable(new AttributeTableModel());
+		attributesTable = new STable(new AttributeTableModel());
+		new EditableCellFocusAction(attributesTable, KeyStroke.getKeyStroke("TAB"));
 		attributesTable.setPreferredScrollableViewportSize(new Dimension(200, 0));
 
 		attributesTable.getModel().addTableModelListener((AttributeTableModel) attributesTable.getModel());
 
 		attributesTable.addMouseListener((AttributeTableModel) attributesTable.getModel());
 
-		methodsTable = new JTable(new MethodTableModel());
+		methodsTable = new STable(new MethodTableModel());
 		methodsTable.setPreferredScrollableViewportSize(new Dimension(200, 0));
 		methodsTable.getModel().addTableModelListener((MethodTableModel) methodsTable.getModel());
 		methodsTable.addMouseListener((MethodTableModel) methodsTable.getModel());
 
-		parametersTable = new JTable(new ParametersTableModel());
+		parametersTable = new STable(new ParametersTableModel());
 		parametersTable.setPreferredScrollableViewportSize(new Dimension(70, 0));
 		parametersTable.getModel().addTableModelListener((ParametersTableModel) parametersTable.getModel());
 		parametersTable.addMouseListener((ParametersTableModel) parametersTable.getModel());
@@ -1310,8 +1336,7 @@ public class EntityPropreties extends GlobalPropreties
 	}
 
 	@Override
-	public void updateComponentInformations(UpdateMessage msg)
-	{
+	public void updateComponentInformations(UpdateMessage msg) {
 		if (currentObject == null)
 			return;
 
@@ -1352,8 +1377,24 @@ public class EntityPropreties extends GlobalPropreties
 		btnRemoveParameters.setEnabled(false);
 		btnRightParameters.setEnabled(false);
 		btnLeftParameters.setEnabled(false);
-
+		
 		validate();
+    cancelEditingTables();
+	}
+	
+	private void cancelEditingTables() {
+	  TableCellEditor a = attributesTable.getCellEditor(),
+	                  m = methodsTable.getCellEditor(),
+	                  p = parametersTable.getCellEditor();
+	  
+	  if (a != null)
+	    a.cancelCellEditing();
+	  
+	  if (m != null)
+	    m.cancelCellEditing();
+	  
+	  if (p != null)
+	    p.cancelCellEditing();
 	}
   
   @Override

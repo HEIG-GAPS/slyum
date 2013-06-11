@@ -119,7 +119,7 @@ public class InheritanceView extends RelationView
 		if (getClass() == InheritanceView.class) {
 			popupMenu.addSeparator();
       popupMenu.add(menuItemOI = makeMenuItem("Overrides & Implementations...", "O&I", "method"));
-      popupMenu.add(makeMenuItem("Automatic position", Slyum.ACTION_ADJUST_INHERITANCE, "adjust-inheritance"));
+      popupMenu.add(makeMenuItem("Autopath", Slyum.ACTION_ADJUST_INHERITANCE, "adjust-inheritance"));
 		}
 
 		if (inheritance.getParent().getClass() == InterfaceEntity.class)

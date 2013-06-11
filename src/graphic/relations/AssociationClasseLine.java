@@ -7,6 +7,12 @@ import graphic.entity.EntityView;
 import java.awt.BasicStroke;
 import java.awt.Point;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import utility.Utility;
+import classDiagram.IDiagramComponent;
+
 /**
  * The LineView class represent a collection of lines making a link between two
  * GraphicComponent. When it creates, the LineView have one single line between
@@ -22,8 +28,7 @@ import java.awt.Point;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class AssociationClasseLine extends LineView
-{
+public class AssociationClasseLine extends LineView {
 	/**
 	 * Create a new AssociationClasseLine between source and target.
 	 * 
@@ -40,17 +45,49 @@ public class AssociationClasseLine extends LineView
 	 * @param checkRecursivity
 	 *            check if the relation is on itself
 	 */
-	public AssociationClasseLine(GraphicView graphicView, EntityView source, AssociationView target, Point posSource, Point posTarget, boolean checkRecursivity)
-	{
+	public AssociationClasseLine(
+	    GraphicView graphicView, EntityView source, AssociationView target, 
+	    Point posSource, Point posTarget, boolean checkRecursivity) {
 		super(graphicView, source, target, posSource, posTarget, checkRecursivity);
-
-		lineStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 6.5f }, 0.0f);
+		lineStroke = new BasicStroke(
+		    1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
+		    10.0f, new float[] { 6.5f }, 0.0f);
+	}
+	
+	@Override
+	public IDiagramComponent getAssociedXmlElement() {
+    return getFirstPoint().getAssociedComponentView().getAssociedComponent();
 	}
 
 	@Override
-	public boolean relationChanged(MagneticGrip gripSource, GraphicComponent target) {
+	public boolean relationChanged(
+	    MagneticGrip gripSource, GraphicComponent target) {
 		// Le changement de relation pour les classes d'association 
 	  // n'est pas implémenté.
 		return false;
 	}
+  
+  @Override
+  public String getXmlTagName() {
+    return "relationView";
+  }
+  
+  @Override
+  public Element getXmlElement(Document doc) {
+    Element relationView = doc.createElement(getXmlTagName()),
+            line = doc.createElement("line");
+    
+    relationView.setAttribute("relationId", 
+        String.valueOf(getAssociedXmlElement().getId()));
+    relationView.setAttribute("color", String.valueOf(getColor().getRGB()));
+    
+    for (RelationGrip grip : points) {
+      Point pt = grip.getAnchor();
+      pt.translate(1, 1);
+      line.appendChild(Utility.pointToXmlElement(pt, "point", doc));
+    }
+    
+    relationView.appendChild(line);    
+    return relationView;
+  }
 }
