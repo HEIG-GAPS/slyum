@@ -3,6 +3,10 @@ package classDiagram;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import swing.XmlElement;
 import utility.Utility;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.ClassEntity;
@@ -26,7 +30,7 @@ import classDiagram.relationships.Multi;
  * @version 1.0 - 24.07.2011
  * 
  */
-public class ClassDiagram implements IComponentsObserver
+public class ClassDiagram implements IComponentsObserver, XmlElement
 {
 	private static int currentID = 0;
 
@@ -278,8 +282,7 @@ public class ClassDiagram implements IComponentsObserver
 	 * @return the component corresponding to the given id, or null if no
 	 *         component are found.
 	 */
-	public IDiagramComponent searchComponentById(int id)
-	{
+	public IDiagramComponent searchComponentById(int id) {
 		for (final IDiagramComponent c : components)
 
 			if (c.getId() == id)
@@ -295,8 +298,7 @@ public class ClassDiagram implements IComponentsObserver
 	 * @param id
 	 *            the new id to set
 	 */
-	public void setCurrentId(int id)
-	{
+	public void setCurrentId(int id) {
 		currentID = id;
 	}
 
@@ -310,25 +312,19 @@ public class ClassDiagram implements IComponentsObserver
 	{
 		this.name = name;
 	}
+	
+	@Override
+	public String getXmlTagName() {
+	  return "diagramElements";
+	}
+	
+	public Element getXmlElement(Document doc) {
 
-	/**
-	 * Return a String representing the structure of all components in class
-	 * diagram in XML format (get the XSD in documents).
-	 * 
-	 * @param depth
-	 *            the number of tabs to put before a new tag
-	 * @return the string representing the structure of class diagram in XML.
-	 */
-	public String toXML(int depth)
-	{
-		final String tab = Utility.generateTab(depth);
+    Element classDiagram = doc.createElement(getXmlTagName());
 
-		String xml = tab + "<diagramElements>\n";
-
-		// write for each component its XML structure.
-		for (final IDiagramComponent component : components)
-			xml += component.toXML(depth + 1) + "\n";
-
-		return xml + tab + "</diagramElements>";
+    for (IDiagramComponent component : components)
+      classDiagram.appendChild(component.getXmlElement(doc));
+    
+    return classDiagram;
 	}
 }

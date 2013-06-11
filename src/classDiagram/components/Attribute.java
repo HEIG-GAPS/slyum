@@ -1,6 +1,8 @@
 package classDiagram.components;
 
-import utility.Utility;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import change.BufferAttribute;
 import change.Change;
 import classDiagram.verifyName.TypeName;
@@ -226,11 +228,19 @@ public class Attribute extends Variable {
 		Change.push(new BufferAttribute(this));
 		setChanged();
 	}
-
+	
 	@Override
-	public String toXML(int depth)
-	{
-		final String tab = Utility.generateTab(depth);
-		return tab + "<attribute " + "name=\"" + name + "\" type=\"" + type.toXML(depth+1) + "\" const=\"" + constant + "\" visibility=\"" + visibility + "\" " + (defaultValue == null ? "" : "defaultValue=\"" + defaultValue) + "\" isStatic=\"" + _isStatic + "\" " + "/>";
+	public String getXmlTagName() {
+	  return "attribute";
+	}
+	
+	@Override
+	public Element getXmlElement(Document doc) {
+    Element attribute = super.getXmlElement(doc);
+    attribute.setAttribute("visibility", visibility.toString());
+    if (defaultValue != null)
+      attribute.setAttribute("defaultValue", defaultValue.toString());
+    attribute.setAttribute("isStatic", String.valueOf(_isStatic));
+    return attribute;
 	}
 }

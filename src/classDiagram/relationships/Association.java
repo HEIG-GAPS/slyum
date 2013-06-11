@@ -5,7 +5,9 @@ import graphic.textbox.ILabelTitle;
 import java.util.LinkedList;
 import java.util.Observable;
 
-import utility.Utility;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import classDiagram.ClassDiagram;
 import classDiagram.components.Entity;
 
@@ -199,19 +201,28 @@ public abstract class Association extends Observable
     role.notifyObservers();
     setChanged();
   }
-
+  
   @Override
-	public String toXML(int depth)
-	{
-		final String tab = Utility.generateTab(depth);
-
-		String xml = tab + "<association id=\"" + id + "\" " + (name == null ? "" : "name=\"" + name.replaceAll("<", "&lt;") + "\"") + " direction=\"" + directed + "\" aggregation=\"" + getAssociationType() + "\">\n";
-
-		for (final Role role : roles)
-			xml += role.toXML(depth + 1) + "\n";
-
-		return xml + tab + "</association>";
-	}
+  public String getXmlTagName() {
+    return "association";
+  }
+  
+  @Override
+  public Element getXmlElement(Document doc) {
+    Element association = doc.createElement(getXmlTagName());
+    
+    association.setAttribute("id", String.valueOf(id));
+    association.setAttribute("direction", String.valueOf(directed));
+    association.setAttribute("aggregation", String.valueOf(getAssociationType()));
+    
+    if (name != null)
+      association.setAttribute("name", name);
+    
+    for (Role role : roles)
+      association.appendChild(role.getXmlElement(doc));
+    
+    return association;
+  }
 	
 	@Override
 	public String toString()

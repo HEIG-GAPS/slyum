@@ -3,6 +3,9 @@ package classDiagram.components;
 import java.util.LinkedList;
 import java.util.Observable;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
@@ -213,14 +216,17 @@ public class Type extends Observable implements IDiagramComponent
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return getName();
 	}
 
-	@Override
-	public String toXML(int depth)
-	{		
-		return getName().replace("<", "&lt;").replace(">", "&gt;");
-	}
+  @Override
+  public Element getXmlElement(Document doc) {
+    return null;
+  }
+
+  @Override
+  public String getXmlTagName() {
+    return null;
+  }
 }

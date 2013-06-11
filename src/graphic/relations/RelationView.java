@@ -15,13 +15,16 @@ import java.util.Observer;
 
 import javax.swing.JMenuItem;
 
-import com.google.common.collect.Lists;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import utility.Utility;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
 import classDiagram.relationships.Relation;
 import classDiagram.relationships.RelationChanger;
+
+import com.google.common.collect.Lists;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -147,38 +150,53 @@ public abstract class RelationView extends LineView implements Observer
 	    i++;
 	  }
 	}
-
+	
 	@Override
-	public String toXML(int depth)
-	{
-		final String tab = Utility.generateTab(depth);
-
-		String xml = tab + "<relationView relationId=\"" + relation.getId() + "\" color=\"" + getColor().getRGB() + "\">\n";
-
-		xml += tab + "\t<line>\n";
-
-		for (final RelationGrip grip : points)
-		{
-			final Point anchor = grip.getAnchor();
-			xml += tab + "\t\t<point>\n" + tab + "\t\t\t<x>" + (anchor.x + 1) + "</x>\n" + tab + "\t\t\t<y>" + (anchor.y + 1) + "</y>\n" + tab + "\t\t</point>\n";
-		}
-
-		xml += tab + "\t</line>\n";
-
-		if (tbRoles.size() >= 1)
-		{
-			xml += utility.Utility.boundsToXML(depth, tbRoles.get(0).getBounds(), "labelAssociation");
-
-			if (tbRoles.size() >= 3)
-			{
-				xml += utility.Utility.boundsToXML(depth, tbRoles.get(1).getBounds(), "roleAssociation");
-				xml += utility.Utility.boundsToXML(depth, tbRoles.get(2).getBounds(), "roleAssociation");
-				xml += utility.Utility.boundsToXML(depth, ((TextBoxRole) tbRoles.get(1)).getTextBoxMultiplicity().getBounds(), "multipliciteAssociation");
-				xml += utility.Utility.boundsToXML(depth, ((TextBoxRole) tbRoles.get(2)).getTextBoxMultiplicity().getBounds(), "multipliciteAssociation");
-			}
-		}
-
-		return xml + tab + "</relationView>\n";
+	public String getXmlTagName() {
+	  return "relationView";
+	}
+	
+	@Override
+	public Element getXmlElement(Document doc) {
+	  Element relationView = doc.createElement(getXmlTagName()),
+	          line = doc.createElement("line");
+	  
+	  relationView.setAttribute("relationId", String.valueOf(relation.getId()));
+	  relationView.setAttribute("color", String.valueOf(getColor().getRGB()));
+	  
+    for (RelationGrip grip : points) {
+      Point pt = grip.getAnchor();
+      pt.translate(1, 1);
+      line.appendChild(Utility.pointToXmlElement(pt, "point", doc));
+    }
+    relationView.appendChild(line);
+    
+    // Si l'association a des textbox
+    if (tbRoles.size() >= 1) {
+      
+      // Textbox de titre d'association
+      relationView.appendChild(Utility.boundsToXmlElement(
+          doc, tbRoles.get(0).getBounds(), "labelAssociation"));
+      
+      // S'il y a des rôles et des multiplicités.
+      if (tbRoles.size() >= 3) {
+        relationView.appendChild(Utility.boundsToXmlElement(
+            doc, tbRoles.get(1).getBounds(), "roleAssociation"));
+        relationView.appendChild(Utility.boundsToXmlElement(
+            doc, tbRoles.get(2).getBounds(), "roleAssociation"));
+        
+        relationView.appendChild(Utility.boundsToXmlElement(
+            doc,
+            ((TextBoxRole) tbRoles.get(1)).getTextBoxMultiplicity().getBounds(),
+            "multipliciteAssociation"));
+        relationView.appendChild(Utility.boundsToXmlElement(
+            doc,
+            ((TextBoxRole) tbRoles.get(2)).getTextBoxMultiplicity().getBounds(),
+            "multipliciteAssociation"));
+      }
+    }
+    
+	  return relationView;
 	}
 	
   public Relation getRelation() {

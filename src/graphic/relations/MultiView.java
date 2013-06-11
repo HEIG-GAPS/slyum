@@ -21,6 +21,9 @@ import java.util.Observer;
 
 import javax.swing.JMenuItem;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import utility.Utility;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
@@ -372,22 +375,25 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 		else
 			multi.notifyObservers(UpdateMessage.UNSELECT);
 	}
-
+	
 	@Override
-	public String toXML(int depth)
-	{
-		final String tab = Utility.generateTab(depth);
-
-		String xml = tab + "<multiView relationId=\"" + getAssociedComponent().getId() + "\" color=\"" + getColor().getRGB() + "\">\n";
-		xml += Utility.boundsToXML(depth + 1, getBounds(), "multiViewBounds");
-
-		for (final MultiLineView lv : getMultiLinesView())
-
-			xml += lv.getXML(depth + 1);
-
-		xml += tab + "</multiView>\n";
-
-		return xml;
+	public String getXmlTagName() {
+	  return "multiView";
+	}
+	
+	@Override
+	public Element getXmlElement(Document doc) {
+	  Element multiView = doc.createElement(getXmlTagName());
+	  multiView.setAttribute(
+	      "relationId", String.valueOf(getAssociedComponent().getId()));
+	  multiView.setAttribute("color", String.valueOf(getColor().getRGB()));
+	  multiView.appendChild(
+	      Utility.boundsToXmlElement(doc, getBounds(), "multiViewBounds"));
+	  
+	  for (MultiLineView lv : getMultiLinesView())
+	    multiView.appendChild(lv.getXmlElement(doc));
+	  
+	  return multiView;
 	}
 
 	/**
