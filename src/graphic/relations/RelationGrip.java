@@ -80,8 +80,7 @@ public class RelationGrip extends SquareGrip implements ActionListener
 	 * 
 	 * @return the anchor of the grip.
 	 */
-	public Point getAnchor()
-	{
+	public Point getAnchor() {
 		return new Point(anchor);
 	}
 

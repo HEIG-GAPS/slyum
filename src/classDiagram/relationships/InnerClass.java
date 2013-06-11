@@ -1,6 +1,8 @@
 package classDiagram.relationships;
 
-import utility.Utility;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import classDiagram.components.Entity;
 
 public class InnerClass extends Inheritance
@@ -15,15 +17,11 @@ public class InnerClass extends Inheritance
 	{
 		super(child, parent, id);
 	}
-
+	
 	@Override
-	public String toXML(int depth)
-	{
-		final String tab = Utility.generateTab(depth);
-
-		final String xml = tab + "<inheritance id=\"" + id + "\" innerClass=\"true\">\n" + tab + "\t<child>" + child.getId() + "</child>\n" + tab + "\t<parent>" + parent.getId() + "</parent>\n";
-
-		return xml + tab + "</inheritance>";
+	public Element getXmlElement(Document doc) {
+	  Element innerClass = super.getXmlElement(doc);
+	  innerClass.setAttribute("innerClass", "true");
+	  return innerClass;
 	}
-
 }

@@ -8,6 +8,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.datatransfer.DataFlavor;
@@ -30,6 +31,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import swing.EditCommentaryDialog;
 import swing.PropertyLoader;
@@ -148,11 +152,39 @@ public class Utility
 	 *            the name of the balise
 	 * @return the string representing a geometry tags with the bounds given.
 	 */
-	public static String boundsToXML(int depth, Rectangle bounds, String baliseName)
-	{
-		final String tab = Utility.generateTab(depth);
+	public static Element boundsToXmlElement(
+	    Document doc, Rectangle bounds, String tag) {
+	  Element element = doc.createElement(tag),
+	          x = doc.createElement("x"),
+            y = doc.createElement("y"),
+            w = doc.createElement("w"),
+            h = doc.createElement("h");
+	  
+	  x.setTextContent(String.valueOf(bounds.x));
+	  y.setTextContent(String.valueOf(bounds.y));
+	  w.setTextContent(String.valueOf(bounds.width));
+	  h.setTextContent(String.valueOf(bounds.height));
+	  
+	  element.appendChild(x);
+	  element.appendChild(y);
+	  element.appendChild(w);
+	  element.appendChild(h);
+	  
+		return element;
+	}
+	
+	public static Element pointToXmlElement(Point pt, String tag, Document doc) {
+    Element element = doc.createElement(tag),
+            x = doc.createElement("x"),
+            y = doc.createElement("y");
 
-		return tab + "\t<" + baliseName + ">\n" + tab + "\t\t<x>" + bounds.x + "</x>\n" + tab + "\t\t<y>" + bounds.y + "</y>\n" + tab + "\t\t<w>" + bounds.width + "</w>\n" + tab + "\t\t<h>" + bounds.height + "</h>\n" + tab + "\t</" + baliseName + ">\n";
+    x.setTextContent(String.valueOf(pt.x));
+    y.setTextContent(String.valueOf(pt.y));
+    
+    element.appendChild(x);
+    element.appendChild(y);
+    
+    return element;
 	}
 
 	/**

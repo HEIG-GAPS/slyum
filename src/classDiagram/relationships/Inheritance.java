@@ -2,9 +2,11 @@ package classDiagram.relationships;
 
 import java.util.Observable;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import swing.OverridesAndImplementationsDialog;
 import utility.SMessageDialog;
-import utility.Utility;
 import classDiagram.ClassDiagram;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
@@ -212,14 +214,24 @@ public class Inheritance extends Observable
 	{
 		return getChild().getName() + " - " + getParent().getName();
 	}
-
+	
 	@Override
-	public String toXML(int depth)
-	{
-		final String tab = Utility.generateTab(depth);
-
-		final String xml = tab + "<inheritance id=\"" + id + "\">\n" + tab + "\t<child>" + child.getId() + "</child>\n" + tab + "\t<parent>" + parent.getId() + "</parent>\n";
-
-		return xml + tab + "</inheritance>";
+	public String getXmlTagName() {
+	  return "inheritance";
+	}
+	
+	@Override
+	public Element getXmlElement(Document doc) {
+	  Element inheritance = doc.createElement(getXmlTagName()),
+	          child = doc.createElement("child"),
+            parent = doc.createElement("parent");
+	  inheritance.setAttribute("id", String.valueOf(id));
+	  
+	  child.setTextContent(String.valueOf(this.child.getId()));
+	  parent.setTextContent(String.valueOf(this.parent.getId()));
+	  inheritance.appendChild(child);
+	  inheritance.appendChild(parent);
+	  
+	  return inheritance;
 	}
 }

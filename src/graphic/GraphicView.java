@@ -14,6 +14,7 @@ import graphic.relations.InheritanceView;
 import graphic.relations.InnerClassView;
 import graphic.relations.LineCommentary;
 import graphic.relations.LineView;
+import graphic.relations.MultiLineView;
 import graphic.relations.MultiView;
 import graphic.textbox.TextBoxCommentary;
 import graphic.textbox.TextBoxMethod.ParametersViewStyle;
@@ -54,15 +55,18 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import swing.IListenerComponentSelectionChanged;
 import swing.PanelClassDiagram;
 import swing.PropertyLoader;
 import swing.SButton;
 import swing.SColorAssigner;
 import swing.SPanelDiagramComponent;
+import swing.SPanelDiagramComponent.Mode;
 import swing.SPanelElement;
 import swing.Slyum;
-import swing.SPanelDiagramComponent.Mode;
 import utility.PersonalizedIcon;
 import utility.SizedCursor;
 import utility.Utility;
@@ -2400,19 +2404,25 @@ public class GraphicView extends GraphicComponent implements
   public JMenuItem getMiOpenInExplorer() {
     return miOpenInExplorer;
   }
-
+  
   @Override
-  public String toXML(int depth) {
-    final String tab = Utility.generateTab(depth);
-
-    String xml = tab + "<umlView name=\"" + getName() + "\" ";
-
-    xml += "grid=\"" + getGridSize() + "\">\n";
-
-    for (final GraphicComponent c : getAllComponents())
-      xml += c.toXML(depth + 1);
-
-    return xml + tab + "</umlView>";
+  public String getXmlTagName() {
+    return "umlView";
+  }
+  
+  @Override
+  public Element getXmlElement(Document doc) {
+    Element graphicView = doc.createElement(getXmlTagName());
+    graphicView.setAttribute("name", getName());
+    graphicView.setAttribute("grid", String.valueOf(getGridSize()));
+    
+    for (GraphicComponent c : getAllComponents()) {
+      Element el = c.getXmlElement(doc);
+      if (el != null && c.getClass() != MultiLineView.class)
+        graphicView.appendChild(el);
+    }
+    
+    return graphicView;
   }
   
   public void duplicateSelectedEntities() {

@@ -37,6 +37,9 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import swing.PropertyLoader;
 import swing.SPanelElement;
 import swing.Slyum;
@@ -1338,21 +1341,24 @@ public abstract class EntityView
       setCurrentColor(getColor().darker());
       repaint();
     }
-
+    
     @Override
-    public String toXML(int depth) {
-        final String tab = Utility.generateTab(depth);
-
-        String xml = tab + 
-            "<componentView componentID=\"" + getAssociedComponent().getId() + "\" " +
-            		           "color=\"" + defaultColor.getRGB() + "\" " +
-            		           "displayDefault=\"" + displayDefault + "\" " +
-            		           "displayAttributes=\"" + displayAttributes + "\" " +
-            		           "displayMethods=\"" + displayMethods + "\" >\n";
-        xml += Utility.boundsToXML(depth + 1, getBounds(), "geometry");
-        xml += tab + "</componentView>\n";
-
-        return xml;
+    public String getXmlTagName() {
+      return "componentView";
+    }
+    
+    @Override
+    public Element getXmlElement(Document doc) {
+      Element entityView = doc.createElement(getXmlTagName());
+      entityView.setAttribute(
+          "componentID", String.valueOf(getAssociedComponent().getId()));
+      entityView.setAttribute("color", String.valueOf(defaultColor.getRGB()));
+      entityView.setAttribute("displayDefault", String.valueOf(displayDefault));
+      entityView.setAttribute(
+          "displayAttributes", String.valueOf(displayAttributes));
+      entityView.setAttribute("displayMethods", String.valueOf(displayMethods));
+      entityView.appendChild(Utility.boundsToXmlElement(doc, getBounds(), "geometry"));
+      return entityView;
     }
 
     @Override

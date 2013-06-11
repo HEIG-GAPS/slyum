@@ -5,8 +5,10 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import utility.SMessageDialog;
-import utility.Utility;
 import change.BufferClass;
 import change.BufferCreationAttribute;
 import change.BufferCreationMethod;
@@ -566,27 +568,28 @@ public abstract class Entity extends Type implements Cloneable
 	  
 	  return null;
 	}
-	
+
+  @Override
+  public String getXmlTagName() {
+    return "entity";
+  }
+
 	@Override
-	public String toXML(int depth)
-	{
-		final String tab = Utility.generateTab(depth);
+  public Element getXmlElement(Document doc) {
+    Element entity = doc.createElement(getXmlTagName());
+    
+    entity.setAttribute("id", String.valueOf(getId()));
+    entity.setAttribute("name", toString());
+    entity.setAttribute("visibility", visibility.toString());
+    entity.setAttribute("entityType", getEntityType());
+    entity.setAttribute("isAbstract", String.valueOf(isAbstract()));
 
-		String xml = tab + "<entity " + "id=\"" + getId() + "\" " + "name=\"" + super.toXML(0) + "\" " + "visibility=\"" + visibility + "\" " + "entityType=\"" + getEntityType() + "\" " + "isAbstract=\"" + isAbstract() + "\" ";
-
-		if (attributes.size() == 0 && methods.size() == 0 && getLastBalise(depth).isEmpty())
-			return xml + "/>";
-
-		xml += ">\n";
-
-		for (final Attribute attribute : attributes)
-			xml += attribute.toXML(depth + 1) + "\n";
-
-		for (final Method operation : methods)
-			xml += operation.toXML(depth + 1) + "\n";
-
-		xml += getLastBalise(depth + 1);
-
-		return xml + tab + "</entity>";
-	}
+    for (Attribute attribute : attributes)
+      entity.appendChild(attribute.getXmlElement(doc));
+      
+    for (Method operation : methods)
+      entity.appendChild(operation.getXmlElement(doc));
+    
+    return entity;
+  }
 }

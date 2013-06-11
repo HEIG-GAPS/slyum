@@ -18,9 +18,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import swing.PanelClassDiagram;
 import swing.SPanelDiagramComponent;
 import swing.Slyum;
+import swing.XmlElement;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import change.BufferCreation;
@@ -37,7 +41,8 @@ import classDiagram.IDiagramComponent;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public abstract class GraphicComponent extends Observable implements ActionListener
+public abstract class GraphicComponent extends Observable 
+                                       implements ActionListener, XmlElement
 {
 	private Color color = Color.DARK_GRAY;
 	// Save the location of the mouse uses for computing the movement or the
@@ -601,16 +606,14 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 	public void setPictureMode(boolean enable) {
 	  pictureMode = enable;
 	}
-
-	/**
-	 * Return the XML structure for this component in String.
-	 * 
-	 * @param depth
-	 *            the number of tabs before each tags.
-	 * @return the XML structure
-	 */
-	public String toXML(int depth)
-	{
-		return "";
+	
+	@Override
+	public String getXmlTagName() {
+	  return null;
+	}
+	
+	@Override
+	public Element getXmlElement(Document doc) {
+	  return null;
 	}
 }
