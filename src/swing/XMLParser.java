@@ -282,14 +282,12 @@ public class XMLParser extends DefaultHandler
 			buffer.append(reader);
 	}
 
-	private void createEntity(Entity e) throws SyntaxeNameException
-	{		
+	private void createEntity(Entity e) throws SyntaxeNameException {
 		classDiagram.components.Entity ce = null;
 		EntityView newEntity;
 		e.name = TypeName.verifyAndAskNewName(e.name);
 
-		switch (e.entityType)
-		{
+		switch (e.entityType) {
 			case CLASS:
 
 				ce = new ClassEntity(e.name, e.visibility, e.id);
@@ -323,7 +321,7 @@ public class XMLParser extends DefaultHandler
 				{
 				    ce = new AssociationClass(e.name, e.visibility, b, e.id);
 	                classDiagram.addAssociationClass((AssociationClass) ce);
-				}catch (IllegalArgumentException a)
+				} catch (IllegalArgumentException a)
 				{
 				    SMessageDialog.showErrorMessage(a.getMessage());
 				}
@@ -331,8 +329,7 @@ public class XMLParser extends DefaultHandler
 				break;
 		}
 		
-		newEntity = (EntityView)PanelClassDiagram
-		    .getInstance().getCurrentGraphicView().searchAssociedComponent(ce);
+		newEntity = (EntityView)PanelClassDiagram.getInstance().getCurrentGraphicView().searchAssociedComponent(ce);
 
 		for (final Variable v : e.attribute) {			
       final Attribute a = new Attribute(VariableName.verifyAndAskNewName(v.name), v.type);
@@ -732,8 +729,8 @@ public class XMLParser extends DefaultHandler
 		}
 	}
 
-	public void locateComponentBounds()
-	{
+	public void locateComponentBounds() {
+	  
 		// Generals bounds
 		for (GraphicComponent g : graphicView.getAllComponents()) {
 			IDiagramComponent component = g.getAssociedComponent();
@@ -757,18 +754,17 @@ public class XMLParser extends DefaultHandler
 		}
 
 		// Associations
-		for (final LineView l : graphicView.getLinesView())
-		{
-			final IDiagramComponent component = l.getAssociedComponent();
-
-			if (component != null)
-			{
+		for (LineView l : graphicView.getLinesView()) {
+			IDiagramComponent component = l.getAssociedXmlElement();
+			
+			if (component != null) {
 				final RelationView rl = relationView.get(component.getId());
+				if (rl == null)
+				  continue;
+				
+				LinkedList<Point> points = rl.line;
 
-				final LinkedList<Point> points = rl.line;
-
-				for (int i = 1; i < points.size() - 1; i++)
-				{
+				for (int i = 1; i < points.size() - 1; i++) {
 					final RelationGrip rg = new RelationGrip(graphicView, l);
 					rg.setAnchor(points.get(i));
 					rg.notifyObservers();
@@ -776,7 +772,7 @@ public class XMLParser extends DefaultHandler
 				}
 
 				RelationGrip first = l.getFirstPoint(),
-						     last = l.getLastPoint();
+						         last = l.getLastPoint();
 				
 				first.setAnchor(points.getFirst());
 				last.setAnchor(points.getLast());
@@ -788,20 +784,30 @@ public class XMLParser extends DefaultHandler
 				final LinkedList<TextBox> tb = l.getTextBoxRole();
 
 				SwingUtilities.invokeLater(new Runnable() {
-          
           @Override
           public void run() {
-            if (tb.size() >= 1)
-            {
-              ((TextBoxLabel) tb.getFirst()).computeDeplacement(new Point(rl.labelAssociation.x, rl.labelAssociation.y));
+            if (tb.size() >= 1) {
+              ((TextBoxLabel) tb.getFirst()).computeDeplacement(
+                  new Point(rl.labelAssociation.x, rl.labelAssociation.y));
 
-              if (tb.size() >= 3)
-              {
-                ((TextBoxLabel) tb.get(1)).computeDeplacement(new Point(rl.roleAssociations.get(0).x, rl.roleAssociations.get(0).y));
-                ((TextBoxLabel) tb.get(2)).computeDeplacement(new Point(rl.roleAssociations.get(1).x, rl.roleAssociations.get(1).y));
+              if (tb.size() >= 3) {
+                ((TextBoxLabel)tb.get(1)).computeDeplacement(
+                    new Point(rl.roleAssociations.get(0).x, 
+                              rl.roleAssociations.get(0).y));
+                ((TextBoxLabel)tb.get(2)).computeDeplacement(
+                    new Point(rl.roleAssociations.get(1).x, 
+                              rl.roleAssociations.get(1).y));
 
-                ((TextBoxRole) tb.get(1)).getTextBoxMultiplicity().computeDeplacement(new Point(rl.multipliciteAssociations.get(0).x, rl.multipliciteAssociations.get(0).y));
-                ((TextBoxRole) tb.get(2)).getTextBoxMultiplicity().computeDeplacement(new Point(rl.multipliciteAssociations.get(1).x, rl.multipliciteAssociations.get(1).y));
+                ((TextBoxRole)tb.get(1))
+                    .getTextBoxMultiplicity()
+                    .computeDeplacement(
+                        new Point(rl.multipliciteAssociations.get(0).x,
+                                  rl.multipliciteAssociations.get(0).y));
+                ((TextBoxRole)tb.get(2))
+                    .getTextBoxMultiplicity()
+                    .computeDeplacement(
+                        new Point(rl.multipliciteAssociations.get(1).x,
+                            rl.multipliciteAssociations.get(1).y));
               }
             }
           }
@@ -813,7 +819,7 @@ public class XMLParser extends DefaultHandler
 		// Multi-association
 		for (final graphic.relations.MultiView mv : graphicView.getMultiView())
 		{
-			final IDiagramComponent component = mv.getAssociedComponent();
+			final IDiagramComponent component = mv.getAssociedXmlElement();
 
 			if (component != null)
 			{

@@ -60,7 +60,7 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 		btnOI.setMaximumSize(new Dimension(250, 100));
     btnOI.setHorizontalAlignment(SwingUtilities.LEFT);
     
-    btnAdjustInheritance = new FlatButton("Automatic position", 
+    btnAdjustInheritance = new FlatButton("Autopath", 
         PersonalizedIcon.createImageIcon(
             Slyum.ICON_PATH + "adjust-inheritance.png"));
     btnAdjustInheritance.setActionCommand(Slyum.ACTION_ADJUST_INHERITANCE);

@@ -616,4 +616,8 @@ public abstract class GraphicComponent extends Observable
 	public Element getXmlElement(Document doc) {
 	  return null;
 	}
+  
+  public IDiagramComponent getAssociedXmlElement() {
+    return getAssociedComponent();
+  }
 }
