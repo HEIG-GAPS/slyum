@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.font.TextAttribute;
 import java.text.AttributedString;
-import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -15,7 +14,6 @@ import utility.Utility;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Method;
-import classDiagram.components.Variable;
 
 /**
  * A TextBox is a graphic component from Slyum containing a String. The
@@ -30,61 +28,6 @@ import classDiagram.components.Variable;
  * @version 1.0 - 25.07.2011
  */
 public class TextBoxMethod extends TextBox implements Observer {
-  
-	/**
-	 * Enumeration class for the mode of display parameters in methods.
-	 * 
-	 * @author David Miserez
-	 * @version 1.0 - 25.07.2011
-	 */
-	public enum ParametersViewStyle { 
-	  DEFAULT, NAME, NOTHING , TYPE, TYPE_AND_NAME;
-	  
-	  @Override
-	  public String toString() {
-	    return super.toString().charAt(0) + super.toString().substring(1).toLowerCase().replace('_', ' ');
-	  }
-	};
-
-	/**
-	 * Get a String representing the Method.
-	 * 
-	 * @param method
-	 *            the method to convert to String
-	 * @param style
-	 *            the style of display for parameters
-	 * @return the string converted
-	 */
-	public static String getStringFromMethod(Method method, ParametersViewStyle style)
-	{
-		String signature = method.getVisibility().toCar() + " " + method.getName() + " (";
-		final LinkedList<Variable> parameters = method.getParameters();
-
-		if (style != ParametersViewStyle.NOTHING)
-
-			for (int i = 0; i < parameters.size(); i++)
-			{
-				if (!parameters.get(i).getName().isEmpty())
-					if (style == ParametersViewStyle.TYPE_AND_NAME)
-
-						signature += parameters.get(i).getName() + " : " + parameters.get(i).getType();
-
-					else if (style == ParametersViewStyle.NAME)
-
-						signature += parameters.get(i).getName();
-
-				if (style == ParametersViewStyle.TYPE)
-
-					signature += parameters.get(i).getType();
-
-				if (i < parameters.size() - 1)
-					signature += ", ";
-			}
-
-		return signature + ") : " + method.getReturnType();
-	}
-
-	private ParametersViewStyle currentStyle;
 
 	private final Method method;
 
@@ -96,13 +39,10 @@ public class TextBoxMethod extends TextBox implements Observer {
 	 * @param attribute
 	 *            the method
 	 */
-	public TextBoxMethod(GraphicView parent, Method method)
-	{
-		super(parent, getStringFromMethod(method, GraphicView.getDefaultViewMethods()));
-
+	public TextBoxMethod(GraphicView parent, Method method) {
+		super(parent, method.getStringFromMethod());
 		this.method = method;
 		method.addObserver(this);
-		currentStyle = ParametersViewStyle.DEFAULT;
 	}
 
 	@Override
@@ -126,27 +66,9 @@ public class TextBoxMethod extends TextBox implements Observer {
 		return new Rectangle(bounds);
 	}
 
-	/**
-	 * Get the style of displaying parameters.
-	 * 
-	 * @return the style of displaying parameters
-	 */
-	public ParametersViewStyle getParametersViewStyle()
-	{
-	  if (currentStyle == ParametersViewStyle.DEFAULT)
-	    return GraphicView.getDefaultViewMethods();
-	  
-		return currentStyle;
-	}
-	
-	public ParametersViewStyle getConcretParametersViewStyle() {
-    return currentStyle;
-	}
-
 	@Override
-	public String getText()
-	{
-		return getStringFromMethod(method, getParametersViewStyle());
+	public String getText() {
+		return method.getStringFromMethod();
 	}
 
 	@Override
@@ -163,19 +85,6 @@ public class TextBoxMethod extends TextBox implements Observer {
 			throw new IllegalArgumentException("bounds is null");
 
 		this.bounds = new Rectangle(bounds);
-	}
-
-	/**
-	 * Change the style of displaying parameters.
-	 * 
-	 * @param newStyle
-	 *            the new style
-	 */
-	public void setParametersViewStyle(ParametersViewStyle newStyle)
-	{
-		currentStyle = newStyle;
-
-		super.setText(getText());
 	}
 
 	@Override
@@ -195,10 +104,9 @@ public class TextBoxMethod extends TextBox implements Observer {
 	}
 
 	@Override
-	public void setText(String text)
-	{
+	public void setText(String text) {
 		method.setText(text);
-		super.setText(getStringFromMethod(method, getParametersViewStyle()));
+		super.setText(method.getStringFromMethod());
 	}
 
 	@Override
@@ -208,9 +116,8 @@ public class TextBoxMethod extends TextBox implements Observer {
 	}
 
 	@Override
-	public void update(Observable observable, Object o)
-	{
-		if (o != null && o instanceof UpdateMessage)
+	public void update(Observable observable, Object o) {
+		if (o != null && o instanceof UpdateMessage) {
 			switch ((UpdateMessage) o)
 			{
 				case SELECT:
@@ -222,9 +129,8 @@ public class TextBoxMethod extends TextBox implements Observer {
       default:
         break;
 			}
-		else
-		{
-			String text = getStringFromMethod(method, getParametersViewStyle());
+		} else {
+			String text = method.getStringFromMethod();
 			super.setText(text);
 		}
 

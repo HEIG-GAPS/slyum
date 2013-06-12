@@ -5,7 +5,6 @@ import graphic.GraphicView;
 import graphic.GraphicView.ViewEntity;
 import graphic.entity.EntityView;
 import graphic.textbox.TextBox;
-import graphic.textbox.TextBoxMethod.ParametersViewStyle;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -57,6 +56,7 @@ import javax.swing.event.ListSelectionListener;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.Utility;
+import classDiagram.components.Method.ParametersViewStyle;
 
 public class SProperties extends JDialog {
   private ButtonColor btnColor;
