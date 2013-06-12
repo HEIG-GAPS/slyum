@@ -10,7 +10,6 @@ import graphic.textbox.TextBox;
 import graphic.textbox.TextBoxAttribute;
 import graphic.textbox.TextBoxEntityName;
 import graphic.textbox.TextBoxMethod;
-import graphic.textbox.TextBoxMethod.ParametersViewStyle;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -52,6 +51,7 @@ import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Attribute;
 import classDiagram.components.Entity;
 import classDiagram.components.Method;
+import classDiagram.components.Method.ParametersViewStyle;
 import classDiagram.components.PrimitiveType;
 import classDiagram.components.Visibility;
 
@@ -906,7 +906,7 @@ public abstract class EntityView
      */
     public void methodViewChange(ParametersViewStyle newStyle) {
       for (TextBoxMethod tbm : methodsView)
-        tbm.setParametersViewStyle(newStyle);
+        ((Method)tbm.getAssociedComponent()).setParametersViewStyle(newStyle);
     }
 
     /**
@@ -918,7 +918,8 @@ public abstract class EntityView
      */
     private void methodViewChangeClicked(ParametersViewStyle newStyle) {
       if (pressedTextBox instanceof TextBoxMethod)
-        ((TextBoxMethod) pressedTextBox).setParametersViewStyle(newStyle);
+        ((Method)pressedTextBox.getAssociedComponent()).
+            setParametersViewStyle(newStyle);
       else
         for (EntityView ev : parent.getSelectedEntities())
           ev.methodViewChange(newStyle);
@@ -1062,7 +1063,7 @@ public abstract class EntityView
     protected abstract void prepareNewMethod(Method method);
 
     /**
-     * Delete all TextBox and regenerate them. !! This method take time !!
+     * Delete all TextBox and regenerate them. !! This could method take time !!
      */
     public void regenerateEntity() {
         boolean isStopRepaint = parent.getStopRepaint();
@@ -1073,10 +1074,10 @@ public abstract class EntityView
 
         entityName.setText(component.getName());
 
-        for (final Attribute a : component.getAttributes())
+        for (Attribute a : component.getAttributes())
             addAttribute(a, false);
 
-        for (final Method m : component.getMethods())
+        for (Method m : component.getMethods())
             addMethod(m, false);
 
         if (!isStopRepaint)
@@ -1270,8 +1271,8 @@ public abstract class EntityView
           textbox.addAll(view.methodsView);
         
         for (int i = 0; i < textbox.size() - 1; i++) {
-          TextBoxMethod current = textbox.get(i),
-                        next = textbox.get(i+1);
+          Method current = (Method)textbox.get(i).getAssociedComponent(),
+                 next = (Method)textbox.get(i+1).getAssociedComponent();
           if (!current.getConcretParametersViewStyle().equals(
                next.getConcretParametersViewStyle())) {
             groupViewMethods.clearSelection();
@@ -1280,10 +1281,11 @@ public abstract class EntityView
         }
         
         if (textbox.size() > 0)
-          newView = textbox.get(0).getConcretParametersViewStyle();
+          newView = ((Method)textbox.get(0).
+              getAssociedComponent()).getConcretParametersViewStyle();
       } else if (pressedTextBox instanceof TextBoxMethod) {
         newView = 
-            ((TextBoxMethod)pressedTextBox).getConcretParametersViewStyle();
+            ((Method)pressedTextBox.getAssociedComponent()).getConcretParametersViewStyle();
       }
       
       if (newView != null) {
@@ -1440,6 +1442,8 @@ public abstract class EntityView
         EntityView view = (EntityView)Class.forName(classToInstanciate)
             .getConstructor(GraphicView.class, entity.getClass())
             .newInstance(parent, entity);
+        view.regenerateEntity();
+        
         view.setBounds(newBounds);
         view.setColor(defaultColor);
         view.displayDefault = displayDefault;

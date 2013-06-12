@@ -10,8 +10,6 @@ import graphic.relations.RelationGrip;
 import graphic.textbox.TextBox;
 import graphic.textbox.TextBoxCommentary;
 import graphic.textbox.TextBoxLabel;
-import graphic.textbox.TextBoxMethod;
-import graphic.textbox.TextBoxMethod.ParametersViewStyle;
 import graphic.textbox.TextBoxRole;
 
 import java.awt.Point;
@@ -33,6 +31,7 @@ import classDiagram.components.Attribute;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Method;
+import classDiagram.components.Method.ParametersViewStyle;
 import classDiagram.components.Type;
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Binary;
@@ -284,7 +283,6 @@ public class XMLParser extends DefaultHandler
 
 	private void createEntity(Entity e) throws SyntaxeNameException {
 		classDiagram.components.Entity ce = null;
-		EntityView newEntity;
 		e.name = TypeName.verifyAndAskNewName(e.name);
 
 		switch (e.entityType) {
@@ -328,8 +326,6 @@ public class XMLParser extends DefaultHandler
 
 				break;
 		}
-		
-		newEntity = (EntityView)PanelClassDiagram.getInstance().getCurrentGraphicView().searchAssociedComponent(ce);
 
 		for (final Variable v : e.attribute) {			
       final Attribute a = new Attribute(VariableName.verifyAndAskNewName(v.name), v.type);
@@ -355,10 +351,7 @@ public class XMLParser extends DefaultHandler
 			ce.addMethod(m);
 			ce.notifyObservers(UpdateMessage.ADD_METHOD_NO_EDIT);
 			
-			// Set le type de vue
-			((TextBoxMethod)newEntity.searchAssociedTextBox(m))
-			    .setParametersViewStyle(o.view);
-			
+			m.setParametersViewStyle(o.view);
 			m.setStatic(o.isStatic);
 			m.setAbstract(o.isAbstract);
 

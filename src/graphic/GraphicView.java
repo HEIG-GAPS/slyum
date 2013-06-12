@@ -17,7 +17,6 @@ import graphic.relations.LineView;
 import graphic.relations.MultiLineView;
 import graphic.relations.MultiView;
 import graphic.textbox.TextBoxCommentary;
-import graphic.textbox.TextBoxMethod.ParametersViewStyle;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -79,6 +78,7 @@ import classDiagram.components.AssociationClass;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
+import classDiagram.components.Method.ParametersViewStyle;
 import classDiagram.relationships.Aggregation;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Composition;

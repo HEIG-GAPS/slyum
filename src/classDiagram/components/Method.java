@@ -1,7 +1,6 @@
 package classDiagram.components;
 
-import graphic.entity.EntityView;
-import graphic.textbox.TextBoxMethod;
+import graphic.GraphicView;
 
 import java.util.LinkedList;
 import java.util.Observable;
@@ -10,7 +9,6 @@ import java.util.Observer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import swing.PanelClassDiagram;
 import utility.SMessageDialog;
 import change.BufferMethod;
 import change.Change;
@@ -27,13 +25,29 @@ import classDiagram.verifyName.VariableName;
  * @version 1.0 - 24.07.2011
  */
 public class Method extends Observable 
-                    implements IDiagramComponent, Observer, Cloneable
-{
-	public static final String REGEX_SEMANTIC_METHOD = 
-	    Variable.REGEX_SEMANTIC_ATTRIBUTE;
+                    implements IDiagramComponent, Observer, Cloneable {
+  
+  public static final String REGEX_SEMANTIC_METHOD = 
+      Variable.REGEX_SEMANTIC_ATTRIBUTE;
+  
+  /**
+   * Enumeration class for the mode of display parameters in methods.
+   * 
+   * @author David Miserez
+   * @version 1.0 - 25.07.2011
+   */
+  public enum ParametersViewStyle { 
+    DEFAULT, NAME, NOTHING , TYPE, TYPE_AND_NAME;
+    
+    @Override
+    public String toString() {
+      return 
+          super.toString().charAt(0) + 
+          super.toString().substring(1).toLowerCase().replace('_', ' ');
+    }
+  };
 	
-	public static boolean checkSemantic(String name)
-	{
+	public static boolean checkSemantic(String name) {
 		return name.matches(REGEX_SEMANTIC_METHOD);
 	}
 	
@@ -45,6 +59,7 @@ public class Method extends Observable
 	private final LinkedList<Variable> parameters = new LinkedList<>();
 	private Type returnType;
 	private Visibility visibility;
+  private ParametersViewStyle currentStyle;
 
   /**
 	 * Create a new method.
@@ -56,8 +71,8 @@ public class Method extends Observable
 	 * @param visibility
 	 *            the visibility of the method
 	 */
-	public Method(String name, Type returnType, Visibility visibility, Entity entity)
-	{
+	public Method(
+	    String name, Type returnType, Visibility visibility, Entity entity) {
 		if (returnType == null)
 			throw new IllegalArgumentException("type is null");
 
@@ -73,6 +88,7 @@ public class Method extends Observable
 		this.entity = entity;
 		setReturnType(returnType);
 		this.visibility = visibility;
+    currentStyle = ParametersViewStyle.DEFAULT;
 		
 		Change.setBlocked(isBlocked);
 	}
@@ -84,6 +100,7 @@ public class Method extends Observable
 		this.visibility = method.visibility;
 		this._isAbstract = method._isAbstract;
 		this._isStatic = method._isStatic;
+		this.currentStyle = method.currentStyle;
 		for (Variable parameter : method.parameters)
 			this.parameters.add(new Variable(parameter));
 	}
@@ -338,9 +355,9 @@ public class Method extends Observable
 		setChanged();
 	}
 
-	public void setText(String text)
-	{
-		if (text.length() == 0 || text.equals(TextBoxMethod.getStringFromMethod(this, TextBoxMethod.ParametersViewStyle.TYPE_AND_NAME)))
+	public void setText(String text) {
+		if (text.length() == 0 || 
+		    text.equals(getStringFromMethod(ParametersViewStyle.TYPE_AND_NAME)))
 			return;
 
 		String returnType = getReturnType().getName();
@@ -450,15 +467,10 @@ public class Method extends Observable
 	
 	@Override
 	public Element getXmlElement(Document doc) {
-    TextBoxMethod textbox = 
-        (TextBoxMethod)((EntityView)PanelClassDiagram.getInstance()
-            .getCurrentGraphicView().searchAssociedComponent(entity))
-            .searchAssociedTextBox(this);
-    
+	  
     Element variable = doc.createElement(getXmlTagName());
-    
     variable.setAttribute("name", name);
-    variable.setAttribute("view", textbox.getConcretParametersViewStyle().name());
+    variable.setAttribute("view", getConcretParametersViewStyle().name());
     variable.setAttribute("returnType", returnType.toString());
     variable.setAttribute("visibility", visibility.toString());
     variable.setAttribute("isStatic", String.valueOf(_isStatic));
@@ -471,9 +483,77 @@ public class Method extends Observable
 	}
 
 	@Override
-	public void update(Observable arg0, Object arg1)
-	{
+	public void update(Observable arg0, Object arg1) {
 		// parameter's changed
 		setChanged();
 	}
+
+  /**
+   * Get the style of displaying parameters.
+   * 
+   * @return the style of displaying parameters
+   */
+  public ParametersViewStyle getParametersViewStyle()
+  {
+    if (currentStyle == ParametersViewStyle.DEFAULT)
+      return GraphicView.getDefaultViewMethods();
+    
+    return currentStyle;
+  }
+  
+  public ParametersViewStyle getConcretParametersViewStyle() {
+    return currentStyle;
+  }
+
+  /**
+   * Change the style of displaying parameters.
+   * 
+   * @param newStyle
+   *            the new style
+   */
+  public void setParametersViewStyle(ParametersViewStyle newStyle) {
+    currentStyle = newStyle;
+    setChanged();
+    notifyObservers();
+  }
+
+  /**
+   * Get a String representing the Method.
+   * 
+   * @param method
+   *            the method to convert to String
+   * @param style
+   *            the style of display for parameters
+   * @return the string converted
+   */
+  public String getStringFromMethod(ParametersViewStyle style) {
+    String signature = getVisibility().toCar() + " " + getName() + " (";
+    final LinkedList<Variable> parameters = getParameters();
+
+    if (style != ParametersViewStyle.NOTHING)
+
+      for (int i = 0; i < parameters.size(); i++) {
+        if (!parameters.get(i).getName().isEmpty())
+          if (style == ParametersViewStyle.TYPE_AND_NAME)
+
+            signature += parameters.get(i).getName() + " : " + parameters.get(i).getType();
+
+          else if (style == ParametersViewStyle.NAME)
+
+            signature += parameters.get(i).getName();
+
+        if (style == ParametersViewStyle.TYPE)
+
+          signature += parameters.get(i).getType();
+
+        if (i < parameters.size() - 1)
+          signature += ", ";
+      }
+
+    return signature + ") : " + getReturnType();
+  }
+  
+  public String getStringFromMethod() {
+    return getStringFromMethod(getParametersViewStyle());
+  }
 }
