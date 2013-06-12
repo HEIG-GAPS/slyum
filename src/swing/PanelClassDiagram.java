@@ -8,6 +8,7 @@ import java.awt.Cursor;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -25,6 +27,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.filechooser.FileFilter;
@@ -130,6 +133,16 @@ public class PanelClassDiagram extends JPanel
 		    BorderFactory.createMatteBorder(2, 0, 0, 0, Slyum.THEME_COLOR));
 
 		add(splitOuter, BorderLayout.CENTER);
+    
+    getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+        .put(KeyStroke.getKeyStroke("ESCAPE"), "escapePressed");
+    getActionMap().put("escapePressed", new AbstractAction() {
+      
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        graphicView.deleteCurrentFactory();
+      }
+    });
 	}
 
 	/**
