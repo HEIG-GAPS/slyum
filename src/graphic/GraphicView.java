@@ -25,12 +25,13 @@ import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -38,6 +39,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
@@ -66,8 +68,6 @@ import swing.SPanelDiagramComponent;
 import swing.SPanelDiagramComponent.Mode;
 import swing.SPanelElement;
 import swing.Slyum;
-import utility.PersonalizedIcon;
-import utility.SizedCursor;
 import utility.Utility;
 import change.BufferBounds;
 import change.Change;
@@ -515,10 +515,22 @@ public class GraphicView extends GraphicComponent implements
         super.setCursor(cursor);
       }
     };
+    
+    AdjustmentListener listnener = new AdjustmentListener() {
+      
+      @Override
+      public void adjustmentValueChanged(AdjustmentEvent evt) {
+        repaint();
+      }
+    };
 
     scrollPane = new JScrollPane(scene);
     scrollPane.getVerticalScrollBar().setUnitIncrement(50);
     scrollPane.setBorder(null);
+    scrollPane.getHorizontalScrollBar()
+              .addAdjustmentListener(listnener);
+    scrollPane.getVerticalScrollBar()
+              .addAdjustmentListener(listnener);
 
     scene.addMouseWheelListener(this);
     scene.addKeyListener(this);
@@ -1551,13 +1563,7 @@ public class GraphicView extends GraphicComponent implements
       break;
 
     case MouseEvent.BUTTON2:
-      Toolkit toolkit = Toolkit.getDefaultToolkit();
-      Image image = PersonalizedIcon.createImageIcon(
-          Slyum.ICON_PATH + "drag_hand.png").getImage();
-      image = SizedCursor.getPreferredSizedCursor(image);
-      Cursor brokenCursor = toolkit.createCustomCursor(image, new Point(0, 0),
-          "drag_hand");
-      scene.setCursor(brokenCursor);
+      scene.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
       break;
     }
   }
@@ -1913,21 +1919,21 @@ public class GraphicView extends GraphicComponent implements
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
         RenderingHints.VALUE_ANTIALIAS_OFF);
 
-    final Rectangle vr = getScene().getVisibleRect();
-    final boolean gradient = isBackgroundGradient();
+    Rectangle vr = getScene().getVisibleRect();
+    boolean gradient = isBackgroundGradient();
 
     // Paint a gradient from top to bottom.
     if (gradient)
-      g2.setPaint(new GradientPaint(0, 0, color, 0, scene.getHeight(), color
-          .brighter()));
+      g2.setPaint(new GradientPaint(
+          0, 0, color, 0, scene.getHeight(), color.brighter()));
     else
       g2.setColor(color);
 
     g2.fillRect(vr.x, vr.y, vr.width, vr.height);
 
     // Draw grid
-    if (isVisible() && isGridEnable() && isGridVisible() && getGridSize() >= 10)
-    {
+    if (isVisible() && isGridEnable() && isGridVisible() && getGridSize() >= 10) {
+      
       final int grayLevel = Utility.getColorGrayLevel(getColor());
       Color gridColor = new Color(getGridColor());
 
@@ -1938,11 +1944,14 @@ public class GraphicView extends GraphicComponent implements
             gridColor.getBlue(), getGridOpacity());
 
       g2.setColor(gridColor);
+      
+      double gridSizeScale = (double)gridSize * getScale();
 
-      for (int x = (vr.x / gridSize) * gridSize; x < vr.x + vr.width + gridSize; x += gridSize)
-        for (int y = (vr.y / gridSize) * gridSize; y < vr.y + vr.height
-            + gridSize; y += gridSize)
-          g2.drawLine(x, y, x, y);
+      for (double x = (int)(vr.x / gridSizeScale) * gridSizeScale;
+          x < vr.x + vr.width + gridSizeScale; x += gridSizeScale)
+        for (double y = (int)(vr.y / gridSizeScale) * gridSizeScale;
+            y < vr.y + vr.height + gridSizeScale; y += gridSizeScale)
+          g2.draw(new Line2D.Double(x, y, x, y));
     }
   }
 
