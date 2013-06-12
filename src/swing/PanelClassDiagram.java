@@ -55,8 +55,7 @@ import classDiagram.ClassDiagram;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class PanelClassDiagram extends JPanel
-{
+public class PanelClassDiagram extends JPanel {
 	private static PanelClassDiagram instance = new PanelClassDiagram();
 
 	public static PanelClassDiagram getInstance() {
@@ -254,21 +253,18 @@ public class PanelClassDiagram extends JPanel
 				file = new File(file.getPath() + "." + extension);
 			}
 
-			if (file.exists())
-			{
+			if (file.exists()) {
 				final int answer = SMessageDialog.showQuestionMessageOkCancel(file + " already exists. Overwrite?");
 
 				if (answer == JOptionPane.CANCEL_OPTION)
 					return false;
-			}
-			else
-				try
-				{
+			} else {
+				try {
 					file.createNewFile();
-				} catch (final IOException e)
-				{
+				} catch (final IOException e) {
 					e.printStackTrace();
 				}
+			}
 
 			setCurrentFile(file);
 			return true;
@@ -282,19 +278,14 @@ public class PanelClassDiagram extends JPanel
 	 * 
 	 * Launch a new printing.
 	 */
-	public void initPrinting()
-	{
-		final Thread runner = new Thread() {
-
-			@Override
-			public void run()
-			{
-				print();
-			}
-
-		};
-
-		runner.start();
+	public void initPrinting() {
+	  new Thread(new Runnable() {
+      
+      @Override
+      public void run() {
+        print();        
+      }
+    }).start();
 	}
 
 

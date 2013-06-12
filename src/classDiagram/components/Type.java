@@ -22,7 +22,14 @@ public class Type extends Observable implements IDiagramComponent
     public static final String accents = "ÀàÁáÂâÃãÄäÅåÒòÓóÔôÕõÖöØøÈèÉéÊêËëÇçÌìÍíÎîÏïÙùÚúÛûÜüÑñ";
     public static final String CARACTERES_VALID = "a-zA-Z_" + accents;
     public final static String REGEX_DIGIT = "[0-9]*";
-    public final static String REGEX_SEMANTIC_TYPE = Variable.REGEX_SEMANTIC_ATTRIBUTE + "(<("+Variable.REGEX_SEMANTIC_ATTRIBUTE+")(,\\s*("+Variable.REGEX_SEMANTIC_ATTRIBUTE+"))*>)?((\\["+REGEX_DIGIT+"])*)*";
+    private final static String REGEXP_GENERIC = 
+        Variable.REGEX_SEMANTIC_ATTRIBUTE + 
+        "(<("+Variable.REGEX_SEMANTIC_ATTRIBUTE+")(,\\s*("+Variable.REGEX_SEMANTIC_ATTRIBUTE+"))*>)?";
+    private final static String REGEXP_GENERIC_2 = 
+        "(<("+REGEXP_GENERIC+")(,\\s*("+REGEXP_GENERIC+"))*>)";
+    public final static String REGEX_SEMANTIC_TYPE = 
+        Variable.REGEX_SEMANTIC_ATTRIBUTE + 
+        REGEXP_GENERIC_2 + "?((\\["+REGEX_DIGIT+"])*)*";
 	
 	public static boolean checkSemantic(String type) {
 	    return type.matches(REGEX_SEMANTIC_TYPE);
