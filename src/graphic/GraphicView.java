@@ -1639,7 +1639,6 @@ public class GraphicView extends GraphicComponent implements
 
   @Override
   public void keyReleased(KeyEvent e) {
-    
     if (currentFactory == null && shiftDown) {
       shiftDown = false;
       SPanelDiagramComponent panel = SPanelDiagramComponent.getInstance();
