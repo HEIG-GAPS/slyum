@@ -159,6 +159,8 @@ public abstract class TextBoxLabel extends TextBox implements Observer {
 		parent.getScene().repaint(repaintBounds);
 	}
 	
+	public abstract void reinitializeLocation();
+	
 	public void setDeplacement(Point point)
 	{
 		deplacement = point;

@@ -59,8 +59,8 @@ public class Slyum extends JFrame implements ActionListener {
 	public final static Color BACKGROUND_FORHEAD = new Color(246, 246, 246);
 	public final static Color THEME_COLOR = new Color(0, 122, 204);
 
-	// Don't use the file separator here. Java resources are get with getResource() and
-	// didn't support back-slash character on Windows.
+	// Don't use the file separator here. Java resources are get with
+	// getResource() and didn't support back-slash character on Windows.
 	public final static String RESOURCES_PATH = "resources/";
   public final static String ICON_PATH = RESOURCES_PATH + "icon/";
   public final static String FONTS_PATCH = RESOURCES_PATH + "fonts/";
@@ -172,7 +172,8 @@ public class Slyum extends JFrame implements ActionListener {
 	public final static String KEY_ZOOM_ADAPT = "ctrl shift E";
 	public final static String KEY_ZOOM_1 = "1";
 
-  public final static String KEY_SWITCH_MODE_CURSOR = "shift";
+  public final static String KEY_DEFAULT_MODE = "alt Q";
+  public final static String KEY_GRIPS_MODE = "alt W";
 	public final static String KEY_CLASS = "ctrl shift C";
 	public final static String KEY_INTERFACE = "ctrl shift I";
 	public final static String KEY_ASSOCIATION_CLASS = "ctrl shift X";
@@ -818,8 +819,17 @@ public class Slyum extends JFrame implements ActionListener {
 			// Menu item Zoom2x
 			menuItem = createMenuItem("2:1 (200 %)", "", 0, null, ACTION_ZOOM_2);
 			subMenu.add(menuItem);
-			
-			menu.addSeparator();
+
+      menu.addSeparator();
+      // Menu item default mode
+      menuItem = createMenuItem("Default cursor", "pointer-arrow", KeyEvent.VK_E, KEY_DEFAULT_MODE, ACTION_MODE_CURSOR, Mode.CURSOR.getBtnMode());
+      menu.add(menuItem);
+
+      // Menu item grips mode
+      menuItem = createMenuItem("Add grips", "pointer-grip", KeyEvent.VK_G, KEY_GRIPS_MODE, ACTION_MODE_GRIP, Mode.GRIP.getBtnMode());
+      menu.add(menuItem);
+      
+      menu.addSeparator();
 	
 			// Menu item add class
 			menuItem = createMenuItem("Add Class", "class", KeyEvent.VK_C, KEY_CLASS, ACTION_NEW_CLASS, p.getBtnClass());

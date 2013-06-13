@@ -118,11 +118,21 @@ public class TextBoxRole extends TextBoxLabel {
 		this.grip = grip;
 		grip.addObserver(this);
 
-		final Rectangle classBounds = grip.getAssociedComponentView().getBounds();
-		final Point gripAnchor = grip.getAnchor();
-		
-		// Permet d'attendre que la taille de la textbox soit définie.
-		SwingUtilities.invokeLater(new Runnable() {
+		parent.addOthersComponents(tbm = new TextBoxMultiplicity(parent, role.getMultiplicity(), grip));
+    
+    reinitializeLocation();
+	}
+	
+	@Override
+	public void reinitializeLocation() {
+
+    final Rectangle classBounds = grip.getAssociedComponentView().getBounds();
+    final Point gripAnchor = grip.getAnchor();
+    
+    deplacement = new Point(); // (0, 0)
+    
+    // Permet d'attendre que la taille de la textbox soit définie.
+    SwingUtilities.invokeLater(new Runnable() {
       
       @Override
       public void run() {
@@ -140,8 +150,8 @@ public class TextBoxRole extends TextBoxLabel {
         computeLabelPosition();
       }
     });
-
-		parent.addOthersComponents(tbm = new TextBoxMultiplicity(parent, role.getMultiplicity(), grip));
+    
+    tbm.reinitializeLocation();
 	}
 
 	@Override

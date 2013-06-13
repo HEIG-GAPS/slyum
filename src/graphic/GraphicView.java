@@ -1621,30 +1621,15 @@ public class GraphicView extends GraphicComponent implements
     if (!isRecord)
       Change.stopRecord();
   }
-  
-  private boolean shiftDown = false;
 
   @Override
   public void keyPressed(KeyEvent e) {
-    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+    if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
       unselectAll();
-    }
-    else if (!e.isControlDown() && currentFactory == null && !shiftDown && e.isShiftDown()) {
-      SPanelDiagramComponent panel = SPanelDiagramComponent.getInstance();
-      shiftDown = true;
-      // Inversion du mode.
-      panel.setMode(panel.getMode() == Mode.CURSOR ? Mode.GRIP : Mode.CURSOR);
-    }
   }
 
   @Override
   public void keyReleased(KeyEvent e) {
-    if (currentFactory == null && shiftDown) {
-      shiftDown = false;
-      SPanelDiagramComponent panel = SPanelDiagramComponent.getInstance();
-      // Inversion du mode.
-      panel.setMode(panel.getMode() == Mode.CURSOR ? Mode.GRIP : Mode.CURSOR);
-    }
   }
 
   @Override

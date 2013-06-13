@@ -97,10 +97,9 @@ public abstract class MovableComponent extends GraphicComponent
 	 *            the value to adjust
 	 * @return the value adjusted
 	 */
-	public int ajustOnGrid(int value)
-	{
+	public int ajustOnGrid(int value) {
 		// Use the integer cast for adjusting value.
-		return value / GraphicView.getGridSize() * GraphicView.getGridSize();
+		return Math.round(value / (float)GraphicView.getGridSize()) * GraphicView.getGridSize();
 	}
 
 	@Override
