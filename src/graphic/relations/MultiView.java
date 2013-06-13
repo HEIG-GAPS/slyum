@@ -98,6 +98,10 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 		popupMenu.add(menuItem);
 		
 		super.pushBufferCreation();
+		
+		// Cet élément n'est pas redimensionnable. Suppression des grips.
+		leftMovableSquare.delete();
+		rightMovableSquare.delete();
 	}
 	
 	@Override
