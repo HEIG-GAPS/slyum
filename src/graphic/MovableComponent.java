@@ -32,8 +32,7 @@ public abstract class MovableComponent extends GraphicComponent
 
 	protected GripEntity rightMovableSquare;
 
-	public MovableComponent(GraphicView parent)
-	{
+	public MovableComponent(GraphicView parent) {
 		super(parent);
 
 		final int resizerSize = 10;
