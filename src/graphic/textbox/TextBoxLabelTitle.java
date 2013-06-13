@@ -57,10 +57,17 @@ public class TextBoxLabelTitle extends TextBoxLabel
 		this.relationView = relationView;
 		this.label = label;
 		this.label.addObserver(this);
-
 		relationView.addObserver(this);
+		
+		reinitializeLocation();
+	}
+	
+	@Override
+	public void reinitializeLocation() {
 
-		// Permet d'attendre que la taille de la textbox soit définie.
+    deplacement = new Point(); // (0, 0)
+    
+    // Permet d'attendre que la taille de la textbox soit définie.
     SwingUtilities.invokeLater(new Runnable() {
       
       @Override

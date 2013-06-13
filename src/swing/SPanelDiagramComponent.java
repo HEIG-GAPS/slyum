@@ -18,8 +18,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 
@@ -43,10 +41,10 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
   }
   
   private static final String TT_MODE_CURSOR = 
-      "Default cursor " + Utility.keystrokeToString(Slyum.KEY_SWITCH_MODE_CURSOR);
+      "Default cursor " + Utility.keystrokeToString(Slyum.KEY_DEFAULT_MODE);
   
   private static final String TT_MODE_GRIP = 
-      "Add grips " + Utility.keystrokeToString(Slyum.KEY_SWITCH_MODE_CURSOR);
+      "Add grips " + Utility.keystrokeToString(Slyum.KEY_GRIPS_MODE);
   
 	private static final String TT_CLASS = 
 	    "Class " + Utility.keystrokeToString(Slyum.KEY_CLASS);
@@ -106,24 +104,10 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
     add(btnCursorMode = createSButton(PersonalizedIcon.createImageIcon(
         Slyum.ICON_PATH + "pointer-arrow.png"), Slyum.ACTION_MODE_CURSOR,
         Color.RED, TT_MODE_CURSOR));
-    btnCursorMode.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        super.mouseClicked(e);
-        setMode(Mode.CURSOR);
-      }
-    });
 
     add(btnGripMode = createSButton(PersonalizedIcon.createImageIcon(
         Slyum.ICON_PATH + "pointer-grip.png"), Slyum.ACTION_MODE_GRIP,
         Color.RED, TT_MODE_GRIP));
-    btnGripMode.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        super.mouseClicked(e);
-        setMode(Mode.GRIP);
-      }
-    });
     
     add(new SSeparator());
 
@@ -254,6 +238,12 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
 
 		else if (Slyum.ACTION_NEW_LINK_NOTE.equals(e.getActionCommand()))
 			gv.initNewComponent(new LineCommentaryFactory(gv));
+		
+		else if (Slyum.ACTION_MODE_CURSOR.equals(e.getActionCommand()))
+		  setMode(Mode.CURSOR);
+		
+	  else if (Slyum.ACTION_MODE_GRIP.equals(e.getActionCommand()))
+	    setMode(Mode.GRIP);
 	}
 	
 	public SButton getBtnClass()

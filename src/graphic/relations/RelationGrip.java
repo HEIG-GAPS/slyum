@@ -29,8 +29,7 @@ import change.Change;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class RelationGrip extends SquareGrip implements ActionListener
-{
+public class RelationGrip extends SquareGrip implements ActionListener {
 	public static int DEFAULT_SIZE = 10;
 
 	private Point anchor = new Point();
@@ -197,7 +196,7 @@ public class RelationGrip extends SquareGrip implements ActionListener
 		                              relation.getBounds(), 
 		                              GraphicView.getGridSize() + 20);
 
-		this.anchor = ajustOnGrid(anchor);
+		this.anchor = adjustOnGrid(anchor);
 		relation.gripMoved(repaintBounds);
 
 		setChanged();
@@ -205,10 +204,10 @@ public class RelationGrip extends SquareGrip implements ActionListener
 	
 	public static int adjust(int value) {
     // Use the integer cast for adjusting value.
-    return value / GraphicView.getGridSize() * GraphicView.getGridSize();
+    return Math.round(value / (float)GraphicView.getGridSize()) * GraphicView.getGridSize();
 	}
 	
-  protected Point ajustOnGrid(Point pt) {
+  protected Point adjustOnGrid(Point pt) {
     return new Point(adjust(pt.x), adjust(pt.y));
   }
 

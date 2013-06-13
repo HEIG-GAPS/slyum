@@ -8,8 +8,8 @@ import graphic.textbox.TextBoxRole;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -19,12 +19,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import utility.Utility;
+import change.Change;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
 import classDiagram.relationships.Relation;
 import classDiagram.relationships.RelationChanger;
-
-import com.google.common.collect.Lists;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -81,41 +80,57 @@ public abstract class RelationView extends LineView implements Observer
 	  changeLinkedComponent(gripSource, target);
 		return true;
 	}
-	
-	/**
-	 * Change the orientation of the association.
-	 * @return true if it's ok, false otherwise.
-	 */
-	public void changeOrientation() {
-	  GraphicComponent buffer;
-	  Rectangle bufferBoundsFirst, bufferBoundsLast;
-	  LinkedList<RelationGrip> bufferPoints;
-	  List<RelationGrip> reversePoints;
+  
+  /**
+   * Change the orientation of the association.
+   * @return true if it's ok, false otherwise.
+   */
+  public void changeOrientation() {
+    MagneticGrip first = getFirstPoint(), 
+                 last = getLastPoint();
+    GraphicComponent buffer;
+    Point bufferAnchorFirst, bufferAnchorLast,
+          bufferPreferredAnchor1, bufferPreferredAnchor2;
+    LinkedList<RelationGrip> bufferPoints;
+    
+    boolean blocked = Change.isBlocked();
+    Change.setBlocked(true);
 
-	  // Inversion des composants.
-	  buffer = getFirstPoint().getAssociedComponentView();
-    bufferBoundsFirst = getFirstPoint().getBounds();
-    bufferBoundsLast = getLastPoint().getBounds();
+    // Inversion des composants.
+    buffer = first.getAssociedComponentView();
+    bufferAnchorFirst = first.getAnchor();
+    bufferAnchorLast = last.getAnchor();
+    bufferPreferredAnchor1 = first.getPreferredAnchor();
+    bufferPreferredAnchor2 = last.getPreferredAnchor();
     bufferPoints = getPoints();
     
     // Il ne faut pas ré-ajouter par la suite les grips magnétisés. 
     bufferPoints.removeFirst();
     bufferPoints.removeLast();
     
-    // On inverse la liste des points pour pas qu'ils ne se croisent.
-    reversePoints = Lists.reverse(bufferPoints);
+    // On inverse la liste des points pour ne pas qu'ils ne se croisent.
+    Collections.reverse(bufferPoints);
 
     // On cache la relation pour éviter qu'elle ne se redissne alors que
     // l'inversion n'est pas terminée.
     setVisible(false);
-	  relationChanged(getFirstPoint(), getLastPoint().getAssociedComponentView());
-	  relationChanged(getLastPoint(), buffer);
+    relationChanged(first, last.getAssociedComponentView());
+    relationChanged(getLastPoint(), buffer);
     setVisible(true);
-	  
-    getFirstPoint().setBounds(bufferBoundsLast);
-	  getLastPoint().setBounds(bufferBoundsFirst);
-	  addAllGrip(reversePoints, 1);
-	}
+    addAllGrip(bufferPoints, 1);
+    
+    first.setPreferredAnchor(bufferPreferredAnchor2);
+    last.setPreferredAnchor(bufferPreferredAnchor1);
+    first.setAnchor(bufferAnchorLast);
+    last.setAnchor(bufferAnchorFirst);
+    
+    first.notifyObservers();
+    last.notifyObservers();
+    
+    reinitializeTextBoxesLocation();
+    
+    Change.setBlocked(blocked);
+  }
 	
 	/**
 	 * Return an array with all gripd bounds.

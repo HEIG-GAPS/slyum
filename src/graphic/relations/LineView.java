@@ -183,6 +183,11 @@ public abstract class LineView extends GraphicComponent
 		repaint();
 	}
 	
+	public void reinitializeTextBoxesLocation() {
+	  for (TextBoxLabel textbox : tbRoles)
+	    textbox.reinitializeLocation();
+	}
+	
 	/**
 	 * Add all the grips in given list.
 	 * @param grips the list of grips.
@@ -236,8 +241,7 @@ public abstract class LineView extends GraphicComponent
 		Point2D pfinal = null;
 		double distance = Integer.MAX_VALUE, buffDistance;
 
-		for (int i = 0; i < points.size() - 1; i++)
-		{
+		for (int i = 0; i < points.size() - 1; i++) {
 			p1 = points.get(i).getAnchor();
 			p2 = points.get(i + 1).getAnchor();
 
@@ -245,8 +249,7 @@ public abstract class LineView extends GraphicComponent
 
 			buffDistance = nearestPoint.distance(p3);
 
-			if (distance > buffDistance)
-			{
+			if (distance > buffDistance) {
 				distance = buffDistance;
 				pfinal = nearestPoint;
 			}

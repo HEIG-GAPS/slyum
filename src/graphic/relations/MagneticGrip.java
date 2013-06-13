@@ -89,8 +89,7 @@ public class MagneticGrip extends RelationGrip implements Observer
 	}
 
 	@Override
-	public void gMouseDragged(MouseEvent e)
-	{
+	public void gMouseDragged(MouseEvent e) {
 		super.gMouseDragged(e);
 		magnetism = false;
 	}
@@ -118,6 +117,7 @@ public class MagneticGrip extends RelationGrip implements Observer
 		Change.stopRecord();
 		maybeShowPopup(e, popupMenu);
 		notifyObservers();
+    relation.reinitializeTextBoxesLocation();
 	}
 
 	@Override
@@ -133,10 +133,10 @@ public class MagneticGrip extends RelationGrip implements Observer
 	}
 	
 	@Override
-	protected Point ajustOnGrid(Point pt) {
+	protected Point adjustOnGrid(Point pt) {
     if (magnetism)
       return pt;
-    return super.ajustOnGrid(pt);
+    return super.adjustOnGrid(pt);
 	}
 	
 	@Override
@@ -157,12 +157,31 @@ public class MagneticGrip extends RelationGrip implements Observer
 		if (!magnetism)
 			return;
 
-		final Rectangle boundsRect = component.getBounds();
-		final Point absolutePrefLoc = new Point(preferredAnchor.x + boundsRect.x, preferredAnchor.y + boundsRect.y);
+		Rectangle boundsRect = component.getBounds();
+		Point absolutePrefLoc = new Point(preferredAnchor.x + boundsRect.x, 
+		                                  preferredAnchor.y + boundsRect.y);
 		setAnchor(absolutePrefLoc);
 
 		arg0.deleteObserver(this);
 		notifyObservers();
 		arg0.addObserver(this);
 	}
+
+  public boolean isMagnetism() {
+    return magnetism;
+  }
+
+  public void setMagnetism(boolean magnetism) {
+    this.magnetism = magnetism;
+    setChanged();
+  }
+
+  public Point getPreferredAnchor() {
+    return preferredAnchor;
+  }
+
+  public void setPreferredAnchor(Point preferredAnchor) {
+    this.preferredAnchor = preferredAnchor;
+    setChanged();
+  }
 }

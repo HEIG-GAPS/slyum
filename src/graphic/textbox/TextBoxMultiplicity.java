@@ -136,12 +136,18 @@ public class TextBoxMultiplicity extends TextBoxLabel
 
 		this.multiplicity = multiplicity;
 		multiplicity.addObserver(this);
+	}
+	
+	@Override
+	public void reinitializeLocation() {
 
     final Rectangle classBounds = grip.getAssociedComponentView().getBounds();
     final Point gripAnchor = grip.getAnchor();
-		
+
+    deplacement = new Point(); // (0, 0)
+    
     // Permet d'attendre que la taille de la textbox soit définie.
-		SwingUtilities.invokeLater(new Runnable() {
+    SwingUtilities.invokeLater(new Runnable() {
       
       @Override
       public void run() {
