@@ -100,8 +100,6 @@ public class PanelClassDiagram extends JPanel {
         (float)(splitOuter.getWidth() - splitOuter.getDividerSize());
     properties.put(PropertyLoader.DIVIDER_LEFT, 
         String.valueOf(dividerLocationLeft));
-    
-    PropertyLoader.getInstance().push();
   }
 
 	private PanelClassDiagram() {

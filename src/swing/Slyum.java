@@ -7,6 +7,7 @@ import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -72,7 +73,9 @@ public class Slyum extends JFrame implements ActionListener {
 	// Properties
 	public final static boolean SHOW_CROSS_MENU = true;
 	public final static boolean SHOW_ERRORS_MESSAGES = true;
-	public final static boolean SHOW_OPENJDK_WARNING = true;
+  public final static boolean SHOW_OPENJDK_WARNING = true;
+  public final static int WINDOWS_MAXIMIZED = Frame.MAXIMIZED_BOTH;
+  public final static Dimension WINDOWS_SIZE = new Dimension(DEFAULT_SIZE.x, DEFAULT_SIZE.y);
 	public final static boolean IS_AUTO_ADJUST_INHERITANCE = true;
 	public final static Mode MODE_CURSOR = Mode.CURSOR;
 	
@@ -229,7 +232,7 @@ public class Slyum extends JFrame implements ActionListener {
         
         @Override
         public void run() {
-          Slyum.initializationComplete();
+          instance.initializationComplete();
         }
       });
 	}
@@ -300,8 +303,7 @@ public class Slyum extends JFrame implements ActionListener {
 		return fileName;
 	}
 
-	public static boolean isShowOpenJDKWarning()
-	{
+	public static boolean isShowOpenJDKWarning() {
 		String prop = PropertyLoader.getInstance().getProperties().getProperty("showOpenJDKWarning");
 		boolean enable = SHOW_OPENJDK_WARNING;
 
@@ -309,6 +311,29 @@ public class Slyum extends JFrame implements ActionListener {
 			enable = Boolean.parseBoolean(prop);
 
 		return enable;
+	}
+	
+	public static int getExtendedStateSaved() {
+    String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.WINDOWS_MAXIMIZED);
+    int state = WINDOWS_MAXIMIZED;
+
+    if (prop != null)
+      state = Integer.parseInt(prop);
+
+    return state;
+	}
+	
+	public static Dimension getSizeSaved() {
+    String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.WINDOWS_SIZE);
+    Dimension state = WINDOWS_SIZE;
+
+    if (prop != null && getExtendedStateSaved() != MAXIMIZED_BOTH) {
+      String[] size = prop.split(",");
+      state.width = Integer.parseInt(size[0]);
+      state.height = Integer.parseInt(size[1]);
+    }
+
+    return state;
 	}
 	
 	public static boolean isAutoAdjustInheritance() {
@@ -434,21 +459,31 @@ public class Slyum extends JFrame implements ActionListener {
 		initEventListener();
 	}
 	
-	public static void initializationComplete() {
+	public void initializationComplete() {
 	  String file = RecentProjectManager.getMoreRecentFile();
 	  if (file != null)
 	    PanelClassDiagram.openSlyFile(file);
-	  
-	  PanelClassDiagram panel = PanelClassDiagram.getInstance();
-	  Properties properties = PropertyLoader.getInstance().getProperties();
-	  String dividerBottom = properties.getProperty(PropertyLoader.DIVIDER_BOTTOM),
-           dividerLeft = properties.getProperty(PropertyLoader.DIVIDER_LEFT);
+
+    setSize(getSizeSaved());
+    setExtendedState(getExtendedStateSaved());
     
-	  if (dividerBottom != null)
-  	  panel.setDividerBottom(Float.valueOf(dividerBottom));
-	  
-	  if (dividerLeft != null)
-      panel.setDividerLeft(Float.valueOf(dividerLeft));
+    SwingUtilities.invokeLater(new Runnable() {
+      
+      @Override
+      public void run() {
+        
+        PanelClassDiagram panel = PanelClassDiagram.getInstance();
+        Properties properties = PropertyLoader.getInstance().getProperties();
+        String dividerBottom = properties.getProperty(PropertyLoader.DIVIDER_BOTTOM),
+               dividerLeft = properties.getProperty(PropertyLoader.DIVIDER_LEFT);
+        
+        if (dividerBottom != null)
+          panel.setDividerBottom(Float.valueOf(dividerBottom));
+        
+        if (dividerLeft != null)
+          panel.setDividerLeft(Float.valueOf(dividerLeft));
+      }
+    });
 	  
 	  SPanelDiagramComponent.getInstance().setMode(getModeCursor());
 	}
@@ -554,11 +589,8 @@ public class Slyum extends JFrame implements ActionListener {
 		setTitle(getName());
 		setIconImage(PersonalizedIcon.getLogo().getImage());
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setSize(DEFAULT_SIZE.x, DEFAULT_SIZE.y);
 		setMinimumSize(new Dimension(400, 400));
 		setContentPane(PanelClassDiagram.getInstance());
-		setLocationRelativeTo(null);
-		setExtendedState(MAXIMIZED_BOTH);
 	}
 	
 	/**
@@ -1021,7 +1053,18 @@ public class Slyum extends JFrame implements ActionListener {
 	}
 	
 	private void _exit() {
+	  Dimension size = getSize();
+	  
+	  // Save properties before closing.
     PanelClassDiagram.getInstance().saveSplitLocationInProperties();
+    Properties properties = PropertyLoader.getInstance().getProperties();
+    properties.put(PropertyLoader.WINDOWS_MAXIMIZED, 
+        String.valueOf(getExtendedState()));
+    properties.put(PropertyLoader.WINDOWS_SIZE,
+        String.format("%s,%s", size.width, size.height));
+    
+    PropertyLoader.getInstance().push();
+    
     System.exit(0);
 	}
 	

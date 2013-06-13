@@ -29,6 +29,8 @@ public class PropertyLoader {
     public static final String GRID_SIZE = "gridSize";
     public static final String DIVIDER_LEFT = "dividerLeft";
     public static final String DIVIDER_BOTTOM = "dividerBottom";
+    public static final String WINDOWS_MAXIMIZED = "WindowsMaximized";
+    public static final String WINDOWS_SIZE = "WindowsSize";
     public static final String AUTO_ADJUST_INHERITANCE = "autoAdjustInheritance";
     public static final String MODE_CURSOR = "ModeCursor";
     public static final String VIEW_METHODS = "ViewMethods";
