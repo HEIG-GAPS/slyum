@@ -16,7 +16,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -214,27 +213,34 @@ public class Slyum extends JFrame implements ActionListener {
 		  PropertyLoader.getInstance().reset();
 	
 		instance = new Slyum();
-		
-	    // Launch application from ETD.
-	    try {
-        SwingUtilities.invokeAndWait(new Runnable() {
+	    
+    SwingUtilities.invokeLater(new Runnable() {
+      
+      @Override
+      public void run() {
+        instance.initializationComplete();
+        instance.setVisible(true);
+
+        // Locate dividers.
+        SwingUtilities.invokeLater(new Runnable() {
           
           @Override
           public void run() {
-            instance.setVisible(true);
+            
+            PanelClassDiagram panel = PanelClassDiagram.getInstance();
+            Properties properties = PropertyLoader.getInstance().getProperties();
+            String dividerBottom = properties.getProperty(PropertyLoader.DIVIDER_BOTTOM),
+                   dividerLeft = properties.getProperty(PropertyLoader.DIVIDER_LEFT);
+            
+            if (dividerBottom != null)
+              panel.setDividerBottom(Float.valueOf(dividerBottom));
+            
+            if (dividerLeft != null)
+              panel.setDividerLeft(Float.valueOf(dividerLeft));
           }
         });
-      } catch (InvocationTargetException | InterruptedException e) {
-        e.printStackTrace();
       }
-	    
-      SwingUtilities.invokeLater(new Runnable() {
-        
-        @Override
-        public void run() {
-          instance.initializationComplete();
-        }
-      });
+    });
 	}
 	
 	public static boolean isChangeStackStatePrinted()
@@ -465,26 +471,7 @@ public class Slyum extends JFrame implements ActionListener {
 	    PanelClassDiagram.openSlyFile(file);
 
     setSize(getSizeSaved());
-    setExtendedState(getExtendedStateSaved());
-    
-    SwingUtilities.invokeLater(new Runnable() {
-      
-      @Override
-      public void run() {
-        
-        PanelClassDiagram panel = PanelClassDiagram.getInstance();
-        Properties properties = PropertyLoader.getInstance().getProperties();
-        String dividerBottom = properties.getProperty(PropertyLoader.DIVIDER_BOTTOM),
-               dividerLeft = properties.getProperty(PropertyLoader.DIVIDER_LEFT);
-        
-        if (dividerBottom != null)
-          panel.setDividerBottom(Float.valueOf(dividerBottom));
-        
-        if (dividerLeft != null)
-          panel.setDividerLeft(Float.valueOf(dividerLeft));
-      }
-    });
-	  
+    setExtendedState(getExtendedStateSaved());	  
 	  SPanelDiagramComponent.getInstance().setMode(getModeCursor());
 	}
 	
