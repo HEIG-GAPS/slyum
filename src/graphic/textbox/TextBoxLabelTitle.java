@@ -5,6 +5,7 @@ import graphic.relations.LineView;
 import graphic.relations.RelationGrip;
 
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.Observable;
@@ -82,7 +83,8 @@ public class TextBoxLabelTitle extends TextBoxLabel
 	@Override
 	protected Point computeAnchor() {
 		final LinkedList<RelationGrip> points = relationView.getPoints();
-		final int seg = relationView.getNearestSegment(new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2));
+		final int seg = relationView.getNearestSegment(
+		    new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2));
 
 		final Point grip1 = points.get(seg).getAnchor();
 		final Point grip2 = points.get(seg + 1).getAnchor();
@@ -92,6 +94,13 @@ public class TextBoxLabelTitle extends TextBoxLabel
 
 		return new Point(posX, posY);
 	}
+
+  @Override
+  public void computeDeplacement(Point point) {
+    setBounds(new Rectangle(point.x, point.y, bounds.width, bounds.height));
+    Point pos = computeAnchor();
+    deplacement = new Point(point.x - pos.x, point.y - pos.y);
+  }
 	
 	/**
 	 * Get the LineView associed with this TextBoxLabelTitle.
