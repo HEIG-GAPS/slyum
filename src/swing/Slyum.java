@@ -219,30 +219,6 @@ public class Slyum extends JFrame implements ActionListener {
       @Override
       public void run() {
         instance.initializationComplete();
-        instance.setVisible(true);
-
-        // Locate dividers.
-        SwingUtilities.invokeLater(new Runnable() {
-          
-          @Override
-          public void run() {
-            
-            PanelClassDiagram panel = PanelClassDiagram.getInstance();
-            Properties properties = PropertyLoader.getInstance().getProperties();
-            String dividerBottom = properties.getProperty(PropertyLoader.DIVIDER_BOTTOM),
-                   dividerLeft = properties.getProperty(PropertyLoader.DIVIDER_LEFT);
-            
-            if (dividerBottom != null)
-              panel.setDividerBottom(Float.valueOf(dividerBottom));
-            
-            if (dividerLeft != null)
-              panel.setDividerLeft(Float.valueOf(dividerLeft));
-          }
-        });
-
-        String file = RecentProjectManager.getMoreRecentFile();
-        if (file != null)
-          PanelClassDiagram.openSlyFile(file);
       }
     });
 	}
@@ -473,6 +449,30 @@ public class Slyum extends JFrame implements ActionListener {
     setSize(getSizeSaved());
     setExtendedState(getExtendedStateSaved());	  
 	  SPanelDiagramComponent.getInstance().setMode(getModeCursor());
+    instance.setVisible(true);
+
+    // Locate dividers.
+    SwingUtilities.invokeLater(new Runnable() {
+      
+      @Override
+      public void run() {
+        
+        PanelClassDiagram panel = PanelClassDiagram.getInstance();
+        Properties properties = PropertyLoader.getInstance().getProperties();
+        String dividerBottom = properties.getProperty(PropertyLoader.DIVIDER_BOTTOM),
+               dividerLeft = properties.getProperty(PropertyLoader.DIVIDER_LEFT);
+        
+        if (dividerBottom != null)
+          panel.setDividerBottom(Float.valueOf(dividerBottom));
+        
+        if (dividerLeft != null)
+          panel.setDividerLeft(Float.valueOf(dividerLeft));
+      }
+    });
+
+    String file = RecentProjectManager.getMoreRecentFile();
+    if (file != null)
+      PanelClassDiagram.openSlyFile(file);
 	}
 	
 	private void initFont()
