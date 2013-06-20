@@ -137,4 +137,8 @@ public class TextBoxMethod extends TextBox implements Observer {
 		repaint();
 	}
 
+  @Override
+  protected boolean mustPaintSelectedStyle() {
+    return mouseHover;
+  }
 }

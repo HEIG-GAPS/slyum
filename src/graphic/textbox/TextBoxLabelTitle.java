@@ -120,9 +120,13 @@ public class TextBoxLabelTitle extends TextBoxLabel
 	@Override
 	public void gMouseClicked(MouseEvent e) {
 	  super.gMouseClicked(e);
-    // remove all selected components TODO : AMELIORE
-    parent.unselectAll();
-    relationView.setSelected(true);
+    
+    if (!GraphicView.isAddToSelection(e)) {
+      parent.unselectAll();
+      relationView.setSelected(true);
+    } else {
+      relationView.setSelected(!relationView.isSelected());
+    }
 	}
 
 	@Override

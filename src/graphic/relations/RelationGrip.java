@@ -101,8 +101,13 @@ public class RelationGrip extends SquareGrip implements ActionListener {
 	@Override
 	public void gMouseClicked(MouseEvent e) {
 	  super.gMouseClicked(e);
-    parent.unselectAll();
-    relation.setSelected(true);
+    
+    if (!GraphicView.isAddToSelection(e)) {
+      parent.unselectAll();
+      relation.setSelected(true);
+    } else {
+      relation.setSelected(!relation.isSelected());
+    }
 	}
 	
 	@Override

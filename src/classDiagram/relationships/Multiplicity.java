@@ -118,8 +118,6 @@ public class Multiplicity extends Observable implements IDiagramComponent
 	@Override
 	public void select()
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	/**

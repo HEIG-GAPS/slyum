@@ -874,12 +874,17 @@ public class GraphicView extends GraphicComponent implements
     boolean isRecord = Change.isRecord();
     Change.record();
 
-    for (final EntityView ev : list)
-
+    for (EntityView ev : list)
       ev.adjustWidth();
 
     if (!isRecord)
       Change.stopRecord();
+  }
+  
+  public void adjustInheritances() {
+    for (GraphicComponent c : getSelectedComponents())
+      if (c instanceof InheritanceView)
+        ((InheritanceView)c).adjustInheritance();
   }
 
   /**
@@ -1558,7 +1563,7 @@ public class GraphicView extends GraphicComponent implements
     switch (mouseButton) {
     case MouseEvent.BUTTON1:
       scene.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-      if (!e.isControlDown())
+      if (!isAddToSelection(e))
         unselectAll();
       break;
 
@@ -1566,6 +1571,10 @@ public class GraphicView extends GraphicComponent implements
       scene.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
       break;
     }
+  }
+  
+  public static boolean isAddToSelection(MouseEvent e) {
+    return e.isControlDown() || e.isShiftDown();
   }
 
   @Override

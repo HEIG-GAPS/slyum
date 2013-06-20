@@ -762,23 +762,23 @@ public abstract class EntityView
 
     @Override
     public void gMouseClicked(MouseEvent e) {
-        super.gMouseClicked(e);
+      super.gMouseClicked(e);
+      TextBox textBox = GraphicView.searchComponentWithPosition(
+          getAllTextBox(), e.getPoint());
+  
+      if (textBox != null) {
+        IDiagramComponent idc = textBox.getAssociedComponent();
+        if (idc != null) {
 
-        final TextBox textBox = GraphicView.searchComponentWithPosition(
-                getAllTextBox(), e.getPoint());
-
-        if (textBox != null) {
-            final IDiagramComponent idc = textBox.getAssociedComponent();
-
-            if (idc != null) {
-                idc.select();
-                idc.notifyObservers(UpdateMessage.SELECT);
-            }
-
-            if (e.getClickCount() == 2)
-
-                textBox.editing();
+          if (!GraphicView.isAddToSelection(e)) {
+            idc.select();
+            idc.notifyObservers(UpdateMessage.SELECT);
+          }
         }
+
+        if (e.getClickCount() == 2)
+          textBox.editing();
+      }
     }
 
     @Override
@@ -1170,7 +1170,7 @@ public abstract class EntityView
         // Move graphics elements associated with this component
         leftMovableSquare.setBounds(computeLocationResizer(0));
         rightMovableSquare.setBounds(computeLocationResizer(bounds.width));
-
+        
         setChanged();
         notifyObservers();
     }

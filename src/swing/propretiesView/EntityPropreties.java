@@ -290,6 +290,9 @@ public class EntityPropreties extends GlobalPropreties {
 							btnDownAttribute.setEnabled(index < mapIndex.size() - 1);
 							showInProperties();
 							attributesTable.addRowSelectionInterval(index, index);
+							attributesTable.scrollRectToVisible(attributesTable.getCellRect(
+							    attributesTable.getSelectedRow(), 
+							    attributesTable.getSelectedColumn(), true));
 							break;
 						case UNSELECT:
 							attributesTable.removeRowSelectionInterval(index, index);

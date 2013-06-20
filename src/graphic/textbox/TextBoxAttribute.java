@@ -123,42 +123,38 @@ public class TextBoxAttribute extends TextBox implements Observer
 	}
 
 	@Override
-	public void setText(String text)
-	{
+	public void setText(String text) {
 		attribute.setText(text);
 
 		super.setText(getStringFromAttribute(attribute));
 	}
 
 	@Override
-	protected String truncate(Graphics2D g2, String text, int width)
-	{
+	protected String truncate(Graphics2D g2, String text, int width) {
 		return Utility.truncate(g2, text, width);
 	}
 
 	@Override
-	public void update(Observable observable, Object o)
-	{
+	public void update(Observable observable, Object o) {
 		if (o != null && o instanceof UpdateMessage)
-			switch ((UpdateMessage) o)
-			{
-				case SELECT:
-					setSelected(true);
-					break;
-				case UNSELECT:
-					setSelected(false);
-					break;
-      default:
-        break;
-			}
+  		switch ((UpdateMessage) o) {
+  			case SELECT:
+  				setSelected(true);
+  				break;
+  			case UNSELECT:
+  				setSelected(false);
+  				break;
+        default:
+          break;
+  		}
 		else
-		{
-			final String text = getStringFromAttribute(attribute);
-
-			super.setText(text);
-		}
+			super.setText(getStringFromAttribute(attribute));
 
 		repaint();
 	}
 
+  @Override
+  protected boolean mustPaintSelectedStyle() {
+    return mouseHover;
+  }
 }

@@ -1,5 +1,6 @@
 package graphic.textbox;
 
+import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.relations.AssociationView;
 import graphic.relations.LineView;
@@ -192,19 +193,27 @@ public class TextBoxMultiplicity extends TextBoxLabel
 	@Override
 	public void gMouseClicked(MouseEvent e) {
 	  super.gMouseClicked(e);
-
-    // remove all selected components TODO : AMELIORE
-    parent.unselectAll();
+	  GraphicComponent view = null;
 
     // search a multiplicity corresponding to the textBox multiplicity...
+	  firstloop:
     for (LineView av : parent.getLinesView())
       // take all line view
       if (av instanceof AssociationView) // test if it's an associationView (have some role)
         for (Role r : ((Association) ((AssociationView) av).getAssociedComponent()).getRoles())
           // iterate through roles
-          if (r.getMultiplicity().equals(multiplicity)) // multiplicity's
+          if (r.getMultiplicity().equals(multiplicity)) { // multiplicity's
             // role is the same than textBoxMultiplicity multiplicity?
-            ((AssociationView) av).setSelected(true);
+            view = av;
+            break firstloop;
+          }
+    
+    if (!GraphicView.isAddToSelection(e)) {
+      parent.unselectAll();
+      view.setSelected(true);
+    } else {
+      view.setSelected(!view.isSelected());
+    }
 	}
 
 	@Override

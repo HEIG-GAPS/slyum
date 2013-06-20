@@ -42,13 +42,14 @@ public abstract class MovableComponent extends GraphicComponent
 		setLeftResizer(new GripEntity(parent, resizerSize, Cursor.W_RESIZE_CURSOR) {
 
 			@Override
-			public void gMousePressed(MouseEvent e)
-			{
-				if (!g.isSelected())
-					parent.unselectAll();
-
-				g.setSelected(true);
-				super.gMousePressed(e);
+			public void gMousePressed(MouseEvent e) {
+        super.gMousePressed(e);
+		    if (!GraphicView.isAddToSelection(e)) {
+		      parent.unselectAll();
+		      g.setSelected(true);
+		    } else {
+		      g.setSelected(!g.isSelected());
+		    }
 			}
 
 			@Override
@@ -62,13 +63,14 @@ public abstract class MovableComponent extends GraphicComponent
 		setRightResizer(new GripEntity(parent, resizerSize, Cursor.E_RESIZE_CURSOR) {
 
 			@Override
-			public void gMousePressed(MouseEvent e)
-			{
-				if (!g.isSelected())
-					parent.unselectAll();
-
-				g.setSelected(true);
-				super.gMousePressed(e);
+			public void gMousePressed(MouseEvent e) {
+        super.gMousePressed(e);
+        if (!GraphicView.isAddToSelection(e)) {
+          parent.unselectAll();
+          g.setSelected(true);
+        } else {
+          g.setSelected(!g.isSelected());
+        }
 			}
 
 			@Override
@@ -102,9 +104,7 @@ public abstract class MovableComponent extends GraphicComponent
 	}
 
 	@Override
-	public void apply(MouseEvent e)
-	{
-		
+	public void apply(MouseEvent e) {
 		final Rectangle saveBounds = getBounds();
 		saveBounds.grow(20, 20);
 
@@ -154,27 +154,21 @@ public abstract class MovableComponent extends GraphicComponent
 	public void gMouseClicked(MouseEvent e)
 	{
 		super.gMouseClicked(e);
-
-		if (!e.isControlDown()) // If ctrl is not down, unselect all component
-		// except this one.
-		{
+		
+		if (!GraphicView.isAddToSelection(e)) {
 			parent.unselectAll();
 			setSelected(true);
 		}
 		else // If control is down, inverse the current selected state of this
 		// component.
 		if (!justSelected)
+		  setSelected(!isSelected());
 
-			setSelected(!isSelected());
-
-		justSelected = false; // Avoid to unselect a just selected component
-		// when gMouseReleased is called.
+		// Avoid to unselect a just selected component when gMouseReleased is called.
+		justSelected = false;
 		
-
 		int selectedComponentSize = parent.countSelectedEntities();
-		
 		if (e.isControlDown() && selectedComponentSize > 0)
-			
 			new StyleCross(parent, e.getPoint(), selectedComponentSize);
 	}
 
@@ -203,13 +197,11 @@ public abstract class MovableComponent extends GraphicComponent
 	{
 		super.gMousePressed(e);
 
-		if (!parent.getSelectedComponents().contains(this) && !e.isControlDown())
-
+		if (!parent.getSelectedComponents().contains(this) && 
+		    !GraphicView.isAddToSelection(e))
 			parent.unselectAll();
 
-		if (!isSelected()) // Select the component, see doc for know how
-		// component are selected.
-		{
+		if (!isSelected()) { // Select the component, see doc for know how component are selected.
 			setSelected(true);
 			justSelected = true; // Avoid to unselect a just selected component
 			// when gMouseReleased is called.
@@ -220,7 +212,6 @@ public abstract class MovableComponent extends GraphicComponent
 		// So they must save this
 		// location for compute themselves their new bounds.
 		for (final GraphicComponent c : parent.getSelectedComponents())
-
 			c.saveMouseLocation(e);
 	}
 	@Override
