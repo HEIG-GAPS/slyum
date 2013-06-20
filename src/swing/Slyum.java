@@ -239,6 +239,10 @@ public class Slyum extends JFrame implements ActionListener {
               panel.setDividerLeft(Float.valueOf(dividerLeft));
           }
         });
+
+        String file = RecentProjectManager.getMoreRecentFile();
+        if (file != null)
+          PanelClassDiagram.openSlyFile(file);
       }
     });
 	}
@@ -466,10 +470,6 @@ public class Slyum extends JFrame implements ActionListener {
 	}
 	
 	public void initializationComplete() {
-	  String file = RecentProjectManager.getMoreRecentFile();
-	  if (file != null)
-	    PanelClassDiagram.openSlyFile(file);
-
     setSize(getSizeSaved());
     setExtendedState(getExtendedStateSaved());	  
 	  SPanelDiagramComponent.getInstance().setMode(getModeCursor());
