@@ -273,18 +273,11 @@ public abstract class TextBox extends GraphicComponent
 		textDim.width = metrics.stringWidth(name);
 		textDim.height = metrics.getHeight();
 
-		final Rectangle bounds = getBounds();
-
 		g2.setStroke(new BasicStroke());
 		// Draw mouseHover style (same as selected style)
-		if (!pictureMode && (mouseHover || isSelected())) {
-			g2.setColor(new Color(150, 150, 150, 150));
-			g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-
-			g2.setColor(new Color(150, 150, 150));
-			g2.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
-		}
-
+		if (!pictureMode && mustPaintSelectedStyle())
+		  paintSelectedStyle(g2);
+		
 		g2.setColor(Color.DARK_GRAY);
 		g2.setFont(effectivFont);
 
@@ -297,6 +290,20 @@ public abstract class TextBox extends GraphicComponent
 
 			g2.drawString(ats.getIterator(), bounds.x, bounds.y + bounds.height - metrics.getDescent());
 		}
+	}
+	
+	protected void paintSelectedStyle(Graphics2D g2) {
+    Rectangle bounds = getBounds();
+    
+    g2.setColor(new Color(150, 150, 150, 150));
+    g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+
+    g2.setColor(new Color(150, 150, 150));
+    g2.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+	}
+	
+	protected boolean mustPaintSelectedStyle() {
+	  return mouseHover || isSelected();
 	}
 
 	@Override

@@ -33,7 +33,7 @@ public abstract class Entity extends Type implements Cloneable
 	protected List<Inheritance> parents = new LinkedList<>();
 	protected List<Role> roles = new LinkedList<>();
 
-	protected String stereotype = "";
+  protected String stereotype = "";
 
 	protected Visibility visibility = Visibility.PUBLIC;
 
@@ -591,5 +591,13 @@ public abstract class Entity extends Type implements Cloneable
       entity.appendChild(operation.getXmlElement(doc));
     
     return entity;
+  }
+
+  public List<Inheritance> getChilds() {
+    return childs;
+  }
+
+  public List<Inheritance> getParents() {
+    return parents;
   }
 }

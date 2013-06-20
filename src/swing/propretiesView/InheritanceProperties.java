@@ -1,7 +1,5 @@
 package swing.propretiesView;
 
-import graphic.relations.InheritanceView;
-
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -106,7 +104,6 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 		if (ACTION_OI.equals(e.getActionCommand()))
 			i.showOverridesAndImplementations();
 		else if (Slyum.ACTION_ADJUST_INHERITANCE.equals(e.getActionCommand()))
-		  ((InheritanceView)PanelClassDiagram.getInstance().getCurrentGraphicView()
-		      .searchAssociedComponent(i)).adjustInheritance();
+		  PanelClassDiagram.getInstance().getCurrentGraphicView().adjustInheritances();
 	}
 }

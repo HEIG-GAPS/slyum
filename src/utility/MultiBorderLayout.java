@@ -166,9 +166,6 @@ public class MultiBorderLayout extends BorderLayout{
     , target.getHeight() - insets.top - insets.bottom
    );
     
-   // TODO: this is only using the preferred size, shrink components
-   // to their minimum size, if preferred Size doesn't fit!
-    
    final Dimension northSize=sumHorizontal(northList,getPreferredSize);
    final Dimension southSize=sumHorizontal(southList,getPreferredSize);
    final Dimension westSize=sumVertical(westList,getPreferredSize);

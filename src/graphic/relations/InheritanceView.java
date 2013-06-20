@@ -140,7 +140,7 @@ public class InheritanceView extends RelationView
 		if ("O&I".equals(e.getActionCommand()))
 			inheritance.showOverridesAndImplementations();
 		else if (Slyum.ACTION_ADJUST_INHERITANCE.equals(e.getActionCommand()))
-		  adjustInheritance();
+		  parent.adjustInheritances();
 	}
 
 	@Override

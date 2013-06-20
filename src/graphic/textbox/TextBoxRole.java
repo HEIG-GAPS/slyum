@@ -1,5 +1,6 @@
 package graphic.textbox;
 
+import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.relations.MagneticGrip;
 
@@ -194,9 +195,14 @@ public class TextBoxRole extends TextBoxLabel {
 	@Override
 	public void gMouseClicked(MouseEvent e) {
 	  super.gMouseClicked(e);
-    // remove all selected components TODO : AMELIORE
-    parent.unselectAll();
-    parent.searchAssociedComponent(role.getAssociation()).setSelected(true);
+	  GraphicComponent c = parent.searchAssociedComponent(role.getAssociation());
+    
+    if (!GraphicView.isAddToSelection(e)) {
+      parent.unselectAll();
+      c.setSelected(true);
+    } else {
+      c.setSelected(!c.isSelected());
+    }
 	}
 	
 	@Override
