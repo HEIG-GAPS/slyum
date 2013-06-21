@@ -7,14 +7,17 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
+import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import swing.FlatPanel;
 import swing.PanelClassDiagram;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Association;
+import classDiagram.relationships.Association.NavigateDirection;
+import classDiagram.relationships.Binary;
 import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Role;
 
@@ -37,7 +40,8 @@ public class RelationPropreties extends GlobalPropreties
 		return instance;
 	}
 
-	private JCheckBox chckbxDirect;
+	private ButtonGroup btnGrpNavigation;
+	private JRadioButton radBidirectional, radFirstToSecond, radSecondToFirst;
 	private JPanel pnlRoles;
 	private JTextField textFieldLabel;
 	private ButtonChangeOrientation btnChangeOrientation;
@@ -68,22 +72,48 @@ public class RelationPropreties extends GlobalPropreties
       }
     });
 
-    chckbxDirect = new JCheckBox("Directed");
-    chckbxDirect.setBackground(null);
-    chckbxDirect.addActionListener(new ActionListener() {
+    radBidirectional = new JRadioButton();
+    radBidirectional.setBackground(null);
+    radBidirectional.addActionListener(new ActionListener() {
+      
       @Override
-      public void actionPerformed(ActionEvent e) {
-        if (currentObject != null && currentObject instanceof Association) {
-          ((Association) currentObject).setDirected(chckbxDirect.isSelected());
-          ((Association) currentObject).notifyObservers();
-        }
+      public void actionPerformed(ActionEvent evt) {
+        setCurrentObjectDirected(NavigateDirection.BIDIRECTIONAL);
       }
     });
+    
+    radFirstToSecond = new JRadioButton();
+    radFirstToSecond.setBackground(null);
+    radFirstToSecond.addActionListener(new ActionListener() {
+      
+      @Override
+      public void actionPerformed(ActionEvent evt) {
+        setCurrentObjectDirected(NavigateDirection.FIRST_TO_SECOND);
+      }
+    });
+    
+    radSecondToFirst = new JRadioButton();
+    radSecondToFirst.setBackground(null);
+    radSecondToFirst.addActionListener(new ActionListener() {
+      
+      @Override
+      public void actionPerformed(ActionEvent evt) {
+        setCurrentObjectDirected(NavigateDirection.SECOND_TO_FIRST);
+      }
+    });
+
+    btnGrpNavigation = new ButtonGroup();
+    btnGrpNavigation.add(radBidirectional);
+    btnGrpNavigation.add(radFirstToSecond);
+    btnGrpNavigation.add(radSecondToFirst);
     
     pnlGeneral.setLayout(new BoxLayout(pnlGeneral, BoxLayout.PAGE_AXIS));
     pnlGeneral.setMaximumSize(new Dimension(250, Integer.MAX_VALUE));
     pnlGeneral.add(textFieldLabel);
-    pnlGeneral.add(chckbxDirect);
+    pnlGeneral.add(Box.createVerticalGlue());
+    pnlGeneral.add(radBidirectional);
+    pnlGeneral.add(radFirstToSecond);
+    pnlGeneral.add(radSecondToFirst);
     pnlGeneral.add(Box.createVerticalGlue());
     pnlGeneral.add(btnChangeOrientation = new ButtonChangeOrientation());
 
@@ -97,11 +127,18 @@ public class RelationPropreties extends GlobalPropreties
     add(Box.createHorizontalStrut(5));
     add(pnlRoles);
 	}
+	
+	private void setCurrentObjectDirected(NavigateDirection direction) {
+    if (currentObject != null && currentObject instanceof Association) {
+      ((Association)currentObject).setDirected(direction);
+      ((Association)currentObject).notifyObservers();
+    }
+	}
 
 	@Override
 	public void updateComponentInformations(UpdateMessage msg)
 	{
-		if (currentObject != null)
+		if (currentObject != null) {
 			if (currentObject instanceof Association) {
 				final Association association = (Association) currentObject;
 
@@ -114,8 +151,21 @@ public class RelationPropreties extends GlobalPropreties
 					    ((SlyumRolePanel) c).confirm();
 				}
 
-				chckbxDirect.setEnabled(true);
-				chckbxDirect.setSelected(association.isDirected());
+		    switch (association.getDirected()) {
+		    case FIRST_TO_SECOND:
+		      btnGrpNavigation.setSelected(radFirstToSecond.getModel(), true);
+		      break;
+		    case SECOND_TO_FIRST:
+		      btnGrpNavigation.setSelected(radSecondToFirst.getModel(), true);
+		      break;
+		    case BIDIRECTIONAL:
+		      btnGrpNavigation.setSelected(radBidirectional.getModel(), true);
+		      break;
+		    default:
+		      break;
+		    }
+		    setMenuItemText();
+		    
 				textFieldLabel.setText(association.getLabel());
 
 				if (pnlRoles.getComponentCount() == 0 || 
@@ -145,11 +195,31 @@ public class RelationPropreties extends GlobalPropreties
 					dependency.notifyObservers();
 				}
 
-				chckbxDirect.setEnabled(false);
 				textFieldLabel.setText(dependency.getLabel());
 			}
       btnChangeOrientation.changeActionListener(
           PanelClassDiagram.getInstance().getCurrentGraphicView()
               .searchAssociedComponent(currentObject));
+      setVisibleNavigationBtn(currentObject instanceof Binary);
+      btnChangeOrientation.setVisible(currentObject instanceof Binary ||
+                                      currentObject instanceof Dependency);
+		}
+	}
+  
+  private void setMenuItemText() {
+    if (currentObject != null && currentObject instanceof Association) {
+      String sourceName = ((Association)currentObject).getSource().getName(),
+             targetName = ((Association)currentObject).getTarget().getName();
+      radBidirectional.setText(String.format("%s - %s", sourceName, targetName));
+      radFirstToSecond.setText(String.format("%s -> %s", sourceName, targetName));
+      radSecondToFirst.setText(String.format("%s <- %s", sourceName, targetName));
+    }
+  }
+	
+	private void setVisibleNavigationBtn(boolean visible) {
+	  radBidirectional.setVisible(visible);
+	  radFirstToSecond.setVisible(visible);
+	  radSecondToFirst.setVisible(visible);
+	  btnChangeOrientation.setVisible(visible);
 	}
 }

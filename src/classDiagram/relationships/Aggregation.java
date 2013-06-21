@@ -26,7 +26,7 @@ public class Aggregation extends Binary
 	 * @param directed
 	 *            true if the association is directed; false otherwise
 	 */
-	public Aggregation(Entity source, Entity target, boolean directed)
+	public Aggregation(Entity source, Entity target, NavigateDirection directed)
 	{
 		super(source, target, directed);
 	}
@@ -49,7 +49,7 @@ public class Aggregation extends Binary
 	 * @param id
 	 *            the id for this association
 	 */
-	public Aggregation(Entity source, Entity target, boolean directed, int id)
+	public Aggregation(Entity source, Entity target, NavigateDirection directed, int id)
 	{
 		super(source, target, directed, id);
 	}

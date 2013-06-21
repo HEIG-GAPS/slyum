@@ -27,7 +27,7 @@ public class Binary extends Association
 	 * @param directed
 	 *            true if the association is directed; false otherwise
 	 */
-	public Binary(Entity source, Entity target, boolean directed)
+	public Binary(Entity source, Entity target, NavigateDirection directed)
 	{
 		super();
 
@@ -57,7 +57,7 @@ public class Binary extends Association
 	 * @param id
 	 *            the id for this association
 	 */
-	public Binary(Entity source, Entity target, boolean directed, int id)
+	public Binary(Entity source, Entity target, NavigateDirection directed, int id)
 	{
 		super(id);
 

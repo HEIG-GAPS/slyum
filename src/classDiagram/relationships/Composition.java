@@ -25,7 +25,7 @@ public class Composition extends Binary
 	 * @param directed
 	 *            true if the association is directed; false otherwise
 	 */
-	public Composition(Entity source, Entity target, boolean directed)
+	public Composition(Entity source, Entity target, NavigateDirection directed)
 	{
 		super(source, target, directed);
 	}
@@ -48,7 +48,7 @@ public class Composition extends Binary
 	 * @param id
 	 *            the id for this association
 	 */
-	public Composition(Entity source, Entity target, boolean directed, int id)
+	public Composition(Entity source, Entity target, NavigateDirection directed, int id)
 	{
 		super(source, target, directed, id);
 	}

@@ -7,6 +7,7 @@ import swing.XMLParser.EntityType;
 import utility.Utility;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Role;
+import classDiagram.relationships.Association.NavigateDirection;
 
 /**
  * Represent an association class in UML structure.
@@ -80,7 +81,7 @@ public class AssociationClass extends ClassEntity {
 		checkAssociationCreation(source, target);
 
 		// Create a new association.
-		association = new Binary(source, target, false);
+		association = new Binary(source, target, NavigateDirection.BIDIRECTIONAL);
 	}
 	
 	private void checkAssociationCreation(Binary binary)

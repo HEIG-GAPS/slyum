@@ -208,12 +208,14 @@ public class TextBoxMultiplicity extends TextBoxLabel
             break firstloop;
           }
     
-    if (!GraphicView.isAddToSelection(e)) {
-      parent.unselectAll();
-      view.setSelected(true);
-    } else {
-      view.setSelected(!view.isSelected());
-    }
+	  if (view != null) {
+      if (!GraphicView.isAddToSelection(e)) {
+        parent.unselectAll();
+        view.setSelected(true);
+      } else {
+        view.setSelected(!view.isSelected());
+      }
+	  }
 	}
 
 	@Override
