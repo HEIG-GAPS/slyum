@@ -9,7 +9,6 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import swing.propretiesView.NoteProperties;
-import utility.SMessageDialog;
 import classDiagram.IDiagramComponent.UpdateMessage;
 
 /**
@@ -40,8 +39,8 @@ public class LineCommentary extends LineView
 		ok = associed && graphic && ext;
 		
 		// Message only adapted for associed component null.
-		if (graphic && !ok && showMessage)
-			SMessageDialog.showErrorMessage(ERROR_MESSAGE_DIAGRAM_COMPONENTS);
+		//if (graphic && !ok && showMessage)
+			//SMessageDialog.showErrorMessage(ERROR_MESSAGE_DIAGRAM_COMPONENTS);
 		
 		return ok;
 	}

@@ -111,7 +111,10 @@ public class AssociationClassFactory extends RelationFactory
 		}
 
 		repaint();
-		return acv;
+		
+		if (acv != null)
+		  return acv.getBinaryView();
+		return null;
 	}
 	
 	@Override

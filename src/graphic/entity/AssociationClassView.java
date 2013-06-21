@@ -103,4 +103,8 @@ public class AssociationClassView extends ClassView
   public AssociationClasseLine getAcl() {
     return acl;
   }
+  
+  public BinaryView getBinaryView() {
+    return binaryView;
+  }
 }

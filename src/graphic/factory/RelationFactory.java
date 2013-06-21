@@ -2,6 +2,8 @@ package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
+import graphic.relations.LineView;
+import graphic.relations.RelationGrip;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -10,6 +12,10 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.swing.SwingUtilities;
 
 import utility.Utility;
 
@@ -28,6 +34,7 @@ public abstract class RelationFactory extends ComponentFactory
 	private GraphicComponent componentMouseHover;
 	protected Point mouseLocation = new Point();
 	protected BasicStroke stroke = new BasicStroke(1.2f);
+	protected List<Point> points = new LinkedList<>();
 
 	public RelationFactory(GraphicView parent)
 	{
@@ -69,38 +76,51 @@ public abstract class RelationFactory extends ComponentFactory
 	}
 
 	/**
-	 * Draw a line between the mouse location and the location where mouse was
+	 * Draw a line between points and mouse location.
 	 * pressed.
 	 * 
 	 * @param g2
 	 *            the graphic context
 	 */
-	private void drawLine(Graphics2D g2)
-	{
-		final int gray = Utility.getColorGrayLevel(parent.getColor());
+	private void drawLine(Graphics2D g2) {
+		if (points.isEmpty())
+		  return;
+		
+    // Draw last line between mouse location and last point.
+    int gray = Utility.getColorGrayLevel(parent.getColor());
+    Point p, p1, p2;
 
-		g2.setStroke(stroke);
-
-		g2.setColor(new Color(gray, gray, gray, 200));
-		g2.drawLine(mousePressed.x, mousePressed.y, mouseLocation.x, mouseLocation.y);
+    g2.setStroke(stroke);
+    g2.setColor(new Color(gray, gray, gray, 200));
+    
+    // Draw lines between points.
+    for (int i = 0; i < points.size() - 1; i++) {
+      p1 = points.get(i);
+      p2 = points.get(i+1);
+      g2.drawLine(p1.x, p1.y, p2.x, p2.y);
+    }
+    
+    p = points.get(points.size()-1);
+    g2.drawLine(p.x, p.y, mouseLocation.x, mouseLocation.y);
 	}
 
 	@Override
-	public Cursor getCursor()
-	{
+	public Cursor getCursor() {
 		return new Cursor(Cursor.CROSSHAIR_CURSOR);
 	}
 
 	@Override
-	public void gMouseDragged(MouseEvent e)
-	{
+	public void gMouseDragged(MouseEvent e) {
+	  super.gMouseDragged(e);
+    gMouseMoved(e);
+	  /*
+    mouseLocation = e.getPoint();
+    mouseLocation = new Point(RelationGrip.adjust(mouseLocation.x), RelationGrip.adjust(mouseLocation.y));
 		Rectangle repaintBounds = new Rectangle(mousePressed.x, mousePressed.y, mouseLocation.x - mousePressed.x, mouseLocation.y - mousePressed.y);
 
 		Rectangle repaintExtremity = new Rectangle(mouseLocation.x - 50, mouseLocation.y - 50, 100, 100); // 100
 																											// take
 																											// arbitrary
-
-		mouseLocation = e.getPoint();
 
 		repaintBounds = Utility.normalizeRect(repaintBounds);
 		parent.getScene().repaint(repaintBounds);
@@ -117,60 +137,91 @@ public abstract class RelationFactory extends ComponentFactory
 
 		parent.getScene().repaint(repaintExtremity);
 		parent.getScene().repaint(Utility.normalizeRect(repaintBounds));
-
-		drawComponentMouseHoverStyle(e);
+    drawComponentMouseHoverStyle(e);*/
 	}
 
 	@Override
-	public void gMouseMoved(MouseEvent e)
-	{
+	public void gMouseMoved(MouseEvent e) {
 		mouseLocation = e.getPoint();
+		mouseLocation = new Point(RelationGrip.adjust(mouseLocation.x), RelationGrip.adjust(mouseLocation.y));
 		drawComponentMouseHoverStyle(e);
+		repaint();
 	}
 
 	@Override
-	public void gMousePressed(MouseEvent e)
-	{
-		super.gMousePressed(e);
-
+	public void gMousePressed(MouseEvent e) {
+	  super.gMousePressed(e);
+    mousePressed = e.getPoint();
+    
 		componentMouseHover.setStyleClicked();
+		
+		// Le premier point doit être ajouté lorsque l'on presse sur la souris.
+		// Les suivants le sont quand on relâche la souris.
+		if (points.isEmpty())
+		  points.add(mouseLocation);
 	}
 
 	@Override
-	public void gMouseReleased(MouseEvent e)
-	{
-		super.gMouseReleased(e);
+	public void gMouseReleased(MouseEvent e) {
+	  final GraphicComponent view;
+	  RelationGrip grip;
+    mouseReleased = mouseLocation;
+    componentMouseReleased = parent.getComponentAtPosition(mouseReleased);
 
-		componentMousePressed.setDefaultStyle();
-		componentMouseReleased.setDefaultStyle();
+    points.add(mouseLocation);
+    if ((view = create()) != null) {
+      parent.deleteCurrentFactory();
+      componentMousePressed.setDefaultStyle();
+      componentMouseReleased.setDefaultStyle();
+      
+      if (view instanceof LineView && points.size() > 2) {
+        ((LineView)view).removeAllGrip();
+        
+        // Middle grip
+        for (int i = 1; i < points.size() - 1; i++) {
+          grip = new RelationGrip(parent, (LineView)view);
+          grip.setAnchor(points.get(i));
+          ((LineView)view).addGrip(grip, i);
+        }
+        
+        // Magnetic grip
+        ((LineView)view).getFirstPoint().setAnchor(points.get(0));
+        ((LineView)view).getLastPoint().setAnchor(points.get(points.size()-1));
+        
+        SwingUtilities.invokeLater(new Runnable() {
+          
+          @Override
+          public void run() {
+            ((LineView)view).reinitializeTextBoxesLocation();
+          }
+        });
+      }
+    }
 	}
 
 	@Override
-	public void paintComponent(Graphics2D g2)
-	{
-		if (componentMousePressed == null)
-			return;
-
+	public void paintComponent(Graphics2D g2) {
 		drawLine(g2);
-		drawExtremity(g2);
+    if (componentMousePressed != null)
+      drawExtremity(g2);
 	}
 	
 	@Override
-	public GraphicComponent create()
-	{
+	public GraphicComponent create() {
 		return null;
 	}
 
 	@Override
-	public void repaint()
-	{
-		if (mousePressed == null || mouseReleased == null)
-			return;
-
-		Rectangle repaintBounds = new Rectangle(mousePressed.x, mousePressed.y, mouseReleased.x - mousePressed.x, mouseReleased.y - mousePressed.y);
-
-		repaintBounds = Utility.normalizeRect(repaintBounds);
-		parent.getScene().repaint(repaintBounds);
+	public void repaint() {
+	  if (!points.isEmpty()) {
+  		Point p = points.get(0);
+  		Rectangle repaintBounds = new Rectangle(p.x, p.y, 1, 1);
+  		for (int i = 1; i < points.size(); i++)
+  		  repaintBounds.add(points.get(i));
+  		repaintBounds.add(mouseLocation);
+  		repaintBounds.grow(100, 100);
+  		parent.getScene().repaint(repaintBounds);
+	  }
 	}
 
 }
