@@ -561,8 +561,7 @@ public abstract class Entity extends Type implements Cloneable
 	    return entity;
     } catch (Exception e) {
       SMessageDialog.showErrorMessage(
-          "Une erreur est survenue lors de la copie " +
-      		"de l'entité.\nMerci de signaler le problème.");
+          "An error occured when copying the entity.\nThank to send a report.");
       e.printStackTrace();
     }
 	  

@@ -526,7 +526,7 @@ public class Slyum extends JFrame implements ActionListener {
         	if (e.getSource() instanceof JMenuItemHistory)
         		PanelClassDiagram.getInstance().openFromXmlAndAsk(new File(((JMenuItemHistory)e.getSource()).getHistoryPath().toString()));
         	else
-        		SMessageDialog.showErrorMessage("Impossible d'effectuer cette action. Veuillez reporter ce bug.");
+        		SMessageDialog.showErrorMessage("An error occured while opening project. Please report.");
             break;
         case ACTION_PROPERTIES:
             new SProperties();
