@@ -139,8 +139,14 @@ public class InheritanceView extends RelationView
 		super.actionPerformed(e);
 		if ("O&I".equals(e.getActionCommand()))
 			inheritance.showOverridesAndImplementations();
-		else if (Slyum.ACTION_ADJUST_INHERITANCE.equals(e.getActionCommand()))
+		else if (Slyum.ACTION_ADJUST_INHERITANCE.equals(e.getActionCommand())) {
 		  parent.adjustInheritances();
+
+      // parent.adjustInheritances() will not adjust this inheritance if
+      // it's not selected. This code will.
+      if (!isSelected())
+        adjustInheritance();
+    }
 	}
 
 	@Override
