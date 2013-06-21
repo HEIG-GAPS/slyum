@@ -30,6 +30,7 @@ import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Role;
+import classDiagram.relationships.Association.NavigateDirection;
 
 /**
  * MultiView is represented by a diamond and it represents a multi-association
@@ -409,7 +410,9 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 		if (roles.size() != 2)
 			return;
 
-		final Binary binary = new Binary(roles.getFirst().getEntity(), roles.getLast().getEntity(), false, multi.getId());
+		final Binary binary = new Binary(
+		    roles.getFirst().getEntity(), roles.getLast().getEntity(), 
+		    NavigateDirection.BIDIRECTIONAL, multi.getId());
 
 		parent.getClassDiagram().addBinary(binary);
 	}

@@ -17,6 +17,7 @@ import classDiagram.components.ClassEntity;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Role;
+import classDiagram.relationships.Association.NavigateDirection;
 
 /**
  * BinaryFactory allows to create a new binary view associated with a new
@@ -56,7 +57,7 @@ public class BinaryFactory extends RelationFactory
 			final EntityView source = (EntityView) componentMousePressed;
 			final EntityView target = (EntityView) componentMouseReleased;
 
-			final Binary binary = new Binary(source.getComponent(), target.getComponent(), false);
+			final Binary binary = new Binary(source.getComponent(), target.getComponent(), NavigateDirection.BIDIRECTIONAL);
 
 			final BinaryView b = new BinaryView(parent, source, target, binary, mousePressed, mouseReleased, true);
 

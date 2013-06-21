@@ -78,6 +78,34 @@ public class AggregationView extends BinaryView
 		g2.drawPolygon(pointsX, pointsY, pointsX.length);
 	}
 
+  @Override
+  protected void paintNavigability(Graphics2D g2) {
+    switch (association.getDirected()) {
+    case FIRST_TO_SECOND:
+      DependencyView.paintExtremity(g2, points.get(points.size() - 2).getAnchor(), points.getLast().getAnchor());
+      break;
+    case SECOND_TO_FIRST:
+      Point source = points.get(1).getAnchor(),
+            target = points.getFirst().getAnchor();
+      double width = target.x - source.x,
+             height = target.y - source.y,
+             hypo = Math.hypot(width, height),
+             ratio = hypo / 26.f, x, y; // 26 is the size of the relation end.
+      
+       width /= ratio;
+       height /= ratio;
+       x = target.x - width;
+       y = target.y - height;
+      
+      DependencyView.paintExtremity(g2, source, new Point((int)x, (int)y));
+      break;
+      
+    case BIDIRECTIONAL:
+    default:
+      break;
+    }
+  }
+
 	/**
 	 * Create a new AggregationView between source and target.
 	 * 

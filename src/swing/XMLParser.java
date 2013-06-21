@@ -34,6 +34,7 @@ import classDiagram.components.Method;
 import classDiagram.components.Method.ParametersViewStyle;
 import classDiagram.components.Type;
 import classDiagram.components.Visibility;
+import classDiagram.relationships.Association.NavigateDirection;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Composition;
 import classDiagram.relationships.Multi;
@@ -59,7 +60,7 @@ public class XMLParser extends DefaultHandler
 	private class Association
 	{
 		Aggregation aggregation = Aggregation.NONE;
-		boolean direction = false;
+		NavigateDirection direction = NavigateDirection.BIDIRECTIONAL;
 		int id = -1;
 		String name = null;
 		LinkedList<Role> role = new LinkedList<>();
@@ -957,7 +958,16 @@ public class XMLParser extends DefaultHandler
 				currentAssociation = new Association();
 				currentAssociation.id = Integer.parseInt(attributes.getValue("id"));
 				currentAssociation.name = attributes.getValue("name");
-				currentAssociation.direction = Boolean.parseBoolean(attributes.getValue("direction"));
+				try {
+				  currentAssociation.direction = NavigateDirection.valueOf(attributes.getValue("direction"));
+				} catch (IllegalArgumentException e) {
+				  // For older version of sly file. Convert boolean value to navigability.
+				  if (Boolean.parseBoolean(attributes.getValue("direction")))
+  				  currentAssociation.direction = NavigateDirection.FIRST_TO_SECOND;
+				  else
+				    currentAssociation.direction = NavigateDirection.BIDIRECTIONAL;
+  				    
+				}
 				currentAssociation.aggregation = Aggregation.valueOf(attributes.getValue("aggregation"));
 
 				uMLClassDiagram.diagrameElement.association.add(currentAssociation);

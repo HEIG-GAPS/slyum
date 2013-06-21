@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 import swing.SPanelDiagramComponent;
 
 import classDiagram.relationships.Aggregation;
+import classDiagram.relationships.Association.NavigateDirection;
 
 /**
  * AggregationFactory allows to create a new aggregation view associated with a
@@ -49,7 +50,7 @@ public class AggregationFactory extends RelationFactory
 			final EntityView source = (EntityView) componentMousePressed;
 			final EntityView target = (EntityView) componentMouseReleased;
 
-			final Aggregation aggregation = new Aggregation(source.getComponent(), target.getComponent(), false);
+			final Aggregation aggregation = new Aggregation(source.getComponent(), target.getComponent(), NavigateDirection.BIDIRECTIONAL);
 			final AggregationView a = new AggregationView(parent, source, target, aggregation, mousePressed, mouseReleased, true);
 
 			parent.addLineView(a);

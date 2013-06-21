@@ -508,63 +508,62 @@ public class Slyum extends JFrame implements ActionListener {
 		PanelClassDiagram p = PanelClassDiagram.getInstance();
 		GraphicView gv = p.getCurrentGraphicView();
 		
-    switch (e.getActionCommand())
-    {
-        case Slyum.ACTION_SAVE_AS:
-            p.saveToXML(true);
-            break;
-        case ACTION_ABOUT:
-            new AboutBox(this);
-            break;
-        case ACTION_HELP:
-            openHelp();
-            break;
-        case ACTION_EXIT:
-            exit();
-            break;
-        case ACTION_OPEN_RECENT_RPOJECT:
-        	if (e.getSource() instanceof JMenuItemHistory)
-        		PanelClassDiagram.getInstance().openFromXmlAndAsk(new File(((JMenuItemHistory)e.getSource()).getHistoryPath().toString()));
-        	else
-        		SMessageDialog.showErrorMessage("An error occured while opening project. Please report.");
-            break;
-        case ACTION_PROPERTIES:
-            new SProperties();
-            break;
-        case ACTION_UPDATE:
-            openURL(URL_UPDATE_PAGE);
-            break;
-        case ACTION_SELECT_ALL:
-            gv.selectAll();
-            break;
-        case ACTION_UNSELECT_ALL:
-            gv.unselectAll();
-            break;
-				case ACTION_ZOOM_PLUS:
-					PanelClassDiagram.getInstance().getCurrentGraphicView().forwardScale();
-					break;
-				case ACTION_ZOOM_MINUS:
-					PanelClassDiagram.getInstance().getCurrentGraphicView().backScale();
-					break;
-				case ACTION_ZOOM_ADAPT:
-					PanelClassDiagram.getInstance().getCurrentGraphicView().adaptDiagramToWindow();
-					break;
-				case ACTION_ZOOM_ADAPT_SELECTION:
-					PanelClassDiagram.getInstance().getCurrentGraphicView().adaptSelectionToWindow();
-					break;
-				case ACTION_ZOOM_1:
-					PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(1.0);
-					break;
-				case ACTION_ZOOM_0_5:
-					PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(0.5);
-					break;
-				case ACTION_ZOOM_1_5:
-					PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(1.5);
-					break;
-				case ACTION_ZOOM_2:
-					PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(2.0);
-					break;
-      }
+    switch (e.getActionCommand()) {
+      case Slyum.ACTION_SAVE_AS:
+        p.saveToXML(true);
+        break;
+      case ACTION_ABOUT:
+        new AboutBox(this);
+        break;
+      case ACTION_HELP:
+        openHelp();
+        break;
+      case ACTION_EXIT:
+        exit();
+        break;
+      case ACTION_OPEN_RECENT_RPOJECT:
+      	if (e.getSource() instanceof JMenuItemHistory)
+      		PanelClassDiagram.getInstance().openFromXmlAndAsk(new File(((JMenuItemHistory)e.getSource()).getHistoryPath().toString()));
+      	else
+      		SMessageDialog.showErrorMessage("An error occured while opening project. Please report.");
+          break;
+      case ACTION_PROPERTIES:
+        new SProperties();
+        break;
+      case ACTION_UPDATE:
+        openURL(URL_UPDATE_PAGE);
+        break;
+      case ACTION_SELECT_ALL:
+        gv.selectAll();
+        break;
+      case ACTION_UNSELECT_ALL:
+        gv.unselectAll();
+        break;
+			case ACTION_ZOOM_PLUS:
+				PanelClassDiagram.getInstance().getCurrentGraphicView().forwardScale();
+				break;
+			case ACTION_ZOOM_MINUS:
+				PanelClassDiagram.getInstance().getCurrentGraphicView().backScale();
+				break;
+			case ACTION_ZOOM_ADAPT:
+				PanelClassDiagram.getInstance().getCurrentGraphicView().adaptDiagramToWindow();
+				break;
+			case ACTION_ZOOM_ADAPT_SELECTION:
+				PanelClassDiagram.getInstance().getCurrentGraphicView().adaptSelectionToWindow();
+				break;
+			case ACTION_ZOOM_1:
+				PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(1.0);
+				break;
+			case ACTION_ZOOM_0_5:
+				PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(0.5);
+				break;
+			case ACTION_ZOOM_1_5:
+				PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(1.5);
+				break;
+			case ACTION_ZOOM_2:
+				PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(2.0);
+				break;
+    }
 	}
 
 	/**
@@ -598,6 +597,7 @@ public class Slyum extends JFrame implements ActionListener {
         UIManager.put("List.font", f);
         UIManager.put("Menu.font", f.deriveFont(14.0f));
         UIManager.put("MenuItem.font", f);
+        UIManager.put("RadioButtonMenuItem.font", f);
         UIManager.put("ComboBox.font", f);
         UIManager.put("Table.font", f);
         UIManager.put("TextField.font", f);

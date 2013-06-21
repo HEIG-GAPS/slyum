@@ -12,6 +12,7 @@ import java.awt.Graphics2D;
 import swing.SPanelDiagramComponent;
 
 import classDiagram.relationships.Composition;
+import classDiagram.relationships.Association.NavigateDirection;
 
 /**
  * CompositionFactpry allows to create a new composition view associated with a
@@ -49,7 +50,7 @@ public class CompositionFactory extends RelationFactory
 			final EntityView source = (EntityView) componentMousePressed;
 			final EntityView target = (EntityView) componentMouseReleased;
 
-			final Composition composition = new Composition(source.getComponent(), target.getComponent(), false);
+			final Composition composition = new Composition(source.getComponent(), target.getComponent(), NavigateDirection.BIDIRECTIONAL);
 			final CompositionView c = new CompositionView(parent, source, target, composition, mousePressed, mouseReleased, true);
 
 			parent.addLineView(c);

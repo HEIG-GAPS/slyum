@@ -21,7 +21,12 @@ import classDiagram.components.Entity;
 public abstract class Association extends Observable
                                   implements Relation,
                                              ILabelTitle {
-	protected boolean directed;
+  
+  public enum NavigateDirection {
+    BIDIRECTIONAL, FIRST_TO_SECOND, SECOND_TO_FIRST
+  }
+  
+	protected NavigateDirection directed;
 
 	protected final int id;
 	protected String name;
@@ -65,7 +70,7 @@ public abstract class Association extends Observable
 	 * 
 	 * @return if the association is directed or not
 	 */
-	public boolean getDirected()
+	public NavigateDirection getDirected()
 	{
 		return directed;
 	}
@@ -96,16 +101,6 @@ public abstract class Association extends Observable
 	public LinkedList<Role> getRoles()
 	{
 		return (LinkedList<Role>) roles.clone();
-	}
-
-	/**
-	 * Return if the association is directed or not.
-	 * 
-	 * @return ture if the association si directed; false otherwise
-	 */
-	public boolean isDirected()
-	{
-		return directed;
 	}
 
 	/**
@@ -146,12 +141,12 @@ public abstract class Association extends Observable
 	}
 
 	/**
-	 * Set if the association is directed or not.
+	 * Set the association direction
 	 * 
 	 * @param directed
 	 *            the new directed state for this association
 	 */
-	public void setDirected(boolean directed)
+	public void setDirected(NavigateDirection directed)
 	{
 		this.directed = directed;
 

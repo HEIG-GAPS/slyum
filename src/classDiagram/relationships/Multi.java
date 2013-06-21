@@ -50,7 +50,7 @@ public class Multi extends Association {
 
 			addClass(ce);
 
-		directed = false;
+		directed = NavigateDirection.BIDIRECTIONAL;
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class Multi extends Association {
 
 			addClass(ce);
 
-		directed = false;
+		directed = NavigateDirection.BIDIRECTIONAL;
 	}
 
 	/**
