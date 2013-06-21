@@ -9,7 +9,6 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import swing.SPanelDiagramComponent;
-
 import change.Change;
 
 /**
@@ -21,8 +20,7 @@ import change.Change;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class NoteFactory extends RelationFactory
-{
+public class NoteFactory extends RelationFactory {  
 	/**
 	 * Create a new factory allowing the creation of a note.
 	 * 
@@ -40,8 +38,7 @@ public class NoteFactory extends RelationFactory
 	}
 
 	@Override
-	public GraphicComponent create()
-	{
+	public GraphicComponent create() {
 		boolean isRecord = Change.isRecord();
 		Change.record();
 		

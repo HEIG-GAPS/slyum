@@ -68,14 +68,12 @@ public class DependencyFactory extends RelationFactory
 	}
 
 	@Override
-	protected void drawExtremity(Graphics2D g2)
-	{
-		DependencyView.paintExtremity(g2, mousePressed, mouseLocation);
+	protected void drawExtremity(Graphics2D g2) {
+		DependencyView.paintExtremity(g2, points.get(points.size()-1), mouseLocation);
 	}
 	
 	@Override
-	protected void creationFailed()
-	{
+	protected void creationFailed() {
 		SMessageDialog.showErrorMessage(ERROR_CREATION_MESSAGE);
 	}
 }

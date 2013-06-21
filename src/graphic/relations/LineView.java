@@ -197,15 +197,19 @@ public abstract class LineView extends GraphicComponent
 	  for (RelationGrip grip : grips)
 	    addGrip(grip, firstIndex++);
 	}
+	
+	final public void removeAllGrip() {
+    // Remove all intermediate grip.
+    while (points.size() > 2)
+      points.get(1).delete();
+	}
 
 	/**
 	 * Remove and replace all grips.
 	 */
 	final public void reinitGrips() {
-		// Remove all intermediate grip.
-		while (points.size() > 2)
-		  points.get(1).delete();
-
+	  removeAllGrip();
+	  
 		// Create a square with the association to display the recursivity (if any).
 		if (isRecursif()) {
 			int gridSize = 35;

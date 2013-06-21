@@ -83,14 +83,12 @@ public class InheritanceFactory extends RelationFactory
 	}
 
 	@Override
-	protected void drawExtremity(Graphics2D g2)
-	{
-		InheritanceView.paintExtremity(g2, mousePressed, mouseLocation, Color.DARK_GRAY);
+	protected void drawExtremity(Graphics2D g2) {
+		InheritanceView.paintExtremity(g2, points.get(points.size()-1), mouseLocation, Color.DARK_GRAY);
 	}
 	
 	@Override
-	protected void creationFailed()
-	{
+	protected void creationFailed() {
 		SMessageDialog.showErrorMessage(ERROR_CREATION_MESSAGE);
 	}
 }

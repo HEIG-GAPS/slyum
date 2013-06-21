@@ -8,6 +8,7 @@ import graphic.relations.CompositionView;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 
 import swing.SPanelDiagramComponent;
 
@@ -67,8 +68,8 @@ public class CompositionFactory extends RelationFactory
 	}
 
 	@Override
-	protected void drawExtremity(Graphics2D g2)
-	{
-		AggregationView.paintExtremity(g2, mouseLocation, mousePressed, Color.BLACK, Color.DARK_GRAY);
+	protected void drawExtremity(Graphics2D g2) {
+	  Point p = points.size() < 2 ? mouseLocation : points.get(1);
+		AggregationView.paintExtremity(g2, p, points.get(0), Color.BLACK, Color.DARK_GRAY);
 	}
 }

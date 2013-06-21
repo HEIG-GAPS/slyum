@@ -32,10 +32,11 @@ public abstract class ComponentFactory extends CreateComponent
 	}
 
 	@Override
-	public void gMousePressed(MouseEvent e)
-	{
+	public void gMousePressed(MouseEvent e) {
 		mousePressed = e.getPoint();
-		componentMousePressed = parent.getComponentAtPosition(mousePressed);
+		
+		if (componentMousePressed == null)
+		  componentMousePressed = parent.getComponentAtPosition(mousePressed);
 	}
 
 	@Override
