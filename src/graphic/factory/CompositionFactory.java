@@ -46,7 +46,7 @@ public class CompositionFactory extends RelationFactory
 	@Override
 	public GraphicComponent create()
 	{
-		if (componentMousePressed instanceof EntityView && componentMouseReleased instanceof EntityView)
+		if (isFirstComponentValid() && componentMouseReleased instanceof EntityView)
 		{
 			final EntityView source = (EntityView) componentMousePressed;
 			final EntityView target = (EntityView) componentMouseReleased;
@@ -65,6 +65,11 @@ public class CompositionFactory extends RelationFactory
 
 		repaint();
 		return null;
+	}
+	
+	@Override
+	protected boolean isFirstComponentValid() {
+	  return componentMousePressed instanceof EntityView;
 	}
 
 	@Override

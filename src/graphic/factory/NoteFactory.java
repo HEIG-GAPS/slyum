@@ -54,6 +54,11 @@ public class NoteFactory extends RelationFactory {
 
 		return tb;
 	}
+	
+	@Override
+	protected boolean isFirstComponentValid() {
+	  return true;
+	}
 
 	@Override
 	protected void drawExtremity(Graphics2D g2)

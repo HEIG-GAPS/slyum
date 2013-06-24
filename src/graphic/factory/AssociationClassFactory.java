@@ -118,6 +118,12 @@ public class AssociationClassFactory extends RelationFactory
 	}
 	
 	@Override
+	protected boolean isFirstComponentValid() {
+	  return componentMousePressed.getClass() == ClassView.class ||
+	         componentMousePressed instanceof BinaryView;
+	}
+	
+	@Override
 	protected void creationFailed()
 	{
 		SMessageDialog.showErrorMessage(ERROR_CREATION_MESSAGE);

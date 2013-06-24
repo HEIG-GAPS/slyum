@@ -107,6 +107,13 @@ public class BinaryFactory extends RelationFactory
 	}
 	
 	@Override
+	protected boolean isFirstComponentValid() {
+	  return componentMousePressed instanceof EntityView || 
+	         componentMousePressed.getClass() == MultiView.class ||
+	         componentMousePressed instanceof ClassView;
+	}
+	
+	@Override
 	protected void creationFailed()
 	{
 		SMessageDialog.showErrorMessage(ERROR_CREATION_MESSAGE);

@@ -157,8 +157,12 @@ public abstract class RelationFactory extends ComponentFactory
 		
 		// Le premier point doit être ajouté lorsque l'on presse sur la souris.
 		// Les suivants le sont quand on relâche la souris.
-		if (points.isEmpty())
-		  points.add(mouseLocation);
+		if (points.isEmpty()) {
+		  if (isFirstComponentValid())
+		    points.add(mouseLocation);
+		  else
+		    componentMousePressed = null;
+		} 
 	}
 
 	@Override
@@ -166,6 +170,10 @@ public abstract class RelationFactory extends ComponentFactory
 	  final GraphicComponent view;
 	  RelationGrip grip;
     mouseReleased = mouseLocation;
+    
+    if (points.isEmpty())
+      return;
+    
     componentMouseReleased = parent.getComponentAtPosition(mouseReleased);
 
     points.add(mouseLocation);
@@ -223,5 +231,7 @@ public abstract class RelationFactory extends ComponentFactory
   		parent.getScene().repaint(repaintBounds);
 	  }
 	}
+	
+	protected abstract boolean isFirstComponentValid();
 
 }
