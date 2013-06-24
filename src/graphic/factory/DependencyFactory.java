@@ -66,6 +66,11 @@ public class DependencyFactory extends RelationFactory
 		repaint();
 		return null;
 	}
+	
+	@Override
+	protected boolean isFirstComponentValid() {
+	  return componentMousePressed instanceof EntityView;
+	}
 
 	@Override
 	protected void drawExtremity(Graphics2D g2) {

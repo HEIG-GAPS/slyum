@@ -2,7 +2,11 @@ package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
+import graphic.entity.EntityView;
 import graphic.relations.LineCommentary;
+import graphic.relations.MultiView;
+import graphic.relations.RelationView;
+import graphic.textbox.TextBoxCommentary;
 
 import java.awt.BasicStroke;
 
@@ -50,6 +54,14 @@ public class LineCommentaryFactory extends RelationFactory
 		parent.addLineView(lc);
 
 		return lc;
+	}
+	
+	@Override
+	protected boolean isFirstComponentValid() {
+	  return componentMousePressed instanceof RelationView ||
+	         componentMousePressed instanceof EntityView ||
+	         componentMousePressed instanceof TextBoxCommentary ||
+	         componentMousePressed instanceof MultiView;
 	}
 	
 	@Override
