@@ -201,6 +201,8 @@ public abstract class RelationFactory extends ComponentFactory
           @Override
           public void run() {
             ((LineView)view).reinitializeTextBoxesLocation();
+            ((LineView)view).setSelected(true);
+            ((LineView)view).notifyObservers();
           }
         });
       }
