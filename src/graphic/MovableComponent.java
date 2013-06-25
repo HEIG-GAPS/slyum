@@ -27,9 +27,9 @@ public abstract class MovableComponent extends GraphicComponent
 
 	protected Rectangle ghost = new Rectangle();
 	private boolean justSelected = false;
+	private boolean previousSquareState = false;
 
 	protected GripEntity leftMovableSquare;
-
 	protected GripEntity rightMovableSquare;
 
 	public MovableComponent(GraphicView parent) {
@@ -43,19 +43,16 @@ public abstract class MovableComponent extends GraphicComponent
 
 			@Override
 			public void gMousePressed(MouseEvent e) {
+	      if (!g.isSelected())
+	        parent.unselectAll();
+	      g.setSelected(true);
         super.gMousePressed(e);
-		    if (!GraphicView.isAddToSelection(e)) {
-		      parent.unselectAll();
-		      g.setSelected(true);
-		    } else {
-		      g.setSelected(!g.isSelected());
-		    }
 			}
-
+			
 			@Override
 			public void move(MouseEvent e)
 			{
-				for (final GraphicComponent c : parent.getSelectedComponents())
+				for (GraphicComponent c : parent.getSelectedComponents())
 					c.resizeLeft(e);
 			}
 		});
@@ -64,13 +61,10 @@ public abstract class MovableComponent extends GraphicComponent
 
 			@Override
 			public void gMousePressed(MouseEvent e) {
-        super.gMousePressed(e);
-        if (!GraphicView.isAddToSelection(e)) {
+        if (!g.isSelected())
           parent.unselectAll();
-          g.setSelected(true);
-        } else {
-          g.setSelected(!g.isSelected());
-        }
+        g.setSelected(true);
+        super.gMousePressed(e);
 			}
 
 			@Override
@@ -151,8 +145,7 @@ public abstract class MovableComponent extends GraphicComponent
 	}
 
 	@Override
-	public void gMouseClicked(MouseEvent e)
-	{
+	public void gMouseClicked(MouseEvent e) {
 		super.gMouseClicked(e);
 		
 		if (!GraphicView.isAddToSelection(e)) {
@@ -173,24 +166,28 @@ public abstract class MovableComponent extends GraphicComponent
 	}
 
 	@Override
-	public void gMouseDragged(MouseEvent e)
-	{
-		for (final GraphicComponent c : parent.getSelectedComponents())
-
+	public void gMouseDragged(MouseEvent e) {
+		for (GraphicComponent c : parent.getSelectedComponents())
 			c.move(e);
 	}
 
 	@Override
-	public void gMouseEntered(MouseEvent e)
-	{
+	public void gMouseEntered(MouseEvent e) {
+	  previousSquareState = getResizerVisible();
 		setResizerVisible(true);
 	}
 
 	@Override
-	public void gMouseExited(MouseEvent e)
-	{
-		setResizerVisible(false);
+	public void gMouseExited(MouseEvent e) {
+		setResizerVisible(previousSquareState);
 	}
+  
+  @Override
+  public void setSelected(boolean selected) {
+    super.setSelected(selected);
+    previousSquareState = true;
+    setResizerVisible(selected);
+  }
 
 	@Override
 	public void gMousePressed(MouseEvent e)
@@ -358,6 +355,10 @@ public abstract class MovableComponent extends GraphicComponent
 	{
 		leftMovableSquare.setVisible(visible);
 		rightMovableSquare.setVisible(visible);
+	}
+	
+	public boolean getResizerVisible() {
+	  return leftMovableSquare.isVisible() || rightMovableSquare.isVisible();
 	}
 
 	/**

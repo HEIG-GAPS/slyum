@@ -784,9 +784,7 @@ public abstract class EntityView
     @Override
     public void gMouseEntered(MouseEvent e) {
         super.gMouseEntered(e);
-
         setMouseHoverStyle();
-
         saveCursor = parent.getScene().getCursor();
         parent.getScene().setCursor(new Cursor(Cursor.MOVE_CURSOR));
     }
