@@ -511,6 +511,9 @@ public class EntityPropreties extends GlobalPropreties {
 							btnDownMethod.setEnabled(index < mapIndex.size() - 1);
 							showInProperties();
 							methodsTable.addRowSelectionInterval(index, index);
+							methodsTable.scrollRectToVisible(methodsTable.getCellRect(
+							    methodsTable.getSelectedRow(), 
+							    methodsTable.getSelectedColumn(), true));
 							break;
 						case UNSELECT:
 							methodsTable.removeRowSelectionInterval(index, index);
@@ -1383,6 +1386,17 @@ public class EntityPropreties extends GlobalPropreties {
 		
 		validate();
     cancelEditingTables();
+    
+    if (msg == UpdateMessage.ADD_METHOD || msg == UpdateMessage.ADD_METHOD_NO_EDIT)
+      methodsTable.scrollRectToVisible(methodsTable.getCellRect(
+          methodsTable.getRowCount(), 
+          methodsTable.getColumnCount(), true));
+
+    if (msg == UpdateMessage.ADD_ATTRIBUTE || msg == UpdateMessage.ADD_ATTRIBUTE_NO_EDIT)
+      attributesTable.scrollRectToVisible(attributesTable.getCellRect(
+          attributesTable.getRowCount(), 
+          attributesTable.getColumnCount(), true));
+    
 	}
 	
 	private void cancelEditingTables() {
