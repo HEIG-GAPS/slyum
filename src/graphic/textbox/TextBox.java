@@ -132,7 +132,7 @@ public abstract class TextBox extends GraphicComponent
 		
 		final Rectangle bounds = getBounds();
 
-		textField = new JTextField(getText()) {
+		textField = new JTextField(getEditingText()) {
 			
 			@Override
 			public void paintComponent(Graphics g)
@@ -185,6 +185,10 @@ public abstract class TextBox extends GraphicComponent
 				}
 			}
 		});
+	}
+	
+	public String getEditingText() {
+	  return getText();
 	}
 
 	@Override

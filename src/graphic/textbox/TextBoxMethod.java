@@ -14,6 +14,7 @@ import utility.Utility;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Method;
+import classDiagram.components.Method.ParametersViewStyle;
 
 /**
  * A TextBox is a graphic component from Slyum containing a String. The
@@ -69,6 +70,11 @@ public class TextBoxMethod extends TextBox implements Observer {
 	@Override
 	public String getText() {
 		return method.getStringFromMethod();
+	}
+	
+	@Override
+	public String getEditingText() {
+	  return method.getStringFromMethod(ParametersViewStyle.TYPE_AND_NAME);
 	}
 
 	@Override
