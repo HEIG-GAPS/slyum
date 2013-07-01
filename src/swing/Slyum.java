@@ -481,10 +481,9 @@ public class Slyum extends JFrame implements ActionListener {
       defaultFont = 
           Font.createFont(
               Font.TRUETYPE_FONT, 
-              new File(Slyum.class.getResource(
+              Slyum.class.getResource(
                   String.format("%ssegoeui.ttf", 
-                  FONTS_PATCH)).getFile())).deriveFont(Font.PLAIN,
-                                                       DEFAULT_FONT_SIZE);
+                  FONTS_PATCH)).openStream()).deriveFont(Font.PLAIN, DEFAULT_FONT_SIZE);
     } catch (FontFormatException | IOException e) {
       e.printStackTrace();
       defaultFont = new Font(Font.SANS_SERIF, Font.PLAIN, DEFAULT_FONT_SIZE);
