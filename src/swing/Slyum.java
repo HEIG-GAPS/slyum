@@ -416,7 +416,7 @@ public class Slyum extends JFrame implements ActionListener {
 	private static void showWarningForOpenJDK()
 	{
 		if (isShowOpenJDKWarning() && OSValidator.isUnix())
-			new NoRepopDialog("Slowdowns are observed with OpenJDK. If you use OpenJDK, we encourage you to get Sun JDK or put graphic quality to low.").setVisible(true);
+			new NoRepopDialog("Problems are observed with OpenJRE. If you use OpenJRE, we encourage you to get official Sun JRE.").setVisible(true);
 	}
 
 	public static void updateWindowTitle(File projectName)
