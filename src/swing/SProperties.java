@@ -50,6 +50,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -62,7 +64,8 @@ public class SProperties extends JDialog {
   private ButtonColor btnColor;
   private ButtonColor btnBackgroundColor;
   private ButtonColor btnDefaultClassColor;
-  private final JPanel contentPanel = new JPanel();
+  private JPanel contentPanel = new JPanel(),
+                 panelLabelAlert;
   private JLabel lblPreviewFont = new JLabel();
   private JList<String> listName;
   private JList<Integer> listSize;
@@ -469,15 +472,36 @@ public class SProperties extends JDialog {
           panelFormatting.add(panel, gbc_panel);
           final GridBagLayout gbl_panel = new GridBagLayout();
           gbl_panel.columnWidths = new int[] { 122, 25, 0 };
-          gbl_panel.rowHeights = new int[] { 188, 0, 0 };
+          gbl_panel.rowHeights = new int[] { 188, 0, 0, 0 };
           gbl_panel.columnWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
-          gbl_panel.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
+          gbl_panel.rowWeights = new double[] { 1.0, 0.0, 0.0, Double.MIN_VALUE };
           panel.setLayout(gbl_panel);
           {
+            panelLabelAlert = new JPanel();
+            panelLabelAlert.setVisible(false);
+            panelLabelAlert.setMinimumSize(new Dimension(200, 40));
+            panelLabelAlert.setMaximumSize(new Dimension(200, 40));
+            panelLabelAlert.setBorder(new LineBorder(Color.RED));
+            final GridBagConstraints gbc_panel_1 = new GridBagConstraints();
+            gbc_panel_1.gridwidth = 2;
+            gbc_panel_1.insets = new Insets(0, 0, 5, 0);
+            gbc_panel_1.fill = GridBagConstraints.HORIZONTAL;
+            gbc_panel_1.gridx = 0;
+            gbc_panel_1.gridy = 1;
+            panel.add(panelLabelAlert, gbc_panel_1);
+            {
+              JLabel lblAlert = new JLabel("Some fonts cause zoom problems");
+              lblAlert.setFont(new Font("Tahoma", Font.PLAIN, 12));
+              lblAlert.setForeground(Color.RED);
+              panelLabelAlert.add(lblAlert);
+            }
+          }
+          {
             final JScrollPane scrollPane = new JScrollPane();
+            
             final GridBagConstraints gbc_scrollPane = new GridBagConstraints();
             gbc_scrollPane.fill = GridBagConstraints.BOTH;
-            gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
+            gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
             gbc_scrollPane.gridx = 0;
             gbc_scrollPane.gridy = 0;
             panel.add(scrollPane, gbc_scrollPane);
@@ -510,6 +534,14 @@ public class SProperties extends JDialog {
                   return values.length;
                 }
               });
+              
+              listName.addListSelectionListener(new ListSelectionListener() {
+                
+                @Override
+                public void valueChanged(ListSelectionEvent evt) {
+                  panelLabelAlert.setVisible(!listName.getSelectedValue().equals(TextBox.getFont().getName()));
+                }
+              });
 
               listName.setSelectedValue(TextBox.getFont().getName(), true);
             }
@@ -517,7 +549,7 @@ public class SProperties extends JDialog {
           {
             final JScrollPane scrollPane = new JScrollPane();
             final GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-            gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
+            gbc_scrollPane.insets = new Insets(0, 5, 5, 0);
             gbc_scrollPane.fill = GridBagConstraints.BOTH;
             gbc_scrollPane.gridx = 1;
             gbc_scrollPane.gridy = 0;
@@ -552,10 +584,10 @@ public class SProperties extends JDialog {
             panel_1.setBorder(new LineBorder(Color.GRAY));
             final GridBagConstraints gbc_panel_1 = new GridBagConstraints();
             gbc_panel_1.gridwidth = 2;
-            gbc_panel_1.insets = new Insets(0, 0, 0, 5);
+            gbc_panel_1.insets = new Insets(0, 0, 0, 0);
             gbc_panel_1.fill = GridBagConstraints.HORIZONTAL;
             gbc_panel_1.gridx = 0;
-            gbc_panel_1.gridy = 1;
+            gbc_panel_1.gridy = 2;
             panel.add(panel_1, gbc_panel_1);
             {
               lblPreviewFont = new JLabel("ABCDEFG abcdefg 1234");
