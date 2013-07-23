@@ -583,27 +583,27 @@ public class Slyum extends JFrame implements ActionListener {
 	 */
 	private void setUIProperties()
 	{
-        System.setProperty("awt.useSystemAAFontSettings", "on");
-        System.setProperty("swing.aatext", "true");
-        
-        Font f = defaultFont.deriveFont(13.0f);
-        UIManager.put("Button.font", f);
-        UIManager.put("Label.font", f);
-        UIManager.put("CheckBox.font", f);
-        UIManager.put("RadioButton.font", f);
-        UIManager.put("TabbedPane.font", f);
-        UIManager.put("TitledBorder.font", f);
-        UIManager.put("List.font", f);
-        UIManager.put("Menu.font", f.deriveFont(14.0f));
-        UIManager.put("MenuItem.font", f);
-        UIManager.put("RadioButtonMenuItem.font", f);
-        UIManager.put("ComboBox.font", f);
-        UIManager.put("Table.font", f);
-        UIManager.put("TextField.font", f);
-        UIManager.put("OptionPane.informationIcon", PersonalizedIcon.getInfoIcon());
-        UIManager.put("OptionPane.errorIcon", PersonalizedIcon.getErrorIcon());
-        UIManager.put("OptionPane.warningIcon", PersonalizedIcon.getWarningIcon());
-        UIManager.put("OptionPane.questionIcon", PersonalizedIcon.getQuestionIcon());
+    System.setProperty("awt.useSystemAAFontSettings", "on");
+    System.setProperty("swing.aatext", "true");
+    
+    Font f = defaultFont.deriveFont(13.0f);
+    UIManager.put("Button.font", f);
+    UIManager.put("Label.font", f);
+    UIManager.put("CheckBox.font", f);
+    UIManager.put("RadioButton.font", f);
+    UIManager.put("TabbedPane.font", f);
+    UIManager.put("TitledBorder.font", f);
+    UIManager.put("List.font", f);
+    UIManager.put("Menu.font", f.deriveFont(14.0f));
+    UIManager.put("MenuItem.font", f);
+    UIManager.put("RadioButtonMenuItem.font", f);
+    UIManager.put("ComboBox.font", f);
+    UIManager.put("Table.font", f);
+    UIManager.put("TextField.font", f);
+    UIManager.put("OptionPane.informationIcon", PersonalizedIcon.getInfoIcon());
+    UIManager.put("OptionPane.errorIcon", PersonalizedIcon.getErrorIcon());
+    UIManager.put("OptionPane.warningIcon", PersonalizedIcon.getWarningIcon());
+    UIManager.put("OptionPane.questionIcon", PersonalizedIcon.getQuestionIcon());
 	}
 
 	public static void openURL(String url)
@@ -630,7 +630,7 @@ public class Slyum extends JFrame implements ActionListener {
 		JMenuItem menuItem;
 
 		// Menu file
-		JMenu menu = menuFile = new JMenu("FILE");
+		JMenu menu = menuFile = new JMenu("File");
 		menu.setMnemonic(KeyEvent.VK_F);
 		menuBar.add(menu);
 
@@ -688,7 +688,7 @@ public class Slyum extends JFrame implements ActionListener {
 		}
 
 		// Menu edit
-		menu = new JMenu("EDIT");
+		menu = new JMenu("Edit");
 		menu.setMnemonic(KeyEvent.VK_E);
 		menuBar.add(menu);
 
@@ -790,7 +790,7 @@ public class Slyum extends JFrame implements ActionListener {
 			SPanelDiagramComponent p = SPanelDiagramComponent.getInstance();
 			
 			// Menu Diagram
-			menu = new JMenu("DIAGRAM");
+			menu = new JMenu("Diagram");
 			menu.setMnemonic(KeyEvent.VK_D);
 			menuBar.add(menu);
 			
@@ -903,7 +903,7 @@ public class Slyum extends JFrame implements ActionListener {
 		}
 
 		// Menu Help
-		menu = new JMenu("HELP");
+		menu = new JMenu("Help");
 		menu.setMnemonic(KeyEvent.VK_H);
 		menuBar.add(menu);
 
