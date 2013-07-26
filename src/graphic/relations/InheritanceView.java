@@ -180,33 +180,6 @@ public class InheritanceView extends RelationView
 	    return false;
 	  
 	  return super.relationChanged(gripSource, target);
-		/*if (newCompo.getClass() != oldCompo.getClass())
-			return false;
-
-		inheritance.getChild().removeParent(inheritance);
-		inheritance.getParent().removeChild(inheritance);
-
-		Entity newChild, newParent;
-
-		if (oldCompo.equals(getFirstPoint().getAssociedComponentView()))
-		{
-			newChild = (Entity) newCompo.getAssociedComponent();
-			newParent = inheritance.getParent();
-		} else {
-			newChild = inheritance.getChild();
-			newParent = (Entity) newCompo.getAssociedComponent();
-		}
-
-		if (!Inheritance.validate(newChild, newParent)) {
-			inheritance.getChild().addParent(inheritance);
-			inheritance.getParent().addChild(inheritance);
-			return false;
-		}
-
-		inheritance.setChild(newChild);
-		inheritance.setParent(newParent);
-
-		return super.relationChanged(oldCompo, newCompo);*/
 	}
 
 	/**
@@ -264,7 +237,7 @@ public class InheritanceView extends RelationView
     
     // Supprime tous les grips présents afin de les repositionner correctement.
     reinitGrips();
-
+    
     // Positionnement des grip centraux.
     // Plus haut ou plus bas?
     if (ptParent.y > ptChild.y - (offsetChild + offsetParent)) { // enfant plus haut
@@ -282,6 +255,19 @@ public class InheritanceView extends RelationView
         addGripAtLocation(3, new Point(x, ptParent.y + offsetParent));
         
       } else { // Ils se croisent
+        
+        // Ils sont proche
+        if (ptParent.y <= ptChild.y) {
+          reinitGrips();
+          int limitLeft = Math.max(boundsChild.x, boundsParent.x),
+              limitRight = Math.min(boundsChild.x + boundsChild.width, 
+                                    boundsParent.x + boundsParent.width);
+          int offset = (limitRight - limitLeft) / 2 + limitLeft;
+          getFirstPoint().setAnchor(new Point(offset, ptChild.y));
+          getLastPoint().setAnchor(new Point(offset, ptParent.y));
+          return;
+        }
+        
         // Quelle chemin est le plus court?
         if (Math.abs(boundsChild.x - boundsParent.x) < 
             Math.abs((boundsChild.x + boundsChild.width) - 
@@ -299,6 +285,7 @@ public class InheritanceView extends RelationView
       addGripAtLocation(4, new Point(ptParent.x, ptParent.y + offsetParent));
       
     } else { // enfant plus bas
+
       int vertical = (ptChild.y - (ptParent.y + 20)) / 2;
       addGripAtLocation(1, new Point(ptChild.x, ptChild.y - vertical));
       addGripAtLocation(2, new Point(ptParent.x, ptChild.y - vertical));
@@ -310,12 +297,6 @@ public class InheritanceView extends RelationView
     
     // Remove useless grips (if the entities are aligned).
     searchUselessAnchor(getFirstPoint());
-  }
-  
-  private void addGripAtLocation(int index, Point anchor) {
-    RelationGrip grip = new RelationGrip(parent, this);
-    grip.setAnchor(anchor);
-    addGrip(grip, index);
   }
   
 }
