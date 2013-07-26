@@ -250,7 +250,7 @@ public class Slyum extends JFrame implements ActionListener {
 	{
 		final File appDir = new File(path);
 
-		if (appDir.mkdir())
+		if (appDir.mkdirs())
 
 			System.out.println("Application directory created.");
 

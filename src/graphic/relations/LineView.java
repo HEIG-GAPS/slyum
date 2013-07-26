@@ -20,7 +20,7 @@ import java.awt.geom.Point2D;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import utility.Utility;
 import change.BufferBounds;
@@ -81,7 +81,8 @@ public abstract class LineView extends GraphicComponent
 	
 	private BufferBounds[] bb = new BufferBounds[2];
 	
-	private Point anchor1MousePressed, anchor2MousePressed;
+	private Point anchor1MousePressed, anchor2MousePressed,
+	              locationContextMenuRequested;
 
 	// More ratio is bigger, more the line near horizontal / vertical degree
 	// will be adjusted.
@@ -128,9 +129,10 @@ public abstract class LineView extends GraphicComponent
 			reinitGrips();
 
 		popupMenu.addSeparator();
-
-		JMenuItem menuItem = makeMenuItem("Delete", "Delete", "delete");
-		popupMenu.add(menuItem);
+		
+    popupMenu.add(makeMenuItem("Add grip", "AddGrip", "pointer-grip"));
+		
+		popupMenu.add(makeMenuItem("Delete", "Delete", "delete"));
 
 		setColor(getBasicColor());
 
@@ -143,6 +145,12 @@ public abstract class LineView extends GraphicComponent
 		super.actionPerformed(e);
 		if ("Delete".equals(e.getActionCommand()))
 			delete();
+		else if ("AddGrip".equals(e.getActionCommand()))
+		  if (locationContextMenuRequested != null) {
+		    createNewGrip(locationContextMenuRequested);
+		    setSelected(false);
+		    setSelected(true);
+		  }
 	}
 
 	/**
@@ -182,6 +190,12 @@ public abstract class LineView extends GraphicComponent
 		
 		repaint();
 	}
+  
+  public void addGripAtLocation(int index, Point anchor) {
+    RelationGrip grip = new RelationGrip(parent, this);
+    grip.setAnchor(anchor);
+    addGrip(grip, index);
+  }
 	
 	public void reinitializeTextBoxesLocation() {
 	  for (TextBoxLabel textbox : tbRoles)
@@ -883,5 +897,12 @@ public abstract class LineView extends GraphicComponent
                                   	   GraphicComponent target) {
     gripSource.setAssociedComponentView(target);
     reinitGrips();
+	}
+	
+	@Override
+	public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
+	  super.maybeShowPopup(e, popupMenu);
+	  
+	  locationContextMenuRequested = e.getPoint();
 	}
 }
