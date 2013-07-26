@@ -13,10 +13,10 @@ nbproject/private/config.properties
 nbproject/genfiles.properties
 nbproject/build-impl.xml
 manifest.mf
-build.xml
 dist/README.TXT
 dist/Slyum.jar
 nbproject/private/private.xml
 nbproject/private/profiler/configurations.xml
 dist/slyum.jar
 .settings/org.eclipse.jdt.ui.prefs
+dist/Slyum.app
