@@ -1,5 +1,6 @@
 package swing;
 
+import com.apple.java.OSXAdapter;
 import graphic.GraphicView;
 
 import java.awt.Color;
@@ -9,6 +10,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Frame;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -16,6 +18,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -58,6 +63,11 @@ public class Slyum extends JFrame implements ActionListener {
 	public final static Color DEFAULT_BACKGROUND = new Color(239, 239, 242);
 	public final static Color BACKGROUND_FORHEAD = new Color(246, 246, 246);
 	public final static Color THEME_COLOR = new Color(0, 122, 204);
+  
+  /**
+   * Check that we are on Mac OS X.  This is crucial to loading and using the OSXAdapter class.
+   */
+  public static final boolean MAC_OS_X = (System.getProperty("os.name").toLowerCase().startsWith("mac os"));
 
 	// Don't use the file separator here. Java resources are get with
 	// getResource() and didn't support back-slash character on Windows.
@@ -137,7 +147,7 @@ public class Slyum extends JFrame implements ActionListener {
 
 	public static final String ACTION_TEXTBOX_UP = "MoveTextBoxUp";
 	public static final String ACTION_TEXTBOX_DOWN = "MoveTextBoxDown";
-	
+  
 	// Accelerator
 	public final static String KEY_NEW_PROJECT = "ctrl alt N";
 	public final static String KEY_OPEN_PROJECT = "ctrl O";
@@ -438,6 +448,7 @@ public class Slyum extends JFrame implements ActionListener {
 	 * Create a new Slyum :D (slyyy slyy slyyyyy)!
 	 */
 	public Slyum() {
+    handleMacOSX();
 		initFont();
 		setUIProperties();
 		createJMenuBar();
@@ -500,6 +511,33 @@ public class Slyum extends JFrame implements ActionListener {
       }
     });
 	}
+  
+  private void handleMacOSX() {
+    if (MAC_OS_X) {
+      System.setProperty("apple.laf.useScreenMenuBar", "true");
+      try {
+        // Generate and register the OSXAdapter, passing it a hash of all the methods we wish to
+        // use as delegates for various com.apple.eawt.ApplicationListener methods
+        OSXAdapter.setQuitHandler(this, getClass().getDeclaredMethod("exit", (Class[]) null));
+        OSXAdapter.setAboutHandler(this, getClass().getDeclaredMethod("openAbout", (Class[]) null));
+        OSXAdapter.setPreferencesHandler(this, getClass().getDeclaredMethod("openProperties", (Class[]) null));
+        //OSXAdapter.setFileHandler(this, getClass().getDeclaredMethod("loadImageFile", new Class[]{String.class}));
+      } catch (NoSuchMethodException | SecurityException e) {
+        System.err.println("Error while loading the OSXAdapter:");
+        Writer sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+      }
+    }
+  }
+  
+  public void openAbout() {
+    new AboutBox(this);
+  }
+  
+  public void openProperties() {
+    new SProperties();
+  }
 	
 	@Override
 	public void actionPerformed(ActionEvent e)
@@ -512,7 +550,7 @@ public class Slyum extends JFrame implements ActionListener {
         p.saveToXML(true);
         break;
       case ACTION_ABOUT:
-        new AboutBox(this);
+        openAbout();
         break;
       case ACTION_HELP:
         openHelp();
@@ -527,7 +565,7 @@ public class Slyum extends JFrame implements ActionListener {
       		SMessageDialog.showErrorMessage("An error occured while opening project. Please report.");
           break;
       case ACTION_PROPERTIES:
-        new SProperties();
+        openProperties();
         break;
       case ACTION_UPDATE:
         openURL(URL_UPDATE_PAGE);
@@ -671,20 +709,24 @@ public class Slyum extends JFrame implements ActionListener {
 			menuItem = createMenuItem("Print...", "print", KeyEvent.VK_P, KEY_PRINT, ACTION_PRINT, p.getBtnPrint());
 			menu.add(menuItem);
 	
-			menu.addSeparator();
-	
-			// Menu item Properties
-			menuItem = createMenuItem("Properties...", "properties", KeyEvent.VK_R, KEY_PROPERTIES, ACTION_PROPERTIES);
-			menu.add(menuItem);
+      if (!MAC_OS_X) {
+        menu.addSeparator();
+
+        // Menu item Properties
+        menuItem = createMenuItem("Properties...", "properties", KeyEvent.VK_R, KEY_PROPERTIES, ACTION_PROPERTIES);
+        menu.add(menuItem);
+      }
 			
 			// Menu recent project
 			updateMenuItemHistory();
 			
-            menu.addSeparator();
-	
-			// Menu item exit
-			menuItem = createMenuItem("Exit", "exit", KeyEvent.VK_X, KEY_EXIT, ACTION_EXIT);
-			menu.add(menuItem);
+      if (!MAC_OS_X) {
+        menu.addSeparator();
+
+        // Menu item exit
+        menuItem = createMenuItem("Exit", "exit", KeyEvent.VK_X, KEY_EXIT, ACTION_EXIT);
+        menu.add(menuItem);
+      }
 		}
 
 		// Menu edit
@@ -915,11 +957,13 @@ public class Slyum extends JFrame implements ActionListener {
 		menuItem = createMenuItem("Go to update page...", "update", KeyEvent.VK_U, null, ACTION_UPDATE);
 		menu.add(menuItem);
 
-		menu.addSeparator();
+    if (!MAC_OS_X) {
+      menu.addSeparator();
 
-		// Menu item About
-		menuItem = createMenuItem("About Slyum...", "about", KeyEvent.VK_A, null, ACTION_ABOUT);
-		menu.add(menuItem);
+      // Menu item About
+      menuItem = createMenuItem("About Slyum...", "about", KeyEvent.VK_A, null, ACTION_ABOUT);
+      menu.add(menuItem);
+    }
 		
 		// Apply the menu bar.
     setJMenuBar(menuBar);
@@ -941,7 +985,7 @@ public class Slyum extends JFrame implements ActionListener {
         
         // Suppression du séparateur.
         if (remove)
-        	menuFile.remove(12);
+        	menuFile.remove((MAC_OS_X ? 8 : 12));
 	}
 	
 	public void updateMenuItemHistory()
@@ -951,7 +995,7 @@ public class Slyum extends JFrame implements ActionListener {
 	    List<String> histories = RecentProjectManager.getHistoryList();
 		
 	    if (histories.size() > 0)
-	    	menuFile.add(new JSeparator(), 12);
+	    	menuFile.add(new JSeparator(), (MAC_OS_X ? 8 : 12));
 	    
         for (String s : histories)
         {
@@ -960,7 +1004,7 @@ public class Slyum extends JFrame implements ActionListener {
         	menuItem.addActionListener(this);
         	menuItem.setHistoryPath(Paths.get(s));
     		
-            menuFile.add(menuItem, 13);
+            menuFile.add(menuItem, 9);
         }
 	}
 	
@@ -990,6 +1034,10 @@ public class Slyum extends JFrame implements ActionListener {
 		item = new JMenuItem(text, icon);
 		item.setMnemonic(mnemonic);
 		item.setActionCommand(actionCommand);
+    if (accelerator != null && accelerator.contains("ctrl") && MAC_OS_X) {
+      accelerator = accelerator.replace("ctrl", "meta");
+      accelerator = accelerator.replace("control", "meta");
+    }
 		item.setAccelerator(KeyStroke.getKeyStroke(accelerator));
 		item.addActionListener(al);
 
@@ -1019,13 +1067,21 @@ public class Slyum extends JFrame implements ActionListener {
 		return createMenuItem(text, iconName, mnemonic, accelerator, actionCommand, this);
 	}
 
-	private void exit() {
+  /**
+   * Quit the app.
+   * 
+   * This method is public because on the MacOSX handler.
+   * 
+   * @return True if the exit operation could be done or False if it has been 
+   * canceled.
+   */
+	public boolean exit() {
 		PanelClassDiagram p = PanelClassDiagram.getInstance();
 		
 		switch (p.askSavingCurrentProject())
 		{
 			case JOptionPane.CANCEL_OPTION:
-				return;
+				return false;
 
 			case JOptionPane.YES_OPTION:
 				p.saveToXML(false);
@@ -1036,6 +1092,7 @@ public class Slyum extends JFrame implements ActionListener {
 			  _exit();
 				break;
 		}
+    return true;
 	}
 	
 	private void _exit() {
