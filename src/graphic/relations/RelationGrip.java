@@ -89,14 +89,14 @@ public class RelationGrip extends SquareGrip implements ActionListener {
 		return new Rectangle(anchor.x - DEFAULT_SIZE / 2, anchor.y - DEFAULT_SIZE / 2, DEFAULT_SIZE, DEFAULT_SIZE);
 	}
 
-	@Override
-	public void gMouseDragged(MouseEvent e) {
-		Point mouse = e.getPoint();
+  @Override
+  public void gMouseDragged(MouseEvent e) {
+    Point mouse = e.getPoint();
     relation.showGrips(true);
-		setAnchor(new Point(mouse.x, mouse.y));
-		notifyObservers();
-		isMouseDragged = true;
-	}
+    setAnchor(new Point(mouse.x, mouse.y));
+    notifyObservers();
+    isMouseDragged = true;
+  }
 	
 	@Override
 	public void gMouseClicked(MouseEvent e) {
