@@ -54,20 +54,13 @@ public class MagneticGrip extends RelationGrip implements Observer
 		if (component == null)
 			throw new IllegalArgumentException("component is null");
 
+    Rectangle boundsRect = component.getBounds();
+    
 		this.component = component;
-
-		final Rectangle boundsRect = component.getBounds();
-
-		preferredAnchor = new Point(first.x - boundsRect.x, first.y - boundsRect.y); // relative
-																						// location
-
+		preferredAnchor = new Point(first.x - boundsRect.x, first.y - boundsRect.y);
 		super.setAnchor(component.computeAnchorLocation(first, next));
-
 		component.addObserver(this);
-
 		setVisible(false);
-
-		menuItemDelete.setEnabled(false);
 	}
 
 	/**
@@ -115,7 +108,7 @@ public class MagneticGrip extends RelationGrip implements Observer
 		relation.searchUselessAnchor(this);
 		pushBufferChangeMouseReleased(e);
 		Change.stopRecord();
-		maybeShowPopup(e, popupMenu);
+		maybeShowPopup(e, relation);
 		notifyObservers();
     relation.reinitializeTextBoxesLocation();
 	}

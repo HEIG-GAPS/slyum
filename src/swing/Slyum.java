@@ -1,6 +1,5 @@
 package swing;
 
-import com.apple.java.OSXAdapter;
 import graphic.GraphicView;
 
 import java.awt.Color;
@@ -10,7 +9,6 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Frame;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -43,6 +41,8 @@ import swing.SPanelDiagramComponent.Mode;
 import utility.OSValidator;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
+
+import com.apple.java.OSXAdapter;
 
 /**
  * Main class! Create a new Instance of Slyum and display it. Create menu.

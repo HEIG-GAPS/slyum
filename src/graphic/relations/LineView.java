@@ -20,8 +20,6 @@ import java.awt.geom.Point2D;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JPopupMenu;
-
 import utility.Utility;
 import change.BufferBounds;
 import change.BufferCreation;
@@ -81,8 +79,7 @@ public abstract class LineView extends GraphicComponent
 	
 	private BufferBounds[] bb = new BufferBounds[2];
 	
-	private Point anchor1MousePressed, anchor2MousePressed,
-	              locationContextMenuRequested;
+	private Point anchor1MousePressed, anchor2MousePressed;
 
 	// More ratio is bigger, more the line near horizontal / vertical degree
 	// will be adjusted.
@@ -129,10 +126,10 @@ public abstract class LineView extends GraphicComponent
 			reinitGrips();
 
 		popupMenu.addSeparator();
-		
     popupMenu.add(makeMenuItem("Add grip", "AddGrip", "pointer-grip"));
-		
-		popupMenu.add(makeMenuItem("Delete", "Delete", "delete"));
+    popupMenu.add(makeMenuItem("Delete grip", "DeleteGrip", "delete-grip"));
+    popupMenu.addSeparator();
+		popupMenu.add(makeMenuItem("Delete relation", "Delete", "delete"));
 
 		setColor(getBasicColor());
 
@@ -143,14 +140,49 @@ public abstract class LineView extends GraphicComponent
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		super.actionPerformed(e);
-		if ("Delete".equals(e.getActionCommand()))
+		if ("Delete".equals(e.getActionCommand())) {
 			delete();
-		else if ("AddGrip".equals(e.getActionCommand()))
+		}
+		else if ("AddGrip".equals(e.getActionCommand())) {
 		  if (locationContextMenuRequested != null) {
 		    createNewGrip(locationContextMenuRequested);
 		    setSelected(false);
 		    setSelected(true);
 		  }
+		}
+	  else if ("DeleteGrip".equals(e.getActionCommand())) {
+	    if (locationContextMenuRequested != null)
+	      deleteNearestGripAt(locationContextMenuRequested);
+	  }
+	}
+	
+	/**
+	 * Delete the nearest grip to the given point.
+	 * @param point the point (x, y) for deleting the nearest grip.
+	 */
+	public void deleteNearestGripAt(Point point) {
+	  getNearestGripAt(point).delete();
+	}
+	
+	/**
+	 * Return the nearest RelationGrip to the given point.
+	 * @param point the point for getting the nearest RelationGrip.
+	 */
+	public RelationGrip getNearestGripAt(Point point) {
+	  double shorterDistance = Double.MAX_VALUE,
+	         currentDistance;
+    RelationGrip nearestGrip = null, 
+                 currentGrip;
+    
+    for (int i = 1; i < points.size() - 1; i++) {
+      currentGrip = points.get(i);
+      currentDistance = point.distance(currentGrip.getAnchor());
+      if (currentDistance < shorterDistance){
+        nearestGrip = currentGrip;
+        shorterDistance = currentDistance;
+      }
+    }
+    return nearestGrip;
 	}
 
 	/**
@@ -897,12 +929,5 @@ public abstract class LineView extends GraphicComponent
                                   	   GraphicComponent target) {
     gripSource.setAssociedComponentView(target);
     reinitGrips();
-	}
-	
-	@Override
-	public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
-	  super.maybeShowPopup(e, popupMenu);
-	  
-	  locationContextMenuRequested = e.getPoint();
 	}
 }

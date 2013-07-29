@@ -59,6 +59,7 @@ public abstract class GraphicComponent extends Observable
 	private boolean visible = true;
 	
 	protected boolean pictureMode = false;
+	protected Point locationContextMenuRequested;
 
 	/**
 	 * !!! This constructor is use for create the graphic view, don't use in
@@ -428,15 +429,19 @@ public abstract class GraphicComponent extends Observable
 	 * @param popupMenu
 	 *            the popupMenu to display or hide.
 	 */
-	public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu)
-	{
+	public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
 		GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+		locationContextMenuRequested = e.getPoint();
 		
-		if (e.isPopupTrigger())
-		{
+		if (e.isPopupTrigger()) {
 			miNewNote.setEnabled(getAssociedComponent() != null);
 			popupMenu.show(e.getComponent(), (int)(e.getX() / gv.getInversedScale()), (int)(e.getY() / gv.getInversedScale()));
 		}
+	}
+	
+	public void maybeShowPopup(MouseEvent e, GraphicComponent source) {
+	  source.locationContextMenuRequested = e.getPoint();
+	  maybeShowPopup(e, source.getPopupMenu());
 	}
 
 	/**
