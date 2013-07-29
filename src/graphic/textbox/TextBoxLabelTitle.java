@@ -128,6 +128,18 @@ public class TextBoxLabelTitle extends TextBoxLabel
       relationView.setSelected(!relationView.isSelected());
     }
 	}
+	
+	@Override
+	public void gMousePressed(MouseEvent e) {
+	  super.gMousePressed(e);
+    maybeShowPopup(e, relationView);
+	}
+	
+	@Override
+	public void gMouseReleased(MouseEvent e) {
+	  super.gMouseReleased(e);
+    maybeShowPopup(e, relationView);
+	}
 
 	@Override
 	public void setText(String text) {

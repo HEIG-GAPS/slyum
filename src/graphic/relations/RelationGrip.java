@@ -7,16 +7,8 @@ import graphic.SquareGrip;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-
-import swing.Slyum;
-import utility.PersonalizedIcon;
 import utility.Utility;
 import change.BufferBounds;
 import change.BufferCreation;
@@ -29,13 +21,11 @@ import change.Change;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class RelationGrip extends SquareGrip implements ActionListener {
+public class RelationGrip extends SquareGrip {
 	public static int DEFAULT_SIZE = 10;
 
 	private Point anchor = new Point();
 
-	protected JMenuItem menuItemDelete;
-	protected JPopupMenu popupMenu;
 	protected LineView relation;
 	private int index = -1;
 
@@ -56,22 +46,9 @@ public class RelationGrip extends SquareGrip implements ActionListener {
 			throw new IllegalArgumentException("relation is null");
 
 		relation = relationView;
-		popupMenu = new JPopupMenu();
-		ImageIcon imgIcon = PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete.png");
-		menuItemDelete = new JMenuItem("Delete", imgIcon);
-		menuItemDelete.setActionCommand("delete");
-		menuItemDelete.addActionListener(this);
-		popupMenu.add(menuItemDelete);
 		
 		Change.push(new BufferCreation(false, this));
 		Change.push(new BufferCreation(true, this));
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e)
-	{
-		if ("delete".equals(e.getActionCommand()))
-			delete();
 	}
 
 	/**
@@ -132,7 +109,7 @@ public class RelationGrip extends SquareGrip implements ActionListener {
 			Change.record();
 			Change.push(new BufferBounds(this));
 		}
-		maybeShowPopup(e, popupMenu);
+    maybeShowPopup(e, relation);
 	}
 
 	@Override
@@ -152,7 +129,7 @@ public class RelationGrip extends SquareGrip implements ActionListener {
 
 		Change.stopRecord();
 		
-		maybeShowPopup(e, popupMenu);
+		maybeShowPopup(e, relation);
 		isMouseDragged = false;
 		
 		if (!relation.isSelected())
@@ -221,4 +198,8 @@ public class RelationGrip extends SquareGrip implements ActionListener {
 		setAnchor(new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2));
 		notifyObservers();
 	}
+	
+	public LineView getRelation() {
+    return relation;
+  }
 }

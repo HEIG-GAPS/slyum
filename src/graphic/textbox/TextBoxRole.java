@@ -2,6 +2,7 @@ package graphic.textbox;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
+import graphic.relations.AssociationView;
 import graphic.relations.MagneticGrip;
 
 import java.awt.Point;
@@ -192,6 +193,10 @@ public class TextBoxRole extends TextBoxLabel {
 		return role;
 	}
 	
+	public AssociationView getAssociationView() {
+	  return (AssociationView)parent.searchAssociedComponent(role.getAssociation());
+	}
+	
 	@Override
 	public void gMouseClicked(MouseEvent e) {
 	  super.gMouseClicked(e);
@@ -203,6 +208,18 @@ public class TextBoxRole extends TextBoxLabel {
     } else {
       c.setSelected(!c.isSelected());
     }
+	}
+	
+	@Override
+	public void gMousePressed(MouseEvent e) {
+	  super.gMousePressed(e);
+	  maybeShowPopup(e, getAssociationView());
+	}
+	
+	@Override
+	public void gMouseReleased(MouseEvent e) {
+	  super.gMouseReleased(e);
+    maybeShowPopup(e, getAssociationView());
 	}
 	
 	@Override

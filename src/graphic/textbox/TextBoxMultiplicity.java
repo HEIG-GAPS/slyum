@@ -217,6 +217,18 @@ public class TextBoxMultiplicity extends TextBoxLabel
       }
 	  }
 	}
+	
+	@Override
+	public void gMousePressed(MouseEvent e) {
+	  super.gMousePressed(e);
+	  maybeShowPopup(e, grip.getRelation());
+	}
+	
+	@Override
+	public void gMouseReleased(MouseEvent e) {
+	  super.gMouseReleased(e);
+    maybeShowPopup(e, grip.getRelation());
+	}
 
 	@Override
 	public void setText(String text)
