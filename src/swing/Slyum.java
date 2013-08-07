@@ -213,17 +213,10 @@ public class Slyum extends JFrame implements ActionListener {
 	private static String[] arguments;
 	private JMenu menuFile;
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 	  arguments = args;
 	  
 		showWarningForOpenJDK();
-		
-		// Hack pour mettre à jour le fichier de configuration.
-		if (PropertyLoader.getInstance().getProperties()
-        .getProperty(PropertyLoader.DIVIDER_BOTTOM) == null)
-		  PropertyLoader.getInstance().reset();
-	
 		instance = new Slyum();
 	    
     SwingUtilities.invokeLater(new Runnable() {
@@ -248,16 +241,11 @@ public class Slyum extends JFrame implements ActionListener {
 	 * Create the application directory.
 	 * @param path the path where create the application directory.
 	 */
-	public static void createAppDir(String path)
-	{
-		final File appDir = new File(path);
-
-		if (appDir.mkdirs())
-
+	public static void createAppDir(String path){
+		File appDir = new File(path);
+		if (appDir.mkdirs()) {
 			System.out.println("Application directory created.");
-
-		else
-		{
+		} else {
 			System.err.println("Application directory not created.");
 			SMessageDialog.showErrorMessage("Error to create application directory.");
 		}
@@ -280,22 +268,17 @@ public class Slyum extends JFrame implements ActionListener {
 		return instance;
 	}
 
-	public static String getPathAppDir()
-	{
+	public static String getPathAppDir() {
 		String fileName;
-		final String appData = System.getenv("APPDATA");
-		final String userHome = System.getProperty("user.home");
+		String appData = System.getenv("APPDATA");
+		String userHome = System.getProperty("user.home");
 
 		if (appData == null)
-
 			fileName = userHome + FILE_SEPARATOR + "." + APP_DIR_NAME;
-
 		else
-
 			fileName = appData + FILE_SEPARATOR + APP_DIR_NAME;
 
 		if (!new File(fileName).exists())
-
 			createAppDir(fileName);
 
 		return fileName;
