@@ -2,7 +2,6 @@ package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
-import graphic.entity.EntityView;
 import graphic.entity.SimpleEntityView;
 import graphic.relations.InheritanceView;
 
@@ -85,7 +84,7 @@ public class InheritanceFactory extends RelationFactory
 	
 	@Override
 	protected boolean isFirstComponentValid() {
-	  return componentMousePressed instanceof EntityView;
+	  return componentMousePressed instanceof SimpleEntityView;
 	}
 
 	@Override
