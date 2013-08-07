@@ -4,6 +4,8 @@ import graphic.ColoredComponent;
 import graphic.GraphicView;
 import graphic.GraphicView.ViewEntity;
 import graphic.entity.EntityView;
+import graphic.entity.EnumView;
+import graphic.entity.SimpleEntityView;
 import graphic.textbox.TextBox;
 
 import java.awt.BorderLayout;
@@ -83,6 +85,7 @@ public class SProperties extends JDialog {
   private JCheckBox ckbBackgroundGradient;
   private JCheckBox ckbEntityGradient;
   private JCheckBox chckbxShowGrid;
+  private JCheckBox chckbxViewEnum;
   private JPanel panel_Grid, panel_grid_color, panel_grid_opacity;
   private JCheckBox chckbxEnableGrid;
 
@@ -734,6 +737,16 @@ public class SProperties extends JDialog {
             innerPanel.add(chckbxAutoAdjustInheritance, gbc_chckbxAutoAdjustInheritance);
           }
           {
+            chckbxViewEnum = new JCheckBox(
+                "View enum values");
+            GridBagConstraints gbc_chckbxViewEnum = new GridBagConstraints();
+            gbc_chckbxViewEnum.insets = new Insets(0, 5, 0, 0);
+            gbc_chckbxViewEnum.anchor = GridBagConstraints.WEST;
+            gbc_chckbxViewEnum.gridx = 0;
+            gbc_chckbxViewEnum.gridy = 3;
+            innerPanel.add(chckbxViewEnum, gbc_chckbxViewEnum);
+          }
+          {
             JPanel panelViews = new JPanel(new GridLayout(2, 2, 10, 10));
             panelViews.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
             
@@ -758,7 +771,7 @@ public class SProperties extends JDialog {
             gbc_panelViews.insets = new Insets(0, 5, 0, 0);
             gbc_panelViews.anchor = GridBagConstraints.WEST;
             gbc_panelViews.gridx = 0;
-            gbc_panelViews.gridy = 3;
+            gbc_panelViews.gridy = 4;
             innerPanel.add(panelViews, gbc_panelViews);
           }
           panel.add(innerPanel);
@@ -809,6 +822,8 @@ public class SProperties extends JDialog {
                   String.valueOf(chckbxDisableCrossPopup.isSelected()));
               properties.put(PropertyLoader.AUTO_ADJUST_INHERITANCE,
                   String.valueOf(chckbxAutoAdjustInheritance.isSelected()));
+              properties.put(PropertyLoader.VIEW_ENUM,
+                  String.valueOf(chckbxViewEnum.isSelected()));
               properties.put(PropertyLoader.GRID_VISIBLE,
                   String.valueOf(chckbxShowGrid.isSelected()));
               properties.put(PropertyLoader.GRID_ENABLE,
@@ -844,9 +859,11 @@ public class SProperties extends JDialog {
               e1.printStackTrace();
             }
             
-            for (EntityView entity : PanelClassDiagram.getInstance().
-                getCurrentGraphicView().getEntitiesView())
+            for (SimpleEntityView entity : SimpleEntityView.getAll())
               entity.initViewType();
+            
+            for (EnumView enums : EnumView.getAll())
+              enums.updateHeight();
 
             setVisible(false);
             PanelClassDiagram.getInstance().getCurrentGraphicView().repaint();
@@ -937,6 +954,7 @@ public class SProperties extends JDialog {
     chckbxDisableErrorMessage.setSelected(Slyum.isShowErrorMessage());
     chckbxDisableCrossPopup.setSelected(Slyum.isShowCrossMenu());
     chckbxAutoAdjustInheritance.setSelected(Slyum.isAutoAdjustInheritance());
+    chckbxViewEnum.setSelected(GraphicView.getDefaultViewEnum());
     chckbxEnableGrid.setSelected(GraphicView.isGridEnable());
     listViewMethods.setSelectedItem(GraphicView.getDefaultViewMethods());
     listViewEntities.setSelectedItem(GraphicView.getDefaultViewEntities());

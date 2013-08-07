@@ -3,17 +3,17 @@ package classDiagram.relationships;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import classDiagram.components.Entity;
+import classDiagram.components.SimpleEntity;
 
 public class InnerClass extends Inheritance
 {
 
-	public InnerClass(Entity child, Entity parent)
+	public InnerClass(SimpleEntity child, SimpleEntity parent)
 	{
 		super(child, parent);
 	}
 
-	public InnerClass(Entity child, Entity parent, int id)
+	public InnerClass(SimpleEntity child, SimpleEntity parent, int id)
 	{
 		super(child, parent, id);
 	}

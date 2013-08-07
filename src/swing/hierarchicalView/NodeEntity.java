@@ -11,9 +11,7 @@ import javax.swing.tree.TreePath;
 
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
-import classDiagram.components.Attribute;
 import classDiagram.components.Entity;
-import classDiagram.components.Method;
 
 /**
  * A JTree node associated with an entity UML.
@@ -21,14 +19,14 @@ import classDiagram.components.Method;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public class NodeEntity extends DefaultMutableTreeNode implements Observer, IClassDiagramNode, ICustomizedIconNode
-{
-	private static final long serialVersionUID = 1L;
-	private final Entity entity;
-	private final ImageIcon icon;
-	private final JTree tree;
+public abstract class NodeEntity 
+    extends DefaultMutableTreeNode 
+    implements Observer, IClassDiagramNode, ICustomizedIconNode {
+	protected final Entity entity;
+	protected final ImageIcon icon;
+	protected final JTree tree;
 
-	private final DefaultTreeModel treeModel;
+	protected final DefaultTreeModel treeModel;
 
 	/**
 	 * Create a new node associated with an entity.
@@ -42,7 +40,8 @@ public class NodeEntity extends DefaultMutableTreeNode implements Observer, ICla
 	 * @param icon
 	 *            the customized icon
 	 */
-	public NodeEntity(Entity entity, DefaultTreeModel treeModel, JTree tree, ImageIcon icon)
+	public NodeEntity(
+	    Entity entity, DefaultTreeModel treeModel, JTree tree, ImageIcon icon)
 	{
 		super(entity.getName());
 
@@ -78,27 +77,7 @@ public class NodeEntity extends DefaultMutableTreeNode implements Observer, ICla
 	 * Remove and re-generate all child nodes according to methods and attributs
 	 * containing by the entity.
 	 */
-	private void reloadChildsNodes()
-	{
-		DefaultMutableTreeNode node;
-
-		setUserObject(entity.getName());
-		removeAllChildren();
-
-		for (final Attribute a : entity.getAttributes())
-		{
-			node = new NodeAttribute(a, treeModel, tree);
-			add(node);
-		}
-
-		for (final Method m : entity.getMethods())
-		{
-			node = new NodeMethod(m, treeModel, tree);
-			add(node);
-		}
-
-		treeModel.reload(this);
-	}
+	protected abstract void reloadChildsNodes();
 
 	@Override
 	public void removeAllChildren()

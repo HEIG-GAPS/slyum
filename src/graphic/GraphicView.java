@@ -3,7 +3,9 @@ package graphic;
 import graphic.entity.AssociationClassView;
 import graphic.entity.ClassView;
 import graphic.entity.EntityView;
+import graphic.entity.EnumView;
 import graphic.entity.InterfaceView;
+import graphic.entity.SimpleEntityView;
 import graphic.factory.CreateComponent;
 import graphic.factory.MultiFactory;
 import graphic.relations.AggregationView;
@@ -77,6 +79,7 @@ import classDiagram.IDiagramComponent;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
+import classDiagram.components.EnumEntity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Method.ParametersViewStyle;
 import classDiagram.relationships.Aggregation;
@@ -165,6 +168,17 @@ public class GraphicView extends GraphicComponent implements
 
     if (prop != null)
       view = ViewEntity.valueOf(prop);
+
+    return view;
+  }
+  
+  public static boolean getDefaultViewEnum() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.VIEW_ENUM);
+    boolean view = true;
+
+    if (prop != null)
+      view = Boolean.parseBoolean(prop);
 
     return view;
   }
@@ -311,7 +325,7 @@ public class GraphicView extends GraphicComponent implements
    * @return the component found or null if no component are found
    */
   public static <T extends GraphicComponent> T searchComponentWithPosition(
-      LinkedList<T> components, Point pos) {
+      List<T> components, Point pos) {
     for (final T c : components)
       if (c.isAtPosition(pos))
         return c;
@@ -681,6 +695,13 @@ public class GraphicView extends GraphicComponent implements
     GraphicComponent result = searchAssociedComponent(component);
     if (result == null)
       addComponentIn(new ClassView(this, component), entities);
+  }
+
+  @Override
+  public void addEnumEntity(EnumEntity component) {
+    GraphicComponent result = searchAssociedComponent(component);
+    if (result == null)
+      addComponentIn(new EnumView(this, component), entities);
   }
 
   public <T extends GraphicComponent> boolean addComponentIn(T component,
@@ -2314,12 +2335,12 @@ public class GraphicView extends GraphicComponent implements
    *          true for showing attributes, false otherwise
    */
   public void showAttributsForSelectedEntity(boolean show) {
-    for (final EntityView ev : getSelectedEntities())
+    for (SimpleEntityView ev : SimpleEntityView.getSelectedSimpleEntityView(this))
       ev.setDisplayAttributes(show);
   }
   
   public void setDefaultForSelectedEntities(boolean show) {
-    for (final EntityView ev : getSelectedEntities())
+    for (SimpleEntityView ev : SimpleEntityView.getSelectedSimpleEntityView(this))
       ev.setDisplayDefault(show);
   }
 
@@ -2330,8 +2351,7 @@ public class GraphicView extends GraphicComponent implements
    *          true for showing methods, false otherwise
    */
   public void showMethodsForSelectedEntity(boolean show) {
-    for (final EntityView ev : getSelectedEntities())
-
+    for (SimpleEntityView ev : SimpleEntityView.getSelectedSimpleEntityView(this))
       ev.setDisplayMethods(show);
   }
 
@@ -2432,7 +2452,7 @@ public class GraphicView extends GraphicComponent implements
     boolean isRecord = Change.isRecord();
     Change.record();
     
-    for (EntityView entityView : getSelectedEntities()) {
+    for (final EntityView entityView : getSelectedEntities()) {
       try {
         final EntityView newView = entityView.clone();
         Entity entity = ((Entity)newView.getAssociedComponent());
@@ -2449,6 +2469,7 @@ public class GraphicView extends GraphicComponent implements
           SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+              entityView.setSelected(false);
               newView.setSelected(true);
               newView.repaint();
             }

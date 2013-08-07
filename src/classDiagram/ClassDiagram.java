@@ -11,6 +11,7 @@ import utility.Utility;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
+import classDiagram.components.EnumEntity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.relationships.Aggregation;
 import classDiagram.relationships.Binary;
@@ -168,15 +169,25 @@ public class ClassDiagram implements IComponentsObserver, XmlElement
 		addComponent(component);
 	}
 
-	@Override
-	public void addInterfaceEntity(InterfaceEntity component)
-	{
-		for (final IComponentsObserver c : observers)
-			c.addInterfaceEntity(component);
+  @Override
+  public void addInterfaceEntity(InterfaceEntity component)
+  {
+    for (final IComponentsObserver c : observers)
+      c.addInterfaceEntity(component);
 
-		addComponent(component);
-		entities.addFirst(component);
-	}
+    addComponent(component);
+    entities.addFirst(component);
+  }
+
+  @Override
+  public void addEnumEntity(EnumEntity component)
+  {
+    for (final IComponentsObserver c : observers)
+      c.addEnumEntity(component);
+
+    addComponent(component);
+    entities.addFirst(component);
+  }
 
 	@Override
 	public void addMulti(Multi component)

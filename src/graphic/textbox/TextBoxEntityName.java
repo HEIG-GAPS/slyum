@@ -48,7 +48,7 @@ public class TextBoxEntityName extends TextBox
 	{
 		int style = Font.BOLD;
 
-		if (entity.isAbstract())
+		if (entity.isNameItalic())
 			style |= Font.ITALIC;
 
 		effectivFont = getFont().deriveFont(style);

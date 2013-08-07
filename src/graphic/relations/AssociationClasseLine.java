@@ -50,7 +50,7 @@ public class AssociationClasseLine extends LineView {
 	    Point posSource, Point posTarget, boolean checkRecursivity) {
 		super(graphicView, source, target, posSource, posTarget, checkRecursivity);
 		lineStroke = new BasicStroke(
-		    1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
+		    LINE_WIDTH, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
 		    10.0f, new float[] { 6.5f }, 0.0f);
 	}
 	

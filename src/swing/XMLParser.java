@@ -2,7 +2,9 @@ package swing;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
-import graphic.entity.EntityView;
+import graphic.entity.EnumView;
+import graphic.entity.EnumView.TypeEnumDisplay;
+import graphic.entity.SimpleEntityView;
 import graphic.relations.LineCommentary;
 import graphic.relations.LineView;
 import graphic.relations.MultiLineView;
@@ -29,9 +31,12 @@ import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.Attribute;
 import classDiagram.components.ClassEntity;
+import classDiagram.components.EnumEntity;
+import classDiagram.components.EnumValue;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Method;
 import classDiagram.components.Method.ParametersViewStyle;
+import classDiagram.components.SimpleEntity;
 import classDiagram.components.Type;
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Association.NavigateDirection;
@@ -81,6 +86,7 @@ public class XMLParser extends DefaultHandler
 		boolean displayAttributes = true,
 		        displayMethods = true,
 		        displayDefault = true;
+		TypeEnumDisplay typeEnumDisplay = TypeEnumDisplay.DEFAULT;
 		Rectangle geometry = new Rectangle();
 	}
 
@@ -106,17 +112,18 @@ public class XMLParser extends DefaultHandler
 	{
 		int associationClassID = -1;
 		LinkedList<Variable> attribute = new LinkedList<>();
+    LinkedList<Operation> method = new LinkedList<>();
+    LinkedList<EnumValue> enums = new LinkedList<>();
 		EntityType entityType = null;
 		int id = -1;
 		boolean isAbstract = false;
-		LinkedList<Operation> method = new LinkedList<>();
 		String name = null;
 		Visibility visibility = Visibility.PUBLIC;
 	}
 
 	public enum EntityType
 	{
-		ASSOCIATION_CLASS, CLASS, INTERFACE
+		ASSOCIATION_CLASS, CLASS, INTERFACE, ENUM
 	}
 
 	private class Inheritance
@@ -285,6 +292,7 @@ public class XMLParser extends DefaultHandler
 	private void createEntity(Entity e) throws SyntaxeNameException {
 		classDiagram.components.Entity ce = null;
 		e.name = TypeName.verifyAndAskNewName(e.name);
+		boolean isSimpleEntity = true;
 
 		switch (e.entityType) {
 			case CLASS:
@@ -292,7 +300,7 @@ public class XMLParser extends DefaultHandler
 				ce = new ClassEntity(e.name, e.visibility, e.id);
 				
 				classDiagram.addClassEntity((ClassEntity) ce);
-				ce.setAbstract(e.isAbstract);
+				((ClassEntity) ce).setAbstract(e.isAbstract);
 
 				break;
 
@@ -300,9 +308,16 @@ public class XMLParser extends DefaultHandler
 
 				ce = new InterfaceEntity(e.name, e.visibility, e.id);
 				classDiagram.addInterfaceEntity((InterfaceEntity) ce);
-				ce.setAbstract(true);
+				((InterfaceEntity) ce).setAbstract(true);
 
 				break;
+				
+	    case ENUM:
+	      isSimpleEntity = false;
+        ce = new EnumEntity(e.name, e.id);
+        classDiagram.addEnumEntity((EnumEntity) ce);
+        
+	      break;
 
 			case ASSOCIATION_CLASS:
 
@@ -311,7 +326,7 @@ public class XMLParser extends DefaultHandler
 				{
           ce = new ClassEntity(e.name, e.visibility, e.id);
           classDiagram.addClassEntity((ClassEntity) ce);
-          ce.setAbstract(e.isAbstract);
+          ((ClassEntity) ce).setAbstract(e.isAbstract);
           SMessageDialog.showInformationMessage("Association class " + ce.getName() + " has been converted into a normal class.\nIts association no longer exists during importation.");
           break;
 				}
@@ -327,44 +342,51 @@ public class XMLParser extends DefaultHandler
 
 				break;
 		}
-
-		for (final Variable v : e.attribute) {			
-      final Attribute a = new Attribute(VariableName.verifyAndAskNewName(v.name), v.type);
-         
-      ce.addAttribute(a);
-      ce.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
-      a.setConstant(v.constant);
-      a.setDefaultValue(v.defaultValue);
-      a.setStatic(v.isStatic);
-      a.setVisibility(v.visibility);
-
-      a.notifyObservers();
-		}
-
-		for (final Operation o : e.method)
-		{
-			final Method m = new Method(
-			        MethodName.verifyAndAskNewName(o.name),
-			        o.returnType,
-			        o.visibility,
-			        ce);
-			
-			ce.addMethod(m);
-			ce.notifyObservers(UpdateMessage.ADD_METHOD_NO_EDIT);
-			
-			m.setParametersViewStyle(o.view);
-			m.setStatic(o.isStatic);
-			m.setAbstract(o.isAbstract);
-
-			for (final Variable v : o.variable)
-			{
-        final classDiagram.components.Variable va = new classDiagram.components.Variable(
-                VariableName.verifyAndAskNewName(v.name), 
-                v.type);
-        m.addParameter(va);
-			}
-
-			m.notifyObservers();
+		
+		if (isSimpleEntity) {
+		  
+		  SimpleEntity se = (SimpleEntity)ce;
+  		for (Variable v : e.attribute) {			
+        Attribute a = 
+            new Attribute(VariableName.verifyAndAskNewName(v.name), v.type);
+           
+        se.addAttribute(a);
+        se.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
+        a.setConstant(v.constant);
+        a.setDefaultValue(v.defaultValue);
+        a.setStatic(v.isStatic);
+        a.setVisibility(v.visibility);
+        a.notifyObservers();
+  		}
+  
+  		for (Operation o : e.method) {
+  			Method m = new Method(
+  			    MethodName.verifyAndAskNewName(o.name),
+  			    o.returnType,
+  			    o.visibility,
+  			    se);
+  			
+  			se.addMethod(m);
+  			se.notifyObservers(UpdateMessage.ADD_METHOD_NO_EDIT);
+  			
+  			m.setParametersViewStyle(o.view);
+  			m.setStatic(o.isStatic);
+  			m.setAbstract(o.isAbstract);
+  
+  			for (Variable v : o.variable) {
+          classDiagram.components.Variable va = new classDiagram.components.Variable(
+                  VariableName.verifyAndAskNewName(v.name), 
+                  v.type);
+          m.addParameter(va);
+  			}
+  			m.notifyObservers();
+  		}
+		} else {
+      EnumEntity ee = (EnumEntity)ce;
+		  for (EnumValue v : e.enums) {
+		    ee.addEnumValue(v);
+		    ee.notifyObservers(UpdateMessage.ADD_ENUM_NO_EDIT);
+		  }
 		}
 
 		ce.notifyObservers();
@@ -402,6 +424,10 @@ public class XMLParser extends DefaultHandler
 			currentEntity = null;
 		else if (qName.equals("method"))
 			currentMethod = null;
+    else if (qName.equals("EnumValue")) {
+      currentEntity.enums.add(new EnumValue(buffer.toString()));
+      buffer = null;
+    }
 		else if (qName.equals("associationClassID"))
 			currentEntity.associationClassID = Integer.parseInt(buffer.toString());
 		else if (qName.equals("association"))
@@ -665,8 +691,8 @@ public class XMLParser extends DefaultHandler
 	{
 		for (final Inheritance h : uMLClassDiagram.diagrameElement.inheritance)
 		{
-			final classDiagram.components.Entity child = (classDiagram.components.Entity) classDiagram.searchComponentById(h.child);
-			final classDiagram.components.Entity parent = (classDiagram.components.Entity) classDiagram.searchComponentById(h.parent);
+			final classDiagram.components.SimpleEntity child = (classDiagram.components.SimpleEntity) classDiagram.searchComponentById(h.child);
+			final classDiagram.components.SimpleEntity parent = (classDiagram.components.SimpleEntity) classDiagram.searchComponentById(h.parent);
 			
 			if (h.innerClass)
 			{
@@ -737,11 +763,13 @@ public class XMLParser extends DefaultHandler
 					g.setColor(cv.color);
 					
 					// Gestion des entités
-					if (g instanceof EntityView) {
-					  EntityView entityView = (EntityView)g;
+					if (g instanceof SimpleEntityView) {
+					  SimpleEntityView entityView = (SimpleEntityView)g;
 					  entityView.setDisplayAttributes(cv.displayAttributes);
 					  entityView.setDisplayMethods(cv.displayMethods);
 					  entityView.setDisplayDefault(cv.displayDefault);
+					} else if (g instanceof EnumView) {
+					  ((EnumView)g).setTypeEnumDisplay(cv.typeEnumDisplay);
 					}
 				}
 			}
@@ -894,16 +922,25 @@ public class XMLParser extends DefaultHandler
 				currentEntity = new Entity();
 				currentEntity.id = Integer.parseInt(attributes.getValue("id"));
 				currentEntity.name = attributes.getValue("name");
+				
+				String currentAttributeValue = attributes.getValue("entityType");
+				if (currentAttributeValue != null)
 				currentEntity.entityType = EntityType.valueOf(attributes.getValue("entityType"));
-				currentEntity.visibility = Visibility.valueOf(attributes.getValue("visibility"));
-				currentEntity.isAbstract = Boolean.parseBoolean(attributes.getValue("isAbstract"));
+				
+				currentAttributeValue = attributes.getValue("visibility");
+        if (currentAttributeValue != null)
+          currentEntity.visibility = Visibility.valueOf(attributes.getValue("visibility"));
+        
+        currentAttributeValue = attributes.getValue("isAbstract");
+        if (currentAttributeValue != null)
+          currentEntity.isAbstract = Boolean.parseBoolean(attributes.getValue("isAbstract"));
 
 				uMLClassDiagram.diagrameElement.entity.add(currentEntity);
 			} catch (final Exception e)
 			{
 				throw new SAXException(e);
 			}
-		else if (qName.equals("method"))
+    else if (qName.equals("method"))
 			try
 			{
 				currentMethod = new Operation();
@@ -1042,9 +1079,13 @@ public class XMLParser extends DefaultHandler
 				
         if (attributes.getValue("displayMethods") != null)
           currentComponentView.displayMethods = Boolean.parseBoolean(attributes.getValue("displayMethods"));
-				
+        
         if (attributes.getValue("displayDefault") != null)
           currentComponentView.displayDefault = Boolean.parseBoolean(attributes.getValue("displayDefault"));
+        
+        if (attributes.getValue("enumValuesVisible") != null)
+          currentComponentView.typeEnumDisplay = TypeEnumDisplay.valueOf(attributes.getValue("enumValuesVisible"));
+        
 			} catch (final Exception e)
 			{
 				throw new SAXException(e);
@@ -1107,7 +1148,7 @@ public class XMLParser extends DefaultHandler
 			{
 				throw new SAXException(e);
 			}
-		else if (qName.equals("min") || qName.equals("max") || qName.equals("associationClassID") || qName.equals("child") || qName.equals("parent") || qName.equals("source") || qName.equals("target") || qName.equals("x") || qName.equals("y") || qName.equals("w") || qName.equals("h"))
+		else if (qName.equals("EnumValue") || qName.equals("min") || qName.equals("max") || qName.equals("associationClassID") || qName.equals("child") || qName.equals("parent") || qName.equals("source") || qName.equals("target") || qName.equals("x") || qName.equals("y") || qName.equals("w") || qName.equals("h"))
 			buffer = new StringBuffer();
 	}
 }

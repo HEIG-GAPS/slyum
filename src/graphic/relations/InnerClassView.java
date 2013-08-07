@@ -50,7 +50,7 @@ public class InnerClassView extends InheritanceView
 		final int vectorYN2 = -vectorX;
 
 		// Circle
-		g2.setStroke(new BasicStroke());
+		g2.setStroke(new BasicStroke(LINE_WIDTH));
 		g2.setColor(new Color(255, 246, 219));
 		g2.fillOval((int) x - 10, (int) y - 10, 20, 20);
 		g2.setColor(borderColor);

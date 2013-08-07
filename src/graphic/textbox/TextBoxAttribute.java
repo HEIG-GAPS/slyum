@@ -80,6 +80,14 @@ public class TextBoxAttribute extends TextBox implements Observer
 		return new Rectangle(bounds);
 	}
 
+  @Override
+  public void setBounds(Rectangle bounds) {
+    if (bounds == null)
+      throw new IllegalArgumentException("bounds is null");
+
+    this.bounds = new Rectangle(bounds);
+  }
+
 	@Override
 	public String getText()
 	{
@@ -98,23 +106,10 @@ public class TextBoxAttribute extends TextBox implements Observer
 	}
 
 	@Override
-	public void setBounds(Rectangle bounds)
-	{
-		if (bounds == null)
-			throw new IllegalArgumentException("bounds is null");
-
-		this.bounds = new Rectangle(bounds);
-	}
-
-	@Override
-	public void setSelected(boolean select)
-	{
-		if (isSelected() != select)
-		{
+	public void setSelected(boolean select) {
+		if (isSelected() != select) {
 			super.setSelected(select);
-
 			attribute.select();
-
 			if (select)
 				attribute.notifyObservers(UpdateMessage.SELECT);
 			else
@@ -125,7 +120,6 @@ public class TextBoxAttribute extends TextBox implements Observer
 	@Override
 	public void setText(String text) {
 		attribute.setText(text);
-
 		super.setText(getStringFromAttribute(attribute));
 	}
 

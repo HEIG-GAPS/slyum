@@ -12,6 +12,7 @@ import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Method;
+import classDiagram.components.SimpleEntity;
 
 /**
  * Represent a inheritance in UML structure. This inheritance, depends on the
@@ -43,7 +44,7 @@ public class Inheritance extends Observable
 	  return true;
 	}
 
-	protected Entity child, parent;
+	protected SimpleEntity child, parent;
 
 	protected final int id;
 
@@ -55,7 +56,7 @@ public class Inheritance extends Observable
 	 * @param parent
 	 *            the parent entity
 	 */
-	public Inheritance(Entity child, Entity parent)
+	public Inheritance(SimpleEntity child, SimpleEntity parent)
 	{
 		init(child, parent);
 
@@ -71,7 +72,7 @@ public class Inheritance extends Observable
 	 * @param parent
 	 *            the parent entity
 	 */
-	public Inheritance(Entity child, Entity parent, int id)
+	public Inheritance(SimpleEntity child, SimpleEntity parent, int id)
 	{
 		init(child, parent);
 
@@ -83,7 +84,7 @@ public class Inheritance extends Observable
 	 * 
 	 * @return the child for this inheritance
 	 */
-	public Entity getChild()
+	public SimpleEntity getChild()
 	{
 		return child;
 	}
@@ -99,7 +100,7 @@ public class Inheritance extends Observable
 	 * 
 	 * @return the parent for this inheritance
 	 */
-	public Entity getParent()
+	public SimpleEntity getParent()
 	{
 		return parent;
 	}
@@ -112,7 +113,7 @@ public class Inheritance extends Observable
 	 * @param parent
 	 *            the parent given in constructor
 	 */
-	private void init(Entity child, Entity parent)
+	private void init(SimpleEntity child, SimpleEntity parent)
 	{
 		if (child.getClass() == InterfaceEntity.class && parent.getClass() == ClassEntity.class)
 			throw new IllegalArgumentException("interface cannot implements class");
@@ -136,7 +137,7 @@ public class Inheritance extends Observable
 	 * @param child
 	 *            the new child for this inheritance
 	 */
-	public void setChild(Entity child)
+	public void setChild(SimpleEntity child)
 	{
 		this.child.removeParent(this);
 		this.child = child;
@@ -150,7 +151,7 @@ public class Inheritance extends Observable
 	 * @param parent
 	 *            the new parent for this inheritance
 	 */
-	public void setParent(Entity parent)
+	public void setParent(SimpleEntity parent)
 	{
 		this.parent.removeChild(this);
 		this.parent = parent;
@@ -201,12 +202,12 @@ public class Inheritance extends Observable
 
   @Override
   public void setSource(Entity entity) {
-    setChild(entity);
+    setChild((SimpleEntity)entity);
   }
 
   @Override
   public void setTarget(Entity entity) {
-    setParent(entity);
+    setParent((SimpleEntity)entity);
   }
 
 	@Override

@@ -67,7 +67,7 @@ public class DependencyView extends RelationView
 		final int[] pointsX = new int[] { ref.x + vectorXN1, target.x, ref.x + vectorXN2 };
 		final int[] pointsY = new int[] { ref.y + vectorYN1, target.y, ref.y + vectorYN2 };
 
-		g2.setStroke(new BasicStroke());
+		g2.setStroke(new BasicStroke(LINE_WIDTH));
 		g2.drawPolyline(pointsX, pointsY, pointsX.length);
 	}
 
@@ -96,8 +96,8 @@ public class DependencyView extends RelationView
 		super(parent, source, target, dependency, posSource, posTarget, checkRecursivity);
 
 		this.dependency = dependency;
-
-		lineStroke = new BasicStroke(1.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 7.f }, 0.0f);
+		
+		lineStroke = new BasicStroke(LINE_WIDTH, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 7.f }, 0.0f);
 
 		final TextBoxLabelTitle tb = new TextBoxLabelTitle(parent, dependency, this);
 		tbRoles.add(tb);

@@ -13,6 +13,7 @@ import classDiagram.IDiagramComponent;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
+import classDiagram.components.EnumEntity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.relationships.Aggregation;
 import classDiagram.relationships.Association;
@@ -85,7 +86,7 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 
 	@Override
 	public void addAssociationClass(AssociationClass component) {
-		component.addObserver(EntityPropreties.getInstance());
+		component.addObserver(SimpleEntityPropreties.getInstance());
 	}
 
 	@Override
@@ -95,7 +96,12 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 
 	@Override
 	public void addClassEntity(ClassEntity component) {
-		component.addObserver(EntityPropreties.getInstance());
+		component.addObserver(SimpleEntityPropreties.getInstance());
+	}
+	
+	@Override
+	public void addEnumEntity(EnumEntity component) {
+    component.addObserver(EnumEntityPropreties.getInstance());
 	}
 
 	@Override
@@ -120,7 +126,7 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
 
 	@Override
 	public void addInterfaceEntity(InterfaceEntity component) {
-		component.addObserver(EntityPropreties.getInstance());
+		component.addObserver(SimpleEntityPropreties.getInstance());
 	}
 
 	@Override

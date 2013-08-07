@@ -4,11 +4,7 @@ import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.entity.InterfaceView;
-
-import java.awt.Rectangle;
-
 import swing.SPanelDiagramComponent;
-
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Visibility;
 
@@ -44,14 +40,12 @@ public class InterfaceFactory extends EntityFactory
 	@Override
 	public GraphicComponent create()
 	{
-		final InterfaceEntity ie = new InterfaceEntity("Interface", Visibility.PUBLIC);
-		final EntityView i = new InterfaceView(parent, ie);
+		InterfaceEntity ie = new InterfaceEntity("Interface", Visibility.PUBLIC);
+		EntityView i = new InterfaceView(parent, ie);
 
 		parent.addEntity(i);
 		classDiagram.addInterfaceEntity(ie);
-
-		i.setBounds(new Rectangle(mouseReleased.x - DEFAULT_SIZE.width / 2, mouseReleased.y - DEFAULT_SIZE.height / 2, DEFAULT_SIZE.width, DEFAULT_SIZE.height));
-		
+    initializeBounds(i);
 		return i;
 	}
 

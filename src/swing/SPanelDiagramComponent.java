@@ -7,6 +7,7 @@ import graphic.factory.BinaryFactory;
 import graphic.factory.ClassFactory;
 import graphic.factory.CompositionFactory;
 import graphic.factory.DependencyFactory;
+import graphic.factory.EnumFactory;
 import graphic.factory.InheritanceFactory;
 import graphic.factory.InnerClassFactory;
 import graphic.factory.InterfaceFactory;
@@ -45,9 +46,12 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
   
   private static final String TT_MODE_GRIP = 
       "Add grips " + Utility.keystrokeToString(Slyum.KEY_GRIPS_MODE);
+
+  private static final String TT_CLASS = 
+      "Class " + Utility.keystrokeToString(Slyum.KEY_CLASS);
   
-	private static final String TT_CLASS = 
-	    "Class " + Utility.keystrokeToString(Slyum.KEY_CLASS);
+  private static final String TT_ENUM = 
+      "Enum " + Utility.keystrokeToString(Slyum.KEY_ENUM);
 	
 	private static final String TT_INTERFACE = 
 	    "Interface " + Utility.keystrokeToString(Slyum.KEY_INTERFACE);
@@ -85,7 +89,7 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
 	private static final String TT_LINK_NOTE = 
 	    "Link note " + Utility.keystrokeToString(Slyum.KEY_LINK_NOTE);
 	
-	private SButton btnCursorMode, btnGripMode, btnClass, btnInterface,
+	private SButton btnCursorMode, btnGripMode, btnClass, btnEnum, btnInterface,
 	                btnClassAssociation, btnGeneralize, btnDependeny,
 	                btnInnerClass, btnAssociation, btnAggregation,
 	                btnComposition, btnMulti, btnNote, btnLinkNote;
@@ -118,6 +122,10 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
 		add(btnInterface = createSButton(PersonalizedIcon.createImageIcon(
 		    Slyum.ICON_PATH + "interface.png"), Slyum.ACTION_NEW_INTERFACE,
 		    Color.RED, TT_INTERFACE));
+
+    add(btnEnum = createSButton(PersonalizedIcon.createImageIcon(
+        Slyum.ICON_PATH + "enum.png"), Slyum.ACTION_NEW_ENUM,
+        Color.RED, TT_ENUM));
 		
 		add(btnClassAssociation = createSButton(PersonalizedIcon.createImageIcon(
 		    Slyum.ICON_PATH + "classAssoc.png"), Slyum.ACTION_NEW_CLASS_ASSOCIATION,
@@ -206,8 +214,11 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
 		if (Slyum.ACTION_NEW_CLASS.equals(e.getActionCommand()))
 			gv.initNewComponent(new ClassFactory(gv));
 
-		else if (Slyum.ACTION_NEW_INTERFACE.equals(e.getActionCommand()))
-			gv.initNewComponent(new InterfaceFactory(gv));
+    else if (Slyum.ACTION_NEW_INTERFACE.equals(e.getActionCommand()))
+      gv.initNewComponent(new InterfaceFactory(gv));
+
+    else if (Slyum.ACTION_NEW_ENUM.equals(e.getActionCommand()))
+      gv.initNewComponent(new EnumFactory(gv));
 
 		else if (Slyum.ACTION_NEW_GENERALIZE.equals(e.getActionCommand()))
 			gv.initNewComponent(new InheritanceFactory(gv));
@@ -305,4 +316,8 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
 	{
 		return btnLinkNote;
 	}
+	
+	public SButton getBtnEnum() {
+    return btnEnum;
+  }
 }
