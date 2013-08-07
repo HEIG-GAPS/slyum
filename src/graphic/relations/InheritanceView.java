@@ -3,6 +3,7 @@ package graphic.relations;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
+import graphic.entity.SimpleEntityView;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -20,6 +21,7 @@ import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
+import classDiagram.components.SimpleEntity;
 import classDiagram.relationships.Inheritance;
 
 /**
@@ -76,7 +78,7 @@ public class InheritanceView extends RelationView
 		final int[] pointsX = new int[] { target.x, ref.x + vectorXN1, ref.x + vectorXN2 };
 		final int[] pointsY = new int[] { target.y, ref.y + vectorYN1, ref.y + vectorYN2 };
 
-		g2.setStroke(new BasicStroke());
+		g2.setStroke(new BasicStroke(LINE_WIDTH));
 		g2.setColor(Color.WHITE);
 		g2.fillPolygon(pointsX, pointsY, pointsX.length);
 		g2.setColor(borderColor);
@@ -123,7 +125,7 @@ public class InheritanceView extends RelationView
 		}
 
 		if (inheritance.getParent().getClass() == InterfaceEntity.class)
-			lineStroke = new BasicStroke(1.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 7.f }, 0.0f);
+			lineStroke = new BasicStroke(LINE_WIDTH, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 7.f }, 0.0f);
 	}
 	
 	@Override
@@ -188,8 +190,8 @@ public class InheritanceView extends RelationView
 	 * @param child
 	 *            the new child of the inheritance
 	 */
-	public void setChild(EntityView child) {
-		inheritance.setChild((Entity) child.getAssociedComponent());
+	public void setChild(SimpleEntityView child) {
+		inheritance.setChild((SimpleEntity) child.getAssociedComponent());
 	}
 
 	/**
@@ -198,8 +200,8 @@ public class InheritanceView extends RelationView
 	 * @param parent
 	 *            the new parent of the inheritance
 	 */
-	public void setParent(EntityView parent) {
-		inheritance.setParent((Entity) parent.getAssociedComponent());
+	public void setParent(SimpleEntityView parent) {
+		inheritance.setParent((SimpleEntity) parent.getAssociedComponent());
 	}
 
 	@Override

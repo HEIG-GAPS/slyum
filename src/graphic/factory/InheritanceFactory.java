@@ -3,6 +3,7 @@ package graphic.factory;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
+import graphic.entity.SimpleEntityView;
 import graphic.relations.InheritanceView;
 
 import java.awt.Color;
@@ -48,19 +49,19 @@ public class InheritanceFactory extends RelationFactory
 	{
 		try
 		{
-			if (componentMousePressed instanceof EntityView && componentMouseReleased instanceof EntityView)
+			if (componentMousePressed instanceof SimpleEntityView && 
+			    componentMouseReleased instanceof SimpleEntityView)
 			{
-				final EntityView source = (EntityView) componentMousePressed;
-				final EntityView target = (EntityView) componentMouseReleased;
+				SimpleEntityView source = (SimpleEntityView) componentMousePressed;
+				SimpleEntityView target = (SimpleEntityView) componentMouseReleased;
 
-				if (!Inheritance.validate(source.getComponent(), target.getComponent()))
-				{
+				if (!Inheritance.validate(source.getComponent(), target.getComponent())) {
 					repaint();
 					return null;
 				}
 
-				final Inheritance inheritance = new Inheritance(source.getComponent(), target.getComponent());
-				final InheritanceView i = new InheritanceView(parent, source, target, inheritance, mousePressed, mouseReleased, true);
+				Inheritance inheritance = new Inheritance(source.getComponent(), target.getComponent());
+				InheritanceView i = new InheritanceView(parent, source, target, inheritance, mousePressed, mouseReleased, true);
 
 				parent.addLineView(i);
 				classDiagram.addInheritance(inheritance);

@@ -11,7 +11,7 @@ import classDiagram.components.Method;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class InterfaceView extends EntityView
+public class InterfaceView extends SimpleEntityView
 {
 
 	/**

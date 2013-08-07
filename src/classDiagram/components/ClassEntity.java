@@ -10,10 +10,14 @@ import swing.XMLParser.EntityType;
  * @author David Miserez
  * @version 1.0 - 24.07.2011
  */
-public class ClassEntity extends Entity
+public class ClassEntity extends SimpleEntity
 {
 	/** Contains all inners classes. / ! \ not used in Slyum 1.0. */
 	private final LinkedList<ClassEntity> innersClass = new LinkedList<ClassEntity>();
+
+  public ClassEntity(String name) {
+    super(name);
+  }
 
 	/**
 	 * Construct a new class.

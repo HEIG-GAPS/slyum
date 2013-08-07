@@ -1,18 +1,19 @@
 package change;
 
 import classDiagram.IDiagramComponent.UpdateMessage;
-import classDiagram.components.Entity;
 import classDiagram.components.Method;
+import classDiagram.components.SimpleEntity;
 
 public class BufferCreationMethod implements Changeable
 {
 
-  private Entity entity;
+  private SimpleEntity entity;
   private Method method;
   private boolean isCreated;
   private int index;
   
-  public BufferCreationMethod(Entity e, Method m, Boolean isCreated, int index)
+  public BufferCreationMethod(
+      SimpleEntity e, Method m, Boolean isCreated, int index)
   {
     entity = e;
     method = m;

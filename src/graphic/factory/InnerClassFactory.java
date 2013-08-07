@@ -2,7 +2,7 @@ package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
-import graphic.entity.EntityView;
+import graphic.entity.SimpleEntityView;
 import graphic.relations.InnerClassView;
 
 import java.awt.Color;
@@ -30,10 +30,11 @@ public class InnerClassFactory extends InheritanceFactory
 	{
 		try
 		{
-			if (componentMousePressed instanceof EntityView && componentMouseReleased instanceof EntityView)
+			if (componentMousePressed instanceof SimpleEntityView && 
+			    componentMouseReleased instanceof SimpleEntityView)
 			{
-				final EntityView source = (EntityView) componentMousePressed;
-				final EntityView target = (EntityView) componentMouseReleased;
+			  SimpleEntityView source = (SimpleEntityView) componentMousePressed;
+				SimpleEntityView target = (SimpleEntityView) componentMouseReleased;
 
 				if (!Inheritance.validate(source.getComponent(), target.getComponent()))
 				{
@@ -41,8 +42,8 @@ public class InnerClassFactory extends InheritanceFactory
 					return null;
 				}
 
-				final InnerClass innerClass = new InnerClass(source.getComponent(), target.getComponent());
-				final InnerClassView i = new InnerClassView(parent, source, target, innerClass, mousePressed, mouseReleased, true);
+				InnerClass innerClass = new InnerClass(source.getComponent(), target.getComponent());
+				InnerClassView i = new InnerClassView(parent, source, target, innerClass, mousePressed, mouseReleased, true);
 
 				parent.addLineView(i);
 				classDiagram.addInnerClass(innerClass);

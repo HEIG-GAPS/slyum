@@ -32,7 +32,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 import javax.swing.border.LineBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -40,55 +39,33 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
-import javax.swing.text.JTextComponent;
 
 import swing.FlatPanel;
 import swing.SButton;
+import swing.STable;
 import swing.Slyum;
-import utility.EditableCellFocusAction;
 import utility.MultiBorderLayout;
 import utility.PersonalizedIcon;
 import utility.Utility;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Attribute;
-import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Method;
 import classDiagram.components.PrimitiveType;
+import classDiagram.components.SimpleEntity;
 import classDiagram.components.Type;
 import classDiagram.components.Variable;
 import classDiagram.components.Visibility;
 import classDiagram.verifyName.TypeName;
 
 /**
- * Show the propreties of an UML entity with Swing components. All inner classes
+ * Show the propreties of an UML SimpleEntity with Swing components. All inner classes
  * are used for create customized JTable.
  * 
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public class EntityPropreties extends GlobalPropreties {  
-  
-  private class STable extends JTable {
-    
-    public STable(TableModel dm) {
-      super(dm);
-    }
-
-    @Override
-    public void changeSelection(
-        int rowIndex, int columnIndex, boolean toggle, boolean extend) {
-      super.changeSelection(rowIndex, columnIndex, toggle, extend);
-      
-      if (editCellAt(rowIndex, columnIndex)) {
-          Component editor = getEditorComponent();
-          editor.requestFocusInWindow();
-          
-          if (editor instanceof JTextComponent)
-            ((JTextComponent)editor).selectAll();
-      }
-    }
-  }
+public class SimpleEntityPropreties extends GlobalPropreties {  
   
 	private class AttributeTableModel extends AbstractTableModel implements Observer, TableModelListener, MouseListener
 	{
@@ -175,7 +152,7 @@ public class EntityPropreties extends GlobalPropreties {
 		@Override
 		public void mousePressed(MouseEvent e)
 		{
-			if (currentObject == null || !(currentObject instanceof Entity))
+			if (currentObject == null || !(currentObject instanceof SimpleEntity))
 				return;
 
 			// Get the selected attribute
@@ -183,7 +160,7 @@ public class EntityPropreties extends GlobalPropreties {
 			final Attribute attribute = Utility.getKeysByValue(mapIndex, index).iterator().next();
 
 			// Unselect all attributes
-			for (final Attribute a : ((Entity) currentObject).getAttributes())
+			for (final Attribute a : ((SimpleEntity) currentObject).getAttributes())
 			{
 				if (a.equals(attribute))
 					continue;
@@ -398,7 +375,7 @@ public class EntityPropreties extends GlobalPropreties {
 		@Override
 		public void mousePressed(MouseEvent e)
 		{
-			if (currentObject == null || !(currentObject instanceof Entity))
+			if (currentObject == null || !(currentObject instanceof SimpleEntity))
 				return;
 
 			// Get the selected method
@@ -406,7 +383,7 @@ public class EntityPropreties extends GlobalPropreties {
 			final Method method = Utility.getKeysByValue(mapIndex, index).iterator().next();
 
 			// Unselect all methods
-			for (final Method m : ((Entity) currentObject).getMethods())
+			for (final Method m : ((SimpleEntity) currentObject).getMethods())
 			{
 				if (m.equals(method))
 					continue;
@@ -785,14 +762,14 @@ public class EntityPropreties extends GlobalPropreties {
 		}
 	}
 
-	private static EntityPropreties instance = new EntityPropreties();
+	private static SimpleEntityPropreties instance = new SimpleEntityPropreties();
 
 	/**
 	 * Get the unique instance of this class.
 	 * 
-	 * @return the unique instance of EntityPropreties
+	 * @return the unique instance of SimpleEntityPropreties
 	 */
-	public static EntityPropreties getInstance() {
+	public static SimpleEntityPropreties getInstance() {
 		return instance;
 	}
 
@@ -837,7 +814,7 @@ public class EntityPropreties extends GlobalPropreties {
 
 	JTextField textName = new JTextField();
 
-	protected EntityPropreties() {
+	protected SimpleEntityPropreties() {
 		btnAddParameters = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus.png"), "Add");
 		btnRemoveMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"), "Remove");
 		btnRemoveAttribute = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"), "Remove");
@@ -857,7 +834,6 @@ public class EntityPropreties extends GlobalPropreties {
 		imgNoParameter.setVisible(false);
 
 		attributesTable = new STable(new AttributeTableModel());
-		new EditableCellFocusAction(attributesTable, KeyStroke.getKeyStroke("TAB"));
 		attributesTable.setPreferredScrollableViewportSize(new Dimension(200, 0));
 
 		attributesTable.getModel().addTableModelListener((AttributeTableModel) attributesTable.getModel());
@@ -926,7 +902,7 @@ public class EntityPropreties extends GlobalPropreties {
 			gbc_btnNewButton.anchor = GridBagConstraints.NORTH;
 			gbc_btnNewButton.gridx = 0;
 			gbc_btnNewButton.gridy = 0;
-			p.add(createEntityPropreties(), gbc_btnNewButton);
+			p.add(createSimpleEntityPropreties(), gbc_btnNewButton);
 		}
 
 		add(p);
@@ -954,8 +930,8 @@ public class EntityPropreties extends GlobalPropreties {
 				@Override
 				public void actionPerformed(ActionEvent arg0)
 				{
-					((Entity) currentObject).addAttribute(new Attribute("attribute", PrimitiveType.VOID_TYPE));
-					((Entity) currentObject).notifyObservers(UpdateMessage.ADD_ATTRIBUTE);
+					((SimpleEntity) currentObject).addAttribute(new Attribute("attribute", PrimitiveType.VOID_TYPE));
+					((SimpleEntity) currentObject).notifyObservers(UpdateMessage.ADD_ATTRIBUTE);
 				}
 			});
 
@@ -974,8 +950,8 @@ public class EntityPropreties extends GlobalPropreties {
 					final int index = attributesTable.getSelectionModel().getLeadSelectionIndex();
 					final Attribute attribute = Utility.getKeysByValue(((AttributeTableModel) attributesTable.getModel()).getMapIndex(), index).iterator().next();
 
-					((Entity) currentObject).moveAttributePosition(attribute, -1);
-					((Entity) currentObject).notifyObservers();
+					((SimpleEntity) currentObject).moveAttributePosition(attribute, -1);
+					((SimpleEntity) currentObject).notifyObservers();
 					attribute.select();
 					attribute.notifyObservers(UpdateMessage.SELECT);
 				}
@@ -995,8 +971,8 @@ public class EntityPropreties extends GlobalPropreties {
 					final int index = attributesTable.getSelectionModel().getLeadSelectionIndex();
 					final Attribute attribute = Utility.getKeysByValue(((AttributeTableModel) attributesTable.getModel()).getMapIndex(), index).iterator().next();
 
-					((Entity) currentObject).moveAttributePosition(attribute, 1);
-					((Entity) currentObject).notifyObservers();
+					((SimpleEntity) currentObject).moveAttributePosition(attribute, 1);
+					((SimpleEntity) currentObject).notifyObservers();
 					attribute.select();
 					attribute.notifyObservers(UpdateMessage.SELECT);
 				}
@@ -1017,8 +993,8 @@ public class EntityPropreties extends GlobalPropreties {
 					final int index = attributesTable.getSelectionModel().getLeadSelectionIndex();
 					Attribute attribute = Utility.getKeysByValue(((AttributeTableModel) attributesTable.getModel()).getMapIndex(), index).iterator().next();
 
-					((Entity) currentObject).removeAttribute(attribute);
-					((Entity) currentObject).notifyObservers();
+					((SimpleEntity) currentObject).removeAttribute(attribute);
+					((SimpleEntity) currentObject).notifyObservers();
 
 					for (int i = 0; i <= 1; i++)
 					{
@@ -1067,9 +1043,9 @@ public class EntityPropreties extends GlobalPropreties {
 				@Override
 				public void actionPerformed(ActionEvent arg0)
 				{
-					final Entity entity = (Entity) currentObject;
-					entity.addMethod(new Method("method", PrimitiveType.VOID_TYPE, Visibility.PUBLIC, entity));
-					entity.notifyObservers(UpdateMessage.ADD_METHOD);
+					final SimpleEntity SimpleEntity = (SimpleEntity) currentObject;
+					SimpleEntity.addMethod(new Method("method", PrimitiveType.VOID_TYPE, Visibility.PUBLIC, SimpleEntity));
+					SimpleEntity.notifyObservers(UpdateMessage.ADD_METHOD);
 				}
 			});
 
@@ -1089,8 +1065,8 @@ public class EntityPropreties extends GlobalPropreties {
 					final int index = methodsTable.getSelectionModel().getLeadSelectionIndex();
 					final Method method = Utility.getKeysByValue(((MethodTableModel) methodsTable.getModel()).getMapIndex(), index).iterator().next();
 
-					((Entity) currentObject).moveMethodPosition(method, -1);
-					((Entity) currentObject).notifyObservers();
+					((SimpleEntity) currentObject).moveMethodPosition(method, -1);
+					((SimpleEntity) currentObject).notifyObservers();
 					method.select();
 					method.notifyObservers(UpdateMessage.SELECT);
 				}
@@ -1111,8 +1087,8 @@ public class EntityPropreties extends GlobalPropreties {
 					final int index = methodsTable.getSelectionModel().getLeadSelectionIndex();
 					final Method method = Utility.getKeysByValue(((MethodTableModel) methodsTable.getModel()).getMapIndex(), index).iterator().next();
 
-					((Entity) currentObject).moveMethodPosition(method, 1);
-					((Entity) currentObject).notifyObservers();
+					((SimpleEntity) currentObject).moveMethodPosition(method, 1);
+					((SimpleEntity) currentObject).notifyObservers();
 					method.select();
 					method.notifyObservers(UpdateMessage.SELECT);
 				}
@@ -1133,8 +1109,8 @@ public class EntityPropreties extends GlobalPropreties {
 					final int index = methodsTable.getSelectionModel().getLeadSelectionIndex();
 					Method method = Utility.getKeysByValue(((MethodTableModel) methodsTable.getModel()).getMapIndex(), index).iterator().next();
 
-					((Entity) currentObject).removeMethod(method);
-					((Entity) currentObject).notifyObservers();
+					((SimpleEntity) currentObject).removeMethod(method);
+					((SimpleEntity) currentObject).notifyObservers();
 
 					for (int i = 0; i <= 1; i++)
 					{
@@ -1252,7 +1228,7 @@ public class EntityPropreties extends GlobalPropreties {
 		add(panel);
 	}
 
-	public JPanel createEntityPropreties()
+	public JPanel createSimpleEntityPropreties()
 	{
 		JPanel panel = new JPanel();
 		Dimension size = new Dimension(200, 110);
@@ -1281,12 +1257,12 @@ public class EntityPropreties extends GlobalPropreties {
 			{
 				if (e.getKeyChar() == '\n')
 				{
-					final Entity entity = (Entity) currentObject;
+					final SimpleEntity SimpleEntity = (SimpleEntity) currentObject;
 
-					if (!entity.setName(textName.getText()))
-						textName.setText(entity.getName());
+					if (!SimpleEntity.setName(textName.getText()))
+						textName.setText(SimpleEntity.getName());
 					else
-						entity.notifyObservers();
+						SimpleEntity.notifyObservers();
 				}
 			}
 		});
@@ -1295,8 +1271,8 @@ public class EntityPropreties extends GlobalPropreties {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				((Entity) currentObject).setAbstract(checkBoxAbstract.isSelected());
-				((Entity) currentObject).notifyObservers();
+				((SimpleEntity) currentObject).setAbstract(checkBoxAbstract.isSelected());
+				((SimpleEntity) currentObject).notifyObservers();
 			}
 		});
 
@@ -1307,10 +1283,10 @@ public class EntityPropreties extends GlobalPropreties {
 			{
 				final Visibility newVisibility = Visibility.valueOf(comboBox.getSelectedItem().toString().toUpperCase());
 
-				if (newVisibility != Visibility.valueOf(((Entity) currentObject).getVisibility().getName().toUpperCase()))
+				if (newVisibility != Visibility.valueOf(((SimpleEntity) currentObject).getVisibility().getName().toUpperCase()))
 				{
-					((Entity) currentObject).setVisibility(newVisibility);
-					((Entity) currentObject).notifyObservers();
+					((SimpleEntity) currentObject).setVisibility(newVisibility);
+					((SimpleEntity) currentObject).notifyObservers();
 				}
 			}
 		});
@@ -1346,24 +1322,24 @@ public class EntityPropreties extends GlobalPropreties {
 		if (currentObject == null)
 			return;
 
-		final Entity entity = (Entity) currentObject;
+		final SimpleEntity SimpleEntity = (SimpleEntity) currentObject;
 		final AttributeTableModel modelAttributes = (AttributeTableModel) attributesTable.getModel();
 		final MethodTableModel modelMethods = (MethodTableModel) methodsTable.getModel();
 
-		final LinkedList<Attribute> attributes = entity.getAttributes();
-		final LinkedList<Method> methods = entity.getMethods();
+		final LinkedList<Attribute> attributes = SimpleEntity.getAttributes();
+		final LinkedList<Method> methods = SimpleEntity.getMethods();
 
 		if (msg != null && msg.equals(UpdateMessage.UNSELECT))
-			if (!entity.getName().equals(textName.getText()))
-				if (!entity.setName(textName.getText()))
-					textName.setText(entity.getName());
+			if (!SimpleEntity.getName().equals(textName.getText()))
+				if (!SimpleEntity.setName(textName.getText()))
+					textName.setText(SimpleEntity.getName());
 				else
-					entity.notifyObservers();
+					SimpleEntity.notifyObservers();
 
-		textName.setText(entity.getName());
-		checkBoxAbstract.setSelected(entity.isAbstract());
+		textName.setText(SimpleEntity.getName());
+		checkBoxAbstract.setSelected(SimpleEntity.isAbstract());
 		checkBoxAbstract.setEnabled(currentObject.getClass() != InterfaceEntity.class);
-		comboBox.setSelectedItem(entity.getVisibility().getName());
+		comboBox.setSelectedItem(SimpleEntity.getVisibility().getName());
 
 		modelAttributes.clearAll();
 		modelMethods.clearAll();

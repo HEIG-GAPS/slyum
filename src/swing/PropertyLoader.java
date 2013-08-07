@@ -35,6 +35,7 @@ public class PropertyLoader {
     public static final String MODE_CURSOR = "ModeCursor";
     public static final String VIEW_METHODS = "ViewMethods";
     public static final String VIEW_ENTITIES = "ViewEntities";
+    public static final String VIEW_ENUM = "ViewEnum";
 
     public static final String filename = Slyum.getPathAppDir()
             + Slyum.FILE_SEPARATOR + "config.properties";

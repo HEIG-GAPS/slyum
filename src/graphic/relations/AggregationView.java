@@ -71,7 +71,7 @@ public class AggregationView extends BinaryView
 		final int[] pointsX = new int[] { target.x, ref.x + vectorXN1, ref2.x, ref.x + vectorXN2 };
 		final int[] pointsY = new int[] { target.y, ref.y + vectorYN1, ref2.y, ref.y + vectorYN2 };
 
-		g2.setStroke(new BasicStroke());
+		g2.setStroke(new BasicStroke(LINE_WIDTH));
 		g2.setColor(color);
 		g2.fillPolygon(pointsX, pointsY, pointsX.length);
 		g2.setColor(borderColor);

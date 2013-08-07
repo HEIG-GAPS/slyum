@@ -5,6 +5,7 @@
 package change;
 
 import classDiagram.components.Entity;
+import classDiagram.components.SimpleEntity;
 import classDiagram.components.Visibility;
 
 /**
@@ -23,15 +24,20 @@ public class BufferClass implements Changeable
 	{
 	    entity = e;
 		name = e.getName();
-		isAbstract = e.isAbstract();
-		visibility = e.getVisibility();
+		
+		if (e instanceof SimpleEntity) {
+	    isAbstract = ((SimpleEntity)e).isAbstract();
+	    visibility = ((SimpleEntity)e).getVisibility();
+		}
 	}
 
 	@Override
 	public void restore()
 	{
-		entity.setAbstract(isAbstract);
-		entity.setVisibility(visibility);
+    if (entity instanceof SimpleEntity) {
+      ((SimpleEntity)entity).setAbstract(isAbstract);
+      ((SimpleEntity)entity).setVisibility(visibility);
+    }
 		entity.setName(name);
 		
 		entity.notifyObservers();

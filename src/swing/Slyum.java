@@ -54,7 +54,7 @@ public class Slyum extends JFrame implements ActionListener {
   
 	private static final long serialVersionUID = 1L;
 	private static final String APP_NAME = "Slyum";
-	public static final float version = 3f;
+	public static final float version = 3.1f;
   public final static String EXTENTION = "sly";
   public final static String FULL_EXTENTION = String.format(".%s", EXTENTION);
 	public final static String APP_DIR_NAME = APP_NAME;
@@ -107,8 +107,9 @@ public class Slyum extends JFrame implements ActionListener {
 	public static final String ACTION_KLIPPER = "Klipper";
 	public static final String ACTION_PRINT = "Print";
 	public static final String ACTION_NEW_LINK_NOTE = "LinkNote";
-	public static final String ACTION_NEW_CLASS = "NewClass";
+  public static final String ACTION_NEW_CLASS = "NewClass";
 	public static final String ACTION_NEW_INTERFACE = "NewInterface";
+  public static final String ACTION_NEW_ENUM = "NewEnum";
 	public static final String ACTION_NEW_GENERALIZE = "NewGeneralize";
 	public static final String ACTION_NEW_INNER_CLASS = "NewInnerClass";
 	public static final String ACTION_NEW_DEPENDENCY = "NewDependency";
@@ -181,12 +182,13 @@ public class Slyum extends JFrame implements ActionListener {
 	
 	public final static String KEY_ZOOM_PLUS = "ctrl PLUS";
 	public final static String KEY_ZOOM_MINUS = "ctrl MINUS";
-	public final static String KEY_ZOOM_ADAPT = "ctrl shift E";
+	public final static String KEY_ZOOM_ADAPT = "ctrl shift Z";
 	public final static String KEY_ZOOM_1 = "1";
 
   public final static String KEY_DEFAULT_MODE = "alt Q";
   public final static String KEY_GRIPS_MODE = "alt W";
-	public final static String KEY_CLASS = "ctrl shift C";
+  public final static String KEY_CLASS = "ctrl shift C";
+  public final static String KEY_ENUM = "ctrl shift E";
 	public final static String KEY_INTERFACE = "ctrl shift I";
 	public final static String KEY_ASSOCIATION_CLASS = "ctrl shift X";
 	public final static String KEY_INHERITANCE = "ctrl shift H";
@@ -983,7 +985,7 @@ public class Slyum extends JFrame implements ActionListener {
             }
         }
         
-        // Suppression du sÃ©parateur.
+        // Suppression du séparateur.
         if (remove)
         	menuFile.remove((MAC_OS_X ? 8 : 12));
 	}
@@ -1003,8 +1005,7 @@ public class Slyum extends JFrame implements ActionListener {
         	menuItem.setActionCommand(ACTION_OPEN_RECENT_RPOJECT);
         	menuItem.addActionListener(this);
         	menuItem.setHistoryPath(Paths.get(s));
-    		
-            menuFile.add(menuItem, 9);
+        	menuFile.add(menuItem, (MAC_OS_X ? 9 : 13));
         }
 	}
 	

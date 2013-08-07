@@ -67,7 +67,8 @@ public abstract class LineView extends GraphicComponent
 
 	boolean justSelected = false;
 
-	protected Stroke lineStroke = new BasicStroke(1.2f);
+	public final static float LINE_WIDTH = 1.f; 
+	protected Stroke lineStroke = new BasicStroke(LINE_WIDTH);
 
 	protected LinkedList<RelationGrip> points = new LinkedList<>();
 

@@ -4,11 +4,7 @@ import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.ClassView;
 import graphic.entity.EntityView;
-
-import java.awt.Rectangle;
-
 import swing.SPanelDiagramComponent;
-
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Visibility;
 
@@ -47,8 +43,7 @@ public class ClassFactory extends EntityFactory
 		final ClassEntity classEntity = new ClassEntity("Class", Visibility.PUBLIC);
 		final EntityView c = new ClassView(parent, classEntity);
 
-		c.setBounds(new Rectangle(mouseReleased.x - DEFAULT_SIZE.width / 2, mouseReleased.y - DEFAULT_SIZE.height / 2, DEFAULT_SIZE.width, DEFAULT_SIZE.height));
-
+    initializeBounds(c);
 		parent.addEntity(c);
 		classDiagram.addClassEntity(classEntity);
 		return c;

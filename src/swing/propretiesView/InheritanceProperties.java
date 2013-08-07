@@ -17,8 +17,8 @@ import swing.PanelClassDiagram;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent.UpdateMessage;
-import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
+import classDiagram.components.SimpleEntity;
 import classDiagram.relationships.Inheritance;
 
 public class InheritanceProperties extends GlobalPropreties implements ActionListener
@@ -82,7 +82,7 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 	public void updateComponentInformations(UpdateMessage msg) {
 		if (currentObject != null) {
 			Inheritance i = (Inheritance)currentObject;
-			Entity parent = i.getParent();
+			SimpleEntity parent = i.getParent();
 			String lblTypeText = "generalize";
 			
 			if (parent.getClass() == InterfaceEntity.class)

@@ -14,6 +14,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
+import javax.swing.SwingUtilities;
+
 
 /**
  * EntityFactory allows to create a new entity view associated with a new entity
@@ -102,5 +104,21 @@ public abstract class EntityFactory extends ComponentFactory
 		repaintBounds.grow(10, 10);
 		parent.getScene().repaint(repaintBounds);
 
+	}
+	
+	protected void initializeBounds(final EntityView view) {
+
+    SwingUtilities.invokeLater(new Runnable() {
+      
+      @Override
+      public void run() {
+        view.setBounds(
+            new Rectangle(mouseReleased.x - DEFAULT_SIZE.width / 2, 
+                          mouseReleased.y - DEFAULT_SIZE.height / 2, 
+                          DEFAULT_SIZE.width, 
+                          DEFAULT_SIZE.height));
+        
+      }
+    });
 	}
 }

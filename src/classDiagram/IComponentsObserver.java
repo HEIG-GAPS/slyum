@@ -3,6 +3,7 @@ package classDiagram;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
+import classDiagram.components.EnumEntity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.relationships.Aggregation;
 import classDiagram.relationships.Binary;
@@ -87,7 +88,9 @@ public interface IComponentsObserver
 	 * @param component
 	 *            the component that was added.
 	 */
-	public void addInterfaceEntity(InterfaceEntity component);
+  public void addInterfaceEntity(InterfaceEntity component);
+  
+  public void addEnumEntity(EnumEntity component);
 
 	/**
 	 * Adds a new multi-association and notify that a new multi-association has

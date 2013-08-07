@@ -26,8 +26,8 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
 import utility.Utility;
-import classDiagram.components.Entity;
 import classDiagram.components.Method;
+import classDiagram.components.SimpleEntity;
 import classDiagram.components.Variable;
 
 public class OverridesAndImplementationsDialog extends JDialog
@@ -105,13 +105,13 @@ public class OverridesAndImplementationsDialog extends JDialog
 
 	Vector<CheckableItem> items = new Vector<OverridesAndImplementationsDialog.CheckableItem>();
 
-	private final Entity parent, child;
+	private final SimpleEntity parent, child;
 
 	/**
 	 * Create the dialog.
 	 */
-	public OverridesAndImplementationsDialog(Entity parent, Entity child)
-	{
+	public OverridesAndImplementationsDialog(
+	    SimpleEntity parent, SimpleEntity child) {
 	  Utility.setRootPaneActionOnEsc(getRootPane(), new AbstractAction() {
 	    
       private static final long serialVersionUID = -9137055482704631902L;
@@ -201,7 +201,7 @@ public class OverridesAndImplementationsDialog extends JDialog
 	{
 		items = new Vector<CheckableItem>();
 
-		for (final Entity e : parent.getAllParents())
+		for (final SimpleEntity e : parent.getAllParents())
 
 			out: for (final Method m : e.getMethods())
 			{

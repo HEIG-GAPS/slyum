@@ -8,9 +8,14 @@ import swing.XMLParser.EntityType;
  * @author David Miserez
  * @version 1.0 - 24.07.2011
  */
-public class InterfaceEntity extends Entity
+public class InterfaceEntity extends SimpleEntity
 {
 	public static final String STEREOTYPE_INTERFACE = "interface";
+	
+  public InterfaceEntity(String name) {
+    super(name);
+    initializeComponents();
+  }
 
 	/**
 	 * Construct a new interface.
@@ -20,12 +25,9 @@ public class InterfaceEntity extends Entity
 	 * @param visibility
 	 *            the visibility of the interface
 	 */
-	public InterfaceEntity(String name, Visibility visibility)
-	{
+	public InterfaceEntity(String name, Visibility visibility) {
 		super(name, visibility);
-
-		setStereotype(STEREOTYPE_INTERFACE);
-		setAbstract(true);
+    initializeComponents();
 	}
 
 	/**
@@ -38,13 +40,15 @@ public class InterfaceEntity extends Entity
 	 * @param id
 	 *            the id of the interface
 	 */
-	public InterfaceEntity(String name, Visibility visibility, int id)
-	{
+	public InterfaceEntity(String name, Visibility visibility, int id) {
 		super(name, visibility, id);
-
-		setStereotype("interface");
-		setAbstract(true);
+		initializeComponents();
 	}
+	
+	private void initializeComponents() {
+    setStereotype(STEREOTYPE_INTERFACE);
+    setAbstract(true);
+  }
 
 	@Override
 	public void addAttribute(Attribute attribute)

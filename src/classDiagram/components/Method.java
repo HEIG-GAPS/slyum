@@ -53,7 +53,7 @@ public class Method extends Observable
 	
 	private boolean _isAbstract = false;
 	private boolean _isStatic = false;
-	private final Entity entity;
+	private final SimpleEntity entity;
 	protected final int id = ClassDiagram.getNextId();
 	private String name;
 	private final LinkedList<Variable> parameters = new LinkedList<>();
@@ -72,7 +72,7 @@ public class Method extends Observable
 	 *            the visibility of the method
 	 */
 	public Method(
-	    String name, Type returnType, Visibility visibility, Entity entity) {
+	    String name, Type returnType, Visibility visibility, SimpleEntity entity) {
 		if (returnType == null)
 			throw new IllegalArgumentException("type is null");
 
@@ -93,7 +93,7 @@ public class Method extends Observable
 		Change.setBlocked(isBlocked);
 	}
 	
-	public Method(Method method, Entity newEntity) {
+	public Method(Method method, SimpleEntity newEntity) {
 		this.entity = newEntity;
 		this.name = method.name;
 		this.returnType = method.returnType;

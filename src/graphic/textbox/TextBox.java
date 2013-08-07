@@ -95,7 +95,6 @@ public abstract class TextBox extends GraphicComponent
 	private Cursor previousCursor;
 
 	private String text;
-
 	protected Dimension textDim = new Dimension(50, 30);
 
 	private JTextField textField;
@@ -135,14 +134,10 @@ public abstract class TextBox extends GraphicComponent
 		textField = new JTextField(getEditingText()) {
 			
 			@Override
-			public void paintComponent(Graphics g)
-			{
+			public void paintComponent(Graphics g) {
 				Utility.setRenderQuality(g);
-
 				// Bug with TextField
 				((Graphics2D)g).setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
-				
-
 				super.paintComponent(g);
 			}
 		};
@@ -159,11 +154,13 @@ public abstract class TextBox extends GraphicComponent
 		textField.requestFocusInWindow();
 
 		textField.addFocusListener(new FocusAdapter() {
+		  
 			@Override
-			public void focusLost(FocusEvent arg0)
-			{
-				setText(textField.getText());
-				stopEditing();
+			public void focusLost(FocusEvent arg0) {
+			  if (isEditing()) {
+	        setText(textField.getText());
+	        stopEditing(); 
+			  }
 			}
 		});
 
@@ -179,7 +176,7 @@ public abstract class TextBox extends GraphicComponent
 						break;
 
 					case KeyEvent.VK_ENTER:
-						setText(textField.getText());
+            setText(textField.getText()); 
 						stopEditing();
 						break;
 				}
@@ -353,6 +350,10 @@ public abstract class TextBox extends GraphicComponent
 		final Rectangle repaintBounds = new Rectangle(0, bounds.y, parent.getScene().getWidth(), bounds.height);
 		parent.getScene().repaint(repaintBounds);
 	}
+	
+	public boolean isEditing() {
+	  return textField != null;
+	}
 
 	/**
 	 * Stop the edition of the String.
@@ -363,8 +364,8 @@ public abstract class TextBox extends GraphicComponent
 			return;
 
 		parent.getScene().remove(textField);
-
 		final Rectangle bounds = textField.getBounds();
+    textField = null;
 		final Rectangle repaintBounds = new Rectangle(0, bounds.y, parent.getBounds().width, bounds.height);
 		parent.getScene().repaint(repaintBounds);
 		setVisible(true);

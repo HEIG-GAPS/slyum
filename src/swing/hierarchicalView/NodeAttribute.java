@@ -21,9 +21,9 @@ import classDiagram.components.Attribute;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public class NodeAttribute extends DefaultMutableTreeNode implements ICustomizedIconNode, Observer, IClassDiagramNode
-{
-	private static final long serialVersionUID = -2998185646864433535L;
+public class NodeAttribute 
+    extends DefaultMutableTreeNode 
+    implements ICustomizedIconNode, Observer, IClassDiagramNode {
 	private final Attribute attribute;
 	private final JTree tree;
 	private final DefaultTreeModel treeModel;
