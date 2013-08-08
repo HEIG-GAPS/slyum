@@ -20,7 +20,7 @@ public class Change
 
 	private static void printStackState()
 	{
-	  if (!Slyum.isChangeStackStatePrinted())
+	  if (!Slyum.argumentIsChangeStackStatePrinted())
 	    return;
 	  
 		System.out.println("Etat de la pile");

@@ -202,8 +202,9 @@ public class Slyum extends JFrame implements ActionListener {
 	public final static String KEY_LINK_NOTE = "ctrl shift L";
 
 	public final static String KEY_HELP = "F1";
-	
+
   private static final String ARGUMENT_PRINT_CHANGE_STACK_STATE = "-printChanges";
+  private static final String ARGUMENT_EXIT_WITHOUT_ASK = "-exitWithoutAsk";
 
 	private static Slyum instance;
 	private static JMenuItem undo, redo;
@@ -227,15 +228,22 @@ public class Slyum extends JFrame implements ActionListener {
       }
     });
 	}
-	
-	public static boolean isChangeStackStatePrinted()
-	{
-	  for (String s : arguments)
-	    if (s.equals(ARGUMENT_PRINT_CHANGE_STACK_STATE))
-	      return true;
-	  
-	  return false;
-	}
+  
+  public static boolean argumentIsChangeStackStatePrinted() {
+    for (String s : arguments)
+      if (s.equals(ARGUMENT_PRINT_CHANGE_STACK_STATE))
+        return true;
+    
+    return false;
+  }
+  
+  public static boolean argumentExitWithoutAsk() {
+    for (String s : arguments)
+      if (s.equals(ARGUMENT_EXIT_WITHOUT_ASK))
+        return true;
+    
+    return false;
+  }
 
 	/**
 	 * Create the application directory.
@@ -1062,20 +1070,23 @@ public class Slyum extends JFrame implements ActionListener {
 	public boolean exit() {
 		PanelClassDiagram p = PanelClassDiagram.getInstance();
 		
-		switch (p.askSavingCurrentProject())
-		{
-			case JOptionPane.CANCEL_OPTION:
-				return false;
-
-			case JOptionPane.YES_OPTION:
-				p.saveToXML(false);
-        _exit();
-				break;
-
-			case JOptionPane.NO_OPTION:
-			  _exit();
-				break;
-		}
+		if (argumentExitWithoutAsk())
+      _exit();
+		else
+  		switch (p.askSavingCurrentProject())
+  		{
+  			case JOptionPane.CANCEL_OPTION:
+  				return false;
+  
+  			case JOptionPane.YES_OPTION:
+  				p.saveToXML(false);
+          _exit();
+  				break;
+  
+  			case JOptionPane.NO_OPTION:
+  			  _exit();
+  				break;
+  		}
     return true;
 	}
 	
