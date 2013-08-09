@@ -68,6 +68,8 @@ public class Slyum extends JFrame implements ActionListener {
    * Check that we are on Mac OS X.  This is crucial to loading and using the OSXAdapter class.
    */
   public static final boolean MAC_OS_X = (System.getProperty("os.name").toLowerCase().startsWith("mac os"));
+  public static final boolean WINDOWS = (System.getProperty("os.name").toLowerCase().startsWith("win"));
+  public static final boolean LINUX = (System.getProperty("os.name").toLowerCase().startsWith("unix"));
 
 	// Don't use the file separator here. Java resources are get with
 	// getResource() and didn't support back-slash character on Windows.
@@ -289,14 +291,17 @@ public class Slyum extends JFrame implements ActionListener {
 	}
 
 	public static String getPathAppDir() {
-		String fileName;
+		String fileName = "";
 		String appData = System.getenv("APPDATA");
 		String userHome = System.getProperty("user.home");
-
-		if (appData == null)
-			fileName = userHome + FILE_SEPARATOR + "." + APP_DIR_NAME;
-		else
-			fileName = appData + FILE_SEPARATOR + APP_DIR_NAME;
+		
+		if (MAC_OS_X) {
+      fileName = userHome + "/Library/Application Support/" + APP_DIR_NAME;
+		} else if (WINDOWS) {
+      fileName = appData + FILE_SEPARATOR + APP_DIR_NAME;
+		} else if (LINUX) {
+      fileName = userHome + FILE_SEPARATOR + "." + APP_DIR_NAME;
+		}
 
 		if (!new File(fileName).exists())
 			createAppDir(fileName);
