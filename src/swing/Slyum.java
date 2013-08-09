@@ -244,6 +244,20 @@ public class Slyum extends JFrame implements ActionListener {
     
     return false;
   }
+  
+  public static String argumentGetFile() {
+    for (String s : arguments)
+      if (s.contains(FULL_EXTENTION)) {
+        File f = new File(s);
+        if (f.exists()) {
+          return s;
+        } else {
+          System.err.println("Specified file does not exist.");
+          return null;
+        }
+      }
+    return null;
+  }
 
 	/**
 	 * Create the application directory.
@@ -259,8 +273,7 @@ public class Slyum extends JFrame implements ActionListener {
 		}
 	}
 
-	public static String getCurrentDirectoryFileChooser()
-	{
+	public static String getCurrentDirectoryFileChooser() {
 		String defaultPath = null;
 
 		defaultPath = PropertyLoader.getInstance().getProperties().getProperty("PathForFileChooser");
@@ -271,8 +284,7 @@ public class Slyum extends JFrame implements ActionListener {
 		return defaultPath;
 	}
 
-	public static Slyum getInstance()
-	{
+	public static Slyum getInstance() {
 		return instance;
 	}
 
@@ -474,7 +486,10 @@ public class Slyum extends JFrame implements ActionListener {
       }
     });
 
-    String file = RecentProjectManager.getMoreRecentFile();
+    String file = argumentGetFile();
+    if (file == null)
+      file = RecentProjectManager.getMoreRecentFile();
+    
     if (file != null)
       PanelClassDiagram.openSlyFile(file);
 	}
