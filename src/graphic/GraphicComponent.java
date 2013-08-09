@@ -98,8 +98,8 @@ public abstract class GraphicComponent extends Observable
       } catch (Exception e1) {
         SMessageDialog.showErrorMessage("No open file!");
       }
-		else 
-		  SPanelDiagramComponent.getInstance().actionPerformed(e);
+		else
+      SPanelDiagramComponent.getInstance().actionPerformed(e);
 	}
 	
 	public static void askNewColorForSelectedItems()

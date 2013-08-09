@@ -263,19 +263,19 @@ public abstract class EntityView extends MovableComponent implements Observer,
     initializeMenuViews(popupMenu);
 
     SPanelElement p = SPanelElement.getInstance();
-    menuItem = makeMenuItem("Move top", "ZOrderTOP", "top");
+    menuItem = makeMenuItem("Move top", Slyum.ACTION_MOVE_TOP, "top");
     p.getBtnTop().linkComponent(menuItem);
     popupMenu.add(menuItem);
 
-    menuItem = makeMenuItem("Up", "ZOrderUP", "up");
+    menuItem = makeMenuItem("Up", Slyum.ACTION_MOVE_UP, "up");
     p.getBtnUp().linkComponent(menuItem);
     popupMenu.add(menuItem);
 
-    menuItem = makeMenuItem("Down", "ZOrderDown", "down");
+    menuItem = makeMenuItem("Down", Slyum.ACTION_MOVE_DOWN, "down");
     p.getBtnDown().linkComponent(menuItem);
     popupMenu.add(menuItem);
 
-    menuItem = makeMenuItem("Move bottom", "ZOrderBottom", "bottom");
+    menuItem = makeMenuItem("Move bottom", Slyum.ACTION_MOVE_BOTTOM, "bottom");
     p.getBtnBottom().linkComponent(menuItem);
     popupMenu.add(menuItem);
 
@@ -303,6 +303,8 @@ public abstract class EntityView extends MovableComponent implements Observer,
     } else if (Slyum.ACTION_DUPLICATE.equals(e.getActionCommand())) {
       if (pressedTextBox == null)
         parent.duplicateSelectedEntities();
+    } else {
+      SPanelElement.getInstance().actionPerformed(e); 
     }
   }
 
