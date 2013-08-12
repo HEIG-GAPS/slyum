@@ -63,13 +63,6 @@ public class Slyum extends JFrame implements ActionListener {
 	public final static Color DEFAULT_BACKGROUND = new Color(239, 239, 242);
 	public final static Color BACKGROUND_FORHEAD = new Color(246, 246, 246);
 	public final static Color THEME_COLOR = new Color(0, 122, 204);
-  
-  /**
-   * Check that we are on Mac OS X.  This is crucial to loading and using the OSXAdapter class.
-   */
-  public static final boolean MAC_OS_X = (System.getProperty("os.name").toLowerCase().startsWith("mac os"));
-  public static final boolean WINDOWS = (System.getProperty("os.name").toLowerCase().startsWith("win"));
-  public static final boolean LINUX = (System.getProperty("os.name").toLowerCase().startsWith("unix"));
 
 	// Don't use the file separator here. Java resources are get with
 	// getResource() and didn't support back-slash character on Windows.
@@ -295,11 +288,11 @@ public class Slyum extends JFrame implements ActionListener {
 		String appData = System.getenv("APPDATA");
 		String userHome = System.getProperty("user.home");
 		
-		if (MAC_OS_X) {
+		if (OSValidator.IS_MAC) {
       fileName = userHome + "/Library/Application Support/" + APP_DIR_NAME;
-		} else if (WINDOWS) {
+		} else if (OSValidator.IS_WINDOWS) {
       fileName = appData + FILE_SEPARATOR + APP_DIR_NAME;
-		} else if (LINUX) {
+		} else if (OSValidator.IS_UNIX) {
       fileName = userHome + FILE_SEPARATOR + "." + APP_DIR_NAME;
 		}
 
@@ -435,7 +428,7 @@ public class Slyum extends JFrame implements ActionListener {
 
 	private static void showWarningForOpenJDK()
 	{
-		if (isShowOpenJDKWarning() && OSValidator.isUnix())
+		if (isShowOpenJDKWarning() && OSValidator.IS_UNIX)
 			new NoRepopDialog("Problems are observed with OpenJRE. If you use OpenJRE, we encourage you to get official Sun JRE.").setVisible(true);
 	}
 
@@ -526,7 +519,7 @@ public class Slyum extends JFrame implements ActionListener {
 	}
   
   private void handleMacOSX() {
-    if (MAC_OS_X) {
+    if (OSValidator.IS_MAC) {
       System.setProperty("apple.laf.useScreenMenuBar", "true");
       try {
         // Generate and register the OSXAdapter, passing it a hash of all the methods we wish to
@@ -722,7 +715,7 @@ public class Slyum extends JFrame implements ActionListener {
 			menuItem = createMenuItem("Print...", "print", KeyEvent.VK_P, KEY_PRINT, ACTION_PRINT, p.getBtnPrint());
 			menu.add(menuItem);
 	
-      if (!MAC_OS_X) {
+      if (!OSValidator.IS_MAC) {
         menu.addSeparator();
 
         // Menu item Properties
@@ -733,7 +726,7 @@ public class Slyum extends JFrame implements ActionListener {
 			// Menu recent project
 			updateMenuItemHistory();
 			
-      if (!MAC_OS_X) {
+      if (!OSValidator.IS_MAC) {
         menu.addSeparator();
 
         // Menu item exit
@@ -970,7 +963,7 @@ public class Slyum extends JFrame implements ActionListener {
 		menuItem = createMenuItem("Go to update page...", "update", KeyEvent.VK_U, null, ACTION_UPDATE);
 		menu.add(menuItem);
 
-    if (!MAC_OS_X) {
+    if (!OSValidator.IS_MAC) {
       menu.addSeparator();
 
       // Menu item About
@@ -998,7 +991,7 @@ public class Slyum extends JFrame implements ActionListener {
         
         // Suppression du séparateur.
         if (remove)
-        	menuFile.remove((MAC_OS_X ? 8 : 12));
+        	menuFile.remove((OSValidator.IS_MAC ? 8 : 12));
 	}
 	
 	public void updateMenuItemHistory()
@@ -1008,7 +1001,7 @@ public class Slyum extends JFrame implements ActionListener {
 	    List<String> histories = RecentProjectManager.getHistoryList();
 		
 	    if (histories.size() > 0)
-	    	menuFile.add(new JSeparator(), (MAC_OS_X ? 8 : 12));
+	    	menuFile.add(new JSeparator(), (OSValidator.IS_MAC ? 8 : 12));
 	    
         for (String s : histories)
         {
@@ -1016,7 +1009,7 @@ public class Slyum extends JFrame implements ActionListener {
         	menuItem.setActionCommand(ACTION_OPEN_RECENT_RPOJECT);
         	menuItem.addActionListener(this);
         	menuItem.setHistoryPath(Paths.get(s));
-        	menuFile.add(menuItem, (MAC_OS_X ? 9 : 13));
+        	menuFile.add(menuItem, (OSValidator.IS_MAC ? 9 : 13));
         }
 	}
 	
@@ -1046,7 +1039,7 @@ public class Slyum extends JFrame implements ActionListener {
 		item = new JMenuItem(text, icon);
 		item.setMnemonic(mnemonic);
 		item.setActionCommand(actionCommand);
-    if (accelerator != null && accelerator.contains("ctrl") && MAC_OS_X) {
+    if (accelerator != null && accelerator.contains("ctrl") && OSValidator.IS_MAC) {
       accelerator = accelerator.replace("ctrl", "meta");
       accelerator = accelerator.replace("control", "meta");
     }
