@@ -1,4 +1,4 @@
-﻿package swing.propretiesView;
+package swing.propretiesView;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

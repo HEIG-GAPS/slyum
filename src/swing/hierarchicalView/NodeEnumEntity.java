@@ -1,4 +1,4 @@
-﻿package swing.hierarchicalView;
+package swing.hierarchicalView;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTree;

@@ -1,4 +1,4 @@
-﻿package graphic.textbox;
+package graphic.textbox;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;

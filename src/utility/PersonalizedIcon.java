@@ -1,4 +1,4 @@
-﻿package utility;
+package utility;
 
 import java.net.URL;
 

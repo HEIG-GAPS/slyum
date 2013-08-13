@@ -1,4 +1,4 @@
-﻿package graphic;
+package graphic;
 
 import graphic.entity.GripEntity;
 import graphic.relations.LineView;

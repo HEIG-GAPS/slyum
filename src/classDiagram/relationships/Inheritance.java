@@ -1,4 +1,4 @@
-﻿package classDiagram.relationships;
+package classDiagram.relationships;
 
 import java.util.Observable;
 

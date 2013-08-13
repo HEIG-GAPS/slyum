@@ -1,4 +1,4 @@
-﻿package swing;
+package swing;
 
 import java.io.BufferedWriter;
 import java.io.File;

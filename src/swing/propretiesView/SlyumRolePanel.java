@@ -1,4 +1,4 @@
-﻿package swing.propretiesView;
+package swing.propretiesView;
 
 import graphic.textbox.TextBoxMultiplicity;
 

@@ -1,4 +1,4 @@
-﻿package graphic;
+package graphic;
 
 import graphic.entity.AssociationClassView;
 import graphic.entity.ClassView;

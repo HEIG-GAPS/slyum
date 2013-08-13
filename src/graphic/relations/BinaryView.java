@@ -1,4 +1,4 @@
-﻿package graphic.relations;
+package graphic.relations;
 
 import graphic.GraphicView;
 import graphic.entity.EntityView;

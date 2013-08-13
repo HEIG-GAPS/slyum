@@ -1,4 +1,4 @@
-﻿package utility;
+package utility;
 
 import graphic.GraphicComponent;
 

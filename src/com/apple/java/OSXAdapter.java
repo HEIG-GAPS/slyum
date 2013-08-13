@@ -1,4 +1,4 @@
-﻿/*File: OSXAdapter.java Abstract: Hooks existing preferences/about/quit
+/*File: OSXAdapter.java Abstract: Hooks existing preferences/about/quit
  * functionality from an existing Java app into handlers for the Mac OS X
  * application menu. Uses a Proxy object to dynamically implement the
  * com.apple.eawt.ApplicationListener interface and register it with the

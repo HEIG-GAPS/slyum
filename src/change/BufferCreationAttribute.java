@@ -1,4 +1,4 @@
-﻿package change;
+package change;
 
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Attribute;

@@ -1,4 +1,4 @@
-﻿package classDiagram;
+package classDiagram;
 
 import java.util.LinkedList;
 import java.util.List;

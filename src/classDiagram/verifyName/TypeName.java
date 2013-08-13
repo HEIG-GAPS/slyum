@@ -1,4 +1,4 @@
-﻿package classDiagram.verifyName;
+package classDiagram.verifyName;
 
 import classDiagram.components.Type;
 

@@ -1,4 +1,4 @@
-﻿package change;
+package change;
 
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Multiplicity;

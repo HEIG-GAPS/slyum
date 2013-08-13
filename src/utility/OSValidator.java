@@ -1,4 +1,4 @@
-﻿package utility;
+package utility;
 
 /**
  * Detect wich os is installed on the system running Java.

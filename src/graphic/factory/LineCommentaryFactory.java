@@ -1,4 +1,4 @@
-﻿package graphic.factory;
+package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
