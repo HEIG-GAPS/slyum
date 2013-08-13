@@ -83,7 +83,7 @@
             identifier="ch.slyum"
             mainclassname="swing.Slyum"
             icon="tools/icns/slyum.icns"
-            shortversion="3.3"
+            shortversion="3.1"
             copyright="GAPS - HEIG-VD">
             <classpath file="dist/Slyum.jar" />
         </bundleapp>

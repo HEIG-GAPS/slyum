@@ -1,0 +1,60 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+<key>CFBundleDevelopmentRegion</key>
+<string>English</string>
+<key>CFBundleExecutable</key>
+<string>JavaAppLauncher</string>
+<key>CFBundleIconFile</key>
+<string>slyum.icns</string>
+<key>CFBundleIdentifier</key>
+<string>ch.slyum</string>
+<key>CFBundleDisplayName</key>
+<string>Slyum</string>
+<key>CFBundleInfoDictionaryVersion</key>
+<string>6.0</string>
+<key>CFBundleName</key>
+<string>Slyum</string>
+<key>CFBundlePackageType</key>
+<string>APPL</string>
+<key>CFBundleShortVersionString</key>
+<string>3.1</string>
+<key>CFBundleSignature</key>
+<string>????</string>
+<key>CFBundleVersion</key>
+<string>1</string>
+<key>NSHumanReadableCopyright</key>
+<string>GAPS - HEIG-VD</string>
+<key>JVMMainClassName</key>
+<string>swing.Slyum</string>
+<key>JVMOptions</key>
+<array>
+</array>
+<key>JVMArguments</key>
+<array>
+</array>
+<key>CFBundleDocumentTypes</key>
+<array>
+    <dict>
+        <key>CFBundleTypeExtensions</key>
+        <array>
+            <string>sly</string>
+        </array>
+        <key>CFBundleTypeMIMETypes</key>
+        <array>
+            <string>text/xml</string>
+        </array>
+        <key>CFBundleTypeName</key>
+        <string>Slyum File</string>
+        <key>CFBundleTypeOSTypes</key>
+        <array>
+            <string>FSLY</string>
+        </array>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+    </dict>
+</array>
+</dict>
+</plist>
+
