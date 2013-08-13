@@ -1,4 +1,4 @@
-package graphic.factory;
+﻿package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -20,49 +20,48 @@ import change.Change;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class NoteFactory extends RelationFactory {  
-	/**
-	 * Create a new factory allowing the creation of a note.
-	 * 
-	 * @param parent
-	 *            the graphic view
-	 * @param classDiagram
-	 *            the class diagram
-	 */
-	public NoteFactory(GraphicView parent)
-	{
-		super(parent);
-    
-    GraphicView.setButtonFactory(
-        SPanelDiagramComponent.getInstance().getBtnNote());
-	}
+public class NoteFactory extends RelationFactory {
+  /**
+   * Create a new factory allowing the creation of a note.
+   * 
+   * @param parent
+   *          the graphic view
+   * @param classDiagram
+   *          the class diagram
+   */
+  public NoteFactory(GraphicView parent) {
+    super(parent);
 
-	@Override
-	public GraphicComponent create() {
-		boolean isRecord = Change.isRecord();
-		Change.record();
-		
-		final TextBoxCommentary tb = new TextBoxCommentary(parent, TextBoxCommentary.DEFAULT_TEXT, componentMousePressed);
-		tb.setBounds(new Rectangle(mouseReleased.x, mouseReleased.y, 100, 100));
-		
-		if (!isRecord)
-			Change.stopRecord();
+    GraphicView.setButtonFactory(SPanelDiagramComponent.getInstance()
+            .getBtnNote());
+  }
 
-		parent.addNotes(tb);
+  @Override
+  public GraphicComponent create() {
+    boolean isRecord = Change.isRecord();
+    Change.record();
 
-		tb.repaint();
+    final TextBoxCommentary tb = new TextBoxCommentary(parent,
+            TextBoxCommentary.DEFAULT_TEXT, componentMousePressed);
+    tb.setBounds(new Rectangle(mouseReleased.x, mouseReleased.y, 100, 100));
 
-		return tb;
-	}
-	
-	@Override
-	protected boolean isFirstComponentValid() {
-	  return true;
-	}
+    if (!isRecord) Change.stopRecord();
 
-	@Override
-	protected void drawExtremity(Graphics2D g2)
-	{
-		TextBoxCommentary.drawNote(g2, new Rectangle(mouseLocation.x, mouseLocation.y, 30, 30), 8, new Color(254, 250, 220));
-	}
+    parent.addNotes(tb);
+
+    tb.repaint();
+
+    return tb;
+  }
+
+  @Override
+  protected boolean isFirstComponentValid() {
+    return true;
+  }
+
+  @Override
+  protected void drawExtremity(Graphics2D g2) {
+    TextBoxCommentary.drawNote(g2, new Rectangle(mouseLocation.x,
+            mouseLocation.y, 30, 30), 8, new Color(254, 250, 220));
+  }
 }

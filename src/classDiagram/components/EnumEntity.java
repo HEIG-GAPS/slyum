@@ -1,4 +1,4 @@
-package classDiagram.components;
+﻿package classDiagram.components;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,9 +12,9 @@ import change.Change;
 import swing.XMLParser.EntityType;
 
 public class EnumEntity extends Entity {
-  
+
   public static final String STEREOTYPE_ENUM = "enum";
-  
+
   private List<EnumValue> values = new LinkedList<>();
 
   public EnumEntity(String name) {
@@ -31,11 +31,11 @@ public class EnumEntity extends Entity {
     super(e);
     initializeComponents();
   }
-  
+
   public void initializeComponents() {
     setStereotype(STEREOTYPE_ENUM);
   }
-  
+
   public boolean addEnumValue(EnumValue value) {
     if (!values.contains(value)) {
       if (values.add(value)) {
@@ -43,19 +43,18 @@ public class EnumEntity extends Entity {
         int index = values.indexOf(value);
         Change.push(new BufferCreationEnumValue(this, value, false, index));
         Change.push(new BufferCreationEnumValue(this, value, true, index));
-        return true; 
+        return true;
       }
     }
     return false;
   }
-  
+
   public void createEnumValue() {
     EnumValue value = new EnumValue("VALUE");
 
-    if (addEnumValue(value))
-      notifyObservers(UpdateMessage.ADD_ENUM);
+    if (addEnumValue(value)) notifyObservers(UpdateMessage.ADD_ENUM);
   }
-  
+
   public boolean removeEnumValue(EnumValue value) {
     int index = values.indexOf(value);
     boolean success = values.remove(value);
@@ -66,13 +65,14 @@ public class EnumEntity extends Entity {
     }
     return success;
   }
-  
+
   public void moveEnumPosition(EnumValue value, int offset) {
     moveComponentPosition(values, value, offset);
   }
-  
+
   /**
    * Return enum values. Not a copy.
+   * 
    * @return enum values (not copied).
    */
   public List<EnumValue> getEnumValues() {
@@ -83,7 +83,7 @@ public class EnumEntity extends Entity {
   protected String getEntityType() {
     return EntityType.ENUM.toString();
   }
-  
+
   @Override
   public Element getXmlElement(Document doc) {
     Element enumEntity = super.getXmlElement(doc);
@@ -91,14 +91,14 @@ public class EnumEntity extends Entity {
       enumEntity.appendChild(value.getXmlElement(doc));
     return enumEntity;
   }
-  
+
   @Override
   public EnumEntity clone() throws CloneNotSupportedException {
-    EnumEntity entity = (EnumEntity)super.clone();
-    
+    EnumEntity entity = (EnumEntity) super.clone();
+
     for (EnumValue value : values)
       entity.addEnumValue(new EnumValue(value.getValue()));
-    
+
     return entity;
   }
 }

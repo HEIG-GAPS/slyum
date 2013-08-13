@@ -1,4 +1,4 @@
-package graphic.factory;
+﻿package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -20,52 +20,44 @@ import classDiagram.ClassDiagram;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public abstract class CreateComponent extends GraphicComponent
-{
-	protected ClassDiagram classDiagram;
+public abstract class CreateComponent extends GraphicComponent {
+  protected ClassDiagram classDiagram;
 
-	public CreateComponent(GraphicView parent)
-	{
-		super(parent);
-		parent.deleteCurrentFactory();
-		this.classDiagram = parent.getClassDiagram();
-	}
+  public CreateComponent(GraphicView parent) {
+    super(parent);
+    parent.deleteCurrentFactory();
+    this.classDiagram = parent.getClassDiagram();
+  }
 
-	/**
-	 * Create an instance of the class with informations collected during
-	 * life-cycle. Return null if informations collected are not suffisant to
-	 * create a class.
-	 * 
-	 * @return the new class created or null.
-	 */
-	public abstract GraphicComponent create();
+  /**
+   * Create an instance of the class with informations collected during
+   * life-cycle. Return null if informations collected are not suffisant to
+   * create a class.
+   * 
+   * @return the new class created or null.
+   */
+  public abstract GraphicComponent create();
 
-	public void deleteFactory()
-	{
-		repaint();
+  public void deleteFactory() {
+    repaint();
     SPanelDiagramComponent.getInstance().applyMode();
-	}
+  }
 
-	@Override
-	public Rectangle getBounds()
-	{
-		return null;
-	}
+  @Override
+  public Rectangle getBounds() {
+    return null;
+  }
 
-	public Cursor getCursor()
-	{
-		return Cursor.getDefaultCursor();
-	}
+  public Cursor getCursor() {
+    return Cursor.getDefaultCursor();
+  }
 
-	@Override
-	public boolean isAtPosition(Point mouse)
-	{
-		return false;
-	}
+  @Override
+  public boolean isAtPosition(Point mouse) {
+    return false;
+  }
 
-	@Override
-	public void setBounds(Rectangle bounds)
-	{
-	}
+  @Override
+  public void setBounds(Rectangle bounds) {}
 
 }

@@ -1,4 +1,4 @@
-package graphic.entity;
+ï»¿package graphic.entity;
 
 import graphic.GraphicView;
 import graphic.textbox.TextBox;
@@ -31,19 +31,16 @@ import classDiagram.components.EnumEntity;
 import classDiagram.components.EnumValue;
 
 public class EnumView extends EntityView {
-  
+
   public enum TypeEnumDisplay {
     DEFAULT, VISIBLE, HIDE
   }
-  
+
   public final static String ACTION_ADD_ENUM_VALUE = "actionAddEnumValue";
-  public final static String ACTION_ENUM_VALUES_DEFAULT = 
-      "actionEnumValuesDefault";
-  public final static String ACTION_ENUM_VALUES_VISIBLE = 
-      "actionEnumValuesVisible";
-  public final static String ACTION_ENUM_VALUES_HIDE = 
-      "actionEnumValuesHide";
-  
+  public final static String ACTION_ENUM_VALUES_DEFAULT = "actionEnumValuesDefault";
+  public final static String ACTION_ENUM_VALUES_VISIBLE = "actionEnumValuesVisible";
+  public final static String ACTION_ENUM_VALUES_HIDE = "actionEnumValuesHide";
+
   private List<TextBoxEnumValue> viewValues = new LinkedList<>();
   private TypeEnumDisplay typeEnumDisplay = TypeEnumDisplay.DEFAULT;
   private ButtonGroup btnGrpEnumValuesVisible;
@@ -55,8 +52,8 @@ public class EnumView extends EntityView {
 
   @Override
   protected void initializeMenuItemsAddElements(JPopupMenu popupmenu) {
-    popupmenu.add(makeMenuItem(
-        "Add enum value", ACTION_ADD_ENUM_VALUE, "add-enum-value"));
+    popupmenu.add(makeMenuItem("Add enum value", ACTION_ADD_ENUM_VALUE,
+            "add-enum-value"));
     popupmenu.addSeparator();
   }
 
@@ -68,15 +65,15 @@ public class EnumView extends EntityView {
   @Override
   protected void initializeMenuViews(JPopupMenu popupMenu) {
     JMenu subMenu = new JMenu("Values view");
-    subMenu.setIcon(
-        PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "eye.png"));
+    subMenu.setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
+            + "eye.png"));
     btnGrpEnumValuesVisible = new ButtonGroup();
-    subMenu.add(radBtnDefault = makeRadioButtonMenuItem(
-        "Default", ACTION_ENUM_VALUES_DEFAULT, btnGrpEnumValuesVisible));
-    subMenu.add(radBtnVisible = makeRadioButtonMenuItem(
-        "Visible", ACTION_ENUM_VALUES_VISIBLE, btnGrpEnumValuesVisible));
-    subMenu.add(radBtnHide = makeRadioButtonMenuItem(
-        "Hide", ACTION_ENUM_VALUES_HIDE, btnGrpEnumValuesVisible));
+    subMenu.add(radBtnDefault = makeRadioButtonMenuItem("Default",
+            ACTION_ENUM_VALUES_DEFAULT, btnGrpEnumValuesVisible));
+    subMenu.add(radBtnVisible = makeRadioButtonMenuItem("Visible",
+            ACTION_ENUM_VALUES_VISIBLE, btnGrpEnumValuesVisible));
+    subMenu.add(radBtnHide = makeRadioButtonMenuItem("Hide",
+            ACTION_ENUM_VALUES_HIDE, btnGrpEnumValuesVisible));
     radBtnDefault.setSelected(true);
     popupMenu.add(subMenu);
     popupMenu.addSeparator();
@@ -84,19 +81,19 @@ public class EnumView extends EntityView {
 
   @Override
   protected int paintTextBoxes(Graphics2D g2, Rectangle bounds,
-      int textboxHeight, int offset) {
+          int textboxHeight, int offset) {
     if (isEnumValuesVisible()) {
       offset += 10;
       g2.setStroke(new BasicStroke(BORDER_WIDTH));
       g2.setColor(DEFAULT_BORDER_COLOR);
       g2.drawLine(bounds.x, offset, bounds.x + bounds.width, offset);
-  
+
       // draw values (enum)
       for (TextBoxEnumValue tb : viewValues) {
         tb.setBounds(new Rectangle(bounds.x + 8, offset + 2, bounds.width - 15,
-            textboxHeight + 2));
+                textboxHeight + 2));
         tb.paintComponent(g2);
-  
+
         offset += textboxHeight;
       }
     }
@@ -105,9 +102,9 @@ public class EnumView extends EntityView {
 
   @Override
   public int computeHeight(int classNameHeight, int stereotypeHeight,
-      int elementsHeight) {
+          int elementsHeight) {
     int height = super.computeHeight(classNameHeight, stereotypeHeight,
-        elementsHeight);
+            elementsHeight);
 
     if (isEnumValuesVisible())
       height += 10 + elementsHeight * viewValues.size();
@@ -117,15 +114,15 @@ public class EnumView extends EntityView {
   @Override
   protected void innerRegenerate() {
     viewValues.clear();
-    for (EnumValue value : ((EnumEntity)component).getEnumValues())
+    for (EnumValue value : ((EnumEntity) component).getEnumValues())
       addEnumValue(value, false);
   }
 
   @Override
   public boolean removeTextBox(TextBox tb) {
-    
-    if (((EnumEntity)component).removeEnumValue(
-          ((EnumValue)tb.getAssociedComponent()))) {
+
+    if (((EnumEntity) component).removeEnumValue(((EnumValue) tb
+            .getAssociedComponent()))) {
       component.notifyObservers();
       updateHeight();
       return true;
@@ -133,14 +130,14 @@ public class EnumView extends EntityView {
 
     return false;
   }
-  
+
   @Override
   public List<TextBox> getAllTextBox() {
     List<TextBox> tbs = super.getAllTextBox();
     tbs.addAll(viewValues);
     return tbs;
   }
-  
+
   @Override
   public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
     if (e.isPopupTrigger()) {
@@ -148,10 +145,9 @@ public class EnumView extends EntityView {
 
       // If context menu is requested on a TextBox, customize popup menu.
       if (pressedTextBox != null) {
-        
+
         menuItemMoveUp.setEnabled(viewValues.indexOf(pressedTextBox) != 0);
-        menuItemMoveDown
-            .setEnabled((viewValues.size() == 0 || viewValues
+        menuItemMoveDown.setEnabled((viewValues.size() == 0 || viewValues
                 .indexOf(pressedTextBox) != viewValues.size() - 1));
       } else {
         menuItemMoveUp.setEnabled(false);
@@ -160,7 +156,7 @@ public class EnumView extends EntityView {
     }
     super.maybeShowPopup(e, popupMenu);
   }
-  
+
   public void addEnumValue(EnumValue value, final boolean editing) {
     final TextBoxEnumValue newTextBox = new TextBoxEnumValue(parent, value);
     viewValues.add(newTextBox);
@@ -168,45 +164,43 @@ public class EnumView extends EntityView {
       @Override
       public void run() {
         updateHeight();
-        if (editing)
-          newTextBox.editing();
+        if (editing) newTextBox.editing();
       }
     });
   }
-  
+
   @Override
   public void actionPerformed(ActionEvent e) {
     super.actionPerformed(e);
-    
+
     if (ACTION_ADD_ENUM_VALUE.equals(e.getActionCommand())) {
-      ((EnumEntity)component).createEnumValue();
-      
-    // Action Move up and down
+      ((EnumEntity) component).createEnumValue();
+
+      // Action Move up and down
     } else if (Slyum.ACTION_TEXTBOX_UP.equals(e.getActionCommand())
-        || Slyum.ACTION_TEXTBOX_DOWN.equals(e.getActionCommand())) {
-      
+            || Slyum.ACTION_TEXTBOX_DOWN.equals(e.getActionCommand())) {
+
       int offset = 1;
-      if (Slyum.ACTION_TEXTBOX_UP.equals(e.getActionCommand()))
-        offset = -1;
-      
+      if (Slyum.ACTION_TEXTBOX_UP.equals(e.getActionCommand())) offset = -1;
+
       if (pressedTextBox.getClass() == TextBoxEnumValue.class) {
-        EnumValue value = (EnumValue)((TextBoxEnumValue)pressedTextBox)
-            .getAssociedComponent();
-        ((EnumEntity)component).moveEnumPosition(value, offset);
+        EnumValue value = (EnumValue) ((TextBoxEnumValue) pressedTextBox)
+                .getAssociedComponent();
+        ((EnumEntity) component).moveEnumPosition(value, offset);
       }
-    
-    // Action duplicate item
+
+      // Action duplicate item
     } else if (Slyum.ACTION_DUPLICATE.equals(e.getActionCommand())) {
       if (pressedTextBox != null) {
         IDiagramComponent component = pressedTextBox.getAssociedComponent();
-        EnumEntity entity = (EnumEntity)getAssociedComponent();
+        EnumEntity entity = (EnumEntity) getAssociedComponent();
         if (component instanceof EnumValue) {
           EnumValue value = new EnumValue(((EnumValue) component).getValue());
           List<EnumValue> values = entity.getEnumValues();
           entity.addEnumValue(value);
           entity.notifyObservers(UpdateMessage.ADD_ENUM_NO_EDIT);
-          entity.moveEnumPosition(value, values.indexOf(component)
-              - values.size() + 1);
+          entity.moveEnumPosition(value,
+                  values.indexOf(component) - values.size() + 1);
           entity.notifyObservers();
         }
       }
@@ -219,24 +213,24 @@ public class EnumView extends EntityView {
     }
     component.notifyObservers();
   }
-  
+
   public static void changeViewForSelectedEnums(TypeEnumDisplay view) {
     for (EnumView enumView : getSelected())
       enumView.setTypeEnumDisplay(view);
   }
-  
+
   public boolean isEnumValuesVisible() {
     switch (typeEnumDisplay) {
-    case HIDE:
-      return false;
-    case VISIBLE:
-      return true;
-    case DEFAULT:
-    default:
-      return GraphicView.getDefaultViewEnum();
+      case HIDE:
+        return false;
+      case VISIBLE:
+        return true;
+      case DEFAULT:
+      default:
+        return GraphicView.getDefaultViewEnum();
     }
   }
-  
+
   public TypeEnumDisplay getTypeEnumDisplay() {
     return typeEnumDisplay;
   }
@@ -247,20 +241,19 @@ public class EnumView extends EntityView {
   }
 
   public static List<EnumView> getAll() {
-    return extractEnumViewFromList(PanelClassDiagram.getInstance().
-        getCurrentGraphicView().getEntitiesView());
+    return extractEnumViewFromList(PanelClassDiagram.getInstance()
+            .getCurrentGraphicView().getEntitiesView());
   }
-  
+
   public static List<EnumView> getSelected() {
-    return extractEnumViewFromList(PanelClassDiagram.getInstance().
-        getCurrentGraphicView().getSelectedEntities());
+    return extractEnumViewFromList(PanelClassDiagram.getInstance()
+            .getCurrentGraphicView().getSelectedEntities());
   }
-  
+
   private static List<EnumView> extractEnumViewFromList(List<EntityView> list) {
     LinkedList<EnumView> enums = new LinkedList<>();
     for (EntityView view : list)
-      if (view instanceof EnumView)
-        enums.add((EnumView)view);
+      if (view instanceof EnumView) enums.add((EnumView) view);
     return enums;
   }
 
@@ -271,37 +264,36 @@ public class EnumView extends EntityView {
     restoreEntity();
     repaint();
   }
-  
+
   protected void restoreEntity() {
-    parent.getClassDiagram().addEnumEntity((EnumEntity)getAssociedComponent());
+    parent.getClassDiagram().addEnumEntity((EnumEntity) getAssociedComponent());
   }
-  
 
   private void updateMenuItemView() {
     List<EnumView> enums = getSelected();
     JRadioButtonMenuItem itemToSelect;
-    
-    // Check si toutes les entités sélectionnées ont le même type de vue.
+
+    // Check si toutes les entitÃ©s sÃ©lectionnÃ©es ont le mÃªme type de vue.
     for (int i = 0; i < enums.size() - 1; i++)
-      if (!enums.get(i).getTypeEnumDisplay().equals(
-          enums.get(i+1).getTypeEnumDisplay())) {
+      if (!enums.get(i).getTypeEnumDisplay()
+              .equals(enums.get(i + 1).getTypeEnumDisplay())) {
         btnGrpEnumValuesVisible.clearSelection();
         return;
       }
-    
+
     switch (getTypeEnumDisplay()) {
-    case HIDE:
-      itemToSelect = radBtnHide;
-      break;
-    case VISIBLE:
-      itemToSelect = radBtnVisible;
-      break;
-    case DEFAULT:
-    default:
-      itemToSelect = radBtnDefault;
-      break;
+      case HIDE:
+        itemToSelect = radBtnHide;
+        break;
+      case VISIBLE:
+        itemToSelect = radBtnVisible;
+        break;
+      case DEFAULT:
+      default:
+        itemToSelect = radBtnDefault;
+        break;
     }
-    
+
     btnGrpEnumValuesVisible.setSelected(itemToSelect.getModel(), true);
   }
 
@@ -310,25 +302,25 @@ public class EnumView extends EntityView {
     boolean enable = false;
     if (arg1 != null && arg1.getClass() == UpdateMessage.class)
       switch ((UpdateMessage) arg1) {
-      case ADD_ENUM:
-        enable = true;
-      case ADD_ENUM_NO_EDIT:
-        List<EnumValue> values = ((EnumEntity)component).getEnumValues();
-        addEnumValue(values.get(values.size()-1), enable);
-        break;
-      default:
-        super.update(arg0, arg1);
-        break;
+        case ADD_ENUM:
+          enable = true;
+        case ADD_ENUM_NO_EDIT:
+          List<EnumValue> values = ((EnumEntity) component).getEnumValues();
+          addEnumValue(values.get(values.size() - 1), enable);
+          break;
+        default:
+          super.update(arg0, arg1);
+          break;
       }
     else
       regenerateEntity();
   }
-  
+
   @Override
   public Element getXmlElement(Document doc) {
     Element entityView = super.getXmlElement(doc);
-    entityView.setAttribute(
-        "enumValuesVisible", String.valueOf(getTypeEnumDisplay()));
+    entityView.setAttribute("enumValuesVisible",
+            String.valueOf(getTypeEnumDisplay()));
     return entityView;
   }
 }

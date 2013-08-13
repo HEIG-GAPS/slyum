@@ -1,4 +1,4 @@
-package swing.hierarchicalView;
+﻿package swing.hierarchicalView;
 
 import graphic.entity.EntityView;
 
@@ -51,10 +51,9 @@ import classDiagram.relationships.Multi;
  * @version 1.0 - 28.07.2011
  */
 @SuppressWarnings("serial")
-public class HierarchicalView extends JPanel implements IComponentsObserver,
-    TreeSelectionListener {
+public class HierarchicalView extends JPanel implements IComponentsObserver, TreeSelectionListener {
   private final DefaultMutableTreeNode entitiesNode, associationsNode,
-      inheritancesNode, dependenciesNode;
+          inheritancesNode, dependenciesNode;
   private final JTree tree;
   private final DefaultTreeModel treeModel;
 
@@ -72,7 +71,7 @@ public class HierarchicalView extends JPanel implements IComponentsObserver,
     setForeground(Color.GRAY);
 
     final DefaultMutableTreeNode root = new DefaultMutableTreeNode(
-        classDiagram.getName());
+            classDiagram.getName());
 
     entitiesNode = new DefaultMutableTreeNode("Entities");
     root.add(entitiesNode);
@@ -96,7 +95,7 @@ public class HierarchicalView extends JPanel implements IComponentsObserver,
     tree = new JTree(treeModel);
     tree.addTreeSelectionListener(this);
     tree.getSelectionModel().setSelectionMode(
-        TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+            TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
     tree.setCellRenderer(new TreeRenderer());
     tree.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     JScrollPane scrollPane = new JScrollPane();
@@ -121,21 +120,16 @@ public class HierarchicalView extends JPanel implements IComponentsObserver,
    *          the icon representing the association in JTree
    */
   public void addAssociation(Association component, String imgPath) {
-    addNode(
-        new NodeAssociation(component, treeModel,
+    addNode(new NodeAssociation(component, treeModel,
             PersonalizedIcon.createImageIcon(imgPath), tree), associationsNode);
   }
 
   @Override
   public void addAssociationClass(AssociationClass component) {
-    addNode(
-        new NodeSimpleEntity(
-            component, 
-            treeModel, 
-            tree,
-            PersonalizedIcon.createImageIcon(
-                Slyum.ICON_PATH + "classAssoc.png")),
-                entitiesNode);
+    addNode(new NodeSimpleEntity(component, treeModel, tree,
+            PersonalizedIcon
+                    .createImageIcon(Slyum.ICON_PATH + "classAssoc.png")),
+            entitiesNode);
   }
 
   @Override
@@ -145,34 +139,21 @@ public class HierarchicalView extends JPanel implements IComponentsObserver,
 
   @Override
   public void addClassEntity(ClassEntity component) {
-    addNode(
-        new NodeSimpleEntity(
-            component, 
-            treeModel, 
-            tree,
+    addNode(new NodeSimpleEntity(component, treeModel, tree,
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "class.png")),
             entitiesNode);
   }
 
   @Override
   public void addInterfaceEntity(InterfaceEntity component) {
-    addNode(
-        new NodeSimpleEntity(
-            component, 
-            treeModel, 
-            tree, 
-            PersonalizedIcon.createImageIcon(
-                Slyum.ICON_PATH + "interface.png")),
+    addNode(new NodeSimpleEntity(component, treeModel, tree, PersonalizedIcon
+            .createImageIcon(Slyum.ICON_PATH + "interface.png")),
             entitiesNode);
   }
 
   @Override
   public void addEnumEntity(EnumEntity component) {
-    addNode(
-        new NodeEnumEntity(
-            component, 
-            treeModel, 
-            tree,
+    addNode(new NodeEnumEntity(component, treeModel, tree,
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "enum.png")),
             entitiesNode);
   }
@@ -219,10 +200,10 @@ public class HierarchicalView extends JPanel implements IComponentsObserver,
   @Override
   public void changeZOrder(Entity entity, int index) {
     LinkedList<EntityView> evs = PanelClassDiagram.getInstance()
-        .getCurrentGraphicView().getSelectedEntities();
+            .getCurrentGraphicView().getSelectedEntities();
 
     final NodeEntity ne = (NodeEntity) searchAssociedNodeIn(entity,
-        entitiesNode);
+            entitiesNode);
 
     entitiesNode.remove(ne);
 
@@ -256,14 +237,11 @@ public class HierarchicalView extends JPanel implements IComponentsObserver,
   public IClassDiagramNode searchAssociedNode(Object o) {
     IClassDiagramNode result = searchAssociedNodeIn(o, entitiesNode);
 
-    if (result == null)
-      result = searchAssociedNodeIn(o, associationsNode);
+    if (result == null) result = searchAssociedNodeIn(o, associationsNode);
 
-    if (result == null)
-      result = searchAssociedNodeIn(o, inheritancesNode);
+    if (result == null) result = searchAssociedNodeIn(o, inheritancesNode);
 
-    if (result == null)
-      result = searchAssociedNodeIn(o, dependenciesNode);
+    if (result == null) result = searchAssociedNodeIn(o, dependenciesNode);
 
     return result;
   }
@@ -284,8 +262,7 @@ public class HierarchicalView extends JPanel implements IComponentsObserver,
     for (int i = 0; i < root.getChildCount(); i++) {
       child = (IClassDiagramNode) root.getChildAt(i);
 
-      if (child.getAssociedComponent().equals(o))
-        return child;
+      if (child.getAssociedComponent().equals(o)) return child;
 
       if (!root.getChildAt(i).isLeaf())
         searchAssociedNodeIn(o, root.getChildAt(i));
@@ -301,12 +278,10 @@ public class HierarchicalView extends JPanel implements IComponentsObserver,
 
     // sort unselect first, select next
     for (int i = 0; i < treePaths.length; i++)
-      if (!e.isAddedPath(treePaths[i]))
-        paths.add(treePaths[i]);
+      if (!e.isAddedPath(treePaths[i])) paths.add(treePaths[i]);
 
     for (final TreePath treePath2 : treePaths)
-      if (e.isAddedPath(treePath2))
-        paths.add(treePath2);
+      if (e.isAddedPath(treePath2)) paths.add(treePath2);
 
     for (final TreePath treePath : paths) {
       final Object o = treePath.getLastPathComponent();
@@ -316,7 +291,7 @@ public class HierarchicalView extends JPanel implements IComponentsObserver,
         continue;
 
       final IDiagramComponent component = ((IClassDiagramNode) o)
-          .getAssociedComponent();
+              .getAssociedComponent();
       component.select();
       tree.scrollPathToVisible(treePath);
 

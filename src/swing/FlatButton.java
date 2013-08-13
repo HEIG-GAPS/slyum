@@ -1,4 +1,4 @@
-package swing;
+﻿package swing;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -39,21 +39,19 @@ public class FlatButton extends JButton {
     super(name);
     initialize();
   }
-  
+
   private void initialize() {
-    setBorder(
-        BorderFactory.createCompoundBorder(
+    setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createMatteBorder(0, 5, 0, 0, Slyum.THEME_COLOR),
             BorderFactory.createEmptyBorder(5, 15, 5, 15)));
     setBackground(Slyum.DEFAULT_BACKGROUND);
-    
+
     setUI(new MetalButtonUI() {
       @Override
       protected void paintFocus(Graphics g, AbstractButton b,
-          Rectangle viewRect, Rectangle textRect, Rectangle iconRect) {
-      }
+              Rectangle viewRect, Rectangle textRect, Rectangle iconRect) {}
     });
-    
+
     addMouseListener(new MouseAdapter() {
       @Override
       public void mouseEntered(MouseEvent e) {
@@ -61,7 +59,7 @@ public class FlatButton extends JButton {
         setBackground(getBackground().darker());
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
       }
-      
+
       @Override
       public void mouseExited(MouseEvent e) {
         super.mouseExited(e);
@@ -70,5 +68,5 @@ public class FlatButton extends JButton {
       }
     });
   }
-  
+
 }

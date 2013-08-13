@@ -1,4 +1,4 @@
-package classDiagram.relationships;
+﻿package classDiagram.relationships;
 
 import java.util.Observable;
 
@@ -20,214 +20,191 @@ import classDiagram.components.Visibility;
  * @version 1.0 - 24.07.2011
  */
 public class Role extends Observable implements IDiagramComponent {
-	private Association associations;
-	private Entity entity;
-	
-	protected final int id = ClassDiagram.getNextId();
-	private final Multiplicity multiplicity;
+  private Association associations;
+  private Entity entity;
 
-	private String name;
-	private Visibility visibility = Visibility.PRIVATE;
+  protected final int id = ClassDiagram.getNextId();
+  private final Multiplicity multiplicity;
 
-	/**
-	 * Create a new role making a link between the given association and the
-	 * given entity. A role adding itself to the association and entity given in
-	 * parameters.
-	 * 
-	 * @param association
-	 *            the association represented by the role
-	 * @param component
-	 *            the entity linked by the association
-	 * @param name
-	 *            the name (label) for this association
-	 */
-	public Role(Association association, Entity component, String name)
-	{
-		associations = association;
-		entity = component;
+  private String name;
+  private Visibility visibility = Visibility.PRIVATE;
 
-		multiplicity = new Multiplicity(1);
-		this.name = name;
+  /**
+   * Create a new role making a link between the given association and the given
+   * entity. A role adding itself to the association and entity given in
+   * parameters.
+   * 
+   * @param association
+   *          the association represented by the role
+   * @param component
+   *          the entity linked by the association
+   * @param name
+   *          the name (label) for this association
+   */
+  public Role(Association association, Entity component, String name) {
+    associations = association;
+    entity = component;
 
-		component.addRole(this);
-		association.addRole(this);
-	}
+    multiplicity = new Multiplicity(1);
+    this.name = name;
 
-	/**
-	 * Get the association for this role.
-	 * 
-	 * @return the association for this role
-	 */
-	public Association getAssociation()
-	{
-		return associations;
-	}
+    component.addRole(this);
+    association.addRole(this);
+  }
 
-	/**
-	 * Get the entity for this role.
-	 * 
-	 * @return the entity for this role
-	 */
-	public Entity getEntity()
-	{
-		return entity;
-	}
+  /**
+   * Get the association for this role.
+   * 
+   * @return the association for this role
+   */
+  public Association getAssociation() {
+    return associations;
+  }
 
-	@Override
-	public int getId()
-	{
-		return id;
-	}
+  /**
+   * Get the entity for this role.
+   * 
+   * @return the entity for this role
+   */
+  public Entity getEntity() {
+    return entity;
+  }
 
-	/**
-	 * Get the multiplicity for this role.
-	 * 
-	 * @return the multiplicity for this role.
-	 */
-	public Multiplicity getMultiplicity()
-	{
-		return multiplicity;
-	}
+  @Override
+  public int getId() {
+    return id;
+  }
 
-	/**
-	 * Get the name for this role.
-	 * 
-	 * @return the name for this role
-	 */
-	public String getName()
-	{
-		return name;
-	}
+  /**
+   * Get the multiplicity for this role.
+   * 
+   * @return the multiplicity for this role.
+   */
+  public Multiplicity getMultiplicity() {
+    return multiplicity;
+  }
 
-	/**
-	 * Get the visibility for this role.
-	 * 
-	 * @return the visibility for this role
-	 */
-	public Visibility getVisibility()
-	{
-		return visibility;
-	}
+  /**
+   * Get the name for this role.
+   * 
+   * @return the name for this role
+   */
+  public String getName() {
+    return name;
+  }
 
-	@Override
-	public void select()
-	{
-		setChanged();
-	}
+  /**
+   * Get the visibility for this role.
+   * 
+   * @return the visibility for this role
+   */
+  public Visibility getVisibility() {
+    return visibility;
+  }
 
-	/**
-	 * Set the association for this role
-	 * 
-	 * @param association
-	 *            the new association for this role
-	 */
-	public void setAssociation(Association association)
-	{
-		associations = association;
-		setChanged();
-	}
+  @Override
+  public void select() {
+    setChanged();
+  }
 
-	/**
-	 * Set the entity for this role
-	 * 
-	 * @param entity
-	 *            the new entity for this role
-	 */
-	public void setEntity(Entity entity)
-	{
-		this.entity = entity;
-		setChanged();
-	}
+  /**
+   * Set the association for this role
+   * 
+   * @param association
+   *          the new association for this role
+   */
+  public void setAssociation(Association association) {
+    associations = association;
+    setChanged();
+  }
 
-	/**
-	 * Set the multiplicity for this role
-	 * 
-	 * @param multiplicity
-	 *            the new multiplicity for this role
-	 */
-	public void setMultiplicity(Multiplicity multiplicity)
-	{
-		if (multiplicity == null)
-			return;
+  /**
+   * Set the entity for this role
+   * 
+   * @param entity
+   *          the new entity for this role
+   */
+  public void setEntity(Entity entity) {
+    this.entity = entity;
+    setChanged();
+  }
 
-		//saveState();
-		this.multiplicity.setLowerBound(multiplicity.getLowerBound());
-		this.multiplicity.setUpperBound(multiplicity.getUpperBound());
-		//saveState();
+  /**
+   * Set the multiplicity for this role
+   * 
+   * @param multiplicity
+   *          the new multiplicity for this role
+   */
+  public void setMultiplicity(Multiplicity multiplicity) {
+    if (multiplicity == null) return;
 
-		setChanged();
-	}
+    // saveState();
+    this.multiplicity.setLowerBound(multiplicity.getLowerBound());
+    this.multiplicity.setUpperBound(multiplicity.getUpperBound());
+    // saveState();
 
-	/**
-	 * Set the name for this role
-	 * 
-	 * @param name
-	 *            the new name for this role
-	 */
-	public void setName(String name)
-	{	  
-	  //saveState();
-		this.name = name;
-		//saveState();
-		
-		setChanged();
-	}
+    setChanged();
+  }
 
-	/**
-	 * Set the visibility for this role
-	 * 
-	 * @param visibility
-	 *            the new visibility for this role
-	 */
-	public void setVisibility(Visibility visibility)
-	{
-	    //saveState();
+  /**
+   * Set the name for this role
+   * 
+   * @param name
+   *          the new name for this role
+   */
+  public void setName(String name) {
+    // saveState();
+    this.name = name;
+    // saveState();
 
-		this.visibility = visibility;
+    setChanged();
+  }
 
-		//saveState();
+  /**
+   * Set the visibility for this role
+   * 
+   * @param visibility
+   *          the new visibility for this role
+   */
+  public void setVisibility(Visibility visibility) {
+    // saveState();
 
-		setChanged();
-	}
+    this.visibility = visibility;
 
-  /*
-	private void saveState()
-	{
-	  Multiplicity m = getMultiplicity();
-	
-	  Change.push(new BufferRole(this, name, visibility.name(), m.getLowerBound(), m.getUpperBound()));
-	
-	  Change.push(new BufferRole(this, getName(), getVisibility().name(), m.getLowerBound(), m.getUpperBound()));
-	}
-	*/
+    // saveState();
 
+    setChanged();
+  }
 
-	@Override
-	public String toString()
-	{
-		if (name == null || name.isEmpty())
-			return "";
+  /*private void saveState() { Multiplicity m = getMultiplicity();
+   * Change.push(new BufferRole(this, name, visibility.name(),
+   * m.getLowerBound(), m.getUpperBound())); Change.push(new BufferRole(this,
+   * getName(), getVisibility().name(), m.getLowerBound(), m.getUpperBound()));
+   * } */
 
-		return visibility.toCar() + name;
-	}
-	
-	@Override
-	public String getXmlTagName() {
-	  return "role";
-	}
-	
-	@Override
-	public Element getXmlElement(Document doc) {
-	  Element role = doc.createElement(getXmlTagName());
-	  role.setAttribute("componentId", String.valueOf(entity.getId()));
-	  role.setAttribute("visibility", visibility.toString());
-	  
-	  if (name != null)
-	    role.setAttribute("name", name);
-	  
-	  if (multiplicity != null)
-	    role.appendChild(multiplicity.getXmlElement(doc));
-	  
-	  return role;
-	}
+  @Override
+  public String toString() {
+    if (name == null || name.isEmpty()) return "";
+
+    return visibility.toCar() + name;
+  }
+
+  @Override
+  public String getXmlTagName() {
+    return "role";
+  }
+
+  @Override
+  public Element getXmlElement(Document doc) {
+    Element role = doc.createElement(getXmlTagName());
+    role.setAttribute("componentId", String.valueOf(entity.getId()));
+    role.setAttribute("visibility", visibility.toString());
+
+    if (name != null) role.setAttribute("name", name);
+
+    if (multiplicity != null)
+      role.appendChild(multiplicity.getXmlElement(doc));
+
+    return role;
+  }
 }

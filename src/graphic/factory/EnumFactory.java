@@ -1,4 +1,4 @@
-package graphic.factory;
+﻿package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -11,9 +11,9 @@ public class EnumFactory extends EntityFactory {
 
   public EnumFactory(GraphicView parent) {
     super(parent);
-    
-    GraphicView.setButtonFactory(
-        SPanelDiagramComponent.getInstance().getBtnEnum());
+
+    GraphicView.setButtonFactory(SPanelDiagramComponent.getInstance()
+            .getBtnEnum());
   }
 
   @Override

@@ -1,4 +1,4 @@
-package graphic.factory;
+﻿package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -29,93 +29,90 @@ import classDiagram.relationships.Association.NavigateDirection;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class BinaryFactory extends RelationFactory
-{
-	public final String ERROR_CREATION_MESSAGE = "Association creation failed.\nYou must make a bond between two entities (class or interface).";
+public class BinaryFactory extends RelationFactory {
+  public final String ERROR_CREATION_MESSAGE = "Association creation failed.\nYou must make a bond between two entities (class or interface).";
 
-	/**
-	 * Create a new factory allowing the creation of a binary.
-	 * 
-	 * @param parent
-	 *            the graphic view
-	 * @param classDiagram
-	 *            the class diagram
-	 */
-	public BinaryFactory(GraphicView parent)
-	{
-		super(parent);
-    
-    GraphicView.setButtonFactory(
-        SPanelDiagramComponent.getInstance().getBtnAssociation());
-	}
+  /**
+   * Create a new factory allowing the creation of a binary.
+   * 
+   * @param parent
+   *          the graphic view
+   * @param classDiagram
+   *          the class diagram
+   */
+  public BinaryFactory(GraphicView parent) {
+    super(parent);
 
-	@Override
-	public GraphicComponent create()
-	{
-		if (componentMousePressed instanceof EntityView && componentMouseReleased instanceof EntityView)
-		{
-			final EntityView source = (EntityView) componentMousePressed;
-			final EntityView target = (EntityView) componentMouseReleased;
+    GraphicView.setButtonFactory(SPanelDiagramComponent.getInstance()
+            .getBtnAssociation());
+  }
 
-			final Binary binary = new Binary(source.getComponent(), target.getComponent(), NavigateDirection.BIDIRECTIONAL);
+  @Override
+  public GraphicComponent create() {
+    if (componentMousePressed instanceof EntityView
+            && componentMouseReleased instanceof EntityView) {
+      final EntityView source = (EntityView) componentMousePressed;
+      final EntityView target = (EntityView) componentMouseReleased;
 
-			final BinaryView b = new BinaryView(parent, source, target, binary, mousePressed, mouseReleased, true);
+      final Binary binary = new Binary(source.getComponent(),
+              target.getComponent(), NavigateDirection.BIDIRECTIONAL);
 
-			parent.addLineView(b);
-			classDiagram.addBinary(binary);
+      final BinaryView b = new BinaryView(parent, source, target, binary,
+              mousePressed, mouseReleased, true);
 
-			parent.unselectAll();
-			b.setSelected(true);
+      parent.addLineView(b);
+      classDiagram.addBinary(binary);
 
-			return b;
-		}
-		else
-		{
-			final MultiView multiView;
-			final ClassView classView;
+      parent.unselectAll();
+      b.setSelected(true);
 
-			if (componentMousePressed.getClass() == MultiView.class && componentMouseReleased instanceof ClassView)
-			{
-				multiView = (MultiView) componentMousePressed;
-				classView = (ClassView) componentMouseReleased;
-			}
-			else if (componentMouseReleased.getClass() == MultiView.class && componentMousePressed instanceof ClassView)
-			{
-				multiView = (MultiView) componentMouseReleased;
-				classView = (ClassView) componentMousePressed;
-			}
-			else
-			{
-				repaint();
-				return null;
-			}
+      return b;
+    } else {
+      final MultiView multiView;
+      final ClassView classView;
 
-			final Multi multi = (Multi) multiView.getAssociedComponent();
-			final Role role = new Role(multi, (ClassEntity) classView.getAssociedComponent(), "");
+      if (componentMousePressed.getClass() == MultiView.class
+              && componentMouseReleased instanceof ClassView) {
+        multiView = (MultiView) componentMousePressed;
+        classView = (ClassView) componentMouseReleased;
+      } else if (componentMouseReleased.getClass() == MultiView.class
+              && componentMousePressed instanceof ClassView) {
+        multiView = (MultiView) componentMouseReleased;
+        classView = (ClassView) componentMousePressed;
+      } else {
+        repaint();
+        return null;
+      }
 
-			Rectangle bounds = multiView.getBounds();
-			final Point multiPos = new Point((int) bounds.getCenterX(), (int) bounds.getCenterY());
-			bounds = classView.getBounds();
-			final Point classPos = new Point((int) bounds.getCenterX(), (int) bounds.getCenterY());
+      final Multi multi = (Multi) multiView.getAssociedComponent();
+      final Role role = new Role(multi,
+              (ClassEntity) classView.getAssociedComponent(), "");
 
-			final MultiLineView mlv = new MultiLineView(parent, multiView, classView, role, multiPos, classPos, false);
-			multiView.addMultiLineView(mlv);
+      Rectangle bounds = multiView.getBounds();
+      final Point multiPos = new Point((int) bounds.getCenterX(),
+              (int) bounds.getCenterY());
+      bounds = classView.getBounds();
+      final Point classPos = new Point((int) bounds.getCenterX(),
+              (int) bounds.getCenterY());
 
-	        repaint();
-			return mlv;
-		}
-	}
-	
-	@Override
-	protected boolean isFirstComponentValid() {
-	  return componentMousePressed instanceof EntityView || 
-	         componentMousePressed.getClass() == MultiView.class ||
-	         componentMousePressed instanceof ClassView;
-	}
-	
-	@Override
-	protected void creationFailed()
-	{
-		SMessageDialog.showErrorMessage(ERROR_CREATION_MESSAGE);
-	}
+      final MultiLineView mlv = new MultiLineView(parent, multiView, classView,
+              role, multiPos, classPos, false);
+      multiView.addMultiLineView(mlv);
+
+      repaint();
+      return mlv;
+    }
+  }
+
+  @Override
+  protected boolean isFirstComponentValid() {
+    return componentMousePressed instanceof EntityView
+            || componentMousePressed.getClass() == MultiView.class
+            || componentMousePressed instanceof ClassView;
+  }
+
+  @Override
+  protected void creationFailed() {
+    SMessageDialog.showErrorMessage(ERROR_CREATION_MESSAGE);
+  }
 }

@@ -1,4 +1,4 @@
-package swing;
+﻿package swing;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,17 +14,17 @@ public class SToolBarButton extends SButton {
   }
 
   public SToolBarButton(Icon icon, String action, Color color, String tooltip,
-      ActionListener al) {
+          ActionListener al) {
     super(icon, action, tooltip, al);
     init();
   }
 
   public SToolBarButton(String text, String action, Color color,
-      String tooltip, ActionListener al) {
+          String tooltip, ActionListener al) {
     super(text, action, tooltip, al);
     init();
   }
-  
+
   private void init() {
     setPreferredSize(new Dimension(22, 18));
   }

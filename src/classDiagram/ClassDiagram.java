@@ -1,4 +1,4 @@
-package classDiagram;
+﻿package classDiagram;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -31,147 +31,131 @@ import classDiagram.relationships.Multi;
  * @version 1.0 - 24.07.2011
  * 
  */
-public class ClassDiagram implements IComponentsObserver, XmlElement
-{
-	private static int currentID = 0;
+public class ClassDiagram implements IComponentsObserver, XmlElement {
+  private static int currentID = 0;
 
-	public static int getNextId()
-	{
-		return ++currentID;
-	}
+  public static int getNextId() {
+    return ++currentID;
+  }
 
-	LinkedList<IDiagramComponent> components = new LinkedList<>();
-	LinkedList<Entity> entities = new LinkedList<>();
-	private String name;
-	LinkedList<IComponentsObserver> observers = new LinkedList<>();
-	
-	public int countComponents(Class<?> type) {
-	  return Utility.count(type, components);
-	}
-	
-	/**
-	 * Creates a new class diagram with the specified name.
-	 * 
-	 * @param name
-	 *            The name of class diagram.
-	 */
-	public ClassDiagram(String name)
-	{
-		if (name.isEmpty())
-			throw new IllegalArgumentException("name is null");
+  LinkedList<IDiagramComponent> components = new LinkedList<>();
+  LinkedList<Entity> entities = new LinkedList<>();
+  private String name;
+  LinkedList<IComponentsObserver> observers = new LinkedList<>();
 
-		this.name = name;
-	}
+  public int countComponents(Class<?> type) {
+    return Utility.count(type, components);
+  }
 
-	@Override
-	public void addAggregation(Aggregation component)
-	{
-		for (final IComponentsObserver c : observers)
-			c.addAggregation(component);
+  /**
+   * Creates a new class diagram with the specified name.
+   * 
+   * @param name
+   *          The name of class diagram.
+   */
+  public ClassDiagram(String name) {
+    if (name.isEmpty()) throw new IllegalArgumentException("name is null");
 
-		addComponent(component);
-	}
-
-	@Override
-	public void addAssociationClass(AssociationClass component)
-	{
-		for (final IComponentsObserver c : observers)
-			c.addAssociationClass(component);
-
-		addComponent(component);
-		entities.addFirst(component);
-	}
-
-	@Override
-	public void addBinary(Binary component)
-	{
-		for (final IComponentsObserver c : observers)
-			c.addBinary(component);
-
-		addComponent(component);
-	}
-
-	@Override
-	public void addClassEntity(ClassEntity component) {
-		for (final IComponentsObserver c : observers)
-			c.addClassEntity(component);
-		addComponent(component);
-		entities.addFirst(component);
-	}
-
-	/**
-	 * Add a new in class diagram. /!\ Does not notify listners.
-	 * 
-	 * @param component
-	 *            the new component.
-	 * @return true if the component has been added; false otherwise
-	 */
-	private boolean addComponent(IDiagramComponent component)
-	{
-		if (component.getId() > currentID)
-			setCurrentId(component.getId() + 1);
-
-		if (!components.contains(component))
-		{
-			components.addFirst(component);
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Add a new observer who will be notified when the class diagram changed.
-	 * 
-	 * @param c
-	 *            the new obserer.
-	 * @return true if the observer has been added; false otherwise.
-	 */
-	public boolean addComponentsObserver(IComponentsObserver c)
-	{
-		return observers.add(c);
-	}
-
-	@Override
-	public void addComposition(Composition component)
-	{
-		for (final IComponentsObserver c : observers)
-			c.addComposition(component);
-
-		addComponent(component);
-	}
-
-	@Override
-	public void addDependency(Dependency component)
-	{
-		for (final IComponentsObserver c : observers)
-			c.addDependency(component);
-
-		addComponent(component);
-	}
-
-	@Override
-	public void addInheritance(Inheritance component)
-	{
-		for (final IComponentsObserver c : observers)
-			c.addInheritance(component);
-
-		addComponent(component);
-	}
-
-	@Override
-	public void addInnerClass(InnerClass component)
-	{
-
-		for (final IComponentsObserver c : observers)
-			c.addInnerClass(component);
-
-		addComponent(component);
-	}
+    this.name = name;
+  }
 
   @Override
-  public void addInterfaceEntity(InterfaceEntity component)
-  {
+  public void addAggregation(Aggregation component) {
+    for (final IComponentsObserver c : observers)
+      c.addAggregation(component);
+
+    addComponent(component);
+  }
+
+  @Override
+  public void addAssociationClass(AssociationClass component) {
+    for (final IComponentsObserver c : observers)
+      c.addAssociationClass(component);
+
+    addComponent(component);
+    entities.addFirst(component);
+  }
+
+  @Override
+  public void addBinary(Binary component) {
+    for (final IComponentsObserver c : observers)
+      c.addBinary(component);
+
+    addComponent(component);
+  }
+
+  @Override
+  public void addClassEntity(ClassEntity component) {
+    for (final IComponentsObserver c : observers)
+      c.addClassEntity(component);
+    addComponent(component);
+    entities.addFirst(component);
+  }
+
+  /**
+   * Add a new in class diagram. /!\ Does not notify listners.
+   * 
+   * @param component
+   *          the new component.
+   * @return true if the component has been added; false otherwise
+   */
+  private boolean addComponent(IDiagramComponent component) {
+    if (component.getId() > currentID) setCurrentId(component.getId() + 1);
+
+    if (!components.contains(component)) {
+      components.addFirst(component);
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Add a new observer who will be notified when the class diagram changed.
+   * 
+   * @param c
+   *          the new obserer.
+   * @return true if the observer has been added; false otherwise.
+   */
+  public boolean addComponentsObserver(IComponentsObserver c) {
+    return observers.add(c);
+  }
+
+  @Override
+  public void addComposition(Composition component) {
+    for (final IComponentsObserver c : observers)
+      c.addComposition(component);
+
+    addComponent(component);
+  }
+
+  @Override
+  public void addDependency(Dependency component) {
+    for (final IComponentsObserver c : observers)
+      c.addDependency(component);
+
+    addComponent(component);
+  }
+
+  @Override
+  public void addInheritance(Inheritance component) {
+    for (final IComponentsObserver c : observers)
+      c.addInheritance(component);
+
+    addComponent(component);
+  }
+
+  @Override
+  public void addInnerClass(InnerClass component) {
+
+    for (final IComponentsObserver c : observers)
+      c.addInnerClass(component);
+
+    addComponent(component);
+  }
+
+  @Override
+  public void addInterfaceEntity(InterfaceEntity component) {
     for (final IComponentsObserver c : observers)
       c.addInterfaceEntity(component);
 
@@ -180,8 +164,7 @@ public class ClassDiagram implements IComponentsObserver, XmlElement
   }
 
   @Override
-  public void addEnumEntity(EnumEntity component)
-  {
+  public void addEnumEntity(EnumEntity component) {
     for (final IComponentsObserver c : observers)
       c.addEnumEntity(component);
 
@@ -189,153 +172,141 @@ public class ClassDiagram implements IComponentsObserver, XmlElement
     entities.addFirst(component);
   }
 
-	@Override
-	public void addMulti(Multi component)
-	{
-		if (components.contains(component))
-			return;
-		
-		for (final IComponentsObserver c : observers)
-			c.addMulti(component);
+  @Override
+  public void addMulti(Multi component) {
+    if (components.contains(component)) return;
 
-		addComponent(component);
-	}
+    for (final IComponentsObserver c : observers)
+      c.addMulti(component);
 
-	@Override
-	public void changeZOrder(Entity entity, int index)
-	{
-		if (index < 0 || index >= entities.size())
-			return;
-		
-		//Change.push(new BufferZOrder(entity, entities.indexOf(entity)));
+    addComponent(component);
+  }
 
-		entities.remove(entity);
-		entities.add(index, entity);
-		
-		//Change.push(new BufferZOrder(entity, index));
+  @Override
+  public void changeZOrder(Entity entity, int index) {
+    if (index < 0 || index >= entities.size()) return;
 
-		for (final IComponentsObserver c : observers)
-			c.changeZOrder(entity, index);
-	}
+    // Change.push(new BufferZOrder(entity, entities.indexOf(entity)));
 
-	/**
-	 * Return a copy of the array containing all class diagram elements.
-	 * 
-	 * @return a copy of the array containing all class diagram elements
-	 */
-	@SuppressWarnings("unchecked")
-	public LinkedList<IDiagramComponent> getComponents()
-	{
-		return (LinkedList<IDiagramComponent>) components.clone();
-	}
-	
-	@SuppressWarnings("unchecked")
-    public <T> List<T> getComponentsByType(Class<T> type) {
-	    LinkedList<T> filteredList = new LinkedList<>();
-	    for (IDiagramComponent c : components)
-	        if (c.getClass().equals(type))
-	            filteredList.add((T)c);
-	    return filteredList;
-	}
+    entities.remove(entity);
+    entities.add(index, entity);
 
-	/**
-	 * Get the name of class diagram.
-	 * 
-	 * @return the name of class diagram
-	 */
-	public String getName()
-	{
-		return name;
-	}
+    // Change.push(new BufferZOrder(entity, index));
 
-	/**
-	 * Remove all components in class diagram.
-	 */
-	public void removeAll()
-	{
-		while (components.size() > 0)
+    for (final IComponentsObserver c : observers)
+      c.changeZOrder(entity, index);
+  }
 
-			removeComponent(components.get(0));
-	}
+  /**
+   * Return a copy of the array containing all class diagram elements.
+   * 
+   * @return a copy of the array containing all class diagram elements
+   */
+  @SuppressWarnings("unchecked")
+  public LinkedList<IDiagramComponent> getComponents() {
+    return (LinkedList<IDiagramComponent>) components.clone();
+  }
 
-	@Override
-	public void removeComponent(IDiagramComponent component)
-	{
-		components.remove(component);
+  @SuppressWarnings("unchecked")
+  public <T> List<T> getComponentsByType(Class<T> type) {
+    LinkedList<T> filteredList = new LinkedList<>();
+    for (IDiagramComponent c : components)
+      if (c.getClass().equals(type)) filteredList.add((T) c);
+    return filteredList;
+  }
 
-		// Optimizes this (create more array for specific elements, not just an
-		// array for all components.
-		if (component instanceof Entity)
-			entities.remove(component);
+  /**
+   * Get the name of class diagram.
+   * 
+   * @return the name of class diagram
+   */
+  public String getName() {
+    return name;
+  }
 
-		for (final IComponentsObserver c : observers)
-			c.removeComponent(component);
-	}
+  /**
+   * Remove all components in class diagram.
+   */
+  public void removeAll() {
+    while (components.size() > 0)
 
-	/**
-	 * remove the given IComponentsObserver from the list of observers.
-	 * 
-	 * @param c
-	 *            the IComponentsObserver to remove
-	 * @return true if IComponentsObserver has been removed; else otherwise.
-	 */
-	public boolean removeComponentsObserver(IComponentsObserver c)
-	{
-		return observers.remove(c);
-	}
+      removeComponent(components.get(0));
+  }
 
-	/**
-	 * Search the IDiagramComponent corresponding to the given id. Return null
-	 * if no component are found.
-	 * 
-	 * @param id
-	 *            id of the component to search
-	 * @return the component corresponding to the given id, or null if no
-	 *         component are found.
-	 */
-	public IDiagramComponent searchComponentById(int id) {
-		for (final IDiagramComponent c : components)
+  @Override
+  public void removeComponent(IDiagramComponent component) {
+    components.remove(component);
 
-			if (c.getId() == id)
+    // Optimizes this (create more array for specific elements, not just an
+    // array for all components.
+    if (component instanceof Entity) entities.remove(component);
 
-				return c;
+    for (final IComponentsObserver c : observers)
+      c.removeComponent(component);
+  }
 
-		return null;
-	}
+  /**
+   * remove the given IComponentsObserver from the list of observers.
+   * 
+   * @param c
+   *          the IComponentsObserver to remove
+   * @return true if IComponentsObserver has been removed; else otherwise.
+   */
+  public boolean removeComponentsObserver(IComponentsObserver c) {
+    return observers.remove(c);
+  }
 
-	/**
-	 * Set the current id.
-	 * 
-	 * @param id
-	 *            the new id to set
-	 */
-	public void setCurrentId(int id) {
-		currentID = id;
-	}
+  /**
+   * Search the IDiagramComponent corresponding to the given id. Return null if
+   * no component are found.
+   * 
+   * @param id
+   *          id of the component to search
+   * @return the component corresponding to the given id, or null if no
+   *         component are found.
+   */
+  public IDiagramComponent searchComponentById(int id) {
+    for (final IDiagramComponent c : components)
 
-	/**
-	 * Set the name of class diagram.
-	 * 
-	 * @param name
-	 *            the new name of class diagram.
-	 */
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-	
-	@Override
-	public String getXmlTagName() {
-	  return "diagramElements";
-	}
-	
-	public Element getXmlElement(Document doc) {
+      if (c.getId() == id)
+
+      return c;
+
+    return null;
+  }
+
+  /**
+   * Set the current id.
+   * 
+   * @param id
+   *          the new id to set
+   */
+  public void setCurrentId(int id) {
+    currentID = id;
+  }
+
+  /**
+   * Set the name of class diagram.
+   * 
+   * @param name
+   *          the new name of class diagram.
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  @Override
+  public String getXmlTagName() {
+    return "diagramElements";
+  }
+
+  public Element getXmlElement(Document doc) {
 
     Element classDiagram = doc.createElement(getXmlTagName());
 
     for (IDiagramComponent component : components)
       classDiagram.appendChild(component.getXmlElement(doc));
-    
+
     return classDiagram;
-	}
+  }
 }

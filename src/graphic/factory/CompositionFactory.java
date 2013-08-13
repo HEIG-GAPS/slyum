@@ -1,4 +1,4 @@
-package graphic.factory;
+﻿package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -25,56 +25,55 @@ import classDiagram.relationships.Association.NavigateDirection;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class CompositionFactory extends RelationFactory
-{
-	/**
-	 * Create a new factory allowing the creation of a composition.
-	 * 
-	 * @param parent
-	 *            the graphic view
-	 * @param classDiagram
-	 *            the class diagram
-	 */
-	public CompositionFactory(GraphicView parent)
-	{
-		super(parent);
-    
-    GraphicView.setButtonFactory(
-        SPanelDiagramComponent.getInstance().getBtnComposition());
-	}
+public class CompositionFactory extends RelationFactory {
+  /**
+   * Create a new factory allowing the creation of a composition.
+   * 
+   * @param parent
+   *          the graphic view
+   * @param classDiagram
+   *          the class diagram
+   */
+  public CompositionFactory(GraphicView parent) {
+    super(parent);
 
-	@Override
-	public GraphicComponent create()
-	{
-		if (isFirstComponentValid() && componentMouseReleased instanceof EntityView)
-		{
-			final EntityView source = (EntityView) componentMousePressed;
-			final EntityView target = (EntityView) componentMouseReleased;
+    GraphicView.setButtonFactory(SPanelDiagramComponent.getInstance()
+            .getBtnComposition());
+  }
 
-			final Composition composition = new Composition(source.getComponent(), target.getComponent(), NavigateDirection.BIDIRECTIONAL);
-			final CompositionView c = new CompositionView(parent, source, target, composition, mousePressed, mouseReleased, true);
+  @Override
+  public GraphicComponent create() {
+    if (isFirstComponentValid() && componentMouseReleased instanceof EntityView) {
+      final EntityView source = (EntityView) componentMousePressed;
+      final EntityView target = (EntityView) componentMouseReleased;
 
-			parent.addLineView(c);
-			classDiagram.addComposition(composition);
+      final Composition composition = new Composition(source.getComponent(),
+              target.getComponent(), NavigateDirection.BIDIRECTIONAL);
+      final CompositionView c = new CompositionView(parent, source, target,
+              composition, mousePressed, mouseReleased, true);
 
-			parent.unselectAll();
-			c.setSelected(true);
+      parent.addLineView(c);
+      classDiagram.addComposition(composition);
 
-			return c;
-		}
+      parent.unselectAll();
+      c.setSelected(true);
 
-		repaint();
-		return null;
-	}
-	
-	@Override
-	protected boolean isFirstComponentValid() {
-	  return componentMousePressed instanceof EntityView;
-	}
+      return c;
+    }
 
-	@Override
-	protected void drawExtremity(Graphics2D g2) {
-	  Point p = points.size() < 2 ? mouseLocation : points.get(1);
-		AggregationView.paintExtremity(g2, p, points.get(0), Color.BLACK, Color.DARK_GRAY);
-	}
+    repaint();
+    return null;
+  }
+
+  @Override
+  protected boolean isFirstComponentValid() {
+    return componentMousePressed instanceof EntityView;
+  }
+
+  @Override
+  protected void drawExtremity(Graphics2D g2) {
+    Point p = points.size() < 2 ? mouseLocation : points.get(1);
+    AggregationView.paintExtremity(g2, p, points.get(0), Color.BLACK,
+            Color.DARK_GRAY);
+  }
 }

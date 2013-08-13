@@ -1,4 +1,4 @@
-package graphic.textbox;
+Ôªøpackage graphic.textbox;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -37,119 +37,110 @@ import classDiagram.relationships.Role;
  * A TextBoxMultiplicity is associated with a MagneticGrip. The computeAnchor()
  * method return the position of the grip like a second point.
  * 
- * When text is edited, the multiplicity associated changed and notifiy
- * it's listener. This TextBox parse the text into a multiplicity.
+ * When text is edited, the multiplicity associated changed and notifiy it's
+ * listener. This TextBox parse the text into a multiplicity.
  * 
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class TextBoxMultiplicity extends TextBoxLabel
-{
-	/**
-	 * Return multiplicity corresponding to the string given in parameter or
-	 * null if the string is in an incorrect format. Format must be the
-	 * following : [inferiorBound]..[superiorBound] (bounds is from integer
-	 * type) or can be just a number. In this case, inferiorBound and
-	 * superiodBound will be the same.
-	 * 
-	 * @param text
-	 *            string to convert.
-	 * @return multiplicity from string.
-	 */
-	public static Multiplicity convertStringToMultiplicity(String text)
-	{
-		Multiplicity multiplicity = null;
-		final String[] split = text.split("\\.\\.");
+public class TextBoxMultiplicity extends TextBoxLabel {
+  /**
+   * Return multiplicity corresponding to the string given in parameter or null
+   * if the string is in an incorrect format. Format must be the following :
+   * [inferiorBound]..[superiorBound] (bounds is from integer type) or can be
+   * just a number. In this case, inferiorBound and superiodBound will be the
+   * same.
+   * 
+   * @param text
+   *          string to convert.
+   * @return multiplicity from string.
+   */
+  public static Multiplicity convertStringToMultiplicity(String text) {
+    Multiplicity multiplicity = null;
+    final String[] split = text.split("\\.\\.");
 
-		for (int i = 0; i < split.length; i++)
+    for (int i = 0; i < split.length; i++)
 
-			split[i] = split[i].trim();
+      split[i] = split[i].trim();
 
-		if (split.length == 1)
-			try
-			{
-				int bound;
+    if (split.length == 1)
+      try {
+        int bound;
 
-				if (isInfinity(split[0]))
-					bound = Integer.MAX_VALUE;
-				else
-					bound = Integer.parseInt(split[0]);
+        if (isInfinity(split[0]))
+          bound = Integer.MAX_VALUE;
+        else
+          bound = Integer.parseInt(split[0]);
 
-				multiplicity = new Multiplicity(bound);
-			} catch (final NumberFormatException e)
-			{
-				System.err.println("Invalide multiplicity parsing.");
-			}
-		else if (split.length == 2)
-			try
-			{
-				int min, max;
+        multiplicity = new Multiplicity(bound);
+      } catch (final NumberFormatException e) {
+        System.err.println("Invalide multiplicity parsing.");
+      }
+    else if (split.length == 2) try {
+      int min, max;
 
-				if (isInfinity(split[0]))
-					min = Integer.MAX_VALUE;
-				else
-					min = Integer.parseInt(split[0]);
+      if (isInfinity(split[0]))
+        min = Integer.MAX_VALUE;
+      else
+        min = Integer.parseInt(split[0]);
 
-				if (isInfinity(split[1]))
-					max = Integer.MAX_VALUE;
-				else
-					max = Integer.parseInt(split[1]);
+      if (isInfinity(split[1]))
+        max = Integer.MAX_VALUE;
+      else
+        max = Integer.parseInt(split[1]);
 
-				if (min <= max)
-					multiplicity = new Multiplicity(min, max);
-			} catch (final NumberFormatException e)
-			{
-				System.err.println("Invalide multiplicity parsing.");
-			}
+      if (min <= max) multiplicity = new Multiplicity(min, max);
+    } catch (final NumberFormatException e) {
+      System.err.println("Invalide multiplicity parsing.");
+    }
 
-		return multiplicity;
-	}
+    return multiplicity;
+  }
 
-	private static boolean isInfinity(String car)
-	{
-		return car.equals("*") || car.equals("m") || car.equals("n") || car.equals("N") || car.equals("M");
-	}
+  private static boolean isInfinity(String car) {
+    return car.equals("*") || car.equals("m") || car.equals("n")
+            || car.equals("N") || car.equals("M");
+  }
 
-	private final MagneticGrip grip;
+  private final MagneticGrip grip;
 
-	private final Multiplicity multiplicity;
+  private final Multiplicity multiplicity;
 
-	/**
-	 * Create a new TextBoxMultiplicity associated with a MagneticGrip and a
-	 * multiplicity.
-	 * 
-	 * @param parent
-	 *            the graphic view
-	 * @param multiplicity
-	 *            the multiplicity
-	 * @param grip
-	 *            the grip associated with
-	 */
-	public TextBoxMultiplicity(GraphicView parent, Multiplicity multiplicity, MagneticGrip grip)
-	{
-		super(parent, multiplicity.toString());
+  /**
+   * Create a new TextBoxMultiplicity associated with a MagneticGrip and a
+   * multiplicity.
+   * 
+   * @param parent
+   *          the graphic view
+   * @param multiplicity
+   *          the multiplicity
+   * @param grip
+   *          the grip associated with
+   */
+  public TextBoxMultiplicity(GraphicView parent, Multiplicity multiplicity,
+          MagneticGrip grip) {
+    super(parent, multiplicity.toString());
 
-		if (grip == null)
-			throw new IllegalArgumentException("grip is null");
+    if (grip == null) throw new IllegalArgumentException("grip is null");
 
-		this.grip = grip;
-		grip.addObserver(this);
+    this.grip = grip;
+    grip.addObserver(this);
 
-		this.multiplicity = multiplicity;
-		multiplicity.addObserver(this);
-	}
-	
-	@Override
-	public void reinitializeLocation() {
+    this.multiplicity = multiplicity;
+    multiplicity.addObserver(this);
+  }
+
+  @Override
+  public void reinitializeLocation() {
 
     final Rectangle classBounds = grip.getAssociedComponentView().getBounds();
     final Point gripAnchor = grip.getAnchor();
 
     deplacement = new Point(); // (0, 0)
-    
-    // Permet d'attendre que la taille de la textbox soit dÈfinie.
+
+    // Permet d'attendre que la taille de la textbox soit d√©finie.
     SwingUtilities.invokeLater(new Runnable() {
-      
+
       @Override
       public void run() {
 
@@ -163,95 +154,92 @@ public class TextBoxMultiplicity extends TextBoxLabel
         else
           deplacement.y += TextBox.MARGE;
 
-        // La classe est alignÈe horizontalement.
-        if (gripAnchor.x <= classBounds.x || 
-            gripAnchor.x >= classBounds.x + classBounds.width)
+        // La classe est align√©e horizontalement.
+        if (gripAnchor.x <= classBounds.x
+                || gripAnchor.x >= classBounds.x + classBounds.width)
           deplacement.y -= getBounds().height + TextBox.MARGE * 2;
 
-        // La classe est alignÈe verticalement.
-        if (gripAnchor.y <= classBounds.y || 
-            gripAnchor.y >= classBounds.y + classBounds.height)
+        // La classe est align√©e verticalement.
+        if (gripAnchor.y <= classBounds.y
+                || gripAnchor.y >= classBounds.y + classBounds.height)
           deplacement.x -= getBounds().width + TextBox.MARGE * 2;
 
         computeLabelPosition();
       }
     });
-	}
+  }
 
-	@Override
-	protected Point computeAnchor()
-	{
-		return grip.getAnchor();
-	}
+  @Override
+  protected Point computeAnchor() {
+    return grip.getAnchor();
+  }
 
-	@Override
-	public String getText()
-	{
-		return multiplicity.toString();
-	}
-	
-	@Override
-	public void gMouseClicked(MouseEvent e) {
-	  super.gMouseClicked(e);
-	  GraphicComponent view = null;
+  @Override
+  public String getText() {
+    return multiplicity.toString();
+  }
+
+  @Override
+  public void gMouseClicked(MouseEvent e) {
+    super.gMouseClicked(e);
+    GraphicComponent view = null;
 
     // search a multiplicity corresponding to the textBox multiplicity...
-	  firstloop:
+    firstloop:
     for (LineView av : parent.getLinesView())
       // take all line view
-      if (av instanceof AssociationView) // test if it's an associationView (have some role)
-        for (Role r : ((Association) ((AssociationView) av).getAssociedComponent()).getRoles())
+      if (av instanceof AssociationView) // test if it's an associationView
+                                         // (have some role)
+        for (Role r : ((Association) ((AssociationView) av)
+                .getAssociedComponent()).getRoles())
           // iterate through roles
-          if (r.getMultiplicity().equals(multiplicity)) { // multiplicity's
-            // role is the same than textBoxMultiplicity multiplicity?
-            view = av;
-            break firstloop;
-          }
-    
-	  if (view != null) {
+        if (r.getMultiplicity().equals(multiplicity)) { // multiplicity's
+          // role is the same than textBoxMultiplicity multiplicity?
+          view = av;
+          break firstloop;
+        }
+
+    if (view != null) {
       if (!GraphicView.isAddToSelection(e)) {
         parent.unselectAll();
         view.setSelected(true);
       } else {
         view.setSelected(!view.isSelected());
       }
-	  }
-	}
-	
-	@Override
-	public void gMousePressed(MouseEvent e) {
-	  super.gMousePressed(e);
-	  maybeShowPopup(e, grip.getRelation());
-	}
-	
-	@Override
-	public void gMouseReleased(MouseEvent e) {
-	  super.gMouseReleased(e);
+    }
+  }
+
+  @Override
+  public void gMousePressed(MouseEvent e) {
+    super.gMousePressed(e);
     maybeShowPopup(e, grip.getRelation());
-	}
+  }
 
-	@Override
-	public void setText(String text)
-	{
-		final Multiplicity newMultiplicity = convertStringToMultiplicity(text);
+  @Override
+  public void gMouseReleased(MouseEvent e) {
+    super.gMouseReleased(e);
+    maybeShowPopup(e, grip.getRelation());
+  }
 
-		if (newMultiplicity != null)
-		{
-			multiplicity.setLowerBound(newMultiplicity.getLowerBound());
-			multiplicity.setUpperBound(newMultiplicity.getUpperBound());
+  @Override
+  public void setText(String text) {
+    final Multiplicity newMultiplicity = convertStringToMultiplicity(text);
 
-			super.setText(multiplicity.toString());
+    if (newMultiplicity != null) {
+      multiplicity.setLowerBound(newMultiplicity.getLowerBound());
+      multiplicity.setUpperBound(newMultiplicity.getUpperBound());
 
-			multiplicity.notifyObservers();
-		}
-	}
+      super.setText(multiplicity.toString());
 
-	@Override
-	public void update(Observable arg0, Object arg1)
-	{
-		super.update(arg0, arg1);
+      multiplicity.notifyObservers();
+    }
+  }
 
-		super.setText(multiplicity.toString());
-	}
+  @Override
+  public void update(Observable arg0, Object arg1) {
+    super.update(arg0, arg1);
+
+    super.setText(multiplicity.toString());
+  }
 
 }

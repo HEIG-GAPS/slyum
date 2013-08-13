@@ -1,4 +1,4 @@
-package swing;
+ï»¿package swing;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -55,301 +55,283 @@ import classDiagram.verifyName.VariableName;
  * @author David Miserez
  * @verson 1.0 - 25.07.2011
  */
-public class XMLParser extends DefaultHandler
-{    
-	public enum Aggregation
-	{
-		AGGREGATE, COMPOSE, MULTI, NONE
-	};
+public class XMLParser extends DefaultHandler {
+  public enum Aggregation {
+    AGGREGATE, COMPOSE, MULTI, NONE
+  };
 
-	private class Association
-	{
-		Aggregation aggregation = Aggregation.NONE;
-		NavigateDirection direction = NavigateDirection.BIDIRECTIONAL;
-		int id = -1;
-		String name = null;
-		LinkedList<Role> role = new LinkedList<>();
-	};
+  private class Association {
+    Aggregation aggregation = Aggregation.NONE;
+    NavigateDirection direction = NavigateDirection.BIDIRECTIONAL;
+    int id = -1;
+    String name = null;
+    LinkedList<Role> role = new LinkedList<>();
+  };
 
-	private class ClassDiagram
-	{
-		DiagramElements diagrameElement = null;
-		@SuppressWarnings("unused")
-		String name = null;
-		LinkedList<UMLView> uMLView = new LinkedList<>();
-	}
+  private class ClassDiagram {
+    DiagramElements diagrameElement = null;
+    @SuppressWarnings("unused")
+    String name = null;
+    LinkedList<UMLView> uMLView = new LinkedList<>();
+  }
 
-	private class ComponentView
-	{
-		int color = 0;
-		int componentId = -1;
-		boolean displayAttributes = true,
-		        displayMethods = true,
-		        displayDefault = true;
-		TypeEnumDisplay typeEnumDisplay = TypeEnumDisplay.DEFAULT;
-		Rectangle geometry = new Rectangle();
-	}
+  private class ComponentView {
+    int color = 0;
+    int componentId = -1;
+    boolean displayAttributes = true, displayMethods = true,
+            displayDefault = true;
+    TypeEnumDisplay typeEnumDisplay = TypeEnumDisplay.DEFAULT;
+    Rectangle geometry = new Rectangle();
+  }
 
-	private class Dependency
-	{
-		int id = -1;
-		String label = null;
-		int source = -1;
-		int target = -1;
-	}
+  private class Dependency {
+    int id = -1;
+    String label = null;
+    int source = -1;
+    int target = -1;
+  }
 
-	private class DiagramElements
-	{
-		LinkedList<Association> association = new LinkedList<>();
-		LinkedList<Dependency> dependency = new LinkedList<>();
-		LinkedList<Entity> entity = new LinkedList<>();
-		LinkedList<Inheritance> inheritance = new LinkedList<>();
-		@SuppressWarnings("unused")
+  private class DiagramElements {
+    LinkedList<Association> association = new LinkedList<>();
+    LinkedList<Dependency> dependency = new LinkedList<>();
+    LinkedList<Entity> entity = new LinkedList<>();
+    LinkedList<Inheritance> inheritance = new LinkedList<>();
+    @SuppressWarnings("unused")
     LinkedList<InnerClass> innerClass = new LinkedList<>();
-	}
+  }
 
-	private class Entity
-	{
-		int associationClassID = -1;
-		LinkedList<Variable> attribute = new LinkedList<>();
+  private class Entity {
+    int associationClassID = -1;
+    LinkedList<Variable> attribute = new LinkedList<>();
     LinkedList<Operation> method = new LinkedList<>();
     LinkedList<EnumValue> enums = new LinkedList<>();
-		EntityType entityType = null;
-		int id = -1;
-		boolean isAbstract = false;
-		String name = null;
-		Visibility visibility = Visibility.PUBLIC;
-	}
+    EntityType entityType = null;
+    int id = -1;
+    boolean isAbstract = false;
+    String name = null;
+    Visibility visibility = Visibility.PUBLIC;
+  }
 
-	public enum EntityType
-	{
-		ASSOCIATION_CLASS, CLASS, INTERFACE, ENUM
-	}
+  public enum EntityType {
+    ASSOCIATION_CLASS, CLASS, INTERFACE, ENUM
+  }
 
-	private class Inheritance
-	{
-		int child = -1;
-		int id = -1;
-		boolean innerClass = false;
-		int parent = -1;
-	}
+  private class Inheritance {
+    int child = -1;
+    int id = -1;
+    boolean innerClass = false;
+    int parent = -1;
+  }
 
-	@SuppressWarnings("unused")
-	private class InnerClass
-	{
-		int boundingClass = -1;
-		int id = -1;
-		int innerClass = -1;
-	}
+  @SuppressWarnings("unused")
+  private class InnerClass {
+    int boundingClass = -1;
+    int id = -1;
+    int innerClass = -1;
+  }
 
-	private class MultiView
-	{
-		int color = 0;
-		LinkedList<RelationView> multiLineView = new LinkedList<>();
-		Rectangle multiViewBounds = new Rectangle();
-		int relationId = -1;
-	}
+  private class MultiView {
+    int color = 0;
+    LinkedList<RelationView> multiLineView = new LinkedList<>();
+    Rectangle multiViewBounds = new Rectangle();
+    int relationId = -1;
+  }
 
-	private class Note
-	{
-		Rectangle bounds = new Rectangle();
-		int color = 0;
-		String content;
-		LinkedList<RelationView> line = new LinkedList<>();
-	}
+  private class Note {
+    Rectangle bounds = new Rectangle();
+    int color = 0;
+    String content;
+    LinkedList<RelationView> line = new LinkedList<>();
+  }
 
-	private class Operation
-	{
-		boolean isAbstract = false;
-		boolean isStatic = false;
-		ParametersViewStyle view = ParametersViewStyle.TYPE_AND_NAME;
-		String name = null;
-		Type returnType = null;
-		LinkedList<Variable> variable = new LinkedList<>();
-		Visibility visibility = Visibility.PUBLIC;
-	}
+  private class Operation {
+    boolean isAbstract = false;
+    boolean isStatic = false;
+    ParametersViewStyle view = ParametersViewStyle.TYPE_AND_NAME;
+    String name = null;
+    Type returnType = null;
+    LinkedList<Variable> variable = new LinkedList<>();
+    Visibility visibility = Visibility.PUBLIC;
+  }
 
-	private class RelationView
-	{
-		int color = 0;
-		Rectangle labelAssociation = new Rectangle();
-		LinkedList<Point> line = new LinkedList<>();
-		LinkedList<Rectangle> multipliciteAssociations = new LinkedList<>();
-		int relationId = -1;
-		LinkedList<Rectangle> roleAssociations = new LinkedList<>();
-	}
+  private class RelationView {
+    int color = 0;
+    Rectangle labelAssociation = new Rectangle();
+    LinkedList<Point> line = new LinkedList<>();
+    LinkedList<Rectangle> multipliciteAssociations = new LinkedList<>();
+    int relationId = -1;
+    LinkedList<Rectangle> roleAssociations = new LinkedList<>();
+  }
 
-	private class Role
-	{
-		int componentId = -1;
-		Multiplicity multiplicity = null;
-		String name = null;
-		Visibility visibility = Visibility.PUBLIC;
-	}
+  private class Role {
+    int componentId = -1;
+    Multiplicity multiplicity = null;
+    String name = null;
+    Visibility visibility = Visibility.PUBLIC;
+  }
 
-	private class UMLView
-	{
-		@SuppressWarnings("unused")
-		LinkedList<ComponentView> componentView = new LinkedList<>();
-		
-		@SuppressWarnings("unused")
-		String name = null;
+  private class UMLView {
+    @SuppressWarnings("unused")
+    LinkedList<ComponentView> componentView = new LinkedList<>();
 
-		LinkedList<Note> notes = new LinkedList<>();
-		
-		@SuppressWarnings("unused")
-		LinkedList<RelationView> relationView = new LinkedList<>();
-	}
+    @SuppressWarnings("unused")
+    String name = null;
 
-	// UML STRUCTURE
-	private class Variable
-	{
-		@SuppressWarnings("unused")
-		int collection = 0;
-		boolean constant = false;
-		String defaultValue = null;
-		boolean isStatic = false;
-		String name = null;
-		Type type = null;
-		Visibility visibility = null;
-	}
+    LinkedList<Note> notes = new LinkedList<>();
 
-	LinkedList<AssociationClass> associationClassEntities = new LinkedList<>();
-	LinkedList<Association> associations = new LinkedList<>();
-	private StringBuffer buffer;
+    @SuppressWarnings("unused")
+    LinkedList<RelationView> relationView = new LinkedList<>();
+  }
 
-	private final classDiagram.ClassDiagram classDiagram;
+  // UML STRUCTURE
+  private class Variable {
+    @SuppressWarnings("unused")
+    int collection = 0;
+    boolean constant = false;
+    String defaultValue = null;
+    boolean isStatic = false;
+    String name = null;
+    Type type = null;
+    Visibility visibility = null;
+  }
 
-	LinkedList<ClassEntity> classEntities = new LinkedList<>();
-	// LinkedList<InnerCLass> innerCLass = new LinkedList<InnerCLass>();
-	private final HashMap<Integer, ComponentView> componentView = new HashMap<>();
-	Association currentAssociation;
-	ComponentView currentComponentView;
-	Dependency currentDependency;
-	Entity currentEntity;
-	Rectangle currentGeometry;
-	Inheritance currentInheritance;
-	LinkedList<Point> currentLine;
+  LinkedList<AssociationClass> associationClassEntities = new LinkedList<>();
+  LinkedList<Association> associations = new LinkedList<>();
+  private StringBuffer buffer;
 
-	Operation currentMethod;
-	int currentMin, currentMax;
-	// InnerClass currentInnerClass;
+  private final classDiagram.ClassDiagram classDiagram;
 
-	Multiplicity currentMultiplicity;
+  LinkedList<ClassEntity> classEntities = new LinkedList<>();
+  // LinkedList<InnerCLass> innerCLass = new LinkedList<InnerCLass>();
+  private final HashMap<Integer, ComponentView> componentView = new HashMap<>();
+  Association currentAssociation;
+  ComponentView currentComponentView;
+  Dependency currentDependency;
+  Entity currentEntity;
+  Rectangle currentGeometry;
+  Inheritance currentInheritance;
+  LinkedList<Point> currentLine;
 
-	MultiView currentMultiView;
+  Operation currentMethod;
+  int currentMin, currentMax;
+  // InnerClass currentInnerClass;
 
-	Note currentNote;
+  Multiplicity currentMultiplicity;
 
-	Point currentPoint;
+  MultiView currentMultiView;
 
-	RelationView currentRelationView;
+  Note currentNote;
 
-	Role currentRole;
+  Point currentPoint;
 
-	LinkedList<Dependency> dependency = new LinkedList<>();
+  RelationView currentRelationView;
 
-	private final GraphicView graphicView;
+  Role currentRole;
 
-	LinkedList<Inheritance> inheritance = new LinkedList<>();
+  LinkedList<Dependency> dependency = new LinkedList<>();
 
-	private boolean inMultiViewBounds;
+  private final GraphicView graphicView;
 
-	boolean inRelationView = false, inComponentView = false,
-			inNoteGeometry = false, inNoteRelation = false,
-			inLabelAssociation = false;
+  LinkedList<Inheritance> inheritance = new LinkedList<>();
 
-	LinkedList<InterfaceEntity> interfaceEntities = new LinkedList<>();
+  private boolean inMultiViewBounds;
 
-	private final HashMap<Integer, MultiView> multiView = new HashMap<>();
-	private final HashMap<Integer, RelationView> relationView = new HashMap<>();
-	private ClassDiagram uMLClassDiagram;
+  boolean inRelationView = false, inComponentView = false,
+          inNoteGeometry = false, inNoteRelation = false,
+          inLabelAssociation = false;
 
-	public XMLParser(classDiagram.ClassDiagram classDiagram, GraphicView graphicView)
-	{
-		super();
+  LinkedList<InterfaceEntity> interfaceEntities = new LinkedList<>();
 
-		if (classDiagram == null)
-			throw new IllegalArgumentException("classDiagram is null");
+  private final HashMap<Integer, MultiView> multiView = new HashMap<>();
+  private final HashMap<Integer, RelationView> relationView = new HashMap<>();
+  private ClassDiagram uMLClassDiagram;
 
-		if (graphicView == null)
-			throw new IllegalArgumentException("graphicView is null");
+  public XMLParser(classDiagram.ClassDiagram classDiagram,
+          GraphicView graphicView) {
+    super();
 
-		this.classDiagram = classDiagram;
-		this.graphicView = graphicView;
-	}
+    if (classDiagram == null)
+      throw new IllegalArgumentException("classDiagram is null");
 
-	@Override
-	public void characters(char[] ch, int start, int length) throws SAXException
-	{
-		final String reader = new String(ch, start, length);
+    if (graphicView == null)
+      throw new IllegalArgumentException("graphicView is null");
 
-		if (buffer != null)
+    this.classDiagram = classDiagram;
+    this.graphicView = graphicView;
+  }
 
-			buffer.append(reader);
-	}
+  @Override
+  public void characters(char[] ch, int start, int length) throws SAXException {
+    final String reader = new String(ch, start, length);
 
-	private void createEntity(Entity e) throws SyntaxeNameException {
-		classDiagram.components.Entity ce = null;
-		e.name = TypeName.verifyAndAskNewName(e.name);
-		boolean isSimpleEntity = true;
+    if (buffer != null)
 
-		switch (e.entityType) {
-			case CLASS:
+    buffer.append(reader);
+  }
 
-				ce = new ClassEntity(e.name, e.visibility, e.id);
-				
-				classDiagram.addClassEntity((ClassEntity) ce);
-				((ClassEntity) ce).setAbstract(e.isAbstract);
+  private void createEntity(Entity e) throws SyntaxeNameException {
+    classDiagram.components.Entity ce = null;
+    e.name = TypeName.verifyAndAskNewName(e.name);
+    boolean isSimpleEntity = true;
 
-				break;
+    switch (e.entityType) {
+      case CLASS:
 
-			case INTERFACE:
+        ce = new ClassEntity(e.name, e.visibility, e.id);
 
-				ce = new InterfaceEntity(e.name, e.visibility, e.id);
-				classDiagram.addInterfaceEntity((InterfaceEntity) ce);
-				((InterfaceEntity) ce).setAbstract(true);
+        classDiagram.addClassEntity((ClassEntity) ce);
+        ((ClassEntity) ce).setAbstract(e.isAbstract);
 
-				break;
-				
-	    case ENUM:
-	      isSimpleEntity = false;
+        break;
+
+      case INTERFACE:
+
+        ce = new InterfaceEntity(e.name, e.visibility, e.id);
+        classDiagram.addInterfaceEntity((InterfaceEntity) ce);
+        ((InterfaceEntity) ce).setAbstract(true);
+
+        break;
+
+      case ENUM:
+        isSimpleEntity = false;
         ce = new EnumEntity(e.name, e.id);
         classDiagram.addEnumEntity((EnumEntity) ce);
-        
-	      break;
 
-			case ASSOCIATION_CLASS:
+        break;
 
-				final Binary b = (Binary) classDiagram.searchComponentById(e.associationClassID);
-				if (b == null) // création d'une classe normale.
-				{
+      case ASSOCIATION_CLASS:
+
+        final Binary b = (Binary) classDiagram
+                .searchComponentById(e.associationClassID);
+        if (b == null) // crÃ©ation d'une classe normale.
+        {
           ce = new ClassEntity(e.name, e.visibility, e.id);
           classDiagram.addClassEntity((ClassEntity) ce);
           ((ClassEntity) ce).setAbstract(e.isAbstract);
-          SMessageDialog.showInformationMessage("Association class " + ce.getName() + " has been converted into a normal class.\nIts association no longer exists during importation.");
+          SMessageDialog
+                  .showInformationMessage("Association class "
+                          + ce.getName()
+                          + " has been converted into a normal class.\nIts association no longer exists during importation.");
           break;
-				}
-				
-				try
-				{
-				    ce = new AssociationClass(e.name, e.visibility, b, e.id);
-	                classDiagram.addAssociationClass((AssociationClass) ce);
-				} catch (IllegalArgumentException a)
-				{
-				    SMessageDialog.showErrorMessage(a.getMessage());
-				}
+        }
 
-				break;
-		}
-		
-		if (isSimpleEntity) {
-		  
-		  SimpleEntity se = (SimpleEntity)ce;
-  		for (Variable v : e.attribute) {			
-        Attribute a = 
-            new Attribute(VariableName.verifyAndAskNewName(v.name), v.type);
-           
+        try {
+          ce = new AssociationClass(e.name, e.visibility, b, e.id);
+          classDiagram.addAssociationClass((AssociationClass) ce);
+        } catch (IllegalArgumentException a) {
+          SMessageDialog.showErrorMessage(a.getMessage());
+        }
+
+        break;
+    }
+
+    if (isSimpleEntity) {
+
+      SimpleEntity se = (SimpleEntity) ce;
+      for (Variable v : e.attribute) {
+        Attribute a = new Attribute(VariableName.verifyAndAskNewName(v.name),
+                v.type);
+
         se.addAttribute(a);
         se.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
         a.setConstant(v.constant);
@@ -357,798 +339,731 @@ public class XMLParser extends DefaultHandler
         a.setStatic(v.isStatic);
         a.setVisibility(v.visibility);
         a.notifyObservers();
-  		}
-  
-  		for (Operation o : e.method) {
-  			Method m = new Method(
-  			    MethodName.verifyAndAskNewName(o.name),
-  			    o.returnType,
-  			    o.visibility,
-  			    se);
-  			
-  			se.addMethod(m);
-  			se.notifyObservers(UpdateMessage.ADD_METHOD_NO_EDIT);
-  			
-  			m.setParametersViewStyle(o.view);
-  			m.setStatic(o.isStatic);
-  			m.setAbstract(o.isAbstract);
-  
-  			for (Variable v : o.variable) {
+      }
+
+      for (Operation o : e.method) {
+        Method m = new Method(MethodName.verifyAndAskNewName(o.name),
+                o.returnType, o.visibility, se);
+
+        se.addMethod(m);
+        se.notifyObservers(UpdateMessage.ADD_METHOD_NO_EDIT);
+
+        m.setParametersViewStyle(o.view);
+        m.setStatic(o.isStatic);
+        m.setAbstract(o.isAbstract);
+
+        for (Variable v : o.variable) {
           classDiagram.components.Variable va = new classDiagram.components.Variable(
-                  VariableName.verifyAndAskNewName(v.name), 
-                  v.type);
+                  VariableName.verifyAndAskNewName(v.name), v.type);
           m.addParameter(va);
-  			}
-  			m.notifyObservers();
-  		}
-		} else {
-      EnumEntity ee = (EnumEntity)ce;
-		  for (EnumValue v : e.enums) {
-		    ee.addEnumValue(v);
-		    ee.notifyObservers(UpdateMessage.ADD_ENUM_NO_EDIT);
-		  }
-		}
+        }
+        m.notifyObservers();
+      }
+    } else {
+      EnumEntity ee = (EnumEntity) ce;
+      for (EnumValue v : e.enums) {
+        ee.addEnumValue(v);
+        ee.notifyObservers(UpdateMessage.ADD_ENUM_NO_EDIT);
+      }
+    }
 
-		ce.notifyObservers();
-	}
+    ce.notifyObservers();
+  }
 
-	@Override
-	public void endDocument() throws SAXException
-	{
-		classDiagram.removeAll();
-		graphicView.removeAll();
-	}
-	
-	public void createDiagram() throws SyntaxeNameException
-	{
-		// Don't change the order !!
-		importClassesAndInterfaces(); // <- need nothing :D
-	
-		importAssociations(); // <- need importation classes
-		importAssociationClass(); // <- need importation classes and associations
-		importAssociations(); // Import associations that cannot be imported first time
-		importInheritances(); // <- ...
-		importDepedency();
-    
+  @Override
+  public void endDocument() throws SAXException {
+    classDiagram.removeAll();
+    graphicView.removeAll();
+  }
+
+  public void createDiagram() throws SyntaxeNameException {
+    // Don't change the order !!
+    importClassesAndInterfaces(); // <- need nothing :D
+
+    importAssociations(); // <- need importation classes
+    importAssociationClass(); // <- need importation classes and associations
+    importAssociations(); // Import associations that cannot be imported first
+                          // time
+    importInheritances(); // <- ...
+    importDepedency();
+
     graphicView.setPaintBackgroundLast(true);
     graphicView.goRepaint();
 
     locateComponentBounds();
-		importNotes();
-	}
+    importNotes();
+  }
 
-	@Override
-	public void endElement(String uri, String localName, String qName) throws SAXException
-	{
-		if (qName.equals("entity"))
-			currentEntity = null;
-		else if (qName.equals("method"))
-			currentMethod = null;
+  @Override
+  public void endElement(String uri, String localName, String qName)
+          throws SAXException {
+    if (qName.equals("entity"))
+      currentEntity = null;
+    else if (qName.equals("method"))
+      currentMethod = null;
     else if (qName.equals("EnumValue")) {
       currentEntity.enums.add(new EnumValue(buffer.toString()));
       buffer = null;
+    } else if (qName.equals("associationClassID"))
+      currentEntity.associationClassID = Integer.parseInt(buffer.toString());
+    else if (qName.equals("association"))
+      currentAssociation = null;
+    else if (qName.equals("role"))
+      currentRole = null;
+    else if (qName.equals("multiplicity"))
+      currentRole.multiplicity = new Multiplicity(currentMin, currentMax);
+    else if (qName.equals("min")) {
+      currentMin = Integer.parseInt(buffer.toString());
+      buffer = null;
+    } else if (qName.equals("max")) {
+      currentMax = Integer.parseInt(buffer.toString());
+      buffer = null;
+    } else if (qName.equals("child")) {
+      currentInheritance.child = Integer.parseInt(buffer.toString());
+      buffer = null;
+    } else if (qName.equals("parent")) {
+      currentInheritance.parent = Integer.parseInt(buffer.toString());
+      buffer = null;
+    } else if (qName.equals("source")) {
+      currentDependency.source = Integer.parseInt(buffer.toString());
+      buffer = null;
+    } else if (qName.equals("target")) {
+      currentDependency.target = Integer.parseInt(buffer.toString());
+      buffer = null;
+    } else if (qName.equals("relationView")) {
+      inRelationView = false;
+      relationView.put(currentRelationView.relationId, currentRelationView);
+    } else if (qName.equals("multiLineView")) {
+      inRelationView = false;
+      currentMultiView.multiLineView.add(currentRelationView);
+    } else if (qName.equals("multiView")) {
+      multiView.put(currentMultiView.relationId, currentMultiView);
+    } else if (qName.equals("geometry")) {
+      inNoteGeometry = false;
+      currentComponentView.geometry = currentGeometry;
+      currentGeometry = null;
+    } else if (qName.equals("noteGeometry")) {
+      inNoteGeometry = false;
+      currentNote.bounds = currentGeometry;
+      currentGeometry = null;
+    } else if (qName.equals("componentView")) {
+      inComponentView = false;
+      componentView.put(currentComponentView.componentId, currentComponentView);
+    } else if (qName.equals("note")) {
+      uMLClassDiagram.uMLView.getFirst().notes.add(currentNote);
+      currentNote = null;
+    } else if (qName.equals("multiViewBounds")) {
+      inMultiViewBounds = false;
+      currentMultiView.multiViewBounds = currentGeometry;
+      currentGeometry = null;
+    } else if (qName.equals("line")) {
+      currentRelationView.line = currentLine;
+      currentLine = null;
+    } else if (qName.equals("noteLine")) {
+      inNoteRelation = false;
+      currentRelationView.line = currentLine;
+      currentNote.line.addLast(currentRelationView);
+      currentLine = null;
+      currentRelationView = null;
+    } else if (qName.equals("point")) {
+      currentLine.add(currentPoint);
+      currentPoint = null;
+    } else if (qName.equals("labelAssociation")) {
+      currentRelationView.labelAssociation = currentGeometry;
+      currentGeometry = null;
+      inLabelAssociation = false;
+    } else if (qName.equals("roleAssociation")) {
+      currentRelationView.roleAssociations.add(currentGeometry);
+      currentGeometry = null;
+      inLabelAssociation = false;
+    } else if (qName.equals("multipliciteAssociation")) {
+      currentRelationView.multipliciteAssociations.add(currentGeometry);
+      currentGeometry = null;
+      inLabelAssociation = false;
+    } else if (qName.equals("x")) {
+      final int x = Integer.parseInt(buffer.toString());
+
+      if (inComponentView || inNoteGeometry || inLabelAssociation
+              || inMultiViewBounds)
+
+        currentGeometry.x = x;
+
+      else if (inRelationView || inNoteRelation)
+
+      currentPoint.x = x;
+
+      buffer = null;
+    } else if (qName.equals("y")) {
+      final int y = Integer.parseInt(buffer.toString());
+
+      if (inComponentView || inNoteGeometry || inLabelAssociation
+              || inMultiViewBounds)
+
+        currentGeometry.y = y;
+
+      else if (inRelationView || inNoteRelation)
+
+      currentPoint.y = y;
+
+      buffer = null;
+    } else if (qName.equals("w")) {
+      currentGeometry.width = Integer.parseInt(buffer.toString());
+
+      buffer = null;
+    } else if (qName.equals("h")) {
+      currentGeometry.height = Integer.parseInt(buffer.toString());
+
+      buffer = null;
     }
-		else if (qName.equals("associationClassID"))
-			currentEntity.associationClassID = Integer.parseInt(buffer.toString());
-		else if (qName.equals("association"))
-			currentAssociation = null;
-		else if (qName.equals("role"))
-			currentRole = null;
-		else if (qName.equals("multiplicity"))
-			currentRole.multiplicity = new Multiplicity(currentMin, currentMax);
-		else if (qName.equals("min"))
-		{
-			currentMin = Integer.parseInt(buffer.toString());
-			buffer = null;
-		}
-		else if (qName.equals("max"))
-		{
-			currentMax = Integer.parseInt(buffer.toString());
-			buffer = null;
-		}
-		else if (qName.equals("child"))
-		{
-			currentInheritance.child = Integer.parseInt(buffer.toString());
-			buffer = null;
-		}
-		else if (qName.equals("parent"))
-		{
-			currentInheritance.parent = Integer.parseInt(buffer.toString());
-			buffer = null;
-		}
-		else if (qName.equals("source"))
-		{
-			currentDependency.source = Integer.parseInt(buffer.toString());
-			buffer = null;
-		}
-		else if (qName.equals("target"))
-		{
-			currentDependency.target = Integer.parseInt(buffer.toString());
-			buffer = null;
-		}
-		else if (qName.equals("relationView"))
-		{
-			inRelationView = false;
-			relationView.put(currentRelationView.relationId, currentRelationView);
-		}
-		else if (qName.equals("multiLineView"))
-		{
-			inRelationView = false;
-			currentMultiView.multiLineView.add(currentRelationView);
-		}
-		else if (qName.equals("multiView"))
-		{
-			multiView.put(currentMultiView.relationId, currentMultiView);
-		}
-		else if (qName.equals("geometry"))
-		{
-			inNoteGeometry = false;
-			currentComponentView.geometry = currentGeometry;
-			currentGeometry = null;
-		}
-		else if (qName.equals("noteGeometry"))
-		{
-			inNoteGeometry = false;
-			currentNote.bounds = currentGeometry;
-			currentGeometry = null;
-		}
-		else if (qName.equals("componentView"))
-		{
-			inComponentView = false;
-			componentView.put(currentComponentView.componentId, currentComponentView);
-		}
-		else if (qName.equals("note"))
-		{
-			uMLClassDiagram.uMLView.getFirst().notes.add(currentNote);
-			currentNote = null;
-		}
-		else if (qName.equals("multiViewBounds"))
-		{
-			inMultiViewBounds = false;
-			currentMultiView.multiViewBounds = currentGeometry;
-			currentGeometry = null;
-		}
-		else if (qName.equals("line"))
-		{
-			currentRelationView.line = currentLine;
-			currentLine = null;
-		}
-		else if (qName.equals("noteLine"))
-		{
-			inNoteRelation = false;
-			currentRelationView.line = currentLine;
-			currentNote.line.addLast(currentRelationView);
-			currentLine = null;
-			currentRelationView = null;
-		}
-		else if (qName.equals("point"))
-		{
-			currentLine.add(currentPoint);
-			currentPoint = null;
-		}
-		else if (qName.equals("labelAssociation"))
-		{
-			currentRelationView.labelAssociation = currentGeometry;
-			currentGeometry = null;
-			inLabelAssociation = false;
-		}
-		else if (qName.equals("roleAssociation"))
-		{
-			currentRelationView.roleAssociations.add(currentGeometry);
-			currentGeometry = null;
-			inLabelAssociation = false;
-		}
-		else if (qName.equals("multipliciteAssociation"))
-		{
-			currentRelationView.multipliciteAssociations.add(currentGeometry);
-			currentGeometry = null;
-			inLabelAssociation = false;
-		}
-		else if (qName.equals("x"))
-		{
-			final int x = Integer.parseInt(buffer.toString());
+  }
 
-			if (inComponentView || inNoteGeometry || inLabelAssociation || inMultiViewBounds)
+  private void importAssociationClass() throws SyntaxeNameException {
+    for (final Entity e : uMLClassDiagram.diagrameElement.entity)
 
-				currentGeometry.x = x;
+      if (e.entityType == EntityType.ASSOCIATION_CLASS)
 
-			else if (inRelationView || inNoteRelation)
+      createEntity(e);
+  }
 
-				currentPoint.x = x;
+  public void importAssociations() {
+    final LinkedList<Association> associationsNotAdded = new LinkedList<>();
 
-			buffer = null;
-		}
-		else if (qName.equals("y"))
-		{
-			final int y = Integer.parseInt(buffer.toString());
+    for (final Association a : uMLClassDiagram.diagrameElement.association) {
+      classDiagram.relationships.Association ac = null;
 
-			if (inComponentView || inNoteGeometry || inLabelAssociation || inMultiViewBounds)
+      final classDiagram.components.Entity source = (classDiagram.components.Entity) classDiagram
+              .searchComponentById(a.role.getFirst().componentId);
+      final classDiagram.components.Entity target = (classDiagram.components.Entity) classDiagram
+              .searchComponentById(a.role.getLast().componentId);
 
-				currentGeometry.y = y;
+      if (source == null || target == null) {
+        associationsNotAdded.add(a);
+        continue;
+      }
 
-			else if (inRelationView || inNoteRelation)
+      switch (a.aggregation) {
+        case NONE:
+          ac = new Binary(source, target, a.direction, a.id);
+          classDiagram.addBinary((Binary) ac);
 
-				currentPoint.y = y;
+          break;
 
-			buffer = null;
-		}
-		else if (qName.equals("w"))
-		{
-			currentGeometry.width = Integer.parseInt(buffer.toString());
+        case AGGREGATE:
+          ac = new classDiagram.relationships.Aggregation(source, target,
+                  a.direction, a.id);
+          classDiagram
+                  .addAggregation((classDiagram.relationships.Aggregation) ac);
 
-			buffer = null;
-		}
-		else if (qName.equals("h"))
-		{
-			currentGeometry.height = Integer.parseInt(buffer.toString());
+          break;
 
-			buffer = null;
-		}
-	}
+        case COMPOSE:
+          ac = new Composition(source, target, a.direction, a.id);
+          classDiagram.addComposition((Composition) ac);
+          break;
 
-	private void importAssociationClass() throws SyntaxeNameException
-	{
-		for (final Entity e : uMLClassDiagram.diagrameElement.entity)
+        case MULTI:
+          final LinkedList<classDiagram.components.ClassEntity> entities = new LinkedList<>();
 
-			if (e.entityType == EntityType.ASSOCIATION_CLASS)
+          for (final Role role : a.role)
 
-				createEntity(e);
-	}
+            entities.add((classDiagram.components.ClassEntity) classDiagram
+                    .searchComponentById(role.componentId));
 
-	public void importAssociations()
-	{
-		final LinkedList<Association> associationsNotAdded = new LinkedList<>();
+          ac = new Multi(entities, a.id);
+          classDiagram.addMulti((Multi) ac);
+          break;
+      }
 
-		for (final Association a : uMLClassDiagram.diagrameElement.association)
-		{
-			classDiagram.relationships.Association ac = null;
+      for (int i = 0; i < a.role.size(); i++) {
+        ac.getRoles().get(i).setName(a.role.get(i).name);
+        ac.getRoles().get(i).setVisibility(a.role.get(i).visibility);
+        ac.getRoles().get(i).setMultiplicity(a.role.get(i).multiplicity);
 
-			final classDiagram.components.Entity source = (classDiagram.components.Entity) classDiagram.searchComponentById(a.role.getFirst().componentId);
-			final classDiagram.components.Entity target = (classDiagram.components.Entity) classDiagram.searchComponentById(a.role.getLast().componentId);
+        ac.getRoles().get(i).notifyObservers();
+        ac.getRoles().get(i).getMultiplicity().notifyObservers();
+      }
 
-			
-			if (source == null || target == null)
-			{
-				associationsNotAdded.add(a);
-				continue;
-			}
+      ac.setName(a.name);
 
-			switch (a.aggregation)
-			{
-				case NONE:
-					ac = new Binary(source, target, a.direction, a.id);
-					classDiagram.addBinary((Binary) ac);
+      ac.notifyObservers();
+    }
 
-					break;
+    uMLClassDiagram.diagrameElement.association = associationsNotAdded;
+  }
 
-				case AGGREGATE:
-					ac = new classDiagram.relationships.Aggregation(source, target, a.direction, a.id);
-					classDiagram.addAggregation((classDiagram.relationships.Aggregation) ac);
+  private void importClassesAndInterfaces() throws SyntaxeNameException {
+    for (final Entity e : uMLClassDiagram.diagrameElement.entity)
 
-					break;
+      if (!(e.entityType == EntityType.ASSOCIATION_CLASS)) createEntity(e);
 
-				case COMPOSE:
-					ac = new Composition(source, target, a.direction, a.id);
-					classDiagram.addComposition((Composition) ac);
-					break;
+  }
 
-				case MULTI:
-					final LinkedList<classDiagram.components.ClassEntity> entities = new LinkedList<>();
+  public void importDepedency() {
+    for (final Dependency d : uMLClassDiagram.diagrameElement.dependency) {
+      classDiagram.components.Entity source = (classDiagram.components.Entity) classDiagram
+              .searchComponentById(d.source);
+      classDiagram.components.Entity target = (classDiagram.components.Entity) classDiagram
+              .searchComponentById(d.target);
+      classDiagram.relationships.Dependency dr = new classDiagram.relationships.Dependency(
+              source, target, d.id);
+      classDiagram.addDependency(dr);
 
-					for (final Role role : a.role)
+      dr.setLabel(d.label);
+      dr.notifyObservers();
+    }
+  }
 
-						entities.add((classDiagram.components.ClassEntity) classDiagram.searchComponentById(role.componentId));
+  // view
 
-					ac = new Multi(entities, a.id);
-					classDiagram.addMulti((Multi) ac);
-					break;
-			}
+  public void importInheritances() {
+    for (final Inheritance h : uMLClassDiagram.diagrameElement.inheritance) {
+      final classDiagram.components.SimpleEntity child = (classDiagram.components.SimpleEntity) classDiagram
+              .searchComponentById(h.child);
+      final classDiagram.components.SimpleEntity parent = (classDiagram.components.SimpleEntity) classDiagram
+              .searchComponentById(h.parent);
 
-			for (int i = 0; i < a.role.size(); i++)
-			{
-				ac.getRoles().get(i).setName(a.role.get(i).name);
-				ac.getRoles().get(i).setVisibility(a.role.get(i).visibility);
-				ac.getRoles().get(i).setMultiplicity(a.role.get(i).multiplicity);
+      if (h.innerClass) {
+        final classDiagram.relationships.InnerClass innerClass = new classDiagram.relationships.InnerClass(
+                child, parent, h.id);
+        classDiagram.addInnerClass(innerClass);
+        innerClass.notifyObservers();
+      } else {
+        final classDiagram.relationships.Inheritance i = new classDiagram.relationships.Inheritance(
+                child, parent, h.id);
+        classDiagram.addInheritance(i);
+        i.notifyObservers();
+      }
+    }
+  }
 
-				ac.getRoles().get(i).notifyObservers();
-				ac.getRoles().get(i).getMultiplicity().notifyObservers();
-			}
+  private void importNotes() {
+    for (final Note note : uMLClassDiagram.uMLView.getFirst().notes) {
+      final TextBoxCommentary noteView = new TextBoxCommentary(graphicView,
+              note.content);
 
-			ac.setName(a.name);
+      noteView.setBounds(note.bounds);
 
-			ac.notifyObservers();
-		}
+      for (final RelationView rv : note.line) {
+        GraphicComponent component = graphicView
+                .searchAssociedComponent(classDiagram
+                        .searchComponentById(rv.relationId));
 
-		uMLClassDiagram.diagrameElement.association = associationsNotAdded;
-	}
+        if (rv.relationId == -1)
 
-	private void importClassesAndInterfaces() throws SyntaxeNameException
-	{
-		for (final Entity e : uMLClassDiagram.diagrameElement.entity)
-		
-			if (!(e.entityType == EntityType.ASSOCIATION_CLASS))
-				createEntity(e);
+        component = graphicView;
 
-	}
+        if (LineCommentary.checkCreate(noteView, component, false)) {
+          final LineCommentary lc = new LineCommentary(graphicView, noteView,
+                  component, rv.line.getFirst(), rv.line.getLast(), false);
 
-	public void importDepedency()
-	{
-		for (final Dependency d : uMLClassDiagram.diagrameElement.dependency)
-		{
-			classDiagram.components.Entity source = (classDiagram.components.Entity) classDiagram.searchComponentById(d.source);
-			classDiagram.components.Entity target = (classDiagram.components.Entity) classDiagram.searchComponentById(d.target);
-			classDiagram.relationships.Dependency dr = new classDiagram.relationships.Dependency(source, target, d.id);
-			classDiagram.addDependency(dr);
+          for (int i = 1; i < rv.line.size() - 1; i++) {
+            final RelationGrip rg = new RelationGrip(graphicView, lc);
+            rg.setAnchor(rv.line.get(i));
+            lc.addGrip(rg, i);
+          }
 
-			dr.setLabel(d.label);
-			dr.notifyObservers();
-		}
-	}
+          lc.getFirstPoint().setAnchor(rv.line.getFirst());
+          lc.getLastPoint().setAnchor(rv.line.getLast());
 
-	// view
+          lc.setColor(rv.color);
 
-	public void importInheritances()
-	{
-		for (final Inheritance h : uMLClassDiagram.diagrameElement.inheritance)
-		{
-			final classDiagram.components.SimpleEntity child = (classDiagram.components.SimpleEntity) classDiagram.searchComponentById(h.child);
-			final classDiagram.components.SimpleEntity parent = (classDiagram.components.SimpleEntity) classDiagram.searchComponentById(h.parent);
-			
-			if (h.innerClass)
-			{
-				final classDiagram.relationships.InnerClass innerClass = new classDiagram.relationships.InnerClass(child, parent, h.id);
-				classDiagram.addInnerClass(innerClass);
-				innerClass.notifyObservers();
-			}
-			else
-			{
-				final classDiagram.relationships.Inheritance i = new classDiagram.relationships.Inheritance(child, parent, h.id);
-				classDiagram.addInheritance(i);
-				i.notifyObservers();
-			}
-		}
-	}
+          graphicView.addLineView(lc);
+        }
+      }
 
-	private void importNotes()
-	{
-		for (final Note note : uMLClassDiagram.uMLView.getFirst().notes) {
-			final TextBoxCommentary noteView = new TextBoxCommentary(graphicView, note.content);
+      noteView.setColor(note.color);
+      graphicView.addNotes(noteView);
+    }
+  }
 
-			noteView.setBounds(note.bounds);
+  public void locateComponentBounds() {
 
-			for (final RelationView rv : note.line)
-			{
-				GraphicComponent component = graphicView.searchAssociedComponent(classDiagram.searchComponentById(rv.relationId));
+    // Generals bounds
+    for (GraphicComponent g : graphicView.getAllComponents()) {
+      IDiagramComponent component = g.getAssociedComponent();
 
-				if (rv.relationId == -1)
+      if (component != null) {
+        ComponentView cv = componentView.get(component.getId());
 
-					component = graphicView;
+        if (cv != null) {
+          g.setBounds(cv.geometry);
+          g.setColor(cv.color);
 
-				if (LineCommentary.checkCreate(noteView, component, false))
-				{
-					final LineCommentary lc = new LineCommentary(graphicView, noteView, component, rv.line.getFirst(), rv.line.getLast(), false);
+          // Gestion des entitÃ©s
+          if (g instanceof SimpleEntityView) {
+            SimpleEntityView entityView = (SimpleEntityView) g;
+            entityView.setDisplayAttributes(cv.displayAttributes);
+            entityView.setDisplayMethods(cv.displayMethods);
+            entityView.setDisplayDefault(cv.displayDefault);
+          } else if (g instanceof EnumView) {
+            ((EnumView) g).setTypeEnumDisplay(cv.typeEnumDisplay);
+          }
+        }
+      }
+    }
 
-					for (int i = 1; i < rv.line.size() - 1; i++)
-					{
-						final RelationGrip rg = new RelationGrip(graphicView, lc);
-						rg.setAnchor(rv.line.get(i));
-						lc.addGrip(rg, i);
-					}
+    // Associations
+    for (LineView l : graphicView.getLinesView()) {
+      IDiagramComponent component = l.getAssociedXmlElement();
 
-					lc.getFirstPoint().setAnchor(rv.line.getFirst());
-					lc.getLastPoint().setAnchor(rv.line.getLast());
+      if (component != null) {
+        final RelationView rl = relationView.get(component.getId());
+        if (rl == null) continue;
 
-					lc.setColor(rv.color);
+        LinkedList<Point> points = rl.line;
 
-					graphicView.addLineView(lc);
-				}
-			}
+        for (int i = 1; i < points.size() - 1; i++) {
+          final RelationGrip rg = new RelationGrip(graphicView, l);
+          rg.setAnchor(points.get(i));
+          rg.notifyObservers();
+          l.addGrip(rg, i);
+        }
 
-			noteView.setColor(note.color);
-			graphicView.addNotes(noteView);
-		}
-	}
+        RelationGrip first = l.getFirstPoint(), last = l.getLastPoint();
 
-	public void locateComponentBounds() {
-	  
-		// Generals bounds
-		for (GraphicComponent g : graphicView.getAllComponents()) {
-			IDiagramComponent component = g.getAssociedComponent();
+        first.setAnchor(points.getFirst());
+        last.setAnchor(points.getLast());
 
-			if (component != null) {
-				ComponentView cv = componentView.get(component.getId());
+        first.notifyObservers();
+        last.notifyObservers();
 
-				if (cv != null) {
-					g.setBounds(cv.geometry);
-					g.setColor(cv.color);
-					
-					// Gestion des entités
-					if (g instanceof SimpleEntityView) {
-					  SimpleEntityView entityView = (SimpleEntityView)g;
-					  entityView.setDisplayAttributes(cv.displayAttributes);
-					  entityView.setDisplayMethods(cv.displayMethods);
-					  entityView.setDisplayDefault(cv.displayDefault);
-					} else if (g instanceof EnumView) {
-					  ((EnumView)g).setTypeEnumDisplay(cv.typeEnumDisplay);
-					}
-				}
-			}
-		}
+        l.setColor(rl.color);
+        final LinkedList<TextBox> tb = l.getTextBoxRole();
 
-		// Associations
-		for (LineView l : graphicView.getLinesView()) {
-			IDiagramComponent component = l.getAssociedXmlElement();
-			
-			if (component != null) {
-				final RelationView rl = relationView.get(component.getId());
-				if (rl == null)
-				  continue;
-				
-				LinkedList<Point> points = rl.line;
-
-				for (int i = 1; i < points.size() - 1; i++) {
-					final RelationGrip rg = new RelationGrip(graphicView, l);
-					rg.setAnchor(points.get(i));
-					rg.notifyObservers();
-					l.addGrip(rg, i);
-				}
-
-				RelationGrip first = l.getFirstPoint(),
-						         last = l.getLastPoint();
-				
-				first.setAnchor(points.getFirst());
-				last.setAnchor(points.getLast());
-				
-				first.notifyObservers();
-				last.notifyObservers();
-
-				l.setColor(rl.color);
-				final LinkedList<TextBox> tb = l.getTextBoxRole();
-
-				SwingUtilities.invokeLater(new Runnable() {
+        SwingUtilities.invokeLater(new Runnable() {
           @Override
           public void run() {
             if (tb.size() >= 1) {
-              ((TextBoxLabel) tb.getFirst()).computeDeplacement(
-                  new Point(rl.labelAssociation.x, rl.labelAssociation.y));
+              ((TextBoxLabel) tb.getFirst()).computeDeplacement(new Point(
+                      rl.labelAssociation.x, rl.labelAssociation.y));
 
               if (tb.size() >= 3) {
-                ((TextBoxLabel)tb.get(1)).computeDeplacement(
-                    new Point(rl.roleAssociations.get(0).x, 
-                              rl.roleAssociations.get(0).y));
-                ((TextBoxLabel)tb.get(2)).computeDeplacement(
-                    new Point(rl.roleAssociations.get(1).x, 
-                              rl.roleAssociations.get(1).y));
+                ((TextBoxLabel) tb.get(1)).computeDeplacement(new Point(
+                        rl.roleAssociations.get(0).x, rl.roleAssociations
+                                .get(0).y));
+                ((TextBoxLabel) tb.get(2)).computeDeplacement(new Point(
+                        rl.roleAssociations.get(1).x, rl.roleAssociations
+                                .get(1).y));
 
-                ((TextBoxRole)tb.get(1))
-                    .getTextBoxMultiplicity()
-                    .computeDeplacement(
-                        new Point(rl.multipliciteAssociations.get(0).x,
-                                  rl.multipliciteAssociations.get(0).y));
-                ((TextBoxRole)tb.get(2))
-                    .getTextBoxMultiplicity()
-                    .computeDeplacement(
-                        new Point(rl.multipliciteAssociations.get(1).x,
-                            rl.multipliciteAssociations.get(1).y));
+                ((TextBoxRole) tb.get(1)).getTextBoxMultiplicity()
+                        .computeDeplacement(
+                                new Point(rl.multipliciteAssociations.get(0).x,
+                                        rl.multipliciteAssociations.get(0).y));
+                ((TextBoxRole) tb.get(2)).getTextBoxMultiplicity()
+                        .computeDeplacement(
+                                new Point(rl.multipliciteAssociations.get(1).x,
+                                        rl.multipliciteAssociations.get(1).y));
               }
             }
           }
         });
-				
-			}
-		}
 
-		// Multi-association
-		for (final graphic.relations.MultiView mv : graphicView.getMultiView())
-		{
-			final IDiagramComponent component = mv.getAssociedXmlElement();
+      }
+    }
 
-			if (component != null)
-			{
-				final MultiView xmlMV = multiView.get(component.getId());
+    // Multi-association
+    for (final graphic.relations.MultiView mv : graphicView.getMultiView()) {
+      final IDiagramComponent component = mv.getAssociedXmlElement();
 
-				final LinkedList<MultiLineView> multiLinesView = mv.getMultiLinesView();
+      if (component != null) {
+        final MultiView xmlMV = multiView.get(component.getId());
 
-				for (int j = 0; j < multiLinesView.size(); j++)
-				{
-					final RelationView rl = xmlMV.multiLineView.get(j);
-					final LinkedList<Point> points = rl.line;
-					final MultiLineView mlv = multiLinesView.get(j);
+        final LinkedList<MultiLineView> multiLinesView = mv.getMultiLinesView();
 
-					for (int i = 1; i < points.size() - 1; i++)
-					{
-						final RelationGrip rg = new RelationGrip(graphicView, mlv);
-						rg.setAnchor(points.get(i));
-						rg.notifyObservers();
-						mlv.addGrip(rg, i);
-					}
+        for (int j = 0; j < multiLinesView.size(); j++) {
+          final RelationView rl = xmlMV.multiLineView.get(j);
+          final LinkedList<Point> points = rl.line;
+          final MultiLineView mlv = multiLinesView.get(j);
 
-					RelationGrip first = mlv.getFirstPoint(),
-								 last = mlv.getLastPoint();
-				
-				first.setAnchor(points.getFirst());
-				last.setAnchor(points.getLast());
-				
-				first.notifyObservers();
-				last.notifyObservers();
+          for (int i = 1; i < points.size() - 1; i++) {
+            final RelationGrip rg = new RelationGrip(graphicView, mlv);
+            rg.setAnchor(points.get(i));
+            rg.notifyObservers();
+            mlv.addGrip(rg, i);
+          }
 
-					// Role
-					final LinkedList<TextBox> tb = mlv.getTextBoxRole();
-					
-					SwingUtilities.invokeLater(new Runnable() {
-            
+          RelationGrip first = mlv.getFirstPoint(), last = mlv.getLastPoint();
+
+          first.setAnchor(points.getFirst());
+          last.setAnchor(points.getLast());
+
+          first.notifyObservers();
+          last.notifyObservers();
+
+          // Role
+          final LinkedList<TextBox> tb = mlv.getTextBoxRole();
+
+          SwingUtilities.invokeLater(new Runnable() {
+
             @Override
             public void run() {
               if (tb.size() == 1) {
-                ((TextBoxLabel)tb.getFirst()).computeDeplacement(
-                    new Point(rl.roleAssociations.get(0).x,
-                              rl.roleAssociations.get(0).y));
-                
-                ((TextBoxRole)tb.getFirst()).getTextBoxMultiplicity()
-                                            .computeDeplacement(
-                    new Point(rl.multipliciteAssociations.get(0).x,
-                              rl.multipliciteAssociations.get(0).y));
-              } 
+                ((TextBoxLabel) tb.getFirst()).computeDeplacement(new Point(
+                        rl.roleAssociations.get(0).x, rl.roleAssociations
+                                .get(0).y));
+
+                ((TextBoxRole) tb.getFirst()).getTextBoxMultiplicity()
+                        .computeDeplacement(
+                                new Point(rl.multipliciteAssociations.get(0).x,
+                                        rl.multipliciteAssociations.get(0).y));
+              }
             }
           });
-				}
+        }
 
-				mv.setColor(xmlMV.color);
-				mv.setBounds(xmlMV.multiViewBounds);
-			}
-		}
-	}
+        mv.setColor(xmlMV.color);
+        mv.setBounds(xmlMV.multiViewBounds);
+      }
+    }
+  }
 
-	@Override
-	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
-	{
-		if (qName.equals("classDiagram"))
-			try
-			{
-				uMLClassDiagram = new ClassDiagram();
+  @Override
+  public void startElement(String uri, String localName, String qName,
+          Attributes attributes) throws SAXException {
+    if (qName.equals("classDiagram"))
+      try {
+        uMLClassDiagram = new ClassDiagram();
 
-				final String name = attributes.getValue("name");
+        final String name = attributes.getValue("name");
 
-				uMLClassDiagram.name = name;
-			} catch (final Exception e)
-			{
-				throw new SAXException(e);
-			}
-		else if (qName.equals("diagramElements"))
-			uMLClassDiagram.diagrameElement = new DiagramElements();
-		else if (qName.equals("entity"))
-			try
-			{
-				currentEntity = new Entity();
-				currentEntity.id = Integer.parseInt(attributes.getValue("id"));
-				currentEntity.name = attributes.getValue("name");
-				
-				String currentAttributeValue = attributes.getValue("entityType");
-				if (currentAttributeValue != null)
-				currentEntity.entityType = EntityType.valueOf(attributes.getValue("entityType"));
-				
-				currentAttributeValue = attributes.getValue("visibility");
+        uMLClassDiagram.name = name;
+      } catch (final Exception e) {
+        throw new SAXException(e);
+      }
+    else if (qName.equals("diagramElements"))
+      uMLClassDiagram.diagrameElement = new DiagramElements();
+    else if (qName.equals("entity"))
+      try {
+        currentEntity = new Entity();
+        currentEntity.id = Integer.parseInt(attributes.getValue("id"));
+        currentEntity.name = attributes.getValue("name");
+
+        String currentAttributeValue = attributes.getValue("entityType");
         if (currentAttributeValue != null)
-          currentEntity.visibility = Visibility.valueOf(attributes.getValue("visibility"));
-        
+          currentEntity.entityType = EntityType.valueOf(attributes
+                  .getValue("entityType"));
+
+        currentAttributeValue = attributes.getValue("visibility");
+        if (currentAttributeValue != null)
+          currentEntity.visibility = Visibility.valueOf(attributes
+                  .getValue("visibility"));
+
         currentAttributeValue = attributes.getValue("isAbstract");
         if (currentAttributeValue != null)
-          currentEntity.isAbstract = Boolean.parseBoolean(attributes.getValue("isAbstract"));
+          currentEntity.isAbstract = Boolean.parseBoolean(attributes
+                  .getValue("isAbstract"));
 
-				uMLClassDiagram.diagrameElement.entity.add(currentEntity);
-			} catch (final Exception e)
-			{
-				throw new SAXException(e);
-			}
+        uMLClassDiagram.diagrameElement.entity.add(currentEntity);
+      } catch (final Exception e) {
+        throw new SAXException(e);
+      }
     else if (qName.equals("method"))
-			try
-			{
-				currentMethod = new Operation();
-				currentMethod.name = attributes.getValue("name");
-				currentMethod.returnType = new Type(TypeName.verifyAndAskNewName(attributes.getValue("returnType")));
-				currentMethod.visibility = Visibility.valueOf(attributes.getValue("visibility"));
-				currentMethod.isStatic = Boolean.parseBoolean(attributes.getValue("isStatic"));
-				currentMethod.isAbstract = Boolean.parseBoolean(attributes.getValue("isAbstract"));
-				
-				if (attributes.getValue("view") != null)
-				  currentMethod.view = ParametersViewStyle.valueOf(attributes.getValue("view"));
+      try {
+        currentMethod = new Operation();
+        currentMethod.name = attributes.getValue("name");
+        currentMethod.returnType = new Type(
+                TypeName.verifyAndAskNewName(attributes.getValue("returnType")));
+        currentMethod.visibility = Visibility.valueOf(attributes
+                .getValue("visibility"));
+        currentMethod.isStatic = Boolean.parseBoolean(attributes
+                .getValue("isStatic"));
+        currentMethod.isAbstract = Boolean.parseBoolean(attributes
+                .getValue("isAbstract"));
 
-				currentEntity.method.add(currentMethod);
-			} catch (final Exception e)
-			{
-				throw new SAXException(e);
-			}
-		else if (qName.equals("variable"))
-			try
-			{
-				final Variable variable = new Variable();
-				variable.name = attributes.getValue("name");
-				variable.type = new Type(TypeName.verifyAndAskNewName(attributes.getValue("type")));
-				variable.constant = Boolean.parseBoolean(attributes.getValue("const"));
+        if (attributes.getValue("view") != null)
+          currentMethod.view = ParametersViewStyle.valueOf(attributes
+                  .getValue("view"));
 
-				currentMethod.variable.add(variable);
-			} catch (final Exception e)
-			{
-				throw new SAXException(e);
-			}
-		else if (qName.equals("attribute"))
-			try
-			{
-				final Variable variable = new Variable();
-				variable.name = attributes.getValue("name");
-				variable.type = new Type(TypeName.verifyAndAskNewName(attributes.getValue("type")));
-				variable.constant = Boolean.parseBoolean(attributes.getValue("const"));
-				variable.visibility = Visibility.valueOf(attributes.getValue("visibility"));
-				variable.defaultValue = attributes.getValue("defaultValue");
-				// variable.collection =
-				// Integer.parseInt(attributes.getValue("collection"));
-				variable.isStatic = Boolean.parseBoolean(attributes.getValue("isStatic"));
+        currentEntity.method.add(currentMethod);
+      } catch (final Exception e) {
+        throw new SAXException(e);
+      }
+    else if (qName.equals("variable"))
+      try {
+        final Variable variable = new Variable();
+        variable.name = attributes.getValue("name");
+        variable.type = new Type(TypeName.verifyAndAskNewName(attributes
+                .getValue("type")));
+        variable.constant = Boolean.parseBoolean(attributes.getValue("const"));
 
-				currentEntity.attribute.add(variable);
-			} catch (final Exception e)
-			{
-				throw new SAXException(e);
-			}
-		else if (qName.equals("association"))
-			try
-			{
-				currentAssociation = new Association();
-				currentAssociation.id = Integer.parseInt(attributes.getValue("id"));
-				currentAssociation.name = attributes.getValue("name");
-				try {
-				  currentAssociation.direction = NavigateDirection.valueOf(attributes.getValue("direction"));
-				} catch (IllegalArgumentException e) {
-				  // For older version of sly file. Convert boolean value to navigability.
-				  if (Boolean.parseBoolean(attributes.getValue("direction")))
-  				  currentAssociation.direction = NavigateDirection.FIRST_TO_SECOND;
-				  else
-				    currentAssociation.direction = NavigateDirection.BIDIRECTIONAL;
-  				    
-				}
-				currentAssociation.aggregation = Aggregation.valueOf(attributes.getValue("aggregation"));
+        currentMethod.variable.add(variable);
+      } catch (final Exception e) {
+        throw new SAXException(e);
+      }
+    else if (qName.equals("attribute"))
+      try {
+        final Variable variable = new Variable();
+        variable.name = attributes.getValue("name");
+        variable.type = new Type(TypeName.verifyAndAskNewName(attributes
+                .getValue("type")));
+        variable.constant = Boolean.parseBoolean(attributes.getValue("const"));
+        variable.visibility = Visibility.valueOf(attributes
+                .getValue("visibility"));
+        variable.defaultValue = attributes.getValue("defaultValue");
+        // variable.collection =
+        // Integer.parseInt(attributes.getValue("collection"));
+        variable.isStatic = Boolean.parseBoolean(attributes
+                .getValue("isStatic"));
 
-				uMLClassDiagram.diagrameElement.association.add(currentAssociation);
-			} catch (final Exception e)
-			{
-				throw new SAXException(e);
-			}
-		else if (qName.equals("role"))
-			try
-			{
-				currentRole = new Role();
-				currentRole.name = attributes.getValue("name");
-				currentRole.componentId = Integer.parseInt(attributes.getValue("componentId"));
-				currentRole.visibility = Visibility.valueOf(attributes.getValue("visibility"));
+        currentEntity.attribute.add(variable);
+      } catch (final Exception e) {
+        throw new SAXException(e);
+      }
+    else if (qName.equals("association"))
+      try {
+        currentAssociation = new Association();
+        currentAssociation.id = Integer.parseInt(attributes.getValue("id"));
+        currentAssociation.name = attributes.getValue("name");
+        try {
+          currentAssociation.direction = NavigateDirection.valueOf(attributes
+                  .getValue("direction"));
+        } catch (IllegalArgumentException e) {
+          // For older version of sly file. Convert boolean value to
+          // navigability.
+          if (Boolean.parseBoolean(attributes.getValue("direction")))
+            currentAssociation.direction = NavigateDirection.FIRST_TO_SECOND;
+          else
+            currentAssociation.direction = NavigateDirection.BIDIRECTIONAL;
 
-				currentAssociation.role.add(currentRole);
-			} catch (final Exception e)
-			{
-				throw new SAXException(e);
-			}
-		else if (qName.equals("multiplicity"))
-		{
-			// Nothing to do
-		}
-		else if (qName.equals("inheritance"))
-			try
-			{
-				currentInheritance = new Inheritance();
-				currentInheritance.id = Integer.parseInt(attributes.getValue("id"));
-				currentInheritance.innerClass = Boolean.parseBoolean(attributes.getValue("innerClass"));
+        }
+        currentAssociation.aggregation = Aggregation.valueOf(attributes
+                .getValue("aggregation"));
 
-				buffer = new StringBuffer();
+        uMLClassDiagram.diagrameElement.association.add(currentAssociation);
+      } catch (final Exception e) {
+        throw new SAXException(e);
+      }
+    else if (qName.equals("role"))
+      try {
+        currentRole = new Role();
+        currentRole.name = attributes.getValue("name");
+        currentRole.componentId = Integer.parseInt(attributes
+                .getValue("componentId"));
+        currentRole.visibility = Visibility.valueOf(attributes
+                .getValue("visibility"));
 
-				uMLClassDiagram.diagrameElement.inheritance.add(currentInheritance);
-			} catch (final Exception e)
-			{
-				throw new SAXException(e);
-			}
-		else if (qName.equals("dependency"))
-			try
-			{
-				currentDependency = new Dependency();
-				currentDependency.id = Integer.parseInt(attributes.getValue("id"));
-				currentDependency.label = attributes.getValue("label");
+        currentAssociation.role.add(currentRole);
+      } catch (final Exception e) {
+        throw new SAXException(e);
+      }
+    else if (qName.equals("multiplicity")) {
+      // Nothing to do
+    } else if (qName.equals("inheritance"))
+      try {
+        currentInheritance = new Inheritance();
+        currentInheritance.id = Integer.parseInt(attributes.getValue("id"));
+        currentInheritance.innerClass = Boolean.parseBoolean(attributes
+                .getValue("innerClass"));
 
-				buffer = new StringBuffer();
+        buffer = new StringBuffer();
 
-				uMLClassDiagram.diagrameElement.dependency.add(currentDependency);
-			} catch (final Exception e)
-			{
-				throw new SAXException(e);
-			}
-		else if (qName.equals("umlView"))
-			try
-			{
-				uMLClassDiagram.uMLView.add(new UMLView());
-				uMLClassDiagram.uMLView.getLast().name = attributes.getValue("name");
-			} catch (final Exception e)
-			{
-				throw new SAXException(e);
-			}
-		else if (qName.equals("componentView"))
-			try
-			{
-				inComponentView = true;
-				currentComponentView = new ComponentView();
-				currentComponentView.componentId = Integer.parseInt(attributes.getValue("componentID"));
-				currentComponentView.color = Integer.parseInt(attributes.getValue("color"));
-				
-				if (attributes.getValue("displayAttributes") != null)
-				  currentComponentView.displayAttributes = Boolean.parseBoolean(attributes.getValue("displayAttributes"));
-				
+        uMLClassDiagram.diagrameElement.inheritance.add(currentInheritance);
+      } catch (final Exception e) {
+        throw new SAXException(e);
+      }
+    else if (qName.equals("dependency"))
+      try {
+        currentDependency = new Dependency();
+        currentDependency.id = Integer.parseInt(attributes.getValue("id"));
+        currentDependency.label = attributes.getValue("label");
+
+        buffer = new StringBuffer();
+
+        uMLClassDiagram.diagrameElement.dependency.add(currentDependency);
+      } catch (final Exception e) {
+        throw new SAXException(e);
+      }
+    else if (qName.equals("umlView"))
+      try {
+        uMLClassDiagram.uMLView.add(new UMLView());
+        uMLClassDiagram.uMLView.getLast().name = attributes.getValue("name");
+      } catch (final Exception e) {
+        throw new SAXException(e);
+      }
+    else if (qName.equals("componentView"))
+      try {
+        inComponentView = true;
+        currentComponentView = new ComponentView();
+        currentComponentView.componentId = Integer.parseInt(attributes
+                .getValue("componentID"));
+        currentComponentView.color = Integer.parseInt(attributes
+                .getValue("color"));
+
+        if (attributes.getValue("displayAttributes") != null)
+          currentComponentView.displayAttributes = Boolean
+                  .parseBoolean(attributes.getValue("displayAttributes"));
+
         if (attributes.getValue("displayMethods") != null)
-          currentComponentView.displayMethods = Boolean.parseBoolean(attributes.getValue("displayMethods"));
-        
+          currentComponentView.displayMethods = Boolean.parseBoolean(attributes
+                  .getValue("displayMethods"));
+
         if (attributes.getValue("displayDefault") != null)
-          currentComponentView.displayDefault = Boolean.parseBoolean(attributes.getValue("displayDefault"));
-        
+          currentComponentView.displayDefault = Boolean.parseBoolean(attributes
+                  .getValue("displayDefault"));
+
         if (attributes.getValue("enumValuesVisible") != null)
-          currentComponentView.typeEnumDisplay = TypeEnumDisplay.valueOf(attributes.getValue("enumValuesVisible"));
-        
-			} catch (final Exception e)
-			{
-				throw new SAXException(e);
-			}
-		else if (qName.equals("geometry") || qName.equals("noteGeometry"))
-		{
-			inNoteGeometry = true;
-			currentGeometry = new Rectangle();
-		}
-		else if (qName.equals("relationView") || qName.equals("multiLineView"))
-			try
-			{
-				inRelationView = true;
-				currentRelationView = new RelationView();
-				currentRelationView.relationId = Integer.parseInt(attributes.getValue("relationId"));
-				currentRelationView.color = Integer.parseInt(attributes.getValue("color"));
-			} catch (final Exception e)
-			{
-				throw new SAXException(e);
-			}
-		else if (qName.equals("multiView"))
-			try
-			{
-				currentMultiView = new MultiView();
-				currentMultiView.relationId = Integer.parseInt(attributes.getValue("relationId"));
-				currentMultiView.color = Integer.parseInt(attributes.getValue("color"));
-			} catch (final Exception e)
-			{
-				throw new SAXException(e);
-			}
-		else if (qName.equals("multiViewBounds"))
-		{
-			inMultiViewBounds = true;
-			currentGeometry = new Rectangle();
-		}
-		else if (qName.equals("line"))
-			currentLine = new LinkedList<>();
-		else if (qName.equals("noteLine"))
-		{
-			inNoteRelation = true;
-			currentLine = new LinkedList<>();
-			currentRelationView = new RelationView();
-			currentRelationView.relationId = Integer.parseInt(attributes.getValue("relationId"));
-			currentRelationView.color = Integer.parseInt(attributes.getValue("color"));
-		}
-		else if (qName.equals("point"))
-			currentPoint = new Point();
-		else if (qName.equals("labelAssociation") || qName.equals("roleAssociation") || qName.equals("multipliciteAssociation"))
-		{
-			currentGeometry = new Rectangle();
-			inLabelAssociation = true;
-		}
-		else if (qName.equals("note"))
-			try
-			{
-				currentNote = new Note();
-				currentNote.content = attributes.getValue("content");
-				currentNote.color = Integer.parseInt(attributes.getValue("color"));
-			} catch (final Exception e)
-			{
-				throw new SAXException(e);
-			}
-		else if (qName.equals("EnumValue") || qName.equals("min") || qName.equals("max") || qName.equals("associationClassID") || qName.equals("child") || qName.equals("parent") || qName.equals("source") || qName.equals("target") || qName.equals("x") || qName.equals("y") || qName.equals("w") || qName.equals("h"))
-			buffer = new StringBuffer();
-	}
+          currentComponentView.typeEnumDisplay = TypeEnumDisplay
+                  .valueOf(attributes.getValue("enumValuesVisible"));
+
+      } catch (final Exception e) {
+        throw new SAXException(e);
+      }
+    else if (qName.equals("geometry") || qName.equals("noteGeometry")) {
+      inNoteGeometry = true;
+      currentGeometry = new Rectangle();
+    } else if (qName.equals("relationView") || qName.equals("multiLineView"))
+      try {
+        inRelationView = true;
+        currentRelationView = new RelationView();
+        currentRelationView.relationId = Integer.parseInt(attributes
+                .getValue("relationId"));
+        currentRelationView.color = Integer.parseInt(attributes
+                .getValue("color"));
+      } catch (final Exception e) {
+        throw new SAXException(e);
+      }
+    else if (qName.equals("multiView"))
+      try {
+        currentMultiView = new MultiView();
+        currentMultiView.relationId = Integer.parseInt(attributes
+                .getValue("relationId"));
+        currentMultiView.color = Integer.parseInt(attributes.getValue("color"));
+      } catch (final Exception e) {
+        throw new SAXException(e);
+      }
+    else if (qName.equals("multiViewBounds")) {
+      inMultiViewBounds = true;
+      currentGeometry = new Rectangle();
+    } else if (qName.equals("line"))
+      currentLine = new LinkedList<>();
+    else if (qName.equals("noteLine")) {
+      inNoteRelation = true;
+      currentLine = new LinkedList<>();
+      currentRelationView = new RelationView();
+      currentRelationView.relationId = Integer.parseInt(attributes
+              .getValue("relationId"));
+      currentRelationView.color = Integer
+              .parseInt(attributes.getValue("color"));
+    } else if (qName.equals("point"))
+      currentPoint = new Point();
+    else if (qName.equals("labelAssociation")
+            || qName.equals("roleAssociation")
+            || qName.equals("multipliciteAssociation")) {
+      currentGeometry = new Rectangle();
+      inLabelAssociation = true;
+    } else if (qName.equals("note"))
+      try {
+        currentNote = new Note();
+        currentNote.content = attributes.getValue("content");
+        currentNote.color = Integer.parseInt(attributes.getValue("color"));
+      } catch (final Exception e) {
+        throw new SAXException(e);
+      }
+    else if (qName.equals("EnumValue") || qName.equals("min")
+            || qName.equals("max") || qName.equals("associationClassID")
+            || qName.equals("child") || qName.equals("parent")
+            || qName.equals("source") || qName.equals("target")
+            || qName.equals("x") || qName.equals("y") || qName.equals("w")
+            || qName.equals("h")) buffer = new StringBuffer();
+  }
 }

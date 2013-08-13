@@ -1,4 +1,4 @@
-package swing.hierarchicalView;
+﻿package swing.hierarchicalView;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -24,95 +24,84 @@ import classDiagram.relationships.Inheritance;
 public class NodeInheritance extends DefaultMutableTreeNode implements ICustomizedIconNode, Observer, IClassDiagramNode
 
 {
-	/**
+  /**
 	 * 
 	 */
-	private static final long serialVersionUID = -6765906183481076172L;
+  private static final long serialVersionUID = -6765906183481076172L;
 
-	/**
-	 * Return the title that the node must show according to its inheritance.
-	 * 
-	 * @param inheritance
-	 *            the inheritance to get the title
-	 * @return the title generated from dependency
-	 */
-	public static String generateName(Inheritance inheritance)
-	{
-		return inheritance.toString();
-	}
+  /**
+   * Return the title that the node must show according to its inheritance.
+   * 
+   * @param inheritance
+   *          the inheritance to get the title
+   * @return the title generated from dependency
+   */
+  public static String generateName(Inheritance inheritance) {
+    return inheritance.toString();
+  }
 
-	private final Inheritance inheritance;
-	private final JTree tree;
+  private final Inheritance inheritance;
+  private final JTree tree;
 
-	private final DefaultTreeModel treeModel;
+  private final DefaultTreeModel treeModel;
 
-	/**
-	 * Create a new node associated with an inheritance.
-	 * 
-	 * @param inheritance
-	 *            the inheritance associated
-	 * @param treeModel
-	 *            the model of the JTree
-	 * @param tree
-	 *            the JTree
-	 */
-	public NodeInheritance(Inheritance inheritance, DefaultTreeModel treeModel, JTree tree)
-	{
-		super(generateName(inheritance));
+  /**
+   * Create a new node associated with an inheritance.
+   * 
+   * @param inheritance
+   *          the inheritance associated
+   * @param treeModel
+   *          the model of the JTree
+   * @param tree
+   *          the JTree
+   */
+  public NodeInheritance(Inheritance inheritance, DefaultTreeModel treeModel,
+          JTree tree) {
+    super(generateName(inheritance));
 
-		if (treeModel == null)
-			throw new IllegalArgumentException("treeModel is null");
+    if (treeModel == null)
+      throw new IllegalArgumentException("treeModel is null");
 
-		if (tree == null)
-			throw new IllegalArgumentException("tree is null");
+    if (tree == null) throw new IllegalArgumentException("tree is null");
 
-		this.tree = tree;
-		this.inheritance = inheritance;
-		this.treeModel = treeModel;
+    this.tree = tree;
+    this.inheritance = inheritance;
+    this.treeModel = treeModel;
 
-		inheritance.addObserver(this);
-	}
+    inheritance.addObserver(this);
+  }
 
-	@Override
-	public IDiagramComponent getAssociedComponent()
-	{
-		return inheritance;
-	}
+  @Override
+  public IDiagramComponent getAssociedComponent() {
+    return inheritance;
+  }
 
-	@Override
-	public ImageIcon getCustomizedIcon()
-	{
-		return PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "generalize.png");
-	}
+  @Override
+  public ImageIcon getCustomizedIcon() {
+    return PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "generalize.png");
+  }
 
-	@Override
-	public void update(Observable observable, Object o)
-	{
-		if (o != null && o instanceof UpdateMessage)
-		{
-			final TreePath path = new TreePath(getPath());
+  @Override
+  public void update(Observable observable, Object o) {
+    if (o != null && o instanceof UpdateMessage) {
+      final TreePath path = new TreePath(getPath());
 
-			switch ((UpdateMessage) o)
-			{
-				case SELECT:
-					tree.addSelectionPath(path);
-					break;
-				case UNSELECT:
-					tree.removeSelectionPath(path);
-					break;
+      switch ((UpdateMessage) o) {
+        case SELECT:
+          tree.addSelectionPath(path);
+          break;
+        case UNSELECT:
+          tree.removeSelectionPath(path);
+          break;
         default:
           break;
-			}
-		}
-		else
-		{
-			setUserObject(generateName(inheritance));
-			treeModel.reload(this);
-		}
-	}
-	
-	@Override
-	public void remove()
-	{
-	}
+      }
+    } else {
+      setUserObject(generateName(inheritance));
+      treeModel.reload(this);
+    }
+  }
+
+  @Override
+  public void remove() {}
 }

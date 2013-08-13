@@ -1,4 +1,4 @@
-package graphic.textbox;
+﻿package graphic.textbox;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -12,7 +12,7 @@ import classDiagram.components.EnumValue;
 import graphic.GraphicView;
 
 public class TextBoxEnumValue extends TextBox implements Observer {
-  
+
   private EnumValue enumValue;
 
   public TextBoxEnumValue(GraphicView parent, EnumValue enumValue) {
@@ -33,8 +33,7 @@ public class TextBoxEnumValue extends TextBox implements Observer {
 
   @Override
   public void setBounds(Rectangle bounds) {
-    if (bounds == null)
-      throw new IllegalArgumentException("bounds is null");
+    if (bounds == null) throw new IllegalArgumentException("bounds is null");
 
     this.bounds = new Rectangle(bounds);
   }
@@ -61,7 +60,7 @@ public class TextBoxEnumValue extends TextBox implements Observer {
       System.err.println(ex.getMessage());
     }
   }
-  
+
   @Override
   public void update(Observable observable, Object o) {
     if (o != null && o instanceof UpdateMessage)
@@ -85,7 +84,7 @@ public class TextBoxEnumValue extends TextBox implements Observer {
   protected boolean mustPaintSelectedStyle() {
     return mouseHover;
   }
-  
+
   @Override
   public IDiagramComponent getAssociedComponent() {
     return enumValue;

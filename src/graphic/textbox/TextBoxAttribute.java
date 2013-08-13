@@ -1,4 +1,4 @@
-package graphic.textbox;
+﻿package graphic.textbox;
 
 import graphic.GraphicView;
 
@@ -26,126 +26,119 @@ import classDiagram.components.Attribute;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class TextBoxAttribute extends TextBox implements Observer
-{
-	/**
-	 * Get a String representing the Attribute.
-	 * 
-	 * @param attribute
-	 *            the attribute to convert to String
-	 * @return a String representing the Attribute.
-	 */
-	public static String getStringFromAttribute(Attribute attribute)
-	{
-		final String isConst = attribute.isConstant() ? " {const}" : "";
-		return attribute.getVisibility().toCar() + " " + attribute.getName() + " : " + attribute.getType() + isConst;
-	}
+public class TextBoxAttribute extends TextBox implements Observer {
+  /**
+   * Get a String representing the Attribute.
+   * 
+   * @param attribute
+   *          the attribute to convert to String
+   * @return a String representing the Attribute.
+   */
+  public static String getStringFromAttribute(Attribute attribute) {
+    final String isConst = attribute.isConstant() ? " {const}" : "";
+    return attribute.getVisibility().toCar() + " " + attribute.getName()
+            + " : " + attribute.getType() + isConst;
+  }
 
-	private final Attribute attribute;
+  private final Attribute attribute;
 
-	/**
-	 * Create a new TextBoxAttribute with the given Attribute.
-	 * 
-	 * @param parent
-	 *            the graphic view
-	 * @param attribute
-	 *            the attribute
-	 */
-	public TextBoxAttribute(GraphicView parent, Attribute attribute)
-	{
-		super(parent, getStringFromAttribute(attribute));
+  /**
+   * Create a new TextBoxAttribute with the given Attribute.
+   * 
+   * @param parent
+   *          the graphic view
+   * @param attribute
+   *          the attribute
+   */
+  public TextBoxAttribute(GraphicView parent, Attribute attribute) {
+    super(parent, getStringFromAttribute(attribute));
 
-		if (attribute == null)
-			throw new IllegalArgumentException("attribute is null");
+    if (attribute == null)
+      throw new IllegalArgumentException("attribute is null");
 
-		this.attribute = attribute;
-		attribute.addObserver(this);
-	}
+    this.attribute = attribute;
+    attribute.addObserver(this);
+  }
 
-	@Override
-	public void createEffectivFont()
-	{
-		effectivFont = getFont();
-	}
+  @Override
+  public void createEffectivFont() {
+    effectivFont = getFont();
+  }
 
-	@Override
-	public IDiagramComponent getAssociedComponent()
-	{
-		return attribute;
-	}
+  @Override
+  public IDiagramComponent getAssociedComponent() {
+    return attribute;
+  }
 
-	@Override
-	public Rectangle getBounds()
-	{
-		return new Rectangle(bounds);
-	}
+  @Override
+  public Rectangle getBounds() {
+    return new Rectangle(bounds);
+  }
 
   @Override
   public void setBounds(Rectangle bounds) {
-    if (bounds == null)
-      throw new IllegalArgumentException("bounds is null");
+    if (bounds == null) throw new IllegalArgumentException("bounds is null");
 
     this.bounds = new Rectangle(bounds);
   }
 
-	@Override
-	public String getText()
-	{
-		return getStringFromAttribute(attribute);
-	}
+  @Override
+  public String getText() {
+    return getStringFromAttribute(attribute);
+  }
 
-	@Override
-	public void initAttributeString(AttributedString ats)
-	{
-		if (attribute.isConstant())
-			ats.addAttribute(TextAttribute.POSTURE, TextAttribute.POSTURE_OBLIQUE);
+  @Override
+  public void initAttributeString(AttributedString ats) {
+    if (attribute.isConstant())
+      ats.addAttribute(TextAttribute.POSTURE, TextAttribute.POSTURE_OBLIQUE);
 
-		if (attribute.isStatic())
-			ats.addAttribute(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON, 2, ats.getIterator().getEndIndex());
+    if (attribute.isStatic())
+      ats.addAttribute(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON, 2,
+              ats.getIterator().getEndIndex());
 
-	}
+  }
 
-	@Override
-	public void setSelected(boolean select) {
-		if (isSelected() != select) {
-			super.setSelected(select);
-			attribute.select();
-			if (select)
-				attribute.notifyObservers(UpdateMessage.SELECT);
-			else
-				attribute.notifyObservers(UpdateMessage.UNSELECT);
-		}
-	}
+  @Override
+  public void setSelected(boolean select) {
+    if (isSelected() != select) {
+      super.setSelected(select);
+      attribute.select();
+      if (select)
+        attribute.notifyObservers(UpdateMessage.SELECT);
+      else
+        attribute.notifyObservers(UpdateMessage.UNSELECT);
+    }
+  }
 
-	@Override
-	public void setText(String text) {
-		attribute.setText(text);
-		super.setText(getStringFromAttribute(attribute));
-	}
+  @Override
+  public void setText(String text) {
+    attribute.setText(text);
+    super.setText(getStringFromAttribute(attribute));
+  }
 
-	@Override
-	protected String truncate(Graphics2D g2, String text, int width) {
-		return Utility.truncate(g2, text, width);
-	}
+  @Override
+  protected String truncate(Graphics2D g2, String text, int width) {
+    return Utility.truncate(g2, text, width);
+  }
 
-	@Override
-	public void update(Observable observable, Object o) {
-		if (o != null && o instanceof UpdateMessage)
-  		switch ((UpdateMessage) o) {
-  			case SELECT:
-  				setSelected(true);
-  				break;
-  			case UNSELECT:
-  				setSelected(false);
-  				break;
+  @Override
+  public void update(Observable observable, Object o) {
+    if (o != null && o instanceof UpdateMessage)
+      switch ((UpdateMessage) o) {
+        case SELECT:
+          setSelected(true);
+          break;
+        case UNSELECT:
+          setSelected(false);
+          break;
         default:
           break;
-  		}
-		else
-			super.setText(getStringFromAttribute(attribute));
+      }
+    else
+      super.setText(getStringFromAttribute(attribute));
 
-		repaint();
-	}
+    repaint();
+  }
 
   @Override
   protected boolean mustPaintSelectedStyle() {

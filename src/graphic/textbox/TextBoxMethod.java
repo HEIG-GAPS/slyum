@@ -1,4 +1,4 @@
-package graphic.textbox;
+﻿package graphic.textbox;
 
 import graphic.GraphicView;
 
@@ -30,118 +30,109 @@ import classDiagram.components.Method.ParametersViewStyle;
  */
 public class TextBoxMethod extends TextBox implements Observer {
 
-	private final Method method;
+  private final Method method;
 
-	/**
-	 * Create a new TextBoxMethod with the given Method.
-	 * 
-	 * @param parent
-	 *            the graphic view
-	 * @param attribute
-	 *            the method
-	 */
-	public TextBoxMethod(GraphicView parent, Method method) {
-		super(parent, method.getStringFromMethod());
-		this.method = method;
-		method.addObserver(this);
-	}
+  /**
+   * Create a new TextBoxMethod with the given Method.
+   * 
+   * @param parent
+   *          the graphic view
+   * @param attribute
+   *          the method
+   */
+  public TextBoxMethod(GraphicView parent, Method method) {
+    super(parent, method.getStringFromMethod());
+    this.method = method;
+    method.addObserver(this);
+  }
 
-	@Override
-	public void createEffectivFont()
-	{
-		if (method.isAbstract())
-			effectivFont = getFont().deriveFont(Font.ITALIC);
-		else
-			effectivFont = getFont();
-	}
+  @Override
+  public void createEffectivFont() {
+    if (method.isAbstract())
+      effectivFont = getFont().deriveFont(Font.ITALIC);
+    else
+      effectivFont = getFont();
+  }
 
-	@Override
-	public IDiagramComponent getAssociedComponent()
-	{
-		return method;
-	}
+  @Override
+  public IDiagramComponent getAssociedComponent() {
+    return method;
+  }
 
-	@Override
-	public Rectangle getBounds()
-	{
-		return new Rectangle(bounds);
-	}
+  @Override
+  public Rectangle getBounds() {
+    return new Rectangle(bounds);
+  }
 
-	@Override
-	public String getText() {
-		return method.getStringFromMethod();
-	}
-	
-	@Override
-	public String getEditingText() {
-	  return method.getStringFromMethod(ParametersViewStyle.TYPE_AND_NAME);
-	}
+  @Override
+  public String getText() {
+    return method.getStringFromMethod();
+  }
 
-	@Override
-	public void initAttributeString(AttributedString ats)
-	{
-		if (method.isStatic())
-			ats.addAttribute(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON, 2, ats.getIterator().getEndIndex());
-	}
+  @Override
+  public String getEditingText() {
+    return method.getStringFromMethod(ParametersViewStyle.TYPE_AND_NAME);
+  }
 
-	@Override
-	public void setBounds(Rectangle bounds)
-	{
-		if (bounds == null)
-			throw new IllegalArgumentException("bounds is null");
+  @Override
+  public void initAttributeString(AttributedString ats) {
+    if (method.isStatic())
+      ats.addAttribute(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON, 2,
+              ats.getIterator().getEndIndex());
+  }
 
-		this.bounds = new Rectangle(bounds);
-	}
+  @Override
+  public void setBounds(Rectangle bounds) {
+    if (bounds == null) throw new IllegalArgumentException("bounds is null");
 
-	@Override
-	public void setSelected(boolean select)
-	{
-		if (isSelected() != select)
-		{
-			super.setSelected(select);
+    this.bounds = new Rectangle(bounds);
+  }
 
-			method.select();
+  @Override
+  public void setSelected(boolean select) {
+    if (isSelected() != select) {
+      super.setSelected(select);
 
-			if (select)
-				method.notifyObservers(UpdateMessage.SELECT);
-			else
-				method.notifyObservers(UpdateMessage.UNSELECT);
-		}
-	}
+      method.select();
 
-	@Override
-	public void setText(String text) {
-		method.setText(text);
-		super.setText(method.getStringFromMethod());
-	}
+      if (select)
+        method.notifyObservers(UpdateMessage.SELECT);
+      else
+        method.notifyObservers(UpdateMessage.UNSELECT);
+    }
+  }
 
-	@Override
-	protected String truncate(Graphics2D g2, String text, int width)
-	{
-		return Utility.truncate(g2, text, width);
-	}
+  @Override
+  public void setText(String text) {
+    method.setText(text);
+    super.setText(method.getStringFromMethod());
+  }
 
-	@Override
-	public void update(Observable observable, Object o) {
-		if (o != null && o instanceof UpdateMessage) {
-			switch ((UpdateMessage) o)
-			{
-				case SELECT:
-					setSelected(true);
-					break;
-				case UNSELECT:
-					setSelected(false);
-					break;
-      default:
-        break;
-			}
-		} else {
-			String text = method.getStringFromMethod();
-			super.setText(text);
-		}
+  @Override
+  protected String truncate(Graphics2D g2, String text, int width) {
+    return Utility.truncate(g2, text, width);
+  }
 
-		repaint();
-	}
+  @Override
+  public void update(Observable observable, Object o) {
+    if (o != null && o instanceof UpdateMessage) {
+      switch ((UpdateMessage) o) {
+        case SELECT:
+          setSelected(true);
+          break;
+        case UNSELECT:
+          setSelected(false);
+          break;
+        default:
+          break;
+      }
+    } else {
+      String text = method.getStringFromMethod();
+      super.setText(text);
+    }
+
+    repaint();
+  }
 
   @Override
   protected boolean mustPaintSelectedStyle() {

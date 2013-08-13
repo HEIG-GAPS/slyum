@@ -1,4 +1,4 @@
-package swing.hierarchicalView;
+﻿package swing.hierarchicalView;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
@@ -12,14 +12,14 @@ import classDiagram.components.EnumValue;
 public class NodeEnumEntity extends NodeEntity {
 
   public NodeEnumEntity(Entity entity, DefaultTreeModel treeModel, JTree tree,
-      ImageIcon icon) {
+          ImageIcon icon) {
     super(entity, treeModel, tree, icon);
   }
 
   @Override
   protected void reloadChildsNodes() {
     DefaultMutableTreeNode node;
-    EnumEntity entity = (EnumEntity)super.entity;
+    EnumEntity entity = (EnumEntity) super.entity;
 
     setUserObject(entity.getName());
     removeAllChildren();

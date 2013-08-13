@@ -1,4 +1,4 @@
-package graphic.entity;
+﻿package graphic.entity;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -18,45 +18,39 @@ import change.Change;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public abstract class GripEntity extends SquareGrip
-{
-	public GripEntity(GraphicView parent, int size, int cursor)
-	{
-		super(parent, size, cursor);
-	}
+public abstract class GripEntity extends SquareGrip {
+  public GripEntity(GraphicView parent, int size, int cursor) {
+    super(parent, size, cursor);
+  }
 
-	@Override
-	public void gMouseDragged(MouseEvent e)
-	{
-		move(e);
-	}
+  @Override
+  public void gMouseDragged(MouseEvent e) {
+    move(e);
+  }
 
-	@Override
-	public void gMousePressed(MouseEvent e)
-	{
-		for (final GraphicComponent c : parent.getSelectedComponents())
-			c.saveMouseLocation(e);
-	}
+  @Override
+  public void gMousePressed(MouseEvent e) {
+    for (final GraphicComponent c : parent.getSelectedComponents())
+      c.saveMouseLocation(e);
+  }
 
-	@Override
-	public void gMouseReleased(MouseEvent e)
-	{
-		final Rectangle repaintBounds = new Rectangle(getBounds());
-		repaintBounds.grow(10, 10);
+  @Override
+  public void gMouseReleased(MouseEvent e) {
+    final Rectangle repaintBounds = new Rectangle(getBounds());
+    repaintBounds.grow(10, 10);
 
-		boolean isRecord = Change.isRecord();
-		Change.record();
-		
-		for (final GraphicComponent c : parent.getSelectedComponents())
-			
-			c.apply(e);
-		
-		if (!isRecord)
-			Change.stopRecord();
+    boolean isRecord = Change.isRecord();
+    Change.record();
 
-		parent.getScene().repaint(repaintBounds);
-	}
+    for (final GraphicComponent c : parent.getSelectedComponents())
 
-	@Override
-	public abstract void move(MouseEvent e);
+      c.apply(e);
+
+    if (!isRecord) Change.stopRecord();
+
+    parent.getScene().repaint(repaintBounds);
+  }
+
+  @Override
+  public abstract void move(MouseEvent e);
 }

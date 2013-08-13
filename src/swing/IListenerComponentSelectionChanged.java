@@ -1,6 +1,5 @@
-package swing;
+﻿package swing;
 
-public interface IListenerComponentSelectionChanged
-{
-	public void componentSelectionChanged();
+public interface IListenerComponentSelectionChanged {
+  public void componentSelectionChanged();
 }

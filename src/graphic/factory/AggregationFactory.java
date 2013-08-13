@@ -1,4 +1,4 @@
-package graphic.factory;
+﻿package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -24,56 +24,56 @@ import classDiagram.relationships.Association.NavigateDirection;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class AggregationFactory extends RelationFactory
-{
+public class AggregationFactory extends RelationFactory {
 
-	/**
-	 * Create a new factory allowing the creation of an aggregation.
-	 * 
-	 * @param parent
-	 *            the graphic view
-	 * @param classDiagram
-	 *            the class diagram
-	 */
-	public AggregationFactory(GraphicView parent)
-	{
-		super(parent);
-    
-    GraphicView.setButtonFactory(
-        SPanelDiagramComponent.getInstance().getBtnAggregation());
-	}
+  /**
+   * Create a new factory allowing the creation of an aggregation.
+   * 
+   * @param parent
+   *          the graphic view
+   * @param classDiagram
+   *          the class diagram
+   */
+  public AggregationFactory(GraphicView parent) {
+    super(parent);
 
-	@Override
-	public GraphicComponent create()
-	{
-		if (isFirstComponentValid() && componentMouseReleased instanceof EntityView) {
-			final EntityView source = (EntityView) componentMousePressed;
-			final EntityView target = (EntityView) componentMouseReleased;
+    GraphicView.setButtonFactory(SPanelDiagramComponent.getInstance()
+            .getBtnAggregation());
+  }
 
-			final Aggregation aggregation = new Aggregation(source.getComponent(), target.getComponent(), NavigateDirection.BIDIRECTIONAL);
-			final AggregationView a = new AggregationView(parent, source, target, aggregation, mousePressed, mouseReleased, true);
+  @Override
+  public GraphicComponent create() {
+    if (isFirstComponentValid() && componentMouseReleased instanceof EntityView) {
+      final EntityView source = (EntityView) componentMousePressed;
+      final EntityView target = (EntityView) componentMouseReleased;
 
-			parent.addLineView(a);
-			classDiagram.addAggregation(aggregation);
+      final Aggregation aggregation = new Aggregation(source.getComponent(),
+              target.getComponent(), NavigateDirection.BIDIRECTIONAL);
+      final AggregationView a = new AggregationView(parent, source, target,
+              aggregation, mousePressed, mouseReleased, true);
 
-			parent.unselectAll();
-			a.setSelected(true);
+      parent.addLineView(a);
+      classDiagram.addAggregation(aggregation);
 
-			return a;
-		}
+      parent.unselectAll();
+      a.setSelected(true);
 
-		repaint();
-		return null;
-	}
-	
-	@Override
-	protected boolean isFirstComponentValid() {
-	  return componentMousePressed instanceof EntityView;
-	}
+      return a;
+    }
 
-	@Override
-	protected void drawExtremity(Graphics2D g2) {
+    repaint();
+    return null;
+  }
+
+  @Override
+  protected boolean isFirstComponentValid() {
+    return componentMousePressed instanceof EntityView;
+  }
+
+  @Override
+  protected void drawExtremity(Graphics2D g2) {
     Point p = points.size() < 2 ? mouseLocation : points.get(1);
-    AggregationView.paintExtremity(g2, p, points.get(0), Color.WHITE, Color.DARK_GRAY);
-	}
+    AggregationView.paintExtremity(g2, p, points.get(0), Color.WHITE,
+            Color.DARK_GRAY);
+  }
 }

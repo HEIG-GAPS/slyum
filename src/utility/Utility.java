@@ -1,4 +1,4 @@
-package utility;
+﻿package utility;
 
 import graphic.GraphicComponent;
 
@@ -46,551 +46,528 @@ import classDiagram.relationships.Multiplicity;
  * @author David Miserez
  * @version 1.0 - 24.07.2011
  */
-public class Utility
-{
-	public final static GraphicQualityType GRAPHIQUE_QUALITY_TYPE = GraphicQualityType.MAX;
-	
-	public enum GraphicQualityType
-	{
-		LOW, MAX, MEDIUM
-	};
-	
-	public static String proposeNewName(String message) {
-	    EditCommentaryDialog ecd = new EditCommentaryDialog("", "Slyum - Change name", message);
-	    ecd.setVisible(true);
-	    
-	    return ecd.isAccepted() ? ecd.getText() : "-1";
-	}
-  
+public class Utility {
+  public final static GraphicQualityType GRAPHIQUE_QUALITY_TYPE = GraphicQualityType.MAX;
+
+  public enum GraphicQualityType {
+    LOW, MAX, MEDIUM
+  };
+
+  public static String proposeNewName(String message) {
+    EditCommentaryDialog ecd = new EditCommentaryDialog("",
+            "Slyum - Change name", message);
+    ecd.setVisible(true);
+
+    return ecd.isAccepted() ? ecd.getText() : "-1";
+  }
+
   public static <T> int count(Class<?> type, LinkedList<T> list) {
     int count = 0;
-    
+
     for (T component : list)
-      if (type.isInstance(component))
-        count++;
+      if (type.isInstance(component)) count++;
     return count;
   }
 
-	
-	/**
-	 * Scale the given rectangle with the given scale.
-	 * @param rect rectangle
-	 * @param scale scale
-	 * @return the scaling rectangle.
-	 */
-	public static Rectangle scaleRect(Rectangle rect, double scale)
-	{
-		Rectangle r = new Rectangle(rect);
-		
-		r.x *= scale;
-		r.y *= scale;
-		r.width *= scale;
-		r.height *= scale;
-		
-		return r;
-	}
+  /**
+   * Scale the given rectangle with the given scale.
+   * 
+   * @param rect
+   *          rectangle
+   * @param scale
+   *          scale
+   * @return the scaling rectangle.
+   */
+  public static Rectangle scaleRect(Rectangle rect, double scale) {
+    Rectangle r = new Rectangle(rect);
 
-	/**
-	 * http://www.exampledepot.com/egs/java.awt.datatransfer/ToClipImg.html
-	 */
-	public static class ImageSelection implements Transferable
-	{
-		private final Image image;
+    r.x *= scale;
+    r.y *= scale;
+    r.width *= scale;
+    r.height *= scale;
 
-		public ImageSelection(Image image)
-		{
-			this.image = image;
-		}
+    return r;
+  }
 
-		// Returns image
-		@Override
-		public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException
-		{
-			if (!DataFlavor.imageFlavor.equals(flavor))
-				throw new UnsupportedFlavorException(flavor);
-			return image;
-		}
+  /**
+   * http://www.exampledepot.com/egs/java.awt.datatransfer/ToClipImg.html
+   */
+  public static class ImageSelection implements Transferable {
+    private final Image image;
 
-		// Returns supported flavors
-		@Override
-		public DataFlavor[] getTransferDataFlavors()
-		{
-			return new DataFlavor[] { DataFlavor.imageFlavor };
-		}
+    public ImageSelection(Image image) {
+      this.image = image;
+    }
 
-		// Returns true if flavor is supported
-		@Override
-		public boolean isDataFlavorSupported(DataFlavor flavor)
-		{
-			return DataFlavor.imageFlavor.equals(flavor);
-		}
-	}
-	
-	public static String keystrokeToString(String a)
-	{
-		String result = "";
-		String[] string = a.split(" ");
-		
-		for (int i = 0; i < string.length; i++)
-		{
-			String car = i == string.length-1 ? "-" : "+";
-			String s = string[i].substring(0, 1).toUpperCase();
-			result += car.concat(s.concat(string[i].substring(1)));
-		}
-		
-		return "(" + result.substring(1) + ")"; // remove first "+"
-	}
+    // Returns image
+    @Override
+    public Object getTransferData(DataFlavor flavor)
+            throws UnsupportedFlavorException, IOException {
+      if (!DataFlavor.imageFlavor.equals(flavor))
+        throw new UnsupportedFlavorException(flavor);
+      return image;
+    }
 
-	/**
-	 * Get a string representing the tag geometry in the XML structure.
-	 * 
-	 * @param depth
-	 *            the number of tabs before each tags
-	 * @param bounds
-	 *            the bounds to put into XML tags
-	 * @param baliseName
-	 *            the name of the balise
-	 * @return the string representing a geometry tags with the bounds given.
-	 */
-	public static Element boundsToXmlElement(
-	    Document doc, Rectangle bounds, String tag) {
-	  Element element = doc.createElement(tag),
-	          x = doc.createElement("x"),
-            y = doc.createElement("y"),
-            w = doc.createElement("w"),
-            h = doc.createElement("h");
-	  
-	  x.setTextContent(String.valueOf(bounds.x));
-	  y.setTextContent(String.valueOf(bounds.y));
-	  w.setTextContent(String.valueOf(bounds.width));
-	  h.setTextContent(String.valueOf(bounds.height));
-	  
-	  element.appendChild(x);
-	  element.appendChild(y);
-	  element.appendChild(w);
-	  element.appendChild(h);
-	  
-		return element;
-	}
-	
-	public static Element pointToXmlElement(Point pt, String tag, Document doc) {
-    Element element = doc.createElement(tag),
-            x = doc.createElement("x"),
-            y = doc.createElement("y");
+    // Returns supported flavors
+    @Override
+    public DataFlavor[] getTransferDataFlavors() {
+      return new DataFlavor[] { DataFlavor.imageFlavor };
+    }
+
+    // Returns true if flavor is supported
+    @Override
+    public boolean isDataFlavorSupported(DataFlavor flavor) {
+      return DataFlavor.imageFlavor.equals(flavor);
+    }
+  }
+
+  public static String keystrokeToString(String a) {
+    String result = "";
+    String[] string = a.split(" ");
+
+    for (int i = 0; i < string.length; i++) {
+      String car = i == string.length - 1 ? "-" : "+";
+      String s = string[i].substring(0, 1).toUpperCase();
+      result += car.concat(s.concat(string[i].substring(1)));
+    }
+
+    return "(" + result.substring(1) + ")"; // remove first "+"
+  }
+
+  /**
+   * Get a string representing the tag geometry in the XML structure.
+   * 
+   * @param depth
+   *          the number of tabs before each tags
+   * @param bounds
+   *          the bounds to put into XML tags
+   * @param baliseName
+   *          the name of the balise
+   * @return the string representing a geometry tags with the bounds given.
+   */
+  public static Element boundsToXmlElement(Document doc, Rectangle bounds,
+          String tag) {
+    Element element = doc.createElement(tag), x = doc.createElement("x"), y = doc
+            .createElement("y"), w = doc.createElement("w"), h = doc
+            .createElement("h");
+
+    x.setTextContent(String.valueOf(bounds.x));
+    y.setTextContent(String.valueOf(bounds.y));
+    w.setTextContent(String.valueOf(bounds.width));
+    h.setTextContent(String.valueOf(bounds.height));
+
+    element.appendChild(x);
+    element.appendChild(y);
+    element.appendChild(w);
+    element.appendChild(h);
+
+    return element;
+  }
+
+  public static Element pointToXmlElement(Point pt, String tag, Document doc) {
+    Element element = doc.createElement(tag), x = doc.createElement("x"), y = doc
+            .createElement("y");
 
     x.setTextContent(String.valueOf(pt.x));
     y.setTextContent(String.valueOf(pt.y));
-    
+
     element.appendChild(x);
     element.appendChild(y);
-    
+
     return element;
-	}
+  }
 
-	/**
-	 * Compute a point on the segment defined by p1 and p2 that are the nearest
-	 * point from p3. This algorithme was found on :
-	 * http://paulbourke.net/geometry/pointline/
-	 * 
-	 * @param p1
-	 *            the first point defined a segment
-	 * @param p2
-	 *            the second point defined a segment
-	 * @param p3
-	 *            the point used for find the nearest point on the segment (p1,
-	 *            p2)
-	 * @return
-	 */
-	public static Point2D distanceToSegment(Point2D p1, Point2D p2, Point2D p3)
-	{
-		final double xDelta = p2.getX() - p1.getX();
-		final double yDelta = p2.getY() - p1.getY();
+  /**
+   * Compute a point on the segment defined by p1 and p2 that are the nearest
+   * point from p3. This algorithme was found on :
+   * http://paulbourke.net/geometry/pointline/
+   * 
+   * @param p1
+   *          the first point defined a segment
+   * @param p2
+   *          the second point defined a segment
+   * @param p3
+   *          the point used for find the nearest point on the segment (p1, p2)
+   * @return
+   */
+  public static Point2D distanceToSegment(Point2D p1, Point2D p2, Point2D p3) {
+    final double xDelta = p2.getX() - p1.getX();
+    final double yDelta = p2.getY() - p1.getY();
 
-		if (xDelta == 0 && yDelta == 0)
+    if (xDelta == 0 && yDelta == 0)
 
-			return p1;
+    return p1;
 
-		final double u = ((p3.getX() - p1.getX()) * xDelta + (p3.getY() - p1.getY()) * yDelta) / (xDelta * xDelta + yDelta * yDelta);
+    final double u = ((p3.getX() - p1.getX()) * xDelta + (p3.getY() - p1.getY())
+            * yDelta)
+            / (xDelta * xDelta + yDelta * yDelta);
 
-		Point2D closestPoint;
+    Point2D closestPoint;
 
-		if (u < 0)
+    if (u < 0)
 
-			closestPoint = p1;
+      closestPoint = p1;
 
-		else if (u > 1)
+    else if (u > 1)
 
-			closestPoint = p2;
+      closestPoint = p2;
 
-		else
+    else
 
-			closestPoint = new Point2D.Double(p1.getX() + u * xDelta, p1.getY() + u * yDelta);
+      closestPoint = new Point2D.Double(p1.getX() + u * xDelta, p1.getY() + u
+              * yDelta);
 
-		return closestPoint;
-	}
+    return closestPoint;
+  }
 
-	/**
-	 * Find a JMenuItem in the JPopupMenu given that correspond to the given
-	 * text. Return null if no JMenuItem is found. The given text must not be
-	 * the exact title of the JMenuItem, string compare use startsWith() method.
-	 * 
-	 * @param menu
-	 *            the popup menu where find the JMenuItem
-	 * @param text
-	 *            the title of the JMenuItem to find.
-	 * @return the JMenuItem find; or null if no JMenuItem has this title.
-	 */
-	public static JMenuItem findMenuItem(JPopupMenu menu, String text)
-	{
-		for (final Component component : menu.getComponents())
+  /**
+   * Find a JMenuItem in the JPopupMenu given that correspond to the given text.
+   * Return null if no JMenuItem is found. The given text must not be the exact
+   * title of the JMenuItem, string compare use startsWith() method.
+   * 
+   * @param menu
+   *          the popup menu where find the JMenuItem
+   * @param text
+   *          the title of the JMenuItem to find.
+   * @return the JMenuItem find; or null if no JMenuItem has this title.
+   */
+  public static JMenuItem findMenuItem(JPopupMenu menu, String text) {
+    for (final Component component : menu.getComponents())
 
-			if (component instanceof JMenuItem)
+      if (component instanceof JMenuItem)
 
-				if (((JMenuItem) component).getText().startsWith(text))
+      if (((JMenuItem) component).getText().startsWith(text))
 
-					return (JMenuItem) component;
+      return (JMenuItem) component;
 
-		return null;
-	}
+    return null;
+  }
 
-	/**
-	 * Return a string containing a 'number' of '\t'.
-	 * 
-	 * @param number
-	 *            the number of '\t'
-	 * @return a string with 'number' tabs
-	 */
-	public static String generateTab(int number)
-	{
-		String tab = "";
+  /**
+   * Return a string containing a 'number' of '\t'.
+   * 
+   * @param number
+   *          the number of '\t'
+   * @return a string with 'number' tabs
+   */
+  public static String generateTab(int number) {
+    String tab = "";
 
-		for (int i = 0; i < number; i++)
-			tab += "\t";
+    for (int i = 0; i < number; i++)
+      tab += "\t";
 
-		return tab;
-	}
+    return tab;
+  }
 
-	/**
-	 * Return the complementary color. The complementary color is calculated in
-	 * the way define here :
-	 * http://help.adobe.com/fr_FR/Illustrator/13.0/help.html
-	 * ?content=WS714a382cdf7d304e7e07d0100196cbc5f-6288.html
-	 * 
-	 * @param color
-	 *            the color to compute its complementary
-	 * @return the complementary color
-	 */
-	public static Color getComplementaryColor(Color color)
-	{
-		final int r = color.getRed();
-		final int g = color.getGreen();
-		final int b = color.getBlue();
+  /**
+   * Return the complementary color. The complementary color is calculated in
+   * the way define here :
+   * http://help.adobe.com/fr_FR/Illustrator/13.0/help.html
+   * ?content=WS714a382cdf7d304e7e07d0100196cbc5f-6288.html
+   * 
+   * @param color
+   *          the color to compute its complementary
+   * @return the complementary color
+   */
+  public static Color getComplementaryColor(Color color) {
+    final int r = color.getRed();
+    final int g = color.getGreen();
+    final int b = color.getBlue();
 
-		final int min = Math.min(Math.min(r, g), b);
-		final int max = Math.max(Math.max(r, g), b);
+    final int min = Math.min(Math.min(r, g), b);
+    final int max = Math.max(Math.max(r, g), b);
 
-		final int add = min + max;
+    final int add = min + max;
 
-		final int newR = add - r;
-		final int newG = add - g;
-		final int newB = add - b;
+    final int newR = add - r;
+    final int newG = add - g;
+    final int newB = add - b;
 
-		return new Color(newR, newG, newB);
-	}
+    return new Color(newR, newG, newB);
+  }
 
-	/**
-	 * Get the extension of a file. Return null if the file has no extension.
-	 * (find on : http://download.oracle.com/)
-	 * 
-	 * @param f
-	 *            the file to find its extension
-	 * @return the extension of the file; or null if no extension are found.
-	 */
-	public static String getExtension(File f)
-	{
-		String ext = null;
-		final String s = f.getName();
-		final int i = s.lastIndexOf('.');
+  /**
+   * Get the extension of a file. Return null if the file has no extension.
+   * (find on : http://download.oracle.com/)
+   * 
+   * @param f
+   *          the file to find its extension
+   * @return the extension of the file; or null if no extension are found.
+   */
+  public static String getExtension(File f) {
+    String ext = null;
+    final String s = f.getName();
+    final int i = s.lastIndexOf('.');
 
-		if (i > 0 && i < s.length() - 1)
-			ext = s.substring(i + 1).toLowerCase();
-		return ext;
-	}
-	
-	public static GraphicQualityType getGraphicQualityType()
-	{
-		String graphiqueQuality = PropertyLoader.getInstance().getProperties().getProperty("GraphicQuality");
-		GraphicQualityType gqt = GRAPHIQUE_QUALITY_TYPE;
-		
-		if (graphiqueQuality != null)
-			gqt = GraphicQualityType.valueOf(graphiqueQuality);
-		
-		return gqt;
-	}
+    if (i > 0 && i < s.length() - 1) ext = s.substring(i + 1).toLowerCase();
+    return ext;
+  }
 
-	/**
-	 * Compute the gray level of a color. The gray level is calculated by adding
-	 * the hightest RGB component with the lowest and divided by 2. The gray
-	 * level is a float value between 0.0 and 1.0f. This method return a color
-	 * with RGB equals 100 if the gray level is less than 0.5f, 200 otherwise.
-	 * It permit to find a gray color who are visible on the given color (except
-	 * if the color is a gray near of 127 RGB).
-	 * 
-	 * @param color
-	 * @return
-	 */
-	public static int getColorGrayLevel(Color color)
-	{
-		final float rp = color.getRed() / 255.0f;
-		final float gp = color.getGreen() / 255.0f;
-		final float bp = color.getBlue() / 255.0f;
+  public static GraphicQualityType getGraphicQualityType() {
+    String graphiqueQuality = PropertyLoader.getInstance().getProperties()
+            .getProperty("GraphicQuality");
+    GraphicQualityType gqt = GRAPHIQUE_QUALITY_TYPE;
 
-		final float max = Math.max(Math.max(rp, gp), bp);
-		final float min = Math.min(Math.min(rp, gp), bp);
+    if (graphiqueQuality != null)
+      gqt = GraphicQualityType.valueOf(graphiqueQuality);
 
-		return (max + min) / 2.0f > 0.5f ? 100 : 200;
-	}
+    return gqt;
+  }
 
-	/**
-	 * Return a set of keys that corresponding to the given value in a Map. Fint
-	 * on :
-	 * http://stackoverflow.com/questions/1383797/java-hashmap-how-to-get-key
-	 * -from-value
-	 * 
-	 * @param map
-	 * @param value
-	 * @return
-	 */
-	public static <T, E> Set<T> getKeysByValue(Map<T, E> map, E value)
-	{
-		final Set<T> keys = new HashSet<T>();
-		for (final Entry<T, E> entry : map.entrySet())
-			if (entry.getValue().equals(value))
-				keys.add(entry.getKey());
-		return keys;
-	}
+  /**
+   * Compute the gray level of a color. The gray level is calculated by adding
+   * the hightest RGB component with the lowest and divided by 2. The gray level
+   * is a float value between 0.0 and 1.0f. This method return a color with RGB
+   * equals 100 if the gray level is less than 0.5f, 200 otherwise. It permit to
+   * find a gray color who are visible on the given color (except if the color
+   * is a gray near of 127 RGB).
+   * 
+   * @param color
+   * @return
+   */
+  public static int getColorGrayLevel(Color color) {
+    final float rp = color.getRed() / 255.0f;
+    final float gp = color.getGreen() / 255.0f;
+    final float bp = color.getBlue() / 255.0f;
 
-	/**
-	 * Return a rectangle englobing all graphic components from the given list.
-	 * 
-	 * @param components
-	 *            the graphic components
-	 * @return a rectangle englobing all graphic components from the given list
-	 */
-	public static Rectangle getLimits(LinkedList<? extends GraphicComponent> components)
-	{
-		if (components.size() == 0)
-			return new Rectangle();
+    final float max = Math.max(Math.max(rp, gp), bp);
+    final float min = Math.min(Math.min(rp, gp), bp);
 
-		int top = Integer.MAX_VALUE;
-		int left = Integer.MAX_VALUE;
-		int right = Integer.MIN_VALUE;
-		int bottom = Integer.MIN_VALUE;
+    return (max + min) / 2.0f > 0.5f ? 100 : 200;
+  }
 
-		for (final GraphicComponent c : components)
-		{
-			final Rectangle current = c.getBounds();
+  /**
+   * Return a set of keys that corresponding to the given value in a Map. Fint
+   * on : http://stackoverflow.com/questions/1383797/java-hashmap-how-to-get-key
+   * -from-value
+   * 
+   * @param map
+   * @param value
+   * @return
+   */
+  public static <T, E> Set<T> getKeysByValue(Map<T, E> map, E value) {
+    final Set<T> keys = new HashSet<T>();
+    for (final Entry<T, E> entry : map.entrySet())
+      if (entry.getValue().equals(value)) keys.add(entry.getKey());
+    return keys;
+  }
 
-			// find lower y value
-			if (top > current.y)
-				top = current.y;
+  /**
+   * Return a rectangle englobing all graphic components from the given list.
+   * 
+   * @param components
+   *          the graphic components
+   * @return a rectangle englobing all graphic components from the given list
+   */
+  public static Rectangle getLimits(
+          LinkedList<? extends GraphicComponent> components) {
+    if (components.size() == 0) return new Rectangle();
 
-			// find lower x value
-			if (left > current.x)
-				left = current.x;
+    int top = Integer.MAX_VALUE;
+    int left = Integer.MAX_VALUE;
+    int right = Integer.MIN_VALUE;
+    int bottom = Integer.MIN_VALUE;
 
-			// find rightmost x value (for width)
-			if (right < current.x + current.width)
-				right = current.x + current.width;
+    for (final GraphicComponent c : components) {
+      final Rectangle current = c.getBounds();
 
-			// find hightest y value (for hight)
-			if (bottom < current.y + current.height)
-				bottom = current.y + current.height;
-		}
+      // find lower y value
+      if (top > current.y) top = current.y;
 
-		return new Rectangle(left, top, right - left, bottom - top);
-	}
+      // find lower x value
+      if (left > current.x) left = current.x;
 
-	/**
-	 * Return a JComboBox containing all default multiplicities.
-	 * 
-	 * @return a JComboBox containing all default multiplicities
-	 */
-	public static JComboBox<Multiplicity> getMultiplicityComboBox()
-	{
-		final JComboBox<Multiplicity> cmb = new JComboBox<Multiplicity>();
-		cmb.setEditable(true);
+      // find rightmost x value (for width)
+      if (right < current.x + current.width) right = current.x + current.width;
 
-		cmb.addItem(Multiplicity.ONE_ONLY);
-		cmb.addItem(Multiplicity.ONE_OR_MORE);
-		cmb.addItem(Multiplicity.ZERO);
-		cmb.addItem(Multiplicity.ZERO_OR_MORE);
-		cmb.addItem(Multiplicity.ZERO_OR_ONE);
+      // find hightest y value (for hight)
+      if (bottom < current.y + current.height)
+        bottom = current.y + current.height;
+    }
 
-		cmb.setSelectedIndex(0);
+    return new Rectangle(left, top, right - left, bottom - top);
+  }
 
-		return cmb;
-	}
+  /**
+   * Return a JComboBox containing all default multiplicities.
+   * 
+   * @return a JComboBox containing all default multiplicities
+   */
+  public static JComboBox<Multiplicity> getMultiplicityComboBox() {
+    final JComboBox<Multiplicity> cmb = new JComboBox<Multiplicity>();
+    cmb.setEditable(true);
 
-	/**
-	 * Return a JComboBox containing all default visibilities.
-	 * 
-	 * @return a JComboBox containing all default visibilities
-	 */
-	public static JComboBox<String> getVisibilityComboBox()
-	{
-		final String[] list = new String[Visibility.values().length];
+    cmb.addItem(Multiplicity.ONE_ONLY);
+    cmb.addItem(Multiplicity.ONE_OR_MORE);
+    cmb.addItem(Multiplicity.ZERO);
+    cmb.addItem(Multiplicity.ZERO_OR_MORE);
+    cmb.addItem(Multiplicity.ZERO_OR_ONE);
 
-		for (int i = 0; i < list.length; i++)
-			list[i] = Visibility.values()[i].getName();
+    cmb.setSelectedIndex(0);
 
-		return new JComboBox<String>(list);
-	}
+    return cmb;
+  }
 
-	/**
-	 * Grow rectangle in this way: x-size, y-size, width+size*2, height+size*2.
-	 * 
-	 * @param rect
-	 *            Rectangle to grow.
-	 * @param size
-	 *            Size to add.
-	 * @return The rectangle elarged.
-	 */
-	public static Rectangle growRectangle(Rectangle rect, int size)
-	{
-		final int size2 = size * 2;
+  /**
+   * Return a JComboBox containing all default visibilities.
+   * 
+   * @return a JComboBox containing all default visibilities
+   */
+  public static JComboBox<String> getVisibilityComboBox() {
+    final String[] list = new String[Visibility.values().length];
 
-		return new Rectangle(rect.x - size, rect.y - size, rect.width + size2, rect.height + size2);
-	}
+    for (int i = 0; i < list.length; i++)
+      list[i] = Visibility.values()[i].getName();
 
-	/**
-	 * Normalize the given rect. If the given rectangle have some negative
-	 * values, compute a new rectangle having the same bounds, but with only
-	 * positive values.
-	 * 
-	 * @param rect
-	 *            the rectangle to normalize
-	 * @return the normalized rectangle
-	 */
-	public static Rectangle normalizeRect(Rectangle rect)
-	{
-		final Rectangle normalizedRect = new Rectangle();
+    return new JComboBox<String>(list);
+  }
 
-		normalizedRect.width = Math.abs(rect.width);
-		normalizedRect.height = Math.abs(rect.height);
+  /**
+   * Grow rectangle in this way: x-size, y-size, width+size*2, height+size*2.
+   * 
+   * @param rect
+   *          Rectangle to grow.
+   * @param size
+   *          Size to add.
+   * @return The rectangle elarged.
+   */
+  public static Rectangle growRectangle(Rectangle rect, int size) {
+    final int size2 = size * 2;
 
-		normalizedRect.x = rect.width < 0 ? rect.x + rect.width : rect.x;
-		normalizedRect.y = rect.height < 0 ? rect.y + rect.height : rect.y;
+    return new Rectangle(rect.x - size, rect.y - size, rect.width + size2,
+            rect.height + size2);
+  }
 
-		return normalizedRect;
-	}
+  /**
+   * Normalize the given rect. If the given rectangle have some negative values,
+   * compute a new rectangle having the same bounds, but with only positive
+   * values.
+   * 
+   * @param rect
+   *          the rectangle to normalize
+   * @return the normalized rectangle
+   */
+  public static Rectangle normalizeRect(Rectangle rect) {
+    final Rectangle normalizedRect = new Rectangle();
 
-	/**
-	 * Put the default render hints to the given graphic.
-	 * 
-	 * @param g
-	 *            the graphic context
-	 */
-	public static void setDefaultRenderQuality(Graphics g)
-	{
-		final Graphics2D g2 = (Graphics2D) g;
+    normalizedRect.width = Math.abs(rect.width);
+    normalizedRect.height = Math.abs(rect.height);
 
-		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT);
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
+    normalizedRect.x = rect.width < 0 ? rect.x + rect.width : rect.x;
+    normalizedRect.y = rect.height < 0 ? rect.y + rect.height : rect.y;
 
-		g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_DEFAULT);
-		g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_DEFAULT);
-		g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_DEFAULT);
+    return normalizedRect;
+  }
 
-	}
+  /**
+   * Put the default render hints to the given graphic.
+   * 
+   * @param g
+   *          the graphic context
+   */
+  public static void setDefaultRenderQuality(Graphics g) {
+    final Graphics2D g2 = (Graphics2D) g;
 
-	public static void setGraphicQualityType(GraphicQualityType type)
-	{
-		PropertyLoader.getInstance().getProperties().put("GraphicQuality", type);
-		PropertyLoader.getInstance().push();
-	}
+    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+            RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT);
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+            RenderingHints.VALUE_ANTIALIAS_DEFAULT);
 
-	/**
-	 * Enable RenderingHint used in Slyum for the graphic context.
-	 * 
-	 * @param g
-	 *            the graphic context
-	 */
-	public static void setRenderQuality(Graphics g)
-	{
-		if (getGraphicQualityType().equals(GraphicQualityType.LOW))
-			return;
+    g2.setRenderingHint(RenderingHints.KEY_RENDERING,
+            RenderingHints.VALUE_RENDER_DEFAULT);
+    g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
+            RenderingHints.VALUE_FRACTIONALMETRICS_DEFAULT);
+    g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING,
+            RenderingHints.VALUE_COLOR_RENDER_DEFAULT);
 
-		final Graphics2D g2 = (Graphics2D) g;
+  }
 
-		g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+  public static void setGraphicQualityType(GraphicQualityType type) {
+    PropertyLoader.getInstance().getProperties().put("GraphicQuality", type);
+    PropertyLoader.getInstance().push();
+  }
 
-		if (getGraphicQualityType().equals(GraphicQualityType.MEDIUM))
-			return;
-		
-		g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-		g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-		g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+  /**
+   * Enable RenderingHint used in Slyum for the graphic context.
+   * 
+   * @param g
+   *          the graphic context
+   */
+  public static void setRenderQuality(Graphics g) {
+    if (getGraphicQualityType().equals(GraphicQualityType.LOW)) return;
 
-	}
-	
-	/**
-	 * Set the AbstractAction for the RootPane when ESC key is pressed.
-	 * @param rp the RootPane
-	 * @param ac the AbstractAction
-	 */
-	public static void setRootPaneActionOnEsc(JRootPane rp, AbstractAction ac)
-	{
-		rp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+    final Graphics2D g2 = (Graphics2D) g;
+
+    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+            RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+            RenderingHints.VALUE_ANTIALIAS_ON);
+
+    if (getGraphicQualityType().equals(GraphicQualityType.MEDIUM)) return;
+
+    g2.setRenderingHint(RenderingHints.KEY_RENDERING,
+            RenderingHints.VALUE_RENDER_QUALITY);
+    g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
+            RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+    g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING,
+            RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+
+  }
+
+  /**
+   * Set the AbstractAction for the RootPane when ESC key is pressed.
+   * 
+   * @param rp
+   *          the RootPane
+   * @param ac
+   *          the AbstractAction
+   */
+  public static void setRootPaneActionOnEsc(JRootPane rp, AbstractAction ac) {
+    rp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
             KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESC");
-        
-		rp.getActionMap().put("ESC", ac);
-	}
 
-	/**
-	 * Truncate the given text that its width is equals to the given width. The
-	 * graphic context is used to compute text size. If text must be resized,
-	 * '...' will be add at its end.
-	 * 
-	 * @param g2
-	 *            the graphi context
-	 * @param text
-	 *            the text to truncate
-	 * @param width
-	 *            the width of the text
-	 * @return the text truncate if too long; return empty text if text can't be
-	 *         truncate in specified width.
-	 */
-	public static String truncate(Graphics2D g2, String text, int width)
-	{
-		final String carTrunc = "...";
+    rp.getActionMap().put("ESC", ac);
+  }
 
-		final FontMetrics metrics = g2.getFontMetrics(g2.getFont());
+  /**
+   * Truncate the given text that its width is equals to the given width. The
+   * graphic context is used to compute text size. If text must be resized,
+   * '...' will be add at its end.
+   * 
+   * @param g2
+   *          the graphi context
+   * @param text
+   *          the text to truncate
+   * @param width
+   *          the width of the text
+   * @return the text truncate if too long; return empty text if text can't be
+   *         truncate in specified width.
+   */
+  public static String truncate(Graphics2D g2, String text, int width) {
+    final String carTrunc = "...";
 
-		int adv = metrics.stringWidth(text);
+    final FontMetrics metrics = g2.getFontMetrics(g2.getFont());
 
-		if (adv < width)
-			return text;
+    int adv = metrics.stringWidth(text);
 
-		text += carTrunc;
+    if (adv < width) return text;
 
-		do
-		{
-			if (text.length() <= 3)
-				return ""; // If text can't be truncate (the
-			// '...' is longer than the
-			// specified width).
+    text += carTrunc;
 
-			text = text.substring(0, text.length() - carTrunc.length() - 1) + carTrunc;
-			adv = metrics.stringWidth(text);
-		} while (adv > width);
+    do {
+      if (text.length() <= 3) return ""; // If text can't be truncate (the
+      // '...' is longer than the
+      // specified width).
 
-		return text;
-	}
+      text = text.substring(0, text.length() - carTrunc.length() - 1)
+              + carTrunc;
+      adv = metrics.stringWidth(text);
+    } while (adv > width);
 
-	protected static Color getAlphaColor(Color color, int alpha)
-	{
-		return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
-	}
+    return text;
+  }
+
+  protected static Color getAlphaColor(Color color, int alpha) {
+    return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+  }
 }

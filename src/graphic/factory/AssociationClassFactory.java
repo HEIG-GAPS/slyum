@@ -1,4 +1,4 @@
-package graphic.factory;
+﻿package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -27,105 +27,103 @@ import classDiagram.relationships.Binary;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class AssociationClassFactory extends RelationFactory
-{
-	public final String ERROR_CREATION_MESSAGE = "Association class creation failed.\nYou must make a bond between two classes or click on an existing association.";
+public class AssociationClassFactory extends RelationFactory {
+  public final String ERROR_CREATION_MESSAGE = "Association class creation failed.\nYou must make a bond between two classes or click on an existing association.";
 
-	/**
-	 * Create a new factory allowing the creation of an association class.
-	 * 
-	 * @param parent
-	 *            the graphic view
-	 * @param classDiagram
-	 *            the class diagram
-	 */
-	public AssociationClassFactory(GraphicView parent)
-	{
-		super(parent);
-    
-    GraphicView.setButtonFactory(
-        SPanelDiagramComponent.getInstance().getBtnClassAssociation());
-	}
+  /**
+   * Create a new factory allowing the creation of an association class.
+   * 
+   * @param parent
+   *          the graphic view
+   * @param classDiagram
+   *          the class diagram
+   */
+  public AssociationClassFactory(GraphicView parent) {
+    super(parent);
 
-	@Override
-	public GraphicComponent create()
-	{
-		AssociationClass ac;
-		AssociationClassView acv = null;
-		repaint();
+    GraphicView.setButtonFactory(SPanelDiagramComponent.getInstance()
+            .getBtnClassAssociation());
+  }
 
-		if (componentMousePressed.getClass() == ClassView.class && componentMouseReleased.getClass() == ClassView.class)
-		{
+  @Override
+  public GraphicComponent create() {
+    AssociationClass ac;
+    AssociationClassView acv = null;
+    repaint();
 
-			final Rectangle bounds = new Rectangle(mousePressed.x + (mouseReleased.x - mousePressed.x) / 2, mousePressed.y + (mouseReleased.y - mousePressed.y) / 2 - 100, EntityFactory.DEFAULT_SIZE.width, EntityFactory.DEFAULT_SIZE.height - 5);
+    if (componentMousePressed.getClass() == ClassView.class
+            && componentMouseReleased.getClass() == ClassView.class) {
 
-			final ClassView source = (ClassView) componentMousePressed;
-			final ClassView target = (ClassView) componentMouseReleased;
+      final Rectangle bounds = new Rectangle(mousePressed.x
+              + (mouseReleased.x - mousePressed.x) / 2, mousePressed.y
+              + (mouseReleased.y - mousePressed.y) / 2 - 100,
+              EntityFactory.DEFAULT_SIZE.width,
+              EntityFactory.DEFAULT_SIZE.height - 5);
 
-			try
-			{
-			    ac = new AssociationClass("AssociationClass", Visibility.PUBLIC, (Entity) source.getAssociedComponent(), (Entity) target.getAssociedComponent());
+      final ClassView source = (ClassView) componentMousePressed;
+      final ClassView target = (ClassView) componentMouseReleased;
 
-	            boolean isRecord = Change.isRecord();
-	            Change.record();
-	            
-	            acv = new AssociationClassView(parent, ac, source, target, (Point) mousePressed.clone(), (Point) mouseReleased.clone(), bounds);
+      try {
+        ac = new AssociationClass("AssociationClass", Visibility.PUBLIC,
+                (Entity) source.getAssociedComponent(),
+                (Entity) target.getAssociedComponent());
 
-	            if (!isRecord)
-	                Change.stopRecord();
-	            
-	            parent.addEntity(acv);
-	            classDiagram.addAssociationClass(ac);
+        boolean isRecord = Change.isRecord();
+        Change.record();
 
-	            classDiagram.addBinary(ac.getAssociation());
-	            
-			} catch (IllegalArgumentException a)
-			{
-			    SMessageDialog.showErrorMessage(a.getMessage());
-			}
-		}
-		else if (componentMousePressed instanceof BinaryView)
-		{
+        acv = new AssociationClassView(parent, ac, source, target,
+                (Point) mousePressed.clone(), (Point) mouseReleased.clone(),
+                bounds);
 
-			final Rectangle bounds = new Rectangle(mouseReleased.x, mouseReleased.y, EntityFactory.DEFAULT_SIZE.width, EntityFactory.DEFAULT_SIZE.height - 5);
-			
-			try
-			{
-    			ac = new AssociationClass("AssociationClass", Visibility.PUBLIC, (Binary) componentMousePressed.getAssociedComponent());
-    			
-    			boolean isRecord = Change.isRecord();
-    			Change.record();
-    			
-    			acv = new AssociationClassView(parent, ac, (BinaryView) componentMousePressed, bounds);
-    
-    			if (!isRecord)
-    				Change.stopRecord();
-    			
-    			parent.addEntity(acv);
-    			classDiagram.addAssociationClass(ac);
-			}
-			catch(IllegalArgumentException a)
-			{
-			    SMessageDialog.showErrorMessage(a.getMessage());
-			}
-		}
+        if (!isRecord) Change.stopRecord();
 
-		repaint();
-		
-		if (acv != null)
-		  return acv.getBinaryView();
-		return null;
-	}
-	
-	@Override
-	protected boolean isFirstComponentValid() {
-	  return componentMousePressed.getClass() == ClassView.class ||
-	         componentMousePressed instanceof BinaryView;
-	}
-	
-	@Override
-	protected void creationFailed()
-	{
-		SMessageDialog.showErrorMessage(ERROR_CREATION_MESSAGE);
-	}
+        parent.addEntity(acv);
+        classDiagram.addAssociationClass(ac);
+
+        classDiagram.addBinary(ac.getAssociation());
+
+      } catch (IllegalArgumentException a) {
+        SMessageDialog.showErrorMessage(a.getMessage());
+      }
+    } else if (componentMousePressed instanceof BinaryView) {
+
+      final Rectangle bounds = new Rectangle(mouseReleased.x, mouseReleased.y,
+              EntityFactory.DEFAULT_SIZE.width,
+              EntityFactory.DEFAULT_SIZE.height - 5);
+
+      try {
+        ac = new AssociationClass("AssociationClass", Visibility.PUBLIC,
+                (Binary) componentMousePressed.getAssociedComponent());
+
+        boolean isRecord = Change.isRecord();
+        Change.record();
+
+        acv = new AssociationClassView(parent, ac,
+                (BinaryView) componentMousePressed, bounds);
+
+        if (!isRecord) Change.stopRecord();
+
+        parent.addEntity(acv);
+        classDiagram.addAssociationClass(ac);
+      } catch (IllegalArgumentException a) {
+        SMessageDialog.showErrorMessage(a.getMessage());
+      }
+    }
+
+    repaint();
+
+    if (acv != null) return acv.getBinaryView();
+    return null;
+  }
+
+  @Override
+  protected boolean isFirstComponentValid() {
+    return componentMousePressed.getClass() == ClassView.class
+            || componentMousePressed instanceof BinaryView;
+  }
+
+  @Override
+  protected void creationFailed() {
+    SMessageDialog.showErrorMessage(ERROR_CREATION_MESSAGE);
+  }
 }

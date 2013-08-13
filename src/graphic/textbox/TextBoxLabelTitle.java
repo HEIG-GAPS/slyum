@@ -1,4 +1,4 @@
-package graphic.textbox;
+﻿package graphic.textbox;
 
 import graphic.GraphicView;
 import graphic.relations.LineView;
@@ -36,64 +36,66 @@ import javax.swing.SwingUtilities;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class TextBoxLabelTitle extends TextBoxLabel
-{
-	private final ILabelTitle label;
-	protected LineView relationView;
+public class TextBoxLabelTitle extends TextBoxLabel {
+  private final ILabelTitle label;
+  protected LineView relationView;
 
-	/**
-	 * Create a new TextBoxLabelTitle associated with a line.
-	 * 
-	 * @param parent the graphic view
-	 * @param label a component implementing the ILabelTitle interface
-	 * @param relationView the line associated with the TextBox
-	 */
-	public TextBoxLabelTitle(
-	    GraphicView parent, ILabelTitle label, LineView relationView) {
-		super(parent, label.getLabel());
+  /**
+   * Create a new TextBoxLabelTitle associated with a line.
+   * 
+   * @param parent
+   *          the graphic view
+   * @param label
+   *          a component implementing the ILabelTitle interface
+   * @param relationView
+   *          the line associated with the TextBox
+   */
+  public TextBoxLabelTitle(GraphicView parent, ILabelTitle label,
+          LineView relationView) {
+    super(parent, label.getLabel());
 
-		if (relationView == null)
-			throw new IllegalArgumentException("relationView is null");
+    if (relationView == null)
+      throw new IllegalArgumentException("relationView is null");
 
-		this.relationView = relationView;
-		this.label = label;
-		this.label.addObserver(this);
-		relationView.addObserver(this);
-		
-		reinitializeLocation();
-	}
-	
-	@Override
-	public void reinitializeLocation() {
+    this.relationView = relationView;
+    this.label = label;
+    this.label.addObserver(this);
+    relationView.addObserver(this);
+
+    reinitializeLocation();
+  }
+
+  @Override
+  public void reinitializeLocation() {
 
     deplacement = new Point(); // (0, 0)
-    
-    // Permet d'attendre que la taille de la textbox soit d�finie.
+
+    // Permet d'attendre que la taille de la textbox soit définie.
     SwingUtilities.invokeLater(new Runnable() {
-      
+
       @Override
-      public void run() {  
+      public void run() {
         deplacement.x += TextBox.MARGE;
         deplacement.y += TextBox.MARGE;
         computeLabelPosition();
       }
     });
-	}
+  }
 
-	@Override
-	protected Point computeAnchor() {
-		final LinkedList<RelationGrip> points = relationView.getPoints();
-		final int seg = relationView.getNearestSegment(
-		    new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2));
+  @Override
+  protected Point computeAnchor() {
+    final LinkedList<RelationGrip> points = relationView.getPoints();
+    final int seg = relationView.getNearestSegment(new Point(bounds.x
+            + bounds.width / 2, bounds.y + bounds.height / 2));
 
-		final Point grip1 = points.get(seg).getAnchor();
-		final Point grip2 = points.get(seg + 1).getAnchor();
+    final Point grip1 = points.get(seg).getAnchor();
+    final Point grip2 = points.get(seg + 1).getAnchor();
 
-		final int posX = (grip2.x - grip1.x) / 2 + grip1.x;
-		final int posY = (grip2.y - grip1.y) / 2 + grip1.y;
+    final int posX = (grip2.x - grip1.x) / 2 + grip1.x;
+    final int posY = (grip2.y - grip1.y) / 2 + grip1.y;
 
-		return new Point(posX, posY);
-	}
+    return new Point(posX, posY);
+  }
 
   @Override
   public void computeDeplacement(Point point) {
@@ -101,57 +103,56 @@ public class TextBoxLabelTitle extends TextBoxLabel
     Point pos = computeAnchor();
     deplacement = new Point(point.x - pos.x, point.y - pos.y);
   }
-	
-	/**
-	 * Get the LineView associed with this TextBoxLabelTitle.
-	 * @return the LineView associed with this TextBoxLabelTitle
-	 */
-	public LineView getLineView()
-	{
-		return relationView;
-	}
 
-	@Override
-	public String getText()
-	{
-		return label.getLabel();
-	}
-	
-	@Override
-	public void gMouseClicked(MouseEvent e) {
-	  super.gMouseClicked(e);
-    
+  /**
+   * Get the LineView associed with this TextBoxLabelTitle.
+   * 
+   * @return the LineView associed with this TextBoxLabelTitle
+   */
+  public LineView getLineView() {
+    return relationView;
+  }
+
+  @Override
+  public String getText() {
+    return label.getLabel();
+  }
+
+  @Override
+  public void gMouseClicked(MouseEvent e) {
+    super.gMouseClicked(e);
+
     if (!GraphicView.isAddToSelection(e)) {
       parent.unselectAll();
       relationView.setSelected(true);
     } else {
       relationView.setSelected(!relationView.isSelected());
     }
-	}
-	
-	@Override
-	public void gMousePressed(MouseEvent e) {
-	  super.gMousePressed(e);
-    maybeShowPopup(e, relationView);
-	}
-	
-	@Override
-	public void gMouseReleased(MouseEvent e) {
-	  super.gMouseReleased(e);
-    maybeShowPopup(e, relationView);
-	}
+  }
 
-	@Override
-	public void setText(String text) {
-		super.setText(text);
-		label.setLabel(text);
-		label.notifyObservers();
-	}
+  @Override
+  public void gMousePressed(MouseEvent e) {
+    super.gMousePressed(e);
+    maybeShowPopup(e, relationView);
+  }
 
-	@Override
-	public void update(Observable arg0, Object arg1) {
-		super.update(arg0, arg1);
-		super.setText(getText());
-	}
+  @Override
+  public void gMouseReleased(MouseEvent e) {
+    super.gMouseReleased(e);
+    maybeShowPopup(e, relationView);
+  }
+
+  @Override
+  public void setText(String text) {
+    super.setText(text);
+    label.setLabel(text);
+    label.notifyObservers();
+  }
+
+  @Override
+  public void update(Observable arg0, Object arg1) {
+    super.update(arg0, arg1);
+    super.setText(getText());
+  }
 
 }

@@ -1,4 +1,4 @@
-package swing.propretiesView;
+ï»¿package swing.propretiesView;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -29,48 +29,48 @@ import classDiagram.components.EnumEntity;
 import classDiagram.components.EnumValue;
 
 public class EnumEntityPropreties extends GlobalPropreties {
-  
+
   // Singleton
   private static EnumEntityPropreties instance;
-  
+
   /**
    * Get the unique instance of this class.
    * 
    * @return the unique instance of SimpleEntityPropreties
    */
   public static EnumEntityPropreties getInstance() {
-    if (instance == null)
-      instance = new EnumEntityPropreties();
-    
+    if (instance == null) instance = new EnumEntityPropreties();
+
     return instance;
   } // --------
-  
+
   private JTextField txtFieldName;
   private STable tableEnumValues;
   private JButton btnUp, btnDown, btnDelete;
   Observer rowObserver = new Observer() {
-    
+
     @Override
     public void update(Observable o, Object object) {
       if (object instanceof UpdateMessage)
-        switch ((UpdateMessage)object) {
-        case SELECT:
-          int rowCount = tableEnumValues.getRowCount();
-          int selectedRow = tableEnumValues.getSelectedRow();
-          tableEnumValues.selectRow(o);
-          btnDelete.setEnabled(true);
-          btnUp.setEnabled(selectedRow > 0);
-          btnDown.setEnabled(selectedRow < rowCount - 1);
-          tableEnumValues.scrollToCell(selectedRow, 0);
-          break;
-        case UNSELECT:
-          btnDelete.setEnabled(false);
-          break;
-        default:
-          break;
+        switch ((UpdateMessage) object) {
+          case SELECT:
+            int rowCount = tableEnumValues.getRowCount();
+            int selectedRow = tableEnumValues.getSelectedRow();
+            tableEnumValues.selectRow(o);
+            btnDelete.setEnabled(true);
+            btnUp.setEnabled(selectedRow > 0);
+            btnDown.setEnabled(selectedRow < rowCount - 1);
+            tableEnumValues.scrollToCell(selectedRow, 0);
+            break;
+          case UNSELECT:
+            btnDelete.setEnabled(false);
+            break;
+          default:
+            break;
         }
       else
-        ((AbstractTableModel)tableEnumValues.getModel()).fireTableDataChanged();
+        ((AbstractTableModel) tableEnumValues.getModel())
+                .fireTableDataChanged();
     }
   };
 
@@ -80,41 +80,39 @@ public class EnumEntityPropreties extends GlobalPropreties {
 
   @Override
   public void updateComponentInformations(UpdateMessage msg) {
-    if (currentObject == null)
-      return;
-    
-    EnumEntity enumEntity = (EnumEntity)currentObject;
+    if (currentObject == null) return;
+
+    EnumEntity enumEntity = (EnumEntity) currentObject;
     txtFieldName.setText(enumEntity.getName());
     enumEntity.addObserver(this);
-    
-    // Mise à jour des champs de la table
-    AbstractTableModel model = (AbstractTableModel)tableEnumValues.getModel();
+
+    // Mise Ã  jour des champs de la table
+    AbstractTableModel model = (AbstractTableModel) tableEnumValues.getModel();
     model.fireTableStructureChanged();
-    
+
     for (int i = 0; i < model.getRowCount(); i++)
-      ((EnumValue)model.getValueAt(i, 0)).addObserver(rowObserver);
-    
-    // Désactivation des composants.
+      ((EnumValue) model.getValueAt(i, 0)).addObserver(rowObserver);
+
+    // DÃ©sactivation des composants.
     btnDelete.setEnabled(false);
     btnDown.setEnabled(false);
     btnUp.setEnabled(false);
   }
-  
+
   private void initializeComponents() {
-    JPanel panelAttributes = new JPanel(),
-           panelButtons = new JPanel(),
-           panelMain = new FlatPanel();
+    JPanel panelAttributes = new JPanel(), panelButtons = new JPanel(), panelMain = new FlatPanel();
     JButton btnAdd;
     JScrollPane wrapTableEnumValues = new JScrollPane();
-    
-    panelAttributes.setLayout(new BoxLayout(panelAttributes, BoxLayout.PAGE_AXIS));
+
+    panelAttributes.setLayout(new BoxLayout(panelAttributes,
+            BoxLayout.PAGE_AXIS));
     panelAttributes.setMaximumSize(new Dimension(200, Short.MAX_VALUE));
-    
+
     // Enum name
     txtFieldName = new JTextField();
     txtFieldName.setMaximumSize(new Dimension(Short.MAX_VALUE, 20));
     txtFieldName.addKeyListener(new KeyAdapter() {
-      
+
       @Override
       public void keyReleased(KeyEvent evt) {
         updateEnumName(txtFieldName.getText());
@@ -128,60 +126,57 @@ public class EnumEntityPropreties extends GlobalPropreties {
     });
     panelAttributes.add(txtFieldName);
     // -----
-    
+
     // Enum values
     tableEnumValues = new STable(new AbstractTableModel() {
-      
+
       @Override
       public Object getValueAt(int row, int col) {
-        if (currentObject == null)
-          return null;
-        
-        return ((EnumEntity)currentObject).getEnumValues().get(row);
+        if (currentObject == null) return null;
+
+        return ((EnumEntity) currentObject).getEnumValues().get(row);
       }
-      
+
       @Override
       public int getRowCount() {
-        if (currentObject == null)
-          return 0;
-        
-        EnumEntity enumEntity = (EnumEntity)currentObject;
+        if (currentObject == null) return 0;
+
+        EnumEntity enumEntity = (EnumEntity) currentObject;
         return enumEntity.getEnumValues().size();
       }
-      
+
       @Override
       public int getColumnCount() {
         return 1;
       }
-      
+
       @Override
       public Class<?> getColumnClass(int c) {
         return getValueAt(0, c).getClass();
       }
-      
+
       @Override
       public boolean isCellEditable(int row, int col) {
         return true;
       }
-      
+
       @Override
       public void setValueAt(Object value, int row, int col) {
-        if (currentObject == null)
-          return;
-        
-        EnumEntity enumEntity = (EnumEntity)currentObject;
+        if (currentObject == null) return;
+
+        EnumEntity enumEntity = (EnumEntity) currentObject;
         EnumValue enumValue = enumEntity.getEnumValues().get(row);
-        enumValue.setValue(((EnumValue)value).getValue());
+        enumValue.setValue(((EnumValue) value).getValue());
         enumValue.notifyObservers();
       }
     }) {
       @Override
       public void changeSelection(int rowIndex, int columnIndex,
-          boolean toggle, boolean extend) {
+              boolean toggle, boolean extend) {
         super.changeSelection(rowIndex, columnIndex, toggle, extend);
-        
-        EnumValue currentEnumValue = 
-            (EnumValue)getModel().getValueAt(rowIndex, columnIndex);
+
+        EnumValue currentEnumValue = (EnumValue) getModel().getValueAt(
+                rowIndex, columnIndex);
         currentEnumValue.select();
         currentEnumValue.notifyObservers(UpdateMessage.SELECT);
       }
@@ -195,90 +190,82 @@ public class EnumEntityPropreties extends GlobalPropreties {
     panelAttributes.add(Box.createVerticalStrut(5));
     panelAttributes.add(wrapTableEnumValues);
     // -----
-    
+
     // Buttons
     panelButtons.setBackground(null);
     panelButtons.setLayout(new BoxLayout(panelButtons, BoxLayout.PAGE_AXIS));
     panelButtons.setMaximumSize(new Dimension(30, Short.MAX_VALUE));
 
-    panelButtons.add(btnAdd = new SButton(PersonalizedIcon.createImageIcon(
-        Slyum.ICON_PATH + "plus.png"), "Add"));
+    panelButtons.add(btnAdd = new SButton(PersonalizedIcon
+            .createImageIcon(Slyum.ICON_PATH + "plus.png"), "Add"));
     btnAdd.addActionListener(new ActionListener() {
-      
+
       @Override
       public void actionPerformed(ActionEvent evt) {
-        if (currentObject == null)
-          return;
-        
-        ((EnumEntity)currentObject).createEnumValue();
+        if (currentObject == null) return;
+
+        ((EnumEntity) currentObject).createEnumValue();
       }
     });
-    
-    panelButtons.add(btnUp = new SButton(PersonalizedIcon.createImageIcon(
-        Slyum.ICON_PATH + "arrow-up-24.png"), "Up"));
+
+    panelButtons.add(btnUp = new SButton(PersonalizedIcon
+            .createImageIcon(Slyum.ICON_PATH + "arrow-up-24.png"), "Up"));
     btnUp.addActionListener(new ActionListener() {
-      
+
       @Override
       public void actionPerformed(ActionEvent evt) {
-        if (currentObject == null)
-          return;
+        if (currentObject == null) return;
 
-        EnumEntity enumEntity = (EnumEntity)currentObject;
-        EnumValue enumValue = (EnumValue)tableEnumValues.getSelectedRowValue();
-        enumEntity.moveEnumPosition(
-            enumValue, -1);
+        EnumEntity enumEntity = (EnumEntity) currentObject;
+        EnumValue enumValue = (EnumValue) tableEnumValues.getSelectedRowValue();
+        enumEntity.moveEnumPosition(enumValue, -1);
         enumEntity.notifyObservers();
         enumValue.select();
         enumValue.notifyObservers(UpdateMessage.SELECT);
       }
     });
-    
-    panelButtons.add(btnDown = new SButton(PersonalizedIcon.createImageIcon(
-        Slyum.ICON_PATH + "arrow-down-24.png"), "Down"));
+
+    panelButtons.add(btnDown = new SButton(PersonalizedIcon
+            .createImageIcon(Slyum.ICON_PATH + "arrow-down-24.png"), "Down"));
     btnDown.addActionListener(new ActionListener() {
-      
+
       @Override
       public void actionPerformed(ActionEvent evt) {
-        if (currentObject == null)
-          return;
+        if (currentObject == null) return;
 
-        EnumEntity enumEntity = (EnumEntity)currentObject;
-        EnumValue enumValue = (EnumValue)tableEnumValues.getSelectedRowValue();
+        EnumEntity enumEntity = (EnumEntity) currentObject;
+        EnumValue enumValue = (EnumValue) tableEnumValues.getSelectedRowValue();
         enumEntity.moveEnumPosition(
-            (EnumValue)tableEnumValues.getSelectedRowValue(), 1);
+                (EnumValue) tableEnumValues.getSelectedRowValue(), 1);
         enumEntity.notifyObservers();
         enumValue.select();
         enumValue.notifyObservers(UpdateMessage.SELECT);
       }
     });
-    
-    panelButtons.add(btnDelete = new SButton(PersonalizedIcon.createImageIcon(
-        Slyum.ICON_PATH + "minus.png"), "Delete"));
+
+    panelButtons.add(btnDelete = new SButton(PersonalizedIcon
+            .createImageIcon(Slyum.ICON_PATH + "minus.png"), "Delete"));
     btnDelete.setEnabled(false);
     btnDelete.addActionListener(new ActionListener() {
-      
+
       @Override
       public void actionPerformed(ActionEvent evt) {
-        if (currentObject == null)
-          return;
+        if (currentObject == null) return;
 
-        EnumEntity enumEntity = (EnumEntity)currentObject;
-        int selectedRow = tableEnumValues.getSelectedRow(),
-            rowCount,
-            rowToSelect;
-        
-        enumEntity.removeEnumValue(
-            (EnumValue)tableEnumValues.getModel().getValueAt(
-                selectedRow, 0));
+        EnumEntity enumEntity = (EnumEntity) currentObject;
+        int selectedRow = tableEnumValues.getSelectedRow(), rowCount, rowToSelect;
+
+        enumEntity.removeEnumValue((EnumValue) tableEnumValues.getModel()
+                .getValueAt(selectedRow, 0));
         enumEntity.notifyObservers();
-        
-        // Recherche de l'enum devant être sélectionné après la suppression.
+
+        // Recherche de l'enum devant Ãªtre sÃ©lectionnÃ© aprÃ¨s la suppression.
         rowCount = tableEnumValues.getRowCount();
-        rowToSelect =  selectedRow >= rowCount ? rowCount-1 : selectedRow;
-        
+        rowToSelect = selectedRow >= rowCount ? rowCount - 1 : selectedRow;
+
         if (rowCount > 0) {
-          EnumValue enumValueToSelect = 
-              (EnumValue)tableEnumValues.getModel().getValueAt(rowToSelect, 0);
+          EnumValue enumValueToSelect = (EnumValue) tableEnumValues.getModel()
+                  .getValueAt(rowToSelect, 0);
           enumValueToSelect.select();
           enumValueToSelect.notifyObservers(UpdateMessage.SELECT);
         }
@@ -293,21 +280,20 @@ public class EnumEntityPropreties extends GlobalPropreties {
     panelMain.add(panelButtons);
     add(panelMain);
   }
-  
+
   private void updateEnumName(String name) {
-    if (currentObject == null)
-      return;
-    
-    EnumEntity enumEntity = (EnumEntity)currentObject;
+    if (currentObject == null) return;
+
+    EnumEntity enumEntity = (EnumEntity) currentObject;
     enumEntity.setName(name);
     enumEntity.notifyObservers();
   }
-  
+
   @Override
   public void update(Observable o, Object object) {
     super.update(o, object);
     if (object instanceof UpdateMessage) {
-      switch((UpdateMessage)object) {
+      switch ((UpdateMessage) object) {
         case ADD_ENUM_NO_EDIT:
         case ADD_ENUM:
           tableEnumValues.scrollToLastCell();

@@ -1,4 +1,4 @@
-package graphic.relations;
+ï»¿package graphic.relations;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -29,65 +29,64 @@ import classDiagram.IDiagramComponent;
  * @version 1.0 - 25.07.2011
  */
 public class AssociationClasseLine extends LineView {
-	/**
-	 * Create a new AssociationClasseLine between source and target.
-	 * 
-	 * @param parent
-	 *            the graphic view
-	 * @param source
-	 *            the entity source
-	 * @param target
-	 *            the association target
-	 * @param posSource
-	 *            the position for put the first MagneticGrip
-	 * @param posTarget
-	 *            the position for put the last MagneticGrip
-	 * @param checkRecursivity
-	 *            check if the relation is on itself
-	 */
-	public AssociationClasseLine(
-	    GraphicView graphicView, EntityView source, AssociationView target, 
-	    Point posSource, Point posTarget, boolean checkRecursivity) {
-		super(graphicView, source, target, posSource, posTarget, checkRecursivity);
-		lineStroke = new BasicStroke(
-		    LINE_WIDTH, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
-		    10.0f, new float[] { 6.5f }, 0.0f);
-	}
-	
-	@Override
-	public IDiagramComponent getAssociedXmlElement() {
-    return getFirstPoint().getAssociedComponentView().getAssociedComponent();
-	}
+  /**
+   * Create a new AssociationClasseLine between source and target.
+   * 
+   * @param parent
+   *          the graphic view
+   * @param source
+   *          the entity source
+   * @param target
+   *          the association target
+   * @param posSource
+   *          the position for put the first MagneticGrip
+   * @param posTarget
+   *          the position for put the last MagneticGrip
+   * @param checkRecursivity
+   *          check if the relation is on itself
+   */
+  public AssociationClasseLine(GraphicView graphicView, EntityView source,
+          AssociationView target, Point posSource, Point posTarget,
+          boolean checkRecursivity) {
+    super(graphicView, source, target, posSource, posTarget, checkRecursivity);
+    lineStroke = new BasicStroke(LINE_WIDTH, BasicStroke.CAP_BUTT,
+            BasicStroke.JOIN_MITER, 10.0f, new float[] { 6.5f }, 0.0f);
+  }
 
-	@Override
-	public boolean relationChanged(
-	    MagneticGrip gripSource, GraphicComponent target) {
-		// Le changement de relation pour les classes d'association 
-	  // n'est pas implémenté.
-		return false;
-	}
-  
+  @Override
+  public IDiagramComponent getAssociedXmlElement() {
+    return getFirstPoint().getAssociedComponentView().getAssociedComponent();
+  }
+
+  @Override
+  public boolean relationChanged(MagneticGrip gripSource,
+          GraphicComponent target) {
+    // Le changement de relation pour les classes d'association
+    // n'est pas implÃ©mentÃ©.
+    return false;
+  }
+
   @Override
   public String getXmlTagName() {
     return "relationView";
   }
-  
+
   @Override
   public Element getXmlElement(Document doc) {
-    Element relationView = doc.createElement(getXmlTagName()),
-            line = doc.createElement("line");
-    
-    relationView.setAttribute("relationId", 
-        String.valueOf(getAssociedXmlElement().getId()));
+    Element relationView = doc.createElement(getXmlTagName()), line = doc
+            .createElement("line");
+
+    relationView.setAttribute("relationId",
+            String.valueOf(getAssociedXmlElement().getId()));
     relationView.setAttribute("color", String.valueOf(getColor().getRGB()));
-    
+
     for (RelationGrip grip : points) {
       Point pt = grip.getAnchor();
       pt.translate(1, 1);
       line.appendChild(Utility.pointToXmlElement(pt, "point", doc));
     }
-    
-    relationView.appendChild(line);    
+
+    relationView.appendChild(line);
     return relationView;
   }
 }
