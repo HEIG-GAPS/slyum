@@ -1,0 +1,28 @@
+
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+--------------------           Release de Slyum             --------------------
+--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+Ce fichier explique les différents fichiers et applications à utiliser ou 
+mettre à jour lors d'une release de Slyum.
+
+Il est préférable, lors d'une nouvelle release, de mettre à disposition pour
+l'utilisateur une version de Slyum multi-plateforme ET Mac OS X (malgrès que la
+version multi-plateforme fonctionne également sous Mac OS X).
+
+Les fichiers générés pour la version courante doivent être placés dans le 
+dossier "current release". Les fichiers présents actuellement dans ce dossier
+doivent être déplacés dans le dossier "previous release", dans un dossier
+portant le nom de la-dite version.
+
+--------------------------------------------------------------------------------
+--------------------            Multi-plateforme            --------------------
+--------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------
+--------------------             Pour Mac OS X              --------------------
+--------------------------------------------------------------------------------
