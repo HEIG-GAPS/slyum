@@ -1,4 +1,4 @@
-package swing.hierarchicalView;
+﻿package swing.hierarchicalView;
 
 import java.util.LinkedList;
 import java.util.Observable;
@@ -21,118 +21,105 @@ import classDiagram.relationships.Role;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public class NodeAssociation extends DefaultMutableTreeNode implements IClassDiagramNode, ICustomizedIconNode, Observer
-{
-	private static final long serialVersionUID = 3002125135918965920L;
+public class NodeAssociation extends DefaultMutableTreeNode implements IClassDiagramNode, ICustomizedIconNode, Observer {
+  private static final long serialVersionUID = 3002125135918965920L;
 
-	/**
-	 * Return the title that the node must show according to its association.
-	 * 
-	 * @param association
-	 *            the association to get the title
-	 * @return the title generated from association
-	 */
-	public static String generateName(Association association)
-	{
-	  String label = association.getName();
-		if (!label.isEmpty())
-			return label;
+  /**
+   * Return the title that the node must show according to its association.
+   * 
+   * @param association
+   *          the association to get the title
+   * @return the title generated from association
+   */
+  public static String generateName(Association association) {
+    String label = association.getName();
+    if (!label.isEmpty()) return label;
 
-		final LinkedList<Role> roles = association.getRoles();
-		String text = "";
-		String PREFIX = " - ";
-		
-		if (roles.isEmpty())
-			return "";
+    final LinkedList<Role> roles = association.getRoles();
+    String text = "";
+    String PREFIX = " - ";
 
-		for (Role role : roles)
-			text += " - " + role.getEntity().getName();
-		
-		// On efface le premier préfixe.
-		return text.substring(PREFIX.length());
-	}
+    if (roles.isEmpty()) return "";
 
-	private final Association association;
-	private final ImageIcon imageIcon;
-	private final JTree tree;
+    for (Role role : roles)
+      text += " - " + role.getEntity().getName();
 
-	private final DefaultTreeModel treeModel;
+    // On efface le premier prÃ©fixe.
+    return text.substring(PREFIX.length());
+  }
 
-	/**
-	 * Create a new node association with an association.
-	 * 
-	 * @param association
-	 *            the associated association
-	 * @param treeModel
-	 *            the model of the JTree
-	 * @param icon
-	 *            the customized icon
-	 * @param tree
-	 *            the JTree
-	 */
-	public NodeAssociation(Association association, DefaultTreeModel treeModel, ImageIcon icon, JTree tree)
-	{
-		super(generateName(association));
+  private final Association association;
+  private final ImageIcon imageIcon;
+  private final JTree tree;
 
-		if (treeModel == null)
-			throw new IllegalArgumentException("treeModel is null");
+  private final DefaultTreeModel treeModel;
 
-		if (tree == null)
-			throw new IllegalArgumentException("tree is null");
+  /**
+   * Create a new node association with an association.
+   * 
+   * @param association
+   *          the associated association
+   * @param treeModel
+   *          the model of the JTree
+   * @param icon
+   *          the customized icon
+   * @param tree
+   *          the JTree
+   */
+  public NodeAssociation(Association association, DefaultTreeModel treeModel,
+          ImageIcon icon, JTree tree) {
+    super(generateName(association));
 
-		this.tree = tree;
-		this.association = association;
-		association.addObserver(this);
+    if (treeModel == null)
+      throw new IllegalArgumentException("treeModel is null");
 
-		for (final Role role : association.getRoles())
-		    role.addObserver(this);
+    if (tree == null) throw new IllegalArgumentException("tree is null");
 
-		this.treeModel = treeModel;
-		imageIcon = icon;
-	}
+    this.tree = tree;
+    this.association = association;
+    association.addObserver(this);
 
-	@Override
-	public IDiagramComponent getAssociedComponent()
-	{
-		return association;
-	}
+    for (final Role role : association.getRoles())
+      role.addObserver(this);
 
-	@Override
-	public ImageIcon getCustomizedIcon()
-	{
-		return imageIcon;
-	}
+    this.treeModel = treeModel;
+    imageIcon = icon;
+  }
 
-	@Override
-	public void update(Observable observable, Object o)
-	{
-		if (o != null && o instanceof UpdateMessage)
-		{
-			final TreePath path = new TreePath(getPath());
+  @Override
+  public IDiagramComponent getAssociedComponent() {
+    return association;
+  }
 
-			switch ((UpdateMessage) o)
-			{
-				case SELECT:
-					tree.addSelectionPath(path);
-					break;
-				case UNSELECT:
-					tree.removeSelectionPath(path);
-					break;
-      default:
-        break;
-			}
-		}
-		else
-		{
-			setUserObject(generateName(association));
-			treeModel.reload(this);
-		}
-	}
+  @Override
+  public ImageIcon getCustomizedIcon() {
+    return imageIcon;
+  }
 
-	@Override
-	public void remove()
-	{
-		for (final Role role : association.getRoles())
-			role.deleteObserver(this);
-	}
+  @Override
+  public void update(Observable observable, Object o) {
+    if (o != null && o instanceof UpdateMessage) {
+      final TreePath path = new TreePath(getPath());
+
+      switch ((UpdateMessage) o) {
+        case SELECT:
+          tree.addSelectionPath(path);
+          break;
+        case UNSELECT:
+          tree.removeSelectionPath(path);
+          break;
+        default:
+          break;
+      }
+    } else {
+      setUserObject(generateName(association));
+      treeModel.reload(this);
+    }
+  }
+
+  @Override
+  public void remove() {
+    for (final Role role : association.getRoles())
+      role.deleteObserver(this);
+  }
 }

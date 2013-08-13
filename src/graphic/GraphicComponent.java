@@ -1,4 +1,4 @@
-package graphic;
+﻿package graphic;
 
 import graphic.relations.LineView;
 
@@ -41,587 +41,538 @@ import classDiagram.IDiagramComponent;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public abstract class GraphicComponent extends Observable 
-                                       implements ActionListener, XmlElement
-{
-	private Color color = Color.DARK_GRAY;
-	// Save the location of the mouse uses for computing the movement or the
-	// resize.
-	protected Point mousePressed = new Point();
+public abstract class GraphicComponent extends Observable implements ActionListener, XmlElement {
+  private Color color = Color.DARK_GRAY;
+  // Save the location of the mouse uses for computing the movement or the
+  // resize.
+  protected Point mousePressed = new Point();
 
-	protected GraphicView parent;
+  protected GraphicView parent;
 
-	protected JPopupMenu popupMenu;
-	protected JMenuItem miNewNote;
+  protected JPopupMenu popupMenu;
+  protected JMenuItem miNewNote;
 
-	private boolean selected = false;
+  private boolean selected = false;
 
-	private boolean visible = true;
-	
-	protected boolean pictureMode = false;
-	protected Point locationContextMenuRequested;
+  private boolean visible = true;
 
-	/**
-	 * !!! This constructor is use for create the graphic view, don't use in
-	 * another way !!! Graphic view is the parent for all other components, but
-	 * can't give itself to this constructor in its constructor...
-	 */
-	protected GraphicComponent()
-	{
-		parent = (GraphicView) this;
+  protected boolean pictureMode = false;
+  protected Point locationContextMenuRequested;
 
-		init();
-	}
+  /**
+   * !!! This constructor is use for create the graphic view, don't use in
+   * another way !!! Graphic view is the parent for all other components, but
+   * can't give itself to this constructor in its constructor...
+   */
+  protected GraphicComponent() {
+    parent = (GraphicView) this;
 
-	public GraphicComponent(GraphicView parent)
-	{
-		if (parent == null)
-			throw new IllegalArgumentException("parent is null");
+    init();
+  }
 
-		this.parent = parent;
+  public GraphicComponent(GraphicView parent) {
+    if (parent == null) throw new IllegalArgumentException("parent is null");
 
-		init();
-	}
+    this.parent = parent;
 
-	@Override
-	public void actionPerformed(ActionEvent e)
-	{
-		if (Slyum.ACTION_NEW_NOTE_ASSOCIED.equals(e.getActionCommand()))
-			parent.linkNewNoteWithSelectedEntities();
+    init();
+  }
 
-		else if ("Color".equals(e.getActionCommand()))
-			askNewColorForSelectedItems();
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    if (Slyum.ACTION_NEW_NOTE_ASSOCIED.equals(e.getActionCommand()))
+      parent.linkNewNoteWithSelectedEntities();
 
-		else if ("open-in-explorer".equals(e.getActionCommand()))
+    else if ("Color".equals(e.getActionCommand()))
+      askNewColorForSelectedItems();
+
+    else if ("open-in-explorer".equals(e.getActionCommand()))
       try {
-          Desktop.getDesktop().open(PanelClassDiagram.getFileOpen().getParentFile());
+        Desktop.getDesktop().open(
+                PanelClassDiagram.getFileOpen().getParentFile());
       } catch (Exception e1) {
         SMessageDialog.showErrorMessage("No open file!");
       }
-		else
+    else
       SPanelDiagramComponent.getInstance().actionPerformed(e);
-	}
-	
-	public static void askNewColorForSelectedItems()
-	{
-		PanelClassDiagram.getInstance().getCurrentGraphicView().changeColorForSelectedItems();
-	}
+  }
 
-	/**
-	 * Confirm ghost changes. If component have a ghost representation, call
-	 * this method will translate and scale the component bounds with the ghost
-	 * bounds. The ghost is, usually, the representation of component during
-	 * movement or resize.
-	 * 
-	 * @param e
-	 *            the mouse event
-	 */
-	public void apply(MouseEvent e)
-	{
-	}
+  public static void askNewColorForSelectedItems() {
+    PanelClassDiagram.getInstance().getCurrentGraphicView()
+            .changeColorForSelectedItems();
+  }
 
-	/**
-	 * This method is use by the magnetic grip for computing where did it
-	 * magnetized. By default, magnetic grips go to the middle bounds of the
-	 * component.
-	 * 
-	 * @param first
-	 *            the current location of the magnetic grip
-	 * @param next
-	 *            the location of the next grip (nearest grip of first grip)
-	 * @return
-	 */
-	public Point computeAnchorLocation(Point first, Point next)
-	{
-		final Rectangle bounds = getBounds();
-		return new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-	}
+  /**
+   * Confirm ghost changes. If component have a ghost representation, call this
+   * method will translate and scale the component bounds with the ghost bounds.
+   * The ghost is, usually, the representation of component during movement or
+   * resize.
+   * 
+   * @param e
+   *          the mouse event
+   */
+  public void apply(MouseEvent e) {}
 
-	/**
-	 * Delete this component from the parent. Delete a component will delete all
-	 * line associed with this component. A deleted component will no longer be
-	 * drawn or managed by the graphic view. This operation is irreversible.
-	 */
-	public void delete()
-	{
-		if (!parent.containComponent(this))
-			return;
-		
-		// Unselect the component.
-		setSelected(false);
-		
-		Change.push(new BufferCreation(true, this));
-		Change.push(new BufferCreation(false, this));
-		
-		parent.removeComponent(this);
+  /**
+   * This method is use by the magnetic grip for computing where did it
+   * magnetized. By default, magnetic grips go to the middle bounds of the
+   * component.
+   * 
+   * @param first
+   *          the current location of the magnetic grip
+   * @param next
+   *          the location of the next grip (nearest grip of first grip)
+   * @return
+   */
+  public Point computeAnchorLocation(Point first, Point next) {
+    final Rectangle bounds = getBounds();
+    return new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+  }
 
-		// Search and remove the UML associated component.
-		final IDiagramComponent associed = getAssociedComponent();
-		
-		if (associed != null)
-			parent.getClassDiagram().removeComponent(associed);
-		
-		// Search and delete all lines (relations, associations, etc...)
-		// associated with this component.
-		for (final LineView lv : parent.getLinesViewAssociedWith(this))
-		
-			lv.delete();
-		
-	}
+  /**
+   * Delete this component from the parent. Delete a component will delete all
+   * line associed with this component. A deleted component will no longer be
+   * drawn or managed by the graphic view. This operation is irreversible.
+   */
+  public void delete() {
+    if (!parent.containComponent(this)) return;
 
-	/**
-	 * When the user select a component, this method is called. It's used for
-	 * drawing a selected effect, like an etched border.
-	 * 
-	 * @param g2
-	 *            the graphic context
-	 */
-	public void drawSelectedEffect(Graphics2D g2)
-	{
+    // Unselect the component.
+    setSelected(false);
 
-	}
+    Change.push(new BufferCreation(true, this));
+    Change.push(new BufferCreation(false, this));
 
-	/**
-	 * Some graphic component is associed with a structural UML component (like
-	 * classes, methods, relations, ...). Return null if no component are
-	 * associated. !!! GraphicComponent and GraphicComponent associated with UML
-	 * component should be separated in newer version !!!
-	 * 
-	 * @return
-	 */
-	public IDiagramComponent getAssociedComponent()
-	{
-		return null;
-	}
+    parent.removeComponent(this);
 
-	/**
-	 * Get the bounds of this component. The bounds is the minimum (x, y)
-	 * location and the width and height is compute in this way (maxX - minX)
-	 * and (maxY - minY).
-	 * 
-	 * @return the bounds of this component.
-	 */
-	public abstract Rectangle getBounds();
-	
-	public GraphicView getGraphicView()
-	{
-		return parent;
-	}
+    // Search and remove the UML associated component.
+    final IDiagramComponent associed = getAssociedComponent();
 
-	/**
-	 * Get the color of this component. The color can be used by the component
-	 * during drawing. But it is the responsibility of the sub class to use it
-	 * or not.
-	 * 
-	 * @return the color of this component.
-	 */
-	public Color getColor() {
-		return new Color(color.getRGB());
-	}
+    if (associed != null) parent.getClassDiagram().removeComponent(associed);
 
-	/**
-	 * Get the mouse pressed location.
-	 * 
-	 * @return the mouse pressed location.
-	 */
-	public Point getMousePressed()
-	{
-		return mousePressed;
-	}
+    // Search and delete all lines (relations, associations, etc...)
+    // associated with this component.
+    for (final LineView lv : parent.getLinesViewAssociedWith(this))
 
-	/**
-	 * Get the popup menu for this component. The popup menu is shown when user
-	 * make a right-click on it. Some component hides this menu and don't use
-	 * it.
-	 * 
-	 * @return the popup menu.
-	 */
-	public JPopupMenu getPopupMenu()
-	{
-		return popupMenu;
-	}
+      lv.delete();
 
-	/**
-	 * Mouse event - this event is called by the graphic view when the user
-	 * clicks on it. The graphic view make a link between swing and slyum
-	 * events.
-	 * 
-	 * @param e
-	 *            the swing mouse event.
-	 */
-	public void gMouseClicked(MouseEvent e)
-	{
+  }
 
-	}
+  /**
+   * When the user select a component, this method is called. It's used for
+   * drawing a selected effect, like an etched border.
+   * 
+   * @param g2
+   *          the graphic context
+   */
+  public void drawSelectedEffect(Graphics2D g2) {
 
-	/**
-	 * Mouse event - this event is called by the graphic view when the user
-	 * keeps the mouse pressed and move it. The graphic view make a link between
-	 * swing and slyum events.
-	 * 
-	 * @param e
-	 *            the swing mouse event.
-	 */
-	public void gMouseDragged(MouseEvent e)
-	{
-	}
+  }
 
-	/**
-	 * Mouse event - this event is called by the graphic view when the user
-	 * enters in the component with the mouse. The graphic view make a link
-	 * between swing and slyum events.
-	 * 
-	 * @param e
-	 *            the swing mouse event.
-	 */
-	public void gMouseEntered(MouseEvent e)
-	{
-	}
+  /**
+   * Some graphic component is associed with a structural UML component (like
+   * classes, methods, relations, ...). Return null if no component are
+   * associated. !!! GraphicComponent and GraphicComponent associated with UML
+   * component should be separated in newer version !!!
+   * 
+   * @return
+   */
+  public IDiagramComponent getAssociedComponent() {
+    return null;
+  }
 
-	/**
-	 * Mouse event - this event is called by the graphic view when the user
-	 * exits from the component with the mouse. The graphic view make a link
-	 * between swing and slyum events.
-	 * 
-	 * @param e
-	 *            the swing mouse event.
-	 */
-	public void gMouseExited(MouseEvent e)
-	{
-	}
+  /**
+   * Get the bounds of this component. The bounds is the minimum (x, y) location
+   * and the width and height is compute in this way (maxX - minX) and (maxY -
+   * minY).
+   * 
+   * @return the bounds of this component.
+   */
+  public abstract Rectangle getBounds();
 
-	/**
-	 * Mouse event - this event is called by the graphic view when the user
-	 * moves on the component with the mouse. The graphic view make a link
-	 * between swing and slyum events.
-	 * 
-	 * @param e
-	 *            the swing mouse event.
-	 */
-	public void gMouseMoved(MouseEvent e)
-	{
-	}
+  public GraphicView getGraphicView() {
+    return parent;
+  }
 
-	/**
-	 * Mouse event - this event is called by the graphic view when the user
-	 * presses a mouse button on the component. The graphic view make a link
-	 * between swing and slyum events.
-	 * 
-	 * @param e
-	 *            the swing mouse event.
-	 */
-	public void gMousePressed(MouseEvent e)
-	{
-		maybeShowPopup(e, popupMenu);
-	}
+  /**
+   * Get the color of this component. The color can be used by the component
+   * during drawing. But it is the responsibility of the sub class to use it or
+   * not.
+   * 
+   * @return the color of this component.
+   */
+  public Color getColor() {
+    return new Color(color.getRGB());
+  }
 
-	/**
-	 * Mouse event - this event is called by the graphic view when the user
-	 * releases a mouse button on the component. The graphic view make a link
-	 * between swing and slyum events.
-	 * 
-	 * @param e
-	 *            the swing mouse event.
-	 */
-	public void gMouseReleased(MouseEvent e)
-	{
-		maybeShowPopup(e, popupMenu);
-	}
-	
-	public void restore()
-	{
-	}
+  /**
+   * Get the mouse pressed location.
+   * 
+   * @return the mouse pressed location.
+   */
+  public Point getMousePressed() {
+    return mousePressed;
+  }
 
-	/**
-	 * Calls by the constructor for initialize components.
-	 */
-	private void init()
-	{
-		// Create context menu.
-		popupMenu = new JPopupMenu();
+  /**
+   * Get the popup menu for this component. The popup menu is shown when user
+   * make a right-click on it. Some component hides this menu and don't use it.
+   * 
+   * @return the popup menu.
+   */
+  public JPopupMenu getPopupMenu() {
+    return popupMenu;
+  }
 
-		JMenuItem menuItem;
+  /**
+   * Mouse event - this event is called by the graphic view when the user clicks
+   * on it. The graphic view make a link between swing and slyum events.
+   * 
+   * @param e
+   *          the swing mouse event.
+   */
+  public void gMouseClicked(MouseEvent e) {
 
-		miNewNote = menuItem = makeMenuItem("New note", Slyum.ACTION_NEW_NOTE_ASSOCIED, "note");
-		popupMenu.add(menuItem);
+  }
 
-		menuItem = makeMenuItem("Change color...", "Color", "color");
-		popupMenu.add(menuItem);
-	}
+  /**
+   * Mouse event - this event is called by the graphic view when the user keeps
+   * the mouse pressed and move it. The graphic view make a link between swing
+   * and slyum events.
+   * 
+   * @param e
+   *          the swing mouse event.
+   */
+  public void gMouseDragged(MouseEvent e) {}
 
-	/**
-	 * Return if the position given in parameter is on the graphic component or
-	 * not. This method is used by the graphic view for computing mouse event.
-	 * 
-	 * @param position
-	 *            the position to verify
-	 * @return true if the position is on the graphic component; false otherwise
-	 */
-	public abstract boolean isAtPosition(Point position);
+  /**
+   * Mouse event - this event is called by the graphic view when the user enters
+   * in the component with the mouse. The graphic view make a link between swing
+   * and slyum events.
+   * 
+   * @param e
+   *          the swing mouse event.
+   */
+  public void gMouseEntered(MouseEvent e) {}
 
-	/**
-	 * Return if the component is selected or not.
-	 * 
-	 * @return true if the component is selected; false otherwise
-	 */
-	public boolean isSelected()
-	{
-		return selected;
-	}
+  /**
+   * Mouse event - this event is called by the graphic view when the user exits
+   * from the component with the mouse. The graphic view make a link between
+   * swing and slyum events.
+   * 
+   * @param e
+   *          the swing mouse event.
+   */
+  public void gMouseExited(MouseEvent e) {}
 
-	/**
-	 * Return if the component is visible or not.
-	 * 
-	 * @return true if the component is visible; false otherwise
-	 */
-	public boolean isVisible()
-	{
-		return visible;
-	}
+  /**
+   * Mouse event - this event is called by the graphic view when the user moves
+   * on the component with the mouse. The graphic view make a link between swing
+   * and slyum events.
+   * 
+   * @param e
+   *          the swing mouse event.
+   */
+  public void gMouseMoved(MouseEvent e) {}
 
-	/**
-	 * Creates a new JMenuItem with this class like action listeners.
-	 * 
-	 * @param name
-	 *            the name for JMenuItem
-	 * @param action
-	 *            the action command for this JMenuItem
-	 * @param imgIcon
-	 *            the icon path for the icon of this JMenuItem
-	 * @return the new JMenuItem created
-	 */
-	public JMenuItem makeMenuItem(String name, String action, String imgIcon)
-	{
-		final ImageIcon img = PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + imgIcon + ".png");
+  /**
+   * Mouse event - this event is called by the graphic view when the user
+   * presses a mouse button on the component. The graphic view make a link
+   * between swing and slyum events.
+   * 
+   * @param e
+   *          the swing mouse event.
+   */
+  public void gMousePressed(MouseEvent e) {
+    maybeShowPopup(e, popupMenu);
+  }
 
-		final JMenuItem menuItem = new JMenuItem(name, img);
-		menuItem.setActionCommand(action);
-		menuItem.addActionListener(this);
-		return menuItem;
-	}
+  /**
+   * Mouse event - this event is called by the graphic view when the user
+   * releases a mouse button on the component. The graphic view make a link
+   * between swing and slyum events.
+   * 
+   * @param e
+   *          the swing mouse event.
+   */
+  public void gMouseReleased(MouseEvent e) {
+    maybeShowPopup(e, popupMenu);
+  }
 
-	/**
-	 * Makes a new JRadioButtonMenuItem with this class like action listeners.
-	 * 
-	 * @param name
-	 *            the name for JRadioButtonMenuItem
-	 * @param action
-	 *            action the action command for this JRadioButtonMenuItem
-	 * @param group
-	 *            the group for this JRadioButtonMenuItem
-	 * @return the new JRadioButtonMenuItem created
-	 */
-	public JRadioButtonMenuItem makeRadioButtonMenuItem(String name, String action, ButtonGroup group)
-	{
-		final JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem(name);
-		rbMenuItem.setActionCommand(action);
-		rbMenuItem.addActionListener(this);
-		group.add(rbMenuItem);
+  public void restore() {}
 
-		return rbMenuItem;
-	}
+  /**
+   * Calls by the constructor for initialize components.
+   */
+  private void init() {
+    // Create context menu.
+    popupMenu = new JPopupMenu();
 
-	/**
-	 * Displays the popup menu if e.isPopupTrigger is true, hide otherwise.
-	 * 
-	 * @param e
-	 *            the mouse event
-	 * @param popupMenu
-	 *            the popupMenu to display or hide.
-	 */
-	public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
-		GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
-		locationContextMenuRequested = e.getPoint();
-		
-		if (e.isPopupTrigger()) {
-			miNewNote.setEnabled(getAssociedComponent() != null);
-			popupMenu.show(e.getComponent(), (int)(e.getX() / gv.getInversedScale()), (int)(e.getY() / gv.getInversedScale()));
-		}
-	}
-	
-	public void maybeShowPopup(MouseEvent e, GraphicComponent source) {
-	  source.locationContextMenuRequested = e.getPoint();
-	  maybeShowPopup(e, source.getPopupMenu());
-	}
+    JMenuItem menuItem;
 
-	/**
-	 * Compute the middle bounds of the component. Middle bounds is compute from
-	 * the bounds of the component.
-	 * 
-	 * @return
-	 */
-	public Point middleBounds()
-	{
-		final Rectangle bounds = getBounds();
-		return new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
-	}
+    miNewNote = menuItem = makeMenuItem("New note",
+            Slyum.ACTION_NEW_NOTE_ASSOCIED, "note");
+    popupMenu.add(menuItem);
 
-	/**
-	 * Calls when a component is moved. Most of components use a ghost
-	 * representation for moving. Call apply() after move for applying changes.
-	 * 
-	 * @param e
-	 */
-	public void move(MouseEvent e)
-	{
-	}
+    menuItem = makeMenuItem("Change color...", "Color", "color");
+    popupMenu.add(menuItem);
+  }
 
-	/**
-	 * Draw the component on the graphic view.
-	 * 
-	 * @param g2
-	 *            The graphic context
-	 */
-	public abstract void paintComponent(Graphics2D g2);
+  /**
+   * Return if the position given in parameter is on the graphic component or
+   * not. This method is used by the graphic view for computing mouse event.
+   * 
+   * @param position
+   *          the position to verify
+   * @return true if the position is on the graphic component; false otherwise
+   */
+  public abstract boolean isAtPosition(Point position);
 
-	/**
-	 * Repaint the component on the graphic view. Most of components call
-	 * getBounds() method for repaint only its bounds. When a component is moved
-	 * or resize, calls this method is not sufficient because it redraws only
-	 * current bounds, not old bounds.
-	 */
-	public abstract void repaint();
+  /**
+   * Return if the component is selected or not.
+   * 
+   * @return true if the component is selected; false otherwise
+   */
+  public boolean isSelected() {
+    return selected;
+  }
 
-	/**
-	 * Calls for resizing component from left. Not all components can be
-	 * resizing. By default, component can't be resize.
-	 * 
-	 * @param e
-	 *            the mouse event for compute new size
-	 */
-	public void resizeLeft(MouseEvent e)
-	{
-	}
+  /**
+   * Return if the component is visible or not.
+   * 
+   * @return true if the component is visible; false otherwise
+   */
+  public boolean isVisible() {
+    return visible;
+  }
 
-	/**
-	 * Calls for resizing component from right. Not all components can be
-	 * resizing. By default, component can't be resize.
-	 * 
-	 * @param e
-	 *            the mouse event for compute new size
-	 */
-	public void resizeRight(MouseEvent e)
-	{
-	}
+  /**
+   * Creates a new JMenuItem with this class like action listeners.
+   * 
+   * @param name
+   *          the name for JMenuItem
+   * @param action
+   *          the action command for this JMenuItem
+   * @param imgIcon
+   *          the icon path for the icon of this JMenuItem
+   * @return the new JMenuItem created
+   */
+  public JMenuItem makeMenuItem(String name, String action, String imgIcon) {
+    final ImageIcon img = PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
+            + imgIcon + ".png");
 
-	/**
-	 * Calls this method for saving mouse location. Mouse location is used by
-	 * components for compute moving or resizing.
-	 * 
-	 * @param e
-	 *            the mouse event
-	 */
-	public void saveMouseLocation(MouseEvent e)
-	{
-		mousePressed = new Point(e.getPoint());
-	}
+    final JMenuItem menuItem = new JMenuItem(name, img);
+    menuItem.setActionCommand(action);
+    menuItem.addActionListener(this);
+    return menuItem;
+  }
 
-	/**
-	 * Set the bounds for the component. Any component don't have rectangulare
-	 * bounds and this method can have no effect on them. Calls the appropriate
-	 * method of sub element for changed theirs bounds.
-	 * 
-	 * @param bounds
-	 *            the new bounds for this component
-	 */
-	public abstract void setBounds(Rectangle bounds);
+  /**
+   * Makes a new JRadioButtonMenuItem with this class like action listeners.
+   * 
+   * @param name
+   *          the name for JRadioButtonMenuItem
+   * @param action
+   *          action the action command for this JRadioButtonMenuItem
+   * @param group
+   *          the group for this JRadioButtonMenuItem
+   * @return the new JRadioButtonMenuItem created
+   */
+  public JRadioButtonMenuItem makeRadioButtonMenuItem(String name,
+          String action, ButtonGroup group) {
+    final JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem(name);
+    rbMenuItem.setActionCommand(action);
+    rbMenuItem.addActionListener(this);
+    group.add(rbMenuItem);
 
-	/**
-	 * Set the color for this component. The color can be used by the component
-	 * during drawing. But it is the responsibility of the sub class to use it
-	 * or not.
-	 * 
-	 * @param color
-	 *            the new color for this component
-	 */
-	public void setColor(Color color)
-	{
-		this.color = new Color(color.getRGB());
-		repaint();
-	}
+    return rbMenuItem;
+  }
 
-	/**
-	 * Set the color for this component. The color can be used by the component
-	 * during drawing. But it is the responsibility of the sub class to use it
-	 * or not.
-	 * 
-	 * @param color
-	 *            the new rgb 32-bits color for this component
-	 */
-	public void setColor(int rgb)
-	{
-		setColor(new Color(rgb));
-	}
+  /**
+   * Displays the popup menu if e.isPopupTrigger is true, hide otherwise.
+   * 
+   * @param e
+   *          the mouse event
+   * @param popupMenu
+   *          the popupMenu to display or hide.
+   */
+  public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
+    GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+    locationContextMenuRequested = e.getPoint();
 
-	/**
-	 * Some component have different styles. Calls this method reset the default
-	 * style for this component.
-	 */
-	public void setDefaultStyle()
-	{
-	}
+    if (e.isPopupTrigger()) {
+      miNewNote.setEnabled(getAssociedComponent() != null);
+      popupMenu.show(e.getComponent(),
+              (int) (e.getX() / gv.getInversedScale()),
+              (int) (e.getY() / gv.getInversedScale()));
+    }
+  }
 
-	/**
-	 * Some component have different styles. Calls this method draw the
-	 * component with its mouse hover style.
-	 */
-	public void setMouseHoverStyle()
-	{
-	}
+  public void maybeShowPopup(MouseEvent e, GraphicComponent source) {
+    source.locationContextMenuRequested = e.getPoint();
+    maybeShowPopup(e, source.getPopupMenu());
+  }
 
-	/**
-	 * Set the selected state for this component.
-	 * 
-	 * @param selected
-	 *            the new selected state for this component.
-	 */
-	public void setSelected(boolean selected)
-	{
-		if (isSelected() != selected) {
-			this.selected = selected;
-			repaint();
-			
-			parent.componentSelected(selected);
-		}
-		
-		setChanged();
-	}
+  /**
+   * Compute the middle bounds of the component. Middle bounds is compute from
+   * the bounds of the component.
+   * 
+   * @return
+   */
+  public Point middleBounds() {
+    final Rectangle bounds = getBounds();
+    return new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+  }
 
-	/**
-	 * Some component have different styles. Calls this method draw the
-	 * component with its mouse clicked style.
-	 */
-	public void setStyleClicked()
-	{
-	}
+  /**
+   * Calls when a component is moved. Most of components use a ghost
+   * representation for moving. Call apply() after move for applying changes.
+   * 
+   * @param e
+   */
+  public void move(MouseEvent e) {}
 
-	/**
-	 * Set the visible state for this component. This method repaint the
-	 * component. Note that, by default, hide a component means that it will no
-	 * longer be drawn.
-	 * 
-	 * @param visible
-	 */
-	public void setVisible(boolean visible)
-	{
-		this.visible = visible;
-		repaint();
-	}
-	
-	public void setPictureMode(boolean enable) {
-	  pictureMode = enable;
-	}
-	
-	@Override
-	public String getXmlTagName() {
-	  return null;
-	}
-	
-	@Override
-	public Element getXmlElement(Document doc) {
-	  return null;
-	}
-  
+  /**
+   * Draw the component on the graphic view.
+   * 
+   * @param g2
+   *          The graphic context
+   */
+  public abstract void paintComponent(Graphics2D g2);
+
+  /**
+   * Repaint the component on the graphic view. Most of components call
+   * getBounds() method for repaint only its bounds. When a component is moved
+   * or resize, calls this method is not sufficient because it redraws only
+   * current bounds, not old bounds.
+   */
+  public abstract void repaint();
+
+  /**
+   * Calls for resizing component from left. Not all components can be resizing.
+   * By default, component can't be resize.
+   * 
+   * @param e
+   *          the mouse event for compute new size
+   */
+  public void resizeLeft(MouseEvent e) {}
+
+  /**
+   * Calls for resizing component from right. Not all components can be
+   * resizing. By default, component can't be resize.
+   * 
+   * @param e
+   *          the mouse event for compute new size
+   */
+  public void resizeRight(MouseEvent e) {}
+
+  /**
+   * Calls this method for saving mouse location. Mouse location is used by
+   * components for compute moving or resizing.
+   * 
+   * @param e
+   *          the mouse event
+   */
+  public void saveMouseLocation(MouseEvent e) {
+    mousePressed = new Point(e.getPoint());
+  }
+
+  /**
+   * Set the bounds for the component. Any component don't have rectangulare
+   * bounds and this method can have no effect on them. Calls the appropriate
+   * method of sub element for changed theirs bounds.
+   * 
+   * @param bounds
+   *          the new bounds for this component
+   */
+  public abstract void setBounds(Rectangle bounds);
+
+  /**
+   * Set the color for this component. The color can be used by the component
+   * during drawing. But it is the responsibility of the sub class to use it or
+   * not.
+   * 
+   * @param color
+   *          the new color for this component
+   */
+  public void setColor(Color color) {
+    this.color = new Color(color.getRGB());
+    repaint();
+  }
+
+  /**
+   * Set the color for this component. The color can be used by the component
+   * during drawing. But it is the responsibility of the sub class to use it or
+   * not.
+   * 
+   * @param color
+   *          the new rgb 32-bits color for this component
+   */
+  public void setColor(int rgb) {
+    setColor(new Color(rgb));
+  }
+
+  /**
+   * Some component have different styles. Calls this method reset the default
+   * style for this component.
+   */
+  public void setDefaultStyle() {}
+
+  /**
+   * Some component have different styles. Calls this method draw the component
+   * with its mouse hover style.
+   */
+  public void setMouseHoverStyle() {}
+
+  /**
+   * Set the selected state for this component.
+   * 
+   * @param selected
+   *          the new selected state for this component.
+   */
+  public void setSelected(boolean selected) {
+    if (isSelected() != selected) {
+      this.selected = selected;
+      repaint();
+
+      parent.componentSelected(selected);
+    }
+
+    setChanged();
+  }
+
+  /**
+   * Some component have different styles. Calls this method draw the component
+   * with its mouse clicked style.
+   */
+  public void setStyleClicked() {}
+
+  /**
+   * Set the visible state for this component. This method repaint the
+   * component. Note that, by default, hide a component means that it will no
+   * longer be drawn.
+   * 
+   * @param visible
+   */
+  public void setVisible(boolean visible) {
+    this.visible = visible;
+    repaint();
+  }
+
+  public void setPictureMode(boolean enable) {
+    pictureMode = enable;
+  }
+
+  @Override
+  public String getXmlTagName() {
+    return null;
+  }
+
+  @Override
+  public Element getXmlElement(Document doc) {
+    return null;
+  }
+
   public IDiagramComponent getAssociedXmlElement() {
     return getAssociedComponent();
   }

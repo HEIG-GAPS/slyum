@@ -1,4 +1,4 @@
-package swing.hierarchicalView;
+﻿package swing.hierarchicalView;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -19,108 +19,95 @@ import classDiagram.components.Entity;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public abstract class NodeEntity 
-    extends DefaultMutableTreeNode 
-    implements Observer, IClassDiagramNode, ICustomizedIconNode {
-	protected final Entity entity;
-	protected final ImageIcon icon;
-	protected final JTree tree;
+public abstract class NodeEntity extends DefaultMutableTreeNode implements Observer, IClassDiagramNode, ICustomizedIconNode {
+  protected final Entity entity;
+  protected final ImageIcon icon;
+  protected final JTree tree;
 
-	protected final DefaultTreeModel treeModel;
+  protected final DefaultTreeModel treeModel;
 
-	/**
-	 * Create a new node associated with an entity.
-	 * 
-	 * @param entity
-	 *            the entity associated
-	 * @param treeModel
-	 *            the model of the JTree
-	 * @param tree
-	 *            the JTree
-	 * @param icon
-	 *            the customized icon
-	 */
-	public NodeEntity(
-	    Entity entity, DefaultTreeModel treeModel, JTree tree, ImageIcon icon)
-	{
-		super(entity.getName());
+  /**
+   * Create a new node associated with an entity.
+   * 
+   * @param entity
+   *          the entity associated
+   * @param treeModel
+   *          the model of the JTree
+   * @param tree
+   *          the JTree
+   * @param icon
+   *          the customized icon
+   */
+  public NodeEntity(Entity entity, DefaultTreeModel treeModel, JTree tree,
+          ImageIcon icon) {
+    super(entity.getName());
 
-		if (treeModel == null)
-			throw new IllegalArgumentException("treeModel is null");
+    if (treeModel == null)
+      throw new IllegalArgumentException("treeModel is null");
 
-		if (tree == null)
-			throw new IllegalArgumentException("tree is null");
+    if (tree == null) throw new IllegalArgumentException("tree is null");
 
-		this.entity = entity;
-		this.treeModel = treeModel;
-		this.tree = tree;
-		this.icon = icon;
+    this.entity = entity;
+    this.treeModel = treeModel;
+    this.tree = tree;
+    this.icon = icon;
 
-		entity.addObserver(this);
-		
-		reloadChildsNodes();
-	}
+    entity.addObserver(this);
 
-	@Override
-	public IDiagramComponent getAssociedComponent()
-	{
-		return entity;
-	}
+    reloadChildsNodes();
+  }
 
-	@Override
-	public ImageIcon getCustomizedIcon()
-	{
-		return icon;
-	}
+  @Override
+  public IDiagramComponent getAssociedComponent() {
+    return entity;
+  }
 
-	/**
-	 * Remove and re-generate all child nodes according to methods and attributs
-	 * containing by the entity.
-	 */
-	protected abstract void reloadChildsNodes();
+  @Override
+  public ImageIcon getCustomizedIcon() {
+    return icon;
+  }
 
-	@Override
-	public void removeAllChildren()
-	{
-		for (int i = getChildCount()-1; i >= 0; i--)
-		{
-			IClassDiagramNode node = (IClassDiagramNode)getChildAt(i);
-			
-            node.getAssociedComponent().deleteObserver((Observer)node);
-        }
-		
-		super.removeAllChildren();
-	}
+  /**
+   * Remove and re-generate all child nodes according to methods and attributs
+   * containing by the entity.
+   */
+  protected abstract void reloadChildsNodes();
 
-	@Override
-	public void update(Observable arg0, Object arg1)
-	{
-		if (arg1 != null && arg1.getClass() == UpdateMessage.class)
-		{
-			final TreePath path = new TreePath(getPath());
+  @Override
+  public void removeAllChildren() {
+    for (int i = getChildCount() - 1; i >= 0; i--) {
+      IClassDiagramNode node = (IClassDiagramNode) getChildAt(i);
 
-			switch ((UpdateMessage) arg1)
-			{
-				case SELECT:
-					tree.addSelectionPath(path);
-					break;
+      node.getAssociedComponent().deleteObserver((Observer) node);
+    }
 
-				case UNSELECT:
-					tree.removeSelectionPath(path);
-					break;
+    super.removeAllChildren();
+  }
 
-				default:
-					reloadChildsNodes();
-					break;
-			}
-		}
-		else
-			reloadChildsNodes();
-	}
-	
-	@Override
-	public void remove()
-	{
-		removeAllChildren();
-	}
+  @Override
+  public void update(Observable arg0, Object arg1) {
+    if (arg1 != null && arg1.getClass() == UpdateMessage.class) {
+      final TreePath path = new TreePath(getPath());
+
+      switch ((UpdateMessage) arg1) {
+        case SELECT:
+          tree.addSelectionPath(path);
+          break;
+
+        case UNSELECT:
+          tree.removeSelectionPath(path);
+          break;
+
+        default:
+          reloadChildsNodes();
+          break;
+      }
+    } else
+      reloadChildsNodes();
+  }
+
+  @Override
+  public void remove() {
+    removeAllChildren();
+  }
 }

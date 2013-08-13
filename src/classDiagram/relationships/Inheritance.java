@@ -1,4 +1,4 @@
-package classDiagram.relationships;
+ï»¿package classDiagram.relationships;
 
 import java.util.Observable;
 
@@ -22,173 +22,153 @@ import classDiagram.components.SimpleEntity;
  * @author David Miserez
  * @version 1.0 - 24.07.2011
  */
-public class Inheritance extends Observable 
-                         implements Relation
-{
-	public static boolean validate(Entity child, Entity parent) {
-	  /* Cette méthode de validation est a revoir. Désactivation en attendant.
-		boolean valide = true;
+public class Inheritance extends Observable implements Relation {
+  public static boolean validate(Entity child, Entity parent) {
+    /* Cette mÃ©thode de validation est a revoir. DÃ©sactivation en attendant.
+     * boolean valide = true; valide &= child != parent; for (Entity e :
+     * child.getAllChilds()) valide &= !parent.equals(e); if (!valide)
+     * SMessageDialog.showErrorMessage(
+     * "Error in hierarchical class structure.\n" +
+     * "Impossible to create inheritance association."); return valide; */
+    return true;
+  }
 
-		valide &= child != parent;
+  protected SimpleEntity child, parent;
 
-    for (Entity e : child.getAllChilds())
-      valide &= !parent.equals(e);
+  protected final int id;
 
-		if (!valide)
-			SMessageDialog.showErrorMessage(
-					"Error in hierarchical class structure.\n" +
-					"Impossible to create inheritance association.");
+  /**
+   * Create a new inheritance with the given entities child and parent.
+   * 
+   * @param child
+   *          the child entity
+   * @param parent
+   *          the parent entity
+   */
+  public Inheritance(SimpleEntity child, SimpleEntity parent) {
+    init(child, parent);
 
-		return valide;
-		*/
-	  return true;
-	}
+    id = ClassDiagram.getNextId();
+  }
 
-	protected SimpleEntity child, parent;
+  /**
+   * Create a new inheritance with the given entities child and parent. Don't
+   * generate a new id and use this given in parameter.
+   * 
+   * @param child
+   *          the child entity
+   * @param parent
+   *          the parent entity
+   */
+  public Inheritance(SimpleEntity child, SimpleEntity parent, int id) {
+    init(child, parent);
 
-	protected final int id;
+    this.id = id;
+  }
 
-	/**
-	 * Create a new inheritance with the given entities child and parent.
-	 * 
-	 * @param child
-	 *            the child entity
-	 * @param parent
-	 *            the parent entity
-	 */
-	public Inheritance(SimpleEntity child, SimpleEntity parent)
-	{
-		init(child, parent);
+  /**
+   * Get the child for this inheritance.
+   * 
+   * @return the child for this inheritance
+   */
+  public SimpleEntity getChild() {
+    return child;
+  }
 
-		id = ClassDiagram.getNextId();
-	}
+  @Override
+  public int getId() {
+    return id;
+  }
 
-	/**
-	 * Create a new inheritance with the given entities child and parent. Don't
-	 * generate a new id and use this given in parameter.
-	 * 
-	 * @param child
-	 *            the child entity
-	 * @param parent
-	 *            the parent entity
-	 */
-	public Inheritance(SimpleEntity child, SimpleEntity parent, int id)
-	{
-		init(child, parent);
+  /**
+   * Get the parent for this inheritance.
+   * 
+   * @return the parent for this inheritance
+   */
+  public SimpleEntity getParent() {
+    return parent;
+  }
 
-		this.id = id;
-	}
+  /**
+   * Call by construtor for init parameters.
+   * 
+   * @param child
+   *          the child given in constructor
+   * @param parent
+   *          the parent given in constructor
+   */
+  private void init(SimpleEntity child, SimpleEntity parent) {
+    if (child.getClass() == InterfaceEntity.class
+            && parent.getClass() == ClassEntity.class)
+      throw new IllegalArgumentException("interface cannot implements class");
 
-	/**
-	 * Get the child for this inheritance.
-	 * 
-	 * @return the child for this inheritance
-	 */
-	public SimpleEntity getChild()
-	{
-		return child;
-	}
+    this.child = child;
+    this.child.addParent(this);
 
-	@Override
-	public int getId()
-	{
-		return id;
-	}
+    this.parent = parent;
+    this.parent.addChild(this);
+  }
 
-	/**
-	 * Get the parent for this inheritance.
-	 * 
-	 * @return the parent for this inheritance
-	 */
-	public SimpleEntity getParent()
-	{
-		return parent;
-	}
-
-	/**
-	 * Call by construtor for init parameters.
-	 * 
-	 * @param child
-	 *            the child given in constructor
-	 * @param parent
-	 *            the parent given in constructor
-	 */
-	private void init(SimpleEntity child, SimpleEntity parent)
-	{
-		if (child.getClass() == InterfaceEntity.class && parent.getClass() == ClassEntity.class)
-			throw new IllegalArgumentException("interface cannot implements class");
-
-		this.child = child;
-		this.child.addParent(this);
-
-		this.parent = parent;
-		this.parent.addChild(this);
-	}
-
-	@Override
-	public void select()
-	{
-		setChanged();
-	}
-
-	/**
-	 * Set the child for this inheritance.
-	 * 
-	 * @param child
-	 *            the new child for this inheritance
-	 */
-	public void setChild(SimpleEntity child)
-	{
-		this.child.removeParent(this);
-		this.child = child;
-		child.addParent(this);
-		setChanged();
-	}
-
-	/**
-	 * Set the parent for this inheritance.
-	 * 
-	 * @param parent
-	 *            the new parent for this inheritance
-	 */
-	public void setParent(SimpleEntity parent)
-	{
-		this.parent.removeChild(this);
-		this.parent = parent;
-		parent.addChild(this);
+  @Override
+  public void select() {
     setChanged();
-	}
+  }
 
-	public void showOverridesAndImplementations()
-	{
-		boolean thereAbstractMethod = false;
-		
-		final OverridesAndImplementationsDialog oai = new OverridesAndImplementationsDialog(parent, child);
+  /**
+   * Set the child for this inheritance.
+   * 
+   * @param child
+   *          the new child for this inheritance
+   */
+  public void setChild(SimpleEntity child) {
+    this.child.removeParent(this);
+    this.child = child;
+    child.addParent(this);
+    setChanged();
+  }
 
-		if (oai.isAccepted())
+  /**
+   * Set the parent for this inheritance.
+   * 
+   * @param parent
+   *          the new parent for this inheritance
+   */
+  public void setParent(SimpleEntity parent) {
+    this.parent.removeChild(this);
+    this.parent = parent;
+    parent.addChild(this);
+    setChanged();
+  }
 
-			for (final OverridesAndImplementationsDialog.CheckableItem m : oai.getCheckableItems())
-			{
-				if (m.isSelected())
-				{
-					child.addMethod(new Method(m.getMethod(), child));
-					thereAbstractMethod |= m.getMethod().isAbstract();
-				}
-				else
+  public void showOverridesAndImplementations() {
+    boolean thereAbstractMethod = false;
 
-					child.removeMethod(m.getMethod());
-			}
+    final OverridesAndImplementationsDialog oai = new OverridesAndImplementationsDialog(
+            parent, child);
 
-		if (thereAbstractMethod && !child.isAbstract())
-			
-			showDeAbstractMessage();
-			
-		child.notifyObservers();
-	}
+    if (oai.isAccepted())
 
-	private void showDeAbstractMessage() {
-		SMessageDialog.showInformationMessage("Child class is not abstract.\nAbstract methods have been de-abstracted.");
-	}
+      for (final OverridesAndImplementationsDialog.CheckableItem m : oai
+              .getCheckableItems()) {
+        if (m.isSelected()) {
+          child.addMethod(new Method(m.getMethod(), child));
+          thereAbstractMethod |= m.getMethod().isAbstract();
+        } else
+
+          child.removeMethod(m.getMethod());
+      }
+
+    if (thereAbstractMethod && !child.isAbstract())
+
+    showDeAbstractMessage();
+
+    child.notifyObservers();
+  }
+
+  private void showDeAbstractMessage() {
+    SMessageDialog
+            .showInformationMessage("Child class is not abstract.\nAbstract methods have been de-abstracted.");
+  }
 
   @Override
   public Entity getSource() {
@@ -202,37 +182,35 @@ public class Inheritance extends Observable
 
   @Override
   public void setSource(Entity entity) {
-    setChild((SimpleEntity)entity);
+    setChild((SimpleEntity) entity);
   }
 
   @Override
   public void setTarget(Entity entity) {
-    setParent((SimpleEntity)entity);
+    setParent((SimpleEntity) entity);
   }
 
-	@Override
-	public String toString()
-	{
-		return getChild().getName() + " - " + getParent().getName();
-	}
-	
-	@Override
-	public String getXmlTagName() {
-	  return "inheritance";
-	}
-	
-	@Override
-	public Element getXmlElement(Document doc) {
-	  Element inheritance = doc.createElement(getXmlTagName()),
-	          child = doc.createElement("child"),
-            parent = doc.createElement("parent");
-	  inheritance.setAttribute("id", String.valueOf(id));
-	  
-	  child.setTextContent(String.valueOf(this.child.getId()));
-	  parent.setTextContent(String.valueOf(this.parent.getId()));
-	  inheritance.appendChild(child);
-	  inheritance.appendChild(parent);
-	  
-	  return inheritance;
-	}
+  @Override
+  public String toString() {
+    return getChild().getName() + " - " + getParent().getName();
+  }
+
+  @Override
+  public String getXmlTagName() {
+    return "inheritance";
+  }
+
+  @Override
+  public Element getXmlElement(Document doc) {
+    Element inheritance = doc.createElement(getXmlTagName()), child = doc
+            .createElement("child"), parent = doc.createElement("parent");
+    inheritance.setAttribute("id", String.valueOf(id));
+
+    child.setTextContent(String.valueOf(this.child.getId()));
+    parent.setTextContent(String.valueOf(this.parent.getId()));
+    inheritance.appendChild(child);
+    inheritance.appendChild(parent);
+
+    return inheritance;
+  }
 }

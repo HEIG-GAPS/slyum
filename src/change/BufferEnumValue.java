@@ -1,9 +1,9 @@
-package change;
+﻿package change;
 
 import classDiagram.components.EnumValue;
 
 public class BufferEnumValue implements Changeable {
-  
+
   private EnumValue current, copy;
 
   public BufferEnumValue(EnumValue enumValue) {

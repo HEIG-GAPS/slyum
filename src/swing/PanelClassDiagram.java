@@ -1,4 +1,4 @@
-package swing;
+﻿package swing;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -63,8 +63,7 @@ public class PanelClassDiagram extends JPanel {
   }
 
   public static File getFileOpen() {
-    if (getInstance() != null)
-      return getInstance().getCurrentFile();
+    if (getInstance() != null) return getInstance().getCurrentFile();
     return null;
   }
 
@@ -75,7 +74,7 @@ public class PanelClassDiagram extends JPanel {
   private GraphicView graphicView;
 
   SSplitPane splitInner, // Split graphicview part and properties part.
-      splitOuter; // Split inner split and hierarchical part.
+          splitOuter; // Split inner split and hierarchical part.
 
   public void setDividerBottom(float location) {
     splitInner.setDividerLocation(location);
@@ -90,14 +89,14 @@ public class PanelClassDiagram extends JPanel {
     float dividerLocationBottom, dividerLocationLeft;
 
     dividerLocationBottom = (float) splitInner.getDividerLocation()
-        / (float) (splitInner.getHeight() - splitInner.getDividerSize());
+            / (float) (splitInner.getHeight() - splitInner.getDividerSize());
     properties.put(PropertyLoader.DIVIDER_BOTTOM,
-        String.valueOf(dividerLocationBottom));
+            String.valueOf(dividerLocationBottom));
 
     dividerLocationLeft = (float) splitOuter.getDividerLocation()
-        / (float) (splitOuter.getWidth() - splitOuter.getDividerSize());
+            / (float) (splitOuter.getWidth() - splitOuter.getDividerSize());
     properties.put(PropertyLoader.DIVIDER_LEFT,
-        String.valueOf(dividerLocationLeft));
+            String.valueOf(dividerLocationLeft));
   }
 
   private PanelClassDiagram() {
@@ -117,20 +116,20 @@ public class PanelClassDiagram extends JPanel {
 
     // Construct inner split pane.
     splitInner = new SSplitPane(JSplitPane.VERTICAL_SPLIT,
-        graphicView.getScrollPane(), PropretiesChanger.getInstance());
+            graphicView.getScrollPane(), PropretiesChanger.getInstance());
     splitInner.setResizeWeight(1.0);
 
     // Construct outer split pane.
     splitOuter = new SSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-        new HierarchicalView(getClassDiagram()), splitInner);
+            new HierarchicalView(getClassDiagram()), splitInner);
     splitOuter.setResizeWeight(0.0);
     splitOuter.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0,
-        Slyum.THEME_COLOR));
+            Slyum.THEME_COLOR));
 
     add(splitOuter, BorderLayout.CENTER);
 
     getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
-        KeyStroke.getKeyStroke("ESCAPE"), "escapePressed");
+            KeyStroke.getKeyStroke("ESCAPE"), "escapePressed");
     getActionMap().put("escapePressed", new AbstractAction() {
 
       @Override
@@ -148,7 +147,7 @@ public class PanelClassDiagram extends JPanel {
       return JOptionPane.NO_OPTION;
     else
       return SMessageDialog
-          .showQuestionMessageYesNoCancel("Save current project ?");
+              .showQuestionMessageYesNoCancel("Save current project ?");
   }
 
   /**
@@ -156,21 +155,19 @@ public class PanelClassDiagram extends JPanel {
    */
   public void exportAsImage() {
     final JFileChooser fc = new JFileChooser(
-        Slyum.getCurrentDirectoryFileChooser());
+            Slyum.getCurrentDirectoryFileChooser());
     fc.setAcceptAllFileFilterUsed(false);
 
     fc.addChoosableFileFilter(new FileFilter() {
 
       @Override
       public boolean accept(File f) {
-        if (f.isDirectory())
-          return true;
+        if (f.isDirectory()) return true;
 
         final String extension = Utility.getExtension(f);
         if (extension != null)
           if (extension.equals("jpg") || extension.equals("png")
-              || extension.equals("gif"))
-            return true;
+                  || extension.equals("gif")) return true;
 
         return false;
       }
@@ -226,7 +223,7 @@ public class PanelClassDiagram extends JPanel {
    */
   public boolean initCurrentSaveFile() {
     final JFileChooser fc = new JFileChooser(
-        Slyum.getCurrentDirectoryFileChooser());
+            Slyum.getCurrentDirectoryFileChooser());
     fc.setAcceptAllFileFilterUsed(false);
 
     fc.addChoosableFileFilter(new SlyFileChooser());
@@ -245,10 +242,9 @@ public class PanelClassDiagram extends JPanel {
 
       if (file.exists()) {
         final int answer = SMessageDialog.showQuestionMessageOkCancel(file
-            + " already exists. Overwrite?");
+                + " already exists. Overwrite?");
 
-        if (answer == JOptionPane.CANCEL_OPTION)
-          return false;
+        if (answer == JOptionPane.CANCEL_OPTION) return false;
       } else {
         try {
           file.createNewFile();
@@ -283,8 +279,7 @@ public class PanelClassDiagram extends JPanel {
    * Create a new project. Ask user to save current project.
    */
   public void newProject() {
-    if (!askForSave())
-      return;
+    if (!askForSave()) return;
 
     cleanApplication();
   }
@@ -301,8 +296,7 @@ public class PanelClassDiagram extends JPanel {
     Change.setHasChange(false);
     Slyum.updateWindowTitle(currentFile);
 
-    if (file == null)
-      return;
+    if (file == null) return;
 
     Slyum.setCurrentDirectoryFileChooser(file.getParent());
   }
@@ -313,15 +307,15 @@ public class PanelClassDiagram extends JPanel {
 
   public boolean askForSave() {
     switch (askSavingCurrentProject()) {
-    case JOptionPane.CANCEL_OPTION:
-      return false;
+      case JOptionPane.CANCEL_OPTION:
+        return false;
 
-    case JOptionPane.YES_OPTION:
-      saveToXML(false);
-      break;
+      case JOptionPane.YES_OPTION:
+        saveToXML(false);
+        break;
 
-    case JOptionPane.NO_OPTION:
-      break;
+      case JOptionPane.NO_OPTION:
+        break;
     }
 
     return true;
@@ -337,13 +331,13 @@ public class PanelClassDiagram extends JPanel {
 
     if (!file.exists()) {
       SMessageDialog
-          .showErrorMessage("File not found. Please select an existing file...");
+              .showErrorMessage("File not found. Please select an existing file...");
       return;
     }
 
     if (extension == null || !extension.equals(Slyum.EXTENTION)) {
       SMessageDialog.showErrorMessage("Invalide file format. Only \"."
-          + Slyum.EXTENTION + "\" files are accepted.");
+              + Slyum.EXTENTION + "\" files are accepted.");
       return;
     }
 
@@ -396,11 +390,10 @@ public class PanelClassDiagram extends JPanel {
    * Open a new project.
    */
   public void openFromXML() {
-    if (!askForSave())
-      return;
+    if (!askForSave()) return;
 
     final JFileChooser fc = new JFileChooser(
-        Slyum.getCurrentDirectoryFileChooser());
+            Slyum.getCurrentDirectoryFileChooser());
     fc.setAcceptAllFileFilterUsed(false);
 
     fc.addChoosableFileFilter(new SlyFileChooser());
@@ -409,26 +402,24 @@ public class PanelClassDiagram extends JPanel {
 
     if (result == JFileChooser.APPROVE_OPTION)
 
-      openFromXML(fc.getSelectedFile());
+    openFromXML(fc.getSelectedFile());
   }
 
   /**
    * Use for choosing a .sly file.
    * 
    * @author David Miserez
-   * @date 6 déc. 2011
+   * @date 6 dÃ©c. 2011
    */
   private class SlyFileChooser extends FileFilter {
     @Override
     public boolean accept(File f) {
-      if (f.isDirectory())
-        return true;
+      if (f.isDirectory()) return true;
 
       final String extension = Utility.getExtension(f);
 
       if (extension != null)
-        if (extension.equals(Slyum.EXTENTION))
-          return true;
+        if (extension.equals(Slyum.EXTENTION)) return true;
 
       return false;
     }
@@ -436,7 +427,7 @@ public class PanelClassDiagram extends JPanel {
     @Override
     public String getDescription() {
       return "Fichiers " + Slyum.EXTENTION.toUpperCase() + " (*."
-          + Slyum.EXTENTION + ")";
+              + Slyum.EXTENTION + ")";
     }
   }
 
@@ -451,7 +442,7 @@ public class PanelClassDiagram extends JPanel {
 
       if (!prnJob.printDialog())
 
-        return;
+      return;
 
       setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
@@ -483,22 +474,22 @@ public class PanelClassDiagram extends JPanel {
 
       if (file.exists())
         if (SMessageDialog.showQuestionMessageOkCancel(file
-            + " already exists. Overwrite?") == JOptionPane.CANCEL_OPTION)
+                + " already exists. Overwrite?") == JOptionPane.CANCEL_OPTION)
           return;
 
       if (extension.equals("png"))
         ImageIO.write(graphicView.getScreen(BufferedImage.TYPE_INT_ARGB_PRE),
-            extension, file);
+                extension, file);
       else if (extension.equals("jpg") || extension.equals("gif"))
         ImageIO.write(graphicView.getScreen(BufferedImage.TYPE_INT_RGB),
-            extension, file);
+                extension, file);
       else
         SMessageDialog.showErrorMessage("Extension \"." + extension
-            + "\" not supported.\nSupported extensions : png, jpg, gif.");
+                + "\" not supported.\nSupported extensions : png, jpg, gif.");
 
     } catch (final Exception e) {
       SMessageDialog
-          .showErrorMessage("Class diagram is empty. Empty class diagramm can't be export.");
+              .showErrorMessage("Class diagram is empty. Empty class diagramm can't be export.");
     }
   }
 
@@ -511,19 +502,18 @@ public class PanelClassDiagram extends JPanel {
    */
   public void saveToXML(boolean selectFile) {
     if (selectFile || currentFile == null || !currentFile.exists())
-      if (!initCurrentSaveFile())
-        return;
+      if (!initCurrentSaveFile()) return;
 
-    // G�n�ration du document xml.
+    // Génération du document xml.
     DOMSource xmlInput = new DOMSource(XmlFactory.getDocument());
 
-    // Cr�ation et configuration du Transformer. Sauvegarde du fichier.
+    // Création et configuration du Transformer. Sauvegarde du fichier.
     try {
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
       transformer.setOutputProperty(OutputKeys.INDENT, "yes");
       transformer.setOutputProperty(
-          "{http://xml.apache.org/xslt}indent-amount", "2");
+              "{http://xml.apache.org/xslt}indent-amount", "2");
       transformer.setOutputProperty(OutputKeys.ENCODING, "iso-8859-15");
       StreamResult xmlOutput = new StreamResult(currentFile);
       transformer.transform(xmlInput, xmlOutput);
@@ -539,8 +529,8 @@ public class PanelClassDiagram extends JPanel {
 
   private void showErrorImportationMessage(Exception e) {
     SMessageDialog
-        .showErrorMessage("Cannot open projet. Error reading from file.\nMessage : "
-            + e.getMessage());
+            .showErrorMessage("Cannot open projet. Error reading from file.\nMessage : "
+                    + e.getMessage());
 
     e.printStackTrace();
 
@@ -562,8 +552,7 @@ public class PanelClassDiagram extends JPanel {
   }
 
   public void openFromXmlAndAsk(File file) {
-    if (!askForSave())
-      return;
+    if (!askForSave()) return;
 
     openFromXML(file);
   }
@@ -574,8 +563,7 @@ public class PanelClassDiagram extends JPanel {
     @Override
     public boolean canImport(JComponent comp, DataFlavor[] transferFlavors) {
       for (DataFlavor flavor : transferFlavors)
-        if (!flavor.isFlavorJavaFileListType())
-          return false;
+        if (!flavor.isFlavorJavaFileListType()) return false;
 
       return true;
     }
@@ -585,7 +573,7 @@ public class PanelClassDiagram extends JPanel {
       try {
         @SuppressWarnings("unchecked")
         List<File> dropppedFiles = (List<File>) t
-            .getTransferData(DataFlavor.javaFileListFlavor);
+                .getTransferData(DataFlavor.javaFileListFlavor);
 
         // Open just the last of the list.
         openFromXmlAndAsk((File) dropppedFiles.get(dropppedFiles.size() - 1));

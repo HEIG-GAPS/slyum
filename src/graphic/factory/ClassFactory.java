@@ -1,4 +1,4 @@
-package graphic.factory;
+﻿package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -18,35 +18,32 @@ import classDiagram.components.Visibility;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class ClassFactory extends EntityFactory
-{
+public class ClassFactory extends EntityFactory {
 
-	/**
-	 * Create a new factory allowing the creation of a class.
-	 * 
-	 * @param parent
-	 *            the graphic view
-	 * @param classDiagram
-	 *            the class diagram
-	 */
-	public ClassFactory(GraphicView parent)
-	{
-		super(parent);
-    
-    GraphicView.setButtonFactory(
-        SPanelDiagramComponent.getInstance().getBtnClass());
-	}
+  /**
+   * Create a new factory allowing the creation of a class.
+   * 
+   * @param parent
+   *          the graphic view
+   * @param classDiagram
+   *          the class diagram
+   */
+  public ClassFactory(GraphicView parent) {
+    super(parent);
 
-	@Override
-	public GraphicComponent create()
-	{
-		final ClassEntity classEntity = new ClassEntity("Class", Visibility.PUBLIC);
-		final EntityView c = new ClassView(parent, classEntity);
+    GraphicView.setButtonFactory(SPanelDiagramComponent.getInstance()
+            .getBtnClass());
+  }
+
+  @Override
+  public GraphicComponent create() {
+    final ClassEntity classEntity = new ClassEntity("Class", Visibility.PUBLIC);
+    final EntityView c = new ClassView(parent, classEntity);
 
     initializeBounds(c);
-		parent.addEntity(c);
-		classDiagram.addClassEntity(classEntity);
-		return c;
-	}
+    parent.addEntity(c);
+    classDiagram.addClassEntity(classEntity);
+    return c;
+  }
 
 }

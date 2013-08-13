@@ -1,4 +1,4 @@
-package graphic.relations;
+﻿package graphic.relations;
 
 import graphic.GraphicView;
 import graphic.entity.EntityView;
@@ -29,138 +29,136 @@ import classDiagram.relationships.Dependency;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class DependencyView extends RelationView
-{
-	/**
-	 * Paint the extremity of the relation in the direction given by the source
-	 * point.
-	 * 
-	 * @param g2
-	 *            the graphic context
-	 * @param source
-	 *            this point define the direction of the arrow
-	 * @param target
-	 *            this point define the location of the arrow
-	 * @param borderColor
-	 *            the color border
-	 */
-	public static void paintExtremity(Graphics2D g2, Point source, Point target)
-	{
-		final double deltaX = target.x - source.x;
-		final double deltaY = target.y - source.y;
-		final double alpha = Math.atan2(deltaY, deltaX);
-		final double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+public class DependencyView extends RelationView {
+  /**
+   * Paint the extremity of the relation in the direction given by the source
+   * point.
+   * 
+   * @param g2
+   *          the graphic context
+   * @param source
+   *          this point define the direction of the arrow
+   * @param target
+   *          this point define the location of the arrow
+   * @param borderColor
+   *          the color border
+   */
+  public static void paintExtremity(Graphics2D g2, Point source, Point target) {
+    final double deltaX = target.x - source.x;
+    final double deltaY = target.y - source.y;
+    final double alpha = Math.atan2(deltaY, deltaX);
+    final double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-		final double x = Math.cos(alpha) * (length - 20.0) + source.x;
-		final double y = Math.sin(alpha) * (length - 20.0) + source.y;
+    final double x = Math.cos(alpha) * (length - 20.0) + source.x;
+    final double y = Math.sin(alpha) * (length - 20.0) + source.y;
 
-		final Point ref = new Point((int) x, (int) y);
+    final Point ref = new Point((int) x, (int) y);
 
-		final int vectorX = target.x - (int) (Math.cos(alpha) * (length - 8.0) + source.x);
-		final int vectorY = target.y - (int) (Math.sin(alpha) * (length - 8.0) + source.y);
+    final int vectorX = target.x
+            - (int) (Math.cos(alpha) * (length - 8.0) + source.x);
+    final int vectorY = target.y
+            - (int) (Math.sin(alpha) * (length - 8.0) + source.y);
 
-		final int vectorXN1 = -vectorY;
-		final int vectorYN1 = vectorX;
-		final int vectorXN2 = vectorY;
-		final int vectorYN2 = -vectorX;
+    final int vectorXN1 = -vectorY;
+    final int vectorYN1 = vectorX;
+    final int vectorXN2 = vectorY;
+    final int vectorYN2 = -vectorX;
 
-		final int[] pointsX = new int[] { ref.x + vectorXN1, target.x, ref.x + vectorXN2 };
-		final int[] pointsY = new int[] { ref.y + vectorYN1, target.y, ref.y + vectorYN2 };
+    final int[] pointsX = new int[] { ref.x + vectorXN1, target.x,
+            ref.x + vectorXN2 };
+    final int[] pointsY = new int[] { ref.y + vectorYN1, target.y,
+            ref.y + vectorYN2 };
 
-		g2.setStroke(new BasicStroke(LINE_WIDTH));
-		g2.drawPolyline(pointsX, pointsY, pointsX.length);
-	}
+    g2.setStroke(new BasicStroke(LINE_WIDTH));
+    g2.drawPolyline(pointsX, pointsY, pointsX.length);
+  }
 
-	private final Dependency dependency;
+  private final Dependency dependency;
 
-	/**
-	 * Create a new DependencyView between source and target.
-	 * 
-	 * @param parent
-	 *            the graphic view
-	 * @param source
-	 *            the entity source
-	 * @param target
-	 *            the entity target
-	 * @param dependency
-	 *            the dependency UML
-	 * @param posSource
-	 *            the position for put the first MagneticGrip
-	 * @param posTarget
-	 *            the position for put the last MagneticGrip
-	 * @param checkRecursivity
-	 *            check if the relation is on itself
-	 */
-	public DependencyView(GraphicView parent, EntityView source, EntityView target, Dependency dependency, Point posSource, Point posTarget, boolean checkRecursivity)
-	{
-		super(parent, source, target, dependency, posSource, posTarget, checkRecursivity);
+  /**
+   * Create a new DependencyView between source and target.
+   * 
+   * @param parent
+   *          the graphic view
+   * @param source
+   *          the entity source
+   * @param target
+   *          the entity target
+   * @param dependency
+   *          the dependency UML
+   * @param posSource
+   *          the position for put the first MagneticGrip
+   * @param posTarget
+   *          the position for put the last MagneticGrip
+   * @param checkRecursivity
+   *          check if the relation is on itself
+   */
+  public DependencyView(GraphicView parent, EntityView source,
+          EntityView target, Dependency dependency, Point posSource,
+          Point posTarget, boolean checkRecursivity) {
+    super(parent, source, target, dependency, posSource, posTarget,
+            checkRecursivity);
 
-		this.dependency = dependency;
-		
-		lineStroke = new BasicStroke(LINE_WIDTH, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 7.f }, 0.0f);
+    this.dependency = dependency;
 
-		final TextBoxLabelTitle tb = new TextBoxLabelTitle(parent, dependency, this);
-		tbRoles.add(tb);
-		parent.addOthersComponents(tb);
-	}
+    lineStroke = new BasicStroke(LINE_WIDTH, BasicStroke.CAP_BUTT,
+            BasicStroke.JOIN_MITER, 10.0f, new float[] { 7.f }, 0.0f);
 
-	@Override
-	protected void drawExtremity(Graphics2D g2, Point source, Point target)
-	{
-		g2.setColor(getColor());
-		paintExtremity(g2, source, target);
-	}
+    final TextBoxLabelTitle tb = new TextBoxLabelTitle(parent, dependency, this);
+    tbRoles.add(tb);
+    parent.addOthersComponents(tb);
+  }
 
-	@Override
-	public IDiagramComponent getAssociedComponent()
-	{
-		return dependency;
-	}
+  @Override
+  protected void drawExtremity(Graphics2D g2, Point source, Point target) {
+    g2.setColor(getColor());
+    paintExtremity(g2, source, target);
+  }
 
-	@Override
-	public void setSelected(boolean select)
-	{
-		if (isSelected() == select)
-			return;
+  @Override
+  public IDiagramComponent getAssociedComponent() {
+    return dependency;
+  }
 
-		super.setSelected(select);
+  @Override
+  public void setSelected(boolean select) {
+    if (isSelected() == select) return;
 
-		dependency.select();
+    super.setSelected(select);
 
-		if (select)
-			dependency.notifyObservers(UpdateMessage.SELECT);
-		else
-			dependency.notifyObservers(UpdateMessage.UNSELECT);
-	}
+    dependency.select();
 
-	/**
-	 * Set the source of the inheritance
-	 * 
-	 * @param source
-	 *            the new source of the inheritance
-	 */
-	public void setSource(EntityView source)
-	{
-		dependency.setSource((Entity) source.getAssociedComponent());
-	}
+    if (select)
+      dependency.notifyObservers(UpdateMessage.SELECT);
+    else
+      dependency.notifyObservers(UpdateMessage.UNSELECT);
+  }
 
-	/**
-	 * Set the target of the inheritance
-	 * 
-	 * @param target
-	 *            the new target of the inheritance
-	 */
-	public void setTarget(EntityView target)
-	{
-		dependency.setTarget((Entity) target.getAssociedComponent());
-	}
-	
-	@Override
-	public void restore()
-	{
-		super.restore();
-		parent.getClassDiagram().addDependency((Dependency)getAssociedComponent());
-		
-		repaint();
-	}
+  /**
+   * Set the source of the inheritance
+   * 
+   * @param source
+   *          the new source of the inheritance
+   */
+  public void setSource(EntityView source) {
+    dependency.setSource((Entity) source.getAssociedComponent());
+  }
+
+  /**
+   * Set the target of the inheritance
+   * 
+   * @param target
+   *          the new target of the inheritance
+   */
+  public void setTarget(EntityView target) {
+    dependency.setTarget((Entity) target.getAssociedComponent());
+  }
+
+  @Override
+  public void restore() {
+    super.restore();
+    parent.getClassDiagram().addDependency((Dependency) getAssociedComponent());
+
+    repaint();
+  }
 }

@@ -1,4 +1,4 @@
-package graphic.relations;
+ï»¿package graphic.relations;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -39,60 +39,53 @@ import classDiagram.relationships.RelationChanger;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public abstract class RelationView extends LineView implements Observer
-{
+public abstract class RelationView extends LineView implements Observer {
   public final static String ACTION_CHANGE_ORIENTATION = "change-orientation";
-	private Relation relation;
+  private Relation relation;
 
-  public RelationView(GraphicView graphicView, 
-	                    GraphicComponent source,
-	                    GraphicComponent target,
-	                    Relation component,
-	                    Point posSource,
-	                    Point posTarget,
-	                    boolean checkRecursivity)
-	{
-		super(graphicView, source, target, posSource, posTarget, checkRecursivity);
+  public RelationView(GraphicView graphicView, GraphicComponent source,
+          GraphicComponent target, Relation component, Point posSource,
+          Point posTarget, boolean checkRecursivity) {
+    super(graphicView, source, target, posSource, posTarget, checkRecursivity);
 
-		if (component == null)
-			throw new IllegalArgumentException("component is null");
+    if (component == null)
+      throw new IllegalArgumentException("component is null");
 
     popupMenu.addSeparator();
 
-    JMenuItem menuItem = makeMenuItem("Change orientation", ACTION_CHANGE_ORIENTATION, "orientation");
+    JMenuItem menuItem = makeMenuItem("Change orientation",
+            ACTION_CHANGE_ORIENTATION, "orientation");
     popupMenu.add(menuItem);
-    
-		relation = component;
-		component.addObserver(this);
-	}
 
-	@Override
-	public boolean relationChanged(
-	    MagneticGrip gripSource, GraphicComponent target) {
-	  
-		if (!(target instanceof EntityView))
-		  return false;
-    
-		RelationChanger.changeRelation(relation, 
-		    gripSource.equals(getFirstPoint()),
-		    (Entity)target.getAssociedComponent());
-		
-	  changeLinkedComponent(gripSource, target);
-		return true;
-	}
-  
+    relation = component;
+    component.addObserver(this);
+  }
+
+  @Override
+  public boolean relationChanged(MagneticGrip gripSource,
+          GraphicComponent target) {
+
+    if (!(target instanceof EntityView)) return false;
+
+    RelationChanger.changeRelation(relation,
+            gripSource.equals(getFirstPoint()),
+            (Entity) target.getAssociedComponent());
+
+    changeLinkedComponent(gripSource, target);
+    return true;
+  }
+
   /**
    * Change the orientation of the association.
+   * 
    * @return true if it's ok, false otherwise.
    */
   public void changeOrientation() {
-    MagneticGrip first = getFirstPoint(), 
-                 last = getLastPoint();
+    MagneticGrip first = getFirstPoint(), last = getLastPoint();
     GraphicComponent buffer;
-    Point bufferAnchorFirst, bufferAnchorLast,
-          bufferPreferredAnchor1, bufferPreferredAnchor2;
+    Point bufferAnchorFirst, bufferAnchorLast, bufferPreferredAnchor1, bufferPreferredAnchor2;
     LinkedList<RelationGrip> bufferPoints;
-    
+
     boolean blocked = Change.isBlocked();
     Change.setBlocked(true);
 
@@ -103,146 +96,145 @@ public abstract class RelationView extends LineView implements Observer
     bufferPreferredAnchor1 = first.getPreferredAnchor();
     bufferPreferredAnchor2 = last.getPreferredAnchor();
     bufferPoints = getPoints();
-    
-    // Il ne faut pas ré-ajouter par la suite les grips magnétisés. 
+
+    // Il ne faut pas rÃ©-ajouter par la suite les grips magnÃ©tisÃ©s.
     bufferPoints.removeFirst();
     bufferPoints.removeLast();
-    
+
     // On inverse la liste des points pour ne pas qu'ils ne se croisent.
     Collections.reverse(bufferPoints);
 
-    // On cache la relation pour éviter qu'elle ne se redissne alors que
-    // l'inversion n'est pas terminée.
+    // On cache la relation pour Ã©viter qu'elle ne se redissne alors que
+    // l'inversion n'est pas terminÃ©e.
     setVisible(false);
     relationChanged(first, last.getAssociedComponentView());
     relationChanged(getLastPoint(), buffer);
     setVisible(true);
     addAllGrip(bufferPoints, 1);
-    
+
     first.setPreferredAnchor(bufferPreferredAnchor2);
     last.setPreferredAnchor(bufferPreferredAnchor1);
     first.setAnchor(bufferAnchorLast);
     last.setAnchor(bufferAnchorFirst);
-    
+
     first.notifyObservers();
     last.notifyObservers();
-    
+
     reinitializeTextBoxesLocation();
-    
+
     Change.setBlocked(blocked);
   }
-	
-	/**
-	 * Return an array with all gripd bounds.
-	 * @return an array with all gripd bounds.
-	 */
-	public Rectangle[] getPointsBounds() {
+
+  /**
+   * Return an array with all gripd bounds.
+   * 
+   * @return an array with all gripd bounds.
+   */
+  public Rectangle[] getPointsBounds() {
     LinkedList<RelationGrip> grips = getPoints();
-	  Rectangle[] bufferBoundsPoints = new Rectangle[grips.size()];
-	  int i = 0;
+    Rectangle[] bufferBoundsPoints = new Rectangle[grips.size()];
+    int i = 0;
     for (RelationGrip grip : grips) {
       bufferBoundsPoints[i] = new Rectangle(grip.getBounds());
       i++;
     }
     return bufferBoundsPoints;
-	}
-	
-	/**
-	 * Set all points bounds with the given array. First points will be set with
-	 * the first index in array, second with the second, etc...
-	 * @param pointsBounds an array of bounds, size must be the same than the
-	 *                     number of points.
-	 */
-	public void setAllPointsBounds(Rectangle[] pointsBounds) {
-	  LinkedList<RelationGrip> grips = getPoints();
-	  if (pointsBounds.length != grips.size())
-	    throw new IllegalArgumentException("Array of bounds not the same size " +
-	    		                               "than number of points in relation.");
-	  
-	  int i = 0;
-	  for (RelationGrip grip : grips) {
-	    grip.setBounds(pointsBounds[i]);
-	    i++;
-	  }
-	}
-	
-	@Override
-	public String getXmlTagName() {
-	  return "relationView";
-	}
-	
-	@Override
-	public Element getXmlElement(Document doc) {
-	  Element relationView = doc.createElement(getXmlTagName()),
-	          line = doc.createElement("line");
-	  
-	  relationView.setAttribute("relationId", String.valueOf(relation.getId()));
-	  relationView.setAttribute("color", String.valueOf(getColor().getRGB()));
-	  
+  }
+
+  /**
+   * Set all points bounds with the given array. First points will be set with
+   * the first index in array, second with the second, etc...
+   * 
+   * @param pointsBounds
+   *          an array of bounds, size must be the same than the number of
+   *          points.
+   */
+  public void setAllPointsBounds(Rectangle[] pointsBounds) {
+    LinkedList<RelationGrip> grips = getPoints();
+    if (pointsBounds.length != grips.size())
+      throw new IllegalArgumentException("Array of bounds not the same size "
+              + "than number of points in relation.");
+
+    int i = 0;
+    for (RelationGrip grip : grips) {
+      grip.setBounds(pointsBounds[i]);
+      i++;
+    }
+  }
+
+  @Override
+  public String getXmlTagName() {
+    return "relationView";
+  }
+
+  @Override
+  public Element getXmlElement(Document doc) {
+    Element relationView = doc.createElement(getXmlTagName()), line = doc
+            .createElement("line");
+
+    relationView.setAttribute("relationId", String.valueOf(relation.getId()));
+    relationView.setAttribute("color", String.valueOf(getColor().getRGB()));
+
     for (RelationGrip grip : points) {
       Point pt = grip.getAnchor();
       pt.translate(1, 1);
       line.appendChild(Utility.pointToXmlElement(pt, "point", doc));
     }
     relationView.appendChild(line);
-    
+
     // Si l'association a des textbox
     if (tbRoles.size() >= 1) {
-      
+
       // Textbox de titre d'association
-      relationView.appendChild(Utility.boundsToXmlElement(
-          doc, tbRoles.get(0).getBounds(), "labelAssociation"));
-      
-      // S'il y a des rôles et des multiplicités.
+      relationView.appendChild(Utility.boundsToXmlElement(doc, tbRoles.get(0)
+              .getBounds(), "labelAssociation"));
+
+      // S'il y a des rÃ´les et des multiplicitÃ©s.
       if (tbRoles.size() >= 3) {
-        relationView.appendChild(Utility.boundsToXmlElement(
-            doc, tbRoles.get(1).getBounds(), "roleAssociation"));
-        relationView.appendChild(Utility.boundsToXmlElement(
-            doc, tbRoles.get(2).getBounds(), "roleAssociation"));
-        
-        relationView.appendChild(Utility.boundsToXmlElement(
-            doc,
-            ((TextBoxRole) tbRoles.get(1)).getTextBoxMultiplicity().getBounds(),
-            "multipliciteAssociation"));
-        relationView.appendChild(Utility.boundsToXmlElement(
-            doc,
-            ((TextBoxRole) tbRoles.get(2)).getTextBoxMultiplicity().getBounds(),
-            "multipliciteAssociation"));
+        relationView.appendChild(Utility.boundsToXmlElement(doc, tbRoles.get(1)
+                .getBounds(), "roleAssociation"));
+        relationView.appendChild(Utility.boundsToXmlElement(doc, tbRoles.get(2)
+                .getBounds(), "roleAssociation"));
+
+        relationView.appendChild(Utility.boundsToXmlElement(doc,
+                ((TextBoxRole) tbRoles.get(1)).getTextBoxMultiplicity()
+                        .getBounds(), "multipliciteAssociation"));
+        relationView.appendChild(Utility.boundsToXmlElement(doc,
+                ((TextBoxRole) tbRoles.get(2)).getTextBoxMultiplicity()
+                        .getBounds(), "multipliciteAssociation"));
       }
     }
-    
-	  return relationView;
-	}
-	
+
+    return relationView;
+  }
+
   public Relation getRelation() {
     return relation;
   }
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
     if (ACTION_CHANGE_ORIENTATION.equals(e.getActionCommand()))
       changeOrientation();
     else
-      super.actionPerformed(e);	  
-	}
+      super.actionPerformed(e);
+  }
 
-	@Override
-	public void update(Observable observable, Object o)
-	{
-		if (o != null && o.getClass() == UpdateMessage.class)
-			switch ((UpdateMessage)o)
-			{
-				case SELECT:
-					setSelected(true);
-					break;
+  @Override
+  public void update(Observable observable, Object o) {
+    if (o != null && o.getClass() == UpdateMessage.class)
+      switch ((UpdateMessage) o) {
+        case SELECT:
+          setSelected(true);
+          break;
 
-				case UNSELECT:
-					setSelected(false);
-					break;
+        case UNSELECT:
+          setSelected(false);
+          break;
         default:
           break;
-			}
-		else
-			repaint();
-	}
+      }
+    else
+      repaint();
+  }
 }

@@ -1,4 +1,4 @@
-package swing;
+﻿package swing;
 
 import graphic.ColoredComponent;
 import graphic.GraphicView;
@@ -64,8 +64,7 @@ public class SProperties extends JDialog {
   private ButtonColor btnColor;
   private ButtonColor btnBackgroundColor;
   private ButtonColor btnDefaultClassColor;
-  private JPanel contentPanel = new JPanel(),
-                 panelLabelAlert;
+  private JPanel contentPanel = new JPanel(), panelLabelAlert;
   private JLabel lblPreviewFont = new JLabel();
   private JList<String> listName;
   private JList<Integer> listSize;
@@ -89,8 +88,7 @@ public class SProperties extends JDialog {
   private JPanel panel_Grid, panel_grid_color, panel_grid_opacity;
   private JCheckBox chckbxEnableGrid;
 
-  private abstract class ButtonColor extends JButton implements
-      ColoredComponent {
+  private abstract class ButtonColor extends JButton implements ColoredComponent {
 
     public ButtonColor(String name) {
       super(name);
@@ -143,21 +141,21 @@ public class SProperties extends JDialog {
         final JPanel panelFormatting = new JPanel();
         panelFormatting.setBorder(new EmptyBorder(8, 8, 8, 8));
         tabbedPane.addTab(
-            "Formatting",
-            new ImageIcon(SProperties.class.getResource(Slyum.ICON_PATH
-                + "fonts.png")), panelFormatting, null);
+                "Formatting",
+                new ImageIcon(SProperties.class.getResource(Slyum.ICON_PATH
+                        + "fonts.png")), panelFormatting, null);
         final GridBagLayout gbl_panelFormatting = new GridBagLayout();
         gbl_panelFormatting.columnWidths = new int[] { 214, 0, 0 };
         gbl_panelFormatting.rowHeights = new int[] { 23, 0 };
         gbl_panelFormatting.columnWeights = new double[] { 0.0, 1.0,
-            Double.MIN_VALUE };
+                Double.MIN_VALUE };
         gbl_panelFormatting.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
         panelFormatting.setLayout(gbl_panelFormatting);
         {
           final JPanel panel = new JPanel();
           panel.setBorder(new TitledBorder(UIManager
-              .getBorder("TitledBorder.border"), "General",
-              TitledBorder.LEADING, TitledBorder.TOP, null, null));
+                  .getBorder("TitledBorder.border"), "General",
+                  TitledBorder.LEADING, TitledBorder.TOP, null, null));
           final GridBagConstraints gbc_panel = new GridBagConstraints();
           gbc_panel.insets = new Insets(0, 0, 0, 5);
           gbc_panel.fill = GridBagConstraints.BOTH;
@@ -169,7 +167,7 @@ public class SProperties extends JDialog {
           gbl_panel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0 };
           gbl_panel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
           gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0,
-              Double.MIN_VALUE };
+                  Double.MIN_VALUE };
           panel.setLayout(gbl_panel);
           btnDefaultClassColor = new ButtonColor("Default class color") {
             @Override
@@ -247,7 +245,7 @@ public class SProperties extends JDialog {
               }
             };
             panel_Grid.setBorder(new TitledBorder(null, "Grid",
-                TitledBorder.LEADING, TitledBorder.TOP, null, null));
+                    TitledBorder.LEADING, TitledBorder.TOP, null, null));
             final GridBagConstraints gbc_panel_1 = new GridBagConstraints();
             gbc_panel_1.fill = GridBagConstraints.VERTICAL;
             gbc_panel_1.gridx = 0;
@@ -258,12 +256,12 @@ public class SProperties extends JDialog {
             gbl_panel_1.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
             gbl_panel_1.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
             gbl_panel_1.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0,
-                0.0, Double.MIN_VALUE };
+                    0.0, Double.MIN_VALUE };
             panel_Grid.setLayout(gbl_panel_1);
             {
               JPanel panel_2 = new JPanel();
               panel_2.setBorder(new TitledBorder(null, "Size",
-                  TitledBorder.LEADING, TitledBorder.TOP, null, null));
+                      TitledBorder.LEADING, TitledBorder.TOP, null, null));
               GridBagConstraints gbc_panel_2 = new GridBagConstraints();
               gbc_panel_2.insets = new Insets(0, 0, 5, 0);
               gbc_panel_2.fill = GridBagConstraints.BOTH;
@@ -311,7 +309,7 @@ public class SProperties extends JDialog {
               {
                 panel_grid_opacity = new JPanel();
                 panel_grid_opacity.setBorder(new TitledBorder(null, "Opacity",
-                    TitledBorder.LEADING, TitledBorder.TOP, null, null));
+                        TitledBorder.LEADING, TitledBorder.TOP, null, null));
                 GridBagConstraints gbc_panel_2 = new GridBagConstraints();
                 gbc_panel_2.gridheight = 2;
                 gbc_panel_2.fill = GridBagConstraints.BOTH;
@@ -323,9 +321,9 @@ public class SProperties extends JDialog {
                 gbl_panel_2.columnWidths = new int[] { 0, 0 };
                 gbl_panel_2.rowHeights = new int[] { 0, 0, 0 };
                 gbl_panel_2.columnWeights = new double[] { 1.0,
-                    Double.MIN_VALUE };
+                        Double.MIN_VALUE };
                 gbl_panel_2.rowWeights = new double[] { 0.0, 0.0,
-                    Double.MIN_VALUE };
+                        Double.MIN_VALUE };
                 panel_grid_opacity.setLayout(gbl_panel_2);
                 chckbxOpacityGrid = new JCheckBox("Enable opacity");
                 GridBagConstraints gbc_chckbxOpacityGrid = new GridBagConstraints();
@@ -334,7 +332,7 @@ public class SProperties extends JDialog {
                 gbc_chckbxOpacityGrid.gridx = 0;
                 gbc_chckbxOpacityGrid.gridy = 0;
                 panel_grid_opacity
-                    .add(chckbxOpacityGrid, gbc_chckbxOpacityGrid);
+                        .add(chckbxOpacityGrid, gbc_chckbxOpacityGrid);
                 {
                   sliderGridPoint = new JSlider() {
                     private static final long serialVersionUID = 1L;
@@ -342,7 +340,7 @@ public class SProperties extends JDialog {
                     @Override
                     public void setEnabled(boolean enabled) {
                       super.setEnabled(enabled
-                          && chckbxOpacityGrid.isSelected());
+                              && chckbxOpacityGrid.isSelected());
                     }
                   };
                   sliderGridPoint.setEnabled(chckbxOpacityGrid.isSelected());
@@ -365,8 +363,7 @@ public class SProperties extends JDialog {
                   public void actionPerformed(ActionEvent arg0) {
                     boolean isSelected = chckbxOpacityGrid.isSelected();
                     sliderGridPoint.setEnabled(isSelected);
-                    if (isSelected)
-                      showOpacityWarning();
+                    if (isSelected) showOpacityWarning();
                   }
                 });
               }
@@ -378,8 +375,9 @@ public class SProperties extends JDialog {
               {
                 panel_grid_color = new JPanel();
                 panel_grid_color.setBorder(new TitledBorder(new LineBorder(
-                    new Color(184, 207, 229)), "Color", TitledBorder.LEADING,
-                    TitledBorder.TOP, null, new Color(51, 51, 51)));
+                        new Color(184, 207, 229)), "Color",
+                        TitledBorder.LEADING, TitledBorder.TOP, null,
+                        new Color(51, 51, 51)));
                 final GridBagConstraints gbc_panel_2 = new GridBagConstraints();
                 gbc_panel_2.fill = GridBagConstraints.BOTH;
                 gbc_panel_2.gridx = 0;
@@ -389,12 +387,12 @@ public class SProperties extends JDialog {
                 gbl_panel_2.columnWidths = new int[] { 0, 0 };
                 gbl_panel_2.rowHeights = new int[] { 0, 0, 0 };
                 gbl_panel_2.columnWeights = new double[] { 1.0,
-                    Double.MIN_VALUE };
+                        Double.MIN_VALUE };
                 gbl_panel_2.rowWeights = new double[] { 1.0, 1.0,
-                    Double.MIN_VALUE };
+                        Double.MIN_VALUE };
                 panel_grid_color.setLayout(gbl_panel_2);
                 rdbtnAutomaticcolor = new JRadioButton(
-                    "Assorted with background");
+                        "Assorted with background");
                 rdbtnAutomaticcolor.setHorizontalAlignment(SwingConstants.LEFT);
                 final GridBagConstraints gbc_rdbtnAutomaticcolor = new GridBagConstraints();
                 gbc_rdbtnAutomaticcolor.fill = GridBagConstraints.HORIZONTAL;
@@ -402,7 +400,7 @@ public class SProperties extends JDialog {
                 gbc_rdbtnAutomaticcolor.gridx = 0;
                 gbc_rdbtnAutomaticcolor.gridy = 0;
                 panel_grid_color.add(rdbtnAutomaticcolor,
-                    gbc_rdbtnAutomaticcolor);
+                        gbc_rdbtnAutomaticcolor);
                 rdbtnAutomaticcolor.addChangeListener(new ChangeListener() {
                   public void stateChanged(ChangeEvent arg0) {
                     btnColor.setEnabled(!rdbtnAutomaticcolor.isSelected());
@@ -412,7 +410,7 @@ public class SProperties extends JDialog {
                 {
                   final JPanel panel_3 = new JPanel();
                   final FlowLayout flowLayout = (FlowLayout) panel_3
-                      .getLayout();
+                          .getLayout();
                   flowLayout.setAlignment(FlowLayout.LEFT);
                   final GridBagConstraints gbc_panel_3 = new GridBagConstraints();
                   gbc_panel_3.anchor = GridBagConstraints.WEST;
@@ -423,7 +421,7 @@ public class SProperties extends JDialog {
                   {
                     rdbtnSelectedColor = new JRadioButton("Selected color");
                     rdbtnSelectedColor
-                        .setHorizontalAlignment(SwingConstants.LEFT);
+                            .setHorizontalAlignment(SwingConstants.LEFT);
                     panel_3.add(rdbtnSelectedColor);
                     rdbtnSelectedColor.addChangeListener(new ChangeListener() {
                       public void stateChanged(ChangeEvent arg0) {
@@ -465,7 +463,7 @@ public class SProperties extends JDialog {
         {
           final JPanel panel = new JPanel();
           panel.setBorder(new TitledBorder(null, "Font", TitledBorder.LEADING,
-              TitledBorder.TOP, null, null));
+                  TitledBorder.TOP, null, null));
           final GridBagConstraints gbc_panel = new GridBagConstraints();
           gbc_panel.fill = GridBagConstraints.BOTH;
           gbc_panel.gridx = 1;
@@ -499,7 +497,7 @@ public class SProperties extends JDialog {
           }
           {
             final JScrollPane scrollPane = new JScrollPane();
-            
+
             final GridBagConstraints gbc_scrollPane = new GridBagConstraints();
             gbc_scrollPane.fill = GridBagConstraints.BOTH;
             gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
@@ -512,19 +510,19 @@ public class SProperties extends JDialog {
                 public void valueChanged(ListSelectionEvent arg0) {
                   final int size = lblPreviewFont.getFont().getSize();
                   lblPreviewFont.setFont(new Font(listName.getSelectedValue()
-                      .toString(), Font.PLAIN, size));
+                          .toString(), Font.PLAIN, size));
                 }
               });
               scrollPane.setViewportView(listName);
               listName.setBorder(new BevelBorder(BevelBorder.LOWERED, null,
-                  null, null, null));
+                      null, null, null));
               listName.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
               listName.setModel(new AbstractListModel<String>() {
 
                 private static final long serialVersionUID = -8806070481194611567L;
 
                 GraphicsEnvironment ge = GraphicsEnvironment
-                    .getLocalGraphicsEnvironment();
+                        .getLocalGraphicsEnvironment();
                 String[] values = ge.getAvailableFontFamilyNames();
 
                 public String getElementAt(int index) {
@@ -535,12 +533,13 @@ public class SProperties extends JDialog {
                   return values.length;
                 }
               });
-              
+
               listName.addListSelectionListener(new ListSelectionListener() {
-                
+
                 @Override
                 public void valueChanged(ListSelectionEvent evt) {
-                  panelLabelAlert.setVisible(!listName.getSelectedValue().equals(TextBox.getFont().getName()));
+                  panelLabelAlert.setVisible(!listName.getSelectedValue()
+                          .equals(TextBox.getFont().getName()));
                 }
               });
 
@@ -562,7 +561,7 @@ public class SProperties extends JDialog {
                 private static final long serialVersionUID = -2073589127443911972L;
 
                 int[] values = new int[] { 8, 9, 10, 12, 14, 16, 18, 20, 24,
-                    28, 32, 48, 72 };
+                        28, 32, 48, 72 };
 
                 public Integer getElementAt(int index) {
                   return values[index];
@@ -574,7 +573,7 @@ public class SProperties extends JDialog {
               });
               scrollPane.setViewportView(listSize);
               listSize.setBorder(new BevelBorder(BevelBorder.LOWERED, null,
-                  null, null, null));
+                      null, null, null));
               listSize.setSelectedValue(TextBox.getFont().getSize(), true);
             }
           }
@@ -601,9 +600,9 @@ public class SProperties extends JDialog {
           final JPanel panel = new JPanel();
           panel.setBorder(new EmptyBorder(10, 10, 10, 10));
           tabbedPane.addTab(
-              "Graphics",
-              new ImageIcon(SProperties.class.getResource(Slyum.ICON_PATH
-                  + "pencil.png")), panel, null);
+                  "Graphics",
+                  new ImageIcon(SProperties.class.getResource(Slyum.ICON_PATH
+                          + "pencil.png")), panel, null);
           final GridBagLayout gbl_panel = new GridBagLayout();
           gbl_panel.columnWidths = new int[] { 0, 0 };
           gbl_panel.rowHeights = new int[] { 0, 0, 0 };
@@ -614,7 +613,7 @@ public class SProperties extends JDialog {
             final ButtonGroup bgGraphicQuality = new ButtonGroup();
             final JPanel panel_1 = new JPanel();
             panel_1.setBorder(new TitledBorder(null, "Quality",
-                TitledBorder.LEADING, TitledBorder.TOP, null, null));
+                    TitledBorder.LEADING, TitledBorder.TOP, null, null));
             final GridBagConstraints gbc_panel_1 = new GridBagConstraints();
             gbc_panel_1.insets = new Insets(0, 0, 5, 0);
             gbc_panel_1.fill = GridBagConstraints.BOTH;
@@ -625,7 +624,7 @@ public class SProperties extends JDialog {
             gbl_panel_1.columnWidths = new int[] { 0, 0, 0, 0 };
             gbl_panel_1.rowHeights = new int[] { 0, 0 };
             gbl_panel_1.columnWeights = new double[] { 1.0, 1.0, 1.0,
-                Double.MIN_VALUE };
+                    Double.MIN_VALUE };
             gbl_panel_1.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
             panel_1.setLayout(gbl_panel_1);
             {
@@ -658,7 +657,7 @@ public class SProperties extends JDialog {
           {
             final JPanel panel_1 = new JPanel();
             panel_1.setBorder(new TitledBorder(null, "Advanced",
-                TitledBorder.LEADING, TitledBorder.TOP, null, null));
+                    TitledBorder.LEADING, TitledBorder.TOP, null, null));
             final GridBagConstraints gbc_panel_1 = new GridBagConstraints();
             gbc_panel_1.fill = GridBagConstraints.BOTH;
             gbc_panel_1.gridx = 0;
@@ -676,7 +675,7 @@ public class SProperties extends JDialog {
               btnNewButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent arg0) {
                   SMessageDialog.showInformationMessage(
-                      "This will be implemented in futur update.", link);
+                          "This will be implemented in futur update.", link);
                 }
               });
               final GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
@@ -687,58 +686,59 @@ public class SProperties extends JDialog {
           }
         }
         {
-          final JPanel panel = new JPanel(),
-                       innerPanel = new JPanel();
-          
+          final JPanel panel = new JPanel(), innerPanel = new JPanel();
+
           panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
           panel.setBorder(new CompoundBorder(new EmptyBorder(10, 10, 10, 10),
-              new TitledBorder(new LineBorder(new Color(184, 207, 229)),
-                  "Generals", TitledBorder.LEADING, TitledBorder.TOP, null,
-                  new Color(51, 51, 51))));
+                  new TitledBorder(new LineBorder(new Color(184, 207, 229)),
+                          "Generals", TitledBorder.LEADING, TitledBorder.TOP,
+                          null, new Color(51, 51, 51))));
           tabbedPane.addTab(
-              "Diagram editor",
-              new ImageIcon(SProperties.class.getResource(Slyum.ICON_PATH
-                  + "green_config.png")), panel, null);
+                  "Diagram editor",
+                  new ImageIcon(SProperties.class.getResource(Slyum.ICON_PATH
+                          + "green_config.png")), panel, null);
           final GridBagLayout gbl_panel = new GridBagLayout();
           gbl_panel.columnWidths = new int[] { 0, 0 };
           gbl_panel.rowHeights = new int[] { 0, 0, 0, 0, 0 };
           gbl_panel.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
           gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0,
-              Double.MIN_VALUE };
+                  Double.MIN_VALUE };
           innerPanel.setLayout(gbl_panel);
           {
             chckbxDisableErrorMessage = new JCheckBox(
-                "Show error messages during the creation of components");
+                    "Show error messages during the creation of components");
             GridBagConstraints gbc_chckbxDisableErrorMessage = new GridBagConstraints();
             gbc_chckbxDisableErrorMessage.anchor = GridBagConstraints.WEST;
             gbc_chckbxDisableErrorMessage.insets = new Insets(0, 5, 5, 0);
             gbc_chckbxDisableErrorMessage.gridx = 0;
             gbc_chckbxDisableErrorMessage.gridy = 0;
-            innerPanel.add(chckbxDisableErrorMessage, gbc_chckbxDisableErrorMessage);
+            innerPanel.add(chckbxDisableErrorMessage,
+                    gbc_chckbxDisableErrorMessage);
           }
           {
             chckbxDisableCrossPopup = new JCheckBox(
-                "Show cross popup menu when components are selected");
+                    "Show cross popup menu when components are selected");
             GridBagConstraints gbc_chckbxDisableCrossPopup = new GridBagConstraints();
             gbc_chckbxDisableCrossPopup.insets = new Insets(0, 5, 0, 0);
             gbc_chckbxDisableCrossPopup.anchor = GridBagConstraints.WEST;
             gbc_chckbxDisableCrossPopup.gridx = 0;
             gbc_chckbxDisableCrossPopup.gridy = 1;
-            innerPanel.add(chckbxDisableCrossPopup, gbc_chckbxDisableCrossPopup);
+            innerPanel
+                    .add(chckbxDisableCrossPopup, gbc_chckbxDisableCrossPopup);
           }
           {
             chckbxAutoAdjustInheritance = new JCheckBox(
-                "Auto locate new inheritance");
+                    "Auto locate new inheritance");
             GridBagConstraints gbc_chckbxAutoAdjustInheritance = new GridBagConstraints();
             gbc_chckbxAutoAdjustInheritance.insets = new Insets(0, 5, 0, 0);
             gbc_chckbxAutoAdjustInheritance.anchor = GridBagConstraints.WEST;
             gbc_chckbxAutoAdjustInheritance.gridx = 0;
             gbc_chckbxAutoAdjustInheritance.gridy = 2;
-            innerPanel.add(chckbxAutoAdjustInheritance, gbc_chckbxAutoAdjustInheritance);
+            innerPanel.add(chckbxAutoAdjustInheritance,
+                    gbc_chckbxAutoAdjustInheritance);
           }
           {
-            chckbxViewEnum = new JCheckBox(
-                "View enum values");
+            chckbxViewEnum = new JCheckBox("View enum values");
             GridBagConstraints gbc_chckbxViewEnum = new GridBagConstraints();
             gbc_chckbxViewEnum.insets = new Insets(0, 5, 0, 0);
             gbc_chckbxViewEnum.anchor = GridBagConstraints.WEST;
@@ -749,25 +749,23 @@ public class SProperties extends JDialog {
           {
             JPanel panelViews = new JPanel(new GridLayout(2, 2, 10, 10));
             panelViews.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-            
-            ParametersViewStyle[] values = {
-                ParametersViewStyle.TYPE_AND_NAME,
-                ParametersViewStyle.TYPE,
-                ParametersViewStyle.NAME,
-                ParametersViewStyle.NOTHING };
-            
+
+            ParametersViewStyle[] values = { ParametersViewStyle.TYPE_AND_NAME,
+                    ParametersViewStyle.TYPE, ParametersViewStyle.NAME,
+                    ParametersViewStyle.NOTHING };
+
             GridBagConstraints gbc_panelViews = new GridBagConstraints();
-            
+
             listViewMethods = new JComboBox<>(
-                new DefaultComboBoxModel<>(values));
-            listViewEntities = new JComboBox<>(
-                new DefaultComboBoxModel<>(ViewEntity.values()));
-            
+                    new DefaultComboBoxModel<>(values));
+            listViewEntities = new JComboBox<>(new DefaultComboBoxModel<>(
+                    ViewEntity.values()));
+
             panelViews.add(new JLabel("Entities view type:"));
             panelViews.add(listViewEntities);
             panelViews.add(new JLabel("Methods view type:"));
             panelViews.add(listViewMethods);
-            
+
             gbc_panelViews.insets = new Insets(0, 5, 0, 0);
             gbc_panelViews.anchor = GridBagConstraints.WEST;
             gbc_panelViews.gridx = 0;
@@ -791,7 +789,7 @@ public class SProperties extends JDialog {
         gbl_buttonPane.columnWidths = new int[] { 327, 75, 54, 81, 0 };
         gbl_buttonPane.rowHeights = new int[] { 25, 0 };
         gbl_buttonPane.columnWeights = new double[] { 1.0, 0.0, 0.0, 0.0,
-            Double.MIN_VALUE };
+                Double.MIN_VALUE };
         gbl_buttonPane.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
         buttonPane.setLayout(gbl_buttonPane);
       }
@@ -802,55 +800,56 @@ public class SProperties extends JDialog {
           public void actionPerformed(ActionEvent e) {
             try {
               Properties properties = PropertyLoader.getInstance()
-                  .getProperties();
+                      .getProperties();
 
-              properties.put(PropertyLoader.COLOR_ENTITIES,
-                  String.valueOf(btnDefaultClassColor.getBackground().getRGB()));
-              properties.put(PropertyLoader.COLOR_GRAPHIC_VIEW,
-                  String.valueOf(btnBackgroundColor.getBackground().getRGB()));
+              properties.put(PropertyLoader.COLOR_ENTITIES, String
+                      .valueOf(btnDefaultClassColor.getBackground().getRGB()));
+              properties.put(PropertyLoader.COLOR_GRAPHIC_VIEW, String
+                      .valueOf(btnBackgroundColor.getBackground().getRGB()));
               properties.put(PropertyLoader.BACKGROUND_GRADIENT,
-                  String.valueOf(ckbBackgroundGradient.isSelected()));
+                      String.valueOf(ckbBackgroundGradient.isSelected()));
               properties.put(PropertyLoader.ENTITY_GRADIENT,
-                  String.valueOf(ckbEntityGradient.isSelected()));
+                      String.valueOf(ckbEntityGradient.isSelected()));
               properties.put(PropertyLoader.GRID_POINT_OPACITY,
-                  String.valueOf(sliderGridPoint.getValue()));
+                      String.valueOf(sliderGridPoint.getValue()));
               properties.put(PropertyLoader.GRID_OPACITY_ENABLE,
-                  String.valueOf(chckbxOpacityGrid.isSelected()));
+                      String.valueOf(chckbxOpacityGrid.isSelected()));
               properties.put(PropertyLoader.SHOW_ERROR_MESSAGES,
-                  String.valueOf(chckbxDisableErrorMessage.isSelected()));
+                      String.valueOf(chckbxDisableErrorMessage.isSelected()));
               properties.put(PropertyLoader.SHOW_CROSS_MENU,
-                  String.valueOf(chckbxDisableCrossPopup.isSelected()));
+                      String.valueOf(chckbxDisableCrossPopup.isSelected()));
               properties.put(PropertyLoader.AUTO_ADJUST_INHERITANCE,
-                  String.valueOf(chckbxAutoAdjustInheritance.isSelected()));
+                      String.valueOf(chckbxAutoAdjustInheritance.isSelected()));
               properties.put(PropertyLoader.VIEW_ENUM,
-                  String.valueOf(chckbxViewEnum.isSelected()));
+                      String.valueOf(chckbxViewEnum.isSelected()));
               properties.put(PropertyLoader.GRID_VISIBLE,
-                  String.valueOf(chckbxShowGrid.isSelected()));
+                      String.valueOf(chckbxShowGrid.isSelected()));
               properties.put(PropertyLoader.GRID_ENABLE,
-                  String.valueOf(chckbxEnableGrid.isSelected()));
+                      String.valueOf(chckbxEnableGrid.isSelected()));
               properties.put(PropertyLoader.VIEW_METHODS,
-                  String.valueOf(listViewMethods.getSelectedItem()).toUpperCase().replace(' ', '_'));
+                      String.valueOf(listViewMethods.getSelectedItem())
+                              .toUpperCase().replace(' ', '_'));
               properties.put(PropertyLoader.VIEW_ENTITIES,
-                  String.valueOf(listViewEntities.getSelectedItem()).toUpperCase().replace(' ', '_'));
+                      String.valueOf(listViewEntities.getSelectedItem())
+                              .toUpperCase().replace(' ', '_'));
 
               String quality = "MAX";
 
               if (rdbtnLow.isSelected())
                 quality = "LOW";
-              else if (rdbtnMedium.isSelected())
-                quality = "MEDIUM";
+              else if (rdbtnMedium.isSelected()) quality = "MEDIUM";
 
               properties.put(PropertyLoader.GRAPHIC_QUALITY, quality);
 
               properties.put(PropertyLoader.FONT_POLICE,
-                  String.valueOf(listName.getSelectedValue()));
+                      String.valueOf(listName.getSelectedValue()));
               properties.put(PropertyLoader.FONT_SIZE,
-                  String.valueOf(listSize.getSelectedValue()));
+                      String.valueOf(listSize.getSelectedValue()));
 
               properties.put(PropertyLoader.AUTOMATIC_GRID_COLOR,
-                  String.valueOf(rdbtnAutomaticcolor.isSelected()));
+                      String.valueOf(rdbtnAutomaticcolor.isSelected()));
               properties.put(PropertyLoader.GRID_COLOR,
-                  String.valueOf(btnColor.getBackground().getRGB()));
+                      String.valueOf(btnColor.getBackground().getRGB()));
 
               PropertyLoader.getInstance().push();
 
@@ -858,10 +857,10 @@ public class SProperties extends JDialog {
             } catch (Exception e1) {
               e1.printStackTrace();
             }
-            
+
             for (SimpleEntityView entity : SimpleEntityView.getAll())
               entity.initViewType();
-            
+
             for (EnumView enums : EnumView.getAll())
               enums.updateHeight();
 
@@ -876,7 +875,7 @@ public class SProperties extends JDialog {
             public void actionPerformed(ActionEvent arg0) {
 
               Properties prop = (Properties) PropertyLoader.getInstance()
-                  .getProperties().clone();
+                      .getProperties().clone();
               PropertyLoader.getInstance().reset();
 
               init();
@@ -922,9 +921,9 @@ public class SProperties extends JDialog {
 
   private void init() {
     String gripOpacity = PropertyLoader.getInstance().getProperties()
-        .getProperty(PropertyLoader.GRID_POINT_OPACITY);
+            .getProperty(PropertyLoader.GRID_POINT_OPACITY);
     gripOpacity = gripOpacity == null ? "100" : gripOpacity;
-    
+
     btnBackgroundColor.setBackground(GraphicView.getBasicColor());
     btnDefaultClassColor.setBackground(EntityView.getBasicColor());
     ckbBackgroundGradient.setSelected(GraphicView.isBackgroundGradient());
@@ -939,17 +938,17 @@ public class SProperties extends JDialog {
     chckbxShowGrid.setSelected(GraphicView.isGridVisible());
 
     switch (Utility.getGraphicQualityType()) {
-    case LOW:
-      rdbtnLow.setSelected(true);
-      break;
+      case LOW:
+        rdbtnLow.setSelected(true);
+        break;
 
-    case MEDIUM:
-      rdbtnMedium.setSelected(true);
-      break;
+      case MEDIUM:
+        rdbtnMedium.setSelected(true);
+        break;
 
-    case MAX:
-      rdbtnMax.setSelected(true);
-      break;
+      case MAX:
+        rdbtnMax.setSelected(true);
+        break;
     }
     chckbxDisableErrorMessage.setSelected(Slyum.isShowErrorMessage());
     chckbxDisableCrossPopup.setSelected(Slyum.isShowCrossMenu());
@@ -975,7 +974,7 @@ public class SProperties extends JDialog {
   private void setEnableGrid(boolean enable) {
     setEnableComponent(panel_Grid, chckbxEnableGrid.isSelected());
     setEnableStyleGrid(chckbxShowGrid.isSelected()
-        && chckbxEnableGrid.isSelected());
+            && chckbxEnableGrid.isSelected());
   }
 
   private void setEnableComponent(JPanel p, boolean enable) {
@@ -993,7 +992,7 @@ public class SProperties extends JDialog {
 
   private void showOpacityWarning() {
     SMessageDialog.showWarningMessage(
-        SMessageDialog.WARNING_OPTION_DECREASE_PERF, this);
+            SMessageDialog.WARNING_OPTION_DECREASE_PERF, this);
   }
 
 }

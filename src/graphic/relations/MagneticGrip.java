@@ -1,4 +1,4 @@
-package graphic.relations;
+Ôªøpackage graphic.relations;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -24,141 +24,134 @@ import change.Change;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class MagneticGrip extends RelationGrip implements Observer
-{
-	private GraphicComponent component;
-	private boolean magnetism = true;
+public class MagneticGrip extends RelationGrip implements Observer {
+  private GraphicComponent component;
+  private boolean magnetism = true;
 
-	private Point preferredAnchor;
+  private Point preferredAnchor;
 
-	/**
-	 * /** Create a new RelationGrip associate with the given LineView.
-	 * 
-	 * @param parent
-	 *            the graphic view
-	 * @param relation
-	 *            the LineView associated.
-	 * @param component
-	 *            the graphic component associated.
-	 * @param first
-	 *            need to compute the first location of the anchor. Give the
-	 *            point were you want the grip is.
-	 * @param next
-	 *            need to compute the first location of the anchor. Give the
-	 *            point were is the next grip on the relation.
-	 */
-	public MagneticGrip(GraphicView parent, LineView relation, GraphicComponent component, Point first, Point next)
-	{
-		super(parent, relation);
+  /**
+   * /** Create a new RelationGrip associate with the given LineView.
+   * 
+   * @param parent
+   *          the graphic view
+   * @param relation
+   *          the LineView associated.
+   * @param component
+   *          the graphic component associated.
+   * @param first
+   *          need to compute the first location of the anchor. Give the point
+   *          were you want the grip is.
+   * @param next
+   *          need to compute the first location of the anchor. Give the point
+   *          were is the next grip on the relation.
+   */
+  public MagneticGrip(GraphicView parent, LineView relation,
+          GraphicComponent component, Point first, Point next) {
+    super(parent, relation);
 
-		if (component == null)
-			throw new IllegalArgumentException("component is null");
+    if (component == null)
+      throw new IllegalArgumentException("component is null");
 
     Rectangle boundsRect = component.getBounds();
-    
-		this.component = component;
-		preferredAnchor = new Point(first.x - boundsRect.x, first.y - boundsRect.y);
-		super.setAnchor(component.computeAnchorLocation(first, next));
-		component.addObserver(this);
-		setVisible(false);
-	}
 
-	/**
-	 * Get the GraphicComponent associated with this MagnieticGrip.
-	 * 
-	 * @return the GraphicComponent that magnetize the grip
-	 */
-	public GraphicComponent getAssociedComponentView()
-	{
-		return component;
-	}
-	
-	public void setAssociedComponentView(GraphicComponent component) {
-	  this.component.deleteObserver(this);
-	  component.addObserver(this);
-	  this.component = component;
-	  setChanged();
+    this.component = component;
+    preferredAnchor = new Point(first.x - boundsRect.x, first.y - boundsRect.y);
+    super.setAnchor(component.computeAnchorLocation(first, next));
+    component.addObserver(this);
+    setVisible(false);
+  }
+
+  /**
+   * Get the GraphicComponent associated with this MagnieticGrip.
+   * 
+   * @return the GraphicComponent that magnetize the grip
+   */
+  public GraphicComponent getAssociedComponentView() {
+    return component;
+  }
+
+  public void setAssociedComponentView(GraphicComponent component) {
+    this.component.deleteObserver(this);
+    component.addObserver(this);
+    this.component = component;
+    setChanged();
     notifyObservers();
-	}
+  }
 
-	@Override
-	public void gMouseDragged(MouseEvent e) {
-		super.gMouseDragged(e);
-		magnetism = false;
-	}
+  @Override
+  public void gMouseDragged(MouseEvent e) {
+    super.gMouseDragged(e);
+    magnetism = false;
+  }
 
-	@Override
-	public void gMouseReleased(MouseEvent e) {
-	  // RÈcupÈration de l'ÈlÈment sur lequel l'utilisateur a "l‚chÈ" le grip.
-	  GraphicComponent onMouseComponent = 
-	      parent.getDiagramElementAtPosition(e.getPoint(), relation);
-	  
-	  magnetism = true;
-	  
-		// L'utilisateur a "l‚chÈ" le grip sur le GraphicView.
-		if (onMouseComponent == null)
-			onMouseComponent = parent;
+  @Override
+  public void gMouseReleased(MouseEvent e) {
+    // R√©cup√©ration de l'√©l√©ment sur lequel l'utilisateur a "l√¢ch√©" le grip.
+    GraphicComponent onMouseComponent = parent.getDiagramElementAtPosition(
+            e.getPoint(), relation);
 
-		// Est-ce que le composant cible a changÈ?
-		if (!component.equals(onMouseComponent))
-		  relation.relationChanged(this, onMouseComponent);
+    magnetism = true;
 
-		setAnchor(e.getPoint());
-		relation.smoothLines();
-		relation.searchUselessAnchor(this);
-		pushBufferChangeMouseReleased(e);
-		Change.stopRecord();
-		maybeShowPopup(e, relation);
-		notifyObservers();
+    // L'utilisateur a "l√¢ch√©" le grip sur le GraphicView.
+    if (onMouseComponent == null) onMouseComponent = parent;
+
+    // Est-ce que le composant cible a chang√©?
+    if (!component.equals(onMouseComponent))
+      relation.relationChanged(this, onMouseComponent);
+
+    setAnchor(e.getPoint());
+    relation.smoothLines();
+    relation.searchUselessAnchor(this);
+    pushBufferChangeMouseReleased(e);
+    Change.stopRecord();
+    maybeShowPopup(e, relation);
+    notifyObservers();
     relation.reinitializeTextBoxesLocation();
-	}
+  }
 
-	@Override
-	public void setAnchor(Point anchor) {
-		if (magnetism) {
-			Rectangle bounds = component.getBounds();
+  @Override
+  public void setAnchor(Point anchor) {
+    if (magnetism) {
+      Rectangle bounds = component.getBounds();
       RelationGrip nearGrip = relation.getNearestGrip(this);
-			preferredAnchor = new Point(anchor.x - bounds.x, anchor.y - bounds.y);
-			super.setAnchor(component.computeAnchorLocation(anchor, nearGrip.getAnchor()));
-		} else {
-			super.setAnchor(anchor);
-		}
-	}
-	
-	@Override
-	protected Point adjustOnGrid(Point pt) {
-    if (magnetism)
-      return pt;
+      preferredAnchor = new Point(anchor.x - bounds.x, anchor.y - bounds.y);
+      super.setAnchor(component.computeAnchorLocation(anchor,
+              nearGrip.getAnchor()));
+    } else {
+      super.setAnchor(anchor);
+    }
+  }
+
+  @Override
+  protected Point adjustOnGrid(Point pt) {
+    if (magnetism) return pt;
     return super.adjustOnGrid(pt);
-	}
-	
-	@Override
-	public void restore()
-	{
-		parent.addOthersComponents(this);
-	}
-	
-	@Override
-	public void delete()
-	{
-		parent.removeComponent(this);
-	}
+  }
 
-	@Override
-	public void update(Observable arg0, Object arg1)
-	{
-		if (!magnetism)
-			return;
+  @Override
+  public void restore() {
+    parent.addOthersComponents(this);
+  }
 
-		Rectangle boundsRect = component.getBounds();
-		Point absolutePrefLoc = new Point(preferredAnchor.x + boundsRect.x, 
-		                                  preferredAnchor.y + boundsRect.y);
-		setAnchor(absolutePrefLoc);
+  @Override
+  public void delete() {
+    parent.removeComponent(this);
+  }
 
-		arg0.deleteObserver(this);
-		notifyObservers();
-		arg0.addObserver(this);
-	}
+  @Override
+  public void update(Observable arg0, Object arg1) {
+    if (!magnetism) return;
+
+    Rectangle boundsRect = component.getBounds();
+    Point absolutePrefLoc = new Point(preferredAnchor.x + boundsRect.x,
+            preferredAnchor.y + boundsRect.y);
+    setAnchor(absolutePrefLoc);
+
+    arg0.deleteObserver(this);
+    notifyObservers();
+    arg0.addObserver(this);
+  }
 
   public boolean isMagnetism() {
     return magnetism;

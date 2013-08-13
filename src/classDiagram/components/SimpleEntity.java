@@ -1,4 +1,4 @@
-package classDiagram.components;
+﻿package classDiagram.components;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,7 +16,7 @@ import change.Change;
 import classDiagram.relationships.Inheritance;
 
 public class SimpleEntity extends Entity {
-  
+
   private boolean _isAbstract = false;
   protected Visibility visibility = Visibility.PUBLIC;
   protected LinkedList<Attribute> attributes = new LinkedList<>();
@@ -48,21 +48,20 @@ public class SimpleEntity extends Entity {
   protected String getEntityType() {
     return null;
   }
-  
+
   private void initializeComponents(Visibility visibility) {
     if (visibility == null)
       throw new IllegalArgumentException("visibility is null");
     this.visibility = visibility;
   }
-  
+
   /**
    * Add a new attribute.
    * 
    * @param attribute
-   *            the new attribute.
+   *          the new attribute.
    */
-  public void addAttribute(Attribute attribute)
-  {
+  public void addAttribute(Attribute attribute) {
     addAttribute(attribute, attributes.size());
   }
 
@@ -70,10 +69,9 @@ public class SimpleEntity extends Entity {
    * Add a new attribute.
    * 
    * @param attribute
-   *            the new attribute.
+   *          the new attribute.
    */
-  public void addAttribute(Attribute attribute, int index)
-  {
+  public void addAttribute(Attribute attribute, int index) {
     if (attribute == null)
       throw new IllegalArgumentException("attribute is null");
 
@@ -89,12 +87,10 @@ public class SimpleEntity extends Entity {
    * Add a new child.
    * 
    * @param child
-   *            the new child
+   *          the new child
    */
-  public void addChild(Inheritance child)
-  {
-    if (child == null)
-      throw new IllegalArgumentException("child is null");
+  public void addChild(Inheritance child) {
+    if (child == null) throw new IllegalArgumentException("child is null");
 
     childs.add(child);
 
@@ -105,24 +101,22 @@ public class SimpleEntity extends Entity {
    * Add a new method.
    * 
    * @param method
-   *            the new method.
+   *          the new method.
    * @return
    */
   public boolean addMethod(Method method) {
     return addMethod(method, methods.size());
   }
-  
-  public boolean addMethod(Method method, int index) {
-    if (method == null)
-      throw new IllegalArgumentException("method is null");
 
-    if (methods.contains(method))
-      return false;
-    
+  public boolean addMethod(Method method, int index) {
+    if (method == null) throw new IllegalArgumentException("method is null");
+
+    if (methods.contains(method)) return false;
+
     method.setAbstract(isAbstract());
 
     methods.add(index, method);
-    
+
     int i = methods.indexOf(method);
     Change.push(new BufferCreationMethod(this, method, true, i));
     Change.push(new BufferCreationMethod(this, method, false, i));
@@ -136,32 +130,29 @@ public class SimpleEntity extends Entity {
    * Add a new parent.
    * 
    * @param parent
-   *            the new parent
+   *          the new parent
    */
-  public void addParent(Inheritance parent)
-  {
-    if (parent == null)
-      throw new IllegalArgumentException("parent is null");
+  public void addParent(Inheritance parent) {
+    if (parent == null) throw new IllegalArgumentException("parent is null");
 
     parents.add(parent);
 
     setChanged();
-  }public int countStaticMethods()
-  {
+  }
+
+  public int countStaticMethods() {
     int i = 0;
     for (Method m : getMethods())
       if (m.isStatic()) i++;
-    
+
     return i;
   }
-  
-  public boolean isEveryMethodsStatic()
-  {
+
+  public boolean isEveryMethodsStatic() {
     return getMethods().size() - countStaticMethods() == 0;
   }
 
-  public LinkedList<SimpleEntity> getAllChilds()
-  {
+  public LinkedList<SimpleEntity> getAllChilds() {
     LinkedList<SimpleEntity> allChilds = new LinkedList<SimpleEntity>();
     allChilds.add(this);
 
@@ -171,8 +162,7 @@ public class SimpleEntity extends Entity {
     return allChilds;
   }
 
-  public LinkedList<SimpleEntity> getAllParents()
-  {
+  public LinkedList<SimpleEntity> getAllParents() {
     final LinkedList<SimpleEntity> allParents = new LinkedList<SimpleEntity>();
     allParents.add(this);
 
@@ -187,8 +177,7 @@ public class SimpleEntity extends Entity {
    * 
    * @return an array containing all attributes of the entity.
    */
-  public LinkedList<Attribute> getAttributes()
-  {
+  public LinkedList<Attribute> getAttributes() {
     final LinkedList<Attribute> copy = new LinkedList<Attribute>();
 
     for (final Attribute a : attributes)
@@ -196,14 +185,13 @@ public class SimpleEntity extends Entity {
 
     return copy;
   }
-  
+
   /**
    * Get a copy of the method's list.
    * 
    * @return an array containing all methods of the entity.
    */
-  public LinkedList<Method> getMethods()
-  {
+  public LinkedList<Method> getMethods() {
     final LinkedList<Method> copy = new LinkedList<Method>();
 
     for (final Method m : methods)
@@ -217,8 +205,7 @@ public class SimpleEntity extends Entity {
    * 
    * @return the visibility of the entity
    */
-  public Visibility getVisibility()
-  {
+  public Visibility getVisibility() {
     return visibility;
   }
 
@@ -227,11 +214,9 @@ public class SimpleEntity extends Entity {
    * 
    * @return true if the entity has abstract methods; false otherwise.
    */
-  public boolean hasAbstractMethods()
-  {
+  public boolean hasAbstractMethods() {
     for (final Method m : getMethods())
-      if (m.isAbstract())
-        return true;
+      if (m.isAbstract()) return true;
 
     return false;
   }
@@ -241,13 +226,11 @@ public class SimpleEntity extends Entity {
    * 
    * @return true if the entity is abstract; false otherwise
    */
-  public boolean isAbstract()
-  {
+  public boolean isAbstract() {
     return _isAbstract;
   }
 
-  public boolean isChildOf(Entity entity)
-  {
+  public boolean isChildOf(Entity entity) {
     boolean isChild = false;
 
     for (final Inheritance i : parents)
@@ -256,8 +239,7 @@ public class SimpleEntity extends Entity {
     return isChild || equals(entity);
   }
 
-  public boolean isParentOf(Entity entity)
-  {
+  public boolean isParentOf(Entity entity) {
     boolean isParent = false;
 
     for (final Inheritance i : childs)
@@ -272,12 +254,11 @@ public class SimpleEntity extends Entity {
    * positive or negative.
    * 
    * @param attribute
-   *            the attribute to move
+   *          the attribute to move
    * @param offset
-   *            the offset for compute the new index
+   *          the offset for compute the new index
    */
-  public void moveAttributePosition(Attribute attribute, int offset)
-  {
+  public void moveAttributePosition(Attribute attribute, int offset) {
     moveComponentPosition(attributes, attribute, offset);
   }
 
@@ -287,12 +268,11 @@ public class SimpleEntity extends Entity {
    * positive or negative.
    * 
    * @param method
-   *            the method to move
+   *          the method to move
    * @param offset
-   *            the offset for compute the new index
+   *          the offset for compute the new index
    */
-  public void moveMethodPosition(Method method, int offset)
-  {
+  public void moveMethodPosition(Method method, int offset) {
     moveComponentPosition(methods, method, offset);
   }
 
@@ -300,25 +280,22 @@ public class SimpleEntity extends Entity {
    * Remove the attribute.
    * 
    * @param attribute
-   *            the attribute to remove
+   *          the attribute to remove
    * @return true if the attribute has been removed; false otherwise
    */
-  public boolean removeAttribute(Attribute attribute)
-  {
+  public boolean removeAttribute(Attribute attribute) {
     if (attribute == null)
       throw new IllegalArgumentException("attribute is null");
 
     int i = attributes.indexOf(attribute);
-    
-    if (attributes.remove(attribute))
-    {
+
+    if (attributes.remove(attribute)) {
       Change.push(new BufferCreationAttribute(this, attribute, false, i));
       Change.push(new BufferCreationAttribute(this, attribute, true, i));
-      
+
       setChanged();
       return true;
-    }
-    else
+    } else
       return false;
   }
 
@@ -326,10 +303,9 @@ public class SimpleEntity extends Entity {
    * Remove the child.
    * 
    * @param child
-   *            the child to remove
+   *          the child to remove
    */
-  public void removeChild(Inheritance child)
-  {
+  public void removeChild(Inheritance child) {
     childs.remove(child);
 
     setChanged();
@@ -339,21 +315,18 @@ public class SimpleEntity extends Entity {
    * Remove the method.
    * 
    * @param method
-   *            the method to remove.
+   *          the method to remove.
    * @return true if the method has been removed; false otherwise
    */
-  public boolean removeMethod(Method method)
-  {
-    if (method == null)
-      throw new IllegalArgumentException("method is null");
+  public boolean removeMethod(Method method) {
+    if (method == null) throw new IllegalArgumentException("method is null");
 
     int i = methods.indexOf(method);
-    
-    if (methods.remove(method))
-    {
+
+    if (methods.remove(method)) {
       Change.push(new BufferCreationMethod(this, method, false, i));
       Change.push(new BufferCreationMethod(this, method, true, i));
-      
+
       setChanged();
       notifyObservers();
       return true;
@@ -366,10 +339,9 @@ public class SimpleEntity extends Entity {
    * Remove the parent.
    * 
    * @param parent
-   *            the parent to remove
+   *          the parent to remove
    */
-  public void removeParent(Inheritance parent)
-  {
+  public void removeParent(Inheritance parent) {
     parents.remove(parent);
 
     setChanged();
@@ -379,19 +351,18 @@ public class SimpleEntity extends Entity {
    * Set the abstract state of the entity.
    * 
    * @param isAbstract
-   *            the new abstract state.
+   *          the new abstract state.
    */
-  public void setAbstract(boolean isAbstract)
-  {
+  public void setAbstract(boolean isAbstract) {
     if (hasAbstractMethods())
-      if (SMessageDialog.showQuestionMessageYesNo("Class has abstract methods.\nDe-abstract all methods?") == JOptionPane.NO_OPTION)
+      if (SMessageDialog
+              .showQuestionMessageYesNo("Class has abstract methods.\nDe-abstract all methods?") == JOptionPane.NO_OPTION)
 
         isAbstract = true;
 
       else
         for (final Method m : getMethods())
-          if (m.isAbstract())
-            m.setAbstract(false);
+          if (m.isAbstract()) m.setAbstract(false);
 
     Change.push(new BufferClass(this));
     _isAbstract = isAbstract;
@@ -404,17 +375,15 @@ public class SimpleEntity extends Entity {
    * Set the visibility of the entity.
    * 
    * @param visibility
-   *            the new visibility
+   *          the new visibility
    */
-  public void setVisibility(Visibility visibility)
-  {
+  public void setVisibility(Visibility visibility) {
     if (visibility == null)
       throw new IllegalArgumentException("visibility is null");
 
-    if (visibility.equals(getVisibility()))
-      return;
-    
-    Change.push(new BufferClass(this));   
+    if (visibility.equals(getVisibility())) return;
+
+    Change.push(new BufferClass(this));
     this.visibility = visibility;
     Change.push(new BufferClass(this));
 
@@ -428,43 +397,43 @@ public class SimpleEntity extends Entity {
   public List<Inheritance> getParents() {
     return parents;
   }
-  
+
   @Override
   public boolean isNameItalic() {
     return isAbstract();
   }
-  
+
   @Override
   public SimpleEntity clone() throws CloneNotSupportedException {
-    SimpleEntity entity = (SimpleEntity)super.clone();
-    
+    SimpleEntity entity = (SimpleEntity) super.clone();
+
     // Copie des attributs primitifs
     entity.setAbstract(isAbstract());
     entity.setVisibility(getVisibility());
-    
-    // Copie en profondeur des attributs et m�thodes.
+
+    // Copie en profondeur des attributs et méthodes.
     for (Attribute a : getAttributes())
       entity.addAttribute(new Attribute(a));
-    
+
     for (Method m : getMethods())
       entity.addMethod(new Method(m, this));
-    
+
     return entity;
   }
 
   @Override
   public Element getXmlElement(Document doc) {
     Element entity = super.getXmlElement(doc);
-    
+
     entity.setAttribute("visibility", visibility.toString());
     entity.setAttribute("isAbstract", String.valueOf(isAbstract()));
 
     for (Attribute attribute : attributes)
       entity.appendChild(attribute.getXmlElement(doc));
-      
+
     for (Method operation : methods)
       entity.appendChild(operation.getXmlElement(doc));
-    
+
     return entity;
   }
 

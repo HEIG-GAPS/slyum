@@ -1,4 +1,4 @@
-package swing;
+﻿package swing;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,7 +38,7 @@ public class PropertyLoader {
   public static final String VIEW_ENUM = "ViewEnum";
 
   public static final String filename = Slyum.getPathAppDir()
-      + Slyum.FILE_SEPARATOR + "config.properties";
+          + Slyum.FILE_SEPARATOR + "config.properties";
 
   private static PropertyLoader instance;
 
@@ -80,13 +80,11 @@ public class PropertyLoader {
   }
 
   public static PropertyLoader getInstance() {
-    if (instance == null)
-      try {
-        instance = new PropertyLoader();
-      } catch (IOException e) {
-        SMessageDialog
-            .showErrorMessage(SMessageDialog.ERROR_LOAD_PROPERTY_FILE);
-      }
+    if (instance == null) try {
+      instance = new PropertyLoader();
+    } catch (IOException e) {
+      SMessageDialog.showErrorMessage(SMessageDialog.ERROR_LOAD_PROPERTY_FILE);
+    }
     return instance;
   }
 

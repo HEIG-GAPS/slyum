@@ -1,4 +1,4 @@
-package graphic.factory;
+﻿package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -22,63 +22,64 @@ import classDiagram.relationships.Dependency;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class DependencyFactory extends RelationFactory
-{
-	public final String ERROR_CREATION_MESSAGE = "Dependency creation failed.\nYou must make a bond between two entities (class or interface).";
+public class DependencyFactory extends RelationFactory {
+  public final String ERROR_CREATION_MESSAGE = "Dependency creation failed.\nYou must make a bond between two entities (class or interface).";
 
-	/**
-	 * Create a new factory allowing the creation of a dependency.
-	 * 
-	 * @param parent
-	 *            the graphic view
-	 * @param classDiagram
-	 *            the class diagram
-	 */
-	public DependencyFactory(GraphicView parent) {
-		super(parent);
-		stroke = new BasicStroke(1.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
-		                         10.0f, new float[] { 7.f }, 0.0f);
-    
-    GraphicView.setButtonFactory(
-        SPanelDiagramComponent.getInstance().getBtnDependency());
-	}
+  /**
+   * Create a new factory allowing the creation of a dependency.
+   * 
+   * @param parent
+   *          the graphic view
+   * @param classDiagram
+   *          the class diagram
+   */
+  public DependencyFactory(GraphicView parent) {
+    super(parent);
+    stroke = new BasicStroke(1.2f, BasicStroke.CAP_BUTT,
+            BasicStroke.JOIN_MITER, 10.0f, new float[] { 7.f }, 0.0f);
 
-	@Override
-	public GraphicComponent create()
-	{
-		if (componentMousePressed instanceof EntityView && componentMouseReleased instanceof EntityView)
-		{
-			final EntityView source = (EntityView) componentMousePressed;
-			final EntityView target = (EntityView) componentMouseReleased;
+    GraphicView.setButtonFactory(SPanelDiagramComponent.getInstance()
+            .getBtnDependency());
+  }
 
-			final Dependency dependency = new Dependency(source.getComponent(), target.getComponent());
-			final DependencyView d = new DependencyView(parent, source, target, dependency, mousePressed, mouseReleased, true);
+  @Override
+  public GraphicComponent create() {
+    if (componentMousePressed instanceof EntityView
+            && componentMouseReleased instanceof EntityView) {
+      final EntityView source = (EntityView) componentMousePressed;
+      final EntityView target = (EntityView) componentMouseReleased;
 
-			parent.addLineView(d);
-			classDiagram.addDependency(dependency);
+      final Dependency dependency = new Dependency(source.getComponent(),
+              target.getComponent());
+      final DependencyView d = new DependencyView(parent, source, target,
+              dependency, mousePressed, mouseReleased, true);
 
-			parent.unselectAll();
-			d.setSelected(true);
+      parent.addLineView(d);
+      classDiagram.addDependency(dependency);
 
-			return d;
-		}
+      parent.unselectAll();
+      d.setSelected(true);
 
-		repaint();
-		return null;
-	}
-	
-	@Override
-	protected boolean isFirstComponentValid() {
-	  return componentMousePressed instanceof EntityView;
-	}
+      return d;
+    }
 
-	@Override
-	protected void drawExtremity(Graphics2D g2) {
-		DependencyView.paintExtremity(g2, points.get(points.size()-1), mouseLocation);
-	}
-	
-	@Override
-	protected void creationFailed() {
-		SMessageDialog.showErrorMessage(ERROR_CREATION_MESSAGE);
-	}
+    repaint();
+    return null;
+  }
+
+  @Override
+  protected boolean isFirstComponentValid() {
+    return componentMousePressed instanceof EntityView;
+  }
+
+  @Override
+  protected void drawExtremity(Graphics2D g2) {
+    DependencyView.paintExtremity(g2, points.get(points.size() - 1),
+            mouseLocation);
+  }
+
+  @Override
+  protected void creationFailed() {
+    SMessageDialog.showErrorMessage(ERROR_CREATION_MESSAGE);
+  }
 }

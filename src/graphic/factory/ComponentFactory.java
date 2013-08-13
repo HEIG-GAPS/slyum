@@ -1,4 +1,4 @@
-package graphic.factory;
+﻿package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -18,45 +18,40 @@ import swing.Slyum;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public abstract class ComponentFactory extends CreateComponent
-{
-	protected GraphicComponent componentMousePressed;
+public abstract class ComponentFactory extends CreateComponent {
+  protected GraphicComponent componentMousePressed;
 
-	protected GraphicComponent componentMouseReleased;
-	protected Point mousePressed;
-	protected Point mouseReleased;
+  protected GraphicComponent componentMouseReleased;
+  protected Point mousePressed;
+  protected Point mouseReleased;
 
-	public ComponentFactory(GraphicView parent)
-	{
-		super(parent);
-	}
+  public ComponentFactory(GraphicView parent) {
+    super(parent);
+  }
 
-	@Override
-	public void gMousePressed(MouseEvent e) {
-		mousePressed = e.getPoint();
-		
-		if (componentMousePressed == null)
-		  componentMousePressed = parent.getComponentAtPosition(mousePressed);
-	}
+  @Override
+  public void gMousePressed(MouseEvent e) {
+    mousePressed = e.getPoint();
 
-	@Override
-	public void gMouseReleased(MouseEvent e)
-	{
-		mouseReleased = e.getPoint();
+    if (componentMousePressed == null)
+      componentMousePressed = parent.getComponentAtPosition(mousePressed);
+  }
 
-		componentMouseReleased = parent.getComponentAtPosition(mouseReleased);
+  @Override
+  public void gMouseReleased(MouseEvent e) {
+    mouseReleased = e.getPoint();
 
-		if (create() == null && Slyum.isShowErrorMessage())
-				creationFailed();
+    componentMouseReleased = parent.getComponentAtPosition(mouseReleased);
 
-		parent.deleteCurrentFactory();
-	}
-	
-	/**
-	 * Called when the creation of the component failed.
-	 */
-	protected void creationFailed()
-	{
-		// Nothing by default.
-	}
+    if (create() == null && Slyum.isShowErrorMessage()) creationFailed();
+
+    parent.deleteCurrentFactory();
+  }
+
+  /**
+   * Called when the creation of the component failed.
+   */
+  protected void creationFailed() {
+    // Nothing by default.
+  }
 }

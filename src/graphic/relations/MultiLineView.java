@@ -1,4 +1,4 @@
-package graphic.relations;
+Ôªøpackage graphic.relations;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -28,106 +28,104 @@ import classDiagram.relationships.Role;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class MultiLineView extends LineView
-{
-	/**
-	 * Create a new MultiLineView associated with a MultiView.
-	 * 
-	 * @param graphicView
-	 *            the graphic view
-	 * @param source
-	 *            the multi view
-	 * @param target
-	 *            A entity participating at the multi-association
-	 * @param role
-	 *            the role of the association
-	 * @param posSource
-	 *            the position for put the first MagneticGrip
-	 * @param posTarget
-	 *            the position for put the last MagneticGrip
-	 * @param checkRecursivity
-	 *            check if the relation is on itself
-	 */
-	public MultiLineView(GraphicView graphicView, MultiView source, EntityView target, Role role, Point posSource, Point posTarget, boolean checkRecursivity)
-	{
-		super(graphicView, source, target, posSource, posTarget, checkRecursivity);
+public class MultiLineView extends LineView {
+  /**
+   * Create a new MultiLineView associated with a MultiView.
+   * 
+   * @param graphicView
+   *          the graphic view
+   * @param source
+   *          the multi view
+   * @param target
+   *          A entity participating at the multi-association
+   * @param role
+   *          the role of the association
+   * @param posSource
+   *          the position for put the first MagneticGrip
+   * @param posTarget
+   *          the position for put the last MagneticGrip
+   * @param checkRecursivity
+   *          check if the relation is on itself
+   */
+  public MultiLineView(GraphicView graphicView, MultiView source,
+          EntityView target, Role role, Point posSource, Point posTarget,
+          boolean checkRecursivity) {
+    super(graphicView, source, target, posSource, posTarget, checkRecursivity);
 
-		final TextBoxRole tb = new TextBoxRole(parent, role, getLastPoint());
-		tbRoles.add(tb);
-		parent.addOthersComponents(tb);
-	}
+    final TextBoxRole tb = new TextBoxRole(parent, role, getLastPoint());
+    tbRoles.add(tb);
+    parent.addOthersComponents(tb);
+  }
 
-	@Override
-	public void delete()
-	{
-		MultiView mv = (MultiView)getFirstPoint().getAssociedComponentView();
-		final int nbLineAssocied = parent.getLinesViewAssociedWith(mv).size();
+  @Override
+  public void delete() {
+    MultiView mv = (MultiView) getFirstPoint().getAssociedComponentView();
+    final int nbLineAssocied = parent.getLinesViewAssociedWith(mv).size();
 
-		if (nbLineAssocied == 3)
-		
-			mv.delete();
+    if (nbLineAssocied == 3)
 
-		super.delete();
+    mv.delete();
 
-		mv.connexionRemoved(this);
+    super.delete();
 
-	}
-	
-	@Override
-	public void restore()
-	{
-		super.restore();
-		
-		MultiView mv = (MultiView) getFirstPoint().getAssociedComponentView();
-		Multi m = (Multi) mv.getAssociedComponent();
-		TextBoxRole tbr = (TextBoxRole)tbRoles.getFirst();
-		m.addRole(tbr.getRole());
-		mv.addMultiLineView(this);
-		
-		mv.restore();
-	}
-	
-	@Override
-	public String getXmlTagName() {
-	  return "multiLineView";
-	}
-	
-	@Override
-	public Element getXmlElement(Document doc) {
-    Element multiLineView = doc.createElement(getXmlTagName()),
-            line = doc.createElement("line");
+    mv.connexionRemoved(this);
+
+  }
+
+  @Override
+  public void restore() {
+    super.restore();
+
+    MultiView mv = (MultiView) getFirstPoint().getAssociedComponentView();
+    Multi m = (Multi) mv.getAssociedComponent();
+    TextBoxRole tbr = (TextBoxRole) tbRoles.getFirst();
+    m.addRole(tbr.getRole());
+    mv.addMultiLineView(this);
+
+    mv.restore();
+  }
+
+  @Override
+  public String getXmlTagName() {
+    return "multiLineView";
+  }
+
+  @Override
+  public Element getXmlElement(Document doc) {
+    Element multiLineView = doc.createElement(getXmlTagName()), line = doc
+            .createElement("line");
 
     multiLineView.setAttribute(
-        "relationId",
-        String.valueOf(getFirstPoint().getAssociedComponentView()
-                                      .getAssociedComponent().getId()));
+            "relationId",
+            String.valueOf(getFirstPoint().getAssociedComponentView()
+                    .getAssociedComponent().getId()));
     multiLineView.setAttribute("color", String.valueOf(getColor().getRGB()));
-    
+
     for (RelationGrip grip : points) {
       Point pt = grip.getAnchor();
       pt.translate(1, 1);
       line.appendChild(Utility.pointToXmlElement(pt, "point", doc));
     }
     multiLineView.appendChild(line);
-    
-    // Si l'association a des textbox de rÙles.
-    if (tbRoles.size() >= 1) {
-      multiLineView.appendChild(Utility.boundsToXmlElement(
-          doc, tbRoles.get(0).getBounds(), "roleAssociation"));
-      
-      multiLineView.appendChild(Utility.boundsToXmlElement(
-          doc,
-          ((TextBoxRole) tbRoles.get(0)).getTextBoxMultiplicity().getBounds(),
-          "multipliciteAssociation"));
-    }
-    
-    return multiLineView;
-	}
 
-	@Override
-	public boolean relationChanged(MagneticGrip gripSource, GraphicComponent tagret) {
-		// Le changement pour les multi-association n'est pas implÈmentÈ.
-		return false;
-	}
+    // Si l'association a des textbox de r√¥les.
+    if (tbRoles.size() >= 1) {
+      multiLineView.appendChild(Utility.boundsToXmlElement(doc, tbRoles.get(0)
+              .getBounds(), "roleAssociation"));
+
+      multiLineView.appendChild(Utility.boundsToXmlElement(doc,
+              ((TextBoxRole) tbRoles.get(0)).getTextBoxMultiplicity()
+                      .getBounds(), "multipliciteAssociation"));
+    }
+
+    return multiLineView;
+  }
+
+  @Override
+  public boolean relationChanged(MagneticGrip gripSource,
+          GraphicComponent tagret) {
+    // Le changement pour les multi-association n'est pas impl√©ment√©.
+    return false;
+  }
 
 }

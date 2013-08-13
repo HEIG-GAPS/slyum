@@ -1,4 +1,4 @@
-package graphic.relations;
+﻿package graphic.relations;
 
 import graphic.GraphicView;
 import graphic.entity.EntityView;
@@ -29,48 +29,49 @@ import classDiagram.relationships.Role;
  * @version 1.0 - 25.07.2011
  */
 public class BinaryView extends AssociationView {
-	/**
-	 * Create a new BinaryView between source and target.
-	 * 
-	 * @param parent
-	 *            the graphic view
-	 * @param source
-	 *            the entity source
-	 * @param target
-	 *            the entity target
-	 * @param binary
-	 *            the binary UML
-	 * @param posSource
-	 *            the position for put the first MagneticGrip
-	 * @param posTarget
-	 *            the position for put the last MagneticGrip
-	 * @param checkRecursivity
-	 *            check if the relation is on itself
-	 */
-	public BinaryView(GraphicView parent, EntityView source, EntityView target, Binary binary, Point posSource, Point posTarget, boolean checkRecursivity)
-	{
-		super(parent, source, target, binary, posSource, posTarget, checkRecursivity);
+  /**
+   * Create a new BinaryView between source and target.
+   * 
+   * @param parent
+   *          the graphic view
+   * @param source
+   *          the entity source
+   * @param target
+   *          the entity target
+   * @param binary
+   *          the binary UML
+   * @param posSource
+   *          the position for put the first MagneticGrip
+   * @param posTarget
+   *          the position for put the last MagneticGrip
+   * @param checkRecursivity
+   *          check if the relation is on itself
+   */
+  public BinaryView(GraphicView parent, EntityView source, EntityView target,
+          Binary binary, Point posSource, Point posTarget,
+          boolean checkRecursivity) {
+    super(parent, source, target, binary, posSource, posTarget,
+            checkRecursivity);
 
-		final LinkedList<Role> roles = binary.getRoles();
+    final LinkedList<Role> roles = binary.getRoles();
 
-		TextBoxRole tb = new TextBoxRole(parent, roles.getFirst(), getFirstPoint());
-		tbRoles.add(tb);
-		parent.addOthersComponents(tb);
+    TextBoxRole tb = new TextBoxRole(parent, roles.getFirst(), getFirstPoint());
+    tbRoles.add(tb);
+    parent.addOthersComponents(tb);
 
-		tb = new TextBoxRole(parent, roles.getLast(), getLastPoint());
-		tbRoles.add(tb);
-		parent.addOthersComponents(tb);
-	}
-	
-	@Override
-	public void restore()
-	{
-		super.restore();
-		
-		if (this.getClass().equals(BinaryView.class))
-			
-			parent.getClassDiagram().addBinary((Binary)getAssociedComponent());
-		
-		repaint();
-	}
+    tb = new TextBoxRole(parent, roles.getLast(), getLastPoint());
+    tbRoles.add(tb);
+    parent.addOthersComponents(tb);
+  }
+
+  @Override
+  public void restore() {
+    super.restore();
+
+    if (this.getClass().equals(BinaryView.class))
+
+    parent.getClassDiagram().addBinary((Binary) getAssociedComponent());
+
+    repaint();
+  }
 }

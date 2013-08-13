@@ -1,4 +1,4 @@
-package graphic.factory;
+﻿package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -23,77 +23,74 @@ import classDiagram.relationships.Inheritance;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class InheritanceFactory extends RelationFactory
-{
-	public final String ERROR_CREATION_MESSAGE = "Inheritance creation failed.\nYou must make a bond between two classes or class -> interface.";
+public class InheritanceFactory extends RelationFactory {
+  public final String ERROR_CREATION_MESSAGE = "Inheritance creation failed.\nYou must make a bond between two classes or class -> interface.";
 
-	/**
-	 * Create a new factory allowing the creation of an inheritance.
-	 * 
-	 * @param parent
-	 *            the graphic view
-	 * @param classDiagram
-	 *            the class diagram
-	 */
-	public InheritanceFactory(GraphicView parent)
-	{
-		super(parent);
-    
-    GraphicView.setButtonFactory(
-        SPanelDiagramComponent.getInstance().getBtnGeneralize());
-	}
+  /**
+   * Create a new factory allowing the creation of an inheritance.
+   * 
+   * @param parent
+   *          the graphic view
+   * @param classDiagram
+   *          the class diagram
+   */
+  public InheritanceFactory(GraphicView parent) {
+    super(parent);
 
-	@Override
-	public GraphicComponent create()
-	{
-		try
-		{
-			if (componentMousePressed instanceof SimpleEntityView && 
-			    componentMouseReleased instanceof SimpleEntityView)
-			{
-				SimpleEntityView source = (SimpleEntityView) componentMousePressed;
-				SimpleEntityView target = (SimpleEntityView) componentMouseReleased;
+    GraphicView.setButtonFactory(SPanelDiagramComponent.getInstance()
+            .getBtnGeneralize());
+  }
 
-				if (!Inheritance.validate(source.getComponent(), target.getComponent())) {
-					repaint();
-					return null;
-				}
+  @Override
+  public GraphicComponent create() {
+    try {
+      if (componentMousePressed instanceof SimpleEntityView
+              && componentMouseReleased instanceof SimpleEntityView) {
+        SimpleEntityView source = (SimpleEntityView) componentMousePressed;
+        SimpleEntityView target = (SimpleEntityView) componentMouseReleased;
 
-				Inheritance inheritance = new Inheritance(source.getComponent(), target.getComponent());
-				InheritanceView i = new InheritanceView(parent, source, target, inheritance, mousePressed, mouseReleased, true);
+        if (!Inheritance.validate(source.getComponent(), target.getComponent())) {
+          repaint();
+          return null;
+        }
 
-				parent.addLineView(i);
-				classDiagram.addInheritance(inheritance);
+        Inheritance inheritance = new Inheritance(source.getComponent(),
+                target.getComponent());
+        InheritanceView i = new InheritanceView(parent, source, target,
+                inheritance, mousePressed, mouseReleased, true);
 
-				parent.unselectAll();
-				i.setSelected(true);
-				
-				if (Slyum.isAutoAdjustInheritance())
-				  i.adjustInheritance();
+        parent.addLineView(i);
+        classDiagram.addInheritance(inheritance);
 
-				return i;
-			}
-		} catch (final IllegalArgumentException e)
-		{
-			System.err.println("Inheritance relation between class (child) and interface (parent) is not possible.");
-		}
+        parent.unselectAll();
+        i.setSelected(true);
 
-		repaint();
-		return null;
-	}
-	
-	@Override
-	protected boolean isFirstComponentValid() {
-	  return componentMousePressed instanceof SimpleEntityView;
-	}
+        if (Slyum.isAutoAdjustInheritance()) i.adjustInheritance();
 
-	@Override
-	protected void drawExtremity(Graphics2D g2) {
-		InheritanceView.paintExtremity(g2, points.get(points.size()-1), mouseLocation, Color.DARK_GRAY);
-	}
-	
-	@Override
-	protected void creationFailed() {
-		SMessageDialog.showErrorMessage(ERROR_CREATION_MESSAGE);
-	}
+        return i;
+      }
+    } catch (final IllegalArgumentException e) {
+      System.err
+              .println("Inheritance relation between class (child) and interface (parent) is not possible.");
+    }
+
+    repaint();
+    return null;
+  }
+
+  @Override
+  protected boolean isFirstComponentValid() {
+    return componentMousePressed instanceof SimpleEntityView;
+  }
+
+  @Override
+  protected void drawExtremity(Graphics2D g2) {
+    InheritanceView.paintExtremity(g2, points.get(points.size() - 1),
+            mouseLocation, Color.DARK_GRAY);
+  }
+
+  @Override
+  protected void creationFailed() {
+    SMessageDialog.showErrorMessage(ERROR_CREATION_MESSAGE);
+  }
 }

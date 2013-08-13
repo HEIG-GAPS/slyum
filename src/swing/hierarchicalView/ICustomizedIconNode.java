@@ -1,4 +1,4 @@
-package swing.hierarchicalView;
+﻿package swing.hierarchicalView;
 
 import javax.swing.ImageIcon;
 
@@ -8,13 +8,12 @@ import javax.swing.ImageIcon;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public interface ICustomizedIconNode
-{
-	/**
-	 * Return the icon representing the node. Use by the JTree to know wich
-	 * icon attributae to a node.
-	 * 
-	 * @return the icon node
-	 */
-	public ImageIcon getCustomizedIcon();
+public interface ICustomizedIconNode {
+  /**
+   * Return the icon representing the node. Use by the JTree to know wich icon
+   * attributae to a node.
+   * 
+   * @return the icon node
+   */
+  public ImageIcon getCustomizedIcon();
 }

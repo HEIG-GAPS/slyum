@@ -1,4 +1,4 @@
-package graphic.textbox;
+﻿package graphic.textbox;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -37,352 +37,338 @@ import utility.Utility;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public abstract class TextBox extends GraphicComponent
-{
-	public final static String FONT_NAME = Slyum.getInstance().defaultFont.getFamily();
-	public final static int FONT_SIZE = 12;
+public abstract class TextBox extends GraphicComponent {
+  public final static String FONT_NAME = Slyum.getInstance().defaultFont
+          .getFamily();
+  public final static int FONT_SIZE = 12;
 
-	public static Font getFont()
-	{
-		return new Font(getFontName(), Font.PLAIN, getFontSize());
-	}
+  public static Font getFont() {
+    return new Font(getFontName(), Font.PLAIN, getFontSize());
+  }
 
-	public static String getFontName()
-	{
-		final String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.FONT_POLICE);
-		String name = FONT_NAME;
+  public static String getFontName() {
+    final String prop = PropertyLoader.getInstance().getProperties()
+            .getProperty(PropertyLoader.FONT_POLICE);
+    String name = FONT_NAME;
 
-		if (prop != null)
-			name = prop;
+    if (prop != null) name = prop;
 
-		return name;
-	}
+    return name;
+  }
 
-	public static int getFontSize()
-	{
-		final String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.FONT_SIZE);
-		int size = FONT_SIZE;
+  public static int getFontSize() {
+    final String prop = PropertyLoader.getInstance().getProperties()
+            .getProperty(PropertyLoader.FONT_SIZE);
+    int size = FONT_SIZE;
 
-		if (prop != null)
-			size = Integer.parseInt(prop);
+    if (prop != null) size = Integer.parseInt(prop);
 
-		return size;
-	}
+    return size;
+  }
 
-	public static void setFont(Font newFont)
-	{
-		setFontName(newFont.getFamily());
-		setFontSize(newFont.getSize());
-	}
+  public static void setFont(Font newFont) {
+    setFontName(newFont.getFamily());
+    setFontSize(newFont.getSize());
+  }
 
-	public static void setFontName(String name)
-	{
-		PropertyLoader.getInstance().getProperties().put(PropertyLoader.FONT_POLICE, name);
-		PropertyLoader.getInstance().push();
-	}
+  public static void setFontName(String name) {
+    PropertyLoader.getInstance().getProperties()
+            .put(PropertyLoader.FONT_POLICE, name);
+    PropertyLoader.getInstance().push();
+  }
 
-	public static void setFontSize(int size)
-	{
-		PropertyLoader.getInstance().getProperties().put(PropertyLoader.FONT_SIZE, size);
-		PropertyLoader.getInstance().push();
-	}
+  public static void setFontSize(int size) {
+    PropertyLoader.getInstance().getProperties()
+            .put(PropertyLoader.FONT_SIZE, size);
+    PropertyLoader.getInstance().push();
+  }
 
-	protected Rectangle bounds = new Rectangle();
+  protected Rectangle bounds = new Rectangle();
 
-	protected Font effectivFont = getFont();
+  protected Font effectivFont = getFont();
 
-	protected boolean mouseHover = false;
-	private Cursor previousCursor;
+  protected boolean mouseHover = false;
+  private Cursor previousCursor;
 
-	private String text;
-	protected Dimension textDim = new Dimension(50, 30);
+  private String text;
+  protected Dimension textDim = new Dimension(50, 30);
 
-	private JTextField textField;
+  private JTextField textField;
   public static int MARGE = 5;
 
-	public TextBox(GraphicView parent, String text)
-	{
-		super(parent);
+  public TextBox(GraphicView parent, String text) {
+    super(parent);
 
-		this.text = text;
-	}
+    this.text = text;
+  }
 
-	/**
-	 * This method is called just before the String in the TextBox is draw.
-	 * Redefine this method for personnalize the font in subclasses.
-	 */
-	protected void createEffectivFont()
-	{
-		effectivFont = getFont();
-	}
+  /**
+   * This method is called just before the String in the TextBox is draw.
+   * Redefine this method for personnalize the font in subclasses.
+   */
+  protected void createEffectivFont() {
+    effectivFont = getFont();
+  }
 
-	/**
-	 * This method change the mode of the TextBox. Calls this method for turn
-	 * the TextBox in edit mode, allow users to change the String with a
-	 * JTextField. For stop editing, call manually the method stopEditing() or
-	 * the user can accept or reject edition of the String by pressing enter or
-	 * esc key.
-	 */
-	@SuppressWarnings("serial")
-	public void editing()
-	{
-		stopEditing();
-		setVisible(false);
-		
-		final Rectangle bounds = getBounds();
+  /**
+   * This method change the mode of the TextBox. Calls this method for turn the
+   * TextBox in edit mode, allow users to change the String with a JTextField.
+   * For stop editing, call manually the method stopEditing() or the user can
+   * accept or reject edition of the String by pressing enter or esc key.
+   */
+  @SuppressWarnings("serial")
+  public void editing() {
+    stopEditing();
+    setVisible(false);
 
-		textField = new JTextField(getEditingText()) {
-			
-			@Override
-			public void paintComponent(Graphics g) {
-				Utility.setRenderQuality(g);
-				// Bug with TextField
-				((Graphics2D)g).setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
-				super.paintComponent(g);
-			}
-		};
+    final Rectangle bounds = getBounds();
 
-		textField.setBackground(new Color(255, 255, 255));
-		textField.setFont(effectivFont.deriveFont((float)parent.getScale() * (float)getFont().getSize()));
-		textField.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-		double scale = parent.getScale();
-		textField.setBounds(new Rectangle((int)(bounds.x*scale), (int)(bounds.y*scale), (int)(bounds.width*scale), (int)(bounds.height*scale)));
-		textField.selectAll();
+    textField = new JTextField(getEditingText()) {
 
-		parent.getScene().add(textField);
+      @Override
+      public void paintComponent(Graphics g) {
+        Utility.setRenderQuality(g);
+        // Bug with TextField
+        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
+                RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
+        super.paintComponent(g);
+      }
+    };
 
-		textField.requestFocusInWindow();
+    textField.setBackground(new Color(255, 255, 255));
+    textField.setFont(effectivFont.deriveFont((float) parent.getScale()
+            * (float) getFont().getSize()));
+    textField.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+    double scale = parent.getScale();
+    textField.setBounds(new Rectangle((int) (bounds.x * scale),
+            (int) (bounds.y * scale), (int) (bounds.width * scale),
+            (int) (bounds.height * scale)));
+    textField.selectAll();
 
-		textField.addFocusListener(new FocusAdapter() {
-		  
-			@Override
-			public void focusLost(FocusEvent arg0) {
-			  if (isEditing()) {
-	        setText(textField.getText());
-	        stopEditing(); 
-			  }
-			}
-		});
+    parent.getScene().add(textField);
 
-		textField.addKeyListener(new KeyAdapter() {
+    textField.requestFocusInWindow();
 
-			@Override
-			public void keyReleased(KeyEvent e)
-			{
-				switch (e.getKeyCode())
-				{
-					case KeyEvent.VK_ESCAPE:
-						stopEditing();
-						break;
+    textField.addFocusListener(new FocusAdapter() {
 
-					case KeyEvent.VK_ENTER:
-            setText(textField.getText()); 
-						stopEditing();
-						break;
-				}
-			}
-		});
-	}
-	
-	public String getEditingText() {
-	  return getText();
-	}
+      @Override
+      public void focusLost(FocusEvent arg0) {
+        if (isEditing()) {
+          setText(textField.getText());
+          stopEditing();
+        }
+      }
+    });
 
-	@Override
-	public Rectangle getBounds()
-	{
-		return new Rectangle(bounds.x, bounds.y, textDim.width, textDim.height);
-	}
+    textField.addKeyListener(new KeyAdapter() {
 
-	/**
-	 * Get effective font. Effective font is a save of the font changed by
-	 * createdEffectivFont() method.
-	 * 
-	 * @return the effectiv font
-	 */
-	public Font getEffectivFont()
-	{
-		return effectivFont;
-	}
+      @Override
+      public void keyReleased(KeyEvent e) {
+        switch (e.getKeyCode()) {
+          case KeyEvent.VK_ESCAPE:
+            stopEditing();
+            break;
 
-	/**
-	 * Get the String displayed by the TextBox.
-	 * 
-	 * @return the string displayed by the TextBox.
-	 */
-	public String getText()
-	{
-		return text;
-	}
+          case KeyEvent.VK_ENTER:
+            setText(textField.getText());
+            stopEditing();
+            break;
+        }
+      }
+    });
+  }
 
-	/**
-	 * Get the dimension of the String displayed by the TextBox. The dimension
-	 * of the String is update by each repaint. Repaint the TextBox to be sure
-	 * the dimension is the last used.
-	 * 
-	 * @return the dimension of the String
-	 */
-	public Dimension getTextDim()
-	{
-		return (Dimension) textDim.clone();
-	}
+  public String getEditingText() {
+    return getText();
+  }
 
-	@Override
-	public void gMouseEntered(MouseEvent e) {
-		previousCursor = parent.getScene().getCursor();
-		parent.getScene().setCursor(new Cursor(Cursor.TEXT_CURSOR));
+  @Override
+  public Rectangle getBounds() {
+    return new Rectangle(bounds.x, bounds.y, textDim.width, textDim.height);
+  }
 
-		setMouseHover(true);
-	}
+  /**
+   * Get effective font. Effective font is a save of the font changed by
+   * createdEffectivFont() method.
+   * 
+   * @return the effectiv font
+   */
+  public Font getEffectivFont() {
+    return effectivFont;
+  }
 
-	@Override
-	public void gMouseExited(MouseEvent e) {
-		parent.getScene().setCursor(previousCursor);
-		setMouseHover(false);
-	}
+  /**
+   * Get the String displayed by the TextBox.
+   * 
+   * @return the string displayed by the TextBox.
+   */
+  public String getText() {
+    return text;
+  }
 
-	/**
-	 * AttributeString allow the graphic context to parameter the style of the
-	 * text like underline or size. Redefine this method for personnalize the
-	 * style of the String.
-	 * 
-	 * @param ats
-	 *            Add AttributeString to this parameter.
-	 */
-	public void initAttributeString(AttributedString ats)
-	{
+  /**
+   * Get the dimension of the String displayed by the TextBox. The dimension of
+   * the String is update by each repaint. Repaint the TextBox to be sure the
+   * dimension is the last used.
+   * 
+   * @return the dimension of the String
+   */
+  public Dimension getTextDim() {
+    return (Dimension) textDim.clone();
+  }
 
-	}
+  @Override
+  public void gMouseEntered(MouseEvent e) {
+    previousCursor = parent.getScene().getCursor();
+    parent.getScene().setCursor(new Cursor(Cursor.TEXT_CURSOR));
 
-	@Override
-	public boolean isAtPosition(Point mouse)
-	{
-		return getBounds().contains(mouse);
-	}
+    setMouseHover(true);
+  }
 
-	@Override
-	public void paintComponent(Graphics2D g2)
-	{
-		if (!isVisible())
-			return;
+  @Override
+  public void gMouseExited(MouseEvent e) {
+    parent.getScene().setCursor(previousCursor);
+    setMouseHover(false);
+  }
 
-		final String name = getText();
+  /**
+   * AttributeString allow the graphic context to parameter the style of the
+   * text like underline or size. Redefine this method for personnalize the
+   * style of the String.
+   * 
+   * @param ats
+   *          Add AttributeString to this parameter.
+   */
+  public void initAttributeString(AttributedString ats) {
 
-		createEffectivFont();
-		effectivFont = effectivFont.deriveFont(effectivFont.getSize() * parent.getZoom());
-		final FontMetrics metrics = g2.getFontMetrics(effectivFont);
-		textDim.width = metrics.stringWidth(name);
-		textDim.height = metrics.getHeight();
+  }
 
-		g2.setStroke(new BasicStroke());
-		// Draw mouseHover style (same as selected style)
-		if (!pictureMode && mustPaintSelectedStyle())
-		  paintSelectedStyle(g2);
-		
-		g2.setColor(Color.DARK_GRAY);
-		g2.setFont(effectivFont);
+  @Override
+  public boolean isAtPosition(Point mouse) {
+    return getBounds().contains(mouse);
+  }
 
-		final AttributedString ats = new AttributedString(truncate(g2, getText(), bounds.width));
+  @Override
+  public void paintComponent(Graphics2D g2) {
+    if (!isVisible()) return;
 
-		// Draw String
-		if (ats.getIterator().getEndIndex() != 0) {
-			ats.addAttribute(TextAttribute.FONT, effectivFont);
-			initAttributeString(ats);
+    final String name = getText();
 
-			g2.drawString(ats.getIterator(), bounds.x, bounds.y + bounds.height - metrics.getDescent());
-		}
-	}
-	
-	protected void paintSelectedStyle(Graphics2D g2) {
+    createEffectivFont();
+    effectivFont = effectivFont.deriveFont(effectivFont.getSize()
+            * parent.getZoom());
+    final FontMetrics metrics = g2.getFontMetrics(effectivFont);
+    textDim.width = metrics.stringWidth(name);
+    textDim.height = metrics.getHeight();
+
+    g2.setStroke(new BasicStroke());
+    // Draw mouseHover style (same as selected style)
+    if (!pictureMode && mustPaintSelectedStyle()) paintSelectedStyle(g2);
+
+    g2.setColor(Color.DARK_GRAY);
+    g2.setFont(effectivFont);
+
+    final AttributedString ats = new AttributedString(truncate(g2, getText(),
+            bounds.width));
+
+    // Draw String
+    if (ats.getIterator().getEndIndex() != 0) {
+      ats.addAttribute(TextAttribute.FONT, effectivFont);
+      initAttributeString(ats);
+
+      g2.drawString(ats.getIterator(), bounds.x, bounds.y + bounds.height
+              - metrics.getDescent());
+    }
+  }
+
+  protected void paintSelectedStyle(Graphics2D g2) {
     Rectangle bounds = getBounds();
-    
+
     g2.setColor(new Color(150, 150, 150, 150));
     g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
     g2.setColor(new Color(150, 150, 150));
     g2.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
-	}
-	
-	protected boolean mustPaintSelectedStyle() {
-	  return mouseHover || isSelected();
-	}
+  }
 
-	@Override
-	public void repaint() {
-		final Rectangle repaintBounds = getBounds();
-		parent.getScene().repaint(repaintBounds);
-	}
+  protected boolean mustPaintSelectedStyle() {
+    return mouseHover || isSelected();
+  }
 
-	@Override
-	public void restore() {
-		parent.addOthersComponents(this);
-	}
+  @Override
+  public void repaint() {
+    final Rectangle repaintBounds = getBounds();
+    parent.getScene().repaint(repaintBounds);
+  }
 
-	@Override
-	public void setBounds(Rectangle bounds) {
-		if (bounds == null)
-			throw new IllegalArgumentException("bounds is null");
-		this.bounds = new Rectangle(bounds.x, bounds.y, textDim.width, textDim.height);
-	}
+  @Override
+  public void restore() {
+    parent.addOthersComponents(this);
+  }
 
-	/**
-	 * Set if the mouse is hover the component or not.
-	 * 
-	 * @param hover
-	 *            true for set the mouse hover; false otherwise
-	 */
-	public void setMouseHover(boolean hover) {
-		mouseHover = hover;
-		repaint();
-	}
+  @Override
+  public void setBounds(Rectangle bounds) {
+    if (bounds == null) throw new IllegalArgumentException("bounds is null");
+    this.bounds = new Rectangle(bounds.x, bounds.y, textDim.width,
+            textDim.height);
+  }
 
-	/**
-	 * Set the text containing int the TextBox.
-	 * 
-	 * @param text
-	 *            the text containing int the TextBox
-	 */
-	public void setText(String text)
-	{
-		this.text = text;
+  /**
+   * Set if the mouse is hover the component or not.
+   * 
+   * @param hover
+   *          true for set the mouse hover; false otherwise
+   */
+  public void setMouseHover(boolean hover) {
+    mouseHover = hover;
+    repaint();
+  }
 
-		final Rectangle bounds = getBounds();
-		final Rectangle repaintBounds = new Rectangle(0, bounds.y, parent.getScene().getWidth(), bounds.height);
-		parent.getScene().repaint(repaintBounds);
-	}
-	
-	public boolean isEditing() {
-	  return textField != null;
-	}
+  /**
+   * Set the text containing int the TextBox.
+   * 
+   * @param text
+   *          the text containing int the TextBox
+   */
+  public void setText(String text) {
+    this.text = text;
 
-	/**
-	 * Stop the edition of the String.
-	 */
-	public void stopEditing()
-	{
-		if (textField == null)
-			return;
+    final Rectangle bounds = getBounds();
+    final Rectangle repaintBounds = new Rectangle(0, bounds.y, parent
+            .getScene().getWidth(), bounds.height);
+    parent.getScene().repaint(repaintBounds);
+  }
 
-		parent.getScene().remove(textField);
-		final Rectangle bounds = textField.getBounds();
+  public boolean isEditing() {
+    return textField != null;
+  }
+
+  /**
+   * Stop the edition of the String.
+   */
+  public void stopEditing() {
+    if (textField == null) return;
+
+    parent.getScene().remove(textField);
+    final Rectangle bounds = textField.getBounds();
     textField = null;
-		final Rectangle repaintBounds = new Rectangle(0, bounds.y, parent.getBounds().width, bounds.height);
-		parent.getScene().repaint(repaintBounds);
-		setVisible(true);
-	}
+    final Rectangle repaintBounds = new Rectangle(0, bounds.y,
+            parent.getBounds().width, bounds.height);
+    parent.getScene().repaint(repaintBounds);
+    setVisible(true);
+  }
 
-	/**
-	 * Truncate the String. By default no truncation are operated. Redefine this
-	 * method for initialize a truncation. This method is called just before the
-	 * drawing of the String.
-	 * 
-	 * @param g2
-	 * @param text
-	 * @param width
-	 * @return
-	 */
-	protected String truncate(Graphics2D g2, String text, int width)
-	{
-		return text;
-	}
+  /**
+   * Truncate the String. By default no truncation are operated. Redefine this
+   * method for initialize a truncation. This method is called just before the
+   * drawing of the String.
+   * 
+   * @param g2
+   * @param text
+   * @param width
+   * @return
+   */
+  protected String truncate(Graphics2D g2, String text, int width) {
+    return text;
+  }
 }

@@ -1,4 +1,4 @@
-package swing.hierarchicalView;
+﻿package swing.hierarchicalView;
 
 import java.awt.Component;
 
@@ -9,28 +9,31 @@ import swing.Slyum;
 import utility.PersonalizedIcon;
 
 @SuppressWarnings("serial")
-public class TreeRenderer extends DefaultTreeCellRenderer
-{
-	public TreeRenderer()
-	{
-		setLeafIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "boxOpen.png"));
-		setClosedIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "boxClose.png"));
-		setOpenIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "boxOpen.png"));
-	}
+public class TreeRenderer extends DefaultTreeCellRenderer {
+  public TreeRenderer() {
+    setLeafIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
+            + "boxOpen.png"));
+    setClosedIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
+            + "boxClose.png"));
+    setOpenIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
+            + "boxOpen.png"));
+  }
 
-	@Override
-	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus)
-	{
+  @Override
+  public Component getTreeCellRendererComponent(JTree tree, Object value,
+          boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 
-		super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+    super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row,
+            hasFocus);
 
-		if (row == 0) // root
-			setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "diagramIcon.png"));
+    if (row == 0) // root
+      setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
+              + "diagramIcon.png"));
 
-		else if (value instanceof ICustomizedIconNode)
+    else if (value instanceof ICustomizedIconNode)
 
-			setIcon(((ICustomizedIconNode) value).getCustomizedIcon());
+    setIcon(((ICustomizedIconNode) value).getCustomizedIcon());
 
-		return this;
-	}
+    return this;
+  }
 }
