@@ -1,4 +1,4 @@
-﻿package change;
+package change;
 
 import graphic.textbox.TextBoxLabel;
 

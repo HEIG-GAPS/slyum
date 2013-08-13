@@ -1,4 +1,4 @@
-﻿package classDiagram.components;
+package classDiagram.components;
 
 /**
  * Represent a visibility in UML structure.

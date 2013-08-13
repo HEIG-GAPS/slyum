@@ -1,4 +1,4 @@
-﻿package graphic.relations;
+package graphic.relations;
 
 import graphic.ColoredComponent;
 import graphic.GraphicView;

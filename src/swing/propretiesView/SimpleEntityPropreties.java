@@ -1,4 +1,4 @@
-﻿package swing.propretiesView;
+package swing.propretiesView;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

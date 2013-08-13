@@ -1,4 +1,4 @@
-﻿package graphic;
+package graphic;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

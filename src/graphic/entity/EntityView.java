@@ -1,4 +1,4 @@
-﻿package graphic.entity;
+package graphic.entity;
 
 import graphic.ColoredComponent;
 import graphic.GraphicComponent;

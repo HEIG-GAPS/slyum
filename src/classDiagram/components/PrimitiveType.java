@@ -1,4 +1,4 @@
-﻿package classDiagram.components;
+package classDiagram.components;
 
 /**
  * This class, extent of Type contains a list of final attributes representing

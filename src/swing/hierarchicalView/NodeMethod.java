@@ -1,4 +1,4 @@
-﻿package swing.hierarchicalView;
+package swing.hierarchicalView;
 
 import java.util.Observable;
 import java.util.Observer;

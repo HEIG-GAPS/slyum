@@ -1,4 +1,4 @@
-﻿package graphic.textbox;
+package graphic.textbox;
 
 import java.util.Observer;
 

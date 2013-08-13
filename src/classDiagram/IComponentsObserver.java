@@ -1,4 +1,4 @@
-﻿package classDiagram;
+package classDiagram;
 
 import classDiagram.components.AssociationClass;
 import classDiagram.components.ClassEntity;

@@ -1,4 +1,4 @@
-﻿package classDiagram.verifyName;
+package classDiagram.verifyName;
 
 public class SyntaxeNameException extends Exception {
 

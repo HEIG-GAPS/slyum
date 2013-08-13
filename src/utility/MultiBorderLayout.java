@@ -1,4 +1,4 @@
-﻿package utility;
+package utility;
 
 import java.awt.BorderLayout;
 import java.awt.Component;

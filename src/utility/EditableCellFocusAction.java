@@ -1,4 +1,4 @@
-﻿package utility;
+package utility;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

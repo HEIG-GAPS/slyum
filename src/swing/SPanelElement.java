@@ -1,4 +1,4 @@
-﻿package swing;
+package swing;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;

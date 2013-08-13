@@ -1,4 +1,4 @@
-﻿package classDiagram.relationships;
+package classDiagram.relationships;
 
 import graphic.textbox.ILabelTitle;
 

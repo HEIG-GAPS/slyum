@@ -1,4 +1,4 @@
-﻿package swing;
+package swing;
 
 public interface IListenerComponentSelectionChanged {
   public void componentSelectionChanged();
