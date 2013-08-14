@@ -21,3 +21,5 @@ dist/slyum.jar
 .settings/org.eclipse.jdt.ui.prefs
 dist/Slyum.app
 .settings/org.eclipse.core.resources.prefs
+dist
+nbproject
