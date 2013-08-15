@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<jnlp codebase="https://slyum.googlecode.com/hg" 
-      href="latest+release/Slyum.jnlp" spec="1.0+">
+<jnlp codebase="https://slyum.googlecode.com/hg" href="latest+release/Slyum.jnlp" spec="1.0+">
     <information>
         <title>Slyum</title>
         <vendor>GAPS - HEIG-VD</vendor>
@@ -13,20 +12,19 @@
         <icon href="Slyum.ico" kind="shortcut"/>
         <icon href="splash.png" kind="splash"/>
         <offline-allowed/>
-        <association mime-type="application-x/slyum-file" extensions="sly"/>
-        <shortcut online="false" install="true">
+        <association extensions="sly" mime-type="application-x/slyum-file"/>
+        <shortcut install="true" online="false">
           <desktop/>
           <menu submenu="GAPS"/>
         </shortcut>
     </information>
     <information os="linux">
         <icon href="resources+graphiques/splash.gif" kind="splash"/>
-        <shortcut online="false" install="true"/>
+        <shortcut install="true" online="false"/>
     </information>
     <security>
       <all-permissions/>
     </security>
-    <update check="background"/>
     <resources>
         <property name="jnlp.file.extension" value="sly"/>
         <j2se version="1.7+"/>

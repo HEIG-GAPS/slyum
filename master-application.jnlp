@@ -26,7 +26,6 @@
     <security>
       <all-permissions/>
     </security>
-    <update check="background"/>
     <resources>
         <property name="jnlp.file.extension" value="sly"/>
         <j2se version="1.7+"/>
