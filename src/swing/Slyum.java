@@ -1,9 +1,8 @@
 package swing;
 
+import com.apple.java.OSXAdapter;
 import graphic.GraphicView;
-
 import java.awt.Color;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -25,7 +24,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -36,13 +34,10 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-
 import swing.SPanelDiagramComponent.Mode;
 import utility.OSValidator;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
-
-import com.apple.java.OSXAdapter;
 
 /**
  * Main class! Create a new Instance of Slyum and display it. Create menu.
@@ -1182,32 +1177,12 @@ public class Slyum extends JFrame implements ActionListener {
     public Path getHistoryPath() {
       return historyPath;
     }
-
   }
 
   /**
    * Open the help file.
    */
   private void openHelp() {
-    final String ERROR_MESSAGE = "Cannot open help file!\nTry manually in help folder.";
-    try {
-      final File pdfFile = new File("Documentation/User manual.pdf");
-
-      if (pdfFile.exists()) {
-
-        if (Desktop.isDesktopSupported())
-
-          Desktop.getDesktop().open(pdfFile);
-
-        else
-          SMessageDialog.showErrorMessage(ERROR_MESSAGE);
-
-      } else
-        SMessageDialog
-                .showErrorMessage("Help file not found!\nTry to re-download Slyum.");
-
-    } catch (final Exception ex) {
-      SMessageDialog.showErrorMessage(ERROR_MESSAGE);
-    }
+    openURL("https://slyum.googlecode.com/hg/Documentation/User+manual.pdf");
   }
 }
