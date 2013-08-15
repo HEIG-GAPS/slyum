@@ -19,6 +19,9 @@
           <menu submenu="GAPS"/>
         </shortcut>
     </information>
+    <information os="linux">
+        <icon href="resources+graphiques/splash.gif" kind="splash"/>
+    </information>
     <security>
       <all-permissions/>
     </security>
