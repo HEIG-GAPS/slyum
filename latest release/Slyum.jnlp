@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jnlp codebase="https://slyum.googlecode.com/hg" 
-      href="latest+release/Slyum.jnlp" spec="1.0+" version="3.1">
+      href="latest+release/Slyum.jnlp" spec="1.0+">
     <information>
         <title>Slyum</title>
         <vendor>GAPS - HEIG-VD</vendor>
