@@ -9,7 +9,6 @@
 <!-- in the project's Project Properties dialog box.-->
 <project name="Slyum" default="default" basedir=".">
     <description>Builds, tests, and runs the project Slyum.</description>
-    <import file="nbproject/build-impl.xml"/>
     <!--
 
     There exist several targets which are by default empty and which can be 
@@ -83,7 +82,7 @@
             identifier="ch.slyum"
             mainclassname="swing.Slyum"
             icon="tools/icns/slyum.icns"
-            shortversion="3.1"
+            shortversion="3.2.2"
             copyright="GAPS - HEIG-VD">
             <classpath file="dist/Slyum.jar" />
         </bundleapp>
