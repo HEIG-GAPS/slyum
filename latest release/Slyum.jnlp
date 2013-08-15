@@ -11,7 +11,7 @@
         <description kind="short">Slyum</description>
         <icon href="Slyum.ico" kind="default"/>
         <icon href="Slyum.ico" kind="shortcut"/>
-        <icon href="splash.gif" kind="splash"/>
+        <icon href="splash.png" kind="splash"/>
         <offline-allowed/>
         <association mime-type="application-x/slyum-file" extensions="sly"/>
         <shortcut online="false" install="true">
