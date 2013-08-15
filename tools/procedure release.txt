@@ -13,16 +13,33 @@ l'utilisateur une version de Slyum multi-plateforme ET Mac OS X (malgrès que la
 version multi-plateforme fonctionne également sous Mac OS X).
 
 Les fichiers générés pour la version courante doivent être placés dans le 
-dossier "current release". Les fichiers présents actuellement dans ce dossier
+dossier "latest release". Les fichiers présents actuellement dans ce dossier
 doivent être déplacés dans le dossier "previous release", dans un dossier
-portant le nom de la-dite version.
+portant le nom de la-dite version (sauf "Slyum.jnlp").
 
 --------------------------------------------------------------------------------
 --------------------            Multi-plateforme            --------------------
 --------------------------------------------------------------------------------
 
+1) Exécutable Java (.jar)
+   Placez dans le dossier "latest release/" un fichier ".jar" de la dernière
+   version compilée de Slyum.
 
+   !!! IMPORTANT !!! : Le fichier ".jar" doit être signé! L'outils keytool et 
+                       jarsigner permettent cette opération.
+
+2) Java Web Start (.jnlp)
+   Le fichier ".jnlp" disponible dans le dossier "latest release/" ne devrait
+   pas être modifié d'une version à l'autre. Pour plus d'information sur son 
+   contenu (pour d'eventuelles modifications), référez-vous au lien suivant:
+
+   http://docs.oracle.com/javase/7/docs/technotes/guides/javaws/developersguide/syntax.html
 
 --------------------------------------------------------------------------------
 --------------------             Pour Mac OS X              --------------------
 --------------------------------------------------------------------------------
+
+Sur Mac OS X, Slyum est distribué via le bundle "Slyum.app". 
+Pour créer le bundle référez-vous au fichier "tools/readme.macosx.txt".
+Le bundle doit ensuite être placé dans le dossier "latest release/" sous le 
+nom "Slyum.app".
