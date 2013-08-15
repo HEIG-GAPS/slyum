@@ -21,6 +21,7 @@
     </information>
     <information os="linux">
         <icon href="resources+graphiques/splash.gif" kind="splash"/>
+        <shortcut online="false" install="true"/>
     </information>
     <security>
       <all-permissions/>
