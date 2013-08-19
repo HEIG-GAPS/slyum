@@ -39,6 +39,7 @@ import swing.EditCommentaryDialog;
 import swing.PropertyLoader;
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Multiplicity;
+import java.util.List;
 
 /**
  * Utilities class containing tools methods.
@@ -61,7 +62,7 @@ public class Utility {
     return ecd.isAccepted() ? ecd.getText() : "-1";
   }
 
-  public static <T> int count(Class<?> type, LinkedList<T> list) {
+  public static <T> int count(Class<?> type, List<T> list) {
     int count = 0;
 
     for (T component : list)
