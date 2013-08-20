@@ -1,45 +1,34 @@
 
 --------------------------------------------------------------------------------
---------------------------------------------------------------------------------
 --------------------           Release de Slyum             --------------------
 --------------------------------------------------------------------------------
---------------------------------------------------------------------------------
 
-Ce fichier explique les différents fichiers et applications à utiliser ou 
-mettre à jour lors d'une release de Slyum.
+This document explains the process to follow for releasing Slyum.
 
-Il est préférable, lors d'une nouvelle release, de mettre à disposition pour
-l'utilisateur une version de Slyum multi-plateforme ET Mac OS X (malgrès que la
-version multi-plateforme fonctionne également sous Mac OS X).
+For each release, there is a multiplatform version (.jpln and .jar) and a 
+Mac OS X version (App Bundle). All files must be stored in the 
+"latest release/" directory.
 
-Les fichiers générés pour la version courante doivent être placés dans le 
-dossier "latest release". Les fichiers présents actuellement dans ce dossier
-doivent être déplacés dans le dossier "previous release", dans un dossier
-portant le nom de la-dite version (sauf "Slyum.jnlp").
+Files that are currently in the "latest release/" directory must be moved
+in the "previous release/<current version>/" directory. The current version
+of Slyum can be found in the About box (Slyum -> Help -> About Slyum...).
+Don't move the "Slyum.jnlp" file (even if it has changed)!
 
---------------------------------------------------------------------------------
---------------------            Multi-plateforme            --------------------
---------------------------------------------------------------------------------
+1) Executable Java (.jar)
+   Put in the "latest release/" directory the compiled jar version of the 
+   latest release of Slyum.
 
-1) Exécutable Java (.jar)
-   Placez dans le dossier "latest release/" un fichier ".jar" de la dernière
-   version compilée de Slyum.
-
-   !!! IMPORTANT !!! : Le fichier ".jar" doit être signé! L'outils keytool et 
-                       jarsigner permettent cette opération.
+   !!! IMPORTANT !!! : You MUST sign the jar file! You can use keytool and 
+                       jarsigner (given by Java) for sign your jar.
 
 2) Java Web Start (.jnlp)
-   Le fichier ".jnlp" disponible dans le dossier "latest release/" ne devrait
-   pas être modifié d'une version à l'autre. Pour plus d'information sur son 
-   contenu (pour d'eventuelles modifications), référez-vous au lien suivant:
+   The .jnlp located in the "latest release/" directory is the same for each
+   release. Except if you want to modify it's content, there is no need to take 
+   care of. However, here is some doc if you want to change something:
 
    http://docs.oracle.com/javase/7/docs/technotes/guides/javaws/developersguide/syntax.html
 
---------------------------------------------------------------------------------
---------------------             Pour Mac OS X              --------------------
---------------------------------------------------------------------------------
-
-Sur Mac OS X, Slyum est distribué via le bundle "Slyum.app". 
-Pour créer le bundle référez-vous au fichier "tools/readme.macosx.txt".
-Le bundle doit ensuite être placé dans le dossier "latest release/" sous le 
-nom "Slyum.app".
+3) On Mac OS X, Slyum is distributed with "Slyum.app".
+   For the bundle creation, please see the "tools/readme.macosx.txt" file.
+   Like others released files, the bundle must be placed in the "latest release/"
+   directory. With the name "Slyum.app".

@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="iso-8859-15" standalone="no"?>
 <classDiagram>
   <diagramElements>
+    <entity entityType="ENUM" id="32277" name="Enum">
+      <EnumValue>VALUE</EnumValue>
+      <EnumValue>VALUE</EnumValue>
+    </entity>
+    <entity entityType="ENUM" id="32276" name="Enum">
+      <EnumValue>VALUE</EnumValue>
+      <EnumValue>VALUE</EnumValue>
+    </entity>
     <dependency id="7989" label="&lt; test">
       <source>7548</source>
       <target>7759</target>
@@ -21,7 +29,7 @@
       <child>7759</child>
       <parent>7760</parent>
     </inheritance>
-    <association aggregation="NONE" direction="false" id="7976" name="">
+    <association aggregation="NONE" direction="SECOND_TO_FIRST" id="7976" name="">
       <role componentId="7694" name="" visibility="PRIVATE">
         <multiplicity>
           <min>1</min>
@@ -40,7 +48,7 @@
       <method isAbstract="false" isStatic="false" name="method" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
       <associationClassID>7749</associationClassID>
     </entity>
-    <association aggregation="NONE" direction="true" id="7749" name="coucou &gt;">
+    <association aggregation="NONE" direction="FIRST_TO_SECOND" id="7749" name="coucou &gt;">
       <role componentId="7694" name="muck2" visibility="PUBLIC">
         <multiplicity>
           <min>1</min>
@@ -54,7 +62,7 @@
         </multiplicity>
       </role>
     </association>
-    <association aggregation="MULTI" direction="false" id="7822" name="test">
+    <association aggregation="MULTI" direction="BIDIRECTIONAL" id="7822" name="test">
       <role componentId="7694" name="yo" visibility="PRIVATE">
         <multiplicity>
           <min>1</min>
@@ -74,7 +82,7 @@
         </multiplicity>
       </role>
     </association>
-    <association aggregation="AGGREGATE" direction="false" id="7992" name="">
+    <association aggregation="AGGREGATE" direction="BIDIRECTIONAL" id="7992" name="">
       <role componentId="7759" name="" visibility="PRIVATE">
         <multiplicity>
           <min>1</min>
@@ -88,7 +96,7 @@
         </multiplicity>
       </role>
     </association>
-    <association aggregation="COMPOSE" direction="false" id="7997" name="">
+    <association aggregation="COMPOSE" direction="BIDIRECTIONAL" id="7997" name="">
       <role componentId="7759" name="" visibility="PRIVATE">
         <multiplicity>
           <min>1</min>
@@ -117,7 +125,17 @@
     <entity entityType="CLASS" id="7760" isAbstract="false" name="Class" visibility="PUBLIC"/>
     <entity entityType="INTERFACE" id="7972" isAbstract="true" name="Interface" visibility="PUBLIC"/>
     <entity entityType="CLASS" id="7974" isAbstract="false" name="Class" visibility="PUBLIC"/>
-    <entity entityType="CLASS" id="7991" isAbstract="false" name="Class" visibility="PUBLIC"/>
+    <entity entityType="CLASS" id="7991" isAbstract="false" name="Class" visibility="PUBLIC">
+      <method isAbstract="false" isStatic="false" name="method" returnType="void" view="TYPE_AND_NAME" visibility="PUBLIC"/>
+      <method isAbstract="false" isStatic="false" name="method" returnType="void" view="TYPE" visibility="PUBLIC"/>
+      <method isAbstract="false" isStatic="false" name="method" returnType="void" view="NAME" visibility="PUBLIC"/>
+      <method isAbstract="false" isStatic="false" name="method" returnType="void" view="NOTHING" visibility="PUBLIC"/>
+    </entity>
+    <entity entityType="ENUM" id="31882" name="SEMAINE">
+      <EnumValue>LUNDI</EnumValue>
+      <EnumValue>MARDI</EnumValue>
+      <EnumValue>MERCREDI</EnumValue>
+    </entity>
   </diagramElements>
   <umlView grid="10" name="view no name">
     <relationView color="-12566464" relationId="7997">
@@ -246,6 +264,18 @@
         <h>20</h>
       </multipliciteAssociation>
     </relationView>
+    <relationView color="-12566464" relationId="7748">
+      <line>
+        <point>
+          <x>201</x>
+          <y>321</y>
+        </point>
+        <point>
+          <x>291</x>
+          <y>300</y>
+        </point>
+      </line>
+    </relationView>
     <relationView color="-12566464" relationId="7976">
       <line>
         <point>
@@ -328,7 +358,7 @@
         </point>
         <point>
           <x>121</x>
-          <y>597</y>
+          <y>587</y>
         </point>
       </line>
     </relationView>
@@ -356,7 +386,7 @@
         </point>
         <point>
           <x>921</x>
-          <y>142</y>
+          <y>122</y>
         </point>
       </line>
     </relationView>
@@ -494,31 +524,39 @@
         </multipliciteAssociation>
       </multiLineView>
     </multiView>
+    <componentView color="-2079" componentID="31882" enumValuesVisible="DEFAULT">
+      <geometry>
+        <x>430</x>
+        <y>40</y>
+        <w>150</w>
+        <h>109</h>
+      </geometry>
+    </componentView>
     <componentView color="-2079" componentID="7991" displayAttributes="true" displayDefault="true" displayMethods="true">
       <geometry>
         <x>1100</x>
         <y>450</y>
         <w>150</w>
-        <h>56</h>
+        <h>120</h>
       </geometry>
     </componentView>
-    <componentView color="-2079" componentID="7974" displayAttributes="true" displayDefault="true" displayMethods="true">
+    <componentView color="-2079" componentID="7974" displayAttributes="true" displayDefault="false" displayMethods="false">
       <geometry>
         <x>50</x>
         <y>540</y>
         <w>150</w>
-        <h>56</h>
+        <h>46</h>
       </geometry>
     </componentView>
-    <componentView color="-2079" componentID="7972" displayAttributes="true" displayDefault="true" displayMethods="true">
+    <componentView color="-2079" componentID="7972" displayAttributes="false" displayDefault="false" displayMethods="false">
       <geometry>
         <x>850</x>
         <y>70</y>
         <w>150</w>
-        <h>71</h>
+        <h>51</h>
       </geometry>
     </componentView>
-    <componentView color="-2079" componentID="7760" displayAttributes="true" displayDefault="true" displayMethods="true">
+    <componentView color="-2079" componentID="7760" displayAttributes="true" displayDefault="false" displayMethods="true">
       <geometry>
         <x>440</x>
         <y>570</y>
@@ -558,12 +596,28 @@
         <h>88</h>
       </geometry>
     </componentView>
-    <componentView color="-2079" componentID="7748" displayAttributes="true" displayDefault="true" displayMethods="true">
+    <componentView color="-2079" componentID="7748" displayAttributes="false" displayDefault="false" displayMethods="true">
       <geometry>
         <x>50</x>
         <y>290</y>
         <w>150</w>
-        <h>88</h>
+        <h>62</h>
+      </geometry>
+    </componentView>
+    <componentView color="-2079" componentID="32276" enumValuesVisible="VISIBLE">
+      <geometry>
+        <x>980</x>
+        <y>220</y>
+        <w>150</w>
+        <h>93</h>
+      </geometry>
+    </componentView>
+    <componentView color="-2079" componentID="32277" enumValuesVisible="HIDE">
+      <geometry>
+        <x>800</x>
+        <y>300</y>
+        <w>150</w>
+        <h>51</h>
       </geometry>
     </componentView>
     <note color="-6750055" content="Double-click to edit note.">

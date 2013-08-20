@@ -24,6 +24,33 @@
 			<xs:enumeration value="CLASS" />
 			<xs:enumeration value="INTERFACE" />
 			<xs:enumeration value="ASSOCIATION_CLASS" />
+			<xs:enumeration value="ENUM" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="ViewOperation">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="DEFAULT" />
+			<xs:enumeration value="TYPE_AND_NAME" />
+			<xs:enumeration value="TYPE" />
+			<xs:enumeration value="NAME" />
+			<xs:enumeration value="NOTHING" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="Direction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="FIRST_TO_SECOND" />
+			<xs:enumeration value="BIDIRECTIONAL" />
+			<xs:enumeration value="SECOND_TO_FIRST" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="EnumView">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="DEFAULT" />
+			<xs:enumeration value="VISIBLE" />
+			<xs:enumeration value="HIDE" />
 		</xs:restriction>
 	</xs:simpleType>
 	
@@ -46,6 +73,8 @@
 		<xs:attribute name="returnType" type="xs:string" use="required" />
 		<xs:attribute name="visibility" type="Visibility"
 			default="public" />
+		<xs:attribute name="view" type="ViewOperation"
+			default="DEFAULT" />
 		<xs:attribute name="isStatic" type="xs:boolean" default="false" />
 		<xs:attribute name="isAbstract" type="xs:boolean"
 			default="false" />
@@ -57,6 +86,8 @@
 				maxOccurs="unbounded" />
 			<xs:element name="attribute" type="Variable" minOccurs="0"
 				maxOccurs="unbounded" />
+			<xs:element name="EnumValue" type="xs:string" minOccurs="0"
+				maxOccurs="unbounded"/>
 			<xs:element name="associationClassID" type="xs:int" minOccurs="0"
 				maxOccurs="1" />
 		</xs:sequence>
@@ -76,7 +107,7 @@
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="required" />
 		<xs:attribute name="name" type="xs:string" />
-		<xs:attribute name="direction" type="xs:boolean" />
+		<xs:attribute name="direction" type="Direction" />
 		<xs:attribute name="aggregation" type="Aggregation"
 			default="none" />
 	</xs:complexType>
@@ -119,8 +150,7 @@
 	<xs:element name="classDiagram">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="diagramElements" minOccurs="1"
-					maxOccurs="1">
+				<xs:element name="diagramElements" minOccurs="1" maxOccurs="1">
 					<xs:complexType>
 						<xs:all>
 							<xs:element name="entity" type="Entity" minOccurs="0"
@@ -181,6 +211,10 @@
 		</xs:sequence>
 		<xs:attribute name="componentId" type="xs:int" />
 		<xs:attribute name="color" type="xs:int" />
+		<xs:attribute name="displayAttributes" type="xs:boolean" />
+		<xs:attribute name="displayDefault" type="xs:boolean" />
+		<xs:attribute name="displayMethods" type="xs:boolean" />
+		<xs:attribute name="enumValuesVisible" type="xs:EnumView" />
 	</xs:complexType>
 
 	<xs:complexType name="RelationView">
