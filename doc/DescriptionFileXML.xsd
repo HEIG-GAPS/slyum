@@ -109,7 +109,7 @@
 		<xs:attribute name="name" type="xs:string" />
 		<xs:attribute name="direction" type="Direction" />
 		<xs:attribute name="aggregation" type="Aggregation"
-			default="none" />
+			default="NONE" />
 	</xs:complexType>
 
 	<xs:complexType name="Role">
@@ -135,7 +135,7 @@
 			<xs:element name="parent" type="xs:int" />
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:ID" use="required" />
-		<xs:attribute name="innerClass" type="xs:boolean" default="false"
+		<xs:attribute name="innerClass" type="xs:boolean" default="false"/>
 	</xs:complexType>
 
 	<xs:complexType name="Dependency">
@@ -153,16 +153,15 @@
 				<xs:element name="diagramElements" minOccurs="1" maxOccurs="1">
 					<xs:complexType>
 						<xs:all>
-							<xs:element name="entity" type="Entity" minOccurs="0"
-								maxOccurs="unbounded" />
+							<xs:element name="entity" type="Entity" minOccurs="0"/>
 							<xs:element name="association" type="Association"
-								minOccurs="0" maxOccurs="unbounded" />
+								minOccurs="0"/>
 							<xs:element name="inheritance" type="Inheritance"
-								minOccurs="0" maxOccurs="unbounded" />
+								minOccurs="0"/>
 							<xs:element name="dependency" type="Dependency"
-								minOccurs="0" maxOccurs="unbounded" />
-							<xs:element name="innerClass" type="InnerClass"
-								minOccurs="0" maxOccurs="unbounded" />
+								minOccurs="0"/>
+							<xs:element name="innerClass" type="Inheritance"
+								minOccurs="0"/>
 						</xs:all>
 					</xs:complexType>
 				</xs:element>
@@ -214,7 +213,7 @@
 		<xs:attribute name="displayAttributes" type="xs:boolean" />
 		<xs:attribute name="displayDefault" type="xs:boolean" />
 		<xs:attribute name="displayMethods" type="xs:boolean" />
-		<xs:attribute name="enumValuesVisible" type="xs:EnumView" />
+		<xs:attribute name="enumValuesVisible" type="EnumView" />
 	</xs:complexType>
 
 	<xs:complexType name="RelationView">
@@ -240,13 +239,13 @@
 	<xs:complexType name="UmlView">
 		<xs:all>
 			<xs:element name="componentView" type="ComponentView"
-				minOccurs="0" maxOccurs="unbounded" />
+				minOccurs="0"/>
 			<xs:element name="relationView" type="RelationView"
-				minOccurs="0" maxOccurs="unbounded" />
+				minOccurs="0"/>
 			<xs:element name="note" type="Note"
-				minOccurs="0" maxOccurs="unbounded" />
+				minOccurs="0"/>
 			<xs:element name="multiView" type="MultiView"
-				minOccurs="0" maxOccurs="unbounded" />
+				minOccurs="0"/>
 		</xs:all>
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="grid" type="xs:int" use="required"/>
