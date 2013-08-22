@@ -1,5 +1,24 @@
 package graphic;
 
+import change.BufferBounds;
+import change.Change;
+import classDiagram.ClassDiagram;
+import classDiagram.IComponentsObserver;
+import classDiagram.IDiagramComponent;
+import classDiagram.components.AssociationClass;
+import classDiagram.components.ClassEntity;
+import classDiagram.components.Entity;
+import classDiagram.components.EnumEntity;
+import classDiagram.components.InterfaceEntity;
+import classDiagram.components.Method.ParametersViewStyle;
+import classDiagram.relationships.Aggregation;
+import classDiagram.relationships.Binary;
+import classDiagram.relationships.Composition;
+import classDiagram.relationships.Dependency;
+import classDiagram.relationships.Inheritance;
+import classDiagram.relationships.InnerClass;
+import classDiagram.relationships.Multi;
+import classDiagram.relationships.Role;
 import graphic.entity.AssociationClassView;
 import graphic.entity.ClassView;
 import graphic.entity.EntityView;
@@ -19,7 +38,7 @@ import graphic.relations.LineView;
 import graphic.relations.MultiLineView;
 import graphic.relations.MultiView;
 import graphic.textbox.TextBoxCommentary;
-
+import graphic.textbox.TextBoxDiagramName;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -42,6 +61,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
@@ -49,7 +69,6 @@ import java.awt.print.PrinterException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
 import javax.swing.JMenuItem;
@@ -57,10 +76,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
 import swing.IListenerComponentSelectionChanged;
 import swing.PanelClassDiagram;
 import swing.PropertyLoader;
@@ -71,25 +88,6 @@ import swing.SPanelDiagramComponent.Mode;
 import swing.SPanelElement;
 import swing.Slyum;
 import utility.Utility;
-import change.BufferBounds;
-import change.Change;
-import classDiagram.ClassDiagram;
-import classDiagram.IComponentsObserver;
-import classDiagram.IDiagramComponent;
-import classDiagram.components.AssociationClass;
-import classDiagram.components.ClassEntity;
-import classDiagram.components.Entity;
-import classDiagram.components.EnumEntity;
-import classDiagram.components.InterfaceEntity;
-import classDiagram.components.Method.ParametersViewStyle;
-import classDiagram.relationships.Aggregation;
-import classDiagram.relationships.Binary;
-import classDiagram.relationships.Composition;
-import classDiagram.relationships.Dependency;
-import classDiagram.relationships.Inheritance;
-import classDiagram.relationships.InnerClass;
-import classDiagram.relationships.Multi;
-import classDiagram.relationships.Role;
 
 /**
  * This class is the main container for all diagrams components view
@@ -100,7 +98,6 @@ import classDiagram.relationships.Role;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-@SuppressWarnings("serial")
 public class GraphicView extends GraphicComponent implements MouseMotionListener, MouseListener, IComponentsObserver, Printable, KeyListener, MouseWheelListener, ColoredComponent {
 
   public enum ViewEntity {
@@ -125,6 +122,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
   public final static boolean IS_GRID_OPACITY_ENABLE = false;
   public final static boolean IS_GRID_ENABLE = true;
   public final static double SCALE_STEP = 0.1;
+  public final static int DEFAULT_TITLE_BORDER_WIDTH = 1;
+  public final static boolean IS_PAINT_TITLE_BORDER = true;
 
   /**
    * Compute mouse entered and exited event. the componentMouseHover can be the
@@ -203,6 +202,16 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
     return gradient;
   }
+  
+  public static boolean isTitleBorderPainted() {
+    String prop = PropertyLoader.getInstance().getProperties()
+            .getProperty(PropertyLoader.PAINT_TITLE_BORDER);
+    boolean paint = IS_PAINT_TITLE_BORDER;
+
+    if (prop != null) paint = Boolean.parseBoolean(prop);
+
+    return paint;
+  }
 
   /**
    * Get the basic color for the graphic view. The basic color is the color
@@ -232,6 +241,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
     return color;
   }
+  
 
   public static int getGridSize() {
     final String prop = PropertyLoader.getInstance().getProperties()
@@ -341,8 +351,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
     PropertyLoader.getInstance().push();
 
     // Update the components bounds for adapting with new grid.
-    for (GraphicView gv : PanelClassDiagram.getInstance().getAllGraphicView())
-
+    for (GraphicView gv : PanelClassDiagram.getInstance().getAllGraphicViews())
       for (final GraphicComponent c : gv.getAllComponents())
         c.setBounds(c.getBounds());
   }
@@ -436,6 +445,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
   private final JPanel scene;
 
   private final JScrollPane scrollPane;
+  private TextBoxDiagramName txtBoxDiagramName;
 
   private float zoom = 1.0f;
   private boolean stopRepaint = false;
@@ -533,9 +543,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
     scene.addKeyListener(this);
     scene.addMouseMotionListener(this);
     scene.addMouseListener(this);
-
     saveComponentMouseHover = this;
-
     classDiagram.addComponentsObserver(this);
 
     setColor(getBasicColor());
@@ -612,6 +620,10 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
     popupMenu.add(menuItem);
 
     addSPanelListener();
+    txtBoxDiagramName = new TextBoxDiagramName(this);
+    txtBoxDiagramName.setVisible(Slyum.isViewTitleOnExport());
+    addOthersComponents(txtBoxDiagramName);
+    classDiagram.addObserver(txtBoxDiagramName);
   }
 
   private void addSPanelListener() {
@@ -1182,7 +1194,8 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
   public LinkedList<GraphicComponent> getAllDiagramComponents() {
     final LinkedList<GraphicComponent> components = getCurrentComponents();
     for (GraphicComponent o : othersComponents)
-      if (!(o instanceof SquareGrip)) components.add(o);
+      if (!(o instanceof SquareGrip) && !o.equals(txtBoxDiagramName)) 
+        components.add(o);
     return components;
   }
 
@@ -1381,7 +1394,15 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
    * @return a picture representing the scene
    */
   public BufferedImage getScreen(int type) {
+    setPictureMode(true);
+    
     final int margin = 20;
+    int marginTop = margin;
+    boolean displayName = txtBoxDiagramName.isVisible();
+    
+    if (displayName)
+      marginTop += txtBoxDiagramName.getBounds().height;
+    
     int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxX = 0, maxY = 0;
     final LinkedList<GraphicComponent> components = getAllDiagramComponents();
 
@@ -1401,25 +1422,35 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
     // Create the buffered image with margin.
     final BufferedImage img = new BufferedImage(bounds.width + margin * 2,
-            bounds.height + margin * 2, type);
+            bounds.height + margin + marginTop, type);
     final Graphics2D g2 = img.createGraphics();
     Utility.setRenderQuality(g2);
 
     // Translate the rectangle containing all graphic components at origin.
-    g2.translate(-bounds.x + margin, -bounds.y + margin);
+    g2.translate(-bounds.x + margin, -bounds.y + marginTop);
 
     if (type == BufferedImage.TYPE_INT_RGB) {
       g2.setColor(Color.WHITE);
       g2.fillRect(bounds.x - margin, bounds.y - margin, bounds.width + margin
-              * 2, bounds.height + margin * 2);
+              * 2, bounds.height + margin + marginTop);
     }
-
-    setPictureMode(true);
     // Paint all components on picture.
     for (final GraphicComponent c : components)
       c.paintComponent(g2);
+    
+    // Paint diagram's name
+    g2.translate(-margin, -marginTop);
+    txtBoxDiagramName.paintComponentAt(g2, new Point(minX, minY));
+    
+    if (displayName && isTitleBorderPainted()) {
+      g2.setStroke(new BasicStroke(DEFAULT_TITLE_BORDER_WIDTH));
+      g2.draw(new Rectangle2D.Float(
+          minX,
+          minY,
+          img.getWidth() - DEFAULT_TITLE_BORDER_WIDTH,
+          img.getHeight() - DEFAULT_TITLE_BORDER_WIDTH));
+    }
     setPictureMode(false);
-
     return img;
   }
 
@@ -1526,6 +1557,11 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
     setPictureMode(false);
 
     return img;
+  }
+  
+  private void applyBorderTitleToImage(BufferedImage img) {
+    Graphics2D g2 = img.createGraphics();
+    g2.drawRect(0, 0, img.getWidth(), img.getHeight());
   }
 
   /**
@@ -1977,7 +2013,6 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
     Utility.setRenderQuality(g2);
 
     double scale = getScale(), inversedScale = getInversedScale();
-
     g2.scale(scale, scale);
 
     // Paint components
@@ -2082,9 +2117,7 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
    */
   public void removeAll() {
     for (final GraphicComponent c : getAllComponents())
-
       c.delete();
-
     Change.clear();
   }
 
@@ -2454,5 +2487,10 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
     getScene().setPreferredSize(new Dimension(width, height));
     getScene().revalidate();
+  }
+  
+  public void setVisibleDiagramName(boolean visible) {
+    txtBoxDiagramName.setVisible(visible);
+    txtBoxDiagramName.repaint();
   }
 }

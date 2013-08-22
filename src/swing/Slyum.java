@@ -74,6 +74,7 @@ public class Slyum extends JFrame implements ActionListener {
   public final static boolean SHOW_CROSS_MENU = true;
   public final static boolean SHOW_ERRORS_MESSAGES = true;
   public final static boolean SHOW_OPENJDK_WARNING = true;
+  public final static boolean VIEW_TITLE_ON_EXPORT_DEFAULT = true;
   public final static int WINDOWS_MAXIMIZED = Frame.MAXIMIZED_BOTH;
   public final static Dimension WINDOWS_SIZE = new Dimension(DEFAULT_SIZE.x,
           DEFAULT_SIZE.y);
@@ -194,6 +195,24 @@ public class Slyum extends JFrame implements ActionListener {
   public final static String KEY_LINK_NOTE = "ctrl shift L";
 
   public final static String KEY_HELP = "F1";
+  
+  public final static Font DEFAULT_FONT;
+  
+  static {
+    Font tempFont;
+    try {
+      tempFont = Font
+              .createFont(
+                      Font.TRUETYPE_FONT,
+                      Slyum.class.getResource(
+                              String.format("%ssegoeui.ttf", FONTS_PATCH))
+                              .openStream()).deriveFont(Font.PLAIN,
+                      DEFAULT_FONT_SIZE);
+    } catch (FontFormatException | IOException e) {
+      tempFont = new Font(Font.SANS_SERIF, Font.PLAIN, DEFAULT_FONT_SIZE);
+    }
+    DEFAULT_FONT = tempFont;
+  }
 
   private static final String ARGUMENT_PRINT_CHANGE_STACK_STATE = "-printChanges";
   private static final String ARGUMENT_EXIT_WITHOUT_ASK = "-exitWithoutAsk";
@@ -305,6 +324,14 @@ public class Slyum extends JFrame implements ActionListener {
 
     if (prop != null) enable = Boolean.parseBoolean(prop);
 
+    return enable;
+  }
+  
+  public static boolean isViewTitleOnExport() {
+    String prop = PropertyLoader.getInstance().getProperties()
+            .getProperty(PropertyLoader.VIEW_TITLE_ON_EXPORT);
+    boolean enable = VIEW_TITLE_ON_EXPORT_DEFAULT;
+    if (prop != null) enable = Boolean.parseBoolean(prop);
     return enable;
   }
 
@@ -423,6 +450,7 @@ public class Slyum extends JFrame implements ActionListener {
   public static void updateWindowTitle(File projectName) {
     windowTitle = APP_NAME
             + (projectName == null ? "" : " - " + projectName.getPath());
+    Slyum.getInstance().setTitle(windowTitle);
   }
 
   public Font defaultFont;
@@ -480,18 +508,7 @@ public class Slyum extends JFrame implements ActionListener {
   }
 
   private void initFont() {
-    try {
-      defaultFont = Font
-              .createFont(
-                      Font.TRUETYPE_FONT,
-                      Slyum.class.getResource(
-                              String.format("%ssegoeui.ttf", FONTS_PATCH))
-                              .openStream()).deriveFont(Font.PLAIN,
-                      DEFAULT_FONT_SIZE);
-    } catch (FontFormatException | IOException e) {
-      e.printStackTrace();
-      defaultFont = new Font(Font.SANS_SERIF, Font.PLAIN, DEFAULT_FONT_SIZE);
-    }
+    defaultFont = DEFAULT_FONT;
   }
 
   private void initEventListener() {

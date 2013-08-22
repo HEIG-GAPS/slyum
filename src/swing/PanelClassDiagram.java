@@ -1,8 +1,10 @@
 package swing;
 
+import change.Change;
+import classDiagram.ClassDiagram;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
-
+import graphic.textbox.TextBoxDiagramName;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.datatransfer.DataFlavor;
@@ -14,10 +16,10 @@ import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -39,14 +41,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.PropretiesChanger;
 import utility.MultiBorderLayout;
 import utility.SMessageDialog;
 import utility.Utility;
-import change.Change;
-import classDiagram.ClassDiagram;
 
 /**
  * Show the panel containing all views (hierarchical, properties and graphic)
@@ -66,11 +65,18 @@ public class PanelClassDiagram extends JPanel {
     if (getInstance() != null) return getInstance().getCurrentFile();
     return null;
   }
+  
+  public static void setCurrentDiagramName(String name) {
+    getInstance().setDiagramName(name);
+  }
+  
+  public static void setVisibleCurrentDiagramName(boolean visible) {
+    getInstance().setVisibleDiagramName(visible);
+  }
 
   private ClassDiagram classDiagram;
-
+  private HierarchicalView hierarchicalView;
   private File currentFile = null;
-
   private GraphicView graphicView;
 
   SSplitPane splitInner, // Split graphicview part and properties part.
@@ -120,8 +126,10 @@ public class PanelClassDiagram extends JPanel {
     splitInner.setResizeWeight(1.0);
 
     // Construct outer split pane.
-    splitOuter = new SSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-            new HierarchicalView(getClassDiagram()), splitInner);
+    
+    splitOuter = new SSplitPane(
+        JSplitPane.HORIZONTAL_SPLIT,
+        hierarchicalView = new HierarchicalView(getClassDiagram()), splitInner);
     splitOuter.setResizeWeight(0.0);
     splitOuter.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0,
             Slyum.THEME_COLOR));
@@ -137,6 +145,7 @@ public class PanelClassDiagram extends JPanel {
         graphicView.deleteCurrentFactory();
       }
     });
+    getClassDiagram().addObserver(hierarchicalView);
   }
 
   /**
@@ -191,7 +200,7 @@ public class PanelClassDiagram extends JPanel {
    */
   public ClassDiagram getClassDiagram() {
     if (classDiagram == null) {
-      classDiagram = new ClassDiagram("Class diagram");
+      classDiagram = new ClassDiagram();
       classDiagram.addComponentsObserver(PropretiesChanger.getInstance());
     }
 
@@ -213,6 +222,10 @@ public class PanelClassDiagram extends JPanel {
    */
   public GraphicView getCurrentGraphicView() {
     return graphicView;
+  }
+  
+  public List<GraphicView> getAllGraphicViews() {
+    return Arrays.asList(graphicView);
   }
 
   /**
@@ -280,14 +293,23 @@ public class PanelClassDiagram extends JPanel {
    */
   public void newProject() {
     if (!askForSave()) return;
-
     cleanApplication();
   }
 
   public void cleanApplication() {
+    setDiagramName("");
     classDiagram.removeAll();
     graphicView.removeAll();
     setCurrentFile(null);
+  }
+  
+  public void setVisibleDiagramName(boolean visible) {
+    hierarchicalView.setVisibleClassDiagramName(visible);
+  }
+  
+  public void setDiagramName(String name) {
+    classDiagram.setName(name);
+    classDiagram.notifyObservers();
   }
 
   public void setCurrentFile(File file) {
@@ -536,19 +558,6 @@ public class PanelClassDiagram extends JPanel {
 
     cleanApplication();
     graphicView.setVisible(true);
-  }
-
-  /**
-   * Return a LinkedList with all opened graphic views.
-   * 
-   * @return a LinkedList with all opened graphic views
-   */
-  public LinkedList<GraphicView> getAllGraphicView() {
-    // TODO
-    LinkedList<GraphicView> l = new LinkedList<GraphicView>();
-    l.add(graphicView);
-
-    return l;
   }
 
   public void openFromXmlAndAsk(File file) {
