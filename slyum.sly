@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-15" standalone="no"?>
 <classDiagram>
-  <diagramElements>
+  <diagramElements name="SlyumClassDiagram">
     <inheritance id="28454">
       <child>28453</child>
       <parent>24205</parent>
@@ -1795,12 +1795,12 @@
         </point>
         <point>
           <x>91</x>
-          <y>294</y>
+          <y>304</y>
         </point>
       </line>
       <labelAssociation>
         <x>95</x>
-        <y>352</y>
+        <y>357</y>
         <w>0</w>
         <h>20</h>
       </labelAssociation>
@@ -1812,7 +1812,7 @@
       </roleAssociation>
       <roleAssociation>
         <x>21</x>
-        <y>318</y>
+        <y>328</y>
         <w>65</w>
         <h>20</h>
       </roleAssociation>
@@ -1824,7 +1824,7 @@
       </multipliciteAssociation>
       <multipliciteAssociation>
         <x>74</x>
-        <y>295</y>
+        <y>305</y>
         <w>6</w>
         <h>20</h>
       </multipliciteAssociation>
@@ -2183,7 +2183,7 @@
         </point>
         <point>
           <x>121</x>
-          <y>294</y>
+          <y>304</y>
         </point>
       </line>
     </relationView>
@@ -2442,7 +2442,7 @@
     <componentView color="-2079" componentID="28049" displayAttributes="true" displayDefault="true" displayMethods="true">
       <geometry>
         <x>40</x>
-        <y>30</y>
+        <y>40</y>
         <w>220</w>
         <h>263</h>
       </geometry>

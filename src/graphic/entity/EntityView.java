@@ -200,7 +200,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
   /* Colors */
   public final Color DEFAULT_TEXT_COLOR = new Color(40, 40, 40);
-  public final Color DEFAULT_BORDER_COLOR = new Color(65, 65, 65);
+  public static final Color DEFAULT_BORDER_COLOR = new Color(65, 65, 65);
 
   private Rectangle bounds = new Rectangle();
   protected Entity component;

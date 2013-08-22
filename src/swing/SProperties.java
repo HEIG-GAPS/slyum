@@ -59,6 +59,7 @@ import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.Utility;
 import classDiagram.components.Method.ParametersViewStyle;
+import javax.swing.SwingUtilities;
 
 public class SProperties extends JDialog {
   private ButtonColor btnColor;
@@ -85,6 +86,8 @@ public class SProperties extends JDialog {
   private JCheckBox ckbEntityGradient;
   private JCheckBox chckbxShowGrid;
   private JCheckBox chckbxViewEnum;
+  private JCheckBox chckbxViewTitleOnExport;
+  private JCheckBox chckbxPaintTitleBorder;
   private JPanel panel_Grid, panel_grid_color, panel_grid_opacity;
   private JCheckBox chckbxEnableGrid;
 
@@ -738,12 +741,44 @@ public class SProperties extends JDialog {
                     gbc_chckbxAutoAdjustInheritance);
           }
           {
+            chckbxViewTitleOnExport = 
+                new JCheckBox("Paint diagram's name on the diagram");
+            GridBagConstraints gbc_chckbxViewTitleOnExport = 
+                new GridBagConstraints();
+            gbc_chckbxViewTitleOnExport.insets = new Insets(0, 5, 0, 0);
+            gbc_chckbxViewTitleOnExport.anchor = GridBagConstraints.WEST;
+            gbc_chckbxViewTitleOnExport.gridx = 0;
+            gbc_chckbxViewTitleOnExport.gridy = 3;
+            innerPanel.add(chckbxViewTitleOnExport, 
+                           gbc_chckbxViewTitleOnExport);
+            chckbxViewTitleOnExport.addChangeListener(new ChangeListener() {
+
+              @Override
+              public void stateChanged(ChangeEvent e) {
+                checkPaintTitleBorderEnabled();
+              }
+            });
+          }
+          {
+            chckbxPaintTitleBorder = 
+                new JCheckBox("Paint diagram's border");
+            checkPaintTitleBorderEnabled();
+            GridBagConstraints gbc_chckbxPaintTitleBorder = 
+                new GridBagConstraints();
+            gbc_chckbxPaintTitleBorder.insets = new Insets(0, 22, 0, 0);
+            gbc_chckbxPaintTitleBorder.anchor = GridBagConstraints.WEST;
+            gbc_chckbxPaintTitleBorder.gridx = 0;
+            gbc_chckbxPaintTitleBorder.gridy = 4;
+            innerPanel.add(chckbxPaintTitleBorder, 
+                           gbc_chckbxPaintTitleBorder);
+          }
+          {
             chckbxViewEnum = new JCheckBox("View enum values");
             GridBagConstraints gbc_chckbxViewEnum = new GridBagConstraints();
             gbc_chckbxViewEnum.insets = new Insets(0, 5, 0, 0);
             gbc_chckbxViewEnum.anchor = GridBagConstraints.WEST;
             gbc_chckbxViewEnum.gridx = 0;
-            gbc_chckbxViewEnum.gridy = 3;
+            gbc_chckbxViewEnum.gridy = 5;
             innerPanel.add(chckbxViewEnum, gbc_chckbxViewEnum);
           }
           {
@@ -769,7 +804,7 @@ public class SProperties extends JDialog {
             gbc_panelViews.insets = new Insets(0, 5, 0, 0);
             gbc_panelViews.anchor = GridBagConstraints.WEST;
             gbc_panelViews.gridx = 0;
-            gbc_panelViews.gridy = 4;
+            gbc_panelViews.gridy = 6;
             innerPanel.add(panelViews, gbc_panelViews);
           }
           panel.add(innerPanel);
@@ -822,6 +857,10 @@ public class SProperties extends JDialog {
                       String.valueOf(chckbxAutoAdjustInheritance.isSelected()));
               properties.put(PropertyLoader.VIEW_ENUM,
                       String.valueOf(chckbxViewEnum.isSelected()));
+              properties.put(PropertyLoader.VIEW_TITLE_ON_EXPORT,
+                      String.valueOf(chckbxViewTitleOnExport.isSelected()));
+              properties.put(PropertyLoader.PAINT_TITLE_BORDER,
+                      String.valueOf(chckbxPaintTitleBorder.isSelected()));
               properties.put(PropertyLoader.GRID_VISIBLE,
                       String.valueOf(chckbxShowGrid.isSelected()));
               properties.put(PropertyLoader.GRID_ENABLE,
@@ -864,6 +903,11 @@ public class SProperties extends JDialog {
             for (EnumView enums : EnumView.getAll())
               enums.updateHeight();
 
+            boolean selected = chckbxViewTitleOnExport.isSelected();
+            PanelClassDiagram.setVisibleCurrentDiagramName(!selected);
+            for (GraphicView gv : 
+                PanelClassDiagram.getInstance().getAllGraphicViews())
+              gv.setVisibleDiagramName(selected);
             setVisible(false);
             PanelClassDiagram.getInstance().getCurrentGraphicView().repaint();
           }
@@ -954,6 +998,8 @@ public class SProperties extends JDialog {
     chckbxDisableCrossPopup.setSelected(Slyum.isShowCrossMenu());
     chckbxAutoAdjustInheritance.setSelected(Slyum.isAutoAdjustInheritance());
     chckbxViewEnum.setSelected(GraphicView.getDefaultViewEnum());
+    chckbxViewTitleOnExport.setSelected(Slyum.isViewTitleOnExport());
+    chckbxPaintTitleBorder.setSelected(GraphicView.isTitleBorderPainted());
     chckbxEnableGrid.setSelected(GraphicView.isGridEnable());
     listViewMethods.setSelectedItem(GraphicView.getDefaultViewMethods());
     listViewEntities.setSelectedItem(GraphicView.getDefaultViewEntities());
@@ -988,6 +1034,15 @@ public class SProperties extends JDialog {
       else
 
         child.setEnabled(enable);
+  }
+  
+  private void checkPaintTitleBorderEnabled() {
+    if (chckbxPaintTitleBorder == null ||
+        chckbxViewTitleOnExport == null)
+      return;
+    
+    chckbxPaintTitleBorder.setEnabled(
+        chckbxViewTitleOnExport.isSelected());
   }
 
   private void showOpacityWarning() {

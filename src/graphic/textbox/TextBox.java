@@ -38,8 +38,7 @@ import utility.Utility;
  * @version 1.0 - 25.07.2011
  */
 public abstract class TextBox extends GraphicComponent {
-  public final static String FONT_NAME = Slyum.getInstance().defaultFont
-          .getFamily();
+  public final static String FONT_NAME = Slyum.DEFAULT_FONT.getFamily();
   public final static int FONT_SIZE = 12;
 
   public static Font getFont() {
@@ -95,6 +94,7 @@ public abstract class TextBox extends GraphicComponent {
 
   private JTextField textField;
   public static int MARGE = 5;
+  private boolean hideWhileEditing = true;
 
   public TextBox(GraphicView parent, String text) {
     super(parent);
@@ -119,7 +119,9 @@ public abstract class TextBox extends GraphicComponent {
   @SuppressWarnings("serial")
   public void editing() {
     stopEditing();
-    setVisible(false);
+    
+    if (hideWhileEditing)
+      setVisible(false);
 
     final Rectangle bounds = getBounds();
 
@@ -176,6 +178,14 @@ public abstract class TextBox extends GraphicComponent {
         }
       }
     });
+  }
+  
+  public void setHideWhileEditing(boolean hide) {
+    hideWhileEditing = hide;
+  }
+
+  public boolean isHideWhileEditing() {
+    return hideWhileEditing;
   }
 
   public String getEditingText() {
@@ -250,6 +260,10 @@ public abstract class TextBox extends GraphicComponent {
 
   @Override
   public void paintComponent(Graphics2D g2) {
+    paintComponentAt(g2, new Point(bounds.x, bounds.y));
+  }
+  
+  public void paintComponentAt(Graphics2D g2, Point location) {
     if (!isVisible()) return;
 
     final String name = getText();
@@ -276,7 +290,7 @@ public abstract class TextBox extends GraphicComponent {
       ats.addAttribute(TextAttribute.FONT, effectivFont);
       initAttributeString(ats);
 
-      g2.drawString(ats.getIterator(), bounds.x, bounds.y + bounds.height
+      g2.drawString(ats.getIterator(), location.x, location.y + bounds.height
               - metrics.getDescent());
     }
   }
@@ -355,6 +369,7 @@ public abstract class TextBox extends GraphicComponent {
     final Rectangle repaintBounds = new Rectangle(0, bounds.y,
             parent.getBounds().width, bounds.height);
     parent.getScene().repaint(repaintBounds);
+    
     setVisible(true);
   }
 
