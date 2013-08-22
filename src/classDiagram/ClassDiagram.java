@@ -1,5 +1,6 @@
 package classDiagram;
 
+import change.Change;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
+import java.util.Observable;
 
 /**
  * This class contains all structurals UML components. Add classes, interfaces,
@@ -31,32 +33,21 @@ import classDiagram.relationships.Multi;
  * @version 1.0 - 24.07.2011
  * 
  */
-public class ClassDiagram implements IComponentsObserver, XmlElement {
+public class ClassDiagram extends Observable 
+                          implements IComponentsObserver, XmlElement {
   private static int currentID = 0;
 
   public static int getNextId() {
     return ++currentID;
   }
 
+  private String name = "";
   LinkedList<IDiagramComponent> components = new LinkedList<>();
   LinkedList<Entity> entities = new LinkedList<>();
-  private String name;
   LinkedList<IComponentsObserver> observers = new LinkedList<>();
 
   public int countComponents(Class<?> type) {
     return Utility.count(type, components);
-  }
-
-  /**
-   * Creates a new class diagram with the specified name.
-   * 
-   * @param name
-   *          The name of class diagram.
-   */
-  public ClassDiagram(String name) {
-    if (name.isEmpty()) throw new IllegalArgumentException("name is null");
-
-    this.name = name;
   }
 
   @Override
@@ -292,7 +283,15 @@ public class ClassDiagram implements IComponentsObserver, XmlElement {
    *          the new name of class diagram.
    */
   public void setName(String name) {
+    if (name == null)
+      name = "";
+    
+    if (this.name.equals(name))
+      return;
+    
     this.name = name;
+    Change.setHasChange(true);
+    setChanged();
   }
 
   @Override
@@ -300,10 +299,11 @@ public class ClassDiagram implements IComponentsObserver, XmlElement {
     return "diagramElements";
   }
 
+  @Override
   public Element getXmlElement(Document doc) {
 
     Element classDiagram = doc.createElement(getXmlTagName());
-
+  classDiagram.setAttribute("name", getName());
     for (IDiagramComponent component : components)
       classDiagram.appendChild(component.getXmlElement(doc));
 

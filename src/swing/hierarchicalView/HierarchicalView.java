@@ -1,29 +1,6 @@
 package swing.hierarchicalView;
 
-import graphic.entity.EntityView;
-
-import java.awt.Color;
-import java.awt.Dimension;
-import java.util.LinkedList;
-import java.util.Observer;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
-
-import swing.PanelClassDiagram;
-import swing.Slyum;
-import utility.PersonalizedIcon;
+import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IComponentsObserver;
 import classDiagram.IDiagramComponent;
@@ -41,6 +18,34 @@ import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
+import graphic.entity.EntityView;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.LinkedList;
+import java.util.Observable;
+import java.util.Observer;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
+import swing.PanelClassDiagram;
+import swing.Slyum;
+import utility.PersonalizedIcon;
 
 /**
  * This class is a hierarchical view of the class diagram. It represents class
@@ -50,12 +55,14 @@ import classDiagram.relationships.Multi;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-@SuppressWarnings("serial")
-public class HierarchicalView extends JPanel implements IComponentsObserver, TreeSelectionListener {
+public class HierarchicalView 
+    extends JPanel 
+    implements IComponentsObserver, TreeSelectionListener, Observer {
   private final DefaultMutableTreeNode entitiesNode, associationsNode,
           inheritancesNode, dependenciesNode;
   private final JTree tree;
   private final DefaultTreeModel treeModel;
+  private JTextField txtFieldClassDiagramName;  
 
   /**
    * Create a new hierarchical view of the specified class diagram. The new view
@@ -69,6 +76,49 @@ public class HierarchicalView extends JPanel implements IComponentsObserver, Tre
     setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
     setBackground(null);
     setForeground(Color.GRAY);
+    
+    txtFieldClassDiagramName = new JTextField() {
+      @Override
+      protected void paintComponent(java.awt.Graphics g) {
+        super.paintComponent(g);
+        if(getText().isEmpty()){
+          Graphics2D g2 = (Graphics2D)g.create();
+          utility.Utility.setRenderQuality(g2);
+          g2.setColor(Color.gray);
+          g2.drawString("Enter the diagram's name", 11, 23);
+          g2.dispose();
+        }
+      }
+    };
+    txtFieldClassDiagramName.addFocusListener(new FocusListener() {
+
+      @Override
+      public void focusGained(FocusEvent e) {
+        repaint();
+      }
+
+      @Override
+      public void focusLost(FocusEvent e) {
+        repaint();
+      }
+    });
+    txtFieldClassDiagramName.addKeyListener(new KeyAdapter() {
+      
+      @Override
+      public void keyReleased(KeyEvent e) {
+        PanelClassDiagram.setCurrentDiagramName(
+            txtFieldClassDiagramName.getText());
+      }
+    });
+    txtFieldClassDiagramName.setFont(Slyum.DEFAULT_FONT.deriveFont(15f));
+    txtFieldClassDiagramName.setBorder(
+        BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(0, 0, 1, 0, Slyum.THEME_COLOR),
+            BorderFactory.createEmptyBorder(5, 10, 5, 5)));
+    txtFieldClassDiagramName.setMaximumSize(
+        new Dimension(Short.MAX_VALUE, 500));
+    txtFieldClassDiagramName.setVisible(!Slyum.isViewTitleOnExport());
+    add(txtFieldClassDiagramName);
 
     final DefaultMutableTreeNode root = new DefaultMutableTreeNode(
             classDiagram.getName());
@@ -301,5 +351,22 @@ public class HierarchicalView extends JPanel implements IComponentsObserver, Tre
       else
         component.notifyObservers(UpdateMessage.UNSELECT);
     }
+  }
+  
+  public void setDiagramName(String name) {
+    if (txtFieldClassDiagramName.getText().equals(name))
+      return;
+    txtFieldClassDiagramName.setText(name);
+  }
+  
+  public void setVisibleClassDiagramName(boolean visible) {
+    txtFieldClassDiagramName.setVisible(visible);
+    doLayout();
+  }
+
+  @Override
+  public void update(Observable o, Object arg) {
+    if (o instanceof ClassDiagram)
+      setDiagramName(((ClassDiagram)o).getName());
   }
 }
