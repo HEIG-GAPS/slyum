@@ -14,6 +14,7 @@ import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Attribute;
+import swing.PanelClassDiagram;
 
 /**
  * A JTree node associated with an attribute UML.
@@ -69,8 +70,10 @@ public class NodeAttribute extends DefaultMutableTreeNode implements ICustomized
 
       switch ((UpdateMessage) o) {
         case SELECT:
-          tree.addSelectionPath(path.getParentPath());
-          tree.addSelectionPath(path);
+          if (!PanelClassDiagram.getInstance().isDisabledUpdate()) {
+            tree.addSelectionPath(path.getParentPath());
+            tree.addSelectionPath(path);
+          }
           break;
         case UNSELECT:
           tree.removeSelectionPath(path);

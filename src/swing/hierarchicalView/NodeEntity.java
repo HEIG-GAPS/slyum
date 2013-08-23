@@ -12,6 +12,10 @@ import javax.swing.tree.TreePath;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
+import java.util.ArrayList;
+import java.util.Arrays;
+import javax.swing.SwingUtilities;
+import swing.PanelClassDiagram;
 
 /**
  * A JTree node associated with an entity UML.
@@ -91,7 +95,8 @@ public abstract class NodeEntity extends DefaultMutableTreeNode implements Obser
 
       switch ((UpdateMessage) arg1) {
         case SELECT:
-          tree.addSelectionPath(path);
+          if (!PanelClassDiagram.getInstance().isDisabledUpdate())
+            tree.addSelectionPath(path);
           break;
 
         case UNSELECT:

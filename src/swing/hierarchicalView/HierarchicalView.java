@@ -1,6 +1,5 @@
 package swing.hierarchicalView;
 
-import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IComponentsObserver;
 import classDiagram.IDiagramComponent;
@@ -27,6 +26,7 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.BorderFactory;
@@ -35,6 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -62,7 +63,7 @@ public class HierarchicalView
           inheritancesNode, dependenciesNode;
   private final JTree tree;
   private final DefaultTreeModel treeModel;
-  private JTextField txtFieldClassDiagramName;  
+  private JTextField txtFieldClassDiagramName;
 
   /**
    * Create a new hierarchical view of the specified class diagram. The new view

@@ -14,6 +14,7 @@ import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Inheritance;
+import swing.PanelClassDiagram;
 
 /**
  * A JTree node associated with an inheritance.
@@ -88,7 +89,8 @@ public class NodeInheritance extends DefaultMutableTreeNode implements ICustomiz
 
       switch ((UpdateMessage) o) {
         case SELECT:
-          tree.addSelectionPath(path);
+          if (!PanelClassDiagram.getInstance().isDisabledUpdate())
+            tree.addSelectionPath(path);
           break;
         case UNSELECT:
           tree.removeSelectionPath(path);

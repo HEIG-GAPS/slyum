@@ -14,6 +14,7 @@ import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Dependency;
+import swing.PanelClassDiagram;
 
 /**
  * A JTree node associated with a dependency UML.
@@ -84,7 +85,8 @@ public class NodeDepedency extends DefaultMutableTreeNode implements IClassDiagr
 
       switch ((UpdateMessage) o) {
         case SELECT:
-          tree.addSelectionPath(path);
+          if (!PanelClassDiagram.getInstance().isDisabledUpdate())
+            tree.addSelectionPath(path);
           break;
         case UNSELECT:
           tree.removeSelectionPath(path);

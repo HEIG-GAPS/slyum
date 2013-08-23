@@ -1,21 +1,19 @@
 package swing.propretiesView;
 
+import classDiagram.IDiagramComponent.UpdateMessage;
 import graphic.relations.RelationView;
-
 import java.awt.Dimension;
 import java.awt.SystemColor;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
-
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-
 import swing.FlatButton;
+import swing.PanelClassDiagram;
 import swing.Slyum;
 import utility.PersonalizedIcon;
-import classDiagram.IDiagramComponent.UpdateMessage;
 
 /**
  * This is a JPanel that is notified when an UML component is selected. When
@@ -59,6 +57,9 @@ public abstract class GlobalPropreties extends JPanel implements Observer {
 
   @Override
   public void update(Observable arg0, Object arg1) {
+    if (PanelClassDiagram.getInstance().isDisabledUpdate())
+      return;
+          
     if (arg1 != null && arg1 instanceof UpdateMessage)
       switch ((UpdateMessage) arg1) {
         case SELECT:
