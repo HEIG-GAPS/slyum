@@ -4,7 +4,6 @@ import change.Change;
 import classDiagram.ClassDiagram;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
-import graphic.textbox.TextBoxDiagramName;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.datatransfer.DataFlavor;
@@ -17,7 +16,6 @@ import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import javax.imageio.ImageIO;
@@ -78,6 +76,7 @@ public class PanelClassDiagram extends JPanel {
   private HierarchicalView hierarchicalView;
   private File currentFile = null;
   private GraphicView graphicView;
+  private boolean disabledUpdate = false;
 
   SSplitPane splitInner, // Split graphicview part and properties part.
           splitOuter; // Split inner split and hierarchical part.
@@ -593,5 +592,15 @@ public class PanelClassDiagram extends JPanel {
         return false;
       }
     }
+  }
+
+  public boolean isDisabledUpdate() {
+    return disabledUpdate;
+  }
+
+  public void setDisabledUpdate(boolean disabledUpdate) {
+    if (this.disabledUpdate == disabledUpdate)
+      return;
+    this.disabledUpdate = disabledUpdate;
   }
 }

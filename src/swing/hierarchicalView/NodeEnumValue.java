@@ -14,6 +14,7 @@ import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.EnumValue;
+import swing.PanelClassDiagram;
 
 public class NodeEnumValue extends DefaultMutableTreeNode implements ICustomizedIconNode, Observer, IClassDiagramNode {
 
@@ -51,8 +52,10 @@ public class NodeEnumValue extends DefaultMutableTreeNode implements ICustomized
       TreePath path = new TreePath(getPath());
       switch ((UpdateMessage) o) {
         case SELECT:
-          tree.addSelectionPath(path.getParentPath());
-          tree.addSelectionPath(path);
+          if (!PanelClassDiagram.getInstance().isDisabledUpdate()) {
+            tree.addSelectionPath(path.getParentPath());
+            tree.addSelectionPath(path);
+          }
           break;
         case UNSELECT:
           tree.removeSelectionPath(path);

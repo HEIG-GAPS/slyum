@@ -87,6 +87,7 @@ import swing.SPanelDiagramComponent;
 import swing.SPanelDiagramComponent.Mode;
 import swing.SPanelElement;
 import swing.Slyum;
+import swing.propretiesView.PropretiesChanger;
 import utility.Utility;
 
 /**
@@ -1049,41 +1050,37 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
   /**
    * Hide the rubber band, compute components who was in rubber band and select
    * them.
+   * @return the number of components in the rubber band.
    */
   public int clearRubberBand() {
-    int nbrComponentSelected = 0;
+    List<GraphicComponent> components = getComponentsInRect(rubberBand);
+    selectComponents(components);
+    
+    // Use for repaint old position
+    Rectangle previousRect = new Rectangle(rubberBand);
+    rubberBand = new Rectangle();
+    scene.repaint(previousRect);
 
-    // use for repaint old position
-    final Rectangle previousRect = new Rectangle(rubberBand);
+    return components.size();
+  }
+  
+  public List<GraphicComponent> getComponentsInRect(Rectangle rect) {
+    List<GraphicComponent> components = new LinkedList<>();
 
-    // get all selectable components
-    final LinkedList<GraphicComponent> components = new LinkedList<GraphicComponent>();
-    components.addAll(entities);
-    components.addAll(linesView);
-    components.addAll(multiViews);
-    components.addAll(notes);
-
-    for (final GraphicComponent c : components) {
+    for (GraphicComponent c : getDiagramElements()) {
       // see if the intersection area is the same that component area.
-      final Rectangle bounds = c.getBounds();
-      final Rectangle intersection = rubberBand.intersection(bounds);
+      Rectangle bounds = c.getBounds();
+      Rectangle intersection = rubberBand.intersection(bounds);
 
-      final int intersectionArea = intersection.width * intersection.height;
-      final int componentArea = bounds.width * bounds.height;
+      int intersectionArea = intersection.width * intersection.height;
+      int componentArea = bounds.width * bounds.height;
 
       // if it the same, the component is completely covered by the
       // rubber band.
-      if (intersectionArea == componentArea) {
-        c.setSelected(true);
-        nbrComponentSelected++;
-      }
+      if (intersectionArea == componentArea)
+        components.add(c);
     }
-
-    rubberBand = new Rectangle();
-
-    scene.repaint(previousRect);
-
-    return nbrComponentSelected;
+    return components;
   }
 
   /**
@@ -2205,9 +2202,14 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
    * Select all diagram elements.
    */
   public void selectAll() {
-    for (final GraphicComponent c : getDiagramElements())
-
+    selectComponents(getDiagramElements());
+  }
+  
+  public void selectComponents(List<GraphicComponent> components) {
+    PanelClassDiagram.getInstance().setDisabledUpdate(true);
+    for (GraphicComponent c : components)
       c.setSelected(true);
+    PanelClassDiagram.getInstance().setDisabledUpdate(false);
   }
 
   public void goRepaint() {

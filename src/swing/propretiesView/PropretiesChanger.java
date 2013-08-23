@@ -44,7 +44,6 @@ public class PropretiesChanger extends JScrollPane implements IComponentsObserve
   public static PropretiesChanger getInstance() {
     return instance;
   }
-
   private JLabel labelNoComponent;
 
   /**

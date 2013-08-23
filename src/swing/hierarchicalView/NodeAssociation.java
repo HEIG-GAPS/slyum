@@ -14,6 +14,7 @@ import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Association;
 import classDiagram.relationships.Role;
+import swing.PanelClassDiagram;
 
 /**
  * A JTree node associated with an association UML.
@@ -103,7 +104,8 @@ public class NodeAssociation extends DefaultMutableTreeNode implements IClassDia
 
       switch ((UpdateMessage) o) {
         case SELECT:
-          tree.addSelectionPath(path);
+          if (!PanelClassDiagram.getInstance().isDisabledUpdate())
+            tree.addSelectionPath(path);
           break;
         case UNSELECT:
           tree.removeSelectionPath(path);
