@@ -67,11 +67,11 @@ Windows, Linux and Mac OS X
     java -jar "Slyum.jar"
 
 --------------------------------------------------------------------------------
- > KNOWN ISSUES
+ > JNLP KNOWN ISSUES
 --------------------------------------------------------------------------------
 
   JNLP is not known to be reliable:
     - Auto-update on Windows seems to work randomly (see extra informations to force update).
-    - Desktop shortcut and association file don't work on Ubuntu (13.04).
+    - Desktop shortcut and association file don't work on Ubuntu (Linux?) (13.04).
     - Default splash screen on Linux render bad. Customized splash screen 
       for Linux didn't seems to work.
