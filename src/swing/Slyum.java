@@ -49,7 +49,7 @@ public class Slyum extends JFrame implements ActionListener {
 
   private static final long serialVersionUID = 1L;
   private static final String APP_NAME = "Slyum";
-  public static final String version = "3.2.2";
+  public static final String version = "3.2.3";
   public final static String EXTENTION = "sly";
   public final static String FULL_EXTENTION = String.format(".%s", EXTENTION);
   public final static String APP_DIR_NAME = APP_NAME;
@@ -68,7 +68,8 @@ public class Slyum extends JFrame implements ActionListener {
 
   public final static int DEFAULT_FONT_SIZE = 12;
 
-  private static final String URL_UPDATE_PAGE = "http://code.google.com/p/slyum/downloads";
+  private static final String URL_UPDATE_PAGE = "https://drive.google.com/folderview?id=0B8LiFU0_u3AZdTRPY0JKallDRm8&usp=sharing";
+  private static final String URL_PROJECT_PAGE = "https://code.google.com/p/slyum/";
 
   // Properties
   public final static boolean SHOW_CROSS_MENU = true;
@@ -90,6 +91,7 @@ public class Slyum extends JFrame implements ActionListener {
   public static final String ACTION_OPEN_RECENT_RPOJECT = "openRecentProject";
   public static final String ACTION_PROPERTIES = "Properties";
   public static final String ACTION_UPDATE = "Update";
+  public static final String ACTION_PROJECT_PAGE = "ProjectPage";
   public static final String ACTION_SELECT_ALL = "SelectAll";
   public static final String ACTION_UNSELECT_ALL = "UnselectAll";
   public static final String ACTION_NEW_PROJECT = "NewProject";
@@ -589,6 +591,9 @@ public class Slyum extends JFrame implements ActionListener {
       case ACTION_UPDATE:
         openURL(URL_UPDATE_PAGE);
         break;
+      case ACTION_PROJECT_PAGE:
+        openURL(URL_PROJECT_PAGE);
+        break;
       case ACTION_SELECT_ALL:
         gv.selectAll();
         break;
@@ -669,7 +674,7 @@ public class Slyum extends JFrame implements ActionListener {
       java.awt.Desktop.getDesktop().browse(new URI(url));
     } catch (URISyntaxException | IOException e) {
       SMessageDialog
-              .showErrorMessage("Unable to open " + URL_UPDATE_PAGE + ".");
+              .showErrorMessage("Unable to open " + url + ".");
     }
   }
 
@@ -1021,7 +1026,11 @@ public class Slyum extends JFrame implements ActionListener {
     menu.add(menuItem);
 
     // Menu item Update
-    menuItem = createMenuItem("Go to update page...", "update", KeyEvent.VK_U,
+    menuItem = createMenuItem("Go to project page...", "icon_16x16", KeyEvent.VK_P,
+            null, ACTION_PROJECT_PAGE);
+    menu.add(menuItem);
+    
+    menuItem = createMenuItem("Get latest release...", "eggs-16", KeyEvent.VK_R,
             null, ACTION_UPDATE);
     menu.add(menuItem);
 
