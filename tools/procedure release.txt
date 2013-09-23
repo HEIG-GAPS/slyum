@@ -42,6 +42,7 @@ Don't move the "Slyum.jnlp" file (even if it has changed)!
  5) Commit these changes on Google Code.
  
  6) Put every 4 files (Slyum.jar, Slyum.jnlp, Slyum.app and the <current version> file) 
-    into Google Drive (replace existing files).
+    into Google Drive (replace existing files). /!\ Put Slyum.app into an archive (zip) before
+	copying it.
 	Path: https://drive.google.com/folderview?id=0B8LiFU0_u3AZdTRPY0JKallDRm8
 	If you need to get access, please contact david.miserez@heig-vd.ch
