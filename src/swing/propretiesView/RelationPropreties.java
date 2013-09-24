@@ -205,11 +205,11 @@ public class RelationPropreties extends GlobalPropreties {
       String sourceName = ((Association) currentObject).getSource().getName(), targetName = ((Association) currentObject)
               .getTarget().getName();
       radBidirectional
-              .setText(String.format("%s - %s", sourceName, targetName));
+              .setText("Bidirectional");
       radFirstToSecond.setText(String
               .format("%s -> %s", sourceName, targetName));
       radSecondToFirst.setText(String
-              .format("%s <- %s", sourceName, targetName));
+              .format("%s -> %s", targetName, sourceName));
     }
   }
 

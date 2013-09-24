@@ -94,9 +94,9 @@ public abstract class AssociationView extends RelationView {
   private void setMenuItemText() {
     String sourceName = association.getSource().getName(), targetName = association
             .getTarget().getName();
-    navBidirectional.setText(String.format("%s - %s", sourceName, targetName));
+    navBidirectional.setText("Bidirectional");
     navFirstToSecond.setText(String.format("%s -> %s", sourceName, targetName));
-    navSecondToFirst.setText(String.format("%s <- %s", sourceName, targetName));
+    navSecondToFirst.setText(String.format("%s -> %s", targetName, sourceName));
   }
 
   private void checkMenuItemSelected() {
