@@ -83,7 +83,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
     if (Slyum.ACTION_NEW_NOTE_ASSOCIED.equals(e.getActionCommand()))
       parent.linkNewNoteWithSelectedEntities();
 
-    else if ("Color".equals(e.getActionCommand()))
+    else if ("ColorContextMenu".equals(e.getActionCommand()))
       askNewColorForSelectedItems();
 
     else if ("open-in-explorer".equals(e.getActionCommand()))
@@ -314,7 +314,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
             Slyum.ACTION_NEW_NOTE_ASSOCIED, "note");
     popupMenu.add(menuItem);
 
-    menuItem = makeMenuItem("Change color...", "Color", "color");
+    menuItem = makeMenuItem("Change color...", "ColorContextMenu", "color");
     popupMenu.add(menuItem);
   }
 
