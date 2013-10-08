@@ -1,0 +1,5 @@
+New features
+Improvments
+Fixes
+  - The color dialog showed twice when changing element's color from context menu.
+  - Changes in properties view are saved when user unfocus it.
