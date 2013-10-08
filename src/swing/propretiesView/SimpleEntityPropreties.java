@@ -1,5 +1,15 @@
 package swing.propretiesView;
 
+import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.components.Attribute;
+import classDiagram.components.InterfaceEntity;
+import classDiagram.components.Method;
+import classDiagram.components.PrimitiveType;
+import classDiagram.components.SimpleEntity;
+import classDiagram.components.Type;
+import classDiagram.components.Variable;
+import classDiagram.components.Visibility;
+import classDiagram.verifyName.TypeName;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -18,7 +28,6 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Observable;
 import java.util.Observer;
-
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -39,7 +48,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
-
 import swing.FlatPanel;
 import swing.SButton;
 import swing.STable;
@@ -47,16 +55,6 @@ import swing.Slyum;
 import utility.MultiBorderLayout;
 import utility.PersonalizedIcon;
 import utility.Utility;
-import classDiagram.IDiagramComponent.UpdateMessage;
-import classDiagram.components.Attribute;
-import classDiagram.components.InterfaceEntity;
-import classDiagram.components.Method;
-import classDiagram.components.PrimitiveType;
-import classDiagram.components.SimpleEntity;
-import classDiagram.components.Type;
-import classDiagram.components.Variable;
-import classDiagram.components.Visibility;
-import classDiagram.verifyName.TypeName;
 
 /**
  * Show the propreties of an UML SimpleEntity with Swing components. All inner
@@ -1298,6 +1296,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
   public void updateComponentInformations(UpdateMessage msg) {
     if (currentObject == null) return;
 
+    stopEditingTables();
     final SimpleEntity SimpleEntity = (SimpleEntity) currentObject;
     final AttributeTableModel modelAttributes = (AttributeTableModel) attributesTable
             .getModel();
@@ -1340,7 +1339,6 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     btnLeftParameters.setEnabled(false);
 
     validate();
-    cancelEditingTables();
 
     if (msg == UpdateMessage.ADD_METHOD
             || msg == UpdateMessage.ADD_METHOD_NO_EDIT)
@@ -1355,15 +1353,15 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
   }
 
-  private void cancelEditingTables() {
+  private void stopEditingTables() {
     TableCellEditor a = attributesTable.getCellEditor(), m = methodsTable
             .getCellEditor(), p = parametersTable.getCellEditor();
 
-    if (a != null) a.cancelCellEditing();
+    if (a != null) a.stopCellEditing();
 
-    if (m != null) m.cancelCellEditing();
+    if (m != null) m.stopCellEditing();
 
-    if (p != null) p.cancelCellEditing();
+    if (p != null) p.stopCellEditing();
   }
 
   @Override
