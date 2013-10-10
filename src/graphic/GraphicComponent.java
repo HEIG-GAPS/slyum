@@ -85,14 +85,6 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
     else if ("ColorContextMenu".equals(e.getActionCommand()))
       askNewColorForSelectedItems();
-
-    else if ("open-in-explorer".equals(e.getActionCommand()))
-      try {
-        Desktop.getDesktop().open(
-                PanelClassDiagram.getFileOpen().getParentFile());
-      } catch (Exception e1) {
-        SMessageDialog.showErrorMessage("No open file!");
-      }
     else
       SPanelDiagramComponent.getInstance().actionPerformed(e);
   }

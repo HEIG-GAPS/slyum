@@ -3,6 +3,7 @@ package swing;
 import com.apple.java.OSXAdapter;
 import graphic.GraphicView;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
@@ -460,6 +461,11 @@ public class Slyum extends JFrame implements ActionListener {
   }
 
   public Font defaultFont;
+  private JMenuItem menuItemLocate;
+
+  public JMenuItem getMenuItemLocate() {
+    return menuItemLocate;
+  }
 
   public Font _getDefaultFont() {
     return defaultFont;
@@ -645,6 +651,14 @@ public class Slyum extends JFrame implements ActionListener {
       case ACTION_ZOOM_2:
         PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(2.0);
         break;
+      case ACTION_LOCATE:
+        try {
+          Desktop.getDesktop().open(
+              PanelClassDiagram.getFileOpen().getParentFile());
+        } catch (Exception e1) {
+          SMessageDialog.showErrorMessage("No open file!");
+        }
+        break;
     }
   }
 
@@ -750,7 +764,7 @@ public class Slyum extends JFrame implements ActionListener {
       menu.add(menuItem);
       
       // Menu item Copy to clipboard
-      menuItem = createMenuItem("Locate in " + (OSValidator.IS_MAC ? "Finder" : "explorer"), "explore",
+      menuItemLocate = menuItem = createMenuItem("Locate in " + (OSValidator.IS_MAC ? "Finder" : "explorer"), "explore",
               KeyEvent.VK_K, null, ACTION_LOCATE);
       menu.add(menuItem);
 

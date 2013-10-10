@@ -62,8 +62,6 @@ public class DiagramPropreties extends GlobalPropreties {
   private JLabel lblFileName = new JLabel(),
           lblFileAbsolutePath = new JLabel();
 
-  private JButton openInExplorer;
-
   private JTextArea areaSelection, areaDefault;
 
   JPanel west = createJPanelInformations(),
@@ -77,22 +75,6 @@ public class DiagramPropreties extends GlobalPropreties {
     // Informations générales
     west.add(lblFileName);
     west.add(lblFileAbsolutePath);
-    openInExplorer = new FlatButton("Open in explorer",
-            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "explore.png"));
-
-    openInExplorer.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        try {
-          Desktop.getDesktop().open(
-                  PanelClassDiagram.getFileOpen().getParentFile());
-        } catch (IOException e1) {
-          SMessageDialog.showErrorMessage("No open file!");
-        }
-      }
-    });
-    west.add(openInExplorer);
 
     // Statistiques
     areaDefault = new JTextArea();
