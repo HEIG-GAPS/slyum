@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import javax.imageio.ImageIO;
+import javax.jnlp.PrintService;
+import javax.print.PrintServiceLookup;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -313,7 +315,7 @@ public class PanelClassDiagram extends JPanel {
 
   public void setCurrentFile(File file) {
     currentFile = file;
-    getCurrentGraphicView().getMiOpenInExplorer().setEnabled(file != null);
+    Slyum.getInstance().getMenuItemLocate().setEnabled(file != null);
     Change.setHasChange(false);
     Slyum.updateWindowTitle(currentFile);
 
@@ -457,24 +459,22 @@ public class PanelClassDiagram extends JPanel {
    */
   public void print() {
     try {
-      final PrinterJob prnJob = PrinterJob.getPrinterJob();
-
+      PrinterJob prnJob = PrinterJob.getPrinterJob();
       prnJob.setPrintable(graphicView);
-
+      for (javax.print.PrintService ps : PrinterJob.lookupPrintServices())
+        System.out.println(ps);
+      
       if (!prnJob.printDialog())
-
-      return;
-
+        return;
+      
       setCursor(new Cursor(Cursor.WAIT_CURSOR));
-
       prnJob.print();
-
       setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 
-      SMessageDialog.showInformationMessage("Printing completed successfully");
-    } catch (final PrinterException e) {
-      e.printStackTrace();
-      System.err.println("Printing error: " + e.toString());
+      SMessageDialog.showInformationMessage("Print completed successfully");
+    } catch (PrinterException e) {
+      System.err.println("Print error: " + e.toString());
+      SMessageDialog.showErrorMessage("Print failed");
     }
   }
 

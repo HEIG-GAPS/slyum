@@ -87,7 +87,6 @@ import swing.SPanelDiagramComponent;
 import swing.SPanelDiagramComponent.Mode;
 import swing.SPanelElement;
 import swing.Slyum;
-import swing.propretiesView.PropretiesChanger;
 import utility.Utility;
 
 /**
@@ -99,7 +98,14 @@ import utility.Utility;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public class GraphicView extends GraphicComponent implements MouseMotionListener, MouseListener, IComponentsObserver, Printable, KeyListener, MouseWheelListener, ColoredComponent {
+public class GraphicView extends GraphicComponent 
+                         implements MouseMotionListener, 
+                                    MouseListener, 
+                                    IComponentsObserver, 
+                                    Printable, 
+                                    KeyListener, 
+                                    MouseWheelListener, 
+                                    ColoredComponent {
 
   public enum ViewEntity {
     ALL, ONLY_ATTRIBUTES, ONLY_METHODS, NOTHING;
@@ -425,8 +431,6 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
 
   private final LinkedList<LineView> linesView = new LinkedList<>();
 
-  protected JMenuItem miOpenInExplorer;
-
   // use in printing
   private int m_maxNumPage = 1;
 
@@ -550,12 +554,6 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
     setColor(getBasicColor());
 
     JMenuItem menuItem;
-
-    popupMenu.addSeparator();
-
-    miOpenInExplorer = makeMenuItem("Open in explorer", "open-in-explorer",
-            "explore");
-    popupMenu.add(miOpenInExplorer);
 
     popupMenu.addSeparator();
 
@@ -2409,10 +2407,6 @@ public class GraphicView extends GraphicComponent implements MouseMotionListener
     }
 
     return sorted;
-  }
-
-  public JMenuItem getMiOpenInExplorer() {
-    return miOpenInExplorer;
   }
 
   @Override
