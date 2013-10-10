@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Frame;
 import java.awt.Point;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -143,6 +145,8 @@ public class Slyum extends JFrame implements ActionListener {
 
   public static final String ACTION_TEXTBOX_UP = "MoveTextBoxUp";
   public static final String ACTION_TEXTBOX_DOWN = "MoveTextBoxDown";
+  
+  public static final String ACTION_LOCATE = "locate";
 
   // Accelerator
   public final static String KEY_NEW_PROJECT = "ctrl alt N";
@@ -524,9 +528,24 @@ public class Slyum extends JFrame implements ActionListener {
     });
   }
 
+  public static void enableFullScreenMode(Window window) {
+    String className = "com.apple.eawt.FullScreenUtilities";
+    String methodName = "setWindowCanFullScreen";
+
+    try {
+      Class<?> clazz = Class.forName(className);
+      Method method = clazz.getMethod(methodName, new Class<?>[]{
+                Window.class, boolean.class});
+      method.invoke(null, window, true);
+    } catch (Throwable t) {
+      System.err.println("Full screen mode is not supported");
+    }
+  }
+  
   private void handleMacOSX() {
     if (OSValidator.IS_MAC) {
       System.setProperty("apple.laf.useScreenMenuBar", "true");
+      enableFullScreenMode(this);
       try {
         // Generate and register the OSXAdapter, passing it a hash of all the
         // methods we wish to
@@ -728,6 +747,11 @@ public class Slyum extends JFrame implements ActionListener {
       // Menu item Copy to clipboard
       menuItem = createMenuItem("Copy selection to clipboard", "klipper",
               KeyEvent.VK_K, KEY_KLIPPER, ACTION_KLIPPER, p.getBtnKlipper());
+      menu.add(menuItem);
+      
+      // Menu item Copy to clipboard
+      menuItem = createMenuItem("Locate in " + (OSValidator.IS_MAC ? "Finder" : "explorer"), "explore",
+              KeyEvent.VK_K, null, ACTION_LOCATE);
       menu.add(menuItem);
 
       menu.addSeparator();
@@ -1059,7 +1083,7 @@ public class Slyum extends JFrame implements ActionListener {
     }
 
     // Suppression du séparateur.
-    if (remove) menuFile.remove((OSValidator.IS_MAC ? 8 : 12));
+    if (remove) menuFile.remove((OSValidator.IS_MAC ? 9 : 13));
   }
 
   public void updateMenuItemHistory() {
@@ -1068,14 +1092,14 @@ public class Slyum extends JFrame implements ActionListener {
     List<String> histories = RecentProjectManager.getHistoryList();
 
     if (histories.size() > 0)
-      menuFile.add(new JSeparator(), (OSValidator.IS_MAC ? 8 : 12));
+      menuFile.add(new JSeparator(), (OSValidator.IS_MAC ? 9 : 13));
 
     for (String s : histories) {
       JMenuItemHistory menuItem = new JMenuItemHistory(formatHistoryEntry(s));
       menuItem.setActionCommand(ACTION_OPEN_RECENT_RPOJECT);
       menuItem.addActionListener(this);
       menuItem.setHistoryPath(Paths.get(s));
-      menuFile.add(menuItem, (OSValidator.IS_MAC ? 9 : 13));
+      menuFile.add(menuItem, (OSValidator.IS_MAC ? 10 : 14));
     }
   }
 
