@@ -39,7 +39,6 @@ public class TextBoxDiagramName extends TextBox implements Observer {
   @Override
   public void editing() {
     setMouseHover(false);
-      
     super.editing();
   }
 

@@ -1,14 +1,11 @@
 package swing.hierarchicalView;
 
 import java.awt.Component;
-
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
-
 import swing.Slyum;
 import utility.PersonalizedIcon;
 
-@SuppressWarnings("serial")
 public class TreeRenderer extends DefaultTreeCellRenderer {
   public TreeRenderer() {
     setLeafIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
@@ -26,10 +23,10 @@ public class TreeRenderer extends DefaultTreeCellRenderer {
     super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row,
             hasFocus);
 
-    if (row == 0) // root
+    if (row == 0) { // root
       setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
               + "diagramIcon.png"));
-
+    }
     else if (value instanceof ICustomizedIconNode)
 
     setIcon(((ICustomizedIconNode) value).getCustomizedIcon());

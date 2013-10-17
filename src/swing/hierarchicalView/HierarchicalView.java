@@ -26,7 +26,6 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.BorderFactory;
@@ -35,7 +34,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
-import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -108,7 +106,7 @@ public class HierarchicalView
       @Override
       public void keyReleased(KeyEvent e) {
         PanelClassDiagram.setCurrentDiagramName(
-            txtFieldClassDiagramName.getText());
+          txtFieldClassDiagramName.getText());
       }
     });
     txtFieldClassDiagramName.setFont(Slyum.DEFAULT_FONT.deriveFont(15f));
@@ -355,6 +353,11 @@ public class HierarchicalView
   }
   
   public void setDiagramName(String name) {
+    DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
+    DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
+    root.setUserObject(name);
+    model.nodeChanged(root);
+    
     if (txtFieldClassDiagramName.getText().equals(name))
       return;
     txtFieldClassDiagramName.setText(name);
