@@ -1,38 +1,5 @@
 package swing.propretiesView;
 
-import graphic.GraphicView;
-import graphic.entity.AssociationClassView;
-import graphic.entity.ClassView;
-import graphic.entity.EntityView;
-import graphic.entity.InterfaceView;
-import graphic.relations.AggregationView;
-import graphic.relations.AssociationView;
-import graphic.relations.BinaryView;
-import graphic.relations.CompositionView;
-import graphic.relations.InheritanceView;
-import graphic.relations.InnerClassView;
-
-import java.awt.Color;
-import java.awt.Desktop;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.LayoutStyle;
-
-import swing.FlatButton;
-import swing.PanelClassDiagram;
-import swing.Slyum;
-import utility.PersonalizedIcon;
-import utility.SMessageDialog;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.AssociationClass;
@@ -45,6 +12,28 @@ import classDiagram.relationships.Binary;
 import classDiagram.relationships.Composition;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
+import graphic.GraphicView;
+import graphic.entity.AssociationClassView;
+import graphic.entity.ClassView;
+import graphic.entity.EntityView;
+import graphic.entity.InterfaceView;
+import graphic.relations.AggregationView;
+import graphic.relations.AssociationView;
+import graphic.relations.BinaryView;
+import graphic.relations.CompositionView;
+import graphic.relations.InheritanceView;
+import graphic.relations.InnerClassView;
+import java.awt.Color;
+import java.io.File;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.GroupLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.LayoutStyle;
+import swing.PanelClassDiagram;
+import swing.Slyum;
 
 public class DiagramPropreties extends GlobalPropreties {
 

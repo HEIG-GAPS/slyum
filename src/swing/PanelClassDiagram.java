@@ -68,6 +68,7 @@ public class PanelClassDiagram extends JPanel {
   
   public static void setCurrentDiagramName(String name) {
     getInstance().setDiagramName(name);
+    getInstance().getClassDiagram().notifyObservers();
   }
   
   public static void setVisibleCurrentDiagramName(boolean visible) {
