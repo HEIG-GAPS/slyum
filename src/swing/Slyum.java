@@ -779,6 +779,7 @@ public class Slyum extends JFrame implements ActionListener {
       // Menu item Copy to clipboard
       menuItemLocate = menuItem = createMenuItem("Locate in " + (OSValidator.IS_MAC ? "Finder" : "explorer"), "explore",
               KeyEvent.VK_K, null, ACTION_LOCATE);
+      menuItemLocate.setEnabled(false);
       menu.add(menuItem);
 
       menu.addSeparator();
