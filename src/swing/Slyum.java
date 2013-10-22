@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Frame;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -67,7 +68,7 @@ public class Slyum extends JFrame implements ActionListener {
   // getResource() and didn't support back-slash character on Windows.
   public final static String RESOURCES_PATH = "resources/";
   public final static String ICON_PATH = RESOURCES_PATH + "icon/";
-  public final static String FONTS_PATCH = RESOURCES_PATH + "fonts/";
+  public final static String FONTS_PATH = RESOURCES_PATH + "fonts/";
 
   public final static int DEFAULT_FONT_SIZE = 12;
 
@@ -204,21 +205,32 @@ public class Slyum extends JFrame implements ActionListener {
   public final static String KEY_HELP = "F1";
   
   public final static Font DEFAULT_FONT;
+  public final static Font UI_FONT;
   
-  static {
-    Font tempFont;
+  public static Font addSystemFont(String fileName) {
+    Font font = null;
     try {
-      tempFont = Font
+      font = Font
               .createFont(
                       Font.TRUETYPE_FONT,
                       Slyum.class.getResource(
-                              String.format("%ssegoeui.ttf", FONTS_PATCH))
+                              String.format("%s%s.ttf", FONTS_PATH, fileName))
                               .openStream()).deriveFont(Font.PLAIN,
                       DEFAULT_FONT_SIZE);
-    } catch (FontFormatException | IOException e) {
-      tempFont = new Font(Font.SANS_SERIF, Font.PLAIN, DEFAULT_FONT_SIZE);
+      
+      // Save the new font in local environment.
+      GraphicsEnvironment ge = 
+          GraphicsEnvironment.getLocalGraphicsEnvironment();
+      ge.registerFont(font);
+    } catch (IOException | FontFormatException | NullPointerException e) {
+      System.err.println("Unable to import font:" + fileName);
     }
-    DEFAULT_FONT = tempFont;
+    return font;
+  }
+  
+  static {
+    DEFAULT_FONT = addSystemFont("Ubuntu-R");
+    UI_FONT = addSystemFont("segoeui");
   }
 
   private static final String ARGUMENT_PRINT_CHANGE_STACK_STATE = "-printChanges";
@@ -681,7 +693,8 @@ public class Slyum extends JFrame implements ActionListener {
     System.setProperty("awt.useSystemAAFontSettings", "on");
     System.setProperty("swing.aatext", "true");
 
-    Font f = defaultFont.deriveFont(13.0f);
+    //Font f = defaultFont.deriveFont(13.0f);
+    Font f = UI_FONT.deriveFont(13.0f);
     UIManager.put("Button.font", f);
     UIManager.put("Label.font", f);
     UIManager.put("CheckBox.font", f);
