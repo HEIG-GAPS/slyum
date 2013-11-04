@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 import classDiagram.IDiagramComponent;
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Role;
+import graphic.relations.LineView;
 
 /**
  * A TextBox is a graphic component from Slyum containing a String. The
@@ -181,9 +182,13 @@ public class TextBoxRole extends TextBoxLabel {
     return role;
   }
 
-  public AssociationView getAssociationView() {
+  private AssociationView getAssociationView() {
     return (AssociationView) parent.searchAssociedComponent(role
             .getAssociation());
+  }
+  
+  private LineView getLinkedAssociationView() {
+    return grip.getRelation();
   }
 
   @Override
@@ -202,13 +207,13 @@ public class TextBoxRole extends TextBoxLabel {
   @Override
   public void gMousePressed(MouseEvent e) {
     super.gMousePressed(e);
-    maybeShowPopup(e, getAssociationView());
+    maybeShowPopup(e, getLinkedAssociationView());
   }
 
   @Override
   public void gMouseReleased(MouseEvent e) {
     super.gMouseReleased(e);
-    maybeShowPopup(e, getAssociationView());
+    maybeShowPopup(e, getLinkedAssociationView());
   }
 
   @Override
