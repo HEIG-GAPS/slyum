@@ -2,19 +2,14 @@ package swing;
 
 import com.apple.java.OSXAdapter;
 import graphic.GraphicView;
-import java.awt.AWTEvent;
 import java.awt.Color;
-import java.awt.DefaultKeyboardFocusManager;
 import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
-import java.awt.KeyEventDispatcher;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -55,8 +50,7 @@ import utility.SMessageDialog;
  * @version 1.0 - 25.07.2011
  */
 public class Slyum extends JFrame implements ActionListener {
-
-  private static final long serialVersionUID = 1L;
+  
   private static final String APP_NAME = "Slyum";
   public static final String version = "3.3.0";
   public final static String EXTENTION = "sly";
@@ -110,6 +104,7 @@ public class Slyum extends JFrame implements ActionListener {
   public static final String ACTION_EXPORT = "Export";
   public static final String ACTION_KLIPPER = "Klipper";
   public static final String ACTION_PRINT = "Print";
+  public static final String ACTION_PAGE_SETUP = "PageSetup";
   public static final String ACTION_NEW_LINK_NOTE = "LinkNote";
   public static final String ACTION_NEW_CLASS = "NewClass";
   public static final String ACTION_NEW_INTERFACE = "NewInterface";
@@ -627,6 +622,10 @@ public class Slyum extends JFrame implements ActionListener {
           SMessageDialog
                   .showErrorMessage("An error occured while opening project. Please report.");
         break;
+      case ACTION_PAGE_SETUP:
+        SlyumPrinterJob.pageDialog(
+                PanelClassDiagram.getInstance().getCurrentGraphicView());
+        break;
       case ACTION_PROPERTIES:
         openProperties();
         break;
@@ -792,6 +791,11 @@ public class Slyum extends JFrame implements ActionListener {
       // Menu item print
       menuItem = createMenuItem("Print...", "print", KeyEvent.VK_P, KEY_PRINT,
               ACTION_PRINT, p.getBtnPrint());
+      menu.add(menuItem);
+      
+      // Menu item page setup
+      menuItem = createMenuItem("Page setup...", "page-setup", KeyEvent.VK_G, 
+              null, ACTION_PAGE_SETUP);
       menu.add(menuItem);
 
       if (!OSValidator.IS_MAC) {
@@ -1116,7 +1120,7 @@ public class Slyum extends JFrame implements ActionListener {
     }
 
     // Suppression du séparateur.
-    if (remove) menuFile.remove((OSValidator.IS_MAC ? 9 : 13));
+    if (remove) menuFile.remove((OSValidator.IS_MAC ? 10 : 14));
   }
 
   public void updateMenuItemHistory() {
@@ -1125,14 +1129,14 @@ public class Slyum extends JFrame implements ActionListener {
     List<String> histories = RecentProjectManager.getHistoryList();
 
     if (histories.size() > 0)
-      menuFile.add(new JSeparator(), (OSValidator.IS_MAC ? 9 : 13));
+      menuFile.add(new JSeparator(), (OSValidator.IS_MAC ? 10 : 14));
 
     for (String s : histories) {
       JMenuItemHistory menuItem = new JMenuItemHistory(formatHistoryEntry(s));
       menuItem.setActionCommand(ACTION_OPEN_RECENT_RPOJECT);
       menuItem.addActionListener(this);
       menuItem.setHistoryPath(Paths.get(s));
-      menuFile.add(menuItem, (OSValidator.IS_MAC ? 10 : 14));
+      menuFile.add(menuItem, (OSValidator.IS_MAC ? 11 : 15));
     }
   }
 

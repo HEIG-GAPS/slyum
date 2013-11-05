@@ -6,11 +6,14 @@ import graphic.GraphicComponent;
 import graphic.GraphicView;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
+import java.awt.print.PageFormat;
+import java.awt.print.Paper;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
@@ -18,9 +21,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.jnlp.PrintService;
-import javax.print.PrintServiceLookup;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -459,24 +462,16 @@ public class PanelClassDiagram extends JPanel {
    * Print a picture of the diagram.
    */
   public void print() {
+    setCursor(new Cursor(Cursor.WAIT_CURSOR));
     try {
-      PrinterJob prnJob = PrinterJob.getPrinterJob();
-      prnJob.setPrintable(graphicView);
-      for (javax.print.PrintService ps : PrinterJob.lookupPrintServices())
-        System.out.println(ps);
-      
-      if (!prnJob.printDialog())
-        return;
-      
-      setCursor(new Cursor(Cursor.WAIT_CURSOR));
-      prnJob.print();
-      setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-
-      SMessageDialog.showInformationMessage("Print completed successfully");
-    } catch (PrinterException e) {
-      System.err.println("Print error: " + e.toString());
-      SMessageDialog.showErrorMessage("Print failed");
+      if (SlyumPrinterJob.print(getCurrentGraphicView()))
+        SMessageDialog.showInformationMessage("Print completed successfully");
+    } catch (PrinterException ex) {
+      Logger.getLogger(
+              PanelClassDiagram.class.getName()).log(Level.SEVERE, null, ex);
+      SMessageDialog.showInformationMessage("An error occurs while printing.");
     }
+    setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
   }
 
   /**

@@ -432,7 +432,7 @@ public class GraphicView extends GraphicComponent
   private final LinkedList<LineView> linesView = new LinkedList<>();
 
   // use in printing
-  private int m_maxNumPage = 1;
+  private final int MAX_PRINT_PAGE = 1;
 
   private Point mousePressedLocation = new Point();
   private final LinkedList<MultiView> multiViews = new LinkedList<>();
@@ -2045,52 +2045,40 @@ public class GraphicView extends GraphicComponent
   }
 
   @Override
-  public int print(Graphics pg, PageFormat pageFormat, int pageIndex)
+  public int print(Graphics g, PageFormat pageFormat, int pageIndex)
           throws PrinterException {
-    // This method was found on internet (see class PanelClassDiagram).
-    // Printing have not been tested a lot (beta).
-    // This method compute the number of pages required for drawing a
-    // picture and cut this picture for each pages.
-    final BufferedImage m_bi = getScreen(BufferedImage.TYPE_INT_ARGB_PRE);
+    
+    if (pageIndex >= MAX_PRINT_PAGE)
+      return NO_SUCH_PAGE;
+    
+    Utility.setRenderQuality(g);
+    
+    BufferedImage m_bi = getScreen(BufferedImage.TYPE_INT_ARGB_PRE);
+    int wPage = (int) pageFormat.getImageableWidth(),
+        hPage = (int) pageFormat.getImageableHeight(),
+        wBi = m_bi.getWidth(),
+        hBi = m_bi.getHeight(),
+        wScaled = wBi,
+        hScaled = hBi;
+    
+    // Compute the ratio for scaling the scene into one page.
+    float wScale = (float)wBi / wPage,
+          hScale = (float)hBi / hPage;
+    
+    // If the scene overflow the page, scale it for not overbounding the page.
+    if (wScale > 1.0f || hScale > 1.0f)
+      if (wScale > hScale) {
+        wScaled = wPage;
+        hScaled /= wScale;
+      } else  {
+        hScaled = hPage;
+        wScaled /= hScale;
+      }
 
-    if (pageIndex >= m_maxNumPage || m_bi == null)
+    g.translate((int) pageFormat.getImageableX(),
+                 (int) pageFormat.getImageableY());
 
-    return NO_SUCH_PAGE;
-
-    pg.translate((int) pageFormat.getImageableX(),
-            (int) pageFormat.getImageableY());
-
-    final int wPage = (int) pageFormat.getImageableWidth();
-
-    final int hPage = (int) pageFormat.getImageableHeight();
-
-    final int w = m_bi.getWidth(getScene());
-
-    final int h = m_bi.getHeight(getScene());
-
-    if (w == 0 || h == 0)
-
-    return NO_SUCH_PAGE;
-
-    final int nCol = Math.max((int) Math.ceil((double) w / wPage), 1);
-    final int nRow = Math.max((int) Math.ceil((double) h / hPage), 1);
-
-    m_maxNumPage = nCol * nRow;
-
-    final int iCol = pageIndex % nCol;
-
-    final int iRow = pageIndex / nCol;
-
-    final int x = iCol * wPage;
-
-    final int y = iRow * hPage;
-
-    final int wImage = Math.min(wPage, w - x);
-
-    final int hImage = Math.min(hPage, h - y);
-
-    pg.drawImage(m_bi, 0, 0, wImage, hImage, x, y, x + wImage, y + hImage,
-            getScene());
+    g.drawImage(m_bi, 0, 0, wScaled, hScaled, getScene());
 
     System.gc();
 
