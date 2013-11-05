@@ -230,7 +230,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     initializeComponents();
   }
 
-  protected void initializeComponents() {
+  final protected void initializeComponents() {
 
     JMenuItem menuItem;
 

@@ -63,11 +63,9 @@ public class MultiLineView extends LineView {
     final int nbLineAssocied = parent.getLinesViewAssociedWith(mv).size();
 
     if (nbLineAssocied == 3)
-
-    mv.delete();
+      mv.delete();
 
     super.delete();
-
     mv.connexionRemoved(this);
 
   }

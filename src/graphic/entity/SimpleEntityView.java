@@ -43,9 +43,9 @@ public abstract class SimpleEntityView extends EntityView {
   protected boolean displayMethods = true;
 
   // Attributs et méthodes
-  protected LinkedList<TextBoxAttribute> attributesView = new LinkedList<TextBoxAttribute>();
+  protected LinkedList<TextBoxAttribute> attributesView = new LinkedList<>();
 
-  protected LinkedList<TextBoxMethod> methodsView = new LinkedList<TextBoxMethod>();
+  protected LinkedList<TextBoxMethod> methodsView = new LinkedList<>();
 
   // Elements pour le menu contextuel
   private JMenuItem menuItemStatic, menuItemAbstract, menuItemViewDefault,
@@ -57,6 +57,8 @@ public abstract class SimpleEntityView extends EntityView {
 
   public SimpleEntityView(GraphicView parent, SimpleEntity component) {
     super(parent, component);
+    super.initializeComponents();
+    initViewType();
   }
 
   @Override
@@ -139,13 +141,7 @@ public abstract class SimpleEntityView extends EntityView {
     popupMenu.addSeparator();
   }
 
-  @Override
-  protected void initializeComponents() {
-    super.initializeComponents();
-    initViewType();
-  }
-
-  public void initViewType() {
+  final public void initViewType() {
     if (displayDefault) {
       ViewEntity view = GraphicView.getDefaultViewEntities();
       switch (view) {

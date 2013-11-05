@@ -156,11 +156,15 @@ public abstract class Association extends Observable implements Relation, ILabel
 
   @Override
   public Entity getSource() {
+    if (roles.size() == 0)
+      return null;
     return roles.getFirst().getEntity();
   }
 
   @Override
   public Entity getTarget() {
+    if (roles.size() == 0)
+      return null;
     return roles.getLast().getEntity();
   }
 

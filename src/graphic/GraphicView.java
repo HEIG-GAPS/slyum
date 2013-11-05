@@ -1631,16 +1631,28 @@ public class GraphicView extends GraphicComponent
   }
 
   public void deleteSelectedComponents() {
-    final LinkedList<GraphicComponent> selected = getSelectedComponents();
+    deleteComponents(getSelectedComponents());
+  }
+  
+  public static void deleteComponents(List<GraphicComponent> components) {
 
-    if (selected.size() == 0) return;
+    if (components.isEmpty()) return;
 
     boolean isRecord = Change.isRecord();
     Change.record();
 
-    for (final GraphicComponent c : selected)
-
+    for (GraphicComponent c : components)
       c.delete();
+
+    if (!isRecord) Change.stopRecord();
+  }
+  
+  public static void deleteComponent(GraphicComponent component) {
+
+    boolean isRecord = Change.isRecord();
+    Change.record();
+
+    component.delete();
 
     if (!isRecord) Change.stopRecord();
   }
