@@ -114,7 +114,8 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
   public void actionPerformed(ActionEvent e) {
     super.actionPerformed(e);
 
-    if ("Delete".equals(e.getActionCommand())) delete();
+    if ("Delete".equals(e.getActionCommand()))
+      GraphicView.deleteComponent(this);
   }
 
   public void addMultiLineView(MultiLineView mlv) {

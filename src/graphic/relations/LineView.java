@@ -132,17 +132,20 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
   @Override
   public void actionPerformed(ActionEvent e) {
     super.actionPerformed(e);
-    if ("Delete".equals(e.getActionCommand())) {
-      delete();
-    } else if ("AddGrip".equals(e.getActionCommand())) {
-      if (locationContextMenuRequested != null) {
-        createNewGrip(locationContextMenuRequested);
-        setSelected(false);
-        setSelected(true);
-      }
-    } else if ("DeleteGrip".equals(e.getActionCommand())) {
-      if (locationContextMenuRequested != null)
-        deleteNearestGripAt(locationContextMenuRequested);
+    switch (e.getActionCommand()) {
+      case "Delete":
+        GraphicView.deleteComponent(this);
+        break;
+      case "AddGrip":
+        if (locationContextMenuRequested != null) {
+          createNewGrip(locationContextMenuRequested);
+          setSelected(false);
+          setSelected(true);
+        } break;
+      case "DeleteGrip":
+        if (locationContextMenuRequested != null)
+          deleteNearestGripAt(locationContextMenuRequested);
+        break;
     }
   }
 
