@@ -57,7 +57,6 @@ public abstract class SimpleEntityView extends EntityView {
 
   public SimpleEntityView(GraphicView parent, SimpleEntity component) {
     super(parent, component);
-    super.initializeComponents();
     initViewType();
   }
 

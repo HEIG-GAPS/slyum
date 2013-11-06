@@ -1,5 +1,14 @@
 New features
+  - Print complete diagram on one page.
+  - Allow full screen mode on Mac OS X.
 Improvments
+  - Change menu item "Locate" from diagram's popup menu to File menu.
+  - Diagram's name is now visible on the tree hierarchy.
 Fixes
   - The color dialog showed twice when changing element's color from context menu.
   - Changes in properties view are saved when user unfocus it.
+  - Fix fonts problem if the default font wasn't install on the system.
+  - Fix default state (disable) of the "Locate" menu item.
+  - Fix popup menu problem on multi-association.
+  - Fix undo/redo problem on multi-association.
+  - Fix default class view on creation.
