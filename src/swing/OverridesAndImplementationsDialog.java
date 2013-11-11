@@ -28,7 +28,6 @@ import javax.swing.border.EmptyBorder;
 import utility.Utility;
 import classDiagram.components.Method;
 import classDiagram.components.SimpleEntity;
-import classDiagram.components.Variable;
 
 public class OverridesAndImplementationsDialog extends JDialog {
 
@@ -56,30 +55,18 @@ public class OverridesAndImplementationsDialog extends JDialog {
 
     @Override
     public String toString() {
-      String methodString = m.getName();
-
-      methodString += "(";
-
-      for (final Variable v : m.getParameters())
-        methodString += v.toString() + ", ";
-
-      if (m.getParameters().size() > 0)
-        methodString = methodString.substring(0, methodString.length() - 2);
-
-      methodString += ") : " + m.getReturnType();
-
-      return methodString;
+      return m.getStringFromMethod(Method.ParametersViewStyle.TYPE_AND_NAME);
     }
   }
 
   class CheckListRenderer extends JCheckBox implements ListCellRenderer<Object> {
-    private static final long serialVersionUID = 1514851566910580095L;
 
     public CheckListRenderer() {
       setBackground(UIManager.getColor("List.textBackground"));
       setForeground(UIManager.getColor("List.textForeground"));
     }
 
+    @Override
     public Component getListCellRendererComponent(JList<?> list, Object value,
             int index, boolean isSelected, boolean hasFocus) {
       setEnabled(list.isEnabled());
@@ -94,12 +81,14 @@ public class OverridesAndImplementationsDialog extends JDialog {
   private boolean accepted = false;
   private final JPanel contentPanel = new JPanel();
 
-  Vector<CheckableItem> items = new Vector<OverridesAndImplementationsDialog.CheckableItem>();
+  Vector<CheckableItem> items = new Vector<>();
 
   private final SimpleEntity parent, child;
 
   /**
    * Create the dialog.
+   * @param parent The parent entity of inheritance.
+   * @param child The child entity of inheritance.
    */
   public OverridesAndImplementationsDialog(SimpleEntity parent,
           SimpleEntity child) {
@@ -107,6 +96,7 @@ public class OverridesAndImplementationsDialog extends JDialog {
 
       private static final long serialVersionUID = -9137055482704631902L;
 
+      @Override
       public void actionPerformed(ActionEvent e) {
         setVisible(false);
       }
@@ -134,7 +124,7 @@ public class OverridesAndImplementationsDialog extends JDialog {
       gbc_scrollPane.gridy = 0;
       contentPanel.add(scrollPane, gbc_scrollPane);
       {
-        final JList<?> list = new JList<Object>(createData());
+        final JList<?> list = new JList<>(createData());
         scrollPane.setViewportView(list);
         list.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null,
                 null));
@@ -160,6 +150,7 @@ public class OverridesAndImplementationsDialog extends JDialog {
       {
         final JButton okButton = new JButton("OK");
         okButton.addActionListener(new ActionListener() {
+          @Override
           public void actionPerformed(ActionEvent e) {
             accepted = true;
             setVisible(false);
@@ -172,6 +163,7 @@ public class OverridesAndImplementationsDialog extends JDialog {
       {
         final JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(new ActionListener() {
+          @Override
           public void actionPerformed(ActionEvent e) {
             accepted = false;
             setVisible(false);

@@ -1,5 +1,6 @@
 New features
   - Print complete diagram on one page.
+  - Implementation of class' constructor.
   - Allow full screen mode on Mac OS X.
 Improvments
   - Change menu item "Locate" from diagram's popup menu to File menu.

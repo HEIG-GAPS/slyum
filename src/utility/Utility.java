@@ -39,6 +39,7 @@ import swing.EditCommentaryDialog;
 import swing.PropertyLoader;
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Multiplicity;
+import java.awt.Dimension;
 import java.util.List;
 
 /**
@@ -49,6 +50,21 @@ import java.util.List;
  */
 public class Utility {
   public final static GraphicQualityType GRAPHIQUE_QUALITY_TYPE = GraphicQualityType.MAX;
+
+  /**
+   * Set the given size for preferredSize, maximumSize and minimumSize to the
+   * given component.
+   *
+   * @param component
+   *          the component to resize
+   * @param size
+   *          the size
+   */
+  public static void setAllSize(JComponent component, Dimension size) {
+    component.setPreferredSize(size);
+    component.setMaximumSize(size);
+    component.setMinimumSize(size);
+  }
 
   public enum GraphicQualityType {
     LOW, MAX, MEDIUM

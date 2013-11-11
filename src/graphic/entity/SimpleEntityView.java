@@ -29,6 +29,7 @@ import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Attribute;
+import classDiagram.components.ConstructorMethod;
 import classDiagram.components.Method;
 import classDiagram.components.Method.ParametersViewStyle;
 import classDiagram.components.PrimitiveType;
@@ -509,7 +510,8 @@ public abstract class SimpleEntityView extends EntityView {
         textbox.addAll(view.methodsView);
 
       for (int i = 0; i < textbox.size() - 1; i++) {
-        Method current = (Method) textbox.get(i).getAssociedComponent(), next = (Method) textbox
+        Method current = (Method) textbox.get(i).getAssociedComponent();
+        Method next = (Method) textbox
                 .get(i + 1).getAssociedComponent();
         if (!current.getConcretParametersViewStyle().equals(
                 next.getConcretParametersViewStyle())) {
@@ -586,7 +588,9 @@ public abstract class SimpleEntityView extends EntityView {
 
       // If context menu is requested on a TextBox, customize popup menu.
       if (pressedTextBox != null) {
-        menuItemStatic.setEnabled(true);
+        Boolean isConstructor = pressedTextBox.getAssociedComponent().getClass()
+                                              .equals(ConstructorMethod.class);
+        menuItemStatic.setEnabled(!isConstructor);
 
         menuItemMoveUp.setEnabled(attributesView.indexOf(pressedTextBox) != 0
                 && methodsView.indexOf(pressedTextBox) != 0);
@@ -596,7 +600,7 @@ public abstract class SimpleEntityView extends EntityView {
                         && (methodsView.size() == 0 || methodsView
                                 .indexOf(pressedTextBox) != methodsView.size() - 1));
         if (pressedTextBox instanceof TextBoxMethod)
-          menuItemAbstract.setEnabled(true);
+          menuItemAbstract.setEnabled(!isConstructor);
 
       } else {
         menuItemMoveUp.setEnabled(false);

@@ -5,6 +5,7 @@ import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.Attribute;
 import classDiagram.components.ClassEntity;
+import classDiagram.components.ConstructorMethod;
 import classDiagram.components.EnumEntity;
 import classDiagram.components.EnumValue;
 import classDiagram.components.InterfaceEntity;
@@ -42,6 +43,7 @@ import java.util.LinkedList;
 import javax.swing.SwingUtilities;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.helpers.DefaultHandler;
 import utility.SMessageDialog;
 
@@ -136,9 +138,10 @@ public class XMLParser extends DefaultHandler {
     boolean isStatic = false;
     String name = null;
     ParametersViewStyle view = ParametersViewStyle.TYPE_AND_NAME;
-    Type returnType = null;
+    String returnType = null;
     LinkedList<Variable> variable = new LinkedList<>();
     Visibility visibility = Visibility.PUBLIC;
+    boolean isConstructor = false;
   }
 
   private class RelationView {
@@ -256,7 +259,7 @@ public class XMLParser extends DefaultHandler {
     buffer.append(reader);
   }
 
-  private void createEntity(Entity e) throws SyntaxeNameException {
+  private void createEntity(Entity e) throws SyntaxeNameException, SAXNotRecognizedException {
     classDiagram.components.Entity ce = null;
     e.name = TypeName.verifyAndAskNewName(e.name);
     boolean isSimpleEntity = true;
@@ -301,15 +304,15 @@ public class XMLParser extends DefaultHandler {
                           + " has been converted into a normal class.\nIts association no longer exists during importation.");
           break;
         }
-
-        try {
-          ce = new AssociationClass(e.name, e.visibility, b, e.id);
-          classDiagram.addAssociationClass((AssociationClass) ce);
-        } catch (IllegalArgumentException a) {
-          SMessageDialog.showErrorMessage(a.getMessage());
-        }
+        
+        ce = new AssociationClass(e.name, e.visibility, b, e.id);
+        classDiagram.addAssociationClass((AssociationClass) ce);
 
         break;
+        
+        default:
+          throw new SAXNotRecognizedException(
+              e.entityType + ": wrong entity type.");
     }
 
     if (isSimpleEntity) {
@@ -329,9 +332,15 @@ public class XMLParser extends DefaultHandler {
       }
 
       for (Operation o : e.method) {
-        Method m = new Method(MethodName.verifyAndAskNewName(o.name),
-                o.returnType, o.visibility, se);
-
+        Method m;
+        if (o.isConstructor)
+          m = new ConstructorMethod(
+              MethodName.verifyAndAskNewName(o.name), o.visibility, se);
+        else
+          m = new Method(
+              MethodName.verifyAndAskNewName(o.name),
+              new Type(TypeName.verifyAndAskNewName(o.returnType)), 
+              o.visibility, se);
         se.addMethod(m);
         se.notifyObservers(UpdateMessage.ADD_METHOD_NO_EDIT);
 
@@ -363,7 +372,8 @@ public class XMLParser extends DefaultHandler {
     graphicView.removeAll();
   }
 
-  public void createDiagram() throws SyntaxeNameException {
+  public void createDiagram() 
+      throws SyntaxeNameException, SAXNotRecognizedException {
     
     classDiagram.setName(umlClassDiagram.name);
     classDiagram.notifyObservers();
@@ -534,7 +544,8 @@ public class XMLParser extends DefaultHandler {
     }
   }
 
-  private void importAssociationClass() throws SyntaxeNameException {
+  private void importAssociationClass() 
+      throws SyntaxeNameException, SAXNotRecognizedException {
     for (final Entity e : umlClassDiagram.diagrameElement.entity)
 
       if (e.entityType == EntityType.ASSOCIATION_CLASS)
@@ -608,7 +619,8 @@ public class XMLParser extends DefaultHandler {
     umlClassDiagram.diagrameElement.association = associationsNotAdded;
   }
 
-  private void importClassesAndInterfaces() throws SyntaxeNameException {
+  private void importClassesAndInterfaces() 
+      throws SyntaxeNameException, SAXNotRecognizedException {
     for (final Entity e : umlClassDiagram.diagrameElement.entity)
 
       if (!(e.entityType == EntityType.ASSOCIATION_CLASS)) createEntity(e);
@@ -877,8 +889,7 @@ public class XMLParser extends DefaultHandler {
         try {
           currentMethod = new Operation();
           currentMethod.name = attributes.getValue("name");
-          currentMethod.returnType = new Type(
-              TypeName.verifyAndAskNewName(attributes.getValue("returnType")));
+          currentMethod.returnType = attributes.getValue("returnType");
           currentMethod.visibility = Visibility.valueOf(attributes
               .getValue("visibility"));
           currentMethod.isStatic = Boolean.parseBoolean(attributes
@@ -889,6 +900,10 @@ public class XMLParser extends DefaultHandler {
           if (attributes.getValue("view") != null)
             currentMethod.view = ParametersViewStyle.valueOf(attributes
                 .getValue("view"));
+          
+          if (attributes.getValue("is-constructor") != null)
+            currentMethod.isConstructor = Boolean.valueOf(attributes
+                .getValue("is-constructor"));
           
           currentEntity.method.add(currentMethod);
         } catch (final Exception e) {

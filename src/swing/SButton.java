@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.plaf.metal.MetalButtonUI;
 
 public class SButton extends JButton {
+  
   private final Color BACKGROUND = Color.WHITE;
   private LinkedList<Component> linkedComponents = new LinkedList<>();
 
@@ -36,7 +37,8 @@ public class SButton extends JButton {
   }
 
   private void init(String action, String tooltip, ActionListener al) {
-    setPreferredSize(new Dimension(24, 24));
+    setPreferredSize(new Dimension(getIcon().getIconWidth(), 
+                                   getIcon().getIconHeight()));
     setActionCommand(action);
     addActionListener(al);
     setContentAreaFilled(false);

@@ -148,8 +148,8 @@ public abstract class Entity extends Type implements Cloneable {
       return entity;
 
     } catch (Exception e) {
-      SMessageDialog
-              .showErrorMessage("An error occured when copying the entity.\nThank to send a report.");
+      SMessageDialog.showErrorMessage(
+          "An error occured when copying the entity.\nThank to send a report.");
       e.printStackTrace();
     }
     return null;

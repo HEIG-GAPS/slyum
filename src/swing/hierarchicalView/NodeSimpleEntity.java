@@ -2,7 +2,6 @@ package swing.hierarchicalView;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import classDiagram.components.Attribute;
@@ -18,21 +17,16 @@ public class NodeSimpleEntity extends NodeEntity {
 
   @Override
   protected void reloadChildsNodes() {
-    DefaultMutableTreeNode node;
-    SimpleEntity entity = (SimpleEntity) super.entity;
+    SimpleEntity simpleEntity = (SimpleEntity)super.entity;
 
-    setUserObject(entity.getName());
+    setUserObject(simpleEntity.getName());
     removeAllChildren();
 
-    for (final Attribute a : entity.getAttributes()) {
-      node = new NodeAttribute(a, treeModel, tree);
-      add(node);
-    }
+    for (final Attribute a : simpleEntity.getAttributes())
+      add(new NodeAttribute(a, treeModel, tree));
 
-    for (final Method m : entity.getMethods()) {
-      node = new NodeMethod(m, treeModel, tree);
-      add(node);
-    }
+    for (final Method m : simpleEntity.getMethods())
+      add(new NodeMethod(m, treeModel, tree));
 
     treeModel.reload(this);
   }
