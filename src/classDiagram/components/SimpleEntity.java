@@ -416,7 +416,7 @@ public class SimpleEntity extends Entity {
       entity.addAttribute(new Attribute(a));
 
     for (Method m : getMethods())
-      entity.addMethod(new Method(m, this));
+      entity.addMethod(m.createCopy(this));
 
     return entity;
   }

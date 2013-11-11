@@ -1,9 +1,15 @@
 package graphic.entity;
 
+import classDiagram.IDiagramComponent;
 import graphic.GraphicView;
 import classDiagram.components.Attribute;
 import classDiagram.components.ClassEntity;
+import classDiagram.components.ConstructorMethod;
 import classDiagram.components.Method;
+import classDiagram.components.SimpleEntity;
+import classDiagram.components.Visibility;
+import java.awt.event.ActionEvent;
+import javax.swing.JPopupMenu;
 
 /**
  * Represent the view of a class in UML structure.
@@ -12,6 +18,8 @@ import classDiagram.components.Method;
  * @version 1.0 - 25.07.2011
  */
 public class ClassView extends SimpleEntityView {
+  
+  public static final String ACTION_ADD_CONSTRUCTOR = "AddConstructor";
 
   /**
    * Create a new view from the given class.
@@ -42,5 +50,31 @@ public class ClassView extends SimpleEntityView {
   protected void restoreEntity() {
     parent.getClassDiagram().addClassEntity(
             (ClassEntity) getAssociedComponent());
+  }
+
+  @Override
+  protected void initializeMenuItemsAddElements(JPopupMenu popupmenu) {
+    popupMenu.add(makeMenuItem("Add constructor", ACTION_ADD_CONSTRUCTOR, "constructor"));
+    super.initializeMenuItemsAddElements(popupmenu);
+  }
+
+  /**
+   * Create a new method with default type and name, without parameter.
+   */
+  public void addConstructor() {
+    ConstructorMethod method = new ConstructorMethod(getComponent().getName(),
+            Visibility.PUBLIC, ((SimpleEntity) component));
+    prepareNewMethod(method);
+
+    if (((SimpleEntity) component).addMethod(method))
+      component.notifyObservers(IDiagramComponent.UpdateMessage.ADD_METHOD);
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    if (e.getActionCommand().equals(ACTION_ADD_CONSTRUCTOR))
+      addConstructor();
+    else
+      super.actionPerformed(e);
   }
 }

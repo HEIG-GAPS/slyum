@@ -60,7 +60,7 @@ public class NodeMethod extends DefaultMutableTreeNode implements Observer, ICla
 
   @Override
   public ImageIcon getCustomizedIcon() {
-    return PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "method.png");
+    return method.getImageIcon();
   }
 
   @Override

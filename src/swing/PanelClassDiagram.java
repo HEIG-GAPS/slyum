@@ -405,6 +405,8 @@ public class PanelClassDiagram extends JPanel {
 
         graphicView.getScrollPane().getVerticalScrollBar().setValue(0);
         graphicView.getScrollPane().getHorizontalScrollBar().setValue(0);
+        
+        System.gc();
       }
     });
   }

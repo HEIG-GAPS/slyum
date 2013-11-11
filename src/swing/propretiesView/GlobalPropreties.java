@@ -56,25 +56,25 @@ public abstract class GlobalPropreties extends JPanel implements Observer {
   }
 
   @Override
-  public void update(Observable arg0, Object arg1) {
+  public void update(Observable observable, Object object) {
     if (PanelClassDiagram.getInstance().isDisabledUpdate())
       return;
           
-    if (arg1 != null && arg1 instanceof UpdateMessage)
-      switch ((UpdateMessage) arg1) {
+    if (object != null && object instanceof UpdateMessage)
+      switch ((UpdateMessage) object) {
         case SELECT:
-          currentObject = arg0;
-          updateComponentInformations((UpdateMessage) arg1);
+          currentObject = observable;
+          updateComponentInformations((UpdateMessage) object);
           showInProperties();
 
           break;
         case UNSELECT:
-          if (arg0.equals(currentObject))
+          if (observable == currentObject)
             PropretiesChanger.getInstance().setViewportView(null);
-          updateComponentInformations((UpdateMessage) arg1);
+          updateComponentInformations((UpdateMessage) object);
           break;
         default:
-          updateComponentInformations((UpdateMessage) arg1);
+          updateComponentInformations((UpdateMessage) object);
           break;
       }
     else

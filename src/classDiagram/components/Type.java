@@ -40,6 +40,7 @@ public class Type extends Observable implements IDiagramComponent {
   protected String name = "void";
 
   LinkedList<Integer> arraysSize = new LinkedList<>();
+  private boolean visible = true;
 
   /**
    * Create a new type with the specified name.
@@ -90,6 +91,10 @@ public class Type extends Observable implements IDiagramComponent {
    * @return the name of the type
    */
   public String getName() {
+    
+    if (!isVisible())
+      return "";
+    
     String n = name;
 
     for (Integer i : arraysSize)
@@ -97,6 +102,15 @@ public class Type extends Observable implements IDiagramComponent {
       n += "[" + (i < 1 ? "" : i) + "]";
 
     return n;
+  }
+  
+  public void setVisible(boolean visible) {
+    this.visible = visible;
+    setChanged();
+  }
+
+  public boolean isVisible() {
+    return visible;
   }
 
   @Override

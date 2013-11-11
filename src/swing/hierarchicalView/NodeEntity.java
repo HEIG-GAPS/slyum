@@ -12,9 +12,6 @@ import javax.swing.tree.TreePath;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
-import java.util.ArrayList;
-import java.util.Arrays;
-import javax.swing.SwingUtilities;
 import swing.PanelClassDiagram;
 
 /**

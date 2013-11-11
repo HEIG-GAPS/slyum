@@ -142,32 +142,29 @@ public class Inheritance extends Observable implements Relation {
 
   public void showOverridesAndImplementations() {
     boolean thereAbstractMethod = false;
+    OverridesAndImplementationsDialog oai = 
+        new OverridesAndImplementationsDialog(parent, child);
 
-    final OverridesAndImplementationsDialog oai = new OverridesAndImplementationsDialog(
-            parent, child);
-
+    // Get the checked methods and copy them to the child.
     if (oai.isAccepted())
-
-      for (final OverridesAndImplementationsDialog.CheckableItem m : oai
-              .getCheckableItems()) {
+      for (OverridesAndImplementationsDialog.CheckableItem m : 
+          oai.getCheckableItems()) {
         if (m.isSelected()) {
-          child.addMethod(new Method(m.getMethod(), child));
+          child.addMethod(m.getMethod().createCopy(child));
           thereAbstractMethod |= m.getMethod().isAbstract();
-        } else
-
+        } else {
           child.removeMethod(m.getMethod());
+        }
       }
-
     if (thereAbstractMethod && !child.isAbstract())
-
-    showDeAbstractMessage();
-
+      showDeAbstractMessage();
     child.notifyObservers();
   }
 
   private void showDeAbstractMessage() {
-    SMessageDialog
-            .showInformationMessage("Child class is not abstract.\nAbstract methods have been de-abstracted.");
+    SMessageDialog.showInformationMessage(
+        "Child class is not abstract.\n" + 
+        "Abstract methods have been de-abstracted.");
   }
 
   @Override

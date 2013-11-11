@@ -2,6 +2,8 @@ package swing.propretiesView;
 
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Attribute;
+import classDiagram.components.ClassEntity;
+import classDiagram.components.ConstructorMethod;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Method;
 import classDiagram.components.PrimitiveType;
@@ -10,10 +12,12 @@ import classDiagram.components.Type;
 import classDiagram.components.Variable;
 import classDiagram.components.Visibility;
 import classDiagram.verifyName.TypeName;
+import graphic.entity.ClassView;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.SystemColor;
@@ -35,7 +39,6 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -49,6 +52,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import swing.FlatPanel;
+import swing.PanelClassDiagram;
 import swing.SButton;
 import swing.STable;
 import swing.Slyum;
@@ -69,9 +73,9 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     private final String[] columnNames = { "Attribute", "Type", "Visibility",
             "Constant", "Static" };
 
-    private final LinkedList<Object[]> data = new LinkedList<Object[]>();
+    private final LinkedList<Object[]> data = new LinkedList<>();
 
-    private final HashMap<Attribute, Integer> mapIndex = new HashMap<Attribute, Integer>();
+    private final HashMap<Attribute, Integer> mapIndex = new HashMap<>();
 
     public void addAttribute(Attribute attribute) {
       data.add(new Object[] { attribute.getName(),
@@ -272,9 +276,9 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     private final String[] columnNames = { "Method", "Type", "Visibility",
             "Abstract", "Static" };
 
-    private final LinkedList<Object[]> data = new LinkedList<Object[]>();
+    private final LinkedList<Object[]> data = new LinkedList<>();
 
-    private final HashMap<Method, Integer> mapIndex = new HashMap<Method, Integer>();
+    private final HashMap<Method, Integer> mapIndex = new HashMap<>();
 
     public void addMethod(Method method) {
       data.add(new Object[] { method.getName(),
@@ -327,7 +331,16 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
     @Override
     public boolean isCellEditable(int row, int col) {
-      return !(currentObject.getClass() == InterfaceEntity.class && col == 3);
+      Boolean isInterfaceEntityClass = currentObject.getClass()
+          .equals(InterfaceEntity.class);
+      Boolean isConstructorClass = Utility.getKeysByValue(mapIndex, row)
+                                          .iterator().next().getClass()
+                                          .equals(ConstructorMethod.class);
+      
+      Boolean retourn = !(((isInterfaceEntityClass || isConstructorClass) && col == 3) ||
+               isConstructorClass && col == 4 ||  
+               isConstructorClass && col == 1);
+      return retourn;
     }
 
     @Override
@@ -698,81 +711,69 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     return instance;
   }
 
-  /**
-   * Set the given size for preferredSize, maximumSize and minimumSize to the
-   * given component.
-   * 
-   * @param component
-   *          the component to resize
-   * @param size
-   *          the size
-   */
-  public static void setAllSize(JComponent component, Dimension size) {
-    component.setPreferredSize(size);
-    component.setMaximumSize(size);
-    component.setMinimumSize(size);
-  }
-
-  JTable attributesTable, methodsTable, parametersTable;
-
+  private JTable attributesTable, methodsTable, parametersTable;
   private final JButton btnAddParameters, btnRemoveMethod, btnRemoveAttribute,
           btnUpAttribute, btnDownAttribute, btnUpMethod, btnDownMethod,
-          btnRemoveParameters, btnRightParameters, btnLeftParameters;
-
-  JCheckBox checkBoxAbstract = new JCheckBox("Abstract");
-
-  JComboBox<String> comboBox = Utility.getVisibilityComboBox();
-
+          btnRemoveParameters, btnRightParameters, btnLeftParameters,
+          btnAddMethodForInterface;
+  private JCheckBox checkBoxAbstract = new JCheckBox("Abstract");
+  private JComboBox<String> comboBox = Utility.getVisibilityComboBox();
   private JLabel imgMethodSelected, imgNoParameter;
-
-  JPanel panelParameters;
-
+  private JPanel panelParameters, panelAddMethodForClass;
   private JScrollPane scrollPaneParameters;
-
-  JTextField textName = new JTextField();
-
+  private JTextField textName = new JTextField();
+  
   protected SimpleEntityPropreties() {
-    btnAddParameters = new SButton(
-            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus.png"),
-            "Add");
-    btnRemoveMethod = new SButton(
-            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"),
-            "Remove");
-    btnRemoveAttribute = new SButton(
-            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"),
-            "Remove");
+    
+    // Buttons for attributes.
     btnUpAttribute = new SButton(
-            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
-                    + "arrow-up-24.png"), "Up");
+            PersonalizedIcon.createImageIcon(
+                Slyum.ICON_PATH + "arrow-up-24.png"), "Up");
     btnDownAttribute = new SButton(
-            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
-                    + "arrow-down-24.png"), "Down");
-    btnUpMethod = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
-            + "arrow-up-24.png"), "Up");
+            PersonalizedIcon.createImageIcon(
+                Slyum.ICON_PATH + "arrow-down-24.png"), "Down");
+    btnRemoveAttribute = new SButton(
+            PersonalizedIcon.createImageIcon(
+                Slyum.ICON_PATH + "minus.png"), "Remove");
+    
+    // Buttons fo methods.
+    btnUpMethod = new SButton(
+        PersonalizedIcon.createImageIcon(
+            Slyum.ICON_PATH + "arrow-up-24.png"), "Up");
     btnDownMethod = new SButton(
-            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
-                    + "arrow-down-24.png"), "Down");
-    btnRemoveParameters = new SButton(
-            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "minus.png"),
-            "Remove");
-    btnRightParameters = new SButton(
-            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
-                    + "arrow-right-24.png"), "Rigth");
+        PersonalizedIcon.createImageIcon(
+            Slyum.ICON_PATH + "arrow-down-24.png"), "Down");
+    btnRemoveMethod = new SButton(
+        PersonalizedIcon.createImageIcon(
+            Slyum.ICON_PATH + "minus.png"), "Remove");
+    
+    // Buttons for parameters. 
+    btnAddParameters = new SButton(
+        PersonalizedIcon.createImageIcon(
+            Slyum.ICON_PATH + "plus.png"), "Add");
     btnLeftParameters = new SButton(
-            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
-                    + "arrow-left-24.png"), "Left");
+        PersonalizedIcon.createImageIcon(
+            Slyum.ICON_PATH + "arrow-left-24.png"), "Left");
+    btnRightParameters = new SButton(
+        PersonalizedIcon.createImageIcon(
+            Slyum.ICON_PATH + "arrow-right-24.png"), "Rigth");
+    btnRemoveParameters = new SButton(
+        PersonalizedIcon.createImageIcon(
+            Slyum.ICON_PATH + "minus.png"), "Remove");
+    
+    // Others components
     imgMethodSelected = new JLabel(
-            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
-                    + "select_method.png"));
-    imgNoParameter = new JLabel(
-            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
-                    + "empty_parameter.png"));
-
+        PersonalizedIcon.createImageIcon(
+            Slyum.ICON_PATH + "select_method.png"));
     imgMethodSelected.setAlignmentX(CENTER_ALIGNMENT);
+    
+    imgNoParameter = new JLabel(
+        PersonalizedIcon.createImageIcon(
+            Slyum.ICON_PATH + "empty_parameter.png"));
     imgNoParameter.setAlignmentX(CENTER_ALIGNMENT);
-
     imgNoParameter.setVisible(false);
 
+    // Tables
     attributesTable = new STable(new AttributeTableModel());
     attributesTable.setPreferredScrollableViewportSize(new Dimension(200, 0));
 
@@ -810,25 +811,20 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
       if (i < 2)
         column.setPreferredWidth(70);
-
       else if (i == 2)
         column.setPreferredWidth(20);
       else
         column.setPreferredWidth(10);
-
     }
-
     for (int i = 0; i < methodsTable.getColumnCount(); i++) {
       column = methodsTable.getColumnModel().getColumn(i);
 
       if (i < 2)
         column.setPreferredWidth(70);
-
       else if (i == 2)
         column.setPreferredWidth(20);
       else
         column.setPreferredWidth(10);
-
     }
 
     JPanel p = new FlatPanel();
@@ -994,32 +990,86 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     panelButton = new JPanel();
     panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.PAGE_AXIS));
     panelButton.setOpaque(false);
+    
     {
-      final JButton button = new SButton(
-              PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus.png"),
-              "Add");
+      
+      // Compute the total width of components.
+      final int BORDER_VERTICAL = 10;
+      int buttonWidth = 0;
+
+      // Panel contains buttons add method / constructor for classes.
+      panelAddMethodForClass = new JPanel(
+          new FlowLayout(FlowLayout.CENTER, 0, 0));
+      panelAddMethodForClass.setBackground(null);
+      panelAddMethodForClass.setOpaque(false);
+      panelAddMethodForClass.setBorder(
+          BorderFactory.createEmptyBorder(BORDER_VERTICAL, 0, BORDER_VERTICAL, 0));
+      
+      // Button add method.
+      JButton button = new SButton(
+          PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus16.png"), 
+          "Add method");
       button.setAlignmentX(CENTER_ALIGNMENT);
       button.addActionListener(new ActionListener() {
 
         @Override
-        public void actionPerformed(ActionEvent arg0) {
-          final SimpleEntity SimpleEntity = (SimpleEntity) currentObject;
-          SimpleEntity.addMethod(new Method("method", PrimitiveType.VOID_TYPE,
-                  Visibility.PUBLIC, SimpleEntity));
-          SimpleEntity.notifyObservers(UpdateMessage.ADD_METHOD);
+        public void actionPerformed(ActionEvent evt) {
+          SimpleEntity simpleEntity = (SimpleEntity)currentObject;
+          simpleEntity.addMethod(new Method("method", PrimitiveType.VOID_TYPE,
+                  Visibility.PUBLIC, simpleEntity));
+          simpleEntity.notifyObservers(UpdateMessage.ADD_METHOD);
         }
       });
+      buttonWidth += button.getIcon().getIconWidth();
+      panelAddMethodForClass.add(button);
+      
+      // Button add constructor.
+      button = new SButton(
+          PersonalizedIcon.createImageIcon(
+              Slyum.ICON_PATH + "add-constructor16.png"), 
+          "Add constructor");
+      button.addActionListener(new ActionListener() {
 
-      panelButton.add(button);
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          ClassView classView = (ClassView)PanelClassDiagram
+              .getInstance().getCurrentGraphicView()
+              .searchAssociedComponent(currentObject);
+          classView.addConstructor();
+        }
+      });
+      buttonWidth += button.getIcon().getIconWidth();
+      panelAddMethodForClass.add(button);
+      
+      panelAddMethodForClass.setMaximumSize(new Dimension(
+          buttonWidth, button.getIcon().getIconHeight() + BORDER_VERTICAL*2));
+      panelButton.add(panelAddMethodForClass);
+      
+      // Button add methods for interfaces.
+      btnAddMethodForInterface = new SButton(
+          PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus.png"), 
+          "Add method");
+      btnAddMethodForInterface.setAlignmentX(CENTER_ALIGNMENT);
+      btnAddMethodForInterface.addActionListener(new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+          SimpleEntity simpleEntity = (SimpleEntity)currentObject;
+          simpleEntity.addMethod(new Method("method", PrimitiveType.VOID_TYPE,
+                  Visibility.PUBLIC, simpleEntity));
+          simpleEntity.notifyObservers(UpdateMessage.ADD_METHOD);
+        }
+      });
+      btnAddMethodForInterface.setVisible(false);
+      panelButton.add(btnAddMethodForInterface);
     }
-
     {
       btnUpMethod.setAlignmentX(CENTER_ALIGNMENT);
       btnUpMethod.setEnabled(false);
       btnUpMethod.addActionListener(new ActionListener() {
 
         @Override
-        public void actionPerformed(ActionEvent arg0) {
+        public void actionPerformed(ActionEvent evt) {
 
           // Get the selected method
           final int index = methodsTable.getSelectionModel()
@@ -1044,7 +1094,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
       btnDownMethod.addActionListener(new ActionListener() {
 
         @Override
-        public void actionPerformed(ActionEvent arg0) {
+        public void actionPerformed(ActionEvent evt) {
 
           // Get the selected method
           final int index = methodsTable.getSelectionModel()
@@ -1210,16 +1260,16 @@ public class SimpleEntityPropreties extends GlobalPropreties {
   public JPanel createSimpleEntityPropreties() {
     JPanel panel = new JPanel();
     Dimension size = new Dimension(200, 110);
-    setAllSize(panel, size);
+    Utility.setAllSize(panel, size);
     panel.setOpaque(false);
     panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
     panel.setAlignmentY(TOP_ALIGNMENT);
     panel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 
     size = new Dimension(200, 20);
-    setAllSize(textName, size);
-    setAllSize(checkBoxAbstract, new Dimension((int) size.getWidth(), 30));
-    setAllSize(comboBox, new Dimension(80, (int) size.getHeight()));
+    Utility.setAllSize(textName, size);
+    Utility.setAllSize(checkBoxAbstract, new Dimension((int) size.getWidth(), 30));
+    Utility.setAllSize(comboBox, new Dimension(80, (int) size.getHeight()));
 
     textName.setAlignmentX(LEFT_ALIGNMENT);
     checkBoxAbstract.setAlignmentX(LEFT_ALIGNMENT);
@@ -1298,10 +1348,10 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
     stopEditingTables();
     final SimpleEntity SimpleEntity = (SimpleEntity) currentObject;
-    final AttributeTableModel modelAttributes = (AttributeTableModel) attributesTable
-            .getModel();
-    final MethodTableModel modelMethods = (MethodTableModel) methodsTable
-            .getModel();
+    final AttributeTableModel modelAttributes = 
+        (AttributeTableModel)attributesTable.getModel();
+    final MethodTableModel modelMethods = 
+        (MethodTableModel)methodsTable.getModel();
 
     final LinkedList<Attribute> attributes = SimpleEntity.getAttributes();
     final LinkedList<Method> methods = SimpleEntity.getMethods();
@@ -1337,6 +1387,14 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     btnRemoveParameters.setEnabled(false);
     btnRightParameters.setEnabled(false);
     btnLeftParameters.setEnabled(false);
+    
+    if (currentObject instanceof ClassEntity) {
+      panelAddMethodForClass.setVisible(true);
+      btnAddMethodForInterface.setVisible(false);
+    } else {
+      btnAddMethodForInterface.setVisible(true);
+      panelAddMethodForClass.setVisible(false);
+    }
 
     validate();
 

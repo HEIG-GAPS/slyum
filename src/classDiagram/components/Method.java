@@ -17,6 +17,9 @@ import classDiagram.IDiagramComponent;
 import classDiagram.verifyName.MethodName;
 import classDiagram.verifyName.TypeName;
 import classDiagram.verifyName.VariableName;
+import javax.swing.ImageIcon;
+import swing.Slyum;
+import utility.PersonalizedIcon;
 
 /**
  * Represent a method in UML structure.
@@ -24,7 +27,9 @@ import classDiagram.verifyName.VariableName;
  * @author David Miserez
  * @version 1.0 - 24.07.2011
  */
-public class Method extends Observable implements IDiagramComponent, Observer, Cloneable {
+public class Method 
+    extends Observable 
+    implements IDiagramComponent, Observer, Cloneable {
 
   public static final String REGEX_SEMANTIC_METHOD = Variable.REGEX_SEMANTIC_ATTRIBUTE;
 
@@ -64,14 +69,12 @@ public class Method extends Observable implements IDiagramComponent, Observer, C
    * @param name
    *          the name of the method
    * @param returnType
-   *          the return type of the method
    * @param visibility
    *          the visibility of the method
+   * @param entity
    */
   public Method(String name, Type returnType, Visibility visibility,
           SimpleEntity entity) {
-    if (returnType == null) throw new IllegalArgumentException("type is null");
-
     if (visibility == null)
       throw new IllegalArgumentException("visibility is null");
 
@@ -99,6 +102,15 @@ public class Method extends Observable implements IDiagramComponent, Observer, C
     this.currentStyle = method.currentStyle;
     for (Variable parameter : method.parameters)
       this.parameters.add(new Variable(parameter));
+  }
+  
+  /**
+   * Construct a copy of the Method with the given SimpleEntity.
+   * @param newEntity The new SimpleEntity associed.
+   * @return  The new Method.
+   */
+  public Method createCopy(SimpleEntity newEntity) {
+    return new Method(this, newEntity);
   }
 
   /**
@@ -299,9 +311,6 @@ public class Method extends Observable implements IDiagramComponent, Observer, C
    *          the new return type
    */
   public boolean setReturnType(Type returnType) {
-    if (returnType == null)
-      throw new IllegalArgumentException("returnType is null");
-
     if (getReturnType() != null
             && returnType.getName().equals(getReturnType().getName()))
       return false;
@@ -502,20 +511,26 @@ public class Method extends Observable implements IDiagramComponent, Observer, C
                     + parameters.get(i).getType();
 
           else if (style == ParametersViewStyle.NAME)
-
-          signature += parameters.get(i).getName();
+            signature += parameters.get(i).getName();
 
         if (style == ParametersViewStyle.TYPE)
-
-        signature += parameters.get(i).getType();
+          signature += parameters.get(i).getType();
 
         if (i < parameters.size() - 1) signature += ", ";
       }
 
-    return signature + ") : " + getReturnType();
+    return signature + ")" + appendReturnType();
+  }
+  
+  public String appendReturnType() {
+    return " : " + getReturnType();
   }
 
   public String getStringFromMethod() {
     return getStringFromMethod(getParametersViewStyle());
+  }
+  
+  public ImageIcon getImageIcon() {
+    return PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "method.png");
   }
 }
