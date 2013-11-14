@@ -322,11 +322,12 @@ public abstract class SimpleEntityView extends EntityView {
    *          otherwise
    */
   public void addMethod(Method method, boolean editing) {
-    final TextBoxMethod newTextBox = new TextBoxMethod(parent, method);
-    methodsView.add(newTextBox);
-
+    TextBoxMethod newTextBox = new TextBoxMethod(parent, method);
+    
+    // Add the new TextBox at the same position than the model's Method.
+    methodsView.add(((SimpleEntity)component).getMethods().indexOf(method), 
+                    newTextBox);
     updateHeight();
-
     if (editing) newTextBox.editing();
   }
 
@@ -695,24 +696,23 @@ public abstract class SimpleEntityView extends EntityView {
   }
 
   @Override
-  public void update(Observable arg0, Object arg1) {
+  public void update(Observable observable, Object object) {
     boolean enable = false;
-    if (arg1 != null && arg1.getClass() == UpdateMessage.class)
-      switch ((UpdateMessage) arg1) {
+    if (object != null && object.getClass() == UpdateMessage.class)
+      switch ((UpdateMessage) object) {
         case ADD_ATTRIBUTE:
           enable = true;
         case ADD_ATTRIBUTE_NO_EDIT:
-          addAttribute(((SimpleEntity) component).getAttributes().getLast(),
+          addAttribute(((SimpleEntity) component).getLastAddedAttribute(),
                   enable);
           break;
-
         case ADD_METHOD:
           enable = true;
         case ADD_METHOD_NO_EDIT:
-          addMethod(((SimpleEntity) component).getMethods().getLast(), enable);
+          addMethod(((SimpleEntity) component).getLastAddedMethod(), enable);
           break;
         default:
-          super.update(arg0, arg1);
+          super.update(observable, object);
           break;
       }
     else

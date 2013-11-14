@@ -17,12 +17,14 @@ import classDiagram.relationships.Inheritance;
 
 public class SimpleEntity extends Entity {
 
-  private boolean _isAbstract = false;
   protected Visibility visibility = Visibility.PUBLIC;
   protected LinkedList<Attribute> attributes = new LinkedList<>();
   protected List<Inheritance> childs = new LinkedList<>();
   protected LinkedList<Method> methods = new LinkedList<>();
   protected List<Inheritance> parents = new LinkedList<>();
+  private boolean _isAbstract = false;
+  private Attribute lastAddedAttribute;
+  private Method lastAddedMethod;
 
   public SimpleEntity(String name) {
     super(name);
@@ -70,12 +72,14 @@ public class SimpleEntity extends Entity {
    * 
    * @param attribute
    *          the new attribute.
+   * @param index the position of the new attribute in the list.
    */
   public void addAttribute(Attribute attribute, int index) {
     if (attribute == null)
       throw new IllegalArgumentException("attribute is null");
 
     attributes.add(index, attribute);
+    lastAddedAttribute = attribute;
     int i = attributes.indexOf(attribute);
     Change.push(new BufferCreationAttribute(this, attribute, true, i));
     Change.push(new BufferCreationAttribute(this, attribute, false, i));
@@ -116,6 +120,7 @@ public class SimpleEntity extends Entity {
     method.setAbstract(isAbstract());
 
     methods.add(index, method);
+    lastAddedMethod = method;
 
     int i = methods.indexOf(method);
     Change.push(new BufferCreationMethod(this, method, true, i));
@@ -396,6 +401,14 @@ public class SimpleEntity extends Entity {
 
   public List<Inheritance> getParents() {
     return parents;
+  }
+
+  public Attribute getLastAddedAttribute() {
+    return lastAddedAttribute;
+  }
+
+  public Method getLastAddedMethod() {
+    return lastAddedMethod;
   }
 
   @Override
