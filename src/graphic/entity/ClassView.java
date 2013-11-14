@@ -66,7 +66,7 @@ public class ClassView extends SimpleEntityView {
             Visibility.PUBLIC, ((SimpleEntity) component));
     prepareNewMethod(method);
 
-    if (((SimpleEntity) component).addMethod(method))
+    if (((SimpleEntity) component).addMethod(method, 0))
       component.notifyObservers(IDiagramComponent.UpdateMessage.ADD_METHOD);
   }
 
