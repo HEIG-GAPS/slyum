@@ -33,28 +33,6 @@ public class SPanelFileComponent extends SToolBar implements ActionListener {
     return instance;
   }
 
-  @Override
-  public void actionPerformed(ActionEvent e) {
-    PanelClassDiagram p = PanelClassDiagram.getInstance();
-
-    if (Slyum.ACTION_NEW_PROJECT.equals(e.getActionCommand()))
-      p.newProject();
-
-    else if (Slyum.ACTION_OPEN.equals(e.getActionCommand()))
-      p.openFromXML();
-
-    else if (Slyum.ACTION_SAVE.equals(e.getActionCommand()))
-      p.saveToXML(false);
-
-    else if (Slyum.ACTION_EXPORT.equals(e.getActionCommand()))
-      p.exportAsImage();
-
-    else if (Slyum.ACTION_KLIPPER.equals(e.getActionCommand()))
-      p.getCurrentGraphicView().copyDiagramToClipboard();
-
-    else if (Slyum.ACTION_PRINT.equals(e.getActionCommand())) p.initPrinting();
-  }
-
   private SPanelFileComponent() {
     add(newProject = createSButton(
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "new.png"),

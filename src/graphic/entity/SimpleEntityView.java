@@ -315,11 +315,10 @@ public abstract class SimpleEntityView extends EntityView {
    * Create a new method view with the given method. If editing is a true, the
    * new method view will be in editing mode while it created.
    * 
-   * @param method
-   *          the method UML
-   * @param editing
-   *          true if creating a new method view in editing mode; false
-   *          otherwise
+   * @param method 
+   *    The model's method.
+   * @param editing 
+   *    True if creating a new method view in editing mode; false otherwise.
    */
   public void addMethod(Method method, boolean editing) {
     TextBoxMethod newTextBox = new TextBoxMethod(parent, method);

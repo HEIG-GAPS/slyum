@@ -9,7 +9,9 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Frame;
 import java.awt.GraphicsEnvironment;
+import java.awt.MenuItem;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,7 +30,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
+import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -62,6 +66,8 @@ public class Slyum extends JFrame implements ActionListener {
   public final static Color DEFAULT_BACKGROUND = new Color(239, 239, 242);
   public final static Color BACKGROUND_FORHEAD = new Color(246, 246, 246);
   public final static Color THEME_COLOR = new Color(0, 122, 204);
+  public final static int MENU_SHORTCUT_KEY_MASK = 
+      Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
   // Don't use the file separator here. Java resources are get with
   // getResource() and didn't support back-slash character on Windows.
@@ -85,8 +91,15 @@ public class Slyum extends JFrame implements ActionListener {
   public final static boolean IS_AUTO_ADJUST_INHERITANCE = true;
   public final static Mode MODE_CURSOR = Mode.CURSOR;
 
+  // Menu name
+  private final static String NAME_MENU_FILE = "File";
+  private final static String NAME_MENU_EDIT = "Edit";
+  private final static String NAME_MENU_DIAGRAM = "Diagram";
+  private final static String NAME_MENU_HELP = "Help";
+  private final static String NAME_MENU_ZOOM = "Zoom";
+  
+  
   // Action command
-  public static final String ACTION_MODE_CURSOR = "ModeCursor";
   public static final String ACTION_MODE_GRIP = "ModeGrip";
   public static final String ACTION_ABOUT = "About";
   public static final String ACTION_HELP = "Help";
@@ -188,7 +201,7 @@ public class Slyum extends JFrame implements ActionListener {
 
   public final static String KEY_DEFAULT_MODE = "alt Q";
   public final static String KEY_GRIPS_MODE = "alt W";
-  public final static String KEY_CLASS = "ctrl shift C";
+  public final static String KEY_CLASS = "C";
   public final static String KEY_ENUM = "ctrl shift E";
   public final static String KEY_INTERFACE = "ctrl shift I";
   public final static String KEY_ASSOCIATION_CLASS = "ctrl shift X";
@@ -601,9 +614,6 @@ public class Slyum extends JFrame implements ActionListener {
     GraphicView gv = p.getCurrentGraphicView();
 
     switch (e.getActionCommand()) {
-      case Slyum.ACTION_SAVE_AS:
-        p.saveToXML(true);
-        break;
       case ACTION_ABOUT:
         openAbout();
         break;
@@ -621,13 +631,6 @@ public class Slyum extends JFrame implements ActionListener {
         else
           SMessageDialog
                   .showErrorMessage("An error occured while opening project. Please report.");
-        break;
-      case ACTION_PAGE_SETUP:
-        SlyumPrinterJob.pageDialog(
-                PanelClassDiagram.getInstance().getCurrentGraphicView());
-        break;
-      case ACTION_PROPERTIES:
-        openProperties();
         break;
       case ACTION_UPDATE:
         openURL(URL_UPDATE_PAGE);
@@ -666,14 +669,6 @@ public class Slyum extends JFrame implements ActionListener {
         break;
       case ACTION_ZOOM_2:
         PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(2.0);
-        break;
-      case ACTION_LOCATE:
-        try {
-          Desktop.getDesktop().open(
-              PanelClassDiagram.getFileOpen().getParentFile());
-        } catch (Exception e1) {
-          SMessageDialog.showErrorMessage("No open file!");
-        }
         break;
     }
   }
@@ -739,73 +734,25 @@ public class Slyum extends JFrame implements ActionListener {
     JMenuItem menuItem;
 
     // Menu file
-    JMenu menu = menuFile = new JMenu("File");
+    JMenu menu = menuFile = new JMenu(NAME_MENU_FILE);
     menu.setMnemonic(KeyEvent.VK_F);
     menuBar.add(menu);
-
-    {
-      SPanelFileComponent p = SPanelFileComponent.getInstance();
-
-      // Menu item New project
-      menuItem = createMenuItem("New Project", "new", KeyEvent.VK_J,
-              KEY_NEW_PROJECT, ACTION_NEW_PROJECT, p.getBtnNewProject());
-      menu.add(menuItem);
-
-      // Menu item open project
-      menuItem = createMenuItem("Open Project...", "open", KeyEvent.VK_O,
-              KEY_OPEN_PROJECT, ACTION_OPEN, p.getBtnOpen());
-      menu.add(menuItem);
-
+    menu.add(new JMenuItem(SlyumAction.ACTION_NEW_PROJECT));
+    menu.add(new JMenuItem(SlyumAction.ACTION_OPEN_PROJECT));
+    menu.addSeparator();
+    menu.add(new JMenuItem(SlyumAction.ACTION_SAVE_PROJECT));
+    menu.add(new JMenuItem(SlyumAction.ACTION_SAVE_AS_PROJECT));
+    menu.addSeparator();
+    menu.add(new JMenuItem(SlyumAction.ACTION_EXPORT_AS_IMAGE));
+    menu.add(new JMenuItem(SlyumAction.ACTION_COPY_TO_CLIPBOARD));
+    menu.add(new JMenuItem(SlyumAction.ACTION_LOCATE_IN));
+    menu.addSeparator();
+    menu.add(new JMenuItem(SlyumAction.ACTION_PRINT));
+    menu.add(new JMenuItem(SlyumAction.ACTION_PAGE_SETUP));
+    if (!OSValidator.IS_MAC) {
       menu.addSeparator();
-
-      // Menu item save
-      menuItem = createMenuItem("Save", "save", KeyEvent.VK_S, KEY_SAVE,
-              ACTION_SAVE, p.getBtnSave());
-      menu.add(menuItem);
-
-      // Menu item save as...
-      menuItem = createMenuItem("Save As...", "save-as", KeyEvent.VK_A,
-              KEY_SAVE_AS, ACTION_SAVE_AS);
-      menu.add(menuItem);
-
-      menu.addSeparator();
-
-      // Menu item Export as image...
-      menuItem = createMenuItem("Export as image...", "export", KeyEvent.VK_M,
-              KEY_EXPORT, ACTION_EXPORT, p.getBtnExport());
-      menu.add(menuItem);
-
-      // Menu item Copy to clipboard
-      menuItem = createMenuItem("Copy selection to clipboard", "klipper",
-              KeyEvent.VK_K, KEY_KLIPPER, ACTION_KLIPPER, p.getBtnKlipper());
-      menu.add(menuItem);
-      
-      // Menu item Copy to clipboard
-      menuItemLocate = menuItem = createMenuItem("Locate in " + (OSValidator.IS_MAC ? "Finder" : "explorer"), "explore",
-              KeyEvent.VK_K, null, ACTION_LOCATE);
-      menuItemLocate.setEnabled(false);
-      menu.add(menuItem);
-
-      menu.addSeparator();
-
-      // Menu item print
-      menuItem = createMenuItem("Print...", "print", KeyEvent.VK_P, KEY_PRINT,
-              ACTION_PRINT, p.getBtnPrint());
-      menu.add(menuItem);
-      
-      // Menu item page setup
-      menuItem = createMenuItem("Page setup...", "page-setup", KeyEvent.VK_G, 
-              null, ACTION_PAGE_SETUP);
-      menu.add(menuItem);
-
-      if (!OSValidator.IS_MAC) {
-        menu.addSeparator();
-
-        // Menu item Properties
-        menuItem = createMenuItem("Properties...", "properties", KeyEvent.VK_R,
-                KEY_PROPERTIES, ACTION_PROPERTIES);
-        menu.add(menuItem);
-      }
+      menu.add(new JMenuItem(SlyumAction.ACTION_PROPERTIES));
+    }
 
       // Menu recent project
       updateMenuItemHistory();
@@ -993,11 +940,9 @@ public class Slyum extends JFrame implements ActionListener {
       subMenu.add(menuItem);
 
       menu.addSeparator();
+      
       // Menu item default mode
-      menuItem = createMenuItem("Default cursor", "pointer-arrow",
-              KeyEvent.VK_E, KEY_DEFAULT_MODE, ACTION_MODE_CURSOR,
-              Mode.CURSOR.getBtnMode());
-      menu.add(menuItem);
+      menu.add(new JMenuItem(SlyumAction.ACTION_MODE_CURSOR));
 
       // Menu item grips mode
       menuItem = createMenuItem("Add grips", "pointer-grip", KeyEvent.VK_G,
@@ -1007,8 +952,16 @@ public class Slyum extends JFrame implements ActionListener {
       menu.addSeparator();
 
       // Menu item add class
-      menuItem = createMenuItem("Add Class", "class", KeyEvent.VK_C, KEY_CLASS,
+      menuItem = createMenuItem("Add Class", "class", KeyEvent.VK_C, null,
               ACTION_NEW_CLASS, p.getBtnClass());
+      menuItem.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("C"), "class");
+      menuItem.getActionMap().put("class", new AbstractAction() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          System.out.println("test");
+        }
+      });
       menu.add(menuItem);
 
       // Menu item add interface
@@ -1154,53 +1107,6 @@ public class Slyum extends JFrame implements ActionListener {
       text += " [" + parent + "]";
 
     return text;
-  }
-
-  public JMenuItem createMenuItem(String text, String iconName, int mnemonic,
-          String accelerator, String actionCommand, ActionListener al) {
-    JMenuItem item;
-    final String imgLocation = ICON_PATH + iconName + ".png";
-
-    final ImageIcon icon = PersonalizedIcon.createImageIcon(imgLocation);
-
-    item = new JMenuItem(text, icon);
-    item.setMnemonic(mnemonic);
-    item.setActionCommand(actionCommand);
-    if (accelerator != null && accelerator.contains("ctrl")
-            && OSValidator.IS_MAC) {
-      accelerator = accelerator.replace("ctrl", "meta");
-      accelerator = accelerator.replace("control", "meta");
-    }
-    item.setAccelerator(KeyStroke.getKeyStroke(accelerator));
-    item.addActionListener(al);
-
-    return item;
-  }
-
-  public JMenuItem createMenuItem(String text, String iconName, int mnemonic,
-          String accelerator, String actionCommand, SButton link) {
-    JMenuItem item = createMenuItem(text, iconName, mnemonic, accelerator,
-            actionCommand, link.getActionListeners()[0]);
-
-    link.linkComponent(item);
-
-    return item;
-  }
-
-  public JMenuItem createMenuItemDisable(String text, String iconName,
-          int mnemonic, String accelerator, String actionCommand, SButton link) {
-    JMenuItem item = createMenuItem(text, iconName, mnemonic, accelerator,
-            actionCommand, link);
-
-    item.setEnabled(false);
-
-    return item;
-  }
-
-  public JMenuItem createMenuItem(String text, String iconName, int mnemonic,
-          String accelerator, String actionCommand) {
-    return createMenuItem(text, iconName, mnemonic, accelerator, actionCommand,
-            this);
   }
 
   /**
