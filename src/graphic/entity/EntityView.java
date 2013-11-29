@@ -260,19 +260,15 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
     SPanelElement p = SPanelElement.getInstance();
     menuItem = makeMenuItem("Move top", Slyum.ACTION_MOVE_TOP, "top");
-    p.getBtnTop().linkComponent(menuItem);
     popupMenu.add(menuItem);
 
     menuItem = makeMenuItem("Up", Slyum.ACTION_MOVE_UP, "up");
-    p.getBtnUp().linkComponent(menuItem);
     popupMenu.add(menuItem);
 
     menuItem = makeMenuItem("Down", Slyum.ACTION_MOVE_DOWN, "down");
-    p.getBtnDown().linkComponent(menuItem);
     popupMenu.add(menuItem);
 
     menuItem = makeMenuItem("Move bottom", Slyum.ACTION_MOVE_BOTTOM, "bottom");
-    p.getBtnBottom().linkComponent(menuItem);
     popupMenu.add(menuItem);
 
     component.addObserver(this);

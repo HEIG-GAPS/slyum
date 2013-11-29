@@ -1,17 +1,15 @@
 package swing;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.LinkedList;
 
 import javax.swing.AbstractButton;
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.plaf.metal.MetalButtonUI;
@@ -19,32 +17,14 @@ import javax.swing.plaf.metal.MetalButtonUI;
 public class SButton extends JButton {
   
   private final Color BACKGROUND = Color.WHITE;
-  private LinkedList<Component> linkedComponents = new LinkedList<>();
-
-  public SButton(Icon icon, String tooltip) {
-    super(icon);
-    init("", tooltip, null);
-  }
-
-  public SButton(Icon icon, String action, String tooltip, ActionListener al) {
-    super(icon);
-    init(action, tooltip, al);
-  }
-
-  public SButton(String text, String action, String tooltip, ActionListener al) {
-    super(text);
-    init(action, tooltip, al);
-  }
-
-  private void init(String action, String tooltip, ActionListener al) {
-    setPreferredSize(new Dimension(getIcon().getIconWidth(), 
-                                   getIcon().getIconHeight()));
-    setActionCommand(action);
-    addActionListener(al);
+  
+  public SButton(SlyumAction a) {
+    super(a);
+    Icon icon = (Icon)a.getValue(Action.SMALL_ICON);
+    setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
     setContentAreaFilled(false);
     setBorderPainted(false);
     setBackground(BACKGROUND);
-    setToolTipText(tooltip);
 
     setUI(new MetalButtonUI() {
       @Override
@@ -73,21 +53,9 @@ public class SButton extends JButton {
       }
     });
   }
-
+  
   public void resetBackground() {
     setContentAreaFilled(false);
     setBackground(BACKGROUND);
-  }
-
-  @Override
-  public void setEnabled(boolean b) {
-    super.setEnabled(b);
-
-    for (Component c : linkedComponents)
-      c.setEnabled(b);
-  }
-
-  public void linkComponent(Component c) {
-    linkedComponents.add(c);
   }
 }
