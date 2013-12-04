@@ -420,10 +420,10 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
         case 1: // type
           String s = (String) data;
-          if (!TypeName.getInstance().verifyName(s))
-            setValueAt(method.getReturnType().getName(), row, column);
-          else
+          if (TypeName.getInstance().verifyName(s))
             method.setReturnType(new Type(s));
+          else
+            setValueAt(method.getReturnType().getName(), row, column);
 
           break;
 
