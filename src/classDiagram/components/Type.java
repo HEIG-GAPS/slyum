@@ -29,7 +29,7 @@ public class Type extends Observable implements IDiagramComponent {
   private final static String REGEXP_GENERIC_2 = "(<(" + REGEXP_GENERIC
           + ")(,\\s*(" + REGEXP_GENERIC + "))*>)";
   public final static String REGEX_SEMANTIC_TYPE = Variable.REGEX_SEMANTIC_ATTRIBUTE
-          + REGEXP_GENERIC_2 + "?((\\[" + REGEX_DIGIT + "])*)*";
+          + REGEXP_GENERIC_2 + "?(\\[" + REGEX_DIGIT + "])*";
 
   public static boolean checkSemantic(String type) {
     return type.matches(REGEX_SEMANTIC_TYPE);
@@ -158,11 +158,7 @@ public class Type extends Observable implements IDiagramComponent {
             buff = "";
             continue;
           } else if (c == '[') {
-            // Only last dimension can be empty.
-            if (a.getLast() == -1) return false;
-
             buff = "";
-
             continue;
           } else if (!String.valueOf(c).matches(REGEX_DIGIT))
 
@@ -172,6 +168,14 @@ public class Type extends Observable implements IDiagramComponent {
           break;
       }
     }
+    
+    // Check if empty dimensions are at the end
+    boolean dimensionSet = true;
+    for (int size : a)
+      if (!dimensionSet && size >= 0)
+        return false;
+      else
+        dimensionSet &= size >= 0;
 
     if (name.equals(getName()) && arraysSize.containsAll(a)) return false;
 
