@@ -110,7 +110,7 @@ public class AboutBox extends JDialog {
         g2.drawString("Slyum", 40, 100);
 
         g2.setFont(baseFont.deriveFont(20.5f));
-        g2.drawString("ver. " + Slyum.version, 350, 110);
+        g2.drawString("ver. " + Slyum.VERSION, 350, 110);
 
         g2.setFont(baseFont.deriveFont(12.5f));
         g2.drawString("UML class diagram editor developped at heig-vd.", 20,
