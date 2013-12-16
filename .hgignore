@@ -24,3 +24,5 @@ dist/Slyum.app
 dist
 nbproject
 SlyumUpdater/build.xml
+nbbuild.xml
+*.sly
