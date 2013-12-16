@@ -1139,7 +1139,7 @@ public class Slyum extends JFrame implements ActionListener {
       menuItem.setActionCommand(ACTION_OPEN_RECENT_RPOJECT);
       menuItem.addActionListener(this);
       menuItem.setHistoryPath(Paths.get(s));
-      menuFile.add(menuItem, (OSValidator.IS_MAC ? 11 : 15));
+      menuFile.add(menuItem, (OSValidator.IS_MAC ? 10 : 15));
     }
   }
 
