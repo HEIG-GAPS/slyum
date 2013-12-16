@@ -216,8 +216,8 @@ public abstract class MovableComponent extends GraphicComponent {
 
       c.apply(e);
 
-    if (!isRecord) ;
-    Change.stopRecord();
+    if (!isRecord)
+      Change.stopRecord();
   }
 
   @Override
