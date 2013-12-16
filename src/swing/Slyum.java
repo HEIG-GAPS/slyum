@@ -39,6 +39,8 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import swing.SPanelDiagramComponent.Mode;
+import update.UpdateInfo;
+import static update.UpdateInfo.isUpdateAvailable;
 import utility.OSValidator;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
@@ -52,12 +54,12 @@ import utility.SMessageDialog;
 public class Slyum extends JFrame implements ActionListener {
   
   private static final String APP_NAME = "Slyum";
-  public static final String version = "3.3.0";
+  public static final String VERSION = "4.0.0";
   public final static String EXTENTION = "sly";
   public final static String FULL_EXTENTION = String.format(".%s", EXTENTION);
   public final static String APP_DIR_NAME = APP_NAME;
-  public final static String FILE_SEPARATOR = System
-          .getProperty("file.separator");
+  public final static String FILE_SEPARATOR = 
+      System.getProperty("file.separator");
   public final static Point DEFAULT_SIZE = new Point(1024, 760);
   public final static Color DEFAULT_BACKGROUND = new Color(239, 239, 242);
   public final static Color BACKGROUND_FORHEAD = new Color(246, 246, 246);
@@ -210,13 +212,12 @@ public class Slyum extends JFrame implements ActionListener {
   public static Font addSystemFont(String fileName) {
     Font font = null;
     try {
-      font = Font
-              .createFont(
-                      Font.TRUETYPE_FONT,
-                      Slyum.class.getResource(
-                              String.format("%s%s.ttf", FONTS_PATH, fileName))
-                              .openStream()).deriveFont(Font.PLAIN,
-                      DEFAULT_FONT_SIZE);
+      font = 
+          Font.createFont(
+              Font.TRUETYPE_FONT,
+              Slyum.class.getResource(
+                  String.format("%s%s.ttf", FONTS_PATH, fileName)).openStream()
+          ).deriveFont(Font.PLAIN, DEFAULT_FONT_SIZE);
       
       // Save the new font in local environment.
       GraphicsEnvironment ge = 
@@ -246,10 +247,11 @@ public class Slyum extends JFrame implements ActionListener {
 
   public static void main(String[] args) {
     arguments = args;
-
+    setUIProperties();
+    if (UpdateInfo.isUpdateCheckedAtLaunch())
+      UpdateInfo.getNewUpdate(true);
     showWarningForOpenJDK();
     instance = new Slyum();
-
     SwingUtilities.invokeLater(new Runnable() {
 
       @Override
@@ -493,7 +495,6 @@ public class Slyum extends JFrame implements ActionListener {
   public Slyum() {
     handleMacOSX();
     initFont();
-    setUIProperties();
     createJMenuBar();
     setFrameProperties();
     initEventListener();
@@ -630,7 +631,11 @@ public class Slyum extends JFrame implements ActionListener {
         openProperties();
         break;
       case ACTION_UPDATE:
-        openURL(URL_UPDATE_PAGE);
+        if (isUpdateAvailable())
+          UpdateInfo.getNewUpdate();
+        else
+          SMessageDialog.showInformationMessage(
+              "You have the latest version of Slyum! Hura!", this);
         break;
       case ACTION_PROJECT_PAGE:
         openURL(URL_PROJECT_PAGE);
@@ -693,11 +698,10 @@ public class Slyum extends JFrame implements ActionListener {
   /**
    * Initialize the properties of Slyum.
    */
-  private void setUIProperties() {
+  private static void setUIProperties() {
     System.setProperty("awt.useSystemAAFontSettings", "on");
     System.setProperty("swing.aatext", "true");
 
-    //Font f = defaultFont.deriveFont(13.0f);
     Font f = UI_FONT.deriveFont(13.0f);
     UIManager.put("Button.font", f);
     UIManager.put("Label.font", f);
@@ -715,8 +719,7 @@ public class Slyum extends JFrame implements ActionListener {
     UIManager.put("OptionPane.informationIcon", PersonalizedIcon.getInfoIcon());
     UIManager.put("OptionPane.errorIcon", PersonalizedIcon.getErrorIcon());
     UIManager.put("OptionPane.warningIcon", PersonalizedIcon.getWarningIcon());
-    UIManager
-            .put("OptionPane.questionIcon", PersonalizedIcon.getQuestionIcon());
+    UIManager.put("OptionPane.questionIcon", PersonalizedIcon.getQuestionIcon());
   }
 
   public static void openURL(String url) {
@@ -1091,7 +1094,7 @@ public class Slyum extends JFrame implements ActionListener {
             null, ACTION_PROJECT_PAGE);
     menu.add(menuItem);
     
-    menuItem = createMenuItem("Get latest release...", "eggs-16", KeyEvent.VK_R,
+    menuItem = createMenuItem("Check for update...", "eggs-16", KeyEvent.VK_R,
             null, ACTION_UPDATE);
     menu.add(menuItem);
 
@@ -1270,6 +1273,6 @@ public class Slyum extends JFrame implements ActionListener {
    * Open the help file.
    */
   private void openHelp() {
-    openURL("https://slyum.googlecode.com/hg/Documentation/User+manual.pdf");
+    openURL("https://docs.google.com/file/d/0B8LiFU0_u3AZX2NYSmpwMW9TdGc/edit");
   }
 }

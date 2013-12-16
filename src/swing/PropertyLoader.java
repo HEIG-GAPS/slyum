@@ -38,6 +38,7 @@ public class PropertyLoader {
   public static final String VIEW_ENUM = "ViewEnum";
   public static final String VIEW_TITLE_ON_EXPORT = "ViewTitleOnExport";
   public static final String PAINT_TITLE_BORDER = "PaintTitleBorder";
+  public static final String CHECK_UPDATE_AT_LAUNCH = "CheckUpdateAtLaunch";
 
   public static final String filename = Slyum.getPathAppDir()
           + Slyum.FILE_SEPARATOR + "config.properties";
@@ -48,9 +49,9 @@ public class PropertyLoader {
 
   private PropertyLoader() throws IOException {
     createPropertiesFile();
-    FileInputStream input = new FileInputStream(filename);
-    properties.load(input);
-    input.close();
+    try (FileInputStream input = new FileInputStream(filename)) {
+      properties.load(input);
+    }
   }
 
   public void createPropertiesFile() {
