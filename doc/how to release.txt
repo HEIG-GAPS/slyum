@@ -17,11 +17,11 @@ For each release, there is a multiplatform version (.jar) and a
 Mac OS X version (App Bundle). All files must be stored in the 
 "latest release/" directory.
 
-Files that are currently in the "latest release/" directory must be moved
-in the "previous release/<current version>/" (only for major and minor version) 
+Files that are currently in the "latest release/" directory must be copied (not moved!!)
+in the "previous release/<current version>/" (only for major and minor version but not for patch) 
 directory. The current version of Slyum can be found in the About box 
 (Slyum -> Help -> About Slyum...).
-Take the utils/version.html file and move it to the "previous release/<current version>/" too.
+Take the utils/version.html file and copy it to the "previous release/<current version>/" too.
 
 0) Don't forget to update the version number in swing.Slyum.java ("version" constant).
 
