@@ -87,6 +87,7 @@ import swing.SPanelDiagramComponent;
 import swing.SPanelDiagramComponent.Mode;
 import swing.SPanelElement;
 import swing.Slyum;
+import utility.OSValidator;
 import utility.Utility;
 
 /**
@@ -540,6 +541,7 @@ public class GraphicView extends GraphicComponent
 
     scrollPane = new JScrollPane(scene);
     scrollPane.getVerticalScrollBar().setUnitIncrement(50);
+    scrollPane.getHorizontalScrollBar().setUnitIncrement(50);
     scrollPane.setBorder(null);
     scrollPane.getHorizontalScrollBar().addAdjustmentListener(listnener);
     scrollPane.getVerticalScrollBar().addAdjustmentListener(listnener);
@@ -1591,7 +1593,7 @@ public class GraphicView extends GraphicComponent
   }
 
   public static boolean isAddToSelection(MouseEvent e) {
-    return e.isControlDown() || e.isShiftDown();
+    return OSValidator.IS_MAC ? e.isMetaDown() : e.isControlDown() || e.isShiftDown();
   }
 
   @Override
@@ -1827,19 +1829,19 @@ public class GraphicView extends GraphicComponent
 
   @Override
   public void mouseWheelMoved(final MouseWheelEvent e) {
-    if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL)
+    if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
 
-      if (e.isControlDown()) {
+      boolean ctrlDown = OSValidator.IS_MAC ? e.isMetaDown() : e.isControlDown();
+      if (ctrlDown) {
         if (e.getWheelRotation() < 0) {
           backScale();
         } else {
           forwardScale();
         }
       } else {
-        JScrollBar s = scrollPane.getVerticalScrollBar();
-        s.setValue(s.getValue() + s.getUnitIncrement()
-                * (e.getUnitsToScroll() < 0 ? -1 : 1));
+        scrollPane.dispatchEvent(e);
       }
+    }
   }
 
   public void moveZOrderUpSelectedEntities() {
@@ -1908,7 +1910,7 @@ public class GraphicView extends GraphicComponent
 
   protected MouseEvent adapteMouseEvent(MouseEvent e) {
     return new MouseEvent(e.getComponent(), e.getID(), e.getWhen(),
-            e.getModifiers(), (int) (e.getX() * getInversedScale()),
+            e.getModifiersEx(), (int) (e.getX() * getInversedScale()),
             (int) (e.getY() * getInversedScale()), e.getXOnScreen(),
             e.getYOnScreen(), e.getClickCount(), e.isPopupTrigger(),
             e.getButton());
