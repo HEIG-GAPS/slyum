@@ -96,6 +96,7 @@ public class Slyum extends JFrame implements ActionListener {
   public static final String ACTION_OPEN_RECENT_RPOJECT = "openRecentProject";
   public static final String ACTION_PROPERTIES = "Properties";
   public static final String ACTION_UPDATE = "Update";
+  public static final String ACTION_PATCH_NOTE = "PatchNote";
   public static final String ACTION_PROJECT_PAGE = "ProjectPage";
   public static final String ACTION_SELECT_ALL = "SelectAll";
   public static final String ACTION_UNSELECT_ALL = "UnselectAll";
@@ -637,6 +638,9 @@ public class Slyum extends JFrame implements ActionListener {
           SMessageDialog.showInformationMessage(
               "You have the latest version of Slyum! Hura!", this);
         break;
+      case ACTION_PATCH_NOTE:
+        UpdateInfo.getPatchNote();
+        break;
       case ACTION_PROJECT_PAGE:
         openURL(URL_PROJECT_PAGE);
         break;
@@ -1096,6 +1100,10 @@ public class Slyum extends JFrame implements ActionListener {
     
     menuItem = createMenuItem("Check for update...", "eggs-16", KeyEvent.VK_R,
             null, ACTION_UPDATE);
+    menu.add(menuItem);
+    
+    menuItem = createMenuItem("See patch note...", "patchnote", KeyEvent.VK_S,
+            null, ACTION_PATCH_NOTE);
     menu.add(menuItem);
 
     if (!OSValidator.IS_MAC) {

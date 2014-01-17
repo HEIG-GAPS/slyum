@@ -64,6 +64,14 @@ public class UpdateInfo extends JDialog {
       Logger.getLogger(UpdateInfo.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
+  
+  public static void getPatchNote() {
+    try {
+      new UpdateInfo(Updater.getWhatsNew());
+    } catch (Exception ex) {
+      Logger.getLogger(UpdateInfo.class.getName()).log(Level.SEVERE, null, ex);
+    }
+  }
 
   private static final String updaterDirectory = Slyum.getPathAppDir();
   private static final String updaterFile = 
@@ -76,10 +84,15 @@ public class UpdateInfo extends JDialog {
   private JButton cancel;
   private JPanel pan1;
   private JPanel pan2;
-  private Boolean askForDisableCheckingUpdate;
+  private Boolean askForDisableCheckingUpdate = false;
+  private Boolean displayOkButton = true;
 
   private UpdateInfo(String info) {
-    this(info, false);
+    super(Slyum.getInstance(), true);
+    displayOkButton = false;
+    initComponents();
+    infoPane.setText(info);
+    setVisible(true);
   }
 
   private UpdateInfo(String info, boolean askForDisableCheckingUpdate) {
@@ -148,7 +161,7 @@ public class UpdateInfo extends JDialog {
       }
     });
 
-    cancel = new FlatButton("Cancel");
+    cancel = new FlatButton("Close");
     cancel.addActionListener(new ActionListener(){
 
       @Override
@@ -164,14 +177,15 @@ public class UpdateInfo extends JDialog {
       }
     });
     
-    pan2.add(ok);
+    if (displayOkButton)
+      pan2.add(ok);
     pan2.add(cancel);
     pan1.add(pan2, BorderLayout.SOUTH);
     pan1.add(scp, BorderLayout.CENTER);
     add(pan1);
     pack();
     setSize(750, 600);
-    setLocationRelativeTo(null);
+    setLocationRelativeTo(Slyum.getInstance());
   }
   
   private void initializeUpdater() throws MalformedURLException, Exception {
