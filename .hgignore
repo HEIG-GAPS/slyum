@@ -26,3 +26,4 @@ nbproject
 SlyumUpdater/build.xml
 nbbuild.xml
 *.sly
+build.xml
