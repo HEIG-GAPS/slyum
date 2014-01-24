@@ -398,6 +398,8 @@ public class Method
 
     setName(newName);
     setVisibility(newVisibility);
+    
+    returnType = returnType.isEmpty() ? PrimitiveType.VOID_TYPE.getName() : returnType;
     setReturnType(new Type(returnType));
 
     for (Variable v : par)
