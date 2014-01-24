@@ -54,7 +54,7 @@ import utility.SMessageDialog;
 public class Slyum extends JFrame implements ActionListener {
   
   private static final String APP_NAME = "Slyum";
-  public static final String VERSION = "4.0.0";
+  public static final String VERSION = "4.0.1";
   public final static String EXTENTION = "sly";
   public final static String FULL_EXTENTION = String.format(".%s", EXTENTION);
   public final static String APP_DIR_NAME = APP_NAME;
