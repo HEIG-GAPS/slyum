@@ -3,7 +3,6 @@ package graphic;
 import graphic.relations.LineView;
 
 import java.awt.Color;
-import java.awt.Desktop;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -26,7 +25,6 @@ import swing.SPanelDiagramComponent;
 import swing.Slyum;
 import swing.XmlElement;
 import utility.PersonalizedIcon;
-import utility.SMessageDialog;
 import change.BufferCreation;
 import change.Change;
 import classDiagram.IDiagramComponent;
@@ -64,7 +62,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    * another way !!! Graphic view is the parent for all other components, but
    * can't give itself to this constructor in its constructor...
    */
-  protected GraphicComponent() {
+  GraphicComponent() {
     parent = (GraphicView) this;
 
     init();
@@ -80,6 +78,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
   @Override
   public void actionPerformed(ActionEvent e) {
+    
     if (Slyum.ACTION_NEW_NOTE_ASSOCIED.equals(e.getActionCommand()))
       parent.linkNewNoteWithSelectedEntities();
 

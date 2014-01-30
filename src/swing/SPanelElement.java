@@ -208,7 +208,6 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
   public void actionPerformed(ActionEvent e) {
     GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
     gv.setStopRepaint(true);
-
     if (Slyum.ACTION_UNDO.equals(e.getActionCommand()))
       Change.undo();
     else if (Slyum.ACTION_REDO.equals(e.getActionCommand()))
