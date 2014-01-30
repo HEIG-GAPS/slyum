@@ -288,7 +288,10 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    super.actionPerformed(e);
+    
+    // TODO fix degueulasse en attendant la refacto des menus.
+    if (!Slyum.ACTION_NEW_NOTE_ASSOCIED.equals(e.getActionCommand()))
+      super.actionPerformed(e);
 
     if ("Delete".equals(e.getActionCommand())) {
       if (pressedTextBox != null)
