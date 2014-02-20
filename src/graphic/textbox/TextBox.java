@@ -27,6 +27,7 @@ import javax.swing.JTextField;
 
 import swing.PropertyLoader;
 import swing.Slyum;
+import swing.slyumCustomizedComponents.PopupTextField;
 import utility.Utility;
 
 /**
@@ -125,7 +126,7 @@ public abstract class TextBox extends GraphicComponent {
 
     final Rectangle bounds = getBounds();
 
-    textField = new JTextField(getEditingText()) {
+    textField = new PopupTextField(getEditingText()) {
 
       @Override
       public void paintComponent(Graphics g) {
@@ -140,7 +141,6 @@ public abstract class TextBox extends GraphicComponent {
     textField.setBackground(new Color(255, 255, 255));
     textField.setFont(effectivFont.deriveFont((float) parent.getScale()
             * (float) getFont().getSize()));
-    textField.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
     double scale = parent.getScale();
     textField.setBounds(new Rectangle((int) (bounds.x * scale),
             (int) (bounds.y * scale), (int) (bounds.width * scale),

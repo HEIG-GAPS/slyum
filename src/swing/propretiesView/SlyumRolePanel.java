@@ -21,6 +21,7 @@ import utility.Utility;
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Multiplicity;
 import classDiagram.relationships.Role;
+import swing.slyumCustomizedComponents.TextFieldWithPrompt;
 
 /**
  * Represent a JPanel containing all Swing components for edit role.
@@ -67,7 +68,7 @@ public class SlyumRolePanel extends FlatPanel implements Observer {
     gbc_lblRolename.gridy = 0;
     add(lblRolename, gbc_lblRolename);
 
-    txtRolename = new JTextField();
+    txtRolename = new TextFieldWithPrompt("", "Enter the role's name");
     txtRolename.setText(role.getName());
     final GridBagConstraints gbc_txtRolename = new GridBagConstraints();
     gbc_txtRolename.insets = new Insets(0, 0, 5, 0);

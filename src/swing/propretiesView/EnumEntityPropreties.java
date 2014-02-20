@@ -28,6 +28,7 @@ import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.EnumEntity;
 import classDiagram.components.EnumValue;
 import swing.slyumCustomizedComponents.SScrollPane;
+import swing.slyumCustomizedComponents.TextFieldWithPrompt;
 
 public class EnumEntityPropreties extends GlobalPropreties {
 
@@ -110,7 +111,7 @@ public class EnumEntityPropreties extends GlobalPropreties {
     panelAttributes.setMaximumSize(new Dimension(200, Short.MAX_VALUE));
 
     // Enum name
-    txtFieldName = new JTextField();
+    txtFieldName = new TextFieldWithPrompt("", "Enter the enum's name");
     txtFieldName.setMaximumSize(new Dimension(Short.MAX_VALUE, 20));
     txtFieldName.addKeyListener(new KeyAdapter() {
 
@@ -167,7 +168,7 @@ public class EnumEntityPropreties extends GlobalPropreties {
 
         EnumEntity enumEntity = (EnumEntity) currentObject;
         EnumValue enumValue = enumEntity.getEnumValues().get(row);
-        enumValue.setValue(((EnumValue) value).getValue());
+        enumValue.setValue((String)value);
         enumValue.notifyObservers();
       }
     }) {
@@ -182,6 +183,7 @@ public class EnumEntityPropreties extends GlobalPropreties {
         currentEnumValue.notifyObservers(UpdateMessage.SELECT);
       }
     };
+    tableEnumValues.setDefaultEditor(EnumValue.class, tableEnumValues.new CustomCellEditor());
     tableEnumValues.setTableHeader(null);
     tableEnumValues.setFillsViewportHeight(true);
     tableEnumValues.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
