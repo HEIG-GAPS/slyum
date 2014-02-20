@@ -507,7 +507,7 @@ public class SProperties extends JDialog {
             }
           }
           {
-            final JScrollPane scrollPane = new JScrollPane();
+            final JScrollPane scrollPane = new SScrollPane();
 
             final GridBagConstraints gbc_scrollPane = new GridBagConstraints();
             gbc_scrollPane.fill = GridBagConstraints.BOTH;
@@ -561,7 +561,7 @@ public class SProperties extends JDialog {
             }
           }
           {
-            final JScrollPane scrollPane = new JScrollPane();
+            final JScrollPane scrollPane = new SScrollPane();
             final GridBagConstraints gbc_scrollPane = new GridBagConstraints();
             gbc_scrollPane.insets = new Insets(0, 5, 5, 0);
             gbc_scrollPane.fill = GridBagConstraints.BOTH;

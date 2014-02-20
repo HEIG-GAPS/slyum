@@ -24,6 +24,7 @@ import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Role;
+import swing.SScrollPane;
 
 /**
  * Represent a view in Slyum implementing IComponentsObserver. This view is
@@ -33,7 +34,7 @@ import classDiagram.relationships.Role;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public class PropretiesChanger extends JScrollPane implements IComponentsObserver {
+public class PropretiesChanger extends SScrollPane implements IComponentsObserver {
   private static PropretiesChanger instance = new PropretiesChanger();
 
   /**

@@ -117,7 +117,7 @@ public class OverridesAndImplementationsDialog extends JDialog {
     gbl_contentPanel.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
     contentPanel.setLayout(gbl_contentPanel);
     {
-      final JScrollPane scrollPane = new JScrollPane();
+      final JScrollPane scrollPane = new SScrollPane();
       final GridBagConstraints gbc_scrollPane = new GridBagConstraints();
       gbc_scrollPane.fill = GridBagConstraints.BOTH;
       gbc_scrollPane.gridx = 0;

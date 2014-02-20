@@ -43,6 +43,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import swing.PanelClassDiagram;
+import swing.SScrollPane;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 
@@ -147,7 +148,7 @@ public class HierarchicalView
             TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
     tree.setCellRenderer(new TreeRenderer());
     tree.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-    JScrollPane scrollPane = new JScrollPane();
+    JScrollPane scrollPane = new SScrollPane();
     scrollPane.setViewportView(tree);
     scrollPane.setBorder(null);
     add(scrollPane);

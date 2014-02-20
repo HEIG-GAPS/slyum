@@ -54,6 +54,7 @@ import javax.swing.table.TableModel;
 import swing.FlatPanel;
 import swing.PanelClassDiagram;
 import swing.SButton;
+import swing.SScrollPane;
 import swing.STable;
 import swing.Slyum;
 import utility.MultiBorderLayout;
@@ -854,7 +855,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     p.setLayout(new BorderLayout());
     JPanel panel = createWhitePanel();
     panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-    JScrollPane scrollPane = new JScrollPane(attributesTable);
+    JScrollPane scrollPane = new SScrollPane(attributesTable);
     scrollPane.getViewport().setOpaque(false);
     scrollPane.setBorder(new LineBorder(Color.GRAY, 1, true));
     scrollPane.setBackground(Color.WHITE);
@@ -981,7 +982,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     p.setLayout(new BorderLayout());
     panel = createWhitePanel();
     panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-    scrollPane = new JScrollPane(methodsTable);
+    scrollPane = new SScrollPane(methodsTable);
     scrollPane.getViewport().setOpaque(false);
     scrollPane.setBorder(new LineBorder(Color.GRAY, 1, true));
     scrollPane.setBackground(Color.WHITE);
@@ -1160,7 +1161,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     panel = panelParameters = new FlatPanel();
     panel.setLayout(new MultiBorderLayout());
     panel.setAlignmentY(TOP_ALIGNMENT);
-    scrollPane = scrollPaneParameters = new JScrollPane(parametersTable);
+    scrollPane = scrollPaneParameters = new SScrollPane(parametersTable);
     scrollPane.getViewport().setOpaque(false);
     scrollPane.setBorder(new LineBorder(Color.GRAY, 1, true));
     scrollPane.setBackground(Color.WHITE);

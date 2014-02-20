@@ -71,6 +71,7 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
+import javax.swing.BorderFactory;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
@@ -86,6 +87,7 @@ import swing.SColorAssigner;
 import swing.SPanelDiagramComponent;
 import swing.SPanelDiagramComponent.Mode;
 import swing.SPanelElement;
+import swing.SScrollPane;
 import swing.Slyum;
 import utility.OSValidator;
 import utility.Utility;
@@ -538,11 +540,11 @@ public class GraphicView extends GraphicComponent
         repaint();
       }
     };
-
-    scrollPane = new JScrollPane(scene);
+    
+    scrollPane = new SScrollPane(scene);
     scrollPane.getVerticalScrollBar().setUnitIncrement(50);
     scrollPane.getHorizontalScrollBar().setUnitIncrement(50);
-    scrollPane.setBorder(null);
+    scrollPane.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
     scrollPane.getHorizontalScrollBar().addAdjustmentListener(listnener);
     scrollPane.getVerticalScrollBar().addAdjustmentListener(listnener);
 
