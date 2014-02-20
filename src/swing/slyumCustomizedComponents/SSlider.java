@@ -1,4 +1,4 @@
-package utility;
+package swing.slyumCustomizedComponents;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -14,6 +14,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicSliderUI;
 
 import swing.Slyum;
+import utility.Utility;
 
 public class SSlider extends JSlider {
 

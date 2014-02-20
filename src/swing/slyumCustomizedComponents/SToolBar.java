@@ -1,4 +1,4 @@
-package swing;
+package swing.slyumCustomizedComponents;
 
 import java.awt.Color;
 import java.beans.PropertyChangeEvent;
@@ -8,6 +8,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
+import swing.Slyum;
 
 import utility.PersonalizedIcon;
 

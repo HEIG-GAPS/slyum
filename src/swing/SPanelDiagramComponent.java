@@ -1,5 +1,9 @@
 package swing;
 
+import swing.slyumCustomizedComponents.SButton;
+import swing.slyumCustomizedComponents.SSeparator;
+import swing.slyumCustomizedComponents.SToolBar;
+import swing.slyumCustomizedComponents.SToolBarButton;
 import graphic.GraphicView;
 import graphic.factory.AggregationFactory;
 import graphic.factory.AssociationClassFactory;

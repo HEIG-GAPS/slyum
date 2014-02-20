@@ -1,5 +1,6 @@
 package swing;
 
+import swing.slyumCustomizedComponents.SButton;
 import com.apple.java.OSXAdapter;
 import graphic.GraphicView;
 import java.awt.Color;

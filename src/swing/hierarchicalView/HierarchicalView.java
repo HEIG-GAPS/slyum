@@ -43,7 +43,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import swing.PanelClassDiagram;
-import swing.SScrollPane;
+import swing.slyumCustomizedComponents.SScrollPane;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 

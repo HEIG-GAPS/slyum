@@ -1,4 +1,4 @@
-package swing;
+package swing.slyumCustomizedComponents;
 
 import java.awt.Color;
 import java.awt.Dimension;

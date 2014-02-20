@@ -25,7 +25,7 @@ import java.util.LinkedList;
 
 import javax.swing.JButton;
 
-import swing.FlatButton;
+import swing.slyumCustomizedComponents.FlatButton;
 import swing.SPanelDiagramComponent;
 import swing.Slyum;
 import utility.PersonalizedIcon;

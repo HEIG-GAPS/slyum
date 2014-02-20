@@ -1,5 +1,8 @@
 package swing;
 
+import swing.slyumCustomizedComponents.SSeparator;
+import swing.slyumCustomizedComponents.SToolBar;
+import swing.slyumCustomizedComponents.SToolBarButton;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 
@@ -11,9 +14,16 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 
 import utility.PersonalizedIcon;
-import utility.SSlider;
+import swing.slyumCustomizedComponents.SSlider;
 import utility.Utility;
 import change.Change;
+import swing.IListenerComponentSelectionChanged;
+import swing.PanelClassDiagram;
+import swing.slyumCustomizedComponents.SButton;
+import swing.Slyum;
+import swing.slyumCustomizedComponents.SSeparator;
+import swing.slyumCustomizedComponents.SToolBar;
+import swing.slyumCustomizedComponents.SToolBarButton;
 
 public class SPanelElement extends SToolBar implements ActionListener, IListenerComponentSelectionChanged {
   private static final String TT_UNDO = "Undo "

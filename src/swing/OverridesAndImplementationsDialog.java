@@ -1,5 +1,6 @@
 package swing;
 
+import swing.slyumCustomizedComponents.SScrollPane;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;

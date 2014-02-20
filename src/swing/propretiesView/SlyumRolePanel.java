@@ -16,7 +16,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import swing.FlatPanel;
+import swing.slyumCustomizedComponents.FlatPanel;
 import utility.Utility;
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Multiplicity;
