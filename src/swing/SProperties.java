@@ -1,5 +1,6 @@
 package swing;
 
+import swing.slyumCustomizedComponents.SScrollPane;
 import graphic.ColoredComponent;
 import graphic.GraphicView;
 import graphic.GraphicView.ViewEntity;

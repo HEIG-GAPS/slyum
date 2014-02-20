@@ -1,4 +1,4 @@
-package swing;
+package swing.slyumCustomizedComponents;
 
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -12,6 +12,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.plaf.metal.MetalButtonUI;
+import swing.Slyum;
 
 public class FlatButton extends JButton {
 

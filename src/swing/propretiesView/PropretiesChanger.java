@@ -24,7 +24,7 @@ import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Role;
-import swing.SScrollPane;
+import swing.slyumCustomizedComponents.SScrollPane;
 
 /**
  * Represent a view in Slyum implementing IComponentsObserver. This view is

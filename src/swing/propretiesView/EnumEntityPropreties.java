@@ -19,15 +19,15 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
 
-import swing.FlatPanel;
-import swing.SButton;
-import swing.STable;
+import swing.slyumCustomizedComponents.FlatPanel;
+import swing.slyumCustomizedComponents.SButton;
+import swing.slyumCustomizedComponents.STable;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.EnumEntity;
 import classDiagram.components.EnumValue;
-import swing.SScrollPane;
+import swing.slyumCustomizedComponents.SScrollPane;
 
 public class EnumEntityPropreties extends GlobalPropreties {
 

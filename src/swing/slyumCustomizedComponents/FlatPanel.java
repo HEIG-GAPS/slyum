@@ -1,10 +1,11 @@
-package swing;
+package swing.slyumCustomizedComponents;
 
 import java.awt.Color;
 import java.awt.LayoutManager;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import swing.Slyum;
 
 public class FlatPanel extends JPanel {
 

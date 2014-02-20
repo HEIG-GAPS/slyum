@@ -11,8 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import swing.FlatButton;
-import swing.FlatPanel;
+import swing.slyumCustomizedComponents.FlatButton;
+import swing.slyumCustomizedComponents.FlatPanel;
 import swing.PanelClassDiagram;
 import swing.Slyum;
 import utility.PersonalizedIcon;

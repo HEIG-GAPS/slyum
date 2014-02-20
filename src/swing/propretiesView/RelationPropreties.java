@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
-import swing.FlatPanel;
+import swing.slyumCustomizedComponents.FlatPanel;
 import swing.PanelClassDiagram;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Association;

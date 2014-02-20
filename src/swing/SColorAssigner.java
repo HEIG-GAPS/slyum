@@ -22,6 +22,7 @@ import utility.PersonalizedIcon;
 import utility.Utility;
 import change.BufferColor;
 import change.Change;
+import swing.Slyum;
 
 /**
  * Show a dialog for choosing a color.

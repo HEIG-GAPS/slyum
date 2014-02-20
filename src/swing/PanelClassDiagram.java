@@ -1,5 +1,6 @@
 package swing;
 
+import swing.slyumCustomizedComponents.SSplitPane;
 import change.Change;
 import classDiagram.ClassDiagram;
 import graphic.GraphicComponent;

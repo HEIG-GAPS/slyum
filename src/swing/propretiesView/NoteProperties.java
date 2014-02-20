@@ -23,12 +23,16 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import swing.FlatPanel;
-import swing.SButton;
+import swing.slyumCustomizedComponents.FlatPanel;
+import swing.slyumCustomizedComponents.SButton;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent.UpdateMessage;
-import swing.SScrollPane;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import swing.slyumCustomizedComponents.SScrollPane;
 
 public class NoteProperties extends GlobalPropreties {
   private static NoteProperties instance;
@@ -49,7 +53,33 @@ public class NoteProperties extends GlobalPropreties {
     JScrollPane scrollPane = new SScrollPane();
     panel.add(scrollPane);
     panel.add(Box.createHorizontalStrut(10));
-    list = new JList<>();
+    list = new JList<LineCommentary>() {
+
+      @Override
+      protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        repaint();
+        if (!isEnabled()) {
+          Graphics2D g2 = (Graphics2D)g;
+          Rectangle bounds = getBounds();
+          Color color = new Color(100, 100, 100, 50),
+                colorText = new Color(20, 20, 20, 150);
+          String text = "No link note";
+          int stringWidth;
+          
+          g2.setColor(color);
+          g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+          
+          g2.setFont(Slyum.getDefaultFont().deriveFont(16.f));
+          g2.setColor(colorText);
+          stringWidth = g2.getFontMetrics().stringWidth(text);
+          g2.drawString(text, (bounds.x + bounds.width - stringWidth) / 2, 
+                        bounds.y + (bounds.height > 30 ? 30 : bounds.height));
+        }
+      }
+      
+    };
+    list.setEnabled(false);
     list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     scrollPane.setViewportView(list);
     list.setModel(new ListLineCommentaryModel());
@@ -89,7 +119,6 @@ public class NoteProperties extends GlobalPropreties {
           public void run() {
             int j = i;
             if (i >= list.getModel().getSize()) j--;
-
             list.setSelectedIndex(j);
           }
         });
@@ -127,27 +156,23 @@ public class NoteProperties extends GlobalPropreties {
     @Override
     public LineCommentary getElementAt(int i) {
       if (currentObject == null) return null;
-
       return (LineCommentary) getLineCommentary().get(i);
     }
 
     @Override
     public int getSize() {
       if (currentObject == null) return 0;
-
-      return getLineCommentary().size();
+      int size = getLineCommentary().size();
+      list.setEnabled(size > 0);
+      return size;
     }
   }
 
   private LinkedList<LineCommentary> getLineCommentary() {
     GraphicComponent gc = (GraphicComponent) currentObject;
-
     LinkedList<LineCommentary> ll = new LinkedList<>();
-
     for (LineView lv : gc.getGraphicView().getLinesViewAssociedWith(gc))
-
       ll.add((LineCommentary) lv);
-
     return ll;
   }
 }
