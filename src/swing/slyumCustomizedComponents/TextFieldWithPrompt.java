@@ -1,11 +1,18 @@
 package swing.slyumCustomizedComponents;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.BorderFactory;
 import javax.swing.FocusManager;
 import javax.swing.JTextField;
 import javax.swing.text.Document;
+import swing.Slyum;
 
 /**
  *
@@ -13,30 +20,60 @@ import javax.swing.text.Document;
  */
 public class TextFieldWithPrompt extends JTextField {
   
+  public final static Color DEFAUT_BORDER_COLOR = new Color(169, 169, 169);
+  
+  private final static int BORDER_SIZE = 3;
+  
   private String placeholder = "";
+  private Color defaultBorderColor = DEFAUT_BORDER_COLOR;
+  private boolean isMouseHover;
 
   public TextFieldWithPrompt() {
+    initialize();
   }
 
   public TextFieldWithPrompt(String text) {
     super(text);
+    initialize();
   }
 
   public TextFieldWithPrompt(String text, String placeholder) {
     super(text);
+    initialize();
     this.placeholder = placeholder;
   }
 
   public TextFieldWithPrompt(int columns) {
     super(columns);
+    initialize();
   }
 
   public TextFieldWithPrompt(String text, int columns) {
     super(text, columns);
+    initialize();
   }
 
   public TextFieldWithPrompt(Document doc, String text, int columns) {
     super(doc, text, columns);
+    initialize();
+  }
+  
+  private void initialize() {
+    setBorder(BorderFactory.createEmptyBorder(
+        BORDER_SIZE, BORDER_SIZE, BORDER_SIZE, BORDER_SIZE));
+    
+    addMouseListener(new MouseAdapter() {
+
+      @Override
+      public void mouseEntered(MouseEvent e) {
+        isMouseHover = true;
+      }
+
+      @Override
+      public void mouseExited(MouseEvent e) {
+        isMouseHover = false;
+      }
+    });
   }
 
   public String getPlaceholder() {
@@ -48,18 +85,32 @@ public class TextFieldWithPrompt extends JTextField {
   }
   
   @Override
-  protected void paintComponent(java.awt.Graphics g) {
+  protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-
+    repaint();
+    Graphics2D g2 = (Graphics2D)g.create();
+    utility.Utility.setRenderQuality(g2);
+    
+    Insets bounds = getInsets();
+    Dimension size = getSize();
+    
+    if (isFocusOwner())
+      g2.setColor(Slyum.THEME_COLOR);
+    else if (isMouseHover)
+      g2.setColor(defaultBorderColor.darker());
+    else
+      g2.setColor(defaultBorderColor);
+    
+    g2.drawRect(bounds.left - BORDER_SIZE, 
+                bounds.top - BORDER_SIZE, size.width - 1, size.height - 1);
+    
     if(getText().isEmpty() && 
        !(FocusManager.getCurrentKeyboardFocusManager().getFocusOwner() == this)){
-      Graphics2D g2 = (Graphics2D)g.create();
-      g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                          RenderingHints.VALUE_ANTIALIAS_ON);
-      g2.setColor(getDisabledTextColor());
+      g2.setColor(getDisabledTextColor().darker());
       g2.setFont(getFont().deriveFont(Font.ITALIC));
       g2.drawString(placeholder, getInsets().left, 
                     g.getFontMetrics().getMaxAscent() + getInsets().top);
     }
+    g2.dispose();
   }
 }

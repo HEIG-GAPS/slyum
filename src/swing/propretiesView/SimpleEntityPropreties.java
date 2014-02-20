@@ -57,6 +57,7 @@ import swing.slyumCustomizedComponents.SButton;
 import swing.slyumCustomizedComponents.SScrollPane;
 import swing.slyumCustomizedComponents.STable;
 import swing.Slyum;
+import swing.slyumCustomizedComponents.TextFieldWithPrompt;
 import utility.MultiBorderLayout;
 import utility.PersonalizedIcon;
 import utility.Utility;
@@ -722,7 +723,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
   private JLabel imgMethodSelected, imgNoParameter;
   private JPanel panelParameters, panelAddMethodForClass;
   private JScrollPane scrollPaneParameters;
-  private JTextField textName = new JTextField();
+  private JTextField textName = new TextFieldWithPrompt("", "Enter the entity's name");
   
   protected SimpleEntityPropreties() {
     

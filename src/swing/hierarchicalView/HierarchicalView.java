@@ -45,6 +45,7 @@ import javax.swing.tree.TreeSelectionModel;
 import swing.PanelClassDiagram;
 import swing.slyumCustomizedComponents.SScrollPane;
 import swing.Slyum;
+import swing.slyumCustomizedComponents.TextFieldWithPrompt;
 import utility.PersonalizedIcon;
 
 /**

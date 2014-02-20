@@ -20,6 +20,7 @@ import classDiagram.relationships.Association.NavigateDirection;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Role;
+import swing.slyumCustomizedComponents.TextFieldWithPrompt;
 
 /**
  * Show the propreties of an association and its roles with Swing components.
@@ -55,7 +56,7 @@ public class RelationPropreties extends GlobalPropreties {
     setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
 
     // Panel général
-    textFieldLabel = new JTextField();
+    textFieldLabel = new TextFieldWithPrompt("", "Enter the relation's name");
     textFieldLabel.setMaximumSize(new Dimension(Short.MAX_VALUE, 25));
     textFieldLabel.addActionListener(new ActionListener() {
       @Override

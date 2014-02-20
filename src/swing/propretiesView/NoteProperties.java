@@ -61,6 +61,7 @@ public class NoteProperties extends GlobalPropreties {
         repaint();
         if (!isEnabled()) {
           Graphics2D g2 = (Graphics2D)g;
+          utility.Utility.setRenderQuality(g2);
           Rectangle bounds = getBounds();
           Color color = new Color(100, 100, 100, 50),
                 colorText = new Color(20, 20, 20, 150);

@@ -1,66 +1,69 @@
 package swing.slyumCustomizedComponents;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.border.LineBorder;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
+import swing.Slyum;
 import utility.EditableCellFocusAction;
 
 public class STable extends JTable {
-
-  private int lastSelectedRow = -1;
+  
+  public class CustomCellEditor extends DefaultCellEditor {
   
   // Hack to avoid unselection of editor when changing focus.
-  private boolean isAlreadyStopedEditin = false;
+  private boolean isAlreadyStopedEditing = false;
+  private FocusAdapter fa;
+
+    public CustomCellEditor() {
+      super(new PopupTextField());
+      fa = new FocusAdapter() {
+        @Override
+        public void focusLost(FocusEvent e) {
+          if (!isAlreadyStopedEditing && STable.this.getCellEditor() != null)
+            STable.this.getCellEditor().stopCellEditing();
+          isAlreadyStopedEditing = false;
+        }
+      };
+    }
+
+    @Override
+    public boolean stopCellEditing() {
+      ((JComponent)getComponent()).removeFocusListener(fa);
+      isAlreadyStopedEditing = true;
+      return super.stopCellEditing();
+    }
+
+    @Override
+    public void cancelCellEditing() {
+      ((JComponent)getComponent()).removeFocusListener(fa);
+      super.cancelCellEditing();
+    }
+
+    @Override
+    public Component getTableCellEditorComponent(JTable table, Object value, 
+        boolean isSelected, int row, int column) {        
+      JComponent component = (JComponent)getComponent();
+      component.setBorder(BorderFactory.createLineBorder(Slyum.THEME_COLOR, 1));
+      component.addFocusListener(fa);
+      return super.getTableCellEditorComponent(
+          table, value, isSelected, row, column);
+    }    
+  }
+
+  private int lastSelectedRow = -1;
 
   public STable(TableModel dm) {
     super(dm);
-    final FocusAdapter fa = new FocusAdapter() {
-      @Override
-      public void focusLost(FocusEvent e) {
-        if (!isAlreadyStopedEditin)
-          STable.this.getCellEditor().stopCellEditing();
-        isAlreadyStopedEditin = false;
-      }
-    };
     
     new EditableCellFocusAction(this, KeyStroke.getKeyStroke("TAB"));
-    setDefaultEditor(String.class, new DefaultCellEditor(new JTextField()){
-
-      @Override
-      public boolean stopCellEditing() {
-        ((JComponent)getComponent()).removeFocusListener(fa);
-        isAlreadyStopedEditin = true;
-        return super.stopCellEditing();
-      }
-
-      @Override
-      public void cancelCellEditing() {
-        ((JComponent)getComponent()).removeFocusListener(fa);
-        super.cancelCellEditing();
-      }
-      
-      @Override
-      public Component getTableCellEditorComponent(JTable table, Object value, 
-          boolean isSelected, int row, int column) {        
-        JComponent component = (JComponent)getComponent();
-        component.setBorder(new LineBorder(Color.black));
-        component.addFocusListener(fa);
-        return super.getTableCellEditorComponent(
-            table, value, isSelected, row, column);
-      }
-    });
+    setDefaultEditor(String.class, new CustomCellEditor());
   }
 
   @Override
@@ -98,17 +101,5 @@ public class STable extends JTable {
 
   public void scrollToLastCell() {
     scrollToCell(getRowCount() - 1, getColumnCount() - 1);
-  }
-
-  private class DefaultCellEditorImpl extends DefaultCellEditor {
-
-    public DefaultCellEditorImpl(JCheckBox checkBox) {
-      super(checkBox);
-    }
-
-    @Override
-    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-      return super.getTableCellEditorComponent(table, value, isSelected, row, column); //To change body of generated methods, choose Tools | Templates.
-    }
   }
 }
