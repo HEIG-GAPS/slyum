@@ -28,6 +28,7 @@ import swing.SButton;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent.UpdateMessage;
+import swing.SScrollPane;
 
 public class NoteProperties extends GlobalPropreties {
   private static NoteProperties instance;
@@ -45,7 +46,7 @@ public class NoteProperties extends GlobalPropreties {
     JPanel panel = new FlatPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
-    JScrollPane scrollPane = new JScrollPane();
+    JScrollPane scrollPane = new SScrollPane();
     panel.add(scrollPane);
     panel.add(Box.createHorizontalStrut(10));
     list = new JList<>();

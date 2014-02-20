@@ -32,6 +32,7 @@ import javax.swing.text.html.StyleSheet;
 import swing.FlatButton;
 import swing.PanelClassDiagram;
 import swing.PropertyLoader;
+import swing.SScrollPane;
 import swing.Slyum;
 import utility.SMessageDialog;
 import utility.TagDownload;
@@ -149,7 +150,7 @@ public class UpdateInfo extends JDialog {
     s.addRule("h2 {color:#444444; font-size: 1.2em;}");
     
 
-    scp = new JScrollPane(infoPane);
+    scp = new SScrollPane(infoPane);
     scp.setBorder(null);
 
     ok = new FlatButton("Update");

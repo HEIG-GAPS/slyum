@@ -27,6 +27,7 @@ import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.EnumEntity;
 import classDiagram.components.EnumValue;
+import swing.SScrollPane;
 
 public class EnumEntityPropreties extends GlobalPropreties {
 
@@ -102,7 +103,7 @@ public class EnumEntityPropreties extends GlobalPropreties {
   private void initializeComponents() {
     JPanel panelAttributes = new JPanel(), panelButtons = new JPanel(), panelMain = new FlatPanel();
     JButton btnAdd;
-    JScrollPane wrapTableEnumValues = new JScrollPane();
+    JScrollPane wrapTableEnumValues = new SScrollPane();
 
     panelAttributes.setLayout(new BoxLayout(panelAttributes,
             BoxLayout.PAGE_AXIS));
