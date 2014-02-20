@@ -15,9 +15,7 @@ import java.util.List;
 import javax.swing.AbstractListModel;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
@@ -28,16 +26,14 @@ import swing.slyumCustomizedComponents.SButton;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent.UpdateMessage;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import swing.slyumCustomizedComponents.SScrollPane;
+import swing.slyumCustomizedComponents.SList;
 
 public class NoteProperties extends GlobalPropreties {
   private static NoteProperties instance;
 
-  private JList<LineCommentary> list;
+  private SList<LineCommentary> list;
   private SButton btnDelete;
 
   public static NoteProperties getInstance() {
@@ -50,39 +46,19 @@ public class NoteProperties extends GlobalPropreties {
     JPanel panel = new FlatPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
-    JScrollPane scrollPane = new SScrollPane();
-    panel.add(scrollPane);
-    panel.add(Box.createHorizontalStrut(10));
-    list = new JList<LineCommentary>() {
+    list = new SList<LineCommentary>() {
 
       @Override
       protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        repaint();
-        if (!isEnabled()) {
-          Graphics2D g2 = (Graphics2D)g;
-          utility.Utility.setRenderQuality(g2);
-          Rectangle bounds = getBounds();
-          Color color = new Color(100, 100, 100, 50),
-                colorText = new Color(20, 20, 20, 150);
-          String text = "No link note";
-          int stringWidth;
-          
-          g2.setColor(color);
-          g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-          
-          g2.setFont(Slyum.getDefaultFont().deriveFont(16.f));
-          g2.setColor(colorText);
-          stringWidth = g2.getFontMetrics().stringWidth(text);
-          g2.drawString(text, (bounds.x + bounds.width - stringWidth) / 2, 
-                        bounds.y + (bounds.height > 30 ? 30 : bounds.height));
-        }
+        if (!isEnabled())
+          utility.Utility.drawInfoRect(
+              "No link note", getBounds(), (Graphics2D)g, 30);
       }
       
     };
     list.setEnabled(false);
     list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    scrollPane.setViewportView(list);
     list.setModel(new ListLineCommentaryModel());
     list.addMouseListener(new MouseAdapter() {
       @Override
@@ -100,6 +76,9 @@ public class NoteProperties extends GlobalPropreties {
         btnDelete.setEnabled(list.getSelectedIndex() != -1);
       }
     });
+    
+    panel.add(list.getScrollPane());
+    panel.add(Box.createHorizontalStrut(10));
 
     btnDelete = new SButton(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
             + "minus.png"), "Remove link");

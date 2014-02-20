@@ -65,6 +65,7 @@ public class Slyum extends JFrame implements ActionListener {
   public final static Color DEFAULT_BACKGROUND = new Color(239, 239, 242);
   public final static Color BACKGROUND_FORHEAD = new Color(246, 246, 246);
   public final static Color THEME_COLOR = new Color(0, 122, 204);
+  public final static Color DEFAULT_BORDER_COLOR = new Color(169, 169, 169);
 
   // Don't use the file separator here. Java resources are get with
   // getResource() and didn't support back-slash character on Windows.

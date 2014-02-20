@@ -27,6 +27,7 @@ import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.EnumEntity;
 import classDiagram.components.EnumValue;
+import javax.swing.BorderFactory;
 import swing.slyumCustomizedComponents.SScrollPane;
 import swing.slyumCustomizedComponents.TextFieldWithPrompt;
 
@@ -104,7 +105,6 @@ public class EnumEntityPropreties extends GlobalPropreties {
   private void initializeComponents() {
     JPanel panelAttributes = new JPanel(), panelButtons = new JPanel(), panelMain = new FlatPanel();
     JButton btnAdd;
-    JScrollPane wrapTableEnumValues = new SScrollPane();
 
     panelAttributes.setLayout(new BoxLayout(panelAttributes,
             BoxLayout.PAGE_AXIS));
@@ -189,9 +189,8 @@ public class EnumEntityPropreties extends GlobalPropreties {
     tableEnumValues.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     tableEnumValues.setPreferredScrollableViewportSize(new Dimension(0, 0));
 
-    wrapTableEnumValues.setViewportView(tableEnumValues);
     panelAttributes.add(Box.createVerticalStrut(5));
-    panelAttributes.add(wrapTableEnumValues);
+    panelAttributes.add(tableEnumValues.getScrollPane());
     // -----
 
     // Buttons

@@ -14,7 +14,6 @@ import classDiagram.components.Visibility;
 import classDiagram.verifyName.TypeName;
 import graphic.entity.ClassView;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -42,9 +41,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
@@ -54,7 +51,6 @@ import javax.swing.table.TableModel;
 import swing.slyumCustomizedComponents.FlatPanel;
 import swing.PanelClassDiagram;
 import swing.slyumCustomizedComponents.SButton;
-import swing.slyumCustomizedComponents.SScrollPane;
 import swing.slyumCustomizedComponents.STable;
 import swing.Slyum;
 import swing.slyumCustomizedComponents.TextFieldWithPrompt;
@@ -272,8 +268,9 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
   }
 
-  private class MethodTableModel extends AbstractTableModel implements Observer, TableModelListener, MouseListener {
-    private static final long serialVersionUID = -8935769363179120147L;
+  private class MethodTableModel 
+      extends AbstractTableModel 
+      implements Observer, TableModelListener, MouseListener {
 
     private final String[] columnNames = { "Method", "Type", "Visibility",
             "Abstract", "Static" };
@@ -713,7 +710,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     return instance;
   }
 
-  private JTable attributesTable, methodsTable, parametersTable;
+  private STable attributesTable, methodsTable, parametersTable;
   private final JButton btnAddParameters, btnRemoveMethod, btnRemoveAttribute,
           btnUpAttribute, btnDownAttribute, btnUpMethod, btnDownMethod,
           btnRemoveParameters, btnRightParameters, btnLeftParameters,
@@ -777,6 +774,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
     // Tables
     attributesTable = new STable(new AttributeTableModel());
+    attributesTable.setEmptyText("No attribute");
     attributesTable.setPreferredScrollableViewportSize(new Dimension(200, 0));
 
     attributesTable.getModel().addTableModelListener(
@@ -786,6 +784,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
             .getModel());
 
     methodsTable = new STable(new MethodTableModel());
+    methodsTable.setEmptyText("No method");
     methodsTable.setPreferredScrollableViewportSize(new Dimension(200, 0));
     methodsTable.getModel().addTableModelListener(
             (MethodTableModel) methodsTable.getModel());
@@ -856,11 +855,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     p.setLayout(new BorderLayout());
     JPanel panel = createWhitePanel();
     panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-    JScrollPane scrollPane = new SScrollPane(attributesTable);
-    scrollPane.getViewport().setOpaque(false);
-    scrollPane.setBorder(new LineBorder(Color.GRAY, 1, true));
-    scrollPane.setBackground(Color.WHITE);
-    panel.add(scrollPane);
+    panel.add(attributesTable.getScrollPane());
 
     JPanel panelButton = new JPanel();
     panelButton.setOpaque(false);
@@ -983,11 +978,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     p.setLayout(new BorderLayout());
     panel = createWhitePanel();
     panel.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-    scrollPane = new SScrollPane(methodsTable);
-    scrollPane.getViewport().setOpaque(false);
-    scrollPane.setBorder(new LineBorder(Color.GRAY, 1, true));
-    scrollPane.setBackground(Color.WHITE);
-    panel.add(scrollPane);
+    panel.add(methodsTable.getScrollPane());
 
     panelButton = new JPanel();
     panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.PAGE_AXIS));
@@ -1162,14 +1153,11 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     panel = panelParameters = new FlatPanel();
     panel.setLayout(new MultiBorderLayout());
     panel.setAlignmentY(TOP_ALIGNMENT);
-    scrollPane = scrollPaneParameters = new SScrollPane(parametersTable);
-    scrollPane.getViewport().setOpaque(false);
-    scrollPane.setBorder(new LineBorder(Color.GRAY, 1, true));
-    scrollPane.setBackground(Color.WHITE);
-    scrollPane.setVisible(false);
+    scrollPaneParameters = parametersTable.getScrollPane();
+    scrollPaneParameters.setVisible(false);
     panel.setMaximumSize(new Dimension(100, Short.MAX_VALUE));
     panel.setPreferredSize(new Dimension(200, 0));
-    panel.add(scrollPane, BorderLayout.CENTER);
+    panel.add(scrollPaneParameters, BorderLayout.CENTER);
 
     final JPanel btnPanel = new JPanel();
 

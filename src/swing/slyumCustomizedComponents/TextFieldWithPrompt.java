@@ -20,12 +20,10 @@ import swing.Slyum;
  */
 public class TextFieldWithPrompt extends JTextField {
   
-  public final static Color DEFAUT_BORDER_COLOR = new Color(169, 169, 169);
-  
   private final static int BORDER_SIZE = 3;
   
   private String placeholder = "";
-  private Color defaultBorderColor = DEFAUT_BORDER_COLOR;
+  private Color defaultBorderColor = Slyum.DEFAULT_BORDER_COLOR;
   private boolean isMouseHover;
 
   public TextFieldWithPrompt() {

@@ -41,6 +41,7 @@ import classDiagram.components.Visibility;
 import classDiagram.relationships.Multiplicity;
 import java.awt.Dimension;
 import java.util.List;
+import swing.Slyum;
 
 /**
  * Utilities class containing tools methods.
@@ -586,5 +587,22 @@ public class Utility {
 
   protected static Color getAlphaColor(Color color, int alpha) {
     return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+  }
+  
+  public static void drawInfoRect(
+      String text, Rectangle bounds, Graphics2D g2, int offset) {
+    setRenderQuality(g2);
+    Color color = new Color(100, 100, 100, 50),
+          colorText = new Color(20, 20, 20, 150);
+    int stringWidth;
+
+    g2.setColor(color);
+    g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+
+    g2.setFont(Slyum.getDefaultFont().deriveFont(16.f));
+    g2.setColor(colorText);
+    stringWidth = g2.getFontMetrics().stringWidth(text);
+    g2.drawString(text, (bounds.x + bounds.width - stringWidth) / 2, 
+                  bounds.y + (bounds.height > offset ? offset : bounds.height));
   }
 }

@@ -1,11 +1,17 @@
 package swing.slyumCustomizedComponents;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.table.TableModel;
@@ -58,12 +64,43 @@ public class STable extends JTable {
   }
 
   private int lastSelectedRow = -1;
+  private JScrollPane scrollPane;
+  private String emptyText = "";
 
   public STable(TableModel dm) {
     super(dm);
-    
     new EditableCellFocusAction(this, KeyStroke.getKeyStroke("TAB"));
     setDefaultEditor(String.class, new CustomCellEditor());
+    setBorder(null);
+    scrollPane = new SScrollPane(this) {
+      @Override
+      protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (getModel().getRowCount() == 0) {
+          Dimension size = getSize();
+          utility.Utility.drawInfoRect(
+              emptyText, 
+              new Rectangle(size.width, size.height), 
+              (Graphics2D)g, 50);
+        }
+      }
+    };
+    scrollPane.setBorder(
+       BorderFactory.createLineBorder(Slyum.DEFAULT_BORDER_COLOR));
+    scrollPane.setBackground(Color.WHITE);
+    scrollPane.getViewport().setOpaque(false);
+  }
+
+  public String getEmptyText() {
+    return emptyText;
+  }
+
+  public void setEmptyText(String emptyText) {
+    this.emptyText = emptyText;
+  }
+  
+  public JScrollPane getScrollPane() {
+    return scrollPane;
   }
 
   @Override

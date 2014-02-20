@@ -23,12 +23,13 @@ import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 
 import utility.Utility;
 import classDiagram.components.Method;
 import classDiagram.components.SimpleEntity;
+import javax.swing.BorderFactory;
+import swing.slyumCustomizedComponents.SList;
 
 public class OverridesAndImplementationsDialog extends JDialog {
 
@@ -118,17 +119,14 @@ public class OverridesAndImplementationsDialog extends JDialog {
     gbl_contentPanel.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
     contentPanel.setLayout(gbl_contentPanel);
     {
-      final JScrollPane scrollPane = new SScrollPane();
+      final SList<?> list = new SList<>(createData());
       final GridBagConstraints gbc_scrollPane = new GridBagConstraints();
       gbc_scrollPane.fill = GridBagConstraints.BOTH;
       gbc_scrollPane.gridx = 0;
       gbc_scrollPane.gridy = 0;
-      contentPanel.add(scrollPane, gbc_scrollPane);
+      contentPanel.add(list.getScrollPane(), gbc_scrollPane);
       {
-        final JList<?> list = new JList<>(createData());
-        scrollPane.setViewportView(list);
-        list.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null,
-                null));
+        list.setBorder(null);
         list.setCellRenderer(new CheckListRenderer());
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.addMouseListener(new MouseAdapter() {

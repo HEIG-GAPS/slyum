@@ -60,6 +60,7 @@ import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.Utility;
 import classDiagram.components.Method.ParametersViewStyle;
+import swing.slyumCustomizedComponents.SList;
 import update.UpdateInfo;
 
 public class SProperties extends JDialog {
@@ -68,8 +69,8 @@ public class SProperties extends JDialog {
   private ButtonColor btnDefaultClassColor;
   private JPanel contentPanel = new JPanel(), panelLabelAlert;
   private JLabel lblPreviewFont = new JLabel();
-  private JList<String> listName;
-  private JList<Integer> listSize;
+  private SList<String> listName;
+  private SList<Integer> listSize;
   private JComboBox<ParametersViewStyle> listViewMethods;
   private JComboBox<ViewEntity> listViewEntities;
   private JRadioButton rdbtnAutomaticcolor;
@@ -508,16 +509,15 @@ public class SProperties extends JDialog {
             }
           }
           {
-            final JScrollPane scrollPane = new SScrollPane();
+            listName = new SList<>();
 
             final GridBagConstraints gbc_scrollPane = new GridBagConstraints();
             gbc_scrollPane.fill = GridBagConstraints.BOTH;
             gbc_scrollPane.insets = new Insets(0, 0, 5, 0);
             gbc_scrollPane.gridx = 0;
             gbc_scrollPane.gridy = 0;
-            panel.add(scrollPane, gbc_scrollPane);
+            panel.add(listName.getScrollPane(), gbc_scrollPane);
             {
-              listName = new JList<>();
               listName.addListSelectionListener(new ListSelectionListener() {
                 @Override
                 public void valueChanged(ListSelectionEvent arg0) {
@@ -526,9 +526,6 @@ public class SProperties extends JDialog {
                           .toString(), Font.PLAIN, size));
                 }
               });
-              scrollPane.setViewportView(listName);
-              listName.setBorder(new BevelBorder(BevelBorder.LOWERED, null,
-                      null, null, null));
               listName.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
               listName.setModel(new AbstractListModel<String>() {
 
@@ -562,15 +559,14 @@ public class SProperties extends JDialog {
             }
           }
           {
-            final JScrollPane scrollPane = new SScrollPane();
+            listSize = new SList<>();
             final GridBagConstraints gbc_scrollPane = new GridBagConstraints();
             gbc_scrollPane.insets = new Insets(0, 5, 5, 0);
             gbc_scrollPane.fill = GridBagConstraints.BOTH;
             gbc_scrollPane.gridx = 1;
             gbc_scrollPane.gridy = 0;
-            panel.add(scrollPane, gbc_scrollPane);
+            panel.add(listSize.getScrollPane(), gbc_scrollPane);
             {
-              listSize = new JList<>();
               listSize.setModel(new AbstractListModel<Integer>() {
 
                 private static final long serialVersionUID = -2073589127443911972L;
@@ -588,9 +584,6 @@ public class SProperties extends JDialog {
                   return values.length;
                 }
               });
-              scrollPane.setViewportView(listSize);
-              listSize.setBorder(new BevelBorder(BevelBorder.LOWERED, null,
-                      null, null, null));
               listSize.setSelectedValue(TextBox.getFont().getSize(), true);
             }
           }
@@ -598,7 +591,8 @@ public class SProperties extends JDialog {
             final JPanel panel_1 = new JPanel();
             panel_1.setMinimumSize(new Dimension(200, 60));
             panel_1.setMaximumSize(new Dimension(200, 60));
-            panel_1.setBorder(new LineBorder(Color.GRAY));
+            panel_1.setBorder(
+                BorderFactory.createLineBorder(Slyum.DEFAULT_BORDER_COLOR));
             final GridBagConstraints gbc_panel_1 = new GridBagConstraints();
             gbc_panel_1.gridwidth = 2;
             gbc_panel_1.insets = new Insets(0, 0, 0, 0);
