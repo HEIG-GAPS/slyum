@@ -1,6 +1,5 @@
 package swing;
 
-import swing.slyumCustomizedComponents.SScrollPane;
 import graphic.ColoredComponent;
 import graphic.GraphicView;
 import graphic.GraphicView.ViewEntity;
@@ -37,16 +36,13 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -60,7 +56,9 @@ import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.Utility;
 import classDiagram.components.Method.ParametersViewStyle;
+import swing.slyumCustomizedComponents.SCheckBox;
 import swing.slyumCustomizedComponents.SList;
+import swing.slyumCustomizedComponents.SRadioButton;
 import update.UpdateInfo;
 
 public class SProperties extends JDialog {
@@ -207,7 +205,7 @@ public class SProperties extends JDialog {
             }
           });
           {
-            ckbBackgroundGradient = new JCheckBox("Background gradient");
+            ckbBackgroundGradient = new SCheckBox("Background gradient");
             final GridBagConstraints gbc_ckbBackgroundGradient = new GridBagConstraints();
             gbc_ckbBackgroundGradient.fill = GridBagConstraints.HORIZONTAL;
             gbc_ckbBackgroundGradient.anchor = GridBagConstraints.WEST;
@@ -217,7 +215,7 @@ public class SProperties extends JDialog {
             panel.add(ckbBackgroundGradient, gbc_ckbBackgroundGradient);
           }
           {
-            ckbEntityGradient = new JCheckBox("Entity gradient");
+            ckbEntityGradient = new SCheckBox("Entity gradient");
             final GridBagConstraints gbc_ckbEntityGradient = new GridBagConstraints();
             gbc_ckbEntityGradient.fill = GridBagConstraints.HORIZONTAL;
             gbc_ckbEntityGradient.anchor = GridBagConstraints.WEST;
@@ -227,7 +225,7 @@ public class SProperties extends JDialog {
             panel.add(ckbEntityGradient, gbc_ckbEntityGradient);
           }
           {
-            chckbxEnableGrid = new JCheckBox("Enable grid");
+            chckbxEnableGrid = new SCheckBox("Enable grid");
             chckbxEnableGrid.addChangeListener(new ChangeListener() {
               @Override
               public void stateChanged(ChangeEvent e) {
@@ -299,7 +297,7 @@ public class SProperties extends JDialog {
               }
             }
             {
-              chckbxShowGrid = new JCheckBox("Show grid");
+              chckbxShowGrid = new SCheckBox("Show grid");
               GridBagConstraints gbc_chckbxShowGrid = new GridBagConstraints();
               gbc_chckbxShowGrid.fill = GridBagConstraints.HORIZONTAL;
               gbc_chckbxShowGrid.insets = new Insets(0, 0, 5, 0);
@@ -333,7 +331,7 @@ public class SProperties extends JDialog {
                 gbl_panel_2.rowWeights = new double[] { 0.0, 0.0,
                         Double.MIN_VALUE };
                 panel_grid_opacity.setLayout(gbl_panel_2);
-                chckbxOpacityGrid = new JCheckBox("Enable opacity");
+                chckbxOpacityGrid = new SCheckBox("Enable opacity");
                 GridBagConstraints gbc_chckbxOpacityGrid = new GridBagConstraints();
                 gbc_chckbxOpacityGrid.insets = new Insets(0, 0, 5, 0);
                 gbc_chckbxOpacityGrid.anchor = GridBagConstraints.WEST;
@@ -400,7 +398,7 @@ public class SProperties extends JDialog {
                 gbl_panel_2.rowWeights = new double[] { 1.0, 1.0,
                         Double.MIN_VALUE };
                 panel_grid_color.setLayout(gbl_panel_2);
-                rdbtnAutomaticcolor = new JRadioButton(
+                rdbtnAutomaticcolor = new SRadioButton(
                         "Assorted with background");
                 rdbtnAutomaticcolor.setHorizontalAlignment(SwingConstants.LEFT);
                 final GridBagConstraints gbc_rdbtnAutomaticcolor = new GridBagConstraints();
@@ -429,7 +427,7 @@ public class SProperties extends JDialog {
                   gbc_panel_3.gridy = 1;
                   panel_grid_color.add(panel_3, gbc_panel_3);
                   {
-                    rdbtnSelectedColor = new JRadioButton("Selected color");
+                    rdbtnSelectedColor = new SRadioButton("Selected color");
                     rdbtnSelectedColor
                             .setHorizontalAlignment(SwingConstants.LEFT);
                     panel_3.add(rdbtnSelectedColor);
@@ -639,7 +637,7 @@ public class SProperties extends JDialog {
             gbl_panel_1.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
             panel_1.setLayout(gbl_panel_1);
             {
-              rdbtnLow = new JRadioButton("Low");
+              rdbtnLow = new SRadioButton("Low");
               bgGraphicQuality.add(rdbtnLow);
               final GridBagConstraints gbc_rdbtnLow = new GridBagConstraints();
               gbc_rdbtnLow.insets = new Insets(0, 0, 0, 5);
@@ -648,7 +646,7 @@ public class SProperties extends JDialog {
               panel_1.add(rdbtnLow, gbc_rdbtnLow);
             }
             {
-              rdbtnMedium = new JRadioButton("Medium");
+              rdbtnMedium = new SRadioButton("Medium");
               bgGraphicQuality.add(rdbtnMedium);
               final GridBagConstraints gbc_rdbtnMedium = new GridBagConstraints();
               gbc_rdbtnMedium.insets = new Insets(0, 0, 0, 5);
@@ -657,7 +655,7 @@ public class SProperties extends JDialog {
               panel_1.add(rdbtnMedium, gbc_rdbtnMedium);
             }
             {
-              rdbtnMax = new JRadioButton("Max");
+              rdbtnMax = new SRadioButton("Max");
               bgGraphicQuality.add(rdbtnMax);
               final GridBagConstraints gbc_rdbtnMax = new GridBagConstraints();
               gbc_rdbtnMax.gridx = 2;
@@ -728,7 +726,7 @@ public class SProperties extends JDialog {
                   new EmptyBorder(10, 10, 10, 10)));
           
           panelUpdate.add(chckbxCheckUpdateAtLaunch = 
-              new JCheckBox("Check new update at launch"));
+              new SCheckBox("Check new update at launch"));
           tabbedPane.addTab(
                   "Generals",
                   new ImageIcon(SProperties.class.getResource(Slyum.ICON_PATH
@@ -741,7 +739,7 @@ public class SProperties extends JDialog {
               { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
           panelInnerGeneral.setLayout(gbl_panel);
           {
-            chckbxDisableErrorMessage = new JCheckBox(
+            chckbxDisableErrorMessage = new SCheckBox(
                     "Show error messages during the creation of components");
             GridBagConstraints gbc_chckbxDisableErrorMessage = new GridBagConstraints();
             gbc_chckbxDisableErrorMessage.anchor = GridBagConstraints.WEST;
@@ -752,7 +750,7 @@ public class SProperties extends JDialog {
                     gbc_chckbxDisableErrorMessage);
           }
           {
-            chckbxDisableCrossPopup = new JCheckBox(
+            chckbxDisableCrossPopup = new SCheckBox(
                     "Show cross popup menu when components are selected");
             GridBagConstraints gbc_chckbxDisableCrossPopup = new GridBagConstraints();
             gbc_chckbxDisableCrossPopup.insets = new Insets(0, 5, 0, 0);
@@ -763,7 +761,7 @@ public class SProperties extends JDialog {
                     .add(chckbxDisableCrossPopup, gbc_chckbxDisableCrossPopup);
           }
           {
-            chckbxAutoAdjustInheritance = new JCheckBox(
+            chckbxAutoAdjustInheritance = new SCheckBox(
                     "Auto locate new inheritance");
             GridBagConstraints gbc_chckbxAutoAdjustInheritance = new GridBagConstraints();
             gbc_chckbxAutoAdjustInheritance.insets = new Insets(0, 5, 0, 0);
@@ -775,7 +773,7 @@ public class SProperties extends JDialog {
           }
           {
             chckbxViewTitleOnExport = 
-                new JCheckBox("Paint diagram's name on the diagram");
+                new SCheckBox("Paint diagram's name on the diagram");
             GridBagConstraints gbc_chckbxViewTitleOnExport = 
                 new GridBagConstraints();
             gbc_chckbxViewTitleOnExport.insets = new Insets(0, 5, 0, 0);
@@ -794,7 +792,7 @@ public class SProperties extends JDialog {
           }
           {
             chckbxPaintTitleBorder = 
-                new JCheckBox("Paint diagram's border");
+                new SCheckBox("Paint diagram's border");
             checkPaintTitleBorderEnabled();
             GridBagConstraints gbc_chckbxPaintTitleBorder = 
                 new GridBagConstraints();
@@ -806,7 +804,7 @@ public class SProperties extends JDialog {
                            gbc_chckbxPaintTitleBorder);
           }
           {
-            chckbxViewEnum = new JCheckBox("View enum values");
+            chckbxViewEnum = new SCheckBox("View enum values");
             GridBagConstraints gbc_chckbxViewEnum = new GridBagConstraints();
             gbc_chckbxViewEnum.insets = new Insets(0, 5, 0, 0);
             gbc_chckbxViewEnum.anchor = GridBagConstraints.WEST;
