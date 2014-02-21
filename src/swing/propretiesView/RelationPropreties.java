@@ -20,6 +20,7 @@ import classDiagram.relationships.Association.NavigateDirection;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Role;
+import swing.slyumCustomizedComponents.SRadioButton;
 import swing.slyumCustomizedComponents.TextFieldWithPrompt;
 
 /**
@@ -71,7 +72,7 @@ public class RelationPropreties extends GlobalPropreties {
       }
     });
 
-    radBidirectional = new JRadioButton();
+    radBidirectional = new SRadioButton();
     radBidirectional.setBackground(null);
     radBidirectional.addActionListener(new ActionListener() {
 
@@ -81,7 +82,7 @@ public class RelationPropreties extends GlobalPropreties {
       }
     });
 
-    radFirstToSecond = new JRadioButton();
+    radFirstToSecond = new SRadioButton();
     radFirstToSecond.setBackground(null);
     radFirstToSecond.addActionListener(new ActionListener() {
 
@@ -91,7 +92,7 @@ public class RelationPropreties extends GlobalPropreties {
       }
     });
 
-    radSecondToFirst = new JRadioButton();
+    radSecondToFirst = new SRadioButton();
     radSecondToFirst.setBackground(null);
     radSecondToFirst.addActionListener(new ActionListener() {
 

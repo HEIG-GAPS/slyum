@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import swing.slyumCustomizedComponents.SCheckBox;
 
 public class NoRepopDialog extends JDialog {
   private static final long serialVersionUID = 9004532439553406805L;
@@ -94,7 +95,7 @@ public class NoRepopDialog extends JDialog {
       }
     }
     {
-      chckbxDontShowThis = new JCheckBox("Don't show this message again.");
+      chckbxDontShowThis = new SCheckBox("Don't show this message again.");
       final GridBagConstraints gbc_chckbxDontShowThis = new GridBagConstraints();
       gbc_chckbxDontShowThis.fill = GridBagConstraints.HORIZONTAL;
       gbc_chckbxDontShowThis.anchor = GridBagConstraints.SOUTH;

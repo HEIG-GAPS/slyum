@@ -14,7 +14,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
@@ -27,8 +26,6 @@ import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.EnumEntity;
 import classDiagram.components.EnumValue;
-import javax.swing.BorderFactory;
-import swing.slyumCustomizedComponents.SScrollPane;
 import swing.slyumCustomizedComponents.TextFieldWithPrompt;
 
 public class EnumEntityPropreties extends GlobalPropreties {

@@ -28,6 +28,7 @@ import utility.PersonalizedIcon;
 import change.BufferCreation;
 import change.Change;
 import classDiagram.IDiagramComponent;
+import swing.slyumCustomizedComponents.SRadioButtonMenuItem;
 
 /**
  * Represent a graphic component in Slyum. Graphics components can't be draw
@@ -371,7 +372,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    */
   public JRadioButtonMenuItem makeRadioButtonMenuItem(String name,
           String action, ButtonGroup group) {
-    final JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem(name);
+    final JRadioButtonMenuItem rbMenuItem = new SRadioButtonMenuItem(name);
     rbMenuItem.setActionCommand(action);
     rbMenuItem.addActionListener(this);
     group.add(rbMenuItem);

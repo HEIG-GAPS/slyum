@@ -53,6 +53,7 @@ import swing.PanelClassDiagram;
 import swing.slyumCustomizedComponents.SButton;
 import swing.slyumCustomizedComponents.STable;
 import swing.Slyum;
+import swing.slyumCustomizedComponents.SCheckBox;
 import swing.slyumCustomizedComponents.TextFieldWithPrompt;
 import utility.MultiBorderLayout;
 import utility.PersonalizedIcon;
@@ -715,7 +716,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
           btnUpAttribute, btnDownAttribute, btnUpMethod, btnDownMethod,
           btnRemoveParameters, btnRightParameters, btnLeftParameters,
           btnAddMethodForInterface;
-  private JCheckBox checkBoxAbstract = new JCheckBox("Abstract");
+  private JCheckBox checkBoxAbstract = new SCheckBox("Abstract");
   private JComboBox<String> comboBox = Utility.getVisibilityComboBox();
   private JLabel imgMethodSelected, imgNoParameter;
   private JPanel panelParameters, panelAddMethodForClass;
@@ -1249,25 +1250,13 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
   public JPanel createSimpleEntityPropreties() {
     JPanel panel = new JPanel();
-    Dimension size = new Dimension(200, 110);
-    Utility.setAllSize(panel, size);
-    panel.setOpaque(false);
     panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
+    panel.setOpaque(false);
     panel.setAlignmentY(TOP_ALIGNMENT);
-    panel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 
-    size = new Dimension(200, 20);
-    Utility.setAllSize(textName, size);
-    Utility.setAllSize(checkBoxAbstract, new Dimension((int) size.getWidth(), 30));
-    Utility.setAllSize(comboBox, new Dimension(80, (int) size.getHeight()));
-
+    // Entity's name
     textName.setAlignmentX(LEFT_ALIGNMENT);
-    checkBoxAbstract.setAlignmentX(LEFT_ALIGNMENT);
-    comboBox.setAlignmentX(LEFT_ALIGNMENT);
-
-    checkBoxAbstract.setOpaque(false);
-
-    // Event
+    textName.setPreferredSize(new Dimension(230, 25));
     textName.addKeyListener(new KeyAdapter() {
 
       @Override
@@ -1282,17 +1271,11 @@ public class SimpleEntityPropreties extends GlobalPropreties {
         }
       }
     });
-
-    checkBoxAbstract.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        ((SimpleEntity) currentObject).setAbstract(checkBoxAbstract
-                .isSelected());
-        ((SimpleEntity) currentObject).notifyObservers();
-      }
-    });
-
+    panel.add(textName);
+    panel.add(Box.createVerticalStrut(5));
+    
+    // Visibility combobox
+    comboBox.setAlignmentX(LEFT_ALIGNMENT);
     comboBox.addActionListener(new ActionListener() {
 
       @Override
@@ -1307,10 +1290,23 @@ public class SimpleEntityPropreties extends GlobalPropreties {
         }
       }
     });
-
-    panel.add(textName);
-    panel.add(checkBoxAbstract);
     panel.add(comboBox);
+    panel.add(Box.createVerticalStrut(5));
+    
+    // Checkbox is abstract
+    checkBoxAbstract.setAlignmentX(LEFT_ALIGNMENT);
+    checkBoxAbstract.setOpaque(false);
+    checkBoxAbstract.setBorder(null);
+    checkBoxAbstract.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        ((SimpleEntity) currentObject).setAbstract(checkBoxAbstract
+                .isSelected());
+        ((SimpleEntity) currentObject).notifyObservers();
+      }
+    });
+    panel.add(checkBoxAbstract);
 
     return panel;
   }

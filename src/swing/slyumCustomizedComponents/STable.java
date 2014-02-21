@@ -1,5 +1,6 @@
 package swing.slyumCustomizedComponents;
 
+import java.awt.Checkbox;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -10,10 +11,13 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.text.JTextComponent;
 import swing.Slyum;
@@ -71,6 +75,16 @@ public class STable extends JTable {
     super(dm);
     new EditableCellFocusAction(this, KeyStroke.getKeyStroke("TAB"));
     setDefaultEditor(String.class, new CustomCellEditor());
+    setDefaultEditor(Boolean.class, new DefaultCellEditor(new SCheckBox()));
+    setDefaultRenderer(Boolean.class, new TableCellRenderer() {
+
+      @Override
+      public Component getTableCellRendererComponent(
+          JTable table, Object value, boolean isSelected, 
+          boolean hasFocus, int row, int column) {
+        return new SCheckBox("", (boolean)value);
+      }
+    });
     setBorder(null);
     scrollPane = new SScrollPane(this) {
       @Override
