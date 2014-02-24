@@ -9,7 +9,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JComponent;
-import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicRadioButtonMenuItemUI;
@@ -89,7 +88,9 @@ public class SRadioButtonMenuItem extends JRadioButtonMenuItem {
     setUI(new BasicRadioButtonMenuItemUI() {
       
       @Override
-      protected void paintMenuItem(Graphics g, JComponent c, Icon checkIcon, Icon arrowIcon, Color background, Color foreground, int defaultTextIconGap) {
+      protected void paintMenuItem(
+          Graphics g, JComponent c, Icon checkIcon, Icon arrowIcon, 
+          Color background, Color foreground, int defaultTextIconGap) {
         
         paintBackground(g, menuItem, background);
         
@@ -137,7 +138,8 @@ public class SRadioButtonMenuItem extends JRadioButtonMenuItem {
         g2.setFont(UIManager.getFont("RadioButton.font"));
         g2.drawString(
             getText(), 
-            checkBox.x + checkBox.width + 5, g2.getFontMetrics().getMaxAscent() + checkBox.y - 3);
+            checkBox.x + checkBox.width + 5, 
+            g2.getFontMetrics().getMaxAscent() + checkBox.y - 3);
       }
     });
   }
