@@ -42,6 +42,7 @@ import classDiagram.relationships.Multiplicity;
 import java.awt.Dimension;
 import java.util.List;
 import swing.Slyum;
+import swing.slyumCustomizedComponents.SComboBox;
 
 /**
  * Utilities class containing tools methods.
@@ -412,7 +413,7 @@ public class Utility {
    * @return a JComboBox containing all default multiplicities
    */
   public static JComboBox<Multiplicity> getMultiplicityComboBox() {
-    final JComboBox<Multiplicity> cmb = new JComboBox<Multiplicity>();
+    final JComboBox<Multiplicity> cmb = new SComboBox<Multiplicity>();
     cmb.setEditable(true);
 
     cmb.addItem(Multiplicity.ONE_ONLY);
@@ -437,7 +438,7 @@ public class Utility {
     for (int i = 0; i < list.length; i++)
       list[i] = Visibility.values()[i].getName();
 
-    return new JComboBox<String>(list);
+    return new SComboBox<String>(list);
   }
 
   /**

@@ -57,6 +57,7 @@ import utility.SMessageDialog;
 import utility.Utility;
 import classDiagram.components.Method.ParametersViewStyle;
 import swing.slyumCustomizedComponents.SCheckBox;
+import swing.slyumCustomizedComponents.SComboBox;
 import swing.slyumCustomizedComponents.SList;
 import swing.slyumCustomizedComponents.SRadioButton;
 import update.UpdateInfo;
@@ -822,9 +823,9 @@ public class SProperties extends JDialog {
 
             GridBagConstraints gbc_panelViews = new GridBagConstraints();
 
-            listViewMethods = new JComboBox<>(
+            listViewMethods = new SComboBox<>(
                     new DefaultComboBoxModel<>(values));
-            listViewEntities = new JComboBox<>(new DefaultComboBoxModel<>(
+            listViewEntities = new SComboBox<>(new DefaultComboBoxModel<>(
                     ViewEntity.values()));
 
             panelViews.add(new JLabel("Entities view type:"));

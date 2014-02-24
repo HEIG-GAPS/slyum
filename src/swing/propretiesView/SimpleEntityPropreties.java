@@ -1276,6 +1276,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     
     // Visibility combobox
     comboBox.setAlignmentX(LEFT_ALIGNMENT);
+    comboBox.setPreferredSize(new Dimension(230, 25));
     comboBox.addActionListener(new ActionListener() {
 
       @Override
