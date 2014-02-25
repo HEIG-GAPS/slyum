@@ -133,7 +133,8 @@ public class SCheckBox extends JCheckBox {
           g2.fillRect(checkBox.x, checkBox.y, checkBox.width, checkBox.height);
         }
         
-        g2.setColor(getForeground());
+        g2.setColor(isEnabled() ? 
+            getForeground() : getForeground().brighter().brighter().brighter());
         g2.setFont(UIManager.getFont("CheckBox.font"));
         g2.drawString(
             getText(), 

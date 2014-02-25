@@ -1,6 +1,7 @@
 package swing.slyumCustomizedComponents;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -16,10 +17,17 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.swing.plaf.basic.BasicComboPopup;
+import javax.swing.plaf.basic.BasicListUI;
 import javax.swing.plaf.basic.ComboPopup;
 import swing.Slyum;
 
@@ -119,7 +127,51 @@ public class SComboBox<E> extends JComboBox<E> {
 
       @Override
       protected ComboPopup createPopup() {
-        return super.createPopup();
+        return new BasicComboPopup(comboBox) {
+          {
+            setBorder(
+                BorderFactory.createLineBorder(Slyum.THEME_COLOR));
+          }
+
+          @Override
+          protected JList createList() {
+            JList l = super.createList();
+            l.setUI(new BasicListUI() {
+
+              @Override
+              protected void paintCell(
+                  Graphics g, int row, Rectangle rowBounds, 
+                  ListCellRenderer cellRenderer, ListModel dataModel, 
+                  ListSelectionModel selModel, int leadIndex) {
+                utility.Utility.setRenderQuality(g);
+                Graphics2D g2 = (Graphics2D)g;
+                int mouseHoverIndex = selModel.getLeadSelectionIndex();
+                
+                // Drawin' background
+                g2.setColor(Color.WHITE);
+                g2.fillRect(rowBounds.x, rowBounds.y, rowBounds.width, rowBounds.height);
+                
+                // Drawin' mouse hover lightning
+                g2.setColor(Slyum.THEME_COLOR);
+                g2.fillRect(rowBounds.x, rowBounds.height * mouseHoverIndex, 
+                            rowBounds.width, rowBounds.height);
+                
+                // Drain' text
+                g2.setColor(mouseHoverIndex == row ? Color.WHITE : getForeground());
+                g2.drawString(
+                    dataModel.getElementAt(row).toString(), rowBounds.x + 5, 
+                    rowBounds.y + g2.getFontMetrics().getMaxAscent());
+              }
+            });
+            return l;
+          }
+
+          @Override
+          public void paint(Graphics g) {
+            utility.Utility.setRenderQuality(g);
+            super.paint(g);
+          }
+        };
       }
 
       @Override
@@ -127,9 +179,9 @@ public class SComboBox<E> extends JComboBox<E> {
         return new BasicComboBoxEditor() {
           @Override
           protected JTextField createEditorComponent() {
-            return new JTextField(){
-              { setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));}
-            };
+            JTextField textField = super.createEditorComponent();
+            textField.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0));
+            return textField;
           }
         };
       }
