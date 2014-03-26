@@ -29,6 +29,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -39,6 +41,7 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import swing.SPanelDiagramComponent.Mode;
 import update.UpdateInfo;
 import static update.UpdateInfo.isUpdateAvailable;
@@ -55,17 +58,19 @@ import utility.SMessageDialog;
 public class Slyum extends JFrame implements ActionListener {
   
   private static final String APP_NAME = "Slyum";
-  public static final String VERSION = "4.0.2";
+  public static final String VERSION = "4.0.3";
   public final static String EXTENTION = "sly";
   public final static String FULL_EXTENTION = String.format(".%s", EXTENTION);
   public final static String APP_DIR_NAME = APP_NAME;
   public final static String FILE_SEPARATOR = 
       System.getProperty("file.separator");
   public final static Point DEFAULT_SIZE = new Point(1024, 760);
+  public static final Color TEXT_COLOR = new Color(34, 34, 34);
   public final static Color DEFAULT_BACKGROUND = new Color(239, 239, 242);
   public final static Color BACKGROUND_FORHEAD = new Color(246, 246, 246);
   public final static Color THEME_COLOR = new Color(0, 122, 204);
   public final static Color DEFAULT_BORDER_COLOR = new Color(169, 169, 169);
+  public static final Color DISABLE_COLOR = Color.GRAY;
 
   // Don't use the file separator here. Java resources are get with
   // getResource() and didn't support back-slash character on Windows.
@@ -212,6 +217,8 @@ public class Slyum extends JFrame implements ActionListener {
   public final static Font DEFAULT_FONT;
   public final static Font UI_FONT;
   
+  private final static Logger LOGGER = Logger.getLogger(Slyum.class.getName());
+  
   public static Font addSystemFont(String fileName) {
     Font font = null;
     try {
@@ -251,6 +258,17 @@ public class Slyum extends JFrame implements ActionListener {
   public static void main(String[] args) {
     arguments = args;
     setUIProperties();
+    
+    try {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    } catch (ClassNotFoundException | InstantiationException | 
+             IllegalAccessException | UnsupportedLookAndFeelException e) {
+      final String MSG = "Unable to load Look and Feel";
+      LOGGER.log(Level.SEVERE, MSG, e);
+      SMessageDialog.showErrorMessage(MSG);
+    }
+
+    
     if (UpdateInfo.isUpdateCheckedAtLaunch())
       UpdateInfo.getNewUpdate(true);
     showWarningForOpenJDK();
@@ -716,7 +734,7 @@ public class Slyum extends JFrame implements ActionListener {
     UIManager.put("TabbedPane.font", f);
     UIManager.put("TitledBorder.font", f);
     UIManager.put("List.font", f);
-    UIManager.put("Menu.font", f.deriveFont(14.0f));
+    UIManager.put("Menu.font", f);
     UIManager.put("MenuItem.font", f);
     UIManager.put("RadioButtonMenuItem.font", f);
     UIManager.put("ComboBox.font", f);
@@ -750,6 +768,7 @@ public class Slyum extends JFrame implements ActionListener {
     // Menu file
     JMenu menu = menuFile = new JMenu("File");
     menu.setMnemonic(KeyEvent.VK_F);
+    
     menuBar.add(menu);
 
     {
@@ -1142,7 +1161,7 @@ public class Slyum extends JFrame implements ActionListener {
     List<String> histories = RecentProjectManager.getHistoryList();
 
     if (histories.size() > 0)
-      menuFile.add(new JSeparator(), (OSValidator.IS_MAC ? 10 : 14));
+      menuFile.insertSeparator((OSValidator.IS_MAC ? 10 : 14));
 
     for (String s : histories) {
       JMenuItemHistory menuItem = new JMenuItemHistory(formatHistoryEntry(s));

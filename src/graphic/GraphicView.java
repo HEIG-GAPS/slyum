@@ -1822,9 +1822,8 @@ public class GraphicView extends GraphicComponent
   public void mouseReleased(MouseEvent e) {
     e = adapteMouseEvent(e);
 
-    if (mouseButton != MouseEvent.BUTTON2)
-
-    componentMousePressed.gMouseReleased(e);
+    if (componentMousePressed != null && mouseButton != MouseEvent.BUTTON2)
+      componentMousePressed.gMouseReleased(e);
 
     getScene().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
   }

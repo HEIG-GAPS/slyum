@@ -9,7 +9,7 @@ import utility.PersonalizedIcon;
 public class TreeRenderer extends DefaultTreeCellRenderer {
   public TreeRenderer() {
     setLeafIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
-            + "boxOpen.png"));
+            + "boxClose.png"));
     setClosedIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
             + "boxClose.png"));
     setOpenIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH

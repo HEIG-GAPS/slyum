@@ -57,15 +57,19 @@ public class FlatButton extends JButton {
       @Override
       public void mouseEntered(MouseEvent e) {
         super.mouseEntered(e);
-        setBackground(getBackground().darker());
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        if (isEnabled()) {
+          setBackground(getBackground().darker());
+          setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        }
       }
 
       @Override
       public void mouseExited(MouseEvent e) {
         super.mouseExited(e);
-        setBackground(getBackground().brighter());
-        setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        if (isEnabled()) {
+          setBackground(getBackground().brighter());
+          setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        }
       }
     });
   }

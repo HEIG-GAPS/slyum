@@ -56,6 +56,7 @@ import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.Utility;
 import classDiagram.components.Method.ParametersViewStyle;
+import swing.slyumCustomizedComponents.FlatButton;
 import swing.slyumCustomizedComponents.SCheckBox;
 import swing.slyumCustomizedComponents.SComboBox;
 import swing.slyumCustomizedComponents.SList;
@@ -93,10 +94,14 @@ public class SProperties extends JDialog {
   private JPanel panel_Grid, panel_grid_color, panel_grid_opacity;
   private JCheckBox chckbxEnableGrid;
 
-  private abstract class ButtonColor extends JButton implements ColoredComponent {
+  private abstract class ButtonColor extends FlatButton 
+                                     implements ColoredComponent {
 
     public ButtonColor(String name) {
       super(name);
+      setBorder(BorderFactory.createCompoundBorder(
+          BorderFactory.createLineBorder(Slyum.THEME_COLOR),
+          getBorder()));
     }
 
     @Override
@@ -130,7 +135,7 @@ public class SProperties extends JDialog {
 
     setTitle("Slyum - Properties");
     setIconImage(PersonalizedIcon.getLogo().getImage());
-    setMinimumSize(new Dimension(600, 645));
+    setMinimumSize(new Dimension(600, 665));
     setModalityType(ModalityType.APPLICATION_MODAL);
     setFocusable(true);
     getContentPane().setLayout(new BorderLayout());
