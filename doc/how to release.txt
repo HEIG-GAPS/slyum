@@ -40,3 +40,5 @@ Take the utils/version.html file and copy it to the "previous release/<current v
  
 	1) Change the version number into the [version] tag to the appropriate one.
 	2) Change the update patch into the [history] tag. You can use basic HTML.
+	
+4) Update the description in Slyum Google Code.
