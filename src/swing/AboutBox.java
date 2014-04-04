@@ -119,7 +119,7 @@ public class AboutBox extends JDialog {
                 bounds.height / 2 + 40);
         g2.drawString("Developer : Miserez David, Responsable : Donini Pier",
                 20, bounds.height / 2 + 70);
-        g2.drawString("Copyrigth 2013 GAPS - HEIG-VD", 20,
+        g2.drawString("Copyright © 2014 HEIG-VD", 20,
                 bounds.height / 2 + 110);
 
         g2.drawImage(imgHeigvd, bounds.x + bounds.width - imgHeigvd.getWidth()

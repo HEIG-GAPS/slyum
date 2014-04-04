@@ -267,7 +267,6 @@ public class Slyum extends JFrame implements ActionListener {
       LOGGER.log(Level.SEVERE, MSG, e);
       SMessageDialog.showErrorMessage(MSG);
     }
-
     
     if (UpdateInfo.isUpdateCheckedAtLaunch())
       UpdateInfo.getNewUpdate(true);

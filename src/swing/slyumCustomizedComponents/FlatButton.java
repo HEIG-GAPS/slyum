@@ -1,5 +1,6 @@
 package swing.slyumCustomizedComponents;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Rectangle;
@@ -16,6 +17,8 @@ import swing.Slyum;
 
 public class FlatButton extends JButton {
 
+  private Color savedBackgroundColor;
+  
   public FlatButton() {
     super();
     initialize();
@@ -58,7 +61,8 @@ public class FlatButton extends JButton {
       public void mouseEntered(MouseEvent e) {
         super.mouseEntered(e);
         if (isEnabled()) {
-          setBackground(getBackground().darker());
+          savedBackgroundColor = getBackground();
+          setBackground(savedBackgroundColor.darker());
           setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
       }
@@ -67,7 +71,7 @@ public class FlatButton extends JButton {
       public void mouseExited(MouseEvent e) {
         super.mouseExited(e);
         if (isEnabled()) {
-          setBackground(getBackground().brighter());
+          setBackground(savedBackgroundColor);
           setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
       }
