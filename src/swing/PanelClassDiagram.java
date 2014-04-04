@@ -391,7 +391,7 @@ public class PanelClassDiagram extends JPanel {
     Change.setHasChange(false);
 
     setCursor(null);
-
+    
     RecentProjectManager.addhistoryEntry(file.getAbsolutePath());
 
     SwingUtilities.invokeLater(new Runnable() {

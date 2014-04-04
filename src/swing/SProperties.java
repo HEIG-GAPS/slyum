@@ -416,7 +416,7 @@ public class SProperties extends JDialog {
                         gbc_rdbtnAutomaticcolor);
                 rdbtnAutomaticcolor.addChangeListener(new ChangeListener() {
                   @Override
-                  public void stateChanged(ChangeEvent arg0) {
+                  public void stateChanged(ChangeEvent evt) {
                     btnColor.setEnabled(!rdbtnAutomaticcolor.isSelected());
                   }
                 });
@@ -874,7 +874,6 @@ public class SProperties extends JDialog {
             try {
               Properties properties = PropertyLoader.getInstance()
                       .getProperties();
-
               properties.put(PropertyLoader.COLOR_ENTITIES, String
                       .valueOf(btnDefaultClassColor.getBackground().getRGB()));
               properties.put(PropertyLoader.COLOR_GRAPHIC_VIEW, String
