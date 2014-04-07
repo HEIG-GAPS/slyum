@@ -560,6 +560,11 @@ public class Slyum extends JFrame implements ActionListener {
     addWindowListener(new WindowAdapter() {
 
       @Override
+      public void windowActivated(WindowEvent e) {
+        PanelClassDiagram.refresh();
+      }
+
+      @Override
       public void windowClosing(WindowEvent e) {
         super.windowClosing(e);
         exit();

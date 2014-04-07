@@ -11,10 +11,15 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -46,6 +51,8 @@ import swing.propretiesView.PropretiesChanger;
 import utility.MultiBorderLayout;
 import utility.SMessageDialog;
 import utility.Utility;
+import utility.WatchDir;
+import utility.WatchFileListener;
 
 /**
  * Show the panel containing all views (hierarchical, properties and graphic)
@@ -74,12 +81,36 @@ public class PanelClassDiagram extends JPanel {
   public static void setVisibleCurrentDiagramName(boolean visible) {
     getInstance().setVisibleDiagramName(visible);
   }
+  
+  public static void refresh() {
+    getInstance()._refresh();
+  }
+  
+  private void _refresh() {
+    if (fileChanged == StandardWatchEventKinds.ENTRY_MODIFY) {
+      if (SMessageDialog.showQuestionMessageYesNo(
+          "The file has been modified by another program.\n" +
+          "Do you want to reload it?", PanelClassDiagram.this) 
+          == JOptionPane.YES_OPTION)
+        openFromXML(currentFile);
+    } else if (fileChanged == StandardWatchEventKinds.ENTRY_DELETE) {
+      if (SMessageDialog.showQuestionMessageYesNo(
+          "The file has been deleted by another program.\n" +
+          "Do you want to close it?", PanelClassDiagram.this) 
+          == JOptionPane.YES_OPTION)
+        newProject();
+    }
+    
+    fileChanged = null;
+  }
 
   private ClassDiagram classDiagram;
   private HierarchicalView hierarchicalView;
   private File currentFile = null;
   private GraphicView graphicView;
   private boolean disabledUpdate = false;
+  private WatchEvent.Kind<Path> fileChanged;
+  private WatchFileListener watchFileListener;
 
   SSplitPane splitInner, // Split graphicview part and properties part.
           splitOuter; // Split inner split and hierarchical part.
@@ -116,6 +147,19 @@ public class PanelClassDiagram extends JPanel {
     // Create new graphiView, contain class diagram.
     graphicView = new GraphicView(getClassDiagram());
     setTransferHandler(new FileHandler());
+    
+    watchFileListener = new WatchFileListener() {
+
+      @Override
+      public void fileModified() {
+        fileChanged = StandardWatchEventKinds.ENTRY_MODIFY;
+      }
+
+      @Override
+      public void fileDeleted() {
+        fileChanged = StandardWatchEventKinds.ENTRY_DELETE;
+      }
+    };
 
     // Personalized ToolBar Layout
     add(SPanelFileComponent.getInstance(), BorderLayout.NORTH);
@@ -128,7 +172,6 @@ public class PanelClassDiagram extends JPanel {
     splitInner.setResizeWeight(1.0);
 
     // Construct outer split pane.
-    
     splitOuter = new SSplitPane(
         JSplitPane.HORIZONTAL_SPLIT,
         hierarchicalView = new HierarchicalView(getClassDiagram()), splitInner);
@@ -315,18 +358,31 @@ public class PanelClassDiagram extends JPanel {
   }
 
   public void setCurrentFile(File file) {
+    WatchDir.unregister(getCurrentPath());
     currentFile = file;
     Slyum.getInstance().getMenuItemLocate().setEnabled(file != null);
     Change.setHasChange(false);
     Slyum.updateWindowTitle(currentFile);
-
+    
     if (file == null) return;
+    try {
+      WatchDir.register(getCurrentPath(), watchFileListener);
+    } catch (IOException ex) {
+      Logger.getLogger(PanelClassDiagram.class.getName()).log(
+          Level.SEVERE, "Unable to register file", ex);
+    }
 
     Slyum.setCurrentDirectoryFileChooser(file.getParent());
   }
 
   public File getCurrentFile() {
     return currentFile;
+  }
+  
+  public Path getCurrentPath() {
+    if (currentFile == null)
+      return null;
+    return currentFile.toPath();
   }
 
   public boolean askForSave() {
@@ -520,6 +576,9 @@ public class PanelClassDiagram extends JPanel {
     if (selectFile || currentFile == null || !currentFile.exists())
       if (!initCurrentSaveFile()) return;
 
+    // Ignore les deux prochains event qui sont générés par Slyum.
+    WatchDir.ignoreNextEvents(getCurrentPath(), 2);
+    
     // Génération du document xml.
     DOMSource xmlInput = new DOMSource(XmlFactory.getDocument());
 
@@ -534,12 +593,10 @@ public class PanelClassDiagram extends JPanel {
       StreamResult xmlOutput = new StreamResult(currentFile);
       transformer.transform(xmlInput, xmlOutput);
     } catch (TransformerException e) {
-      e.printStackTrace();
+      Logger.getGlobal().log(Level.SEVERE, "Unable to save file.", e);
       SMessageDialog.showErrorMessage(e.getLocalizedMessage());
     }
-
     Change.setHasChange(false);
-
     RecentProjectManager.addhistoryEntry(currentFile.getAbsolutePath());
   }
 
