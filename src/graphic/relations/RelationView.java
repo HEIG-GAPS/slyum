@@ -77,10 +77,9 @@ public abstract class RelationView extends LineView implements Observer {
 
   /**
    * Change the orientation of the association.
-   * 
-   * @return true if it's ok, false otherwise.
    */
   public void changeOrientation() {
+    
     MagneticGrip first = getFirstPoint(), last = getLastPoint();
     GraphicComponent buffer;
     Point bufferAnchorFirst, bufferAnchorLast, bufferPreferredAnchor1, bufferPreferredAnchor2;

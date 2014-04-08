@@ -11,7 +11,6 @@ import classDiagram.ClassDiagram;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
-import classDiagram.components.Method;
 import classDiagram.components.SimpleEntity;
 
 /**
@@ -30,7 +29,11 @@ public class Inheritance extends Observable implements Relation {
      * SMessageDialog.showErrorMessage(
      * "Error in hierarchical class structure.\n" +
      * "Impossible to create inheritance association."); return valide; */
-    return true;
+    
+    // Test qu'une classe ne peut être parente d'une interface.
+    boolean test =  child instanceof InterfaceEntity && parent instanceof InterfaceEntity ||
+           child instanceof ClassEntity;
+    return test;
   }
 
   protected SimpleEntity child, parent;
