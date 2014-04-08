@@ -23,6 +23,7 @@ import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.SimpleEntity;
 import classDiagram.relationships.Inheritance;
+import utility.SMessageDialog;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -170,14 +171,24 @@ public class InheritanceView extends RelationView {
   }
 
   @Override
-  public boolean relationChanged(MagneticGrip gripSource,
-          GraphicComponent target) {
+  public boolean relationChanged(
+      MagneticGrip gripSource, GraphicComponent target) {
     if (!(target instanceof EntityView)
             || !Inheritance.validate((Entity) gripSource
                     .getAssociedComponentView().getAssociedComponent(),
                     (Entity) target.getAssociedComponent())) return false;
 
     return super.relationChanged(gripSource, target);
+  }
+
+  @Override
+  public void changeOrientation() {
+    if (!Inheritance.validate(inheritance.getParent(), inheritance.getChild()))
+      SMessageDialog.showErrorMessage(
+          "Unable to reverse this relation.\n" + 
+          "A class cannot be a parent of an interface.");
+    else
+      super.changeOrientation();
   }
 
   /**
