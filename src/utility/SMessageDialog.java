@@ -10,11 +10,13 @@ public class SMessageDialog {
   /* ------------------------ MESSAGES FOR SLYUM --------------------------- */
 
   /* Warning messages */
-  public static final String WARNING_OPTION_DECREASE_PERF = "This option can decrease performance.";
+  public static final String WARNING_OPTION_DECREASE_PERF 
+      = "This option can decrease performance.";
 
   /* Errors messages */
-  public static final String ERROR_LOAD_PROPERTY_FILE = "Error with properties. Cannot load or save properties file.\n"
-          + "Try to launch Slyum with administrators rights.";
+  public static final String ERROR_LOAD_PROPERTY_FILE = 
+      "Error with properties. Cannot load or save properties file.\n" + 
+      "Try to launch Slyum with administrators rights.";
 
   /* ----------------------------------------------------------------------- */
 

@@ -117,10 +117,12 @@ public class AboutBox extends JDialog {
                 bounds.height / 2 + 20);
         g2.drawString("Works with Java and Swing, use UML 1.4 and XML.", 20,
                 bounds.height / 2 + 40);
-        g2.drawString("Developer : Miserez David, Responsable : Donini Pier",
+        g2.drawString("Developer : Miserez David (david.miserez@heig-vd.ch)",
                 20, bounds.height / 2 + 70);
+        g2.drawString("Responsable : Donini Pier",
+                20, bounds.height / 2 + 90);
         g2.drawString("Copyright © 2014 HEIG-VD", 20,
-                bounds.height / 2 + 110);
+                bounds.height / 2 + 120);
 
         g2.drawImage(imgHeigvd, bounds.x + bounds.width - imgHeigvd.getWidth()
                 - 20, bounds.y + bounds.height / 2 + 20, this);

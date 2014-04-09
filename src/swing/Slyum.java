@@ -28,6 +28,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,7 +38,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -82,7 +82,7 @@ public class Slyum extends JFrame implements ActionListener {
 
   private static final String URL_UPDATE_PAGE = "https://drive.google.com/folderview?id=0B8LiFU0_u3AZdTRPY0JKallDRm8&usp=sharing";
   private static final String URL_PROJECT_PAGE = "https://code.google.com/p/slyum/";
-
+  private static final String URL_ISSUES_PAGE = "https://code.google.com/p/slyum/issues/list";
   // Properties
   public final static boolean SHOW_CROSS_MENU = true;
   public final static boolean SHOW_ERRORS_MESSAGES = true;
@@ -104,6 +104,7 @@ public class Slyum extends JFrame implements ActionListener {
   public static final String ACTION_PROPERTIES = "Properties";
   public static final String ACTION_UPDATE = "Update";
   public static final String ACTION_PATCH_NOTE = "PatchNote";
+  public static final String ACTION_REPORT_ISSUE = "ReportIssue";
   public static final String ACTION_PROJECT_PAGE = "ProjectPage";
   public static final String ACTION_SELECT_ALL = "SelectAll";
   public static final String ACTION_UNSELECT_ALL = "UnselectAll";
@@ -256,6 +257,7 @@ public class Slyum extends JFrame implements ActionListener {
   private JMenu menuFile;
 
   public static void main(String[] args) {
+    Locale.setDefault(Locale.ENGLISH);
     arguments = args;
     setUIProperties();
     
@@ -543,6 +545,8 @@ public class Slyum extends JFrame implements ActionListener {
 
         if (dividerLeft != null)
           panel.setDividerLeft(Float.valueOf(dividerLeft));
+        
+        IssuesInformation.mustDisplayMessage();
       }
     });
 
@@ -668,6 +672,9 @@ public class Slyum extends JFrame implements ActionListener {
       case ACTION_PROJECT_PAGE:
         openURL(URL_PROJECT_PAGE);
         break;
+      case ACTION_REPORT_ISSUE:
+        openURL(URL_ISSUES_PAGE);
+        break;
       case ACTION_SELECT_ALL:
         gv.selectAll();
         break;
@@ -744,6 +751,7 @@ public class Slyum extends JFrame implements ActionListener {
     UIManager.put("ComboBox.font", f);
     UIManager.put("Table.font", f);
     UIManager.put("TextField.font", f);
+    UIManager.put("TextArea.font", f);
     UIManager.put("OptionPane.informationIcon", PersonalizedIcon.getInfoIcon());
     UIManager.put("OptionPane.errorIcon", PersonalizedIcon.getErrorIcon());
     UIManager.put("OptionPane.warningIcon", PersonalizedIcon.getWarningIcon());
@@ -1117,6 +1125,7 @@ public class Slyum extends JFrame implements ActionListener {
     menuItem = createMenuItem("Help...", "help", KeyEvent.VK_E, KEY_HELP,
             ACTION_HELP);
     menu.add(menuItem);
+    menu.addSeparator();
 
     // Menu item Update
     menuItem = createMenuItem("Go to project page...", "icon_16x16", KeyEvent.VK_P,
@@ -1130,7 +1139,12 @@ public class Slyum extends JFrame implements ActionListener {
     menuItem = createMenuItem("See patch note...", "patchnote", KeyEvent.VK_S,
             null, ACTION_PATCH_NOTE);
     menu.add(menuItem);
-
+    menu.addSeparator();
+    
+    menuItem = createMenuItem("Report issue / improvments...", 
+        "bug", KeyEvent.VK_I, null, ACTION_REPORT_ISSUE);
+    menu.add(menuItem);
+    
     if (!OSValidator.IS_MAC) {
       menu.addSeparator();
 
