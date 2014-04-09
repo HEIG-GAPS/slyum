@@ -110,7 +110,8 @@ public class NoRepopDialog extends JDialog {
       {
         final JButton okButton = new JButton("OK");
         okButton.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent arg0) {
+          @Override
+          public void actionPerformed(ActionEvent evt) {
             final Properties properties = PropertyLoader.getInstance()
                     .getProperties();
             properties.put("showOpenJDKWarning",

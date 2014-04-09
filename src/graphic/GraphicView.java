@@ -1755,7 +1755,7 @@ public class GraphicView extends GraphicComponent
 
     computeComponentEventEnter(component, saveComponentMouseHover, ea);
 
-    if (mouseButton != MouseEvent.BUTTON2)
+    if (componentMousePressed!= null && mouseButton != MouseEvent.BUTTON2)
       componentMousePressed.gMouseDragged(ea);
 
     saveComponentMouseHover = component;
@@ -1766,12 +1766,12 @@ public class GraphicView extends GraphicComponent
 
   @Override
   public void mouseEntered(MouseEvent e) {
-    // this event, in Slyum, is call manually when mouseMove is called.
+    // this event, in Slyum, is called manually when mouseMove is called.
   }
 
   @Override
   public void mouseExited(MouseEvent e) {
-    // this event, in Slyum, is call manually when mouseMove is called.
+    // this event, in Slyum, is called manually when mouseMove is called.
   }
 
   @Override

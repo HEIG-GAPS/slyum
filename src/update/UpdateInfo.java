@@ -86,11 +86,11 @@ public class UpdateInfo extends JDialog {
   private JPanel pan1;
   private JPanel pan2;
   private Boolean askForDisableCheckingUpdate = false;
-  private Boolean displayOkButton = true;
+  private Boolean isUpdater = true;
 
   private UpdateInfo(String info) {
     super(Slyum.getInstance(), true);
-    displayOkButton = false;
+    isUpdater = false;
     initComponents();
     infoPane.setText(info);
     setVisible(true);
@@ -107,7 +107,11 @@ public class UpdateInfo extends JDialog {
   private void initComponents() {
 
     setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-    setTitle("Slyum - New update available");
+    if (isUpdater)
+      setTitle("Slyum - New update available");
+    else
+      setTitle("Slyum - Patch notes");
+    
     JComponent glassPane = new JComponent() {
       @Override
       public void paintComponent(Graphics g) {
@@ -178,7 +182,7 @@ public class UpdateInfo extends JDialog {
       }
     });
     
-    if (displayOkButton)
+    if (isUpdater)
       pan2.add(ok);
     pan2.add(cancel);
     pan1.add(pan2, BorderLayout.SOUTH);
