@@ -378,30 +378,6 @@ public class Slyum extends JFrame implements ActionListener {
     return enable;
   }
 
-  public static int getExtendedStateSaved() {
-    String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.WINDOWS_MAXIMIZED);
-    int state = WINDOWS_MAXIMIZED;
-
-    if (prop != null) state = Integer.parseInt(prop);
-
-    return state;
-  }
-
-  public static Dimension getSizeSaved() {
-    String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.WINDOWS_SIZE);
-    Dimension state = WINDOWS_SIZE;
-
-    if (prop != null && getExtendedStateSaved() != MAXIMIZED_BOTH) {
-      String[] size = prop.split(",");
-      state.width = Integer.parseInt(size[0]);
-      state.height = Integer.parseInt(size[1]);
-    }
-
-    return state;
-  }
-
   public static boolean isAutoAdjustInheritance() {
     String prop = PropertyLoader.getInstance().getProperties()
             .getProperty(PropertyLoader.AUTO_ADJUST_INHERITANCE);
@@ -523,8 +499,6 @@ public class Slyum extends JFrame implements ActionListener {
   }
 
   public void initializationComplete() {
-    setSize(getSizeSaved());
-    setExtendedState(getExtendedStateSaved());
     SPanelDiagramComponent.getInstance().setMode(getModeCursor());
     instance.setVisible(true);
 
@@ -727,6 +701,8 @@ public class Slyum extends JFrame implements ActionListener {
     setIconImage(PersonalizedIcon.getLogo().getImage());
     setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     setMinimumSize(new Dimension(400, 400));
+    setSize(WINDOWS_SIZE);
+    setExtendedState(WINDOWS_MAXIMIZED);
     setContentPane(PanelClassDiagram.getInstance());
   }
 
@@ -1284,17 +1260,8 @@ public class Slyum extends JFrame implements ActionListener {
   }
 
   private void _exit() {
-    Dimension size = getSize();
-
     // Save properties before closing.
     PanelClassDiagram.getInstance().saveSplitLocationInProperties();
-    Properties properties = PropertyLoader.getInstance().getProperties();
-    properties.put(PropertyLoader.WINDOWS_MAXIMIZED,
-            String.valueOf(getExtendedState()));
-    properties.put(PropertyLoader.WINDOWS_SIZE,
-            String.format("%s,%s", size.width, size.height));
-
-    PropertyLoader.getInstance().push();
 
     System.exit(0);
   }

@@ -552,34 +552,30 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
     super.gMouseReleased(e);
     smoothLines();
     if (e.getButton() == MouseEvent.BUTTON1) {
-      BufferBounds bb2 = new BufferBounds(points.get(saveGrip)), bb3 = new BufferBounds(
-              points.get(saveGrip + 1));
+      BufferBounds bb2 = new BufferBounds(points.get(saveGrip)), 
+                   bb3 = new BufferBounds(points.get(saveGrip + 1));
 
-      if (!(bb[0].getBounds().equals(bb2.getBounds()) && bb[1].getBounds()
-              .equals(bb3.getBounds()))) {
+      if (!(bb[0] != null && 
+            bb[0].getBounds().equals(bb2.getBounds()) && 
+            bb[1] != null && 
+            bb[1].getBounds().equals(bb3.getBounds()))) {
         boolean isRecord = Change.isRecord();
         Change.record();
-
         Change.push(bb[0]);
         Change.push(bb2);
-
         Change.push(bb[1]);
         Change.push(bb3);
-
         if (!isRecord) Change.stopRecord();
       }
     }
-
     maybeShowPopup(e, popupMenu);
     acceptGripCreation = false;
-
     if (!isSelected()) showGrips(false);
   }
 
   @Override
   public void gMouseClicked(MouseEvent e) {
     super.gMouseClicked(e);
-
     if (!GraphicView.isAddToSelection(e)) {
       parent.unselectAll();
       setSelected(true);
@@ -596,9 +592,7 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
    */
   public void gripMoved(Rectangle lastBounds) {
     parent.getScene().repaint(lastBounds);
-
     repaint();
-
     setChanged();
     notifyObservers();
   }

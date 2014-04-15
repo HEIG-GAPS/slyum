@@ -195,6 +195,7 @@ public class PanelClassDiagram extends JPanel {
 
   /**
    * Ask user to save current project.
+   * @return 
    */
   public int askSavingCurrentProject() {
     if (!Change.hasChange())
