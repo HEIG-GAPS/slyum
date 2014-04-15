@@ -936,6 +936,7 @@ public class SProperties extends JDialog {
               e1.printStackTrace();
             }
 
+            Color newEntityColor = btnDefaultClassColor.getBackground();
             for (SimpleEntityView entity : SimpleEntityView.getAll())
               entity.initViewType();
 
