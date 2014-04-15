@@ -44,6 +44,12 @@ public class FlatButton extends JButton {
     initialize();
   }
 
+  @Override
+  public void setBackground(Color bg) {
+    savedBackgroundColor = bg;
+    super.setBackground(bg);
+  }
+
   private void initialize() {
     setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createMatteBorder(0, 5, 0, 0, Slyum.THEME_COLOR),
@@ -61,8 +67,7 @@ public class FlatButton extends JButton {
       public void mouseEntered(MouseEvent e) {
         super.mouseEntered(e);
         if (isEnabled()) {
-          savedBackgroundColor = getBackground();
-          setBackground(savedBackgroundColor.darker());
+          FlatButton.super.setBackground(getBackground().darker());
           setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
       }
