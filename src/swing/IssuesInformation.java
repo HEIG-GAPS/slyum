@@ -3,29 +3,28 @@ package swing;
 import java.util.Properties;
 
 /**
- *
  * @author David Miserez <david.miserez@heig-vd.ch>
  */
 public class IssuesInformation extends javax.swing.JDialog {
   
-  private static int COUNT_DISPLAY_ISSUES_MESSAGE = 4;
-  
   public static void mustDisplayMessage() {
+  
+    final int COUNT_DISPLAY_ISSUES_MESSAGE = 4;
+    final String PROPERTIE_NAME = "CounterDisplayIssuesMessage";
     final Properties properties = PropertyLoader.getInstance()
             .getProperties();
+    
     String prop = properties.getProperty("CounterDisplayIssuesMessage");
     if (prop == null) {
-      properties.put(
-          "CounterDisplayIssuesMessage", 
-          String.valueOf(COUNT_DISPLAY_ISSUES_MESSAGE));
+      properties.put(PROPERTIE_NAME, 
+                     String.valueOf(COUNT_DISPLAY_ISSUES_MESSAGE));
     } else {
       int counter = Integer.valueOf(prop);
       if (counter >= 0) {
         if (counter == 0) {
           new IssuesInformation(Slyum.getInstance(), true).setVisible(true);
         }
-        properties.put(
-            "CounterDisplayIssuesMessage", String.valueOf(--counter));
+        properties.put(PROPERTIE_NAME, String.valueOf(--counter));
       }
     }
     PropertyLoader.getInstance().push();
