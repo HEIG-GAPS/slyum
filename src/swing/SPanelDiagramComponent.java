@@ -29,7 +29,8 @@ import javax.swing.ImageIcon;
 import utility.PersonalizedIcon;
 import utility.Utility;
 
-public class SPanelDiagramComponent extends SToolBar implements ActionListener {
+public class SPanelDiagramComponent 
+    extends SToolBar implements ActionListener {
 
   public enum Mode {
     CURSOR(getInstance().btnCursorMode), GRIP(getInstance().btnGripMode);
@@ -105,10 +106,7 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
 
   private SPanelDiagramComponent() {
 
-    add(btnCursorMode = createSButton(
-            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
-                    + "pointer-arrow.png"), Slyum.ACTION_MODE_CURSOR,
-            Color.RED, TT_MODE_CURSOR));
+    add(btnCursorMode = new SToolBarButton(SlyumAction.ACTION_MODE_CURSOR));
 
     add(btnGripMode = createSButton(
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
@@ -259,9 +257,6 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
 
     else if (Slyum.ACTION_NEW_LINK_NOTE.equals(e.getActionCommand()))
       gv.initNewComponent(new LineCommentaryFactory(gv));
-
-    else if (Slyum.ACTION_MODE_CURSOR.equals(e.getActionCommand()))
-      setMode(Mode.CURSOR);
 
     else if (Slyum.ACTION_MODE_GRIP.equals(e.getActionCommand()))
       setMode(Mode.GRIP);
