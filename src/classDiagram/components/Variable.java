@@ -22,7 +22,8 @@ public class Variable extends Observable implements IDiagramComponent {
           + Type.accents + "][\\w_" + Type.accents + "]*";
 
   public static boolean checkSemantic(String name) {
-    return name.matches(REGEX_SEMANTIC_ATTRIBUTE);
+    return name.indexOf(' ') == -1;
+    //return name.matches(REGEX_SEMANTIC_ATTRIBUTE);
   }
 
   protected boolean constant = false;

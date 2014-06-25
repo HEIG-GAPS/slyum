@@ -50,7 +50,8 @@ public class Method
   };
 
   public static boolean checkSemantic(String name) {
-    return name.matches(REGEX_SEMANTIC_METHOD);
+    return name.indexOf(' ') == -1;
+    //return name.matches(REGEX_SEMANTIC_METHOD);
   }
 
   private boolean _isAbstract = false;

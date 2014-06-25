@@ -32,7 +32,8 @@ public class Type extends Observable implements IDiagramComponent {
           + REGEXP_GENERIC_2 + "?(\\[" + REGEX_DIGIT + "])*";
 
   public static boolean checkSemantic(String type) {
-    return type.matches(REGEX_SEMANTIC_TYPE);
+    return type.indexOf(' ') == -1;
+    //return type.matches(REGEX_SEMANTIC_TYPE);
   }
 
   protected final int id;
