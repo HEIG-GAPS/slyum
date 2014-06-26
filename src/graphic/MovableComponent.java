@@ -213,7 +213,6 @@ public abstract class MovableComponent extends GraphicComponent {
 
     // Confirm the ghost translation for all selected component.
     for (final GraphicComponent c : parent.getSelectedComponents())
-
       c.apply(e);
 
     if (!isRecord)

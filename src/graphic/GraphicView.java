@@ -53,8 +53,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -76,7 +74,6 @@ import javax.print.attribute.standard.MediaSize;
 import javax.swing.BorderFactory;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import org.w3c.dom.Document;
@@ -1641,25 +1638,21 @@ public class GraphicView extends GraphicComponent
   }
   
   public static void deleteComponents(List<GraphicComponent> components) {
-
     if (components.isEmpty()) return;
-
+    
     boolean isRecord = Change.isRecord();
     Change.record();
-
+    
     for (GraphicComponent c : components)
       c.delete();
-
+    
     if (!isRecord) Change.stopRecord();
   }
   
   public static void deleteComponent(GraphicComponent component) {
-
     boolean isRecord = Change.isRecord();
     Change.record();
-
     component.delete();
-
     if (!isRecord) Change.stopRecord();
   }
 
@@ -1677,22 +1670,19 @@ public class GraphicView extends GraphicComponent
   public void linkNewNoteWithSelectedEntities() {
     setStopRepaint(true);
     LinkedList<GraphicComponent> e = getSelectedComponents();
-
-    TextBoxCommentary tbc = null;
+    TextBoxCommentary tbc;
 
     boolean isRecord = Change.isRecord();
     Change.record();
 
-    if (e.isEmpty())
-
-      tbc = new TextBoxCommentary(parent, TextBoxCommentary.DEFAULT_TEXT, this);
-
-    else {
-      tbc = new TextBoxCommentary(parent, TextBoxCommentary.DEFAULT_TEXT,
-              e.getFirst());
-
+    if (e.isEmpty()) {
+      tbc = new TextBoxCommentary(
+          parent, TextBoxCommentary.DEFAULT_TEXT, this);
+    } else {
+      tbc = new TextBoxCommentary(
+          parent, TextBoxCommentary.DEFAULT_TEXT, e.getFirst());
+      
       e.remove(0);
-
       for (GraphicComponent ev : e)
         if (LineCommentary.checkCreate(ev, tbc, false))
           parent.addLineView(new LineCommentary(parent, ev, tbc, new Point(),
@@ -1706,11 +1696,10 @@ public class GraphicView extends GraphicComponent
     b.y = (int) (loc.getCenterY() * getInversedScale());
 
     tbc.setBounds(b);
-
     parent.addNotes(tbc);
 
-    if (!isRecord) Change.stopRecord();
-
+    if (!isRecord) 
+      Change.stopRecord();
     goRepaint();
   }
 
@@ -1720,15 +1709,12 @@ public class GraphicView extends GraphicComponent
     GraphicComponent component;
 
     if (currentFactory != null)
-
       component = currentFactory;
     else
-
       component = getComponentAtPosition(e.getPoint());
 
     if (mouseButton != MouseEvent.BUTTON2 || component == this)
-
-    component.gMouseClicked(e);
+      component.gMouseClicked(e);
   }
 
   @Override
