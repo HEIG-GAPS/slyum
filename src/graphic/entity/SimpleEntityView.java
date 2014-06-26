@@ -234,29 +234,37 @@ public abstract class SimpleEntityView extends EntityView {
         ((SimpleEntity) component).moveMethodPosition(method, offset);
       } else if (Slyum.ACTION_DUPLICATE.equals(e.getActionCommand())) {
         if (pressedTextBox != null) {
-          IDiagramComponent component = pressedTextBox.getAssociedComponent();
-          SimpleEntity entity = (SimpleEntity) getAssociedComponent();
-          if (component instanceof Attribute) {
-            Attribute attribute = new Attribute((Attribute) component);
-            LinkedList<Attribute> attributes = entity.getAttributes();
-            entity.addAttribute(attribute);
-            entity.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
-            entity.moveAttributePosition(attribute,
-                    attributes.indexOf(component) - attributes.size() + 1);
-            entity.notifyObservers();
-          } else {
-            Method method = new Method((Method) component);
-            LinkedList<Method> methods = entity.getMethods();
-            entity.addMethod(method);
-            entity.notifyObservers(UpdateMessage.ADD_METHOD_NO_EDIT);
-            entity.moveMethodPosition(method, methods.indexOf(component)
-                    - methods.size() + 1);
-            entity.notifyObservers();
-          }
+          IDiagramComponent txtComponent = pressedTextBox.getAssociedComponent();
+          if (txtComponent instanceof Attribute)
+            duplicateAttribute((Attribute)txtComponent);
+          else
+            duplicateMethod((Method)txtComponent);
         }
       }
       component.notifyObservers();
     }
+  }
+  
+  public void duplicateMethod(Method method){
+    SimpleEntity entity = (SimpleEntity) getAssociedComponent();
+    Method duplicatedMethod = new Method(method);
+    LinkedList<Method> methods = entity.getMethods();
+    entity.addMethod(duplicatedMethod);
+    entity.notifyObservers(UpdateMessage.ADD_METHOD_NO_EDIT);
+    entity.moveMethodPosition(duplicatedMethod, methods.indexOf(component)
+            - methods.size() + 1);
+    entity.notifyObservers();
+  }
+  
+  public void duplicateAttribute(Attribute attribute) {
+    SimpleEntity entity = (SimpleEntity) getAssociedComponent();
+    Attribute duplicateAttribute = new Attribute(attribute);
+    LinkedList<Attribute> attributes = entity.getAttributes();
+    entity.addAttribute(duplicateAttribute);
+    entity.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
+    entity.moveAttributePosition(duplicateAttribute,
+            attributes.indexOf(component) - attributes.size() + 1);
+    entity.notifyObservers();
   }
 
   public static List<SimpleEntityView> getAll() {

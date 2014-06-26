@@ -1,6 +1,7 @@
 package swing.slyumCustomizedComponents;
 
 import java.awt.Dimension;
+import swing.SlyumAction;
 
 public class SToolBarButton extends SButton {
   

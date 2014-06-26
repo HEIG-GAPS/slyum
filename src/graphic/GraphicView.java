@@ -74,6 +74,7 @@ import java.util.List;
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
 import javax.swing.BorderFactory;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
@@ -91,6 +92,7 @@ import swing.SPanelDiagramComponent.Mode;
 import swing.SPanelElement;
 import swing.slyumCustomizedComponents.SScrollPane;
 import swing.Slyum;
+import swing.SlyumAction;
 import utility.OSValidator;
 import utility.Utility;
 
@@ -556,73 +558,25 @@ public class GraphicView extends GraphicComponent
     scene.addMouseListener(this);
     saveComponentMouseHover = this;
     classDiagram.addComponentsObserver(this);
-
     setColor(getBasicColor());
 
-    JMenuItem menuItem;
-
     popupMenu.addSeparator();
-
-    // Menu item add class
-    menuItem = makeMenuItem("Add Class", Slyum.ACTION_NEW_CLASS, "class");
-    popupMenu.add(menuItem);
-
-    // Menu item add interface
-    menuItem = makeMenuItem("Add Interface", Slyum.ACTION_NEW_INTERFACE,
-            "interface");
-    popupMenu.add(menuItem);
-
-    // Menu item add class association
-    menuItem = makeMenuItem("Add Association class",
-            Slyum.ACTION_NEW_CLASS_ASSOCIATION, "classAssoc");
-    popupMenu.add(menuItem);
-
+    popupMenu.add(new JMenu(SlyumAction.ACTION_ADD_CLASS));
+    popupMenu.add(new JMenu(SlyumAction.ACTION_ADD_INTERFACE));
+    popupMenu.add(new JMenu(SlyumAction.ACTION_ADD_ASSOCIATION_CLASS));
     popupMenu.addSeparator();
-
-    // Menu item add generalize
-    menuItem = makeMenuItem("Add Inheritance", Slyum.ACTION_NEW_GENERALIZE,
-            "generalize");
-    popupMenu.add(menuItem);
-
-    // Menu item add inner class
-    menuItem = makeMenuItem("Add inner class", Slyum.ACTION_NEW_INNER_CLASS,
-            "innerClass");
-    popupMenu.add(menuItem);
-
-    // Menu item add dependency
-    menuItem = makeMenuItem("Add Dependency", Slyum.ACTION_NEW_DEPENDENCY,
-            "dependency");
-    popupMenu.add(menuItem);
-
-    // Menu item add association
-    menuItem = makeMenuItem("Add Association", Slyum.ACTION_NEW_ASSOCIATION,
-            "association");
-    popupMenu.add(menuItem);
-
-    // Menu item add aggregation
-    menuItem = makeMenuItem("Add Aggregation", Slyum.ACTION_NEW_AGGREGATION,
-            "aggregation");
-    popupMenu.add(menuItem);
-
-    // Menu item add composition
-    menuItem = makeMenuItem("Add Composition", Slyum.ACTION_NEW_COMPOSITION,
-            "composition");
-    popupMenu.add(menuItem);
-
-    // Menu item add composition
-    menuItem = makeMenuItem("Add Multi-association", Slyum.ACTION_NEW_MULTI,
-            "multi");
-    popupMenu.add(menuItem);
-
+    
+    popupMenu.add(new JMenu(SlyumAction.ACTION_ADD_INHERITANCE));
+    popupMenu.add(new JMenu(SlyumAction.ACTION_ADD_INNER_CLASS));
+    popupMenu.add(new JMenu(SlyumAction.ACTION_ADD_DEPENDENCY));
+    popupMenu.add(new JMenu(SlyumAction.ACTION_ADD_ASSOCIATION));
+    popupMenu.add(new JMenu(SlyumAction.ACTION_ADD_AGGREGATION));
+    popupMenu.add(new JMenu(SlyumAction.ACTION_ADD_COMPOSITION));
+    popupMenu.add(new JMenu(SlyumAction.ACTION_ADD_MULTI_ASSOCIATION));
     popupMenu.addSeparator();
-
-    // Menu item add note
-    menuItem = makeMenuItem("Add Note", Slyum.ACTION_NEW_NOTE, "note");
-    popupMenu.add(menuItem);
-
-    // Menu item link note
-    menuItem = makeMenuItem("Link Note", Slyum.ACTION_NEW_LINK_NOTE, "linkNote");
-    popupMenu.add(menuItem);
+    
+    popupMenu.add(new JMenu(SlyumAction.ACTION_ADD_NOTE));
+    popupMenu.add(new JMenu(SlyumAction.ACTION_LINK_NOTE));
 
     addSPanelListener();
     txtBoxDiagramName = new TextBoxDiagramName(this);
@@ -633,16 +587,6 @@ public class GraphicView extends GraphicComponent
 
   private void addSPanelListener() {
     addListenerSelectionChanged(SPanelElement.getInstance());
-  }
-
-  @Override
-  public void actionPerformed(ActionEvent e) {
-    if ("Color".equals(e.getActionCommand()))
-      new SColorAssigner(this);
-    else
-      super.actionPerformed(e);
-
-    Slyum.getInstance().actionPerformed(e);
   }
 
   @Override
@@ -905,7 +849,7 @@ public class GraphicView extends GraphicComponent
     if (!isRecord) Change.stopRecord();
   }
 
-  public void adjustInheritances() {
+  public void adjustSelectedInheritances() {
     for (GraphicComponent c : getSelectedComponents())
       if (c instanceof InheritanceView)
         ((InheritanceView) c).adjustInheritance();
@@ -915,7 +859,7 @@ public class GraphicView extends GraphicComponent
    * Align all selected entities with the hightest or lowest selected entity.
    * Make same space between all selected entities.
    * 
-   * @param true for align top; false for align bottom
+   * @param top for align top; false for align bottom
    */
   public void alignHorizontal(boolean top) {
     int totalWidth = 0, bottom = Integer.MIN_VALUE;
@@ -1003,9 +947,6 @@ public class GraphicView extends GraphicComponent
 
   /**
    * Get all selected component and change their color.
-   * 
-   * @param newColor
-   *          the new color for selected components
    */
   public void changeColorForSelectedItems() {
     List<GraphicComponent> gc = getSelectedComponents();
