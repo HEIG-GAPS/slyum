@@ -82,6 +82,9 @@ public class EnumEntityPropreties extends GlobalPropreties {
   public void updateComponentInformations(UpdateMessage msg) {
     if (currentObject == null) return;
 
+    if (tableEnumValues.getCellEditor() != null)
+      tableEnumValues.getCellEditor().stopCellEditing();
+    
     EnumEntity enumEntity = (EnumEntity) currentObject;
     txtFieldName.setText(enumEntity.getName());
     enumEntity.addObserver(this);
