@@ -162,7 +162,7 @@ public class Slyum extends JFrame implements ActionListener {
   public static final String ACTION_LOCATE = "locate";
 
   // Accelerator
-  public final static String KEY_NEW_PROJECT = "ctrl alt N";
+  public final static String KEY_NEW_PROJECT = "ctrl N";
   public final static String KEY_OPEN_PROJECT = "ctrl O";
   public final static String KEY_SAVE = "ctrl S";
   public final static String KEY_SAVE_AS = "ctrl shift S";
@@ -197,21 +197,21 @@ public class Slyum extends JFrame implements ActionListener {
   public final static String KEY_ZOOM_ADAPT = "ctrl shift Z";
   public final static String KEY_ZOOM_1 = "1";
 
-  public final static String KEY_DEFAULT_MODE = "alt Q";
-  public final static String KEY_GRIPS_MODE = "alt W";
-  public final static String KEY_CLASS = "ctrl shift C";
-  public final static String KEY_ENUM = "ctrl shift E";
-  public final static String KEY_INTERFACE = "ctrl shift I";
-  public final static String KEY_ASSOCIATION_CLASS = "ctrl shift X";
-  public final static String KEY_INHERITANCE = "ctrl shift H";
-  public final static String KEY_INNER_CLASS = "ctrl shift N";
-  public final static String KEY_DEPENDENCY = "ctrl shift D";
-  public final static String KEY_ASSOCIATION = "ctrl shift A";
-  public final static String KEY_AGGREGATION = "ctrl shift G";
-  public final static String KEY_COMPOSITION = "ctrl shift P";
-  public final static String KEY_MULTI_ASSOCIATION = "ctrl shift W";
-  public final static String KEY_NOTE = "ctrl shift O";
-  public final static String KEY_LINK_NOTE = "ctrl shift L";
+  public final static String KEY_DEFAULT_MODE = "Q";
+  public final static String KEY_GRIPS_MODE = "W";
+  public final static String KEY_CLASS = "C";
+  public final static String KEY_ENUM = "E";
+  public final static String KEY_INTERFACE = "I";
+  public final static String KEY_ASSOCIATION_CLASS = "X";
+  public final static String KEY_INHERITANCE = "H";
+  public final static String KEY_INNER_CLASS = "R";
+  public final static String KEY_DEPENDENCY = "D";
+  public final static String KEY_ASSOCIATION = "A";
+  public final static String KEY_AGGREGATION = "G";
+  public final static String KEY_COMPOSITION = "P";
+  public final static String KEY_MULTI_ASSOCIATION = "M";
+  public final static String KEY_NOTE = "O";
+  public final static String KEY_LINK_NOTE = "L";
 
   public final static String KEY_HELP = "F1";
   
