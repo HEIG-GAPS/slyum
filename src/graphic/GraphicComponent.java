@@ -28,6 +28,7 @@ import utility.PersonalizedIcon;
 import change.BufferCreation;
 import change.Change;
 import classDiagram.IDiagramComponent;
+import swing.SlyumAction;
 import swing.slyumCustomizedComponents.SRadioButtonMenuItem;
 
 /**
@@ -40,7 +41,7 @@ import swing.slyumCustomizedComponents.SRadioButtonMenuItem;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public abstract class GraphicComponent extends Observable implements ActionListener, XmlElement {
+public abstract class GraphicComponent extends Observable implements XmlElement {
   private Color color = Color.DARK_GRAY;
   // Save the location of the mouse uses for computing the movement or the
   // resize.
@@ -75,18 +76,6 @@ public abstract class GraphicComponent extends Observable implements ActionListe
     this.parent = parent;
 
     init();
-  }
-
-  @Override
-  public void actionPerformed(ActionEvent e) {
-    
-    if (Slyum.ACTION_NEW_NOTE_ASSOCIED.equals(e.getActionCommand()))
-      parent.linkNewNoteWithSelectedEntities();
-
-    else if ("ColorContextMenu".equals(e.getActionCommand()))
-      askNewColorForSelectedItems();
-    else
-      SPanelDiagramComponent.getInstance().actionPerformed(e);
   }
 
   public static void askNewColorForSelectedItems() {
@@ -294,20 +283,14 @@ public abstract class GraphicComponent extends Observable implements ActionListe
   public void restore() {}
 
   /**
-   * Calls by the constructor for initialize components.
+   * Called by the constructor for initialize components.
    */
   private void init() {
+    
     // Create context menu.
     popupMenu = new JPopupMenu();
-
-    JMenuItem menuItem;
-
-    miNewNote = menuItem = makeMenuItem("New note",
-            Slyum.ACTION_NEW_NOTE_ASSOCIED, "note");
-    popupMenu.add(menuItem);
-
-    menuItem = makeMenuItem("Change color...", "ColorContextMenu", "color");
-    popupMenu.add(menuItem);
+    popupMenu.add(miNewNote = new JMenuItem(SlyumAction.ACTION_ADD_NOTE));
+    popupMenu.add(new JMenuItem(SlyumAction.ACTION_COLOR));
   }
 
   /**
@@ -339,44 +322,18 @@ public abstract class GraphicComponent extends Observable implements ActionListe
   }
 
   /**
-   * Creates a new JMenuItem with this class like action listeners.
-   * 
-   * @param name
-   *          the name for JMenuItem
-   * @param action
-   *          the action command for this JMenuItem
-   * @param imgIcon
-   *          the icon path for the icon of this JMenuItem
-   * @return the new JMenuItem created
-   */
-  public JMenuItem makeMenuItem(String name, String action, String imgIcon) {
-    final ImageIcon img = PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
-            + imgIcon + ".png");
-
-    final JMenuItem menuItem = new JMenuItem(name, img);
-    menuItem.setActionCommand(action);
-    menuItem.addActionListener(this);
-    return menuItem;
-  }
-
-  /**
    * Makes a new JRadioButtonMenuItem with this class like action listeners.
    * 
-   * @param name
-   *          the name for JRadioButtonMenuItem
-   * @param action
-   *          action the action command for this JRadioButtonMenuItem
+   * @param slyumAction the action associated with the new radiobutton item
    * @param group
    *          the group for this JRadioButtonMenuItem
    * @return the new JRadioButtonMenuItem created
    */
-  public JRadioButtonMenuItem makeRadioButtonMenuItem(String name,
-          String action, ButtonGroup group) {
-    final JRadioButtonMenuItem rbMenuItem = new SRadioButtonMenuItem(name);
-    rbMenuItem.setActionCommand(action);
-    rbMenuItem.addActionListener(this);
+  public JRadioButtonMenuItem makeRadioButtonMenuItem(
+      SlyumAction slyumAction, ButtonGroup group) {
+    final JRadioButtonMenuItem rbMenuItem = 
+        new SRadioButtonMenuItem(slyumAction);
     group.add(rbMenuItem);
-
     return rbMenuItem;
   }
 

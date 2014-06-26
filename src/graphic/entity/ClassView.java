@@ -10,6 +10,7 @@ import classDiagram.components.SimpleEntity;
 import classDiagram.components.Visibility;
 import java.awt.event.ActionEvent;
 import javax.swing.JPopupMenu;
+import swing.SlyumAction;
 
 /**
  * Represent the view of a class in UML structure.
@@ -54,7 +55,8 @@ public class ClassView extends SimpleEntityView {
 
   @Override
   protected void initializeMenuItemsAddElements(JPopupMenu popupmenu) {
-    popupMenu.add(makeMenuItem("Add constructor", ACTION_ADD_CONSTRUCTOR, "constructor"));
+    popupMenu.add(SlyumAction.createActionMenuItem(
+        SlyumAction.ACTION_ADD_CONSTRUCTOR, this));
     super.initializeMenuItemsAddElements(popupmenu);
   }
 

@@ -7,12 +7,13 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.plaf.metal.MetalButtonUI;
+
+import swing.SlyumAction;
 
 public class SButton extends JButton {
   

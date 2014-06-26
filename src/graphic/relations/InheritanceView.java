@@ -10,19 +10,18 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import swing.Slyum;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.SimpleEntity;
 import classDiagram.relationships.Inheritance;
+import swing.SlyumAction;
 import utility.SMessageDialog;
 
 /**
@@ -120,10 +119,11 @@ public class InheritanceView extends RelationView {
 
     if (getClass() == InheritanceView.class) {
       popupMenu.addSeparator();
-      popupMenu.add(menuItemOI = makeMenuItem("Overrides & Implementations...",
-              "O&I", "method"));
-      popupMenu.add(makeMenuItem("Autopath", Slyum.ACTION_ADJUST_INHERITANCE,
-              "adjust-inheritance"));
+      popupMenu.add(menuItemOI = SlyumAction.createActionMenuItem(
+          SlyumAction.ACTION_O_AND_I, this));
+      
+      popupMenu.add(SlyumAction.createActionMenuItem(
+          SlyumAction.ACTION_ADJUST_INHERITANCE, this));
     }
 
     if (inheritance.getParent().getClass() == InterfaceEntity.class)
@@ -136,20 +136,6 @@ public class InheritanceView extends RelationView {
     if (menuItemOI != null)
       menuItemOI.setEnabled(!inheritance.getParent().isEveryMethodsStatic());
     super.maybeShowPopup(e, popupMenu);
-  }
-
-  @Override
-  public void actionPerformed(ActionEvent e) {
-    super.actionPerformed(e);
-    if ("O&I".equals(e.getActionCommand()))
-      inheritance.showOverridesAndImplementations();
-    else if (Slyum.ACTION_ADJUST_INHERITANCE.equals(e.getActionCommand())) {
-      parent.adjustInheritances();
-
-      // parent.adjustInheritances() will not adjust this inheritance if
-      // it's not selected. This code will.
-      if (!isSelected()) adjustInheritance();
-    }
   }
 
   @Override

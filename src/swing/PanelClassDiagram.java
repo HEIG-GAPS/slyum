@@ -11,8 +11,6 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.io.File;
@@ -249,16 +247,7 @@ public class PanelClassDiagram extends JPanel {
       classDiagram = new ClassDiagram();
       classDiagram.addComponentsObserver(PropretiesChanger.getInstance());
     }
-
     return classDiagram;
-  }
-
-  public JButton getRedoButton() {
-    return SPanelElement.getInstance().getRedoButton();
-  }
-
-  public JButton getUndoButton() {
-    return SPanelElement.getInstance().getUndoButton();
   }
 
   /**
