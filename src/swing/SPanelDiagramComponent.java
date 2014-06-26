@@ -220,51 +220,53 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
-
-    if (Slyum.ACTION_NEW_CLASS.equals(e.getActionCommand()))
-      gv.initNewComponent(new ClassFactory(gv));
-
-    else if (Slyum.ACTION_NEW_INTERFACE.equals(e.getActionCommand()))
-      gv.initNewComponent(new InterfaceFactory(gv));
-
-    else if (Slyum.ACTION_NEW_ENUM.equals(e.getActionCommand()))
-      gv.initNewComponent(new EnumFactory(gv));
-
-    else if (Slyum.ACTION_NEW_GENERALIZE.equals(e.getActionCommand()))
-      gv.initNewComponent(new InheritanceFactory(gv));
-
-    else if (Slyum.ACTION_NEW_INNER_CLASS.equals(e.getActionCommand()))
-      gv.initNewComponent(new InnerClassFactory(gv));
-
-    else if (Slyum.ACTION_NEW_DEPENDENCY.equals(e.getActionCommand()))
-      gv.initNewComponent(new DependencyFactory(gv));
-
-    else if (Slyum.ACTION_NEW_ASSOCIATION.equals(e.getActionCommand()))
-      gv.initNewComponent(new BinaryFactory(gv));
-
-    else if (Slyum.ACTION_NEW_AGGREGATION.equals(e.getActionCommand()))
-      gv.initNewComponent(new AggregationFactory(gv));
-
-    else if (Slyum.ACTION_NEW_COMPOSITION.equals(e.getActionCommand()))
-      gv.initNewComponent(new CompositionFactory(gv));
-
-    else if (Slyum.ACTION_NEW_CLASS_ASSOCIATION.equals(e.getActionCommand()))
-      gv.initNewComponent(new AssociationClassFactory(gv));
-
-    else if (Slyum.ACTION_NEW_MULTI.equals(e.getActionCommand()))
-      gv.initNewComponent(new MultiFactory(gv));
-
-    else if (Slyum.ACTION_NEW_NOTE.equals(e.getActionCommand()))
-      gv.initNewComponent(new NoteFactory(gv));
-
-    else if (Slyum.ACTION_NEW_LINK_NOTE.equals(e.getActionCommand()))
-      gv.initNewComponent(new LineCommentaryFactory(gv));
-
-    else if (Slyum.ACTION_MODE_CURSOR.equals(e.getActionCommand()))
-      setMode(Mode.CURSOR);
-
-    else if (Slyum.ACTION_MODE_GRIP.equals(e.getActionCommand()))
-      setMode(Mode.GRIP);
+    switch (e.getActionCommand()) {
+      case Slyum.ACTION_NEW_CLASS:
+        gv.initNewComponent(new ClassFactory(gv));
+        break;
+      case Slyum.ACTION_NEW_INTERFACE:
+        gv.initNewComponent(new InterfaceFactory(gv));
+        break;
+      case Slyum.ACTION_NEW_ENUM:
+        gv.initNewComponent(new EnumFactory(gv));
+        break;
+      case Slyum.ACTION_NEW_GENERALIZE:
+        gv.initNewComponent(new InheritanceFactory(gv));
+        break;
+      case Slyum.ACTION_NEW_INNER_CLASS:
+        gv.initNewComponent(new InnerClassFactory(gv));
+        break;
+      case Slyum.ACTION_NEW_DEPENDENCY:
+        gv.initNewComponent(new DependencyFactory(gv));
+        break;
+      case Slyum.ACTION_NEW_ASSOCIATION:
+        gv.initNewComponent(new BinaryFactory(gv));
+        break;
+      case Slyum.ACTION_NEW_AGGREGATION:
+        gv.initNewComponent(new AggregationFactory(gv));
+        break;
+      case Slyum.ACTION_NEW_COMPOSITION:
+        gv.initNewComponent(new CompositionFactory(gv));
+        break;
+      case Slyum.ACTION_NEW_CLASS_ASSOCIATION:
+        gv.initNewComponent(new AssociationClassFactory(gv));
+        break;
+      case Slyum.ACTION_NEW_MULTI:
+        gv.initNewComponent(new MultiFactory(gv));
+        break;
+      case Slyum.ACTION_NEW_NOTE:
+        gv.initNewComponent(new NoteFactory(gv));
+        break;
+      case Slyum.ACTION_NEW_LINK_NOTE:
+        gv.initNewComponent(new LineCommentaryFactory(gv));
+        break;
+      case Slyum.ACTION_MODE_CURSOR:
+        setMode(Mode.CURSOR);
+        break;
+      case Slyum.ACTION_MODE_GRIP:
+        setMode(Mode.GRIP);
+        break;
+    }
   }
 
   public SButton getBtnClass() {
