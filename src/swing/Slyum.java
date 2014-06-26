@@ -1032,6 +1032,11 @@ public class Slyum extends JFrame implements ActionListener {
               KEY_INTERFACE, ACTION_NEW_INTERFACE, p.getBtnInterface());
       menu.add(menuItem);
 
+      // Menu item add interface
+      menuItem = createMenuItem("Add Enum", "enum", KeyEvent.VK_E,
+              KEY_ENUM, ACTION_NEW_ENUM, p.getBtnEnum());
+      menu.add(menuItem);
+
       // Menu item add class association
       menuItem = createMenuItem("Add Association class", "classAssoc",
               KeyEvent.VK_X, KEY_ASSOCIATION_CLASS,
