@@ -59,16 +59,24 @@ public abstract class SquareGrip extends GraphicComponent {
   public void paintComponent(Graphics2D g2) {
     if (!isVisible()) return;
 
-    final Rectangle bounds = getBounds();
-    final Color border = new Color(40, 40, 40);
-    final Color fill = new Color(200, 200, 200);
+    final Rectangle localBounds = getBounds();
 
     g2.setStroke(new BasicStroke(DEFAULT_BORDER_WIDTH));
-    g2.setColor(fill);
-    g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+    g2.setColor(getFillColor());
+    g2.fillRect(
+        localBounds.x, localBounds.y, localBounds.width, localBounds.height);
 
-    g2.setColor(border);
-    g2.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+    g2.setColor(getBorderColor());
+    g2.drawRect(
+        localBounds.x, localBounds.y, localBounds.width, localBounds.height);
+  }
+  
+  public Color getFillColor() {
+    return new Color(200, 200, 200);
+  }
+  
+  public Color getBorderColor() {
+    return new Color(40, 40, 40); 
   }
 
   @Override

@@ -13,6 +13,7 @@ import utility.Utility;
 import change.BufferBounds;
 import change.BufferCreation;
 import change.Change;
+import java.awt.Color;
 
 /**
  * The relationGrip is a grip who customize a LineView. The LineView uses
@@ -132,6 +133,22 @@ public class RelationGrip extends SquareGrip {
     isMouseDragged = false;
 
     if (!relation.isSelected()) relation.showGrips(false);
+  }
+
+  @Override
+  public Color getFillColor() {
+    Color c = super.getFillColor();
+    if (relation.isSelected())
+      return c;
+    return new Color(c.getRed(), c.getGreen(), c.getBlue(), 100);
+  }
+
+  @Override
+  public Color getBorderColor() {
+    if (relation.isSelected())
+      return super.getBorderColor();
+    
+    return super.getBorderColor().brighter().brighter().brighter();
   }
 
   protected void pushBufferChangeMouseReleased(MouseEvent e) {
