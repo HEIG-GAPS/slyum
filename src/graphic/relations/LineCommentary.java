@@ -95,9 +95,11 @@ public class LineCommentary extends LineView {
   }
 
   @Override
-  public void gMousePressed(MouseEvent e) {
-    super.gMousePressed(e);
-    notifyNoteProperties();
+  public void setSelected(boolean selected) {
+    super.setSelected(selected);
+    
+    if (selected)
+      notifyNoteProperties();
   }
 
   @Override
