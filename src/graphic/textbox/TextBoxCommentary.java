@@ -25,7 +25,7 @@ import javax.swing.JMenuItem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import swing.EditCommentaryDialog;
+import swing.UserInputDialog;
 import swing.Slyum;
 import swing.propretiesView.NoteProperties;
 import utility.PersonalizedIcon;
@@ -279,7 +279,7 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
     super.gMouseClicked(e);
 
     if (e.getClickCount() == 2) {
-      final EditCommentaryDialog ecd = new EditCommentaryDialog(text,
+      final UserInputDialog ecd = new UserInputDialog(text,
               "Slyum - Commentary editor", "Edit commentary : ");
       ecd.setVisible(true);
 

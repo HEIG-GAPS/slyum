@@ -68,7 +68,7 @@ public class Slyum extends JFrame implements ActionListener {
   public static final Color TEXT_COLOR = new Color(34, 34, 34);
   public final static Color DEFAULT_BACKGROUND = new Color(239, 239, 242);
   public final static Color BACKGROUND_FORHEAD = new Color(246, 246, 246);
-  public final static Color THEME_COLOR = new Color(0, 122, 204);
+  public final static Color THEME_COLOR = new Color(0, 122, 204); // 007ACC
   public final static Color DEFAULT_BORDER_COLOR = new Color(169, 169, 169);
   public static final Color DISABLE_COLOR = Color.GRAY;
 

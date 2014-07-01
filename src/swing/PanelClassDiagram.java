@@ -11,8 +11,6 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.io.File;
@@ -27,7 +25,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -48,6 +45,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.PropretiesChanger;
+import swing.slyumCustomizedComponents.STab;
 import utility.MultiBorderLayout;
 import utility.SMessageDialog;
 import utility.Utility;
@@ -108,6 +106,7 @@ public class PanelClassDiagram extends JPanel {
   private HierarchicalView hierarchicalView;
   private File currentFile = null;
   private GraphicView graphicView;
+  private STab slyumTabbedPane;
   private boolean disabledUpdate = false;
   private WatchEvent.Kind<Path> fileChanged;
   private WatchFileListener watchFileListener;
@@ -160,6 +159,9 @@ public class PanelClassDiagram extends JPanel {
         fileChanged = StandardWatchEventKinds.ENTRY_DELETE;
       }
     };
+    
+    STab.initialize(graphicView);
+    slyumTabbedPane = STab.getInstance();
 
     // Personalized ToolBar Layout
     add(SPanelFileComponent.getInstance(), BorderLayout.NORTH);
@@ -168,7 +170,7 @@ public class PanelClassDiagram extends JPanel {
 
     // Construct inner split pane.
     splitInner = new SSplitPane(JSplitPane.VERTICAL_SPLIT,
-            graphicView.getScrollPane(), PropretiesChanger.getInstance());
+            slyumTabbedPane, PropretiesChanger.getInstance());
     splitInner.setResizeWeight(1.0);
 
     // Construct outer split pane.
@@ -176,8 +178,6 @@ public class PanelClassDiagram extends JPanel {
         JSplitPane.HORIZONTAL_SPLIT,
         hierarchicalView = new HierarchicalView(getClassDiagram()), splitInner);
     splitOuter.setResizeWeight(0.0);
-    splitOuter.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0,
-            Slyum.THEME_COLOR));
 
     add(splitOuter, BorderLayout.CENTER);
 
@@ -203,6 +203,10 @@ public class PanelClassDiagram extends JPanel {
     else
       return SMessageDialog
               .showQuestionMessageYesNoCancel("Save current project ?");
+  }
+  
+  public void addNewView() {
+    STab.getInstance().addTabAskingName(new GraphicView(classDiagram));
   }
 
   /**
