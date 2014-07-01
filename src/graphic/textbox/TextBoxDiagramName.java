@@ -75,7 +75,7 @@ public class TextBoxDiagramName extends TextBox implements Observer {
 
   @Override
   public void delete() {
-    // Cannot be deleted!
+    // Cannot be deleted.
   }
   
   @Override
@@ -108,7 +108,6 @@ public class TextBoxDiagramName extends TextBox implements Observer {
     Point origin = location,
           deplacement = new Point(bndBackground.x + bndBackground.width,
                                   bndBackground.y + bndBackground.height);
-    
     
     // Compute the shape of the background.
     Path2D background = new Path2D.Float();

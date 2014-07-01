@@ -76,6 +76,8 @@ public class HierarchicalView
     setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
     setBackground(null);
     setForeground(Color.GRAY);
+    setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0,
+            Slyum.THEME_COLOR));
     
     txtFieldClassDiagramName = new JTextField() {
       @Override

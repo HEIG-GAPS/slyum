@@ -71,7 +71,6 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
-import javax.swing.BorderFactory;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -540,10 +539,17 @@ public class GraphicView extends GraphicComponent
       }
     };
     
-    scrollPane = new SScrollPane(scene);
+    scrollPane = new SScrollPane(scene) {
+
+      @Override
+      public String toString() {
+        return GraphicView.this.getName();
+      }
+      
+    };
     scrollPane.getVerticalScrollBar().setUnitIncrement(50);
     scrollPane.getHorizontalScrollBar().setUnitIncrement(50);
-    scrollPane.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
+    scrollPane.setBorder(null);
     scrollPane.getHorizontalScrollBar().addAdjustmentListener(listnener);
     scrollPane.getVerticalScrollBar().addAdjustmentListener(listnener);
 
@@ -1374,7 +1380,7 @@ public class GraphicView extends GraphicComponent
    * @return the name for this graphic view
    */
   public String getName() {
-    return name == null || name.isEmpty() ? "view no name" : name;
+    return name == null || name.isEmpty() ? "No named view" : name;
   }
 
   /**
