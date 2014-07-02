@@ -698,14 +698,14 @@ public class GraphicView extends GraphicComponent
   public void addClassEntity(ClassEntity component) {
     GraphicComponent result = searchAssociedComponent(component);
     if (result == null)
-      addComponentIn(new ClassView(this, component), entities);
+      addEntity(new ClassView(this, component));
   }
 
   @Override
   public void addEnumEntity(EnumEntity component) {
     GraphicComponent result = searchAssociedComponent(component);
     if (result == null)
-      addComponentIn(new EnumView(this, component), entities);
+      addEntity(new EnumView(this, component));
   }
 
   public <T extends GraphicComponent> boolean addComponentIn(T component,
@@ -763,6 +763,9 @@ public class GraphicView extends GraphicComponent
    * @return true if the component has been added; false otherwise
    */
   public boolean addEntity(EntityView component) {
+    if (PanelClassDiagram.getInstance().getCurrentGraphicView() != this)
+      return false;
+    
     return addComponentIn(component, entities);
   }
 
@@ -805,7 +808,7 @@ public class GraphicView extends GraphicComponent
     final GraphicComponent result = searchAssociedComponent(component);
 
     if (result == null)
-      addComponentIn(new InterfaceView(this, component), entities);
+      addEntity(new InterfaceView(this, component));
   }
 
   /**
@@ -895,8 +898,7 @@ public class GraphicView extends GraphicComponent
    * Get entities contents in this graphic view and adjust their width. See
    * adjustWidth() method from EntityView.
    * 
-   * @param list
-   *          the entities list to selected
+   * @param list the entities list to selected
    */
   public void adjustEntities(LinkedList<EntityView> list) {
     boolean isRecord = Change.isRecord();
@@ -918,7 +920,7 @@ public class GraphicView extends GraphicComponent
    * Align all selected entities with the hightest or lowest selected entity.
    * Make same space between all selected entities.
    * 
-   * @param true for align top; false for align bottom
+   * @param top on top or bottom?
    */
   public void alignHorizontal(boolean top) {
     int totalWidth = 0, bottom = Integer.MIN_VALUE;

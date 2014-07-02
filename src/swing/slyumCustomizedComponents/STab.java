@@ -49,9 +49,10 @@ public class STab extends JTabbedPane {
   private STab(GraphicView graphicView) {
     // Add main tab.
     super.add("", graphicView.getScrollPane());
-    setTabComponentAt(0, new ObserverTab(this));
+    
+    setTabComponentAt(0, new GraphicViewTabComponent(this, graphicView));
     graphicView.getClassDiagram().addObserver(
-        (ObserverTab)getTabComponentAt(0));
+        (GraphicViewTabComponent)getTabComponentAt(0));
     
     // Add + tab.
     addPlusTab();
@@ -175,7 +176,7 @@ public class STab extends JTabbedPane {
     remove(tabCount - 1);
     
     super.addTab(title, graphicView.getScrollPane());
-    setTabComponentAt(getTabCount() - 1, new CloseTitleTab(this));
+    setTabComponentAt(getTabCount() - 1, new CloseTitleTab(this, graphicView));
     addPlusTab();
     setSelectedIndex(tabCount - 1);
   }
@@ -193,15 +194,23 @@ public class STab extends JTabbedPane {
         PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus-16.png"),
         null);
   }
-  
-  private static class ObserverTab extends JPanel implements Observer {
 
+  @Override
+  public GraphicViewTabComponent getTabComponentAt(int index) {
+    return (GraphicViewTabComponent)super.getTabComponentAt(index);
+  }
+  
+  public static class GraphicViewTabComponent extends JPanel implements Observer {
+
+    private GraphicView graphicView;
+    
     protected JTabbedPane pane;
     protected JLabel label;
     
-    public ObserverTab(final JTabbedPane pane) {
+    public GraphicViewTabComponent(final JTabbedPane pane, GraphicView graphicView) {
       super(new BorderLayout());
       this.pane = pane;
+      this.graphicView = graphicView;
       setOpaque(false);
       setPreferredSize(new Dimension(130, 30));
       
@@ -209,7 +218,7 @@ public class STab extends JTabbedPane {
 
         @Override
         public String getText() {
-          int i = pane.indexOfTabComponent(ObserverTab.this);
+          int i = pane.indexOfTabComponent(GraphicViewTabComponent.this);
           if (i != -1) {
               return pane.getTitleAt(i);
           }
@@ -220,18 +229,22 @@ public class STab extends JTabbedPane {
     
     @Override
     public void update(Observable o, Object arg) {
-      int i = pane.indexOfTabComponent(ObserverTab.this);
+      int i = pane.indexOfTabComponent(GraphicViewTabComponent.this);
       if (o instanceof ClassDiagram) {
         String text = ((ClassDiagram)o).getName();
         pane.setTitleAt(i, text);
         label.setText(text);
       }
     }
+
+    public GraphicView getGraphicView() {
+      return graphicView;
+    }
   }
   
-  private static class CloseTitleTab extends ObserverTab {
-    public CloseTitleTab(final JTabbedPane pane) {
-      super(pane);      
+  private static class CloseTitleTab extends GraphicViewTabComponent {
+    public CloseTitleTab(final JTabbedPane pane, GraphicView graphicView) {
+      super(pane, graphicView);      
       add(new LabelClose(), BorderLayout.EAST);
     }
     
@@ -257,7 +270,11 @@ public class STab extends JTabbedPane {
 
           @Override
           public void mouseClicked(MouseEvent e) {
-            pane.remove(pane.indexOfTabComponent(CloseTitleTab.this));
+            int selectedIndex = pane.getSelectedIndex();
+            int index = pane.indexOfTabComponent(CloseTitleTab.this);
+            pane.remove(index);
+            pane.setSelectedIndex(
+                selectedIndex == index ? index - 1 : selectedIndex);
             repaint();
           }
 
