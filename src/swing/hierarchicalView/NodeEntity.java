@@ -20,11 +20,13 @@ import swing.PanelClassDiagram;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public abstract class NodeEntity extends DefaultMutableTreeNode implements Observer, IClassDiagramNode, ICustomizedIconNode {
+public abstract class NodeEntity 
+    extends DefaultMutableTreeNode 
+    implements Observer, IClassDiagramNode, ICustomizedIconNode {
+  
   protected final Entity entity;
   protected final ImageIcon icon;
   protected final JTree tree;
-
   protected final DefaultTreeModel treeModel;
 
   /**
@@ -78,10 +80,8 @@ public abstract class NodeEntity extends DefaultMutableTreeNode implements Obser
   public void removeAllChildren() {
     for (int i = getChildCount() - 1; i >= 0; i--) {
       IClassDiagramNode node = (IClassDiagramNode) getChildAt(i);
-
       node.getAssociedComponent().deleteObserver((Observer) node);
     }
-
     super.removeAllChildren();
   }
 
@@ -104,8 +104,9 @@ public abstract class NodeEntity extends DefaultMutableTreeNode implements Obser
           reloadChildsNodes();
           break;
       }
-    } else
+    } else {
       reloadChildsNodes();
+    }
   }
 
   @Override

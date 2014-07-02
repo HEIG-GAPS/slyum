@@ -50,6 +50,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -66,15 +67,19 @@ import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import swing.IListenerComponentSelectionChanged;
@@ -481,8 +486,33 @@ public class GraphicView extends GraphicComponent
       throw new IllegalArgumentException("classDiagram is null");
 
     this.classDiagram = classDiagram;
-
+    
     scene = new JPanel(null) {
+      {
+        setTransferHandler(new TransferHandler(){
+
+          @Override
+          public boolean canImport(TransferHandler.TransferSupport support) {
+            return support.isDataFlavorSupported(Entity.ENTITY_FLAVOR);
+          }
+
+          @Override
+          public boolean importData(TransferHandler.TransferSupport support) {
+            if (!canImport(support))
+              return false;
+            try {
+              addEntity(EntityView.createFromEntity(
+                  GraphicView.this, 
+                  (Entity)support.getTransferable().getTransferData(
+                      Entity.ENTITY_FLAVOR)));
+              return true;
+            } catch (UnsupportedFlavorException | IOException ex) {
+              Slyum.LOGGER.log(Level.SEVERE, null, ex);
+            }
+            return false;
+          }
+        });
+      }
 
       @Override
       public void paintComponent(Graphics g) {

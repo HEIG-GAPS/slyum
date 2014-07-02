@@ -42,7 +42,10 @@ import change.BufferBounds;
 import change.Change;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
+import classDiagram.components.InterfaceEntity;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Represent the view of an entity in UML structure.
@@ -56,6 +59,15 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
   public static final float BORDER_WIDTH = 1.2f;
   public static final int VERTICAL_SPACEMENT = 10; // margin
+  
+  public static EntityView createFromEntity(
+      GraphicView graphicView, Entity entity) {
+     if (entity.getClass() == ClassEntity.class)
+        return new ClassView(graphicView, (ClassEntity)entity);
+     else if (entity.getClass() == InterfaceEntity.class)
+        return new InterfaceView(graphicView, (InterfaceEntity)entity);
+    return null;
+  }
 
   /**
    * Get the default color used then a new entity is created.
