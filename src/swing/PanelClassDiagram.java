@@ -30,6 +30,8 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -271,7 +273,8 @@ public class PanelClassDiagram extends JPanel {
    * @return the current GraphicView
    */
   public GraphicView getCurrentGraphicView() {
-    return graphicView;
+    return STab.getInstance().getTabComponentAt(
+        STab.getInstance().getSelectedIndex()).getGraphicView();
   }
   
   public List<GraphicView> getAllGraphicViews() {
