@@ -21,6 +21,7 @@ import graphic.entity.EntityView;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
@@ -30,10 +31,12 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.TransferHandler;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -145,6 +148,22 @@ public class HierarchicalView
       }
     };
     tree = new JTree(treeModel);
+    tree.setDragEnabled(true);
+    tree.setTransferHandler(new TransferHandler(){
+
+      @Override
+      protected Transferable createTransferable(JComponent c) {
+        Object o = tree.getSelectionPath().getLastPathComponent();
+        if (o instanceof NodeEntity)
+          return (Transferable)((NodeEntity)o).getAssociedComponent();
+        return null;
+      }
+
+      @Override
+      public int getSourceActions(JComponent c) {
+        return COPY;
+      }
+    });
     tree.addTreeSelectionListener(this);
     tree.getSelectionModel().setSelectionMode(
             TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);

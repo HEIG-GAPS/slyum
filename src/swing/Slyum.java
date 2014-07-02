@@ -218,7 +218,7 @@ public class Slyum extends JFrame implements ActionListener {
   public final static Font DEFAULT_FONT;
   public final static Font UI_FONT;
   
-  private final static Logger LOGGER = Logger.getLogger(Slyum.class.getName());
+  public final static Logger LOGGER = Logger.getLogger(Slyum.class.getName());
   
   public static Font addSystemFont(String fileName) {
     Font font = null;
