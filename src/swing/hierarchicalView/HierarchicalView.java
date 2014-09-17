@@ -288,8 +288,7 @@ public class HierarchicalView
    * Search in the entire structure of JTree the node associated with the given
    * UML object. Return null if no associated object are found.
    * 
-   * @param o
-   *          the object associated with a node
+   * @param o the object associated with a node
    * @return the node associated with the object; or null if no node are found
    */
   public IClassDiagramNode searchAssociedNode(Object o) {
@@ -333,10 +332,10 @@ public class HierarchicalView
   public void valueChanged(TreeSelectionEvent e) {
     final LinkedList<TreePath> paths = new LinkedList<>();
     final TreePath[] treePaths = e.getPaths();
-
-    // sort unselect first, select next
-    for (int i = 0; i < treePaths.length; i++)
-      if (!e.isAddedPath(treePaths[i])) paths.add(treePaths[i]);
+    
+    for (TreePath treePath : treePaths)
+      if (!e.isAddedPath(treePath))
+        paths.add(treePath);
 
     for (final TreePath treePath2 : treePaths)
       if (e.isAddedPath(treePath2)) paths.add(treePath2);
