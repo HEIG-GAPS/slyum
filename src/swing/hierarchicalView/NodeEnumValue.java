@@ -4,7 +4,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.ImageIcon;
-import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -15,15 +14,16 @@ import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.EnumValue;
 import swing.PanelClassDiagram;
+import swing.hierarchicalView.HierarchicalView.STree;
 
 public class NodeEnumValue extends DefaultMutableTreeNode implements ICustomizedIconNode, Observer, IClassDiagramNode {
 
   private final EnumValue enumValue;
-  private final JTree tree;
+  private final STree tree;
   private final DefaultTreeModel treeModel;
 
   public NodeEnumValue(EnumValue enumValue, DefaultTreeModel treeModel,
-          JTree tree) {
+          STree tree) {
     super(enumValue.getValue());
 
     if (treeModel == null)
@@ -52,13 +52,11 @@ public class NodeEnumValue extends DefaultMutableTreeNode implements ICustomized
       TreePath path = new TreePath(getPath());
       switch ((UpdateMessage) o) {
         case SELECT:
-          if (!PanelClassDiagram.getInstance().isDisabledUpdate()) {
-            tree.addSelectionPath(path.getParentPath());
-            tree.addSelectionPath(path);
-          }
+          if (!PanelClassDiagram.getInstance().isDisabledUpdate())
+            tree.addSelectionPathNoFire(path);
           break;
         case UNSELECT:
-          tree.removeSelectionPath(path);
+          tree.removeSelectionPathNoFire(path);
           break;
         default:
           break;

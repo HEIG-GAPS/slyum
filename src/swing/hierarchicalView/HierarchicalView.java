@@ -39,6 +39,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -60,7 +61,7 @@ public class HierarchicalView
     implements IComponentsObserver, TreeSelectionListener, Observer {
   private final DefaultMutableTreeNode entitiesNode, associationsNode,
           inheritancesNode, dependenciesNode;
-  private final JTree tree;
+  private final STree tree;
   private final DefaultTreeModel treeModel;
   private JTextField txtFieldClassDiagramName;
 
@@ -134,7 +135,7 @@ public class HierarchicalView
 
     dependenciesNode = new DefaultMutableTreeNode("Dependencies");
     root.add(dependenciesNode);
-
+    
     treeModel = new DefaultTreeModel(root) {
       @Override
       public void removeNodeFromParent(MutableTreeNode node) {
@@ -142,10 +143,10 @@ public class HierarchicalView
         super.removeNodeFromParent(node);
       }
     };
-    tree = new JTree(treeModel);
+    tree = new STree(treeModel);
     tree.addTreeSelectionListener(this);
     tree.getSelectionModel().setSelectionMode(
-            TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+            TreeSelectionModel.SINGLE_TREE_SELECTION);
     tree.setCellRenderer(new TreeRenderer());
     tree.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     JScrollPane scrollPane = new SScrollPane();
@@ -322,7 +323,10 @@ public class HierarchicalView
   }
 
   @Override
-  public void valueChanged(TreeSelectionEvent e) {
+  public void valueChanged(TreeSelectionEvent e) { 
+    if (tree.stopFireEvent)
+      return;
+    
     final LinkedList<TreePath> paths = new LinkedList<>();
     final TreePath[] treePaths = e.getPaths();
 
@@ -331,23 +335,24 @@ public class HierarchicalView
       if (!e.isAddedPath(treePaths[i])) paths.add(treePaths[i]);
 
     for (final TreePath treePath2 : treePaths)
-      if (e.isAddedPath(treePath2)) paths.add(treePath2);
+      if (e.isAddedPath(treePath2)) 
+        paths.add(treePath2);
+    
+    PanelClassDiagram.getInstance().getCurrentGraphicView().unselectAll();
 
     for (final TreePath treePath : paths) {
       final Object o = treePath.getLastPathComponent();
 
-      if (!(o instanceof IClassDiagramNode)) // is an associed component
-        // node ?
+      if (!(o instanceof IClassDiagramNode)) // is an associed component node ?
         continue;
 
-      final IDiagramComponent component = ((IClassDiagramNode) o)
-              .getAssociedComponent();
+      final IDiagramComponent component = 
+          ((IClassDiagramNode) o).getAssociedComponent();
       component.select();
       tree.scrollPathToVisible(treePath);
 
       if (e.isAddedPath(treePath))
         component.notifyObservers(UpdateMessage.SELECT);
-
       else
         component.notifyObservers(UpdateMessage.UNSELECT);
     }
@@ -373,5 +378,25 @@ public class HierarchicalView
   public void update(Observable o, Object arg) {
     if (o instanceof ClassDiagram)
       setDiagramName(((ClassDiagram)o).getName());
+  }
+
+  public static class STree extends JTree {
+    private boolean stopFireEvent;
+
+    public STree(TreeModel newModel) {
+      super(newModel);
+    }
+    
+    public void addSelectionPathNoFire(TreePath treePath) {
+      stopFireEvent = true;
+      addSelectionPath(treePath);
+      stopFireEvent = false;
+    }
+    
+    public void removeSelectionPathNoFire(TreePath treePath) {
+      stopFireEvent = true;
+      removeSelectionPath(treePath);
+      stopFireEvent = false;
+    }
   }
 }

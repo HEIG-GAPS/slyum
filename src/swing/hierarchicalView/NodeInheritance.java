@@ -4,7 +4,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.ImageIcon;
-import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -15,6 +14,7 @@ import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Inheritance;
 import swing.PanelClassDiagram;
+import swing.hierarchicalView.HierarchicalView.STree;
 
 /**
  * A JTree node associated with an inheritance.
@@ -42,7 +42,7 @@ public class NodeInheritance extends DefaultMutableTreeNode implements ICustomiz
   }
 
   private final Inheritance inheritance;
-  private final JTree tree;
+  private final STree tree;
 
   private final DefaultTreeModel treeModel;
 
@@ -57,7 +57,7 @@ public class NodeInheritance extends DefaultMutableTreeNode implements ICustomiz
    *          the JTree
    */
   public NodeInheritance(Inheritance inheritance, DefaultTreeModel treeModel,
-          JTree tree) {
+          STree tree) {
     super(generateName(inheritance));
 
     if (treeModel == null)
@@ -90,10 +90,10 @@ public class NodeInheritance extends DefaultMutableTreeNode implements ICustomiz
       switch ((UpdateMessage) o) {
         case SELECT:
           if (!PanelClassDiagram.getInstance().isDisabledUpdate())
-            tree.addSelectionPath(path);
+            tree.addSelectionPathNoFire(path);
           break;
         case UNSELECT:
-          tree.removeSelectionPath(path);
+          tree.removeSelectionPathNoFire(path);
           break;
         default:
           break;

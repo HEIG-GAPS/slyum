@@ -2480,4 +2480,8 @@ public class GraphicView extends GraphicComponent
     txtBoxDiagramName.setVisible(visible);
     txtBoxDiagramName.repaint();
   }
+
+  private boolean containsDiagramComponent(IDiagramComponent diagramComponent) {
+    return searchAssociedComponent(diagramComponent) != null;
+  }
 }
