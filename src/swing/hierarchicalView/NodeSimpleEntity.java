@@ -1,17 +1,17 @@
 package swing.hierarchicalView;
 
 import javax.swing.ImageIcon;
-import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 
 import classDiagram.components.Attribute;
 import classDiagram.components.Method;
 import classDiagram.components.SimpleEntity;
+import swing.hierarchicalView.HierarchicalView.STree;
 
 public class NodeSimpleEntity extends NodeEntity {
 
   public NodeSimpleEntity(SimpleEntity entity, DefaultTreeModel treeModel,
-          JTree tree, ImageIcon icon) {
+          STree tree, ImageIcon icon) {
     super(entity, treeModel, tree, icon);
   }
 
