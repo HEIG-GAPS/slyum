@@ -848,4 +848,12 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
     return null;
   }
+
+  public void setLocationRelativeTo(Point dropPoint) {
+    Rectangle newBounds = new Rectangle(new Dimension(
+        getBounds().width, getBounds().height));
+    newBounds.x = dropPoint.x - getBounds().width / 2;
+    newBounds.y = dropPoint.y - getBounds().height / 2;
+    setBounds(newBounds);
+  }
 }
