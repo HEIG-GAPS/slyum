@@ -64,7 +64,6 @@ public class PropretiesChanger extends SScrollPane implements IComponentsObserve
     setViewportView(labelNoComponent);
   }
 
-  @Override
   public void addAggregation(Aggregation component) {
     addAssociation(component);
   }
@@ -83,64 +82,40 @@ public class PropretiesChanger extends SScrollPane implements IComponentsObserve
       role.addObserver(RelationPropreties.getInstance());
   }
 
-  @Override
   public void addAssociationClass(AssociationClass component) {
     component.addObserver(SimpleEntityPropreties.getInstance());
   }
 
-  @Override
   public void addBinary(Binary component) {
     addAssociation(component);
   }
 
-  @Override
   public void addClassEntity(ClassEntity component) {
     component.addObserver(SimpleEntityPropreties.getInstance());
   }
 
-  @Override
   public void addEnumEntity(EnumEntity component) {
     component.addObserver(EnumEntityPropreties.getInstance());
   }
 
-  @Override
   public void addComposition(Composition component) {
     addAssociation(component);
   }
 
-  @Override
   public void addDependency(Dependency component) {
     component.addObserver(RelationPropreties.getInstance());
   }
 
-  @Override
   public void addInheritance(Inheritance component) {
     component.addObserver(InheritanceProperties.getInstance());
   }
 
-  @Override
-  public void addInnerClass(InnerClass component) {
-    // no view for InnerClass
-  }
-
-  @Override
   public void addInterfaceEntity(InterfaceEntity component) {
     component.addObserver(SimpleEntityPropreties.getInstance());
   }
 
-  @Override
   public void addMulti(Multi component) {
     addAssociation(component);
-  }
-
-  @Override
-  public void changeZOrder(Entity entity, int index) {
-    // Nothing to do...
-  }
-
-  @Override
-  public void removeComponent(IDiagramComponent component) {
-    // no components saving in this view
   }
 
   @Override
@@ -149,5 +124,70 @@ public class PropretiesChanger extends SScrollPane implements IComponentsObserve
       super.setViewportView(labelNoComponent);
     else
       super.setViewportView(view);
+  }
+
+  @Override
+  public void notifyAggregationCreation(Aggregation component) {
+    addAggregation(component);
+  }
+
+  @Override
+  public void notifyAssociationClassCreation(AssociationClass component) {
+    addAssociationClass(component);
+  }
+
+  @Override
+  public void notifyBinaryCreation(Binary component) {
+    addBinary(component);
+  }
+
+  @Override
+  public void notifyClassEntityCreation(ClassEntity component) {
+    addClassEntity(component);
+  }
+
+  @Override
+  public void notifyCompositionCreation(Composition component) {
+    addComposition(component);
+  }
+
+  @Override
+  public void notifyDependencyCreation(Dependency component) {
+    addDependency(component);
+  }
+
+  @Override
+  public void notifyInheritanceCreation(Inheritance component) {
+    addInheritance(component);
+  }
+
+  @Override
+  public void notifyInnerClassCreation(InnerClass component) {
+    // no view for InnerClass
+  }
+
+  @Override
+  public void notifyInterfaceEntityCreation(InterfaceEntity component) {
+    addInterfaceEntity(component);
+  }
+
+  @Override
+  public void notifyEnumEntityCreation(EnumEntity component) {
+    addEnumEntity(component);
+  }
+
+  @Override
+  public void notifyMultiCreation(Multi component) {
+    addMulti(component);
+  }
+
+  @Override
+  public void notifyChangeZOrder(Entity entity, int index) {
+    // Nothing to do...
+  }
+
+  @Override
+  public void notifyRemoveComponent(IDiagramComponent component) {
+    // no components saving in this view
   }
 }
