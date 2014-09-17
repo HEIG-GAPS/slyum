@@ -177,7 +177,6 @@ public class HierarchicalView
     setMinimumSize(new Dimension(150, 200));
   }
 
-  @Override
   public void addAggregation(Aggregation component) {
     addAssociation(component, "resources/icon/aggregation.png");
   }
@@ -195,7 +194,6 @@ public class HierarchicalView
             PersonalizedIcon.createImageIcon(imgPath), tree), associationsNode);
   }
 
-  @Override
   public void addAssociationClass(AssociationClass component) {
     addNode(new NodeSimpleEntity(component, treeModel, tree,
             PersonalizedIcon
@@ -203,54 +201,45 @@ public class HierarchicalView
             entitiesNode);
   }
 
-  @Override
   public void addBinary(Binary component) {
     addAssociation(component, "resources/icon/association.png");
   }
 
-  @Override
   public void addClassEntity(ClassEntity component) {
     addNode(new NodeSimpleEntity(component, treeModel, tree,
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "class.png")),
             entitiesNode);
   }
 
-  @Override
   public void addInterfaceEntity(InterfaceEntity component) {
     addNode(new NodeSimpleEntity(component, treeModel, tree, PersonalizedIcon
             .createImageIcon(Slyum.ICON_PATH + "interface.png")),
             entitiesNode);
   }
 
-  @Override
   public void addEnumEntity(EnumEntity component) {
     addNode(new NodeEnumEntity(component, treeModel, tree,
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "enum.png")),
             entitiesNode);
   }
 
-  @Override
   public void addComposition(Composition component) {
     addAssociation(component, "resources/icon/composition.png");
   }
 
-  @Override
   public void addDependency(Dependency component) {
     addNode(new NodeDepedency(component, treeModel, tree), dependenciesNode);
   }
 
-  @Override
   public void addInheritance(Inheritance component) {
     addNode(new NodeInheritance(component, treeModel, tree), inheritancesNode);
   }
 
-  @Override
   public void addInnerClass(InnerClass component) {
     addNode(new NodeInnerClass(component, treeModel, tree), inheritancesNode);
 
   }
 
-  @Override
   public void addMulti(Multi component) {
     addAssociation(component, "resources/icon/multi.png");
   }
@@ -268,7 +257,6 @@ public class HierarchicalView
     treeModel.reload(parent);
   }
 
-  @Override
   public void changeZOrder(Entity entity, int index) {
     LinkedList<EntityView> evs = PanelClassDiagram.getInstance()
             .getCurrentGraphicView().getSelectedEntities();
@@ -287,7 +275,6 @@ public class HierarchicalView
       ev.setSelected(true);
   }
 
-  @Override
   public void removeComponent(IDiagramComponent component) {
     final IClassDiagramNode associedNode = searchAssociedNode(component);
 
@@ -394,5 +381,70 @@ public class HierarchicalView
   public void update(Observable o, Object arg) {
     if (o instanceof ClassDiagram)
       setDiagramName(((ClassDiagram)o).getName());
+  }
+
+  @Override
+  public void notifyAggregationCreation(Aggregation component) {
+    addAggregation(component);
+  }
+
+  @Override
+  public void notifyAssociationClassCreation(AssociationClass component) {
+    addAssociationClass(component);
+  }
+
+  @Override
+  public void notifyBinaryCreation(Binary component) {
+    addBinary(component);
+  }
+
+  @Override
+  public void notifyClassEntityCreation(ClassEntity component) {
+    addClassEntity(component);
+  }
+
+  @Override
+  public void notifyCompositionCreation(Composition component) {
+    addComposition(component);
+  }
+
+  @Override
+  public void notifyDependencyCreation(Dependency component) {
+    addDependency(component);
+  }
+
+  @Override
+  public void notifyInheritanceCreation(Inheritance component) {
+    addInheritance(component);
+  }
+
+  @Override
+  public void notifyInnerClassCreation(InnerClass component) {
+    addInnerClass(component);
+  }
+
+  @Override
+  public void notifyInterfaceEntityCreation(InterfaceEntity component) {
+    addInterfaceEntity(component);
+  }
+
+  @Override
+  public void notifyEnumEntityCreation(EnumEntity component) {
+    addEnumEntity(component);
+  }
+
+  @Override
+  public void notifyMultiCreation(Multi component) {
+    addMulti(component);
+  }
+
+  @Override
+  public void notifyChangeZOrder(Entity entity, int index) {
+    changeZOrder(entity, index);
+  }
+
+  @Override
+  public void notifyRemoveComponent(IDiagramComponent component) {
+    removeComponent(component);
   }
 }

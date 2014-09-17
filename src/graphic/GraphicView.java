@@ -72,7 +72,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
 import javax.swing.JMenuItem;
@@ -678,7 +677,6 @@ public class GraphicView extends GraphicComponent
     Slyum.getInstance().actionPerformed(e);
   }
 
-  @Override
   public void addAggregation(Aggregation component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
@@ -694,7 +692,6 @@ public class GraphicView extends GraphicComponent
     }
   }
 
-  @Override
   public void addAssociationClass(AssociationClass component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
@@ -706,7 +703,6 @@ public class GraphicView extends GraphicComponent
     }
   }
 
-  @Override
   public void addBinary(Binary component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
@@ -724,14 +720,12 @@ public class GraphicView extends GraphicComponent
     }
   }
 
-  @Override
   public void addClassEntity(ClassEntity component) {
     GraphicComponent result = searchAssociedComponent(component);
     if (result == null)
       addEntity(new ClassView(this, component));
   }
 
-  @Override
   public void addEnumEntity(EnumEntity component) {
     GraphicComponent result = searchAssociedComponent(component);
     if (result == null)
@@ -751,7 +745,6 @@ public class GraphicView extends GraphicComponent
     return false;
   }
 
-  @Override
   public void addComposition(Composition component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
@@ -767,7 +760,6 @@ public class GraphicView extends GraphicComponent
     }
   }
 
-  @Override
   public void addDependency(Dependency component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
@@ -792,14 +784,10 @@ public class GraphicView extends GraphicComponent
    *          the entity to add.
    * @return true if the component has been added; false otherwise
    */
-  public boolean addEntity(EntityView component) {
-    if (PanelClassDiagram.getInstance().getCurrentGraphicView() != this)
-      return false;
-    
+  public boolean addEntity(EntityView component) {    
     return addComponentIn(component, entities);
   }
 
-  @Override
   public void addInheritance(Inheritance component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
@@ -816,7 +804,6 @@ public class GraphicView extends GraphicComponent
     }
   }
 
-  @Override
   public void addInnerClass(InnerClass component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
@@ -833,7 +820,6 @@ public class GraphicView extends GraphicComponent
     }
   }
 
-  @Override
   public void addInterfaceEntity(InterfaceEntity component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
@@ -853,13 +839,20 @@ public class GraphicView extends GraphicComponent
     return addComponentIn(component, linesView);
   }
 
-  @Override
   public void addMulti(Multi component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
     if (result == null)
 
     addComponentIn(MultiFactory.createMulti(this, component), multiViews);
+  }
+
+  public void removeComponent(IDiagramComponent component) {
+    final GraphicComponent g = searchAssociedComponent(component);
+
+    if (g != null)
+
+    removeComponent(g);
   }
 
   /**
@@ -1067,7 +1060,6 @@ public class GraphicView extends GraphicComponent
     setZoom(getZoom() + grow);
   }
 
-  @Override
   public void changeZOrder(Entity first, int index) {
     final EntityView firstView = (EntityView) searchAssociedComponent(first);
 
@@ -2181,15 +2173,6 @@ public class GraphicView extends GraphicComponent
   }
 
   @Override
-  public void removeComponent(IDiagramComponent component) {
-    final GraphicComponent g = searchAssociedComponent(component);
-
-    if (g != null)
-
-    removeComponent(g);
-  }
-
-  @Override
   public void repaint() {
     scene.repaint();
   }
@@ -2517,5 +2500,71 @@ public class GraphicView extends GraphicComponent
   public void setVisibleDiagramName(boolean visible) {
     txtBoxDiagramName.setVisible(visible);
     txtBoxDiagramName.repaint();
+  }
+
+  @Override
+  public void notifyAggregationCreation(Aggregation component) {
+    addAggregation(component);
+  }
+
+  @Override
+  public void notifyAssociationClassCreation(AssociationClass component) {
+    addAssociationClass(component);
+  }
+
+  @Override
+  public void notifyBinaryCreation(Binary component) {
+    addBinary(component);
+  }
+
+  @Override
+  public void notifyClassEntityCreation(ClassEntity component) {
+    if (PanelClassDiagram.getInstance().getCurrentGraphicView() == this)
+      addClassEntity(component);
+  }
+
+  @Override
+  public void notifyCompositionCreation(Composition component) {
+    addComposition(component);
+  }
+
+  @Override
+  public void notifyDependencyCreation(Dependency component) {
+    addDependency(component);
+  }
+
+  @Override
+  public void notifyInheritanceCreation(Inheritance component) {
+    addInheritance(component);
+  }
+
+  @Override
+  public void notifyInnerClassCreation(InnerClass component) {
+    addInnerClass(component);
+  }
+
+  @Override
+  public void notifyInterfaceEntityCreation(InterfaceEntity component) {
+    addInterfaceEntity(component);
+  }
+
+  @Override
+  public void notifyEnumEntityCreation(EnumEntity component) {
+    addEnumEntity(component);
+  }
+
+  @Override
+  public void notifyMultiCreation(Multi component) {
+    addMulti(component);
+  }
+
+  @Override
+  public void notifyChangeZOrder(Entity entity, int index) {
+    changeZOrder(entity, index);
+  }
+
+  @Override
+  public void notifyRemoveComponent(IDiagramComponent component) {
+    removeComponent(component);
   }
 }

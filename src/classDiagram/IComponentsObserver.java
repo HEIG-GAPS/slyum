@@ -22,13 +22,14 @@ import classDiagram.relationships.Multi;
  * @version 1.0 - 24.07.2011
  */
 public interface IComponentsObserver {
+  
   /**
    * Adds a new aggregation and notify that a new aggregation has been added.
    * 
    * @param component
    *          the component that was added.
    */
-  public void addAggregation(Aggregation component);
+  public void notifyAggregationCreation(Aggregation component);
 
   /**
    * Adds a new association class and notify that a new assocation class has
@@ -37,7 +38,7 @@ public interface IComponentsObserver {
    * @param component
    *          the component that was added.
    */
-  public void addAssociationClass(AssociationClass component);
+  public void notifyAssociationClassCreation(AssociationClass component);
 
   /**
    * Adds a new binary and notify that a new binary has been added.
@@ -45,7 +46,7 @@ public interface IComponentsObserver {
    * @param component
    *          the component that was added.
    */
-  public void addBinary(Binary component);
+  public void notifyBinaryCreation(Binary component);
 
   /**
    * Adds a new class and notify that a new class has been added.
@@ -53,7 +54,7 @@ public interface IComponentsObserver {
    * @param component
    *          the component that was added.
    */
-  public void addClassEntity(ClassEntity component);
+  public void notifyClassEntityCreation(ClassEntity component);
 
   /**
    * Adds a new composition and notify that a new composition has been added.
@@ -61,7 +62,7 @@ public interface IComponentsObserver {
    * @param component
    *          the component that was added.
    */
-  public void addComposition(Composition component);
+  public void notifyCompositionCreation(Composition component);
 
   /**
    * Adds a new dependency and notify that a new dependency has been added.
@@ -69,7 +70,7 @@ public interface IComponentsObserver {
    * @param component
    *          the component that was added.
    */
-  public void addDependency(Dependency component);
+  public void notifyDependencyCreation(Dependency component);
 
   /**
    * Adds a new inheritance and notify that a new inheritance has been added.
@@ -77,9 +78,9 @@ public interface IComponentsObserver {
    * @param component
    *          the component that was added.
    */
-  public void addInheritance(Inheritance component);
+  public void notifyInheritanceCreation(Inheritance component);
 
-  public void addInnerClass(InnerClass component);
+  public void notifyInnerClassCreation(InnerClass component);
 
   /**
    * Adds a new interface and notify that a new interface has been added.
@@ -87,9 +88,9 @@ public interface IComponentsObserver {
    * @param component
    *          the component that was added.
    */
-  public void addInterfaceEntity(InterfaceEntity component);
+  public void notifyInterfaceEntityCreation(InterfaceEntity component);
 
-  public void addEnumEntity(EnumEntity component);
+  public void notifyEnumEntityCreation(EnumEntity component);
 
   /**
    * Adds a new multi-association and notify that a new multi-association has
@@ -98,7 +99,7 @@ public interface IComponentsObserver {
    * @param component
    *          the component that was added.
    */
-  public void addMulti(Multi component);
+  public void notifyMultiCreation(Multi component);
 
   /**
    * Changes the index of entity in the array and notifiy observers.
@@ -108,7 +109,7 @@ public interface IComponentsObserver {
    * @param index
    *          the index to move the entity.
    */
-  public void changeZOrder(Entity entity, int index);
+  public void notifyChangeZOrder(Entity entity, int index);
 
   /**
    * Removes the given component and notify that this component has been
@@ -117,5 +118,5 @@ public interface IComponentsObserver {
    * @param component
    *          the component to remove.
    */
-  public void removeComponent(IDiagramComponent component);
+  public void notifyRemoveComponent(IDiagramComponent component);
 }
