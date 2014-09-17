@@ -500,24 +500,32 @@ public class GraphicView extends GraphicComponent
             if (!canImport(support))
               return false;
             try {
-              // Adding the imported entity view.
-              final EntityView importedEntityView = EntityView.createFromEntity(
-                  GraphicView.this, 
-                  (Entity)support.getTransferable().getTransferData(
-                      Entity.ENTITY_FLAVOR));
-              addEntity(importedEntityView);
-              
-              SwingUtilities.invokeLater(new Runnable() {
+              Entity importedEntity = 
+                  (Entity)support.getTransferable()
+                                 .getTransferData(Entity.ENTITY_FLAVOR);
+              if (containsDiagramComponent(importedEntity))
+              {
+                
+              } else {
 
-                @Override
-                public void run() {
-                  // Place the component corresponding to the mouse location drop.
-                  importedEntityView.setLocationRelativeTo(
-                      support.getDropLocation().getDropPoint());
-                  importedEntityView.adjustWidth();
-                }
-              });
-              return true;
+                // Adding the imported entity view.
+                final EntityView importedEntityView = 
+                    EntityView.createFromEntity(
+                        GraphicView.this, importedEntity);
+                addEntity(importedEntityView);
+
+                SwingUtilities.invokeLater(new Runnable() {
+
+                  @Override
+                  public void run() {
+                    // Place the component corresponding to the mouse location drop.
+                    importedEntityView.setLocationRelativeTo(
+                        support.getDropLocation().getDropPoint());
+                    importedEntityView.adjustWidth();
+                  }
+                });
+                return true;
+              }
             } catch (UnsupportedFlavorException | IOException ex) {
               Slyum.LOGGER.log(Level.SEVERE, null, ex);
             }
