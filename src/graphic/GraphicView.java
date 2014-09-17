@@ -496,14 +496,27 @@ public class GraphicView extends GraphicComponent
           }
 
           @Override
-          public boolean importData(TransferHandler.TransferSupport support) {
+          public boolean importData(final TransferHandler.TransferSupport support) {
             if (!canImport(support))
               return false;
             try {
-              addEntity(EntityView.createFromEntity(
+              // Adding the imported entity view.
+              final EntityView importedEntityView = EntityView.createFromEntity(
                   GraphicView.this, 
                   (Entity)support.getTransferable().getTransferData(
-                      Entity.ENTITY_FLAVOR)));
+                      Entity.ENTITY_FLAVOR));
+              addEntity(importedEntityView);
+              
+              SwingUtilities.invokeLater(new Runnable() {
+
+                @Override
+                public void run() {
+                  // Place the component corresponding to the mouse location drop.
+                  importedEntityView.setLocationRelativeTo(
+                      support.getDropLocation().getDropPoint());
+                  importedEntityView.adjustWidth();
+                }
+              });
               return true;
             } catch (UnsupportedFlavorException | IOException ex) {
               Slyum.LOGGER.log(Level.SEVERE, null, ex);
@@ -1718,14 +1731,9 @@ public class GraphicView extends GraphicComponent
           parent.addLineView(new LineCommentary(parent, ev, tbc, new Point(),
                   new Point(), false));
     }
-
-    Rectangle b = tbc.getBounds();
-    Rectangle loc = getScene().getVisibleRect();
-
-    b.x = (int) (loc.getCenterX() * getInversedScale());
-    b.y = (int) (loc.getCenterY() * getInversedScale());
-
-    tbc.setBounds(b);
+    
+    tbc.setBounds(computeVisibleCenterBounds(
+      new Dimension(tbc.getBounds().width, tbc.getBounds().height)));
     parent.addNotes(tbc);
 
     if (!isRecord) 
@@ -2566,5 +2574,20 @@ public class GraphicView extends GraphicComponent
   @Override
   public void notifyRemoveComponent(IDiagramComponent component) {
     removeComponent(component);
+  }
+
+  public Point getVisibleCenter() {
+    Rectangle loc = getScene().getVisibleRect();
+    return new Point((int) (loc.getCenterX() * getInversedScale()),
+                     (int) (loc.getCenterY() * getInversedScale()));
+  }
+  
+  public Rectangle computeVisibleCenterBounds(Dimension size)
+  {
+    Rectangle rect = new Rectangle(size);
+    Point center = getVisibleCenter();
+    rect.x = center.x - size.width / 2;
+    rect.y = center.y - size.height / 2;
+    return rect;
   }
 }

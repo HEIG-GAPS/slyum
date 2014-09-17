@@ -1,8 +1,5 @@
 package swing;
 
-import swing.slyumCustomizedComponents.SSeparator;
-import swing.slyumCustomizedComponents.SToolBar;
-import swing.slyumCustomizedComponents.SToolBarButton;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 
@@ -17,10 +14,7 @@ import utility.PersonalizedIcon;
 import swing.slyumCustomizedComponents.SSlider;
 import utility.Utility;
 import change.Change;
-import swing.IListenerComponentSelectionChanged;
-import swing.PanelClassDiagram;
 import swing.slyumCustomizedComponents.SButton;
-import swing.Slyum;
 import swing.slyumCustomizedComponents.SSeparator;
 import swing.slyumCustomizedComponents.SToolBar;
 import swing.slyumCustomizedComponents.SToolBarButton;
@@ -218,36 +212,53 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
   public void actionPerformed(ActionEvent e) {
     GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
     gv.setStopRepaint(true);
-    if (Slyum.ACTION_UNDO.equals(e.getActionCommand()))
-      Change.undo();
-    else if (Slyum.ACTION_REDO.equals(e.getActionCommand()))
-      Change.redo();
-    else if (e.getActionCommand().equals(Slyum.ACTION_DELETE))
-      gv.deleteSelectedComponents();
-    else if (e.getActionCommand().equals(Slyum.ACTION_COLOR))
-      GraphicComponent.askNewColorForSelectedItems();
-    else if (e.getActionCommand().equals(Slyum.ACTION_NEW_NOTE_ASSOCIED))
-      gv.linkNewNoteWithSelectedEntities();
-    else if (Slyum.ACTION_ALIGN_TOP.equals(e.getActionCommand()))
-      gv.alignHorizontal(true);
-    else if (Slyum.ACTION_ALIGN_BOTTOM.equals(e.getActionCommand()))
-      gv.alignHorizontal(false);
-    else if (Slyum.ACTION_ALIGN_LEFT.equals(e.getActionCommand()))
-      gv.alignVertical(true);
-    else if (Slyum.ACTION_ALIGN_RIGHT.equals(e.getActionCommand()))
-      gv.alignVertical(false);
-    else if (Slyum.ACTION_ADJUST_WIDTH.equals(e.getActionCommand()))
-      gv.adjustWidthSelectedEntities();
-    else if (Slyum.ACTION_MOVE_TOP.equals(e.getActionCommand()))
-      gv.moveZOrderTopSelectedEntities();
-    else if (Slyum.ACTION_MOVE_UP.equals(e.getActionCommand()))
-      gv.moveZOrderUpSelectedEntities();
-    else if (Slyum.ACTION_MOVE_DOWN.equals(e.getActionCommand()))
-      gv.moveZOrderDownSelectedEntities();
-    else if (Slyum.ACTION_MOVE_BOTTOM.equals(e.getActionCommand()))
-      gv.moveZOrderBottomSelectedEntities();
-    else if (Slyum.ACTION_DUPLICATE.equals(e.getActionCommand()))
-      gv.duplicateSelectedEntities();
+    switch (e.getActionCommand()) {
+      case Slyum.ACTION_UNDO:
+        Change.undo();
+        break;
+      case Slyum.ACTION_REDO:
+        Change.redo();
+        break;
+      case Slyum.ACTION_DELETE:
+        gv.deleteSelectedComponents();
+        break;
+      case Slyum.ACTION_COLOR:
+        GraphicComponent.askNewColorForSelectedItems();
+        break;
+      case Slyum.ACTION_NEW_NOTE_ASSOCIED:
+        gv.linkNewNoteWithSelectedEntities();
+        break;
+      case Slyum.ACTION_ALIGN_TOP:
+        gv.alignHorizontal(true);
+        break;
+      case Slyum.ACTION_ALIGN_BOTTOM:
+        gv.alignHorizontal(false);
+        break;
+      case Slyum.ACTION_ALIGN_LEFT:
+        gv.alignVertical(true);
+        break;
+      case Slyum.ACTION_ALIGN_RIGHT:
+        gv.alignVertical(false);
+        break;
+      case Slyum.ACTION_ADJUST_WIDTH:
+        gv.adjustWidthSelectedEntities();
+        break;
+      case Slyum.ACTION_MOVE_TOP:
+        gv.moveZOrderTopSelectedEntities();
+        break;
+      case Slyum.ACTION_MOVE_UP:
+        gv.moveZOrderUpSelectedEntities();
+        break;
+      case Slyum.ACTION_MOVE_DOWN:
+        gv.moveZOrderDownSelectedEntities();
+        break;
+      case Slyum.ACTION_MOVE_BOTTOM:
+        gv.moveZOrderBottomSelectedEntities();
+        break;
+      case Slyum.ACTION_DUPLICATE:
+        gv.duplicateSelectedEntities();
+        break;
+    }
 
     gv.goRepaint();
   }
