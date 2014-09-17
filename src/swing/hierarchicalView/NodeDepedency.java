@@ -4,7 +4,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.ImageIcon;
-import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -15,6 +14,7 @@ import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Dependency;
 import swing.PanelClassDiagram;
+import swing.hierarchicalView.HierarchicalView.STree;
 
 /**
  * A JTree node associated with a dependency UML.
@@ -37,7 +37,7 @@ public class NodeDepedency extends DefaultMutableTreeNode implements IClassDiagr
   }
 
   private final Dependency dependency;
-  private final JTree tree;
+  private final STree tree;
 
   private final DefaultTreeModel treeModel;
 
@@ -52,7 +52,7 @@ public class NodeDepedency extends DefaultMutableTreeNode implements IClassDiagr
    *          the JTree
    */
   public NodeDepedency(Dependency dependency, DefaultTreeModel treeModel,
-          JTree tree) {
+          STree tree) {
     super(generateName(dependency));
 
     if (treeModel == null)
@@ -86,10 +86,10 @@ public class NodeDepedency extends DefaultMutableTreeNode implements IClassDiagr
       switch ((UpdateMessage) o) {
         case SELECT:
           if (!PanelClassDiagram.getInstance().isDisabledUpdate())
-            tree.addSelectionPath(path);
+            tree.addSelectionPathNoFire(path);
           break;
         case UNSELECT:
-          tree.removeSelectionPath(path);
+          tree.removeSelectionPathNoFire(path);
           break;
         default:
           break;

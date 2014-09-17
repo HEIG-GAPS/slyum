@@ -4,7 +4,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.ImageIcon;
-import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -15,6 +14,7 @@ import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Attribute;
 import swing.PanelClassDiagram;
+import swing.hierarchicalView.HierarchicalView.STree;
 
 /**
  * A JTree node associated with an attribute UML.
@@ -22,9 +22,11 @@ import swing.PanelClassDiagram;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public class NodeAttribute extends DefaultMutableTreeNode implements ICustomizedIconNode, Observer, IClassDiagramNode {
+public class NodeAttribute 
+    extends DefaultMutableTreeNode 
+    implements ICustomizedIconNode, Observer, IClassDiagramNode {
   private final Attribute attribute;
-  private final JTree tree;
+  private final STree tree;
   private final DefaultTreeModel treeModel;
 
   /**
@@ -38,7 +40,7 @@ public class NodeAttribute extends DefaultMutableTreeNode implements ICustomized
    *          the JTree
    */
   public NodeAttribute(Attribute attribute, DefaultTreeModel treeModel,
-          JTree tree) {
+          STree tree) {
     super(attribute.getName());
 
     if (treeModel == null)
@@ -70,13 +72,11 @@ public class NodeAttribute extends DefaultMutableTreeNode implements ICustomized
 
       switch ((UpdateMessage) o) {
         case SELECT:
-          if (!PanelClassDiagram.getInstance().isDisabledUpdate()) {
-            tree.addSelectionPath(path.getParentPath());
-            tree.addSelectionPath(path);
-          }
+          if (!PanelClassDiagram.getInstance().isDisabledUpdate())
+            tree.addSelectionPathNoFire(path);
           break;
         case UNSELECT:
-          tree.removeSelectionPath(path);
+          tree.removeSelectionPathNoFire(path);
           break;
         default:
           break;
