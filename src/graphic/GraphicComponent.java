@@ -526,7 +526,6 @@ public abstract class GraphicComponent extends Observable implements ActionListe
     if (isSelected() != selected) {
       this.selected = selected;
       repaint();
-
       parent.componentSelected(selected);
     }
 

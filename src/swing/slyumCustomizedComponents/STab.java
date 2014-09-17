@@ -20,6 +20,8 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import swing.PanelClassDiagram;
 import swing.Slyum;
@@ -34,6 +36,7 @@ public class STab extends JTabbedPane {
   
   private static final String DEFAULT_NAME_TAB = "No named view";
   private static STab instance;
+  private GraphicView saveCurrentGraphicView;
   
   public static void initialize(GraphicView graphicView) {
     instance = new STab(graphicView);
@@ -49,6 +52,7 @@ public class STab extends JTabbedPane {
   private STab(GraphicView graphicView) {
     // Add main tab.
     super.add("", graphicView.getScrollPane());
+    saveCurrentGraphicView = graphicView;
     
     setTabComponentAt(0, new GraphicViewTabComponent(this, graphicView));
     graphicView.getClassDiagram().addObserver(
@@ -59,6 +63,18 @@ public class STab extends JTabbedPane {
     setSelectedIndex(0);
     
     setTabLayoutPolicy(SCROLL_TAB_LAYOUT);
+    
+    addChangeListener(new ChangeListener() {
+
+      @Override
+      public void stateChanged(ChangeEvent e) {
+        saveCurrentGraphicView.unselectAll();
+        saveCurrentGraphicView = 
+            STab.this.getTabComponentAt(
+                ((STab)e.getSource()).getSelectedIndex())
+                .getGraphicView();
+      }
+    });
     
     addMouseListener(new MouseAdapter() {
 
