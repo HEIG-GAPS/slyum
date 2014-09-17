@@ -5,7 +5,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.ImageIcon;
-import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
@@ -15,6 +14,7 @@ import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Association;
 import classDiagram.relationships.Role;
 import swing.PanelClassDiagram;
+import swing.hierarchicalView.HierarchicalView.STree;
 
 /**
  * A JTree node associated with an association UML.
@@ -22,7 +22,9 @@ import swing.PanelClassDiagram;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public class NodeAssociation extends DefaultMutableTreeNode implements IClassDiagramNode, ICustomizedIconNode, Observer {
+public class NodeAssociation 
+    extends DefaultMutableTreeNode 
+    implements IClassDiagramNode, ICustomizedIconNode, Observer {
   private static final long serialVersionUID = 3002125135918965920L;
 
   /**
@@ -51,7 +53,7 @@ public class NodeAssociation extends DefaultMutableTreeNode implements IClassDia
 
   private final Association association;
   private final ImageIcon imageIcon;
-  private final JTree tree;
+  private final STree tree;
 
   private final DefaultTreeModel treeModel;
 
@@ -68,7 +70,7 @@ public class NodeAssociation extends DefaultMutableTreeNode implements IClassDia
    *          the JTree
    */
   public NodeAssociation(Association association, DefaultTreeModel treeModel,
-          ImageIcon icon, JTree tree) {
+          ImageIcon icon, STree tree) {
     super(generateName(association));
 
     if (treeModel == null)
@@ -105,10 +107,10 @@ public class NodeAssociation extends DefaultMutableTreeNode implements IClassDia
       switch ((UpdateMessage) o) {
         case SELECT:
           if (!PanelClassDiagram.getInstance().isDisabledUpdate())
-            tree.addSelectionPath(path);
+            tree.addSelectionPathNoFire(path);
           break;
         case UNSELECT:
-          tree.removeSelectionPath(path);
+          tree.removeSelectionPathNoFire(path);
           break;
         default:
           break;

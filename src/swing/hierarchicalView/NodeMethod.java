@@ -9,12 +9,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import swing.Slyum;
-import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Method;
 import swing.PanelClassDiagram;
+import swing.hierarchicalView.HierarchicalView.STree;
 
 /**
  * A JTree node associated with a method UML.
@@ -25,7 +24,7 @@ import swing.PanelClassDiagram;
 @SuppressWarnings("serial")
 public class NodeMethod extends DefaultMutableTreeNode implements Observer, IClassDiagramNode, ICustomizedIconNode {
   private final Method method;
-  private final JTree tree;
+  private final STree tree;
   private final DefaultTreeModel treeModel;
 
   /**
@@ -38,7 +37,7 @@ public class NodeMethod extends DefaultMutableTreeNode implements Observer, ICla
    * @param tree
    *          the JTree
    */
-  public NodeMethod(Method method, DefaultTreeModel treeModel, JTree tree) {
+  public NodeMethod(Method method, DefaultTreeModel treeModel, STree tree) {
     super(method.getName());
 
     if (treeModel == null)
@@ -71,12 +70,11 @@ public class NodeMethod extends DefaultMutableTreeNode implements Observer, ICla
       switch ((UpdateMessage) o) {
         case SELECT:
           if (!PanelClassDiagram.getInstance().isDisabledUpdate()) {
-            tree.addSelectionPath(path.getParentPath());
-            tree.addSelectionPath(path);
+            tree.addSelectionPathNoFire(path);
           }
           break;
         case UNSELECT:
-          tree.removeSelectionPath(path);
+          tree.removeSelectionPathNoFire(path);
           break;
         default:
           break;

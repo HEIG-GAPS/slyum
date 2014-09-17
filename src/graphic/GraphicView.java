@@ -2517,10 +2517,14 @@ public class GraphicView extends GraphicComponent
     txtBoxDiagramName.setVisible(visible);
     txtBoxDiagramName.repaint();
   }
-
+  
   @Override
   public void notifyAggregationCreation(Aggregation component) {
     addAggregation(component);
+  }
+  
+  private boolean containsDiagramComponent(IDiagramComponent diagramComponent) {
+    return searchAssociedComponent(diagramComponent) != null;
   }
 
   @Override

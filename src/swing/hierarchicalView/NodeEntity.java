@@ -13,6 +13,7 @@ import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
 import swing.PanelClassDiagram;
+import swing.hierarchicalView.HierarchicalView.STree;
 
 /**
  * A JTree node associated with an entity UML.
@@ -26,7 +27,7 @@ public abstract class NodeEntity
   
   protected final Entity entity;
   protected final ImageIcon icon;
-  protected final JTree tree;
+  protected final STree tree;
   protected final DefaultTreeModel treeModel;
 
   /**
@@ -41,7 +42,7 @@ public abstract class NodeEntity
    * @param icon
    *          the customized icon
    */
-  public NodeEntity(Entity entity, DefaultTreeModel treeModel, JTree tree,
+  public NodeEntity(Entity entity, DefaultTreeModel treeModel, STree tree,
           ImageIcon icon) {
     super(entity.getName());
 
@@ -93,11 +94,11 @@ public abstract class NodeEntity
       switch ((UpdateMessage) arg1) {
         case SELECT:
           if (!PanelClassDiagram.getInstance().isDisabledUpdate())
-            tree.addSelectionPath(path);
+            tree.addSelectionPathNoFire(path);
           break;
 
         case UNSELECT:
-          tree.removeSelectionPath(path);
+          tree.removeSelectionPathNoFire(path);
           break;
 
         default:
