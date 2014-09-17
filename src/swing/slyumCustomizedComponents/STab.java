@@ -20,6 +20,7 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
@@ -67,12 +68,17 @@ public class STab extends JTabbedPane {
     addChangeListener(new ChangeListener() {
 
       @Override
-      public void stateChanged(ChangeEvent e) {
-        saveCurrentGraphicView.unselectAll();
-        saveCurrentGraphicView = 
-            STab.this.getTabComponentAt(
-                ((STab)e.getSource()).getSelectedIndex())
-                .getGraphicView();
+      public void stateChanged(final ChangeEvent e) {
+        SwingUtilities.invokeLater(new Runnable() {
+
+          @Override
+          public void run() {
+            GraphicView currentGraphicView = STab.this.getTabComponentAt(
+                ((STab)e.getSource()).getSelectedIndex()).getGraphicView();
+            tabChanged(currentGraphicView, saveCurrentGraphicView);
+            saveCurrentGraphicView = currentGraphicView;
+          }
+        });
       }
     });
     
@@ -174,6 +180,12 @@ public class STab extends JTabbedPane {
         return new Insets(-1, 0, 0, 0);
       }
     });
+  }
+  
+  public void tabChanged(GraphicView currentGraphicView,
+                         GraphicView previousGraphicView) {
+    saveCurrentGraphicView.unselectAll();
+    currentGraphicView.refreshAllComponents();
   }
 
   public final void addTabAskingName(GraphicView graphicView) {

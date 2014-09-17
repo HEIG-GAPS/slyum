@@ -465,8 +465,7 @@ public class PanelClassDiagram extends JPanel {
         graphicView.paintBackgroundFirst();
         graphicView.unselectAll();
 
-        for (GraphicComponent c : getCurrentGraphicView().getAllComponents())
-          c.notifyObservers();
+        graphicView.refreshAllComponents();
 
         graphicView.getScrollPane().getVerticalScrollBar().setValue(0);
         graphicView.getScrollPane().getHorizontalScrollBar().setValue(0);
@@ -485,14 +484,11 @@ public class PanelClassDiagram extends JPanel {
     final JFileChooser fc = new JFileChooser(
             Slyum.getCurrentDirectoryFileChooser());
     fc.setAcceptAllFileFilterUsed(false);
-
     fc.addChoosableFileFilter(new SlyFileChooser());
 
     final int result = fc.showOpenDialog(this);
-
     if (result == JFileChooser.APPROVE_OPTION)
-
-    openFromXML(fc.getSelectedFile());
+      openFromXML(fc.getSelectedFile());
   }
 
   /**

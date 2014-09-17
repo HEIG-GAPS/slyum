@@ -92,6 +92,7 @@ import swing.SPanelElement;
 import swing.slyumCustomizedComponents.SScrollPane;
 import swing.Slyum;
 import utility.OSValidator;
+import utility.SMessageDialog;
 import utility.Utility;
 
 /**
@@ -505,7 +506,9 @@ public class GraphicView extends GraphicComponent
                                  .getTransferData(Entity.ENTITY_FLAVOR);
               if (containsDiagramComponent(importedEntity))
               {
-                
+                SMessageDialog.showErrorMessage(
+                    "The entity " + importedEntity.getName() + 
+                        " is already present in this view.\nYou can only add it once.");
               } else {
 
                 // Adding the imported entity view.
@@ -521,6 +524,7 @@ public class GraphicView extends GraphicComponent
                     // Place the component corresponding to the mouse location drop.
                     importedEntityView.setLocationRelativeTo(
                         support.getDropLocation().getDropPoint());
+                    importedEntityView.regenerateEntity();
                     importedEntityView.adjustWidth();
                   }
                 });
@@ -537,9 +541,7 @@ public class GraphicView extends GraphicComponent
       @Override
       public void paintComponent(Graphics g) {
         updatePreferredSize(); // for scrolling
-
         super.paintComponent(g);
-
         paintScene((Graphics2D) g);
       }
 
@@ -573,10 +575,8 @@ public class GraphicView extends GraphicComponent
 
       @Override
       public void setCursor(Cursor cursor) {
-        if (currentFactory != null) // cursor change are disabled during
-          // creation of new component
+        if (currentFactory != null) // cursor change are disabled during creation of new component
           cursor = currentFactory.getCursor();
-
         super.setCursor(cursor);
       }
     };
@@ -2601,5 +2601,10 @@ public class GraphicView extends GraphicComponent
     rect.x = center.x - size.width / 2;
     rect.y = center.y - size.height / 2;
     return rect;
+  }
+
+  public void refreshAllComponents() {
+    for (GraphicComponent c : getAllComponents())
+      c.notifyObservers();
   }
 }
