@@ -28,6 +28,7 @@ import utility.PersonalizedIcon;
 import change.BufferCreation;
 import change.Change;
 import classDiagram.IDiagramComponent;
+import java.util.LinkedList;
 import swing.slyumCustomizedComponents.SRadioButtonMenuItem;
 
 /**
@@ -57,6 +58,24 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
   protected boolean pictureMode = false;
   protected Point locationContextMenuRequested;
+  private boolean ligthDelete;
+
+  public static void askNewColorForSelectedItems() {
+    PanelClassDiagram.getInstance()
+                     .getCurrentGraphicView().changeColorForSelectedItems();
+  }
+  
+  public static LinkedList<GraphicComponent> getGraphicComponentsAssociedWith(
+      IDiagramComponent diagramComponent) {
+    LinkedList<GraphicComponent> results = new LinkedList<>();
+    for (GraphicView graphicView : PanelClassDiagram.getInstance().getAllGraphicViews()) {
+      GraphicComponent gc = graphicView.searchAssociedComponent(diagramComponent);
+      if (gc != null)
+        results.add(gc);
+    }
+      
+    return results;
+  }
 
   /**
    * !!! This constructor is use for create the graphic view, don't use in
@@ -87,11 +106,6 @@ public abstract class GraphicComponent extends Observable implements ActionListe
       askNewColorForSelectedItems();
     else
       SPanelDiagramComponent.getInstance().actionPerformed(e);
-  }
-
-  public static void askNewColorForSelectedItems() {
-    PanelClassDiagram.getInstance().getCurrentGraphicView()
-            .changeColorForSelectedItems();
   }
 
   /**
@@ -128,6 +142,8 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    */
   public void delete() {
     if (!parent.containComponent(this)) return;
+    
+    boolean mustDeleteComponent = museDeleteAssociedComponent();
 
     // Unselect the component.
     setSelected(false);
@@ -140,14 +156,27 @@ public abstract class GraphicComponent extends Observable implements ActionListe
     // Search and remove the UML associated component.
     final IDiagramComponent associed = getAssociedComponent();
 
-    if (associed != null) parent.getClassDiagram().removeComponent(associed);
+    if (associed != null && mustDeleteComponent && !ligthDelete) 
+      parent.getClassDiagram().removeComponent(associed);
 
     // Search and delete all lines (relations, associations, etc...)
     // associated with this component.
     for (final LineView lv : parent.getLinesViewAssociedWith(this))
-
       lv.delete();
 
+  }
+  
+  /**
+   * Delete only the graphical component, not the associed component.
+   */
+  public void ligthDelete() {
+    ligthDelete = true;
+    delete();
+    ligthDelete = false;
+  }
+  
+  protected boolean museDeleteAssociedComponent() {
+    return true;
   }
 
   /**

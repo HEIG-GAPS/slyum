@@ -14,6 +14,7 @@ import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.Icon;
@@ -226,6 +227,13 @@ public class STab extends JTabbedPane {
   @Override
   public GraphicViewTabComponent getTabComponentAt(int index) {
     return (GraphicViewTabComponent)super.getTabComponentAt(index);
+  }
+  
+  public LinkedList<GraphicView> getAllGraphicsView() {
+    LinkedList<GraphicView> results = new LinkedList<>();
+    for (int i = 0; i < getTabCount() - 1; i++)
+      results.add(getTabComponentAt(i).getGraphicView());
+    return results;
   }
   
   public static class GraphicViewTabComponent extends JPanel implements Observer {

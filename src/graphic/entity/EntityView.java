@@ -45,7 +45,6 @@ import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Represent the view of an entity in UML structure.
@@ -383,6 +382,15 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     parent.removeComponent(leftMovableSquare);
     parent.removeComponent(rightMovableSquare);
   }
+  
+  @Override
+  protected boolean museDeleteAssociedComponent() {
+    return !isAssociedComponentInOthersView();
+  }
+  
+  public boolean isAssociedComponentInOthersView() {
+    return GraphicComponent.getGraphicComponentsAssociedWith(getAssociedComponent()).size() > 1;
+  }
 
   @Override
   public void drawSelectedEffect(Graphics2D g2) {
@@ -440,7 +448,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
    * @return an array containing all TextBox
    */
   public List<TextBox> getAllTextBox() {
-    List<TextBox> tb = new LinkedList<TextBox>();
+    List<TextBox> tb = new LinkedList<>();
     tb.add(entityName);
     return tb;
   }

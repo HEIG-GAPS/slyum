@@ -142,12 +142,9 @@ public class GraphicView extends GraphicComponent
    * Compute mouse entered and exited event. the componentMouseHover can be the
    * same as the current component. In this case, no event will be called.
    * 
-   * @param component
-   *          the current mouse hover component
-   * @param componentMouseHover
-   *          the previous mouse hover component
-   * @param e
-   *          the mouse event
+   * @param component the current mouse hover component
+   * @param componentMouseHover the previous mouse hover component
+   * @param e the mouse event
    */
   public static void computeComponentEventEnter(GraphicComponent component,
           GraphicComponent componentMouseHover, MouseEvent e) {

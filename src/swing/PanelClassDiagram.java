@@ -278,7 +278,7 @@ public class PanelClassDiagram extends JPanel {
   }
   
   public List<GraphicView> getAllGraphicViews() {
-    return Arrays.asList(graphicView);
+    return STab.getInstance().getAllGraphicsView();
   }
 
   /**
