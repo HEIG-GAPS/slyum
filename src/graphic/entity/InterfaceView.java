@@ -2,6 +2,7 @@ package graphic.entity;
 
 import graphic.GraphicView;
 import classDiagram.components.Attribute;
+import classDiagram.components.EnumEntity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Method;
 
@@ -41,14 +42,13 @@ public class InterfaceView extends SimpleEntityView {
   @Override
   public void restore() {
     super.restore();
-
     parent.addEntity(this);
-    parent.getClassDiagram().addInterfaceEntity(
-            (InterfaceEntity) getAssociedComponent());
-
-    parent.addOthersComponents(leftMovableSquare);
-    parent.addOthersComponents(rightMovableSquare);
-
+    restoreEntity();
     repaint();
+  }
+
+  protected void restoreEntity() {
+    if (!isAssociedComponentInOthersView())
+      parent.getClassDiagram().addInterfaceEntity((InterfaceEntity) getAssociedComponent());
   }
 }

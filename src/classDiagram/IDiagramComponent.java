@@ -1,5 +1,6 @@
 package classDiagram;
 
+import java.util.LinkedList;
 import java.util.Observer;
 
 import swing.XmlElement;
@@ -17,9 +18,7 @@ public interface IDiagramComponent extends XmlElement {
   };
 
   public void addObserver(Observer o);
-
   public void deleteObserver(Observer o);
-
   public int countObservers();
 
   /**

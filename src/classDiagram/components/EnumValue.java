@@ -10,7 +10,8 @@ import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
 
-public class EnumValue extends Observable implements IDiagramComponent, Cloneable {
+public class EnumValue extends Observable 
+                       implements IDiagramComponent, Cloneable {
 
   protected final int id = ClassDiagram.getNextId();
   private String value;
