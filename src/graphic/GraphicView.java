@@ -5,6 +5,7 @@ import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IComponentsObserver;
 import classDiagram.IDiagramComponent;
+import classDiagram.INameObserver;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
@@ -113,6 +114,7 @@ public class GraphicView extends GraphicComponent
                                     KeyListener,
                                     MouseWheelListener, 
                                     IComponentsObserver, 
+                                    INameObserver,
                                     Printable, 
                                     ColoredComponent {
 
@@ -126,6 +128,7 @@ public class GraphicView extends GraphicComponent
     };
   }
 
+  public final static String NO_NAMED_VIEW = "New view";
   public final static boolean BACKGROUND_GRADIENT = false;
   public final static boolean ENTITY_GRADIENT = false;
   public final static boolean CTRL_FOR_GRIP = false;
@@ -479,7 +482,7 @@ public class GraphicView extends GraphicComponent
    * @param classDiagram
    *          the class diagram associated with this graphic view.
    */
-  public GraphicView(ClassDiagram classDiagram) {
+  public GraphicView(ClassDiagram classDiagram, boolean isRoot) {
     super();
 
     if (classDiagram == null)
@@ -668,10 +671,10 @@ public class GraphicView extends GraphicComponent
     popupMenu.add(menuItem);
 
     addSPanelListener();
-    txtBoxDiagramName = new TextBoxDiagramName(this);
+    
+    txtBoxDiagramName = new TextBoxDiagramName(this, isRoot ? classDiagram : this);
     txtBoxDiagramName.setVisible(Slyum.isViewTitleOnExport());
     addOthersComponents(txtBoxDiagramName);
-    classDiagram.addObserver(txtBoxDiagramName);
   }
 
   private void addSPanelListener() {
@@ -1495,8 +1498,15 @@ public class GraphicView extends GraphicComponent
    * 
    * @return the name for this graphic view
    */
+  @Override
   public String getName() {
-    return name == null || name.isEmpty() ? "No named view" : name;
+    return name == null || name.isEmpty() ? NO_NAMED_VIEW : name;
+  }
+  
+  @Override
+  public void setName(String name) {
+    this.name = name;
+    setChanged();
   }
 
   /**

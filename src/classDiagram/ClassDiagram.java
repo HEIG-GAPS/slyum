@@ -22,7 +22,6 @@ import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Relation;
-import java.util.HashMap;
 import java.util.Observable;
 
 /**
@@ -36,7 +35,7 @@ import java.util.Observable;
  * 
  */
 public class ClassDiagram extends Observable 
-                          implements XmlElement {
+                          implements XmlElement, INameObserver {
   private static int currentID = 0;
 
   public static int getNextId() {

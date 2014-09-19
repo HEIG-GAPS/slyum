@@ -36,9 +36,8 @@ import utility.PersonalizedIcon;
  */
 public class STab extends JTabbedPane {
   
-  private static final String DEFAULT_NAME_TAB = "No named view";
   private static STab instance;
-  private GraphicView saveCurrentGraphicView;
+  private int saveCurrentSelectedIndex;
   
   public static void initialize(GraphicView graphicView) {
     instance = new STab(graphicView);
@@ -54,7 +53,7 @@ public class STab extends JTabbedPane {
   private STab(GraphicView graphicView) {
     // Add main tab.
     super.add("", graphicView.getScrollPane());
-    saveCurrentGraphicView = graphicView;
+    saveCurrentSelectedIndex = 0;
     
     setTabComponentAt(0, new GraphicViewTabComponent(this, graphicView));
     graphicView.getClassDiagram().addObserver(
@@ -74,10 +73,21 @@ public class STab extends JTabbedPane {
 
           @Override
           public void run() {
-            GraphicView currentGraphicView = STab.this.getTabComponentAt(
-                ((STab)e.getSource()).getSelectedIndex()).getGraphicView();
-            tabChanged(currentGraphicView, saveCurrentGraphicView);
-            saveCurrentGraphicView = currentGraphicView;
+            STab source = (STab)e.getSource();
+            
+            if (source.getTabCount() <= saveCurrentSelectedIndex)
+              return;
+            
+            GraphicViewTabComponent 
+                gvtcPrevious = STab.this.getTabComponentAt(saveCurrentSelectedIndex),
+                gvtcCurrent = source.getTabComponentAt(source.getSelectedIndex());
+            
+            if (gvtcPrevious != null && gvtcCurrent != null) {
+              tabChanged(gvtcCurrent.getGraphicView(), gvtcPrevious.getGraphicView());
+              saveCurrentSelectedIndex = ((STab)e.getSource()).getSelectedIndex();
+            } else if (gvtcPrevious != null) {
+              setSelectedIndex(saveCurrentSelectedIndex);
+            }
           }
         });
       }
@@ -185,27 +195,31 @@ public class STab extends JTabbedPane {
   
   public void tabChanged(GraphicView currentGraphicView,
                          GraphicView previousGraphicView) {
-    saveCurrentGraphicView.unselectAll();
+    previousGraphicView.unselectAll();
     currentGraphicView.refreshAllComponents();
   }
 
-  public final void addTabAskingName(GraphicView graphicView) {
+  public final void addTabAskingName(ClassDiagram classDiagram, boolean isRoot) {
     UserInputDialog uip = 
         new UserInputDialog(
-            "New view", "Slyum - New view", "Enter a name for the new view:");
+            GraphicView.NO_NAMED_VIEW, "Slyum - New view", "Enter a name for the new view:");
     
     uip.setVisible(true);
-    addClosedTab(uip.isAccepted() ? uip.getText() : DEFAULT_NAME_TAB, graphicView);
+    
+    if (uip.isAccepted())
+      addClosableTab(uip.getText(), new GraphicView(classDiagram, isRoot));
   }
 
-  public void addClosedTab(String title, GraphicView graphicView) {
+  public void addClosableTab(String title, GraphicView graphicView) {
     // Remove the "+" tab for adding a new and re-adding the "+" tab
     // to put it at the end.
     int tabCount = getTabCount();
     remove(tabCount - 1);
     
     super.addTab(title, graphicView.getScrollPane());
-    setTabComponentAt(getTabCount() - 1, new CloseTitleTab(this, graphicView));
+    setTabComponentAt(getTabCount() - 1, new ClosableTitleTab(this, graphicView));
+    graphicView.setName(title);
+    graphicView.notifyObservers();
     addPlusTab();
     setSelectedIndex(tabCount - 1);
   }
@@ -278,10 +292,21 @@ public class STab extends JTabbedPane {
     }
   }
   
-  private static class CloseTitleTab extends GraphicViewTabComponent {
-    public CloseTitleTab(final JTabbedPane pane, GraphicView graphicView) {
+  private static class ClosableTitleTab extends GraphicViewTabComponent {
+    public ClosableTitleTab(final JTabbedPane pane, GraphicView graphicView) {
       super(pane, graphicView);      
       add(new LabelClose(), BorderLayout.EAST);
+      graphicView.addObserver(this);
+    }
+    
+    @Override
+    public void update(Observable o, Object arg) {
+      int i = pane.indexOfTabComponent(this);
+      if (o instanceof GraphicView) {
+        String text = ((GraphicView)o).getName();
+        pane.setTitleAt(i, text);
+        label.setText(text);
+      }
     }
     
     private class LabelClose extends JLabel {
@@ -307,10 +332,10 @@ public class STab extends JTabbedPane {
           @Override
           public void mouseClicked(MouseEvent e) {
             int selectedIndex = pane.getSelectedIndex();
-            int index = pane.indexOfTabComponent(CloseTitleTab.this);
+            int index = pane.indexOfTabComponent(ClosableTitleTab.this);
             pane.remove(index);
             pane.setSelectedIndex(
-                selectedIndex == index ? index - 1 : selectedIndex);
+                selectedIndex == index ? index - 1 : (selectedIndex > index ? selectedIndex - 1 : selectedIndex));
             repaint();
           }
 
@@ -356,16 +381,6 @@ public class STab extends JTabbedPane {
         g2.drawLine(x + size, y, x, y + size);
       }
     }
-    
-    @Override
-    public void update(Observable o, Object arg) {
-      int i = pane.indexOfTabComponent(CloseTitleTab.this);
-      if (o instanceof GraphicView) {
-        String text = ((ClassDiagram)o).getName();
-        pane.setTitleAt(i, text);
-        label.setText(text);
-      }
-    } 
   }  
 }
 
