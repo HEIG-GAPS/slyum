@@ -22,8 +22,7 @@ import utility.Utility;
 import change.Change;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
-import classDiagram.relationships.Relation;
-import classDiagram.relationships.RelationChanger;
+import classDiagram.relationships.*;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -41,6 +40,45 @@ import classDiagram.relationships.RelationChanger;
  */
 public abstract class RelationView extends LineView implements Observer {
   public final static String ACTION_CHANGE_ORIENTATION = "change-orientation";
+  
+  public static RelationView createFromRelation(
+      GraphicView graphicView, Relation relation, EntityView source,
+      EntityView target) {
+    
+    Point pSourceCenter = new Point((int)source.getBounds().getCenterX(), 
+                                    (int)source.getBounds().getCenterY()),
+          pTargetCenter = new Point((int)target.getBounds().getCenterX(), 
+                                    (int)target.getBounds().getCenterY());
+     if (relation.getClass() == Binary.class)
+        return new BinaryView(graphicView, source, target, (Binary)relation, 
+                              pSourceCenter, pTargetCenter, false);
+     
+     else if (relation.getClass() == Aggregation.class)
+        return new AggregationView(graphicView, source, target, (Aggregation)relation, 
+                              pSourceCenter, pTargetCenter, false);
+       
+     else if (relation.getClass() == Composition.class)
+        return new CompositionView(graphicView, source, target, (Composition)relation, 
+                              pSourceCenter, pTargetCenter, false);
+     
+     else if (relation.getClass() == Dependency.class)
+        return new DependencyView(graphicView, source, target, (Dependency)relation, 
+                              pSourceCenter, pTargetCenter, false);
+     
+     else if (relation.getClass() == Inheritance.class)
+        return new InheritanceView(graphicView, source, target, (Inheritance)relation, 
+                              pSourceCenter, pTargetCenter, false);
+     
+     else if (relation.getClass() == InnerClass.class)
+        return new InnerClassView(graphicView, source, target, (InnerClass)relation, 
+                              pSourceCenter, pTargetCenter, false);
+     
+     //else if (relation.getClass() == Multi.class)
+        
+    return null;
+  }
+  
+  
   private Relation relation;
 
   public RelationView(GraphicView graphicView, GraphicComponent source,

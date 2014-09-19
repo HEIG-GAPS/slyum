@@ -21,6 +21,8 @@ import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
+import classDiagram.relationships.Relation;
+import java.util.HashMap;
 import java.util.Observable;
 
 /**
@@ -201,6 +203,14 @@ public class ClassDiagram extends Observable
    */
   public String getName() {
     return name;
+  }
+  
+  public LinkedList<Relation> getAllRelations() {
+    LinkedList<Relation> relations = new LinkedList<>();
+    for (IDiagramComponent component : components)
+      if (component instanceof Relation)
+        relations.add((Relation)component);
+    return relations;
   }
 
   /**

@@ -58,7 +58,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
   protected boolean pictureMode = false;
   protected Point locationContextMenuRequested;
-  private boolean ligthDelete;
+  protected boolean ligthDelete;
 
   public static void askNewColorForSelectedItems() {
     PanelClassDiagram.getInstance()
@@ -141,7 +141,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    * drawn or managed by the graphic view. This operation is irreversible.
    */
   public void delete() {
-    if (!parent.containComponent(this)) return;
+    if (!parent.containsComponent(this)) return;
     
     boolean mustDeleteComponent = museDeleteAssociedComponent();
 
@@ -156,23 +156,13 @@ public abstract class GraphicComponent extends Observable implements ActionListe
     // Search and remove the UML associated component.
     final IDiagramComponent associed = getAssociedComponent();
 
-    if (associed != null && mustDeleteComponent && !ligthDelete) 
+    if (associed != null && mustDeleteComponent) 
       parent.getClassDiagram().removeComponent(associed);
 
     // Search and delete all lines (relations, associations, etc...)
     // associated with this component.
     for (final LineView lv : parent.getLinesViewAssociedWith(this))
       lv.delete();
-
-  }
-  
-  /**
-   * Delete only the graphical component, not the associed component.
-   */
-  public void ligthDelete() {
-    ligthDelete = true;
-    delete();
-    ligthDelete = false;
   }
   
   protected boolean museDeleteAssociedComponent() {
@@ -188,6 +178,11 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    */
   public void drawSelectedEffect(Graphics2D g2) {
 
+  }
+  
+  public boolean existsInOthersViews() {
+    return GraphicComponent.getGraphicComponentsAssociedWith(
+        getAssociedComponent()).size() > 1;
   }
 
   /**

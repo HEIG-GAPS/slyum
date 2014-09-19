@@ -385,11 +385,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   
   @Override
   protected boolean museDeleteAssociedComponent() {
-    return !isAssociedComponentInOthersView();
-  }
-  
-  public boolean isAssociedComponentInOthersView() {
-    return GraphicComponent.getGraphicComponentsAssociedWith(getAssociedComponent()).size() > 1;
+    return !existsInOthersViews();
   }
 
   @Override
