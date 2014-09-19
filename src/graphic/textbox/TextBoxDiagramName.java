@@ -6,6 +6,7 @@
 package graphic.textbox;
 
 import classDiagram.ClassDiagram;
+import classDiagram.INameObserver;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import java.awt.BasicStroke;
@@ -30,10 +31,14 @@ public class TextBoxDiagramName extends TextBox implements Observer {
   final int MINIMAL_WIDTH = 30;
   
   final String EMPTY_MESSAGE = "Enter the diagram's name";
+  
+  final INameObserver modelName;
 
-  public TextBoxDiagramName(GraphicView parent) {
-    super(parent, parent.getClassDiagram().getName());
+  public TextBoxDiagramName(GraphicView parent, INameObserver modelName) {
+    super(parent, modelName.getName());
     setHideWhileEditing(false);
+    this.modelName = modelName;
+    modelName.addObserver(this);
   }
 
   @Override
@@ -144,9 +149,8 @@ public class TextBoxDiagramName extends TextBox implements Observer {
 
   @Override
   public void setText(String text) {
-    ClassDiagram cd = parent.getClassDiagram();
-    cd.setName(text);
-    cd.notifyObservers();
+    modelName.setName(text);
+    modelName.notifyObservers();
   }
 
   @Override
@@ -159,8 +163,8 @@ public class TextBoxDiagramName extends TextBox implements Observer {
 
   @Override
   public void update(Observable o, Object arg) {
-    if (o instanceof ClassDiagram)
-      super.setText(((ClassDiagram)o).getName());
+    if (o instanceof INameObserver)
+      super.setText(((INameObserver)o).getName());
   }
 
   @Override

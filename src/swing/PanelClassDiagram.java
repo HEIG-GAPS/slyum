@@ -3,7 +3,6 @@ package swing;
 import swing.slyumCustomizedComponents.SSplitPane;
 import change.Change;
 import classDiagram.ClassDiagram;
-import graphic.GraphicComponent;
 import graphic.GraphicView;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -30,8 +28,6 @@ import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
@@ -146,7 +142,7 @@ public class PanelClassDiagram extends JPanel {
     setBackground(Slyum.DEFAULT_BACKGROUND);
 
     // Create new graphiView, contain class diagram.
-    graphicView = new GraphicView(getClassDiagram());
+    graphicView = new GraphicView(getClassDiagram(), true);
     setTransferHandler(new FileHandler());
     
     watchFileListener = new WatchFileListener() {
@@ -208,7 +204,7 @@ public class PanelClassDiagram extends JPanel {
   }
   
   public void addNewView() {
-    STab.getInstance().addTabAskingName(new GraphicView(classDiagram));
+    STab.getInstance().addTabAskingName(classDiagram, false);
   }
 
   /**

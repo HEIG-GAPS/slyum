@@ -361,7 +361,6 @@ public abstract class TextBox extends GraphicComponent {
    * Stop the edition of the String.
    */
   public void stopEditing() {
-    System.out.println("stop editing");
     if (textField == null) return;
 
     parent.getScene().remove(textField);
