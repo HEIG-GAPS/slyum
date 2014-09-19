@@ -1,6 +1,5 @@
 package classDiagram;
 
-import java.util.LinkedList;
 import java.util.Observer;
 
 import swing.XmlElement;

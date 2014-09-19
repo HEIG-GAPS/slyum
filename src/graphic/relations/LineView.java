@@ -341,6 +341,11 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
     Change.setBlocked(isBlocked);
   }
 
+  @Override
+  protected boolean museDeleteAssociedComponent() {
+    return !existsInOthersViews();
+  }
+
   /**
    * This method is called when extremity must be drawed. By default LineView
    * have no extremity.

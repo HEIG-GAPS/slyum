@@ -48,7 +48,7 @@ public class ClassView extends SimpleEntityView {
   }
 
   protected void restoreEntity() {
-    if (!isAssociedComponentInOthersView())
+    if (!existsInOthersViews())
       parent.getClassDiagram().addClassEntity(
               (ClassEntity) getAssociedComponent());
   }

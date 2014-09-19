@@ -18,6 +18,7 @@ import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
+import classDiagram.relationships.Relation;
 import classDiagram.relationships.Role;
 import graphic.entity.AssociationClassView;
 import graphic.entity.ClassView;
@@ -37,6 +38,7 @@ import graphic.relations.LineCommentary;
 import graphic.relations.LineView;
 import graphic.relations.MultiLineView;
 import graphic.relations.MultiView;
+import graphic.relations.RelationView;
 import graphic.textbox.TextBoxCommentary;
 import graphic.textbox.TextBoxDiagramName;
 import java.awt.BasicStroke;
@@ -68,6 +70,7 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -512,19 +515,9 @@ public class GraphicView extends GraphicComponent
                 final EntityView importedEntityView = 
                     EntityView.createFromEntity(
                         GraphicView.this, importedEntity);
-                addEntity(importedEntityView);
-
-                SwingUtilities.invokeLater(new Runnable() {
-
-                  @Override
-                  public void run() {
-                    // Place the component corresponding to the mouse location drop.
-                    importedEntityView.setLocationRelativeTo(
-                        support.getDropLocation().getDropPoint());
-                    importedEntityView.regenerateEntity();
-                    importedEntityView.adjustWidth();
-                  }
-                });
+                addEntityWithRelations(
+                    importedEntityView,
+                    support.getDropLocation().getDropPoint());
                 return true;
               }
             } catch (UnsupportedFlavorException | IOException ex) {
@@ -705,6 +698,10 @@ public class GraphicView extends GraphicComponent
       final EntityView target = (EntityView) searchAssociedComponent(roles
               .getLast().getEntity());
 
+      // Are Components in this graphic view?
+      if (source == null || target == null)
+        return;
+
       addComponentIn(new AggregationView(this, source, target, component,
               source.middleBounds(), target.middleBounds(), false), linesView);
     }
@@ -716,6 +713,11 @@ public class GraphicView extends GraphicComponent
     if (result == null) {
       final BinaryView bv = (BinaryView) searchAssociedComponent(component
               .getAssociation());
+
+      // Are Components in this graphic view?
+      if (bv == null)
+        return;
+      
       addComponentIn(new AssociationClassView(this, component, bv,
               new Rectangle(100, 100, 100, 100)), entities);
     }
@@ -731,6 +733,10 @@ public class GraphicView extends GraphicComponent
       final EntityView target = (EntityView) searchAssociedComponent(roles
               .getLast().getEntity());
 
+      // Are Components in this graphic view?
+      if (source == null || target == null)
+        return;
+      
       addComponentIn(
               new BinaryView(this, source, target, component,
                       source.middleBounds(), target.middleBounds(), false),
@@ -773,6 +779,10 @@ public class GraphicView extends GraphicComponent
       final EntityView target = (EntityView) searchAssociedComponent(roles
               .getLast().getEntity());
 
+      // Are Components in this graphic view?
+      if (source == null || target == null)
+        return;
+
       addComponentIn(new CompositionView(this, source, target, component,
               source.middleBounds(), target.middleBounds(), false), linesView);
     }
@@ -786,6 +796,10 @@ public class GraphicView extends GraphicComponent
               .getSource());
       final EntityView target = (EntityView) searchAssociedComponent(component
               .getTarget());
+
+      // Are Components in this graphic view?
+      if (source == null || target == null)
+        return;
 
       addComponentIn(
               new DependencyView(this, source, target, component,
@@ -806,6 +820,62 @@ public class GraphicView extends GraphicComponent
     return addComponentIn(component, entities);
   }
 
+  private void addEntityWithRelations(
+      final EntityView entityView, final Point location) {
+    final List<RelationView> createdRelationViews = new LinkedList<>();
+    
+    addEntity(entityView);
+    Entity entity1 = (Entity)entityView.getAssociedComponent();
+    HashMap<Relation, Entity> linked = entity1.getLinkedEntities();
+    for (Relation relation : linked.keySet()) {
+      Entity entity2 = linked.get(relation);
+      if (containsDiagramComponent(entity2)) {
+        EntityView source, target, entityView2 = (EntityView)searchAssociedComponent(entity2);
+        if (relation.getSource() == entity1) {
+          source = entityView;
+          target = entityView2;
+        } else {
+          source = entityView2;
+          target = entityView;
+        }
+        
+        final RelationView rv = RelationView.createFromRelation(
+              this, relation, source, target);
+        
+        addLineView(rv);
+        createdRelationViews.add(rv);
+      }
+    }
+    
+    
+    // Place the component corresponding to the mouse location drop.
+    SwingUtilities.invokeLater(new Runnable() {
+
+      @Override
+      public void run() {
+        
+        entityView.setLocationRelativeTo(location);
+        entityView.regenerateEntity();
+        entityView.adjustWidth();
+        
+        for (RelationView rv : createdRelationViews) {
+          
+          GraphicComponent gSource = rv.getFirstPoint().getAssociedComponentView(), 
+                           gTarget = rv.getLastPoint().getAssociedComponentView();
+
+          Point pSourceCenter = new Point((int)gSource.getBounds().getCenterX(), 
+                                          (int)gSource.getBounds().getCenterY()),
+                pTargetCenter = new Point((int)gTarget.getBounds().getCenterX(), 
+                                          (int)gTarget.getBounds().getCenterY());
+          
+          rv.getFirstPoint().setAnchor(pSourceCenter);
+          rv.getLastPoint().setAnchor(pTargetCenter);
+          rv.reinitializeTextBoxesLocation();
+        }
+      }
+    });
+  }
+
   public void addInheritance(Inheritance component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
@@ -814,6 +884,10 @@ public class GraphicView extends GraphicComponent
               .getChild());
       final EntityView parent = (EntityView) searchAssociedComponent(component
               .getParent());
+
+      // Are Components in this graphic view?
+      if (child == null || parent == null)
+        return;
 
       addComponentIn(
               new InheritanceView(this, child, parent, component,
@@ -830,6 +904,10 @@ public class GraphicView extends GraphicComponent
               .getChild());
       final EntityView parent = (EntityView) searchAssociedComponent(component
               .getParent());
+
+      // Are Components in this graphic view?
+      if (child == null || parent == null)
+        return;
 
       addComponentIn(
               new InnerClassView(this, child, parent, component,
@@ -859,10 +937,8 @@ public class GraphicView extends GraphicComponent
 
   public void addMulti(Multi component) {
     final GraphicComponent result = searchAssociedComponent(component);
-
     if (result == null)
-
-    addComponentIn(MultiFactory.createMulti(this, component), multiViews);
+      addComponentIn(MultiFactory.createMulti(this, component), multiViews);
   }
 
   public void removeComponent(IDiagramComponent component) {
@@ -1155,10 +1231,9 @@ public class GraphicView extends GraphicComponent
    *          the component to find.
    * @return true if the component is in the graphic view; false otherwise
    */
-  public boolean containComponent(GraphicComponent component) {
+  public boolean containsComponent(GraphicComponent component) {
     if (component == null)
       throw new IllegalArgumentException("component is null");
-
     return getAllComponents().contains(component);
   }
 
@@ -1389,10 +1464,9 @@ public class GraphicView extends GraphicComponent
    */
   public LinkedList<LineView> getLinesViewAssociedWith(
           GraphicComponent component) {
-    final LinkedList<LineView> list = new LinkedList<LineView>();
+    final LinkedList<LineView> list = new LinkedList<>();
 
     for (final LineView lv : linesView)
-
       if (lv.getFirstPoint().getAssociedComponentView().equals(component)
               || lv.getLastPoint().getAssociedComponentView().equals(component))
         list.add(lv);

@@ -315,12 +315,13 @@ public class HierarchicalView
    * @return the node associated with the object; or null if no node are found
    */
   public static IClassDiagramNode searchAssociedNodeIn(Object o, TreeNode root) {
-    IClassDiagramNode child = null;
+    IClassDiagramNode child;
 
     for (int i = 0; i < root.getChildCount(); i++) {
       child = (IClassDiagramNode) root.getChildAt(i);
 
-      if (child.getAssociedComponent().equals(o)) return child;
+      if (child.getAssociedComponent().equals(o)) 
+        return child;
 
       if (!root.getChildAt(i).isLeaf())
         searchAssociedNodeIn(o, root.getChildAt(i));
