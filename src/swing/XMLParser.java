@@ -25,6 +25,7 @@ import classDiagram.verifyName.TypeName;
 import classDiagram.verifyName.VariableName;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
+import graphic.entity.EntityView;
 import graphic.entity.EnumView;
 import graphic.entity.EnumView.TypeEnumDisplay;
 import graphic.entity.SimpleEntityView;
@@ -161,18 +162,27 @@ public class XMLParser extends DefaultHandler {
   }
 
   private class UMLView {
-    @SuppressWarnings("unused")
-    LinkedList<ComponentView> componentView = new LinkedList<>();
 
-    @SuppressWarnings("unused")
+    GraphicView graphicView;
     String name = null;
 
     LinkedList<Note> notes = new LinkedList<>();
 
-    @SuppressWarnings("unused")
-    LinkedList<RelationView> relationView = new LinkedList<>();
-  }
+    HashMap<Integer, ComponentView> componentView = new HashMap<>();
+    HashMap<Integer, MultiView> multiView = new HashMap<>();
+    HashMap<Integer, RelationView> relationView = new HashMap<>();
 
+    public UMLView() {
+      graphicView = PanelClassDiagram.getInstance().getCurrentGraphicView();
+    }
+
+    public UMLView(String name) {
+      this.name = name;
+      graphicView = PanelClassDiagram.getInstance().addNewView(name);
+    }
+  }
+  
+  
   // UML STRUCTURE
   private class Variable {
     @SuppressWarnings("unused")
@@ -193,7 +203,6 @@ public class XMLParser extends DefaultHandler {
 
   LinkedList<ClassEntity> classEntities = new LinkedList<>();
   // LinkedList<InnerCLass> innerCLass = new LinkedList<InnerCLass>();
-  private final HashMap<Integer, ComponentView> componentView = new HashMap<>();
   Association currentAssociation;
   ComponentView currentComponentView;
   Dependency currentDependency;
@@ -201,6 +210,7 @@ public class XMLParser extends DefaultHandler {
   Rectangle currentGeometry;
   Inheritance currentInheritance;
   LinkedList<Point> currentLine;
+  UMLView currentUMLView;
 
   Operation currentMethod;
   int currentMin, currentMax;
@@ -220,8 +230,6 @@ public class XMLParser extends DefaultHandler {
 
   LinkedList<Dependency> dependency = new LinkedList<>();
 
-  private final GraphicView graphicView;
-
   LinkedList<Inheritance> inheritance = new LinkedList<>();
 
   private boolean inMultiViewBounds;
@@ -231,23 +239,16 @@ public class XMLParser extends DefaultHandler {
           inLabelAssociation = false;
 
   LinkedList<InterfaceEntity> interfaceEntities = new LinkedList<>();
-
-  private final HashMap<Integer, MultiView> multiView = new HashMap<>();
-  private final HashMap<Integer, RelationView> relationView = new HashMap<>();
+  
   private ClassDiagram umlClassDiagram;
 
-  public XMLParser(classDiagram.ClassDiagram classDiagram,
-          GraphicView graphicView) {
+  public XMLParser(classDiagram.ClassDiagram classDiagram) {
     super();
 
     if (classDiagram == null)
       throw new IllegalArgumentException("classDiagram is null");
 
-    if (graphicView == null)
-      throw new IllegalArgumentException("graphicView is null");
-
     this.classDiagram = classDiagram;
-    this.graphicView = graphicView;
   }
 
   @Override
@@ -255,8 +256,7 @@ public class XMLParser extends DefaultHandler {
     final String reader = new String(ch, start, length);
 
     if (buffer != null)
-
-    buffer.append(reader);
+      buffer.append(reader);
   }
 
   private void createEntity(Entity e) throws SyntaxeNameException, SAXNotRecognizedException {
@@ -368,13 +368,14 @@ public class XMLParser extends DefaultHandler {
 
   @Override
   public void endDocument() throws SAXException {
-    classDiagram.removeAll();
-    graphicView.removeAll();
+    
   }
 
   public void createDiagram() 
       throws SyntaxeNameException, SAXNotRecognizedException {
     
+    PanelClassDiagram.getInstance().setCurrentGraphicView(0);
+    GraphicView rootGraphicView = PanelClassDiagram.getInstance().getCurrentGraphicView();
     classDiagram.setName(umlClassDiagram.name);
     classDiagram.notifyObservers();
     
@@ -388,8 +389,8 @@ public class XMLParser extends DefaultHandler {
     importInheritances(); // <- ...
     importDepedency();
 
-    graphicView.setPaintBackgroundLast(true);
-    graphicView.goRepaint();
+    rootGraphicView.setPaintBackgroundLast(true);
+    rootGraphicView.goRepaint();
 
     locateComponentBounds();
     importNotes();
@@ -447,14 +448,16 @@ public class XMLParser extends DefaultHandler {
         break;
       case "relationView":
         inRelationView = false;
-        relationView.put(currentRelationView.relationId, currentRelationView);
+        currentUMLView.relationView.put(
+            currentRelationView.relationId, currentRelationView);
         break;
       case "multiLineView":
         inRelationView = false;
         currentMultiView.multiLineView.add(currentRelationView);
         break;
       case "multiView":
-        multiView.put(currentMultiView.relationId, currentMultiView);
+        currentUMLView.multiView.put(
+            currentMultiView.relationId, currentMultiView);
         break;
       case "geometry":
         inNoteGeometry = false;
@@ -468,7 +471,8 @@ public class XMLParser extends DefaultHandler {
         break;
       case "componentView":
         inComponentView = false;
-        componentView.put(currentComponentView.componentId, currentComponentView);
+        currentUMLView.componentView.put(
+            currentComponentView.componentId, currentComponentView);
         break;
       case "note":
         umlClassDiagram.uMLView.getFirst().notes.add(currentNote);
@@ -665,7 +669,7 @@ public class XMLParser extends DefaultHandler {
     }
   }
 
-  private void importNotes() {
+  private void importNotes() {/*
     for (final Note note : umlClassDiagram.uMLView.getFirst().notes) {
       final TextBoxCommentary noteView = new TextBoxCommentary(graphicView,
               note.content);
@@ -702,116 +706,61 @@ public class XMLParser extends DefaultHandler {
 
       noteView.setColor(note.color);
       graphicView.addNotes(noteView);
-    }
+    }*/
   }
 
   public void locateComponentBounds() {
 
-    // Generals bounds
-    for (GraphicComponent g : graphicView.getAllComponents()) {
-      IDiagramComponent component = g.getAssociedComponent();
+    for (UMLView umlView : umlClassDiagram.uMLView) {
+    
+      GraphicView graphicView = umlView.graphicView;
+      graphicView.setName(umlView.name);
+      
+      // Generals bounds
+      for (GraphicComponent g : graphicView.getAllComponents()) {
+        IDiagramComponent component = g.getAssociedComponent();
 
-      if (component != null) {
-        ComponentView cv = componentView.get(component.getId());
+        if (component != null) {
+          ComponentView cv = umlView.componentView.get(component.getId());
 
-        if (cv != null) {
-          g.setBounds(cv.geometry);
-          g.setColor(cv.color);
+          if (cv != null) {
+            g.setBounds(cv.geometry);
+            g.setColor(cv.color);
 
-          // Gestion des entités
-          if (g instanceof SimpleEntityView) {
-            SimpleEntityView entityView = (SimpleEntityView) g;
-            entityView.setDisplayAttributes(cv.displayAttributes);
-            entityView.setDisplayMethods(cv.displayMethods);
-            entityView.setDisplayDefault(cv.displayDefault);
-          } else if (g instanceof EnumView) {
-            ((EnumView) g).setTypeEnumDisplay(cv.typeEnumDisplay);
-          }
-        }
-      }
-    }
-
-    // Associations
-    for (LineView l : graphicView.getLinesView()) {
-      IDiagramComponent component = l.getAssociedXmlElement();
-
-      if (component != null) {
-        final RelationView rl = relationView.get(component.getId());
-        if (rl == null) continue;
-
-        LinkedList<Point> points = rl.line;
-
-        for (int i = 1; i < points.size() - 1; i++) {
-          final RelationGrip rg = new RelationGrip(graphicView, l);
-          rg.setAnchor(points.get(i));
-          rg.notifyObservers();
-          l.addGrip(rg, i);
-        }
-
-        RelationGrip first = l.getFirstPoint(), last = l.getLastPoint();
-
-        first.setAnchor(points.getFirst());
-        last.setAnchor(points.getLast());
-
-        first.notifyObservers();
-        last.notifyObservers();
-
-        l.setColor(rl.color);
-        final LinkedList<TextBox> tb = l.getTextBoxRole();
-
-        SwingUtilities.invokeLater(new Runnable() {
-          @Override
-          public void run() {
-            if (tb.size() >= 1) {
-              ((TextBoxLabel) tb.getFirst()).computeDeplacement(new Point(
-                      rl.labelAssociation.x, rl.labelAssociation.y));
-
-              if (tb.size() >= 3) {
-                ((TextBoxLabel) tb.get(1)).computeDeplacement(new Point(
-                        rl.roleAssociations.get(0).x, rl.roleAssociations
-                                .get(0).y));
-                ((TextBoxLabel) tb.get(2)).computeDeplacement(new Point(
-                        rl.roleAssociations.get(1).x, rl.roleAssociations
-                                .get(1).y));
-
-                ((TextBoxRole) tb.get(1)).getTextBoxMultiplicity()
-                        .computeDeplacement(
-                                new Point(rl.multipliciteAssociations.get(0).x,
-                                        rl.multipliciteAssociations.get(0).y));
-                ((TextBoxRole) tb.get(2)).getTextBoxMultiplicity()
-                        .computeDeplacement(
-                                new Point(rl.multipliciteAssociations.get(1).x,
-                                        rl.multipliciteAssociations.get(1).y));
-              }
+            // Gestion des entités
+            if (g instanceof SimpleEntityView) {
+              SimpleEntityView entityView = (SimpleEntityView) g;
+              entityView.setDisplayAttributes(cv.displayAttributes);
+              entityView.setDisplayMethods(cv.displayMethods);
+              entityView.setDisplayDefault(cv.displayDefault);
+            } else if (g instanceof EnumView) {
+              ((EnumView) g).setTypeEnumDisplay(cv.typeEnumDisplay);
             }
+          } else {
+            if (g instanceof EntityView)
+              g.delete();
           }
-        });
-
+        }
       }
-    }
 
-    // Multi-association
-    for (final graphic.relations.MultiView mv : graphicView.getMultiView()) {
-      final IDiagramComponent component = mv.getAssociedXmlElement();
+      // Associations
+      for (LineView l : graphicView.getLinesView()) {
+        IDiagramComponent component = l.getAssociedXmlElement();
 
-      if (component != null) {
-        final MultiView xmlMV = multiView.get(component.getId());
+        if (component != null) {
+          final RelationView rl = umlView.relationView.get(component.getId());
+          if (rl == null) continue;
 
-        final LinkedList<MultiLineView> multiLinesView = mv.getMultiLinesView();
-
-        for (int j = 0; j < multiLinesView.size(); j++) {
-          final RelationView rl = xmlMV.multiLineView.get(j);
-          final LinkedList<Point> points = rl.line;
-          final MultiLineView mlv = multiLinesView.get(j);
+          LinkedList<Point> points = rl.line;
 
           for (int i = 1; i < points.size() - 1; i++) {
-            final RelationGrip rg = new RelationGrip(graphicView, mlv);
+            final RelationGrip rg = new RelationGrip(graphicView, l);
             rg.setAnchor(points.get(i));
             rg.notifyObservers();
-            mlv.addGrip(rg, i);
+            l.addGrip(rg, i);
           }
 
-          RelationGrip first = mlv.getFirstPoint(), last = mlv.getLastPoint();
+          RelationGrip first = l.getFirstPoint(), last = l.getLastPoint();
 
           first.setAnchor(points.getFirst());
           last.setAnchor(points.getLast());
@@ -819,29 +768,93 @@ public class XMLParser extends DefaultHandler {
           first.notifyObservers();
           last.notifyObservers();
 
-          // Role
-          final LinkedList<TextBox> tb = mlv.getTextBoxRole();
+          l.setColor(rl.color);
+          final LinkedList<TextBox> tb = l.getTextBoxRole();
 
           SwingUtilities.invokeLater(new Runnable() {
-
             @Override
             public void run() {
-              if (tb.size() == 1) {
+              if (tb.size() >= 1) {
                 ((TextBoxLabel) tb.getFirst()).computeDeplacement(new Point(
-                        rl.roleAssociations.get(0).x, rl.roleAssociations
-                                .get(0).y));
+                        rl.labelAssociation.x, rl.labelAssociation.y));
 
-                ((TextBoxRole) tb.getFirst()).getTextBoxMultiplicity()
-                        .computeDeplacement(
-                                new Point(rl.multipliciteAssociations.get(0).x,
-                                        rl.multipliciteAssociations.get(0).y));
+                if (tb.size() >= 3) {
+                  ((TextBoxLabel) tb.get(1)).computeDeplacement(new Point(
+                          rl.roleAssociations.get(0).x, rl.roleAssociations
+                                  .get(0).y));
+                  ((TextBoxLabel) tb.get(2)).computeDeplacement(new Point(
+                          rl.roleAssociations.get(1).x, rl.roleAssociations
+                                  .get(1).y));
+
+                  ((TextBoxRole) tb.get(1)).getTextBoxMultiplicity()
+                          .computeDeplacement(
+                                  new Point(rl.multipliciteAssociations.get(0).x,
+                                          rl.multipliciteAssociations.get(0).y));
+                  ((TextBoxRole) tb.get(2)).getTextBoxMultiplicity()
+                          .computeDeplacement(
+                                  new Point(rl.multipliciteAssociations.get(1).x,
+                                          rl.multipliciteAssociations.get(1).y));
+                }
               }
             }
           });
-        }
 
-        mv.setColor(xmlMV.color);
-        mv.setBounds(xmlMV.multiViewBounds);
+        }
+      }
+
+      // Multi-association
+      for (final graphic.relations.MultiView mv : graphicView.getMultiView()) {
+        final IDiagramComponent component = mv.getAssociedXmlElement();
+
+        if (component != null) {
+          final MultiView xmlMV = umlView.multiView.get(component.getId());
+
+          final LinkedList<MultiLineView> multiLinesView = mv.getMultiLinesView();
+
+          for (int j = 0; j < multiLinesView.size(); j++) {
+            final RelationView rl = xmlMV.multiLineView.get(j);
+            final LinkedList<Point> points = rl.line;
+            final MultiLineView mlv = multiLinesView.get(j);
+
+            for (int i = 1; i < points.size() - 1; i++) {
+              final RelationGrip rg = new RelationGrip(graphicView, mlv);
+              rg.setAnchor(points.get(i));
+              rg.notifyObservers();
+              mlv.addGrip(rg, i);
+            }
+
+            RelationGrip first = mlv.getFirstPoint(), last = mlv.getLastPoint();
+
+            first.setAnchor(points.getFirst());
+            last.setAnchor(points.getLast());
+
+            first.notifyObservers();
+            last.notifyObservers();
+
+            // Role
+            final LinkedList<TextBox> tb = mlv.getTextBoxRole();
+
+            SwingUtilities.invokeLater(new Runnable() {
+
+              @Override
+              public void run() {
+                if (tb.size() == 1) {
+                  ((TextBoxLabel) tb.getFirst()).computeDeplacement(new Point(
+                          rl.roleAssociations.get(0).x, rl.roleAssociations
+                                  .get(0).y));
+
+                  ((TextBoxRole) tb.getFirst()).getTextBoxMultiplicity()
+                          .computeDeplacement(
+                                  new Point(rl.multipliciteAssociations.get(0).x,
+                                          rl.multipliciteAssociations.get(0).y));
+                }
+              }
+            });
+          }
+
+          mv.setColor(xmlMV.color);
+          mv.setBounds(xmlMV.multiViewBounds);
+        }
       }
     }
   }
@@ -882,7 +895,7 @@ public class XMLParser extends DefaultHandler {
                 .getValue("isAbstract"));
           
           umlClassDiagram.diagrameElement.entity.add(currentEntity);
-        } catch (final Exception e) {
+        } catch (final NumberFormatException e) {
           throw new SAXException(e);
         } break;
       case "method":
@@ -918,7 +931,7 @@ public class XMLParser extends DefaultHandler {
           variable.constant = Boolean.parseBoolean(attributes.getValue("const"));
           
           currentMethod.variable.add(variable);
-        } catch (final Exception e) {
+        } catch (final SyntaxeNameException e) {
           throw new SAXException(e);
         } break;
       case "attribute":
@@ -937,7 +950,7 @@ public class XMLParser extends DefaultHandler {
               .getValue("isStatic"));
           
           currentEntity.attribute.add(variable);
-        } catch (final Exception e) {
+        } catch (final SyntaxeNameException e) {
           throw new SAXException(e);
         } break;
       case "association":
@@ -961,7 +974,7 @@ public class XMLParser extends DefaultHandler {
               .getValue("aggregation"));
           
           umlClassDiagram.diagrameElement.association.add(currentAssociation);
-        } catch (final Exception e) {
+        } catch (final NumberFormatException e) {
           throw new SAXException(e);
         } break;
       case "role":
@@ -974,7 +987,7 @@ public class XMLParser extends DefaultHandler {
               .getValue("visibility"));
           
           currentAssociation.role.add(currentRole);
-        } catch (final Exception e) {
+        } catch (final NumberFormatException e) {
           throw new SAXException(e);
         } break;
       case "multiplicity":
@@ -989,7 +1002,7 @@ public class XMLParser extends DefaultHandler {
           buffer = new StringBuffer();
           
           umlClassDiagram.diagrameElement.inheritance.add(currentInheritance);
-        } catch (final Exception e) {
+        } catch (final NumberFormatException e) {
           throw new SAXException(e);
         } break;
       case "dependency":
@@ -1001,13 +1014,18 @@ public class XMLParser extends DefaultHandler {
           buffer = new StringBuffer();
           
           umlClassDiagram.diagrameElement.dependency.add(currentDependency);
-        } catch (final Exception e) {
+        } catch (final NumberFormatException e) {
           throw new SAXException(e);
         } break;
       case "umlView":
         try {
-          umlClassDiagram.uMLView.add(new UMLView());
-          umlClassDiagram.uMLView.getLast().name = attributes.getValue("name");
+          UMLView newUMLView;
+          if (umlClassDiagram.uMLView.size() == 0) // root graphic view
+            newUMLView = new UMLView();
+          else // new view
+            newUMLView = new UMLView(attributes.getValue("name"));
+          currentUMLView = newUMLView;
+          umlClassDiagram.uMLView.add(newUMLView);
         } catch (final Exception e) {
           throw new SAXException(e);
         } break;
@@ -1036,7 +1054,7 @@ public class XMLParser extends DefaultHandler {
             currentComponentView.typeEnumDisplay = TypeEnumDisplay
                 .valueOf(attributes.getValue("enumValuesVisible"));
           
-        } catch (final Exception e) {
+        } catch (final NumberFormatException e) {
           throw new SAXException(e);
         } break;
       case "geometry":
@@ -1053,7 +1071,7 @@ public class XMLParser extends DefaultHandler {
               .getValue("relationId"));
           currentRelationView.color = Integer.parseInt(attributes
               .getValue("color"));
-        } catch (final Exception e) {
+        } catch (final NumberFormatException e) {
           throw new SAXException(e);
         } break;
       case "multiView":
@@ -1062,7 +1080,7 @@ public class XMLParser extends DefaultHandler {
           currentMultiView.relationId = Integer.parseInt(attributes
               .getValue("relationId"));
           currentMultiView.color = Integer.parseInt(attributes.getValue("color"));
-        } catch (final Exception e) {
+        } catch (final NumberFormatException e) {
           throw new SAXException(e);
         } break;
       case "multiViewBounds":
@@ -1095,7 +1113,7 @@ public class XMLParser extends DefaultHandler {
           currentNote = new Note();
           currentNote.content = attributes.getValue("content");
           currentNote.color = Integer.parseInt(attributes.getValue("color"));
-        } catch (final Exception e) {
+        } catch (final NumberFormatException e) {
           throw new SAXException(e);
         } break;
       case "EnumValue":

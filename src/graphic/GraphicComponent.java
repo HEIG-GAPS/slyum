@@ -139,6 +139,8 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    * Delete this component from the parent. Delete a component will delete all
    * line associed with this component. A deleted component will no longer be
    * drawn or managed by the graphic view. This operation is irreversible.
+   * The diagram component associed with will be deleted only if it don't
+   * exist in another view.
    */
   public void delete() {
     if (!parent.containsComponent(this)) return;
