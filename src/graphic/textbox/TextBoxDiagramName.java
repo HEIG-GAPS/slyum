@@ -5,7 +5,6 @@
  */
 package graphic.textbox;
 
-import classDiagram.ClassDiagram;
 import classDiagram.INameObserver;
 import graphic.GraphicView;
 import graphic.entity.EntityView;

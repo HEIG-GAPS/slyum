@@ -199,7 +199,8 @@ public class STab extends JTabbedPane {
     currentGraphicView.refreshAllComponents();
   }
 
-  public final void addTabAskingName(ClassDiagram classDiagram, boolean isRoot) {
+  public final GraphicView addTabAskingName(ClassDiagram classDiagram, boolean isRoot) {
+    GraphicView newGraphicView = null;
     UserInputDialog uip = 
         new UserInputDialog(
             GraphicView.NO_NAMED_VIEW, "Slyum - New view", "Enter a name for the new view:");
@@ -207,7 +208,16 @@ public class STab extends JTabbedPane {
     uip.setVisible(true);
     
     if (uip.isAccepted())
-      addClosableTab(uip.getText(), new GraphicView(classDiagram, isRoot));
+      addClosableTab(uip.getText(), newGraphicView = new GraphicView(classDiagram, isRoot));
+    
+    return newGraphicView;
+  }
+  
+  public GraphicView addTabNotAskingName(String title, ClassDiagram classDiagram, boolean isRoot) {
+    GraphicView newGraphicView;
+    addClosableTab(
+        title, newGraphicView = new GraphicView(classDiagram, isRoot));
+    return newGraphicView;
   }
 
   public void addClosableTab(String title, GraphicView graphicView) {
@@ -282,6 +292,8 @@ public class STab extends JTabbedPane {
       int i = pane.indexOfTabComponent(GraphicViewTabComponent.this);
       if (o instanceof ClassDiagram) {
         String text = ((ClassDiagram)o).getName();
+        if (text.isEmpty())
+          text = "Main view";
         pane.setTitleAt(i, text);
         label.setText(text);
       }

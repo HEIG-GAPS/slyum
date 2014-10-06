@@ -299,7 +299,7 @@ public class ClassDiagram extends Observable
   public Element getXmlElement(Document doc) {
 
     Element classDiagram = doc.createElement(getXmlTagName());
-  classDiagram.setAttribute("name", getName());
+    classDiagram.setAttribute("name", getName());
     for (IDiagramComponent component : components)
       classDiagram.appendChild(component.getXmlElement(doc));
 

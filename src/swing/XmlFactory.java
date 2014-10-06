@@ -40,7 +40,8 @@ public class XmlFactory {
     // Elément principal (diagramme de classe).
     Element classDiagram = doc.createElement("classDiagram");
     classDiagram.appendChild(model.getXmlElement(doc));
-    classDiagram.appendChild(view.getXmlElement(doc));
+    for (GraphicView gv : PanelClassDiagram.getInstance().getAllGraphicViews())
+      classDiagram.appendChild(gv.getXmlElement(doc));
     doc.appendChild(classDiagram);
 
     return doc;

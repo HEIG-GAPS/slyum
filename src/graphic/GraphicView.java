@@ -481,6 +481,7 @@ public class GraphicView extends GraphicComponent
    * 
    * @param classDiagram
    *          the class diagram associated with this graphic view.
+   * @param isRoot if it's the main class diagram view.
    */
   public GraphicView(ClassDiagram classDiagram, boolean isRoot) {
     super();
@@ -1293,7 +1294,7 @@ public class GraphicView extends GraphicComponent
   }
 
   private LinkedList<GraphicComponent> getCurrentComponents() {
-    final LinkedList<GraphicComponent> components = new LinkedList<GraphicComponent>();
+    final LinkedList<GraphicComponent> components = new LinkedList<>();
 
     // Order is important, it is used to compute mouse event.
     components.addAll(linesView);
@@ -2620,7 +2621,8 @@ public class GraphicView extends GraphicComponent
 
   @Override
   public void notifyClassEntityCreation(ClassEntity component) {
-    if (PanelClassDiagram.getInstance().getCurrentGraphicView() == this)
+    if (PanelClassDiagram.getInstance().getCurrentGraphicView() == this ||
+        PanelClassDiagram.getInstance().isXmlImportation())
       addClassEntity(component);
   }
 
