@@ -17,19 +17,24 @@ public class TreeRenderer extends DefaultTreeCellRenderer {
   }
 
   @Override
-  public Component getTreeCellRendererComponent(JTree tree, Object value,
-          boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+  public Component getTreeCellRendererComponent(
+      JTree tree, Object value, boolean sel, boolean expanded, 
+      boolean leaf, int row, boolean hasFocus) {
 
-    super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row,
-            hasFocus);
+    super.getTreeCellRendererComponent(
+        tree, value, sel, expanded, leaf, row, hasFocus);
 
     if (row == 0) { // root
-      setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
-              + "diagramIcon.png"));
+      setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "diagramIcon.png"));
+    } else if (row == 1) {
+      if (expanded)
+        setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "boxOpenView.png"));
+      else
+        setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "boxCloseView.png"));
     }
-    else if (value instanceof ICustomizedIconNode)
-
-    setIcon(((ICustomizedIconNode) value).getCustomizedIcon());
+    else if (value instanceof ICustomizedIconNode) {
+      setIcon(((ICustomizedIconNode) value).getCustomizedIcon());
+    } 
 
     return this;
   }

@@ -100,7 +100,6 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
    */
   public TextBoxCommentary(final GraphicView parent, String text) {
     super(parent);
-
     init(text);
   }
 

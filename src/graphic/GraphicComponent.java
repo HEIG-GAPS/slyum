@@ -62,7 +62,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
   public static void askNewColorForSelectedItems() {
     PanelClassDiagram.getInstance()
-                     .getCurrentGraphicView().changeColorForSelectedItems();
+                     .getSelectedGraphicView().changeColorForSelectedItems();
   }
   
   public static LinkedList<GraphicComponent> getGraphicComponentsAssociedWith(
@@ -415,7 +415,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    *          the popupMenu to display or hide.
    */
   public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
-    GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+    GraphicView gv = PanelClassDiagram.getInstance().getSelectedGraphicView();
     locationContextMenuRequested = e.getPoint();
 
     if (e.isPopupTrigger()) {

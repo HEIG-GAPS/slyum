@@ -1027,7 +1027,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
         @Override
         public void actionPerformed(ActionEvent e) {
           ClassView classView = (ClassView)PanelClassDiagram
-              .getInstance().getCurrentGraphicView()
+              .getInstance().getSelectedGraphicView()
               .searchAssociedComponent(currentObject);
           classView.addConstructor();
         }

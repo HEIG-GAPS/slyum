@@ -46,6 +46,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.helpers.DefaultHandler;
+import swing.slyumCustomizedComponents.STab;
 import utility.SMessageDialog;
 
 /**
@@ -165,6 +166,7 @@ public class XMLParser extends DefaultHandler {
 
     GraphicView graphicView;
     String name = null;
+    boolean open = true;
 
     LinkedList<Note> notes = new LinkedList<>();
 
@@ -173,12 +175,16 @@ public class XMLParser extends DefaultHandler {
     HashMap<Integer, RelationView> relationView = new HashMap<>();
 
     public UMLView() {
-      graphicView = PanelClassDiagram.getInstance().getCurrentGraphicView();
+      graphicView = PanelClassDiagram.getInstance().getSelectedGraphicView();
     }
 
-    public UMLView(String name) {
+    public UMLView(String name, boolean open) {
       this.name = name;
-      graphicView = PanelClassDiagram.getInstance().addNewView(name);
+      
+      if (open)
+        graphicView = PanelClassDiagram.getInstance().addAndOpenNewView(name);
+      else
+        graphicView = PanelClassDiagram.getInstance().addNewView(name);
     }
   }
   
@@ -259,7 +265,8 @@ public class XMLParser extends DefaultHandler {
       buffer.append(reader);
   }
 
-  private void createEntity(Entity e) throws SyntaxeNameException, SAXNotRecognizedException {
+  private void createEntity(Entity e) 
+      throws SyntaxeNameException, SAXNotRecognizedException {
     classDiagram.components.Entity ce = null;
     e.name = TypeName.verifyAndAskNewName(e.name);
     boolean isSimpleEntity = true;
@@ -374,8 +381,8 @@ public class XMLParser extends DefaultHandler {
   public void createDiagram() 
       throws SyntaxeNameException, SAXNotRecognizedException {
     
-    PanelClassDiagram.getInstance().setCurrentGraphicView(0);
-    GraphicView rootGraphicView = PanelClassDiagram.getInstance().getCurrentGraphicView();
+    PanelClassDiagram.getInstance().setSelectedGraphicView(0);
+    GraphicView rootGraphicView = PanelClassDiagram.getInstance().getSelectedGraphicView();
     classDiagram.setName(umlClassDiagram.name);
     classDiagram.notifyObservers();
     
@@ -475,7 +482,7 @@ public class XMLParser extends DefaultHandler {
             currentComponentView.componentId, currentComponentView);
         break;
       case "note":
-        umlClassDiagram.uMLView.getFirst().notes.add(currentNote);
+        currentUMLView.notes.add(currentNote);
         currentNote = null;
         break;
       case "multiViewBounds":
@@ -626,7 +633,6 @@ public class XMLParser extends DefaultHandler {
   private void importClassesAndInterfaces() 
       throws SyntaxeNameException, SAXNotRecognizedException {
     for (final Entity e : umlClassDiagram.diagrameElement.entity)
-
       if (!(e.entityType == EntityType.ASSOCIATION_CLASS)) createEntity(e);
 
   }
@@ -669,44 +675,45 @@ public class XMLParser extends DefaultHandler {
     }
   }
 
-  private void importNotes() {/*
-    for (final Note note : umlClassDiagram.uMLView.getFirst().notes) {
-      final TextBoxCommentary noteView = new TextBoxCommentary(graphicView,
-              note.content);
+  private void importNotes() {
+    for (UMLView umlView : umlClassDiagram.uMLView) {
+      GraphicView graphicView = umlView.graphicView;
+      for (final Note note : umlView.notes) {
+        final TextBoxCommentary noteView = new TextBoxCommentary(graphicView,
+                note.content);
 
-      noteView.setBounds(note.bounds);
+        noteView.setBounds(note.bounds);
 
-      for (final RelationView rv : note.line) {
-        GraphicComponent component = graphicView
-                .searchAssociedComponent(classDiagram
-                        .searchComponentById(rv.relationId));
+        for (final RelationView rv : note.line) {
+          GraphicComponent component = graphicView
+                  .searchAssociedComponent(classDiagram
+                          .searchComponentById(rv.relationId));
 
-        if (rv.relationId == -1)
+          if (rv.relationId == -1)
+            component = graphicView;
 
-        component = graphicView;
+          if (LineCommentary.checkCreate(noteView, component, false)) {
+            final LineCommentary lc = new LineCommentary(
+                graphicView, noteView, component, rv.line.getFirst(), 
+                rv.line.getLast(), false);
+            
+            for (int i = 1; i < rv.line.size() - 1; i++) {
+              final RelationGrip rg = new RelationGrip(graphicView, lc);
+              rg.setAnchor(rv.line.get(i));
+              lc.addGrip(rg, i);
+            }
 
-        if (LineCommentary.checkCreate(noteView, component, false)) {
-          final LineCommentary lc = new LineCommentary(graphicView, noteView,
-                  component, rv.line.getFirst(), rv.line.getLast(), false);
-
-          for (int i = 1; i < rv.line.size() - 1; i++) {
-            final RelationGrip rg = new RelationGrip(graphicView, lc);
-            rg.setAnchor(rv.line.get(i));
-            lc.addGrip(rg, i);
+            lc.getFirstPoint().setAnchor(rv.line.getFirst());
+            lc.getLastPoint().setAnchor(rv.line.getLast());
+            lc.setColor(rv.color);
+            graphicView.addLineView(lc);
           }
-
-          lc.getFirstPoint().setAnchor(rv.line.getFirst());
-          lc.getLastPoint().setAnchor(rv.line.getLast());
-
-          lc.setColor(rv.color);
-
-          graphicView.addLineView(lc);
         }
-      }
 
-      noteView.setColor(note.color);
-      graphicView.addNotes(noteView);
-    }*/
+        noteView.setColor(note.color);
+        graphicView.addNotes(noteView);
+      }
+    }
   }
 
   public void locateComponentBounds() {
@@ -1020,10 +1027,16 @@ public class XMLParser extends DefaultHandler {
       case "umlView":
         try {
           UMLView newUMLView;
+          boolean open = true;
+          
+          if (attributes.getValue("open") != null)
+            open = Boolean.valueOf(attributes.getValue("open"));
+          
           if (umlClassDiagram.uMLView.size() == 0) // root graphic view
             newUMLView = new UMLView();
           else // new view
-            newUMLView = new UMLView(attributes.getValue("name"));
+            newUMLView = new UMLView(attributes.getValue("name"), open);
+          
           currentUMLView = newUMLView;
           umlClassDiagram.uMLView.add(newUMLView);
         } catch (final Exception e) {

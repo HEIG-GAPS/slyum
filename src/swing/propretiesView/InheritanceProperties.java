@@ -89,7 +89,7 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
       lblName.setText(i.getChild().getName() + " -> " + parent.getName());
       btnOI.setEnabled(!parent.isEveryMethodsStatic());
       btnChangeOrientation.changeActionListener(PanelClassDiagram.getInstance()
-              .getCurrentGraphicView().searchAssociedComponent(currentObject));
+              .getSelectedGraphicView().searchAssociedComponent(currentObject));
     }
   }
 
@@ -99,7 +99,7 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
     if (ACTION_OI.equals(e.getActionCommand()))
       i.showOverridesAndImplementations();
     else if (Slyum.ACTION_ADJUST_INHERITANCE.equals(e.getActionCommand()))
-      PanelClassDiagram.getInstance().getCurrentGraphicView()
+      PanelClassDiagram.getInstance().getSelectedGraphicView()
               .adjustInheritances();
   }
 }

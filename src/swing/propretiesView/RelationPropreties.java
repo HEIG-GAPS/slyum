@@ -195,7 +195,7 @@ public class RelationPropreties extends GlobalPropreties {
         textFieldLabel.setText(dependency.getLabel());
       }
       btnChangeOrientation.changeActionListener(PanelClassDiagram.getInstance()
-              .getCurrentGraphicView().searchAssociedComponent(currentObject));
+              .getSelectedGraphicView().searchAssociedComponent(currentObject));
       setVisibleNavigationBtn(currentObject instanceof Binary);
       btnChangeOrientation.setVisible(currentObject instanceof Binary
               || currentObject instanceof Dependency);

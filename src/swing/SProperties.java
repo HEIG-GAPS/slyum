@@ -949,7 +949,7 @@ public class SProperties extends JDialog {
                 PanelClassDiagram.getInstance().getAllGraphicViews())
               gv.setVisibleDiagramName(selected);
             setVisible(false);
-            PanelClassDiagram.getInstance().getCurrentGraphicView().repaint();
+            PanelClassDiagram.getInstance().getSelectedGraphicView().repaint();
           }
 
         });

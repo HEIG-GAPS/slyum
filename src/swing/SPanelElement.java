@@ -135,7 +135,7 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
         super.setValue(value);
 
         if (PanelClassDiagram.getInstance() != null)
-          PanelClassDiagram.getInstance().getCurrentGraphicView().repaint();
+          PanelClassDiagram.getInstance().getSelectedGraphicView().repaint();
       }
     };
     sliderZoom.setPreferredSize(new Dimension(100, 15));
@@ -183,14 +183,14 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
   }
 
   public void componentSelectionChanged() {
-    GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+    GraphicView gv = PanelClassDiagram.getInstance().getSelectedGraphicView();
     btnDelete.setEnabled(gv.countSelectedComponents() > 0);
     btnDuplicate.setEnabled(gv.countSelectedEntities() > 0);
     updateBtnState();
   }
 
   public void updateBtnState() {
-    GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+    GraphicView gv = PanelClassDiagram.getInstance().getSelectedGraphicView();
     int nb = gv.countSelectedEntities();
     boolean enable = nb > 1;
     alignTop.setEnabled(enable);
@@ -210,7 +210,7 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+    GraphicView gv = PanelClassDiagram.getInstance().getSelectedGraphicView();
     gv.setStopRepaint(true);
     switch (e.getActionCommand()) {
       case Slyum.ACTION_UNDO:

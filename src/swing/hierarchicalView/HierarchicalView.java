@@ -17,6 +17,7 @@ import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
+import graphic.GraphicView;
 import graphic.entity.EntityView;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -26,9 +27,12 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -62,7 +66,7 @@ import utility.PersonalizedIcon;
 public class HierarchicalView 
     extends JPanel 
     implements IComponentsObserver, TreeSelectionListener, Observer {
-  private final DefaultMutableTreeNode entitiesNode, associationsNode,
+  private final DefaultMutableTreeNode viewsNode, entitiesNode, associationsNode,
           inheritancesNode, dependenciesNode;
   private final STree tree;
   private final DefaultTreeModel treeModel;
@@ -129,6 +133,9 @@ public class HierarchicalView
     final DefaultMutableTreeNode root = new DefaultMutableTreeNode(
             classDiagram.getName());
 
+    viewsNode = new DefaultMutableTreeNode("Views");
+    root.add(viewsNode);
+
     entitiesNode = new DefaultMutableTreeNode("Entities");
     root.add(entitiesNode);
 
@@ -144,7 +151,8 @@ public class HierarchicalView
     treeModel = new DefaultTreeModel(root) {
       @Override
       public void removeNodeFromParent(MutableTreeNode node) {
-        ((IClassDiagramNode) node).remove();
+        if (node instanceof IClassDiagramNode)
+          ((IClassDiagramNode) node).remove();
         super.removeNodeFromParent(node);
       }
     };
@@ -166,6 +174,27 @@ public class HierarchicalView
       }
     });
     tree.addTreeSelectionListener(this);
+    tree.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mousePressed(MouseEvent e) {
+        int selRow = tree.getRowForLocation(e.getX(), e.getY());
+        TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+        if(selRow != -1) {
+          Object lastComponent = selPath.getLastPathComponent();
+          if (lastComponent instanceof NodeView) {
+            NodeView nodeView = (NodeView)lastComponent;
+            if(e.getClickCount() == 2) {
+              PanelClassDiagram panel = PanelClassDiagram.getInstance();
+              GraphicView gv = nodeView.getGraphicView();
+              if (gv.isOpenInTab())
+                panel.setSelectedGraphicView(nodeView.getGraphicView());
+              else
+                panel.openView(gv);
+            }
+          }
+        }
+      }
+    });
     tree.getSelectionModel().setSelectionMode(
             TreeSelectionModel.SINGLE_TREE_SELECTION);
     tree.setCellRenderer(new TreeRenderer());
@@ -176,6 +205,17 @@ public class HierarchicalView
     add(scrollPane);
     classDiagram.addComponentsObserver(this);
     setMinimumSize(new Dimension(150, 200));
+  }
+  
+  public void addView(GraphicView graphicView) {
+    viewsNode.insert(
+        new NodeView(graphicView), 
+        getLastIndex(viewsNode));
+    treeModel.reload(viewsNode);
+  }
+  
+  private int getLastIndex(DefaultMutableTreeNode node) {
+    return node.getLeafCount() + (node.isLeaf() ? -1 : 0);
   }
 
   public void addAggregation(Aggregation component) {
@@ -260,7 +300,7 @@ public class HierarchicalView
 
   public void changeZOrder(Entity entity, int index) {
     LinkedList<EntityView> evs = PanelClassDiagram.getInstance()
-            .getCurrentGraphicView().getSelectedEntities();
+            .getSelectedGraphicView().getSelectedEntities();
 
     final NodeEntity ne = (NodeEntity) searchAssociedNodeIn(entity,
             entitiesNode);
@@ -283,6 +323,35 @@ public class HierarchicalView
       treeModel.removeNodeFromParent((DefaultMutableTreeNode) associedNode);
       component.deleteObserver((Observer) associedNode);
     }
+  }
+  
+  public void removeView(GraphicView graphicView) {
+    NodeView nodeView = searchNodeViewAssociedWith(graphicView);
+
+    if (nodeView != null) {
+      treeModel.removeNodeFromParent((DefaultMutableTreeNode) nodeView);
+      graphicView.deleteObserver((Observer) nodeView);
+    }
+  }
+  
+  public void removeViews() {
+    List<GraphicView> gvs = PanelClassDiagram.getInstance().getAllGraphicViews();
+    gvs.remove(PanelClassDiagram.getInstance().getRootGraphicView());
+    
+    for (GraphicView gv : gvs)
+      removeView(gv);
+  }
+  
+  public NodeView searchNodeViewAssociedWith(GraphicView graphicView) {
+    NodeView child;
+
+    for (int i = 0; i < viewsNode.getChildCount(); i++) {
+      child = (NodeView) viewsNode.getChildAt(i);
+
+      if (child.getGraphicView() == graphicView)
+        return child;
+    }
+    return null;
   }
 
   /**
@@ -346,7 +415,10 @@ public class HierarchicalView
       if (e.isAddedPath(treePath2)) 
         paths.add(treePath2);
     
-    PanelClassDiagram.getInstance().getCurrentGraphicView().unselectAll();
+    GraphicView selectedGraphicView = 
+        PanelClassDiagram.getInstance().getSelectedGraphicView();
+    if (selectedGraphicView != null)
+      selectedGraphicView.unselectAll();
 
     for (final TreePath treePath : paths) {
       final Object o = treePath.getLastPathComponent();
@@ -384,8 +456,11 @@ public class HierarchicalView
 
   @Override
   public void update(Observable o, Object arg) {
-    if (o instanceof ClassDiagram)
-      setDiagramName(((ClassDiagram)o).getName());
+    if (o instanceof ClassDiagram) {
+      String name = ((ClassDiagram)o).getName();
+      setDiagramName(name);
+      viewsNode.getFirstLeaf().setUserObject(name);
+    }
   }
 
   @Override

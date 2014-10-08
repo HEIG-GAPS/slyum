@@ -976,6 +976,10 @@ public class GraphicView extends GraphicComponent
   public boolean addNotes(TextBoxCommentary component) {
     return addComponentIn(component, notes);
   }
+  
+  public boolean isOpenInTab() {
+    return PanelClassDiagram.getInstance().isGraphicViewOpened(this);
+  }
 
   /**
    * Add a new graphic component. Adding a component means it will be drawn and
@@ -2528,6 +2532,7 @@ public class GraphicView extends GraphicComponent
   public Element getXmlElement(Document doc) {
     Element graphicView = doc.createElement(getXmlTagName());
     graphicView.setAttribute("name", getName());
+    graphicView.setAttribute("open", String.valueOf(isOpenInTab()));
     graphicView.setAttribute("grid", String.valueOf(getGridSize()));
 
     for (GraphicComponent c : getAllComponents()) {
@@ -2621,7 +2626,7 @@ public class GraphicView extends GraphicComponent
 
   @Override
   public void notifyClassEntityCreation(ClassEntity component) {
-    if (PanelClassDiagram.getInstance().getCurrentGraphicView() == this ||
+    if (PanelClassDiagram.getInstance().getSelectedGraphicView() == this ||
         PanelClassDiagram.getInstance().isXmlImportation())
       addClassEntity(component);
   }

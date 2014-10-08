@@ -262,7 +262,7 @@ public abstract class SimpleEntityView extends EntityView {
   public static List<SimpleEntityView> getAll() {
     LinkedList<SimpleEntityView> simples = new LinkedList<>();
     for (EntityView view : PanelClassDiagram.getInstance()
-            .getCurrentGraphicView().getEntitiesView())
+            .getSelectedGraphicView().getEntitiesView())
       if (view instanceof SimpleEntityView)
         simples.add((SimpleEntityView) view);
     return simples;
