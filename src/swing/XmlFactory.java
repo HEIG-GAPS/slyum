@@ -34,7 +34,7 @@ public class XmlFactory {
     // Réinitialisation du document.
     Document doc = createNewDocument();
 
-    GraphicView view = PanelClassDiagram.getInstance().getCurrentGraphicView();
+    GraphicView view = PanelClassDiagram.getInstance().getSelectedGraphicView();
     ClassDiagram model = view.getClassDiagram();
 
     // Elément principal (diagramme de classe).

@@ -54,7 +54,7 @@ public class SPanelFileComponent extends SToolBar implements ActionListener {
       p.exportAsImage();
 
     else if (Slyum.ACTION_KLIPPER.equals(e.getActionCommand()))
-      p.getCurrentGraphicView().copyDiagramToClipboard();
+      p.getSelectedGraphicView().copyDiagramToClipboard();
 
     else if (Slyum.ACTION_PRINT.equals(e.getActionCommand())) p.initPrinting();
   }

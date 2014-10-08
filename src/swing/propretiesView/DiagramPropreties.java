@@ -113,7 +113,7 @@ public class DiagramPropreties extends GlobalPropreties {
     if (panel == null) return;
 
     File fileOpen = PanelClassDiagram.getFileOpen();
-    GraphicView gv = panel.getCurrentGraphicView();
+    GraphicView gv = panel.getSelectedGraphicView();
     ClassDiagram cd = gv.getClassDiagram();
 
     if (fileOpen != null) {

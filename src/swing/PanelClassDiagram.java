@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -34,15 +35,20 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.filechooser.FileFilter;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.PropretiesChanger;
@@ -72,8 +78,12 @@ public class PanelClassDiagram extends JPanel {
     return null;
   }
   
-  public void setCurrentGraphicView(int index) {
+  public void setSelectedGraphicView(int index) {
     STab.getInstance().setSelectedIndex(index);
+  }
+  
+  public void setSelectedGraphicView(GraphicView graphicView) {
+    STab.getInstance().setSelectedComponent(graphicView.getScrollPane());
   }
   
   public static void setCurrentDiagramName(String name) {
@@ -115,6 +125,7 @@ public class PanelClassDiagram extends JPanel {
   private WatchEvent.Kind<Path> fileChanged;
   private WatchFileListener watchFileListener;
   private boolean xmlImportation = false;
+  private LinkedList<GraphicView> graphicViews = new LinkedList<>();
 
   SSplitPane splitInner, // Split graphicview part and properties part.
           splitOuter; // Split inner split and hierarchical part.
@@ -164,7 +175,9 @@ public class PanelClassDiagram extends JPanel {
       }
     };
     
-    STab.initialize(new GraphicView(getClassDiagram(), true));
+    GraphicView rootGraphicView = new GraphicView(getClassDiagram(), true);
+    graphicViews.add(rootGraphicView);
+    STab.initialize(rootGraphicView);
     slyumTabbedPane = STab.getInstance();
 
     // Personalized ToolBar Layout
@@ -182,6 +195,7 @@ public class PanelClassDiagram extends JPanel {
         JSplitPane.HORIZONTAL_SPLIT,
         hierarchicalView = new HierarchicalView(getClassDiagram()), splitInner);
     splitOuter.setResizeWeight(0.0);
+    hierarchicalView.addView(rootGraphicView);
 
     add(splitOuter, BorderLayout.CENTER);
 
@@ -191,7 +205,7 @@ public class PanelClassDiagram extends JPanel {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        getCurrentGraphicView().deleteCurrentFactory();
+        getSelectedGraphicView().deleteCurrentFactory();
       }
     });
     getClassDiagram().addObserver(hierarchicalView);
@@ -209,13 +223,95 @@ public class PanelClassDiagram extends JPanel {
               .showQuestionMessageYesNoCancel("Save current project ?");
   }
   
-  public GraphicView addNewView() {
-    return STab.getInstance().addTabAskingName(classDiagram, false);
+  public GraphicView addNewView() {    
+    UserInputDialog uip = 
+        new UserInputDialog(
+            GraphicView.NO_NAMED_VIEW, "Slyum - New view", "Enter a name for the new view:");
+    
+    uip.setVisible(true);
+    
+    if (uip.isAccepted())
+      return addNewView(uip.getText());
+    
+    return null;
   }
   
   public GraphicView addNewView(String title) {
-    return STab.getInstance().addTabNotAskingName(title, classDiagram, false);
+    GraphicView newGraphicView = new GraphicView(classDiagram, false);
+    graphicViews.add(newGraphicView);
+    hierarchicalView.addView(newGraphicView);
+    newGraphicView.setName(title);
+    newGraphicView.notifyObservers();
+    return newGraphicView;
   }
+  
+  public GraphicView openView(GraphicView graphicView) {
+    STab.getInstance().openTab(graphicView);
+    setSelectedGraphicView(graphicView);
+    
+    if (!isXmlImportation())
+      changeViewStatInFile(graphicView, true);
+    
+    return graphicView;
+  }
+  
+  public GraphicView closeView(GraphicView graphicView) {
+    if (!isXmlImportation())
+      changeViewStatInFile(graphicView, false);
+    
+    STab.getInstance().remove(graphicView.getScrollPane());
+    return graphicView;
+  }
+  
+  public void removeView(GraphicView graphicView) {
+    
+  }
+  
+  public GraphicView addAndOpenNewView() {
+    return openView(addNewView());
+  }
+  
+  public GraphicView addAndOpenNewView(String title) {
+    return openView(addNewView(title));
+  }
+  
+  private Document getDocumentFromCurrentFile() 
+      throws ParserConfigurationException, SAXException, IOException {
+    String filepath = currentFile.getAbsolutePath();
+    DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+    DocumentBuilder docBuilder = docFactory.newDocumentBuilder(); 
+    return docBuilder.parse(filepath);
+  }
+  
+  private void saveDocumentInCurrentFile(Document doc) 
+      throws TransformerConfigurationException, TransformerException {
+    
+      // write the content into xml file
+      TransformerFactory transformerFactory = TransformerFactory.newInstance();
+      Transformer transformer = transformerFactory.newTransformer();
+      DOMSource source = new DOMSource(doc);
+      StreamResult result = new StreamResult(currentFile);
+      transformer.transform(source, result);
+  }
+  
+  public void changeViewStatInFile(GraphicView graphicView, boolean open) {
+    try {      
+      WatchDir.ignoreNextEvents(getCurrentPath(), 2);
+      
+      Document doc = getDocumentFromCurrentFile();
+      
+      Node nodeUmlView = doc.getElementsByTagName("umlView").item(
+          graphicViews.indexOf(graphicView));
+
+      // Update the open attribute of the umlView node.
+      nodeUmlView.getAttributes().getNamedItem("open")
+          .setTextContent(String.valueOf(open));
+      
+      saveDocumentInCurrentFile(doc);
+    } catch (TransformerException | ParserConfigurationException | SAXException | IOException ex) {
+      Logger.getLogger(PanelClassDiagram.class.getName()).log(Level.SEVERE, null, ex);
+    }
+	}
 
   /**
    * Export the current graphic to an image file.
@@ -278,17 +374,26 @@ public class PanelClassDiagram extends JPanel {
    * 
    * @return the current GraphicView
    */
-  public GraphicView getCurrentGraphicView() {
-    return STab.getInstance().getTabComponentAt(
-        STab.getInstance().getSelectedIndex()).getGraphicView();
+  public GraphicView getSelectedGraphicView() {
+    STab.GraphicViewTabComponent component = 
+        STab.getInstance().getTabComponentAt(
+            STab.getInstance().getSelectedIndex());
+    
+    if (component != null)
+      return component.getGraphicView();
+    return null;
   }
   
   public GraphicView getRootGraphicView() {
-    return STab.getInstance().getTabComponentAt(0).getGraphicView();
+    return graphicViews.getFirst();
   }
   
   public List<GraphicView> getAllGraphicViews() {
-    return STab.getInstance().getAllGraphicsView();
+    return (List<GraphicView>) graphicViews.clone();
+  }
+  
+  public boolean isGraphicViewOpened(GraphicView graphicView) {
+    return STab.getInstance().getAllGraphicsView().contains(graphicView);
   }
 
   /**
@@ -362,14 +467,40 @@ public class PanelClassDiagram extends JPanel {
   public void cleanApplication() {
     setDiagramName("");
     classDiagram.removeAll();
+    cleanViews();
+    getRootGraphicView().removeAll();
+    STab.getInstance().setSelectedIndex(0);
+    setCurrentFile(null);
+  }
+  
+  /**
+   * Remove all tabs, nodes and graphicviews from this PanelClassDiagram.
+   * Do not remove them from current file. This method is generally used with
+   * by cleanApplication when opening a new file.
+   */
+  private void cleanViews() {
+    cleanTabs();
+    cleanHierarchicalView();
+    
+    // Clean graphic views last!
+    cleanGraphicViews();
+  }
+  
+  private void cleanTabs() {
+    
     while (STab.getInstance().getTabCount() > 2) {
       STab.getInstance().getTabComponentAt(1).getGraphicView().removeAll();
       STab.getInstance().remove(1);
     }
-      
-    getRootGraphicView().removeAll();
-    STab.getInstance().setSelectedIndex(0);
-    setCurrentFile(null);
+  }
+  
+  private void cleanHierarchicalView() {
+    hierarchicalView.removeViews();    
+  }
+  
+  private void cleanGraphicViews() {
+    while (graphicViews.size() > 1) // Do not remove the root graphic view.
+      graphicViews.remove(1);
   }
   
   public void setVisibleDiagramName(boolean visible) {
@@ -455,7 +586,7 @@ public class PanelClassDiagram extends JPanel {
 
     cleanApplication();
     
-    final GraphicView rootGraphicView = getCurrentGraphicView();
+    final GraphicView rootGraphicView = getSelectedGraphicView();
     rootGraphicView.getScrollPane().setVisible(false);
     
     final boolean isBlocked = Change.isBlocked();
@@ -553,7 +684,7 @@ public class PanelClassDiagram extends JPanel {
   public void print() {
     setCursor(new Cursor(Cursor.WAIT_CURSOR));
     try {
-      if (SlyumPrinterJob.print(getCurrentGraphicView()))
+      if (SlyumPrinterJob.print(getSelectedGraphicView()))
         SMessageDialog.showInformationMessage("Print completed successfully");
     } catch (PrinterException ex) {
       Logger.getLogger(
@@ -583,7 +714,7 @@ public class PanelClassDiagram extends JPanel {
                 + " already exists. Overwrite?") == JOptionPane.CANCEL_OPTION)
           return;
       
-      GraphicView graphicView = getCurrentGraphicView();
+      GraphicView graphicView = getSelectedGraphicView();
       switch (extension) {
         case "png":
           ImageIO.write(graphicView.getScreen(BufferedImage.TYPE_INT_ARGB_PRE),
@@ -647,7 +778,7 @@ public class PanelClassDiagram extends JPanel {
 
     e.printStackTrace();
     cleanApplication();
-    getCurrentGraphicView().setVisible(true);
+    getSelectedGraphicView().setVisible(true);
   }
 
   public void openFromXmlAndAsk(File file) {

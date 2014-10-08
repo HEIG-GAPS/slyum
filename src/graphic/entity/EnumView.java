@@ -242,12 +242,12 @@ public class EnumView extends EntityView {
 
   public static List<EnumView> getAll() {
     return extractEnumViewFromList(PanelClassDiagram.getInstance()
-            .getCurrentGraphicView().getEntitiesView());
+            .getSelectedGraphicView().getEntitiesView());
   }
 
   public static List<EnumView> getSelected() {
     return extractEnumViewFromList(PanelClassDiagram.getInstance()
-            .getCurrentGraphicView().getSelectedEntities());
+            .getSelectedGraphicView().getSelectedEntities());
   }
 
   private static List<EnumView> extractEnumViewFromList(List<EntityView> list) {
