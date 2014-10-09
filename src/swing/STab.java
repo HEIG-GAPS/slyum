@@ -1,4 +1,4 @@
-package swing.slyumCustomizedComponents;
+package swing;
 
 import classDiagram.ClassDiagram;
 import graphic.GraphicView;
@@ -285,7 +285,7 @@ public class STab extends JTabbedPane {
     }
   }
   
-  private static class ClosableTitleTab extends GraphicViewTabComponent {
+  static class ClosableTitleTab extends GraphicViewTabComponent {
     public ClosableTitleTab(final JTabbedPane pane, GraphicView graphicView) {
       super(pane, graphicView);      
       add(new LabelClose(), BorderLayout.EAST);
@@ -324,11 +324,7 @@ public class STab extends JTabbedPane {
 
           @Override
           public void mouseClicked(MouseEvent e) {
-            int selectedIndex = pane.getSelectedIndex();
-            int index = pane.indexOfTabComponent(ClosableTitleTab.this);
             PanelClassDiagram.getInstance().closeView(getGraphicView());
-            pane.setSelectedIndex(
-                selectedIndex == index ? index - 1 : (selectedIndex > index ? selectedIndex - 1 : selectedIndex));
             repaint();
           }
 
