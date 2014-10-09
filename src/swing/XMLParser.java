@@ -46,7 +46,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.helpers.DefaultHandler;
-import swing.slyumCustomizedComponents.STab;
 import utility.SMessageDialog;
 
 /**
@@ -400,7 +399,6 @@ public class XMLParser extends DefaultHandler {
     rootGraphicView.goRepaint();
 
     locateComponentBounds();
-    importNotes();
   }
 
   @Override
@@ -864,6 +862,8 @@ public class XMLParser extends DefaultHandler {
         }
       }
     }
+    
+    importNotes();
   }
 
   @Override

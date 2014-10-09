@@ -7,6 +7,7 @@ import classDiagram.verifyName.SyntaxeNameException;
 import graphic.GraphicView;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
+import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -31,6 +32,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
@@ -48,11 +50,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.PropretiesChanger;
-import swing.slyumCustomizedComponents.STab;
 import utility.MultiBorderLayout;
 import utility.SMessageDialog;
 import utility.Utility;
@@ -199,6 +201,7 @@ public class PanelClassDiagram extends JPanel {
 
     add(splitOuter, BorderLayout.CENTER);
 
+    // Escape key
     getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
             KeyStroke.getKeyStroke("ESCAPE"), "escapePressed");
     getActionMap().put("escapePressed", new AbstractAction() {
@@ -206,6 +209,19 @@ public class PanelClassDiagram extends JPanel {
       @Override
       public void actionPerformed(ActionEvent e) {
         getSelectedGraphicView().deleteCurrentFactory();
+      }
+    });
+
+    // CTRL + W key
+    getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
+            KeyStroke.getKeyStroke('W', 
+            Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), "CtrlWPressed");
+    getActionMap().put("CtrlWPressed", new AbstractAction() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        if (getSelectedGraphicView() != getRootGraphicView())
+          closeView(getSelectedGraphicView());
       }
     });
     getClassDiagram().addObserver(hierarchicalView);
@@ -242,6 +258,10 @@ public class PanelClassDiagram extends JPanel {
     hierarchicalView.addView(newGraphicView);
     newGraphicView.setName(title);
     newGraphicView.notifyObservers();
+    
+    if (!isXmlImportation())
+      addNewViewInFile(newGraphicView);
+    
     return newGraphicView;
   }
   
@@ -259,12 +279,30 @@ public class PanelClassDiagram extends JPanel {
     if (!isXmlImportation())
       changeViewStatInFile(graphicView, false);
     
-    STab.getInstance().remove(graphicView.getScrollPane());
+    JTabbedPane pane = STab.getInstance();
+    int selectedIndex = pane.getSelectedIndex();
+    int index = pane.indexOfComponent(graphicView.getScrollPane());
+    pane.remove(graphicView.getScrollPane());
+    pane.setSelectedIndex(
+        selectedIndex == index ? 
+            index - (index == pane.getTabCount() - 1 ? 1 : 0) : 
+            (selectedIndex > index ? selectedIndex - 1 : selectedIndex));
     return graphicView;
   }
   
   public void removeView(GraphicView graphicView) {
     
+  }
+  
+  private void addNewViewInFile(GraphicView graphicView) {
+    try {
+      WatchDir.ignoreNextEvents(getCurrentPath(), 2);
+      Document doc = getDocumentFromCurrentFile();
+      doc.getFirstChild().appendChild(graphicView.getXmlElement(doc));
+      saveDocumentInCurrentFile(doc);
+    } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
+      Logger.getLogger(PanelClassDiagram.class.getName()).log(Level.SEVERE, null, ex);
+    }
   }
   
   public GraphicView addAndOpenNewView() {
@@ -295,7 +333,8 @@ public class PanelClassDiagram extends JPanel {
   }
   
   public void changeViewStatInFile(GraphicView graphicView, boolean open) {
-    try {      
+    try {
+      String strOpen = String.valueOf(open);
       WatchDir.ignoreNextEvents(getCurrentPath(), 2);
       
       Document doc = getDocumentFromCurrentFile();
@@ -304,8 +343,13 @@ public class PanelClassDiagram extends JPanel {
           graphicViews.indexOf(graphicView));
 
       // Update the open attribute of the umlView node.
-      nodeUmlView.getAttributes().getNamedItem("open")
-          .setTextContent(String.valueOf(open));
+      Node openNode = nodeUmlView.getAttributes().getNamedItem("open");
+      
+      if (openNode == null) {
+        ((Element)nodeUmlView).setAttribute("open", strOpen);
+      } else {
+        openNode.setTextContent(strOpen);
+      }
       
       saveDocumentInCurrentFile(doc);
     } catch (TransformerException | ParserConfigurationException | SAXException | IOException ex) {
