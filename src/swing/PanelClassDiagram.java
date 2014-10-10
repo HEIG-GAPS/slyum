@@ -80,14 +80,6 @@ public class PanelClassDiagram extends JPanel {
     return null;
   }
   
-  public void setSelectedGraphicView(int index) {
-    STab.getInstance().setSelectedIndex(index);
-  }
-  
-  public void setSelectedGraphicView(GraphicView graphicView) {
-    STab.getInstance().setSelectedComponent(graphicView.getScrollPane());
-  }
-  
   public static void setCurrentDiagramName(String name) {
     getInstance().setDiagramName(name);
     getInstance().getClassDiagram().notifyObservers();
@@ -122,12 +114,10 @@ public class PanelClassDiagram extends JPanel {
   private ClassDiagram classDiagram;
   private HierarchicalView hierarchicalView;
   private File currentFile = null;
-  private STab slyumTabbedPane;
   private boolean disabledUpdate = false;
   private WatchEvent.Kind<Path> fileChanged;
   private WatchFileListener watchFileListener;
   private boolean xmlImportation = false;
-  private LinkedList<GraphicView> graphicViews = new LinkedList<>();
 
   SSplitPane splitInner, // Split graphicview part and properties part.
           splitOuter; // Split inner split and hierarchical part.
@@ -176,11 +166,8 @@ public class PanelClassDiagram extends JPanel {
         fileChanged = StandardWatchEventKinds.ENTRY_DELETE;
       }
     };
-    
-    GraphicView rootGraphicView = new GraphicView(getClassDiagram(), true);
-    graphicViews.add(rootGraphicView);
-    STab.initialize(rootGraphicView);
-    slyumTabbedPane = STab.getInstance();
+    hierarchicalView = new HierarchicalView(getClassDiagram());
+    MultiViewManager.initialize(getClassDiagram(), hierarchicalView);
 
     // Personalized ToolBar Layout
     add(SPanelFileComponent.getInstance(), BorderLayout.NORTH);
@@ -189,15 +176,15 @@ public class PanelClassDiagram extends JPanel {
 
     // Construct inner split pane.
     splitInner = new SSplitPane(JSplitPane.VERTICAL_SPLIT,
-            slyumTabbedPane, PropretiesChanger.getInstance());
+             STab.getInstance(), PropretiesChanger.getInstance());
     splitInner.setResizeWeight(1.0);
 
     // Construct outer split pane.
     splitOuter = new SSplitPane(
         JSplitPane.HORIZONTAL_SPLIT,
-        hierarchicalView = new HierarchicalView(getClassDiagram()), splitInner);
+        hierarchicalView, splitInner);
     splitOuter.setResizeWeight(0.0);
-    hierarchicalView.addView(rootGraphicView);
+    hierarchicalView.addView(MultiViewManager.getRootGraphicView());
 
     add(splitOuter, BorderLayout.CENTER);
 
@@ -208,7 +195,7 @@ public class PanelClassDiagram extends JPanel {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        getSelectedGraphicView().deleteCurrentFactory();
+        MultiViewManager.getSelectedGraphicView().deleteCurrentFactory();
       }
     });
 
@@ -220,8 +207,10 @@ public class PanelClassDiagram extends JPanel {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        if (getSelectedGraphicView() != getRootGraphicView())
-          closeView(getSelectedGraphicView());
+        GraphicView selected = MultiViewManager.getSelectedGraphicView(),
+                     root = MultiViewManager.getRootGraphicView();
+        if (selected != root)
+          MultiViewManager.closeView(selected);
       }
     });
     getClassDiagram().addObserver(hierarchicalView);
@@ -238,124 +227,6 @@ public class PanelClassDiagram extends JPanel {
       return SMessageDialog
               .showQuestionMessageYesNoCancel("Save current project ?");
   }
-  
-  public GraphicView addNewView() {    
-    UserInputDialog uip = 
-        new UserInputDialog(
-            GraphicView.NO_NAMED_VIEW, "Slyum - New view", "Enter a name for the new view:");
-    
-    uip.setVisible(true);
-    
-    if (uip.isAccepted())
-      return addNewView(uip.getText());
-    
-    return null;
-  }
-  
-  public GraphicView addNewView(String title) {
-    GraphicView newGraphicView = new GraphicView(classDiagram, false);
-    graphicViews.add(newGraphicView);
-    hierarchicalView.addView(newGraphicView);
-    newGraphicView.setName(title);
-    newGraphicView.notifyObservers();
-    
-    if (!isXmlImportation())
-      addNewViewInFile(newGraphicView);
-    
-    return newGraphicView;
-  }
-  
-  public GraphicView openView(GraphicView graphicView) {
-    STab.getInstance().openTab(graphicView);
-    setSelectedGraphicView(graphicView);
-    
-    if (!isXmlImportation())
-      changeViewStatInFile(graphicView, true);
-    
-    return graphicView;
-  }
-  
-  public GraphicView closeView(GraphicView graphicView) {
-    if (!isXmlImportation())
-      changeViewStatInFile(graphicView, false);
-    
-    JTabbedPane pane = STab.getInstance();
-    int selectedIndex = pane.getSelectedIndex();
-    int index = pane.indexOfComponent(graphicView.getScrollPane());
-    pane.remove(graphicView.getScrollPane());
-    pane.setSelectedIndex(
-        selectedIndex == index ? 
-            index - (index == pane.getTabCount() - 1 ? 1 : 0) : 
-            (selectedIndex > index ? selectedIndex - 1 : selectedIndex));
-    return graphicView;
-  }
-  
-  public void removeView(GraphicView graphicView) {
-    
-  }
-  
-  private void addNewViewInFile(GraphicView graphicView) {
-    try {
-      WatchDir.ignoreNextEvents(getCurrentPath(), 2);
-      Document doc = getDocumentFromCurrentFile();
-      doc.getFirstChild().appendChild(graphicView.getXmlElement(doc));
-      saveDocumentInCurrentFile(doc);
-    } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
-      Logger.getLogger(PanelClassDiagram.class.getName()).log(Level.SEVERE, null, ex);
-    }
-  }
-  
-  public GraphicView addAndOpenNewView() {
-    return openView(addNewView());
-  }
-  
-  public GraphicView addAndOpenNewView(String title) {
-    return openView(addNewView(title));
-  }
-  
-  private Document getDocumentFromCurrentFile() 
-      throws ParserConfigurationException, SAXException, IOException {
-    String filepath = currentFile.getAbsolutePath();
-    DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-    DocumentBuilder docBuilder = docFactory.newDocumentBuilder(); 
-    return docBuilder.parse(filepath);
-  }
-  
-  private void saveDocumentInCurrentFile(Document doc) 
-      throws TransformerConfigurationException, TransformerException {
-    
-      // write the content into xml file
-      TransformerFactory transformerFactory = TransformerFactory.newInstance();
-      Transformer transformer = transformerFactory.newTransformer();
-      DOMSource source = new DOMSource(doc);
-      StreamResult result = new StreamResult(currentFile);
-      transformer.transform(source, result);
-  }
-  
-  public void changeViewStatInFile(GraphicView graphicView, boolean open) {
-    try {
-      String strOpen = String.valueOf(open);
-      WatchDir.ignoreNextEvents(getCurrentPath(), 2);
-      
-      Document doc = getDocumentFromCurrentFile();
-      
-      Node nodeUmlView = doc.getElementsByTagName("umlView").item(
-          graphicViews.indexOf(graphicView));
-
-      // Update the open attribute of the umlView node.
-      Node openNode = nodeUmlView.getAttributes().getNamedItem("open");
-      
-      if (openNode == null) {
-        ((Element)nodeUmlView).setAttribute("open", strOpen);
-      } else {
-        openNode.setTextContent(strOpen);
-      }
-      
-      saveDocumentInCurrentFile(doc);
-    } catch (TransformerException | ParserConfigurationException | SAXException | IOException ex) {
-      Logger.getLogger(PanelClassDiagram.class.getName()).log(Level.SEVERE, null, ex);
-    }
-	}
 
   /**
    * Export the current graphic to an image file.
@@ -396,7 +267,7 @@ public class PanelClassDiagram extends JPanel {
    * 
    * @return the class diagram
    */
-  public ClassDiagram getClassDiagram() {
+  public final ClassDiagram getClassDiagram() {
     if (classDiagram == null) {
       classDiagram = new ClassDiagram();
       classDiagram.addComponentsObserver(PropretiesChanger.getInstance());
@@ -411,33 +282,6 @@ public class PanelClassDiagram extends JPanel {
 
   public JButton getUndoButton() {
     return SPanelElement.getInstance().getUndoButton();
-  }
-
-  /**
-   * Get the current GraphicView.
-   * 
-   * @return the current GraphicView
-   */
-  public GraphicView getSelectedGraphicView() {
-    STab.GraphicViewTabComponent component = 
-        STab.getInstance().getTabComponentAt(
-            STab.getInstance().getSelectedIndex());
-    
-    if (component != null)
-      return component.getGraphicView();
-    return null;
-  }
-  
-  public GraphicView getRootGraphicView() {
-    return graphicViews.getFirst();
-  }
-  
-  public List<GraphicView> getAllGraphicViews() {
-    return (List<GraphicView>) graphicViews.clone();
-  }
-  
-  public boolean isGraphicViewOpened(GraphicView graphicView) {
-    return STab.getInstance().getAllGraphicsView().contains(graphicView);
   }
 
   /**
@@ -512,7 +356,7 @@ public class PanelClassDiagram extends JPanel {
     setDiagramName("");
     classDiagram.removeAll();
     cleanViews();
-    getRootGraphicView().removeAll();
+    MultiViewManager.getRootGraphicView().removeAll();
     STab.getInstance().setSelectedIndex(0);
     setCurrentFile(null);
   }
@@ -527,7 +371,7 @@ public class PanelClassDiagram extends JPanel {
     cleanHierarchicalView();
     
     // Clean graphic views last!
-    cleanGraphicViews();
+    MultiViewManager.cleanGraphicViews();
   }
   
   private void cleanTabs() {
@@ -540,11 +384,6 @@ public class PanelClassDiagram extends JPanel {
   
   private void cleanHierarchicalView() {
     hierarchicalView.removeViews();    
-  }
-  
-  private void cleanGraphicViews() {
-    while (graphicViews.size() > 1) // Do not remove the root graphic view.
-      graphicViews.remove(1);
   }
   
   public void setVisibleDiagramName(boolean visible) {
@@ -630,7 +469,7 @@ public class PanelClassDiagram extends JPanel {
 
     cleanApplication();
     
-    final GraphicView rootGraphicView = getSelectedGraphicView();
+    final GraphicView rootGraphicView = MultiViewManager.getSelectedGraphicView();
     rootGraphicView.getScrollPane().setVisible(false);
     
     final boolean isBlocked = Change.isBlocked();
@@ -728,7 +567,7 @@ public class PanelClassDiagram extends JPanel {
   public void print() {
     setCursor(new Cursor(Cursor.WAIT_CURSOR));
     try {
-      if (SlyumPrinterJob.print(getSelectedGraphicView()))
+      if (SlyumPrinterJob.print(MultiViewManager.getSelectedGraphicView()))
         SMessageDialog.showInformationMessage("Print completed successfully");
     } catch (PrinterException ex) {
       Logger.getLogger(
@@ -758,7 +597,7 @@ public class PanelClassDiagram extends JPanel {
                 + " already exists. Overwrite?") == JOptionPane.CANCEL_OPTION)
           return;
       
-      GraphicView graphicView = getSelectedGraphicView();
+      GraphicView graphicView = MultiViewManager.getSelectedGraphicView();
       switch (extension) {
         case "png":
           ImageIO.write(graphicView.getScreen(BufferedImage.TYPE_INT_ARGB_PRE),
@@ -822,7 +661,7 @@ public class PanelClassDiagram extends JPanel {
 
     e.printStackTrace();
     cleanApplication();
-    getSelectedGraphicView().setVisible(true);
+    MultiViewManager.getSelectedGraphicView().setVisible(true);
   }
 
   public void openFromXmlAndAsk(File file) {

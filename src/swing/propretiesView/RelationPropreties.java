@@ -20,6 +20,7 @@ import classDiagram.relationships.Association.NavigateDirection;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Role;
+import swing.MultiViewManager;
 import swing.slyumCustomizedComponents.SRadioButton;
 import swing.slyumCustomizedComponents.TextFieldWithPrompt;
 
@@ -194,8 +195,9 @@ public class RelationPropreties extends GlobalPropreties {
 
         textFieldLabel.setText(dependency.getLabel());
       }
-      btnChangeOrientation.changeActionListener(PanelClassDiagram.getInstance()
-              .getSelectedGraphicView().searchAssociedComponent(currentObject));
+      btnChangeOrientation.changeActionListener(
+          MultiViewManager.getSelectedGraphicView()
+                          .searchAssociedComponent(currentObject));
       setVisibleNavigationBtn(currentObject instanceof Binary);
       btnChangeOrientation.setVisible(currentObject instanceof Binary
               || currentObject instanceof Dependency);

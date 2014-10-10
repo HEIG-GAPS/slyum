@@ -29,6 +29,7 @@ import change.BufferCreation;
 import change.Change;
 import classDiagram.IDiagramComponent;
 import java.util.LinkedList;
+import swing.MultiViewManager;
 import swing.slyumCustomizedComponents.SRadioButtonMenuItem;
 
 /**
@@ -61,14 +62,13 @@ public abstract class GraphicComponent extends Observable implements ActionListe
   protected boolean ligthDelete;
 
   public static void askNewColorForSelectedItems() {
-    PanelClassDiagram.getInstance()
-                     .getSelectedGraphicView().changeColorForSelectedItems();
+    MultiViewManager.getSelectedGraphicView().changeColorForSelectedItems();
   }
   
   public static LinkedList<GraphicComponent> getGraphicComponentsAssociedWith(
       IDiagramComponent diagramComponent) {
     LinkedList<GraphicComponent> results = new LinkedList<>();
-    for (GraphicView graphicView : PanelClassDiagram.getInstance().getAllGraphicViews()) {
+    for (GraphicView graphicView : MultiViewManager.getAllGraphicViews()) {
       GraphicComponent gc = graphicView.searchAssociedComponent(diagramComponent);
       if (gc != null)
         results.add(gc);
@@ -415,7 +415,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    *          the popupMenu to display or hide.
    */
   public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
-    GraphicView gv = PanelClassDiagram.getInstance().getSelectedGraphicView();
+    GraphicView gv = MultiViewManager.getSelectedGraphicView();
     locationContextMenuRequested = e.getPoint();
 
     if (e.isPopupTrigger()) {

@@ -209,8 +209,7 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
     PropertyLoader.getInstance().getProperties()
             .put(PropertyLoader.MODE_CURSOR, currentMode.toString());
     PropertyLoader.getInstance().push();
-    PanelClassDiagram.getInstance().getSelectedGraphicView()
-            .deleteCurrentFactory();
+    MultiViewManager.getSelectedGraphicView().deleteCurrentFactory();
     setButtonModeStyle(newMode.getBtnMode());
   }
 
@@ -225,7 +224,7 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
     if (Slyum.getInstance().getFocusOwner() instanceof JTextField)
       return;
     
-    GraphicView gv = PanelClassDiagram.getInstance().getSelectedGraphicView();
+    GraphicView gv = MultiViewManager.getSelectedGraphicView();
     switch (e.getActionCommand()) {
       case Slyum.ACTION_NEW_CLASS:
         gv.initNewComponent(new ClassFactory(gv));

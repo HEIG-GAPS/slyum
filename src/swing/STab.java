@@ -25,8 +25,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
-import swing.PanelClassDiagram;
-import swing.Slyum;
 import utility.PersonalizedIcon;
 
 /**
@@ -98,7 +96,7 @@ public class STab extends JTabbedPane {
       @Override
       public void mousePressed(MouseEvent e) {
         if(getBoundsAt(getTabCount() - 1).contains(e.getPoint()))
-          PanelClassDiagram.getInstance().addAndOpenNewView();
+          MultiViewManager.addAndOpenNewView();
       }      
     });
     
@@ -324,7 +322,7 @@ public class STab extends JTabbedPane {
 
           @Override
           public void mouseClicked(MouseEvent e) {
-            PanelClassDiagram.getInstance().closeView(getGraphicView());
+            MultiViewManager.closeView(getGraphicView());
             repaint();
           }
 

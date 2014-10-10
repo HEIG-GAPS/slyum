@@ -604,7 +604,7 @@ public class Slyum extends JFrame implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     PanelClassDiagram p = PanelClassDiagram.getInstance();
-    GraphicView gv = p.getSelectedGraphicView();
+    GraphicView gv = MultiViewManager.getSelectedGraphicView();
 
     switch (e.getActionCommand()) {
       case Slyum.ACTION_SAVE_AS:
@@ -629,8 +629,7 @@ public class Slyum extends JFrame implements ActionListener {
                   .showErrorMessage("An error occured while opening project. Please report.");
         break;
       case ACTION_PAGE_SETUP:
-        SlyumPrinterJob.pageDialog(
-                PanelClassDiagram.getInstance().getSelectedGraphicView());
+        SlyumPrinterJob.pageDialog(MultiViewManager.getSelectedGraphicView());
         break;
       case ACTION_PROPERTIES:
         openProperties();
@@ -658,30 +657,30 @@ public class Slyum extends JFrame implements ActionListener {
         gv.unselectAll();
         break;
       case ACTION_ZOOM_PLUS:
-        PanelClassDiagram.getInstance().getSelectedGraphicView().forwardScale();
+        MultiViewManager.getSelectedGraphicView().forwardScale();
         break;
       case ACTION_ZOOM_MINUS:
-        PanelClassDiagram.getInstance().getSelectedGraphicView().backScale();
+        MultiViewManager.getSelectedGraphicView().backScale();
         break;
       case ACTION_ZOOM_ADAPT:
-        PanelClassDiagram.getInstance().getSelectedGraphicView()
+        MultiViewManager.getSelectedGraphicView()
                 .adaptDiagramToWindow();
         break;
       case ACTION_ZOOM_ADAPT_SELECTION:
-        PanelClassDiagram.getInstance().getSelectedGraphicView()
+        MultiViewManager.getSelectedGraphicView()
                 .adaptSelectionToWindow();
         break;
       case ACTION_ZOOM_1:
-        PanelClassDiagram.getInstance().getSelectedGraphicView().setScale(1.0);
+        MultiViewManager.getSelectedGraphicView().setScale(1.0);
         break;
       case ACTION_ZOOM_0_5:
-        PanelClassDiagram.getInstance().getSelectedGraphicView().setScale(0.5);
+        MultiViewManager.getSelectedGraphicView().setScale(0.5);
         break;
       case ACTION_ZOOM_1_5:
-        PanelClassDiagram.getInstance().getSelectedGraphicView().setScale(1.5);
+        MultiViewManager.getSelectedGraphicView().setScale(1.5);
         break;
       case ACTION_ZOOM_2:
-        PanelClassDiagram.getInstance().getSelectedGraphicView().setScale(2.0);
+        MultiViewManager.getSelectedGraphicView().setScale(2.0);
         break;
       case ACTION_LOCATE:
         try {

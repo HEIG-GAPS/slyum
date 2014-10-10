@@ -174,16 +174,16 @@ public class XMLParser extends DefaultHandler {
     HashMap<Integer, RelationView> relationView = new HashMap<>();
 
     public UMLView() {
-      graphicView = PanelClassDiagram.getInstance().getSelectedGraphicView();
+      graphicView = MultiViewManager.getSelectedGraphicView();
     }
 
     public UMLView(String name, boolean open) {
       this.name = name;
       
       if (open)
-        graphicView = PanelClassDiagram.getInstance().addAndOpenNewView(name);
+        graphicView = MultiViewManager.addAndOpenNewView(name);
       else
-        graphicView = PanelClassDiagram.getInstance().addNewView(name);
+        graphicView = MultiViewManager.addNewView(name);
     }
   }
   
@@ -380,8 +380,8 @@ public class XMLParser extends DefaultHandler {
   public void createDiagram() 
       throws SyntaxeNameException, SAXNotRecognizedException {
     
-    PanelClassDiagram.getInstance().setSelectedGraphicView(0);
-    GraphicView rootGraphicView = PanelClassDiagram.getInstance().getSelectedGraphicView();
+    MultiViewManager.setSelectedGraphicView(0);
+    GraphicView rootGraphicView = MultiViewManager.getSelectedGraphicView();
     classDiagram.setName(umlClassDiagram.name);
     classDiagram.notifyObservers();
     

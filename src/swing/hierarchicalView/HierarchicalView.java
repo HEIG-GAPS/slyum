@@ -37,9 +37,11 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -50,6 +52,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+import swing.MultiViewManager;
 import swing.PanelClassDiagram;
 import swing.slyumCustomizedComponents.SScrollPane;
 import swing.Slyum;
@@ -175,6 +178,17 @@ public class HierarchicalView
     });
     tree.addTreeSelectionListener(this);
     tree.addMouseListener(new MouseAdapter() {
+      
+      public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
+        
+        if (SwingUtilities.isRightMouseButton(e)) {
+          popupMenu.show(e.getComponent(), (int) (e.getX()), (int) (e.getY()));
+          TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+          if (path != null) 
+            tree.setSelectionPath(path);
+        }
+      }
+  
       @Override
       public void mousePressed(MouseEvent e) {
         int selRow = tree.getRowForLocation(e.getX(), e.getY());
@@ -183,13 +197,16 @@ public class HierarchicalView
           Object lastComponent = selPath.getLastPathComponent();
           if (lastComponent instanceof NodeView) {
             NodeView nodeView = (NodeView)lastComponent;
+            
+            maybeShowPopup(e, nodeView.getPopupMenu());
+            
+            // Double click for open view
             if(e.getClickCount() == 2) {
-              PanelClassDiagram panel = PanelClassDiagram.getInstance();
               GraphicView gv = nodeView.getGraphicView();
               if (gv.isOpenInTab())
-                panel.setSelectedGraphicView(nodeView.getGraphicView());
+                MultiViewManager.setSelectedGraphicView(nodeView.getGraphicView());
               else
-                panel.openView(gv);
+                MultiViewManager.openView(gv);
             }
           }
         }
@@ -212,7 +229,7 @@ public class HierarchicalView
         new NodeView(graphicView), 
         getLastIndex(viewsNode));
     treeModel.reload(viewsNode);
-  }
+  }  
   
   private int getLastIndex(DefaultMutableTreeNode node) {
     return node.getLeafCount() + (node.isLeaf() ? -1 : 0);
@@ -299,8 +316,8 @@ public class HierarchicalView
   }
 
   public void changeZOrder(Entity entity, int index) {
-    LinkedList<EntityView> evs = PanelClassDiagram.getInstance()
-            .getSelectedGraphicView().getSelectedEntities();
+    LinkedList<EntityView> evs = 
+        MultiViewManager.getSelectedGraphicView().getSelectedEntities();
 
     final NodeEntity ne = (NodeEntity) searchAssociedNodeIn(entity,
             entitiesNode);
@@ -335,8 +352,8 @@ public class HierarchicalView
   }
   
   public void removeViews() {
-    List<GraphicView> gvs = PanelClassDiagram.getInstance().getAllGraphicViews();
-    gvs.remove(PanelClassDiagram.getInstance().getRootGraphicView());
+    List<GraphicView> gvs = MultiViewManager.getAllGraphicViews();
+    gvs.remove(MultiViewManager.getRootGraphicView());
     
     for (GraphicView gv : gvs)
       removeView(gv);
@@ -416,7 +433,7 @@ public class HierarchicalView
         paths.add(treePath2);
     
     GraphicView selectedGraphicView = 
-        PanelClassDiagram.getInstance().getSelectedGraphicView();
+        MultiViewManager.getSelectedGraphicView();
     if (selectedGraphicView != null)
       selectedGraphicView.unselectAll();
 
