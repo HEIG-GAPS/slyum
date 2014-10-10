@@ -293,7 +293,7 @@ public class STab extends JTabbedPane {
     
     @Override
     public void update(Observable o, Object arg) {
-      int i = pane.indexOfTabComponent(this);
+      int i = pane.indexOfComponent(getGraphicView().getScrollPane());
       if (o instanceof GraphicView) {
         String text = ((GraphicView)o).getName();
         pane.setTitleAt(i, text);

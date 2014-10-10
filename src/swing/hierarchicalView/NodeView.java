@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import swing.MultiViewManager;
 import swing.Slyum;
 import utility.PersonalizedIcon;
@@ -28,11 +29,13 @@ public class NodeView
     implements ICustomizedIconNode, Observer {
   
   private GraphicView graphicView;
+  private DefaultTreeModel treeModel;
   private JPopupMenu popupMenu;
 
-  public NodeView(GraphicView graphicView) {
+  public NodeView(GraphicView graphicView, DefaultTreeModel treeModel) {
     super(graphicView.getName());
     this.graphicView = graphicView;
+    this.treeModel = treeModel;
     graphicView.addObserver(this);
     
     popupMenu = new JPopupMenu();
@@ -63,8 +66,10 @@ public class NodeView
 
   @Override
   public void update(Observable o, Object arg) {
-    if (o instanceof GraphicView)
+    if (o instanceof GraphicView) {
       setUserObject(((GraphicView)o).getName());
+      treeModel.reload(getParent());
+    }
   }
 
   JPopupMenu getPopupMenu() {
