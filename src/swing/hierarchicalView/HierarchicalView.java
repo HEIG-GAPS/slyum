@@ -197,7 +197,7 @@ public class HierarchicalView
   
   public void addView(GraphicView graphicView) {
     viewsNode.insert(
-        new NodeView(graphicView), 
+        new NodeView(graphicView, treeModel), 
         getLastIndex(viewsNode));
     treeModel.reload(viewsNode);
   }
