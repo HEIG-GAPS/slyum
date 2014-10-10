@@ -86,6 +86,7 @@ import javax.swing.TransferHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import swing.IListenerComponentSelectionChanged;
+import swing.MultiViewManager;
 import swing.PanelClassDiagram;
 import swing.PropertyLoader;
 import swing.slyumCustomizedComponents.SButton;
@@ -367,7 +368,7 @@ public class GraphicView extends GraphicComponent
     PropertyLoader.getInstance().push();
 
     // Update the components bounds for adapting with new grid.
-    for (GraphicView gv : PanelClassDiagram.getInstance().getAllGraphicViews())
+    for (GraphicView gv : MultiViewManager.getAllGraphicViews())
       for (final GraphicComponent c : gv.getAllComponents())
         c.setBounds(c.getBounds());
   }
@@ -978,7 +979,7 @@ public class GraphicView extends GraphicComponent
   }
   
   public boolean isOpenInTab() {
-    return PanelClassDiagram.getInstance().isGraphicViewOpened(this);
+    return MultiViewManager.isGraphicViewOpened(this);
   }
 
   /**
@@ -2626,7 +2627,7 @@ public class GraphicView extends GraphicComponent
 
   @Override
   public void notifyClassEntityCreation(ClassEntity component) {
-    if (PanelClassDiagram.getInstance().getSelectedGraphicView() == this ||
+    if (MultiViewManager.getSelectedGraphicView()== this ||
         PanelClassDiagram.getInstance().isXmlImportation())
       addClassEntity(component);
   }

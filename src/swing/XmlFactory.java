@@ -34,13 +34,13 @@ public class XmlFactory {
     // Réinitialisation du document.
     Document doc = createNewDocument();
 
-    GraphicView view = PanelClassDiagram.getInstance().getSelectedGraphicView();
+    GraphicView view = MultiViewManager.getSelectedGraphicView();
     ClassDiagram model = view.getClassDiagram();
 
     // Elément principal (diagramme de classe).
     Element classDiagram = doc.createElement("classDiagram");
     classDiagram.appendChild(model.getXmlElement(doc));
-    for (GraphicView gv : PanelClassDiagram.getInstance().getAllGraphicViews())
+    for (GraphicView gv : MultiViewManager.getAllGraphicViews())
       classDiagram.appendChild(gv.getXmlElement(doc));
     doc.appendChild(classDiagram);
 

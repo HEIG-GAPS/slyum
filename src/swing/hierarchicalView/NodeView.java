@@ -7,10 +7,15 @@
 package swing.hierarchicalView;
 
 import graphic.GraphicView;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.ImageIcon;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
+import swing.MultiViewManager;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 
@@ -23,11 +28,25 @@ public class NodeView
     implements ICustomizedIconNode, Observer {
   
   private GraphicView graphicView;
+  private JPopupMenu popupMenu;
 
   public NodeView(GraphicView graphicView) {
     super(graphicView.getName());
     this.graphicView = graphicView;
     graphicView.addObserver(this);
+    
+    popupMenu = new JPopupMenu();
+    
+    JMenuItem item = new JMenuItem("Delete");
+    item.setEnabled(graphicView != MultiViewManager.getRootGraphicView());
+    item.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        MultiViewManager.removeView(NodeView.this.graphicView);
+      }
+    });
+    popupMenu.add(item);
   }
 
   public GraphicView getGraphicView() {
@@ -43,6 +62,10 @@ public class NodeView
   public void update(Observable o, Object arg) {
     if (o instanceof GraphicView)
       setUserObject(((GraphicView)o).getName());
+  }
+
+  JPopupMenu getPopupMenu() {
+    return popupMenu;
   }
   
 }

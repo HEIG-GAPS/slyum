@@ -20,6 +20,7 @@ import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.SimpleEntity;
 import classDiagram.relationships.Inheritance;
+import swing.MultiViewManager;
 
 public class InheritanceProperties extends GlobalPropreties implements ActionListener {
   public static final String ACTION_OI = "O&I";
@@ -88,18 +89,22 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
 
       lblName.setText(i.getChild().getName() + " -> " + parent.getName());
       btnOI.setEnabled(!parent.isEveryMethodsStatic());
-      btnChangeOrientation.changeActionListener(PanelClassDiagram.getInstance()
-              .getSelectedGraphicView().searchAssociedComponent(currentObject));
+      btnChangeOrientation.changeActionListener(
+          MultiViewManager.getSelectedGraphicView()
+                          .searchAssociedComponent(currentObject));
     }
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
     Inheritance i = (Inheritance) currentObject;
-    if (ACTION_OI.equals(e.getActionCommand()))
-      i.showOverridesAndImplementations();
-    else if (Slyum.ACTION_ADJUST_INHERITANCE.equals(e.getActionCommand()))
-      PanelClassDiagram.getInstance().getSelectedGraphicView()
-              .adjustInheritances();
+    switch (e.getActionCommand()) {
+      case ACTION_OI:
+        i.showOverridesAndImplementations();
+        break;
+      case Slyum.ACTION_ADJUST_INHERITANCE:
+        MultiViewManager.getSelectedGraphicView().adjustInheritances();
+        break;
+    }
   }
 }
