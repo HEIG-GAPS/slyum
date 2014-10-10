@@ -37,7 +37,10 @@ public class NodeView
     
     popupMenu = new JPopupMenu();
     
-    JMenuItem item = new JMenuItem("Delete");
+    JMenuItem item = new JMenuItem(
+        "Delete", 
+        PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete.png"));
+    
     item.setEnabled(graphicView != MultiViewManager.getRootGraphicView());
     item.addActionListener(new ActionListener() {
 

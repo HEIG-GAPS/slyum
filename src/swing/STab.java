@@ -193,7 +193,8 @@ public class STab extends JTabbedPane {
   
   public void tabChanged(GraphicView currentGraphicView,
                          GraphicView previousGraphicView) {
-    previousGraphicView.unselectAll();
+    MultiViewManager.setSelectedGraphicView(currentGraphicView);
+    currentGraphicView.unselectAll();
     currentGraphicView.refreshAllComponents();
   }
   
