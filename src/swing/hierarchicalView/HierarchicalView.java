@@ -27,8 +27,10 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
@@ -68,7 +70,8 @@ import utility.PersonalizedIcon;
  */
 public class HierarchicalView 
     extends JPanel 
-    implements IComponentsObserver, TreeSelectionListener, Observer {
+    implements IComponentsObserver, TreeSelectionListener, Observer, 
+               MouseListener, KeyListener {
   private final DefaultMutableTreeNode viewsNode, entitiesNode, associationsNode,
           inheritancesNode, dependenciesNode;
   private final STree tree;
@@ -177,41 +180,9 @@ public class HierarchicalView
       }
     });
     tree.addTreeSelectionListener(this);
-    tree.addMouseListener(new MouseAdapter() {
-      
-      public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
-        
-        if (SwingUtilities.isRightMouseButton(e)) {
-          popupMenu.show(e.getComponent(), (int) (e.getX()), (int) (e.getY()));
-          TreePath path = tree.getPathForLocation(e.getX(), e.getY());
-          if (path != null) 
-            tree.setSelectionPath(path);
-        }
-      }
-  
-      @Override
-      public void mousePressed(MouseEvent e) {
-        int selRow = tree.getRowForLocation(e.getX(), e.getY());
-        TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
-        if(selRow != -1) {
-          Object lastComponent = selPath.getLastPathComponent();
-          if (lastComponent instanceof NodeView) {
-            NodeView nodeView = (NodeView)lastComponent;
-            
-            maybeShowPopup(e, nodeView.getPopupMenu());
-            
-            // Double click for open view
-            if(e.getClickCount() == 2) {
-              GraphicView gv = nodeView.getGraphicView();
-              if (gv.isOpenInTab())
-                MultiViewManager.setSelectedGraphicView(nodeView.getGraphicView());
-              else
-                MultiViewManager.openView(gv);
-            }
-          }
-        }
-      }
-    });
+    tree.addMouseListener(this);
+    tree.addKeyListener(this);
+    
     tree.getSelectionModel().setSelectionMode(
             TreeSelectionModel.SINGLE_TREE_SELECTION);
     tree.setCellRenderer(new TreeRenderer());
@@ -229,7 +200,12 @@ public class HierarchicalView
         new NodeView(graphicView), 
         getLastIndex(viewsNode));
     treeModel.reload(viewsNode);
-  }  
+  }
+  
+  public void setSelectedView(GraphicView graphicView) {
+    tree.setSelectionPath(
+        new TreePath(searchNodeViewAssociedWith(graphicView).getPath()));
+  }
   
   private int getLastIndex(DefaultMutableTreeNode node) {
     return node.getLeafCount() + (node.isLeaf() ? -1 : 0);
@@ -543,6 +519,82 @@ public class HierarchicalView
   @Override
   public void notifyRemoveComponent(IDiagramComponent component) {
     removeComponent(component);
+  }
+
+  @Override
+  public void mouseClicked(MouseEvent e) {
+   
+  }
+  
+  public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
+        
+    if (SwingUtilities.isRightMouseButton(e)) {
+      popupMenu.show(e.getComponent(), (int) (e.getX()), (int) (e.getY()));
+      TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+      if (path != null) 
+        tree.setSelectionPath(path);
+    }
+  }
+
+  @Override
+  public void mousePressed(MouseEvent e) {
+    int selRow = tree.getRowForLocation(e.getX(), e.getY());
+    TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+    if(selRow != -1) {
+      Object lastComponent = selPath.getLastPathComponent();
+      if (lastComponent instanceof NodeView) {
+        NodeView nodeView = (NodeView)lastComponent;
+
+        maybeShowPopup(e, nodeView.getPopupMenu());
+
+        // Double click for open view
+        if(e.getClickCount() == 2) {
+          GraphicView gv = nodeView.getGraphicView();
+          if (gv.isOpenInTab())
+            MultiViewManager.setSelectedGraphicView(nodeView.getGraphicView());
+          else
+            MultiViewManager.openView(gv);
+        }
+      }
+    }
+  }
+
+  @Override
+  public void mouseReleased(MouseEvent e) {
+    
+  }
+
+  @Override
+  public void mouseEntered(MouseEvent e) {
+    
+  }
+
+  @Override
+  public void mouseExited(MouseEvent e) {
+    
+  }
+
+  @Override
+  public void keyTyped(KeyEvent e) {
+  }
+
+  @Override
+  public void keyPressed(KeyEvent e) {
+    
+  }
+
+  @Override
+  public void keyReleased(KeyEvent e) {
+    TreePath selectionPath = tree.getSelectionPath();
+    if (selectionPath != null) {
+      Object selectedNode = selectionPath.getLastPathComponent();
+      if (selectedNode != null && selectedNode instanceof NodeView) {
+        NodeView selectedNodeView = (NodeView)selectedNode;
+        if (e.getKeyCode() == KeyEvent.VK_DELETE &&
+            selectedNodeView.getGraphicView() != MultiViewManager.getRootGraphicView())
+          MultiViewManager.removeView(selectedNodeView.getGraphicView());
+      }
+    }
   }
   
   public static class STree extends JTree {
