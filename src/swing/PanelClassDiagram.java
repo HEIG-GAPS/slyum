@@ -120,7 +120,7 @@ public class PanelClassDiagram extends JPanel {
   private boolean xmlImportation = false;
 
   SSplitPane splitInner, // Split graphicview part and properties part.
-          splitOuter; // Split inner split and hierarchical part.
+             splitOuter; // Split inner split and hierarchical part.
 
   public void setDividerBottom(float location) {
     splitInner.setDividerLocation(location);

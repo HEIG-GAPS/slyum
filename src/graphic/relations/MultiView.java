@@ -70,8 +70,7 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
     int xMoy = 0, yMoy = 0;
 
     for (Role role : roles) {
-      final ClassView cv = (ClassView) parent.searchAssociedComponent(role
-              .getEntity());
+      final ClassView cv = (ClassView) parent.searchAssociedComponent(role.getEntity());
       bounds = cv.getBounds();
       middleClass = new Point((int) bounds.getCenterX(),
               (int) bounds.getCenterY());

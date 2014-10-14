@@ -44,6 +44,7 @@ import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
+import classDiagram.components.EnumEntity;
 import classDiagram.components.InterfaceEntity;
 
 /**
@@ -65,6 +66,8 @@ public abstract class EntityView extends MovableComponent implements Observer, C
         return new ClassView(graphicView, (ClassEntity)entity);
      else if (entity.getClass() == InterfaceEntity.class)
         return new InterfaceView(graphicView, (InterfaceEntity)entity);
+     else if (entity.getClass() == EnumEntity.class)
+        return new EnumView(graphicView, (EnumEntity)entity);
     return null;
   }
 
