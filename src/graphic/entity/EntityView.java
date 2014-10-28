@@ -749,6 +749,10 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     setCurrentColor(getColor().darker());
     repaint();
   }
+  
+  public void editingName() {
+    entityName.editing();
+  }
 
   @Override
   public String getXmlTagName() {

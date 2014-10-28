@@ -7,6 +7,7 @@ import graphic.entity.InterfaceView;
 import swing.SPanelDiagramComponent;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Visibility;
+import javax.swing.SwingUtilities;
 
 /**
  * InterfaceFactory allows to create a new interface view associated with a new
@@ -25,24 +26,30 @@ public class InterfaceFactory extends EntityFactory {
    * 
    * @param parent
    *          the graphic view
-   * @param classDiagram
-   *          the class diagram
    */
   public InterfaceFactory(GraphicView parent) {
     super(parent);
-
     GraphicView.setButtonFactory(SPanelDiagramComponent.getInstance()
-            .getBtnInterface());
+               .getBtnInterface());
   }
 
   @Override
   public GraphicComponent create() {
     InterfaceEntity ie = new InterfaceEntity("Interface", Visibility.PUBLIC);
-    EntityView i = new InterfaceView(parent, ie);
+    final EntityView i = new InterfaceView(parent, ie);
 
     parent.addEntity(i);
     classDiagram.addInterfaceEntity(ie);
     initializeBounds(i);
+    
+    SwingUtilities.invokeLater(new Runnable() {
+
+      @Override
+      public void run() {
+        i.editingName();
+      }
+    });
+    
     return i;
   }
 
