@@ -49,7 +49,7 @@ public class ConstructorMethod extends Method {
   }
 
   @Override
-  public String appendReturnType() {
+  public String getFullStringReturnType() {
     return "";
   }
 

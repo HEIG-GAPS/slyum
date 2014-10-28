@@ -13,6 +13,7 @@ import utility.Utility;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Attribute;
+import classDiagram.components.Method;
 
 /**
  * A TextBox is a graphic component from Slyum containing a String. The
@@ -37,7 +38,11 @@ public class TextBoxAttribute extends TextBox implements Observer {
   public static String getStringFromAttribute(Attribute attribute) {
     final String isConst = attribute.isConstant() ? " {const}" : "";
     return attribute.getVisibility().toCar() + " " + attribute.getName()
-            + " : " + attribute.getType() + isConst;
+            + getFullStringType(attribute) + isConst;
+  }
+  
+  public static String getFullStringType(Attribute attribute) {
+    return " : " + attribute.getType();
   }
 
   private final Attribute attribute;
@@ -84,7 +89,19 @@ public class TextBoxAttribute extends TextBox implements Observer {
 
   @Override
   public String getText() {
+    String text = getStringFromAttribute(attribute);
+    if (!GraphicView.getDefaultVisibleTypes())
+      text = text.replace(getFullStrungType(), "");
+    return text;
+  }
+
+  @Override
+  public String getEditingText() {
     return getStringFromAttribute(attribute);
+  }
+  
+  public String getFullStrungType() {
+    return getFullStringType(attribute);
   }
 
   @Override
