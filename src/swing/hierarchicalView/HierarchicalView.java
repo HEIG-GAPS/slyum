@@ -547,13 +547,8 @@ public class HierarchicalView
         maybeShowPopup(e, nodeView.getPopupMenu());
 
         // Double click for open view
-        if(e.getClickCount() == 2) {
-          GraphicView gv = nodeView.getGraphicView();
-          if (gv.isOpenInTab())
-            MultiViewManager.setSelectedGraphicView(nodeView.getGraphicView());
-          else
-            MultiViewManager.openView(gv);
-        }
+        if(e.getClickCount() == 2)
+          MultiViewManager.openView(nodeView.getGraphicView());
       }
     }
   }

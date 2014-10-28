@@ -90,11 +90,15 @@ public class MultiViewManager {
   }
   
   public static GraphicView openView(GraphicView graphicView) {
-    STab.getInstance().openTab(graphicView);
-    setSelectedGraphicView(graphicView);
     
-    if (!isXmlImportation())
-      changeViewStatInFile(graphicView, true);
+    if (!graphicView.isOpenInTab()) {
+      STab.getInstance().openTab(graphicView);
+      
+      if (!isXmlImportation())
+        changeViewStatInFile(graphicView, true);
+    }
+    
+    setSelectedGraphicView(graphicView);
     
     return graphicView;
   }
