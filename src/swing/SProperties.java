@@ -91,6 +91,7 @@ public class SProperties extends JDialog {
   private JCheckBox chckbxViewTitleOnExport;
   private JCheckBox chckbxPaintTitleBorder;
   private JCheckBox chckbxCheckUpdateAtLaunch;
+  private JCheckBox chckbxViewTypes;
   private JPanel panel_Grid, panel_grid_color, panel_grid_opacity;
   private JCheckBox chckbxEnableGrid;
 
@@ -819,6 +820,15 @@ public class SProperties extends JDialog {
             panelInnerGeneral.add(chckbxViewEnum, gbc_chckbxViewEnum);
           }
           {
+            chckbxViewTypes = new SCheckBox("Display types");
+            GridBagConstraints gbc_chckbxViewTypes = new GridBagConstraints();
+            gbc_chckbxViewTypes.insets = new Insets(0, 5, 0, 0);
+            gbc_chckbxViewTypes.anchor = GridBagConstraints.WEST;
+            gbc_chckbxViewTypes.gridx = 0;
+            gbc_chckbxViewTypes.gridy = 6;
+            panelInnerGeneral.add(chckbxViewTypes, gbc_chckbxViewTypes);
+          }
+          {
             JPanel panelViews = new JPanel(new GridLayout(2, 2, 10, 10));
             panelViews.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
@@ -841,7 +851,7 @@ public class SProperties extends JDialog {
             gbc_panelViews.insets = new Insets(0, 5, 0, 0);
             gbc_panelViews.anchor = GridBagConstraints.WEST;
             gbc_panelViews.gridx = 0;
-            gbc_panelViews.gridy = 6;
+            gbc_panelViews.gridy = 7;
             panelInnerGeneral.add(panelViews, gbc_panelViews);
           }
           panelGeneral.add(panelInnerGeneral);
@@ -910,6 +920,8 @@ public class SProperties extends JDialog {
               properties.put(PropertyLoader.VIEW_ENTITIES,
                       String.valueOf(listViewEntities.getSelectedItem())
                               .toUpperCase().replace(' ', '_'));
+              properties.put(PropertyLoader.VIEW_TYPES,
+                      String.valueOf(chckbxViewTypes.isSelected()));
 
               String quality = "MAX";
 
@@ -1041,6 +1053,7 @@ public class SProperties extends JDialog {
     chckbxPaintTitleBorder.setSelected(GraphicView.isTitleBorderPainted());
     chckbxCheckUpdateAtLaunch.setSelected(UpdateInfo.isUpdateCheckedAtLaunch());
     chckbxEnableGrid.setSelected(GraphicView.isGridEnable());
+    chckbxViewTypes.setSelected(GraphicView.getDefaultVisibleTypes());
     listViewMethods.setSelectedItem(GraphicView.getDefaultViewMethods());
     listViewEntities.setSelectedItem(GraphicView.getDefaultViewEntities());
 

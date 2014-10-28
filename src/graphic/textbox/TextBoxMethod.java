@@ -66,7 +66,10 @@ public class TextBoxMethod extends TextBox implements Observer {
 
   @Override
   public String getText() {
-    return method.getStringFromMethod();
+    String text = method.getStringFromMethod();
+    if (!GraphicView.getDefaultVisibleTypes())
+      text = text.replace(method.getFullStringReturnType(), "");
+    return text;
   }
 
   @Override

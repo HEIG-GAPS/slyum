@@ -35,6 +35,7 @@ public class PropertyLoader {
   public static final String MODE_CURSOR = "ModeCursor";
   public static final String VIEW_METHODS = "ViewMethods";
   public static final String VIEW_ENTITIES = "ViewEntities";
+  public static final String VIEW_TYPES = "ViewTypes";
   public static final String VIEW_ENUM = "ViewEnum";
   public static final String VIEW_TITLE_ON_EXPORT = "ViewTitleOnExport";
   public static final String PAINT_TITLE_BORDER = "PaintTitleBorder";

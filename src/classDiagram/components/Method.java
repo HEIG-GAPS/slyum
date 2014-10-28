@@ -522,10 +522,10 @@ public class Method
         if (i < parameters.size() - 1) signature += ", ";
       }
 
-    return signature + ")" + appendReturnType();
+    return signature + ")" + getFullStringReturnType();
   }
   
-  public String appendReturnType() {
+  public String getFullStringReturnType() {
     return " : " + getReturnType();
   }
 

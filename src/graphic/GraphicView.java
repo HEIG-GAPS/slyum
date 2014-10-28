@@ -184,6 +184,16 @@ public class GraphicView extends GraphicComponent
     return view;
   }
 
+  public static boolean getDefaultVisibleTypes() {
+    String prop = PropertyLoader.getInstance().getProperties()
+            .getProperty(PropertyLoader.VIEW_TYPES);
+    boolean visible = true;
+
+    if (prop != null) visible = Boolean.valueOf(prop);
+
+    return visible;
+  }
+
   public static void setButtonFactory(SButton btn) {
     SPanelDiagramComponent.getInstance().setButtonModeStyle(btn);
   }
