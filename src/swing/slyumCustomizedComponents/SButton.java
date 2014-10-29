@@ -21,6 +21,11 @@ public class SButton extends JButton {
   private final Color BACKGROUND = Color.WHITE;
   private LinkedList<Component> linkedComponents = new LinkedList<>();
 
+  public SButton() {
+    super();
+    init("", "", null);
+  }
+
   public SButton(Icon icon, String tooltip) {
     super(icon);
     init("", tooltip, null);
@@ -31,14 +36,11 @@ public class SButton extends JButton {
     init(action, tooltip, al);
   }
 
-  public SButton(String text, String action, String tooltip, ActionListener al) {
-    super(text);
-    init(action, tooltip, al);
-  }
-
   private void init(String action, String tooltip, ActionListener al) {
-    setPreferredSize(new Dimension(getIcon().getIconWidth(), 
-                                   getIcon().getIconHeight()));
+    
+    if (getIcon() != null)
+      setPreferredSize(new Dimension(getIcon().getIconWidth(), 
+                                     getIcon().getIconHeight()));
     setActionCommand(action);
     addActionListener(al);
     setContentAreaFilled(false);

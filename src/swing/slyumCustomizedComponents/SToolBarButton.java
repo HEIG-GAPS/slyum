@@ -8,6 +8,11 @@ import javax.swing.Icon;
 
 public class SToolBarButton extends SButton {
 
+  public SToolBarButton() {
+    super();
+    init();
+  }
+
   public SToolBarButton(Icon icon, Color color, String tooltip) {
     super(icon, tooltip);
     init();
@@ -19,13 +24,8 @@ public class SToolBarButton extends SButton {
     init();
   }
 
-  public SToolBarButton(String text, String action, Color color,
-          String tooltip, ActionListener al) {
-    super(text, action, tooltip, al);
-    init();
-  }
-
   private void init() {
+    setMaximumSize(new Dimension(22, 18));
     setPreferredSize(new Dimension(22, 18));
   }
 }

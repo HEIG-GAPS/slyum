@@ -1,8 +1,5 @@
 package swing;
 
-import swing.slyumCustomizedComponents.SSeparator;
-import swing.slyumCustomizedComponents.SToolBar;
-import swing.slyumCustomizedComponents.SToolBarButton;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 
@@ -17,10 +14,10 @@ import utility.PersonalizedIcon;
 import swing.slyumCustomizedComponents.SSlider;
 import utility.Utility;
 import change.Change;
-import swing.IListenerComponentSelectionChanged;
-import swing.PanelClassDiagram;
+import java.util.LinkedList;
+import javax.swing.JButton;
+import swing.SColorAssigner.RecentColorButton;
 import swing.slyumCustomizedComponents.SButton;
-import swing.Slyum;
 import swing.slyumCustomizedComponents.SSeparator;
 import swing.slyumCustomizedComponents.SToolBar;
 import swing.slyumCustomizedComponents.SToolBarButton;
@@ -71,6 +68,8 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
           alignBottom, alignRight, alignLeft, adujst, // Adjust size of entity.
           top, // z-orders
           up, down, bottom;
+  
+  private LinkedList<JButton> btnsColor = new LinkedList<>();
 
   private SSlider sliderZoom;
 
@@ -97,10 +96,6 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "multiNote.png"),
             Slyum.ACTION_NEW_NOTE_ASSOCIED, Color.CYAN, TT_ADD_NOTE, true));
 
-    add(btnColor = createSButton(
-            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "color.png"),
-            "Color", Color.CYAN, TT_CHANGE_COLOR, true));
-
     add(btnDuplicate = createSButton(
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "duplicate.png"),
             "duplicate", Color.CYAN, TT_DUPLICATE, false));
@@ -108,6 +103,23 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
     add(btnDelete = createSButton(
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete.png"),
             "Delete", Color.CYAN, TT_DELETE, false));
+
+    add(btnColor = createSButton(
+            PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "color.png"),
+            "Color", Color.CYAN, TT_CHANGE_COLOR, true));
+    
+    for (final RecentColorButton btn : SColorAssigner.createButtonsRecentColor()) {
+      add(btn);
+      btnsColor.add(btn);
+      btn.addActionListener(new ActionListener() {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          PanelClassDiagram.getInstance().getCurrentGraphicView()
+                           .setColorForSelectedItems(btn.getColor());
+        }
+      });
+    }
 
     add(new SSeparator());
 
@@ -188,6 +200,7 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
     return ee;
   }
 
+  @Override
   public void componentSelectionChanged() {
     GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
     btnDelete.setEnabled(gv.countSelectedComponents() > 0);
@@ -198,6 +211,8 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
   public void updateBtnState() {
     GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
     int nb = gv.countSelectedEntities();
+    int nbColoredComponents = gv.getSelectedColoredComponents().length;
+    
     boolean enable = nb > 1;
     alignTop.setEnabled(enable);
     alignBottom.setEnabled(enable);
@@ -206,6 +221,11 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
 
     enable = nb > 0;
     adujst.setEnabled(enable);
+    for (JButton btn : btnsColor)
+      btn.setEnabled(enable);
+    
+    enable = nbColoredComponents > 0;
+    btnColor.setEnabled(enable);
 
     enable = gv.countEntities() > 1 && gv.countSelectedEntities() > 0;
     top.setEnabled(enable);
@@ -218,36 +238,53 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
   public void actionPerformed(ActionEvent e) {
     GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
     gv.setStopRepaint(true);
-    if (Slyum.ACTION_UNDO.equals(e.getActionCommand()))
-      Change.undo();
-    else if (Slyum.ACTION_REDO.equals(e.getActionCommand()))
-      Change.redo();
-    else if (e.getActionCommand().equals(Slyum.ACTION_DELETE))
-      gv.deleteSelectedComponents();
-    else if (e.getActionCommand().equals(Slyum.ACTION_COLOR))
-      GraphicComponent.askNewColorForSelectedItems();
-    else if (e.getActionCommand().equals(Slyum.ACTION_NEW_NOTE_ASSOCIED))
-      gv.linkNewNoteWithSelectedEntities();
-    else if (Slyum.ACTION_ALIGN_TOP.equals(e.getActionCommand()))
-      gv.alignHorizontal(true);
-    else if (Slyum.ACTION_ALIGN_BOTTOM.equals(e.getActionCommand()))
-      gv.alignHorizontal(false);
-    else if (Slyum.ACTION_ALIGN_LEFT.equals(e.getActionCommand()))
-      gv.alignVertical(true);
-    else if (Slyum.ACTION_ALIGN_RIGHT.equals(e.getActionCommand()))
-      gv.alignVertical(false);
-    else if (Slyum.ACTION_ADJUST_WIDTH.equals(e.getActionCommand()))
-      gv.adjustWidthSelectedEntities();
-    else if (Slyum.ACTION_MOVE_TOP.equals(e.getActionCommand()))
-      gv.moveZOrderTopSelectedEntities();
-    else if (Slyum.ACTION_MOVE_UP.equals(e.getActionCommand()))
-      gv.moveZOrderUpSelectedEntities();
-    else if (Slyum.ACTION_MOVE_DOWN.equals(e.getActionCommand()))
-      gv.moveZOrderDownSelectedEntities();
-    else if (Slyum.ACTION_MOVE_BOTTOM.equals(e.getActionCommand()))
-      gv.moveZOrderBottomSelectedEntities();
-    else if (Slyum.ACTION_DUPLICATE.equals(e.getActionCommand()))
-      gv.duplicateSelectedEntities();
+    switch (e.getActionCommand()) {
+      case Slyum.ACTION_UNDO:
+        Change.undo();
+        break;
+      case Slyum.ACTION_REDO:
+        Change.redo();
+        break;
+      case Slyum.ACTION_DELETE:
+        gv.deleteSelectedComponents();
+        break;
+      case Slyum.ACTION_COLOR:
+        GraphicComponent.askNewColorForSelectedItems();
+        break;
+      case Slyum.ACTION_NEW_NOTE_ASSOCIED:
+        gv.linkNewNoteWithSelectedEntities();
+        break;
+      case Slyum.ACTION_ALIGN_TOP:
+        gv.alignHorizontal(true);
+        break;
+      case Slyum.ACTION_ALIGN_BOTTOM:
+        gv.alignHorizontal(false);
+        break;
+      case Slyum.ACTION_ALIGN_LEFT:
+        gv.alignVertical(true);
+        break;
+      case Slyum.ACTION_ALIGN_RIGHT:
+        gv.alignVertical(false);
+        break;
+      case Slyum.ACTION_ADJUST_WIDTH:
+        gv.adjustWidthSelectedEntities();
+        break;
+      case Slyum.ACTION_MOVE_TOP:
+        gv.moveZOrderTopSelectedEntities();
+        break;
+      case Slyum.ACTION_MOVE_UP:
+        gv.moveZOrderUpSelectedEntities();
+        break;
+      case Slyum.ACTION_MOVE_DOWN:
+        gv.moveZOrderDownSelectedEntities();
+        break;
+      case Slyum.ACTION_MOVE_BOTTOM:
+        gv.moveZOrderBottomSelectedEntities();
+        break;
+      case Slyum.ACTION_DUPLICATE:
+        gv.duplicateSelectedEntities();
+        break;
+    }
 
     gv.goRepaint();
   }

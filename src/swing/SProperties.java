@@ -208,7 +208,12 @@ public class SProperties extends JDialog {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-              new SColorAssigner(btnBackgroundColor);
+              SColorAssigner ca = new SColorAssigner();
+              if (ca.isAccepted())
+                if (ca.isDefaultColor())
+                  btnBackgroundColor.setColor(btnBackgroundColor.getDefaultColor());
+                else
+                  btnBackgroundColor.setColor(ca.getColor());
             }
           });
           {
@@ -463,7 +468,12 @@ public class SProperties extends JDialog {
                     btnColor.addActionListener(new ActionListener() {
                       @Override
                       public void actionPerformed(ActionEvent e) {
-                        new SColorAssigner(btnColor);
+                        SColorAssigner ca = new SColorAssigner();
+                        if (ca.isAccepted())
+                          if (ca.isDefaultColor())
+                            btnColor.setColor(btnColor.getDefaultColor());
+                          else
+                            btnColor.setColor(ca.getColor());
                       }
                     });
                   }
@@ -474,7 +484,12 @@ public class SProperties extends JDialog {
           btnDefaultClassColor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-              new SColorAssigner(btnDefaultClassColor);
+              SColorAssigner ca = new SColorAssigner();
+              if (ca.isAccepted())
+                if (ca.isDefaultColor())
+                  btnDefaultClassColor.setColor(btnDefaultClassColor.getDefaultColor());
+                else
+                  btnDefaultClassColor.setColor(ca.getColor());
             }
           });
         }
