@@ -146,8 +146,8 @@ public class GraphicView extends GraphicComponent
    * @param e
    *          the mouse event
    */
-  public static void computeComponentEventEnter(GraphicComponent component,
-          GraphicComponent componentMouseHover, MouseEvent e) {
+  public static void computeComponentEventEnter(
+      GraphicComponent component, GraphicComponent componentMouseHover, MouseEvent e) {
     if (component != componentMouseHover) {
       if (componentMouseHover != null) componentMouseHover.gMouseExited(e);
 
@@ -166,11 +166,13 @@ public class GraphicView extends GraphicComponent
   }
 
   public static ViewEntity getDefaultViewEntities() {
-    String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.VIEW_ENTITIES);
+    String prop = 
+        PropertyLoader.getInstance().getProperties()
+                      .getProperty(PropertyLoader.VIEW_ENTITIES);
+    
     ViewEntity view = ViewEntity.ALL;
-
-    if (prop != null) view = ViewEntity.valueOf(prop);
+    if (prop != null) 
+      view = ViewEntity.valueOf(prop);
 
     return view;
   }
@@ -186,11 +188,13 @@ public class GraphicView extends GraphicComponent
   }
 
   public static boolean getDefaultVisibleTypes() {
-    String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.VIEW_TYPES);
+    String prop = 
+        PropertyLoader.getInstance().getProperties()
+                      .getProperty(PropertyLoader.VIEW_TYPES);
+    
     boolean visible = true;
-
-    if (prop != null) visible = Boolean.valueOf(prop);
+    if (prop != null) 
+      visible = Boolean.valueOf(prop);
 
     return visible;
   }
@@ -329,7 +333,8 @@ public class GraphicView extends GraphicComponent
    * Search a component in the given who are on the location given. This method
    * uses the isAtPosition() method from GraphicComponent for know if the
    * location given is on the component or not. Return null if no component are
-   * found. This method return the first component found in the list.
+   * found. This method return the first component found in
+   * @param <T> the list.
    * 
    * @param components
    *          the list of component extent from GraphicComponent

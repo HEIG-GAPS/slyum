@@ -22,8 +22,9 @@ import swing.hierarchicalView.HierarchicalView.STree;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public class NodeDepedency extends DefaultMutableTreeNode implements IClassDiagramNode, ICustomizedIconNode, Observer {
-  private static final long serialVersionUID = 1674273797529847201L;
+public class NodeDepedency 
+    extends AbstractNode
+    implements IClassDiagramNode, ICustomizedIconNode, Observer {
 
   /**
    * Return the title that the node must show according to its dependency.
@@ -37,9 +38,6 @@ public class NodeDepedency extends DefaultMutableTreeNode implements IClassDiagr
   }
 
   private final Dependency dependency;
-  private final STree tree;
-
-  private final DefaultTreeModel treeModel;
 
   /**
    * Create a new node associated with a dependency.
@@ -51,9 +49,10 @@ public class NodeDepedency extends DefaultMutableTreeNode implements IClassDiagr
    * @param tree
    *          the JTree
    */
-  public NodeDepedency(Dependency dependency, DefaultTreeModel treeModel,
-          STree tree) {
-    super(generateName(dependency));
+  public NodeDepedency(
+      Dependency dependency, DefaultTreeModel treeModel, STree tree) {
+    
+    super(generateName(dependency), treeModel, tree);
 
     if (treeModel == null)
       throw new IllegalArgumentException("dependency is null");
