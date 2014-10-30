@@ -63,6 +63,10 @@ public class MultiViewManager {
     return STab.getInstance().getAllGraphicsView().contains(graphicView);
   }    
   
+  public static boolean isRootViewSelected() {
+    return getSelectedGraphicView() == getRootGraphicView();
+  }
+  
   public static GraphicView addNewView() {    
     UserInputDialog uip = 
         new UserInputDialog(
@@ -132,6 +136,19 @@ public class MultiViewManager {
     return graphicView;
   }
   
+  public static GraphicView closeSelectedView() {
+    return closeView(getSelectedGraphicView());
+  }
+  
+  public static GraphicView closeSelectedViewWithWarning() {
+    if (isRootViewSelected()) {
+      SMessageDialog.showErrorMessage("The main view can't be closed.");
+      return null;
+    }
+      
+    return closeSelectedView();
+  }
+  
   public static void removeView(GraphicView graphicView) {
     if (graphicView == getRootGraphicView())
       throw new IllegalArgumentException(
@@ -148,6 +165,10 @@ public class MultiViewManager {
     instance.hierarchicalView.removeView(graphicView);
     removeViewInFile(graphicView);
     instance.graphicViews.remove(graphicView);
+  }
+  
+  public static void removeSelectedView() {
+    removeView(getSelectedGraphicView());
   }
   
   public static GraphicView addAndOpenNewView() {

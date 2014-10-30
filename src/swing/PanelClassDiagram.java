@@ -213,21 +213,7 @@ public class PanelClassDiagram extends JPanel {
         MultiViewManager.getSelectedGraphicView().deleteCurrentFactory();
       }
     });
-
-    // CTRL + W key
-    getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
-            KeyStroke.getKeyStroke('W', 
-            Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), "CtrlWPressed");
-    getActionMap().put("CtrlWPressed", new AbstractAction() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        GraphicView selected = MultiViewManager.getSelectedGraphicView(),
-                     root = MultiViewManager.getRootGraphicView();
-        if (selected != root)
-          MultiViewManager.closeView(selected);
-      }
-    });
+    
     getClassDiagram().addObserver(hierarchicalView);
   }
   
