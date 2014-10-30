@@ -7,6 +7,7 @@ import graphic.GraphicComponent;
 import graphic.GraphicView;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -113,7 +114,7 @@ public class PanelClassDiagram extends JPanel {
   private WatchFileListener watchFileListener;
 
   SSplitPane splitInner, // Split graphicview part and properties part.
-          splitOuter; // Split inner split and hierarchical part.
+            splitOuter; // Split inner split and hierarchical part.
 
   public void setDividerBottom(float location) {
     splitInner.setDividerLocation(location);
@@ -121,6 +122,22 @@ public class PanelClassDiagram extends JPanel {
 
   public void setDividerLeft(float location) {
     splitOuter.setDividerLocation(location);
+  }
+
+  public void setDividerBottom(int location) {
+    splitInner.setDividerLocation(location);
+  }
+
+  public void setDividerLeft(int location) {
+    splitOuter.setDividerLocation(location);
+  }
+
+  public int getDividerBottom() {
+    return splitInner.getDividerLocation();
+  }
+
+  public int getDividerLeft() {
+    return splitOuter.getDividerLocation();
   }
 
   public void saveSplitLocationInProperties() {
@@ -136,6 +153,7 @@ public class PanelClassDiagram extends JPanel {
             / (float) (splitOuter.getWidth() - splitOuter.getDividerSize());
     properties.put(PropertyLoader.DIVIDER_LEFT,
             String.valueOf(dividerLocationLeft));
+    PropertyLoader.getInstance().push();
   }
 
   private PanelClassDiagram() {
@@ -169,15 +187,17 @@ public class PanelClassDiagram extends JPanel {
     // Construct inner split pane.
     splitInner = new SSplitPane(JSplitPane.VERTICAL_SPLIT,
             graphicView.getScrollPane(), PropretiesChanger.getInstance());
-    splitInner.setResizeWeight(1.0);
+    splitInner.setResizeWeight(1.d);
 
     // Construct outer split pane.
     splitOuter = new SSplitPane(
         JSplitPane.HORIZONTAL_SPLIT,
-        hierarchicalView = new HierarchicalView(getClassDiagram()), splitInner);
-    splitOuter.setResizeWeight(0.0);
-    splitOuter.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0,
-            Slyum.THEME_COLOR));
+        hierarchicalView = new HierarchicalView(getClassDiagram()), 
+        splitInner);
+    
+    splitOuter.setResizeWeight(0.d);
+    splitOuter.setBorder(
+        BorderFactory.createMatteBorder(2, 0, 0, 0, Slyum.THEME_COLOR));
 
     add(splitOuter, BorderLayout.CENTER);
 
@@ -191,6 +211,39 @@ public class PanelClassDiagram extends JPanel {
       }
     });
     getClassDiagram().addObserver(hierarchicalView);
+  }
+  
+  private int savedDividerBottomLocation;
+  
+  public void setFullScreen(boolean fullScreen) {
+    Slyum.setSelectedMenuItemFullScreen(fullScreen);
+    
+    if (fullScreen) {
+      
+      // Set the same border for the diagram than the one for the splitter.
+      graphicView.getScrollPane().setBorder(
+          BorderFactory.createMatteBorder(2, 0, 0, 0, Slyum.THEME_COLOR));
+      
+      // Remove the splitter and replace it with the diagram.
+      remove(splitOuter);
+      add(graphicView.getScrollPane(), BorderLayout.CENTER);
+      
+      // Save the bottom divider location since we remove it's left component.
+      savedDividerBottomLocation = getDividerBottom();
+    } else {
+      
+      // Remove the border of the diagram.
+      graphicView.getScrollPane().setBorder(null);
+      
+      // Restore the splitter and the diagram.
+      splitInner.setLeftComponent(graphicView.getScrollPane());
+      add(splitOuter, BorderLayout.CENTER);
+      
+      // Restore tge bottom divider location.
+      setDividerBottom(savedDividerBottomLocation);
+    }
+    validate();
+    repaint();
   }
 
   /**

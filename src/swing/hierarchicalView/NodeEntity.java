@@ -4,8 +4,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.ImageIcon;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
@@ -21,12 +19,12 @@ import swing.hierarchicalView.HierarchicalView.STree;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public abstract class NodeEntity extends DefaultMutableTreeNode implements Observer, IClassDiagramNode, ICustomizedIconNode {
+public abstract class NodeEntity 
+    extends AbstractNode 
+    implements Observer, IClassDiagramNode, ICustomizedIconNode {
+  
   protected final Entity entity;
   protected final ImageIcon icon;
-  protected final STree tree;
-
-  protected final DefaultTreeModel treeModel;
 
   /**
    * Create a new node associated with an entity.
@@ -40,14 +38,16 @@ public abstract class NodeEntity extends DefaultMutableTreeNode implements Obser
    * @param icon
    *          the customized icon
    */
-  public NodeEntity(Entity entity, DefaultTreeModel treeModel, STree tree,
-          ImageIcon icon) {
-    super(entity.getName());
+  public NodeEntity(
+      Entity entity, DefaultTreeModel treeModel, STree tree, ImageIcon icon) {
+    
+    super(entity.getName(), treeModel, tree);
 
     if (treeModel == null)
       throw new IllegalArgumentException("treeModel is null");
 
-    if (tree == null) throw new IllegalArgumentException("tree is null");
+    if (tree == null)
+      throw new IllegalArgumentException("tree is null");
 
     this.entity = entity;
     this.treeModel = treeModel;
@@ -79,10 +79,8 @@ public abstract class NodeEntity extends DefaultMutableTreeNode implements Obser
   public void removeAllChildren() {
     for (int i = getChildCount() - 1; i >= 0; i--) {
       IClassDiagramNode node = (IClassDiagramNode) getChildAt(i);
-
       node.getAssociedComponent().deleteObserver((Observer) node);
     }
-
     super.removeAllChildren();
   }
 
@@ -105,8 +103,9 @@ public abstract class NodeEntity extends DefaultMutableTreeNode implements Obser
           reloadChildsNodes();
           break;
       }
-    } else
+    } else {
       reloadChildsNodes();
+    }
   }
 
   @Override

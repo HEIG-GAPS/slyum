@@ -17,7 +17,6 @@ import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
-import graphic.entity.EntityView;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -59,8 +58,13 @@ import utility.PersonalizedIcon;
 public class HierarchicalView 
     extends JPanel 
     implements IComponentsObserver, TreeSelectionListener, Observer {
-  private final DefaultMutableTreeNode entitiesNode, associationsNode,
-          inheritancesNode, dependenciesNode;
+  
+  private final DefaultMutableTreeNode 
+      entitiesNode, 
+      associationsNode,
+      inheritancesNode, 
+      dependenciesNode;
+  
   private final STree tree;
   private final DefaultTreeModel treeModel;
   private JTextField txtFieldClassDiagramName;
@@ -245,11 +249,61 @@ public class HierarchicalView
    */
   public void addNode(DefaultMutableTreeNode leaf, DefaultMutableTreeNode parent) {
     parent.insert(leaf, 0);
+    sortAlphabetically(parent, treeModel);
+  }
+  
+  public static void sortAlphabetically(DefaultMutableTreeNode parent, DefaultTreeModel treeModel) {
+    int count = parent.getChildCount();
+    
+    if (count < 2)
+      return;
+    
+    // Sort childs.
+    for (int i = 0; i < count; ++i) {
+      DefaultMutableTreeNode child = (DefaultMutableTreeNode)parent.getChildAt(i);
+      if (!child.isLeaf())
+        sortAlphabetically(child, treeModel);
+    }
+    
+    quickSort(parent, 0, count-1);
     treeModel.reload(parent);
+  }
+  
+  private static void quickSort(DefaultMutableTreeNode node, int low, int high) {
+    int i = low, j = high;
+    String pivot = ((DefaultMutableTreeNode)node.getChildAt(low + (high-low)/2))
+                                                .getUserObject().toString();
+    
+    while (i <= j) {
+      
+      while (((DefaultMutableTreeNode)node.getChildAt(i)).getUserObject().toString().compareToIgnoreCase(pivot) < 0) ++i;
+      while (((DefaultMutableTreeNode)node.getChildAt(j)).getUserObject().toString().compareToIgnoreCase(pivot) > 0) --j;
+      
+      // Exchange
+      if (i <= j) {
+        DefaultMutableTreeNode 
+            nodeI = (DefaultMutableTreeNode)node.getChildAt(i), 
+            nodeJ = (DefaultMutableTreeNode)node.getChildAt(j);
+        
+        node.insert(nodeI, j);
+        node.insert(nodeJ, i);
+        ++i;
+        --j;
+      }
+    }
+    
+    // Recursivity
+    if (low < j)
+      quickSort(node, low, j);
+    if (i < high)
+      quickSort(node, i, high);
   }
 
   @Override
   public void changeZOrder(Entity entity, int index) {
+    
+    /* Nothing to do since we sort the tree alphabetically.
+    
     LinkedList<EntityView> evs = PanelClassDiagram.getInstance()
             .getCurrentGraphicView().getSelectedEntities();
 
@@ -257,14 +311,11 @@ public class HierarchicalView
             entitiesNode);
 
     entitiesNode.remove(ne);
-
     entitiesNode.insert(ne, entitiesNode.getChildCount() - index);
-
     treeModel.reload(entitiesNode);
 
     for (EntityView ev : evs)
-
-      ev.setSelected(true);
+      ev.setSelected(true);*/
   }
 
   @Override
@@ -329,10 +380,10 @@ public class HierarchicalView
     
     final LinkedList<TreePath> paths = new LinkedList<>();
     final TreePath[] treePaths = e.getPaths();
-
-    // sort unselect first, select next
-    for (int i = 0; i < treePaths.length; i++)
-      if (!e.isAddedPath(treePaths[i])) paths.add(treePaths[i]);
+    
+    for (TreePath treePath : treePaths)
+      if (!e.isAddedPath(treePath))
+        paths.add(treePath);
 
     for (final TreePath treePath2 : treePaths)
       if (e.isAddedPath(treePath2)) 

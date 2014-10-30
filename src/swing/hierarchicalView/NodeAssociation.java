@@ -5,7 +5,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.ImageIcon;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
@@ -23,9 +22,8 @@ import swing.hierarchicalView.HierarchicalView.STree;
  * @version 1.0 - 28.07.2011
  */
 public class NodeAssociation 
-    extends DefaultMutableTreeNode 
+    extends AbstractNode 
     implements IClassDiagramNode, ICustomizedIconNode, Observer {
-  private static final long serialVersionUID = 3002125135918965920L;
 
   /**
    * Return the title that the node must show according to its association.
@@ -69,9 +67,9 @@ public class NodeAssociation
    * @param tree
    *          the JTree
    */
-  public NodeAssociation(Association association, DefaultTreeModel treeModel,
-          ImageIcon icon, STree tree) {
-    super(generateName(association));
+  public NodeAssociation(
+      Association association, DefaultTreeModel treeModel, ImageIcon icon, STree tree) {
+    super(generateName(association), treeModel, tree);
 
     if (treeModel == null)
       throw new IllegalArgumentException("treeModel is null");
