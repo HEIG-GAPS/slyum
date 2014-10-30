@@ -91,6 +91,9 @@ public class MultiViewManager {
   
   public static GraphicView openView(GraphicView graphicView) {
     
+    if (graphicView == null)
+      return null;
+    
     if (!graphicView.isOpenInTab()) {
       STab.getInstance().openTab(graphicView);
       

@@ -198,10 +198,8 @@ public class PanelClassDiagram extends JPanel {
         hierarchicalView, 
         splitInner);
     
-    hierarchicalView.addView(MultiViewManager.getRootGraphicView());
     splitOuter.setResizeWeight(0.d);
-    splitOuter.setBorder(
-        BorderFactory.createMatteBorder(2, 0, 0, 0, Slyum.THEME_COLOR));
+    hierarchicalView.addView(MultiViewManager.getRootGraphicView());
 
     add(splitOuter, BorderLayout.CENTER);
 
@@ -239,10 +237,6 @@ public class PanelClassDiagram extends JPanel {
     Slyum.setSelectedMenuItemFullScreen(fullScreen);
     
     if (fullScreen) {
-      
-      // Set the same border for the diagram than the one for the splitter.      
-      STab.getInstance().setBorder(
-          BorderFactory.createMatteBorder(2, 0, 0, 0, Slyum.THEME_COLOR));
       
       // Remove the splitter and replace it with the diagram.
       remove(splitOuter);
