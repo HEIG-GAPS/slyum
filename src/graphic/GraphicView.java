@@ -6,6 +6,7 @@ import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IComponentsObserver;
 import classDiagram.IDiagramComponent;
+import classDiagram.INameObserver;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
@@ -19,6 +20,7 @@ import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
+import classDiagram.relationships.Relation;
 import classDiagram.relationships.Role;
 import graphic.entity.AssociationClassView;
 import graphic.entity.ClassView;
@@ -38,6 +40,7 @@ import graphic.relations.LineCommentary;
 import graphic.relations.LineView;
 import graphic.relations.MultiLineView;
 import graphic.relations.MultiView;
+import graphic.relations.RelationView;
 import graphic.textbox.TextBoxCommentary;
 import graphic.textbox.TextBoxDiagramName;
 import java.awt.BasicStroke;
@@ -51,6 +54,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
@@ -67,19 +71,23 @@ import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
-import javax.swing.BorderFactory;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import swing.IListenerComponentSelectionChanged;
+import swing.MultiViewManager;
 import swing.PanelClassDiagram;
 import swing.PropertyLoader;
 import swing.slyumCustomizedComponents.SButton;
@@ -90,6 +98,7 @@ import swing.SPanelElement;
 import swing.slyumCustomizedComponents.SScrollPane;
 import swing.Slyum;
 import utility.OSValidator;
+import utility.SMessageDialog;
 import utility.Utility;
 
 /**
@@ -107,6 +116,7 @@ public class GraphicView extends GraphicComponent
                                     KeyListener,
                                     MouseWheelListener, 
                                     IComponentsObserver, 
+                                    INameObserver,
                                     Printable, 
                                     ColoredComponent {
 
@@ -120,6 +130,7 @@ public class GraphicView extends GraphicComponent
     };
   }
 
+  public final static String NO_NAMED_VIEW = "New view";
   public final static boolean BACKGROUND_GRADIENT = false;
   public final static boolean ENTITY_GRADIENT = false;
   public final static boolean CTRL_FOR_GRIP = false;
@@ -139,12 +150,9 @@ public class GraphicView extends GraphicComponent
    * Compute mouse entered and exited event. the componentMouseHover can be the
    * same as the current component. In this case, no event will be called.
    * 
-   * @param component
-   *          the current mouse hover component
-   * @param componentMouseHover
-   *          the previous mouse hover component
-   * @param e
-   *          the mouse event
+   * @param component the current mouse hover component
+   * @param componentMouseHover the previous mouse hover component
+   * @param e the mouse event
    */
   public static void computeComponentEventEnter(
       GraphicComponent component, GraphicComponent componentMouseHover, MouseEvent e) {
@@ -376,7 +384,7 @@ public class GraphicView extends GraphicComponent
     PropertyLoader.getInstance().push();
 
     // Update the components bounds for adapting with new grid.
-    for (GraphicView gv : PanelClassDiagram.getInstance().getAllGraphicViews())
+    for (GraphicView gv : MultiViewManager.getAllGraphicViews())
       for (final GraphicComponent c : gv.getAllComponents())
         c.setBounds(c.getBounds());
   }
@@ -490,23 +498,61 @@ public class GraphicView extends GraphicComponent
    * 
    * @param classDiagram
    *          the class diagram associated with this graphic view.
+   * @param isRoot if it's the main class diagram view.
    */
-  public GraphicView(ClassDiagram classDiagram) {
+  public GraphicView(ClassDiagram classDiagram, boolean isRoot) {
     super();
 
     if (classDiagram == null)
       throw new IllegalArgumentException("classDiagram is null");
 
     this.classDiagram = classDiagram;
-
+    
     scene = new JPanel(null) {
+      {
+        setTransferHandler(new TransferHandler(){
+
+          @Override
+          public boolean canImport(TransferHandler.TransferSupport support) {
+            return support.isDataFlavorSupported(Entity.ENTITY_FLAVOR);
+          }
+
+          @Override
+          public boolean importData(final TransferHandler.TransferSupport support) {
+            if (!canImport(support))
+              return false;
+            try {
+              Entity importedEntity = 
+                  (Entity)support.getTransferable()
+                                 .getTransferData(Entity.ENTITY_FLAVOR);
+              if (containsDiagramComponent(importedEntity))
+              {
+                SMessageDialog.showErrorMessage(
+                    "The entity " + importedEntity.getName() + 
+                        " is already present in this view.\nYou can only add it once.");
+              } else {
+
+                // Adding the imported entity view.
+                final EntityView importedEntityView = 
+                    EntityView.createFromEntity(
+                        GraphicView.this, importedEntity);
+                addEntityWithRelations(
+                    importedEntityView,
+                    support.getDropLocation().getDropPoint());
+                return true;
+              }
+            } catch (UnsupportedFlavorException | IOException ex) {
+              Slyum.LOGGER.log(Level.SEVERE, null, ex);
+            }
+            return false;
+          }
+        });
+      }
 
       @Override
       public void paintComponent(Graphics g) {
         updatePreferredSize(); // for scrolling
-
         super.paintComponent(g);
-
         paintScene((Graphics2D) g);
       }
 
@@ -540,10 +586,8 @@ public class GraphicView extends GraphicComponent
 
       @Override
       public void setCursor(Cursor cursor) {
-        if (currentFactory != null) // cursor change are disabled during
-          // creation of new component
+        if (currentFactory != null) // cursor change are disabled during creation of new component
           cursor = currentFactory.getCursor();
-
         super.setCursor(cursor);
       }
     };
@@ -556,10 +600,17 @@ public class GraphicView extends GraphicComponent
       }
     };
     
-    scrollPane = new SScrollPane(scene);
+    scrollPane = new SScrollPane(scene) {
+
+      @Override
+      public String toString() {
+        return GraphicView.this.getName();
+      }
+      
+    };
     scrollPane.getVerticalScrollBar().setUnitIncrement(50);
     scrollPane.getHorizontalScrollBar().setUnitIncrement(50);
-    scrollPane.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
+    scrollPane.setBorder(null);
     scrollPane.getHorizontalScrollBar().addAdjustmentListener(listnener);
     scrollPane.getVerticalScrollBar().addAdjustmentListener(listnener);
 
@@ -636,10 +687,10 @@ public class GraphicView extends GraphicComponent
     popupMenu.add(menuItem);
 
     addSPanelListener();
-    txtBoxDiagramName = new TextBoxDiagramName(this);
+    
+    txtBoxDiagramName = new TextBoxDiagramName(this, isRoot ? classDiagram : this);
     txtBoxDiagramName.setVisible(Slyum.isViewTitleOnExport());
     addOthersComponents(txtBoxDiagramName);
-    classDiagram.addObserver(txtBoxDiagramName);
   }
 
   @Override
@@ -667,7 +718,6 @@ public class GraphicView extends GraphicComponent
     Slyum.getInstance().actionPerformed(e);
   }
 
-  @Override
   public void addAggregation(Aggregation component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
@@ -678,24 +728,31 @@ public class GraphicView extends GraphicComponent
       final EntityView target = (EntityView) searchAssociedComponent(roles
               .getLast().getEntity());
 
+      // Are Components in this graphic view?
+      if (source == null || target == null)
+        return;
+
       addComponentIn(new AggregationView(this, source, target, component,
               source.middleBounds(), target.middleBounds(), false), linesView);
     }
   }
 
-  @Override
   public void addAssociationClass(AssociationClass component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
     if (result == null) {
       final BinaryView bv = (BinaryView) searchAssociedComponent(component
               .getAssociation());
+
+      // Are Components in this graphic view?
+      if (bv == null)
+        return;
+      
       addComponentIn(new AssociationClassView(this, component, bv,
               new Rectangle(100, 100, 100, 100)), entities);
     }
   }
 
-  @Override
   public void addBinary(Binary component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
@@ -706,6 +763,10 @@ public class GraphicView extends GraphicComponent
       final EntityView target = (EntityView) searchAssociedComponent(roles
               .getLast().getEntity());
 
+      // Are Components in this graphic view?
+      if (source == null || target == null)
+        return;
+      
       addComponentIn(
               new BinaryView(this, source, target, component,
                       source.middleBounds(), target.middleBounds(), false),
@@ -713,18 +774,16 @@ public class GraphicView extends GraphicComponent
     }
   }
 
-  @Override
   public void addClassEntity(ClassEntity component) {
     GraphicComponent result = searchAssociedComponent(component);
     if (result == null)
-      addComponentIn(new ClassView(this, component), entities);
+      addEntity(new ClassView(this, component));
   }
 
-  @Override
   public void addEnumEntity(EnumEntity component) {
     GraphicComponent result = searchAssociedComponent(component);
     if (result == null)
-      addComponentIn(new EnumView(this, component), entities);
+      addEntity(new EnumView(this, component));
   }
 
   public <T extends GraphicComponent> boolean addComponentIn(T component,
@@ -740,7 +799,6 @@ public class GraphicView extends GraphicComponent
     return false;
   }
 
-  @Override
   public void addComposition(Composition component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
@@ -751,12 +809,15 @@ public class GraphicView extends GraphicComponent
       final EntityView target = (EntityView) searchAssociedComponent(roles
               .getLast().getEntity());
 
+      // Are Components in this graphic view?
+      if (source == null || target == null)
+        return;
+
       addComponentIn(new CompositionView(this, source, target, component,
               source.middleBounds(), target.middleBounds(), false), linesView);
     }
   }
 
-  @Override
   public void addDependency(Dependency component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
@@ -765,6 +826,10 @@ public class GraphicView extends GraphicComponent
               .getSource());
       final EntityView target = (EntityView) searchAssociedComponent(component
               .getTarget());
+
+      // Are Components in this graphic view?
+      if (source == null || target == null)
+        return;
 
       addComponentIn(
               new DependencyView(this, source, target, component,
@@ -781,11 +846,66 @@ public class GraphicView extends GraphicComponent
    *          the entity to add.
    * @return true if the component has been added; false otherwise
    */
-  public boolean addEntity(EntityView component) {
+  public boolean addEntity(EntityView component) {    
     return addComponentIn(component, entities);
   }
 
-  @Override
+  private void addEntityWithRelations(
+      final EntityView entityView, final Point location) {
+    final List<RelationView> createdRelationViews = new LinkedList<>();
+    
+    addEntity(entityView);
+    Entity entity1 = (Entity)entityView.getAssociedComponent();
+    HashMap<Relation, Entity> linked = entity1.getLinkedEntities();
+    for (Relation relation : linked.keySet()) {
+      Entity entity2 = linked.get(relation);
+      if (containsDiagramComponent(entity2)) {
+        EntityView source, target, entityView2 = (EntityView)searchAssociedComponent(entity2);
+        if (relation.getSource() == entity1) {
+          source = entityView;
+          target = entityView2;
+        } else {
+          source = entityView2;
+          target = entityView;
+        }
+        
+        final RelationView rv = RelationView.createFromRelation(
+              this, relation, source, target);
+        
+        addLineView(rv);
+        createdRelationViews.add(rv);
+      }
+    }
+    
+    
+    // Place the component corresponding to the mouse location drop.
+    SwingUtilities.invokeLater(new Runnable() {
+
+      @Override
+      public void run() {
+        
+        entityView.setLocationRelativeTo(location);
+        entityView.regenerateEntity();
+        entityView.adjustWidth();
+        
+        for (RelationView rv : createdRelationViews) {
+          
+          GraphicComponent gSource = rv.getFirstPoint().getAssociedComponentView(), 
+                           gTarget = rv.getLastPoint().getAssociedComponentView();
+
+          Point pSourceCenter = new Point((int)gSource.getBounds().getCenterX(), 
+                                          (int)gSource.getBounds().getCenterY()),
+                pTargetCenter = new Point((int)gTarget.getBounds().getCenterX(), 
+                                          (int)gTarget.getBounds().getCenterY());
+          
+          rv.getFirstPoint().setAnchor(pSourceCenter);
+          rv.getLastPoint().setAnchor(pTargetCenter);
+          rv.reinitializeTextBoxesLocation();
+        }
+      }
+    });
+  }
+
   public void addInheritance(Inheritance component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
@@ -795,6 +915,10 @@ public class GraphicView extends GraphicComponent
       final EntityView parent = (EntityView) searchAssociedComponent(component
               .getParent());
 
+      // Are Components in this graphic view?
+      if (child == null || parent == null)
+        return;
+
       addComponentIn(
               new InheritanceView(this, child, parent, component,
                       child.middleBounds(), parent.middleBounds(), false),
@@ -802,7 +926,6 @@ public class GraphicView extends GraphicComponent
     }
   }
 
-  @Override
   public void addInnerClass(InnerClass component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
@@ -812,6 +935,10 @@ public class GraphicView extends GraphicComponent
       final EntityView parent = (EntityView) searchAssociedComponent(component
               .getParent());
 
+      // Are Components in this graphic view?
+      if (child == null || parent == null)
+        return;
+
       addComponentIn(
               new InnerClassView(this, child, parent, component,
                       child.middleBounds(), parent.middleBounds(), false),
@@ -819,12 +946,11 @@ public class GraphicView extends GraphicComponent
     }
   }
 
-  @Override
   public void addInterfaceEntity(InterfaceEntity component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
     if (result == null)
-      addComponentIn(new InterfaceView(this, component), entities);
+      addEntity(new InterfaceView(this, component));
   }
 
   /**
@@ -839,13 +965,18 @@ public class GraphicView extends GraphicComponent
     return addComponentIn(component, linesView);
   }
 
-  @Override
   public void addMulti(Multi component) {
     final GraphicComponent result = searchAssociedComponent(component);
-
     if (result == null)
+      addComponentIn(MultiFactory.createMulti(this, component), multiViews);
+  }
 
-    addComponentIn(MultiFactory.createMulti(this, component), multiViews);
+  public void removeComponent(IDiagramComponent component) {
+    final GraphicComponent g = searchAssociedComponent(component);
+
+    if (g != null)
+
+    removeComponent(g);
   }
 
   /**
@@ -870,6 +1001,10 @@ public class GraphicView extends GraphicComponent
    */
   public boolean addNotes(TextBoxCommentary component) {
     return addComponentIn(component, notes);
+  }
+  
+  public boolean isOpenInTab() {
+    return MultiViewManager.isGraphicViewOpened(this);
   }
 
   /**
@@ -914,8 +1049,7 @@ public class GraphicView extends GraphicComponent
    * Get entities contents in this graphic view and adjust their width. See
    * adjustWidth() method from EntityView.
    * 
-   * @param list
-   *          the entities list to selected
+   * @param list the entities list to selected
    */
   public void adjustEntities(LinkedList<EntityView> list) {
     boolean isRecord = Change.isRecord();
@@ -937,7 +1071,7 @@ public class GraphicView extends GraphicComponent
    * Align all selected entities with the hightest or lowest selected entity.
    * Make same space between all selected entities.
    * 
-   * @param true for align top; false for align bottom
+   * @param top on top or bottom?
    */
   public void alignHorizontal(boolean top) {
     int totalWidth = 0, bottom = Integer.MIN_VALUE;
@@ -1093,7 +1227,6 @@ public class GraphicView extends GraphicComponent
     setZoom(getZoom() + grow);
   }
 
-  @Override
   public void changeZOrder(Entity first, int index) {
     final EntityView firstView = (EntityView) searchAssociedComponent(first);
 
@@ -1171,10 +1304,9 @@ public class GraphicView extends GraphicComponent
    *          the component to find.
    * @return true if the component is in the graphic view; false otherwise
    */
-  public boolean containComponent(GraphicComponent component) {
+  public boolean containsComponent(GraphicComponent component) {
     if (component == null)
       throw new IllegalArgumentException("component is null");
-
     return getAllComponents().contains(component);
   }
 
@@ -1231,7 +1363,7 @@ public class GraphicView extends GraphicComponent
   }
 
   private LinkedList<GraphicComponent> getCurrentComponents() {
-    final LinkedList<GraphicComponent> components = new LinkedList<GraphicComponent>();
+    final LinkedList<GraphicComponent> components = new LinkedList<>();
 
     // Order is important, it is used to compute mouse event.
     components.addAll(linesView);
@@ -1405,10 +1537,9 @@ public class GraphicView extends GraphicComponent
    */
   public LinkedList<LineView> getLinesViewAssociedWith(
           GraphicComponent component) {
-    final LinkedList<LineView> list = new LinkedList<LineView>();
+    final LinkedList<LineView> list = new LinkedList<>();
 
     for (final LineView lv : linesView)
-
       if (lv.getFirstPoint().getAssociedComponentView().equals(component)
               || lv.getLastPoint().getAssociedComponentView().equals(component))
         list.add(lv);
@@ -1437,8 +1568,15 @@ public class GraphicView extends GraphicComponent
    * 
    * @return the name for this graphic view
    */
+  @Override
   public String getName() {
-    return name == null || name.isEmpty() ? "view no name" : name;
+    return name == null || name.isEmpty() ? NO_NAMED_VIEW : name;
+  }
+  
+  @Override
+  public void setName(String name) {
+    this.name = name;
+    setChanged();
   }
 
   /**
@@ -1752,14 +1890,9 @@ public class GraphicView extends GraphicComponent
           parent.addLineView(new LineCommentary(parent, ev, tbc, new Point(),
                   new Point(), false));
     }
-
-    Rectangle b = tbc.getBounds();
-    Rectangle loc = getScene().getVisibleRect();
-
-    b.x = (int) (loc.getCenterX() * getInversedScale());
-    b.y = (int) (loc.getCenterY() * getInversedScale());
-
-    tbc.setBounds(b);
+    
+    tbc.setBounds(computeVisibleCenterBounds(
+      new Dimension(tbc.getBounds().width, tbc.getBounds().height)));
     parent.addNotes(tbc);
 
     if (!isRecord) 
@@ -2207,15 +2340,6 @@ public class GraphicView extends GraphicComponent
   }
 
   @Override
-  public void removeComponent(IDiagramComponent component) {
-    final GraphicComponent g = searchAssociedComponent(component);
-
-    if (g != null)
-
-    removeComponent(g);
-  }
-
-  @Override
   public void repaint() {
     scene.repaint();
   }
@@ -2473,6 +2597,7 @@ public class GraphicView extends GraphicComponent
   public Element getXmlElement(Document doc) {
     Element graphicView = doc.createElement(getXmlTagName());
     graphicView.setAttribute("name", getName());
+    graphicView.setAttribute("open", String.valueOf(isOpenInTab()));
     graphicView.setAttribute("grid", String.valueOf(getGridSize()));
 
     for (GraphicComponent c : getAllComponents()) {
@@ -2544,11 +2669,98 @@ public class GraphicView extends GraphicComponent
     txtBoxDiagramName.setVisible(visible);
     txtBoxDiagramName.repaint();
   }
-
+  
+  @Override
+  public void notifyAggregationCreation(Aggregation component) {
+    addAggregation(component);
+  }
+  
   private boolean containsDiagramComponent(IDiagramComponent diagramComponent) {
     return searchAssociedComponent(diagramComponent) != null;
   }
 
+  @Override
+  public void notifyAssociationClassCreation(AssociationClass component) {
+    addAssociationClass(component);
+  }
+
+  @Override
+  public void notifyBinaryCreation(Binary component) {
+    addBinary(component);
+  }
+
+  @Override
+  public void notifyClassEntityCreation(ClassEntity component) {
+    if (MultiViewManager.getSelectedGraphicView()== this ||
+        PanelClassDiagram.getInstance().isXmlImportation())
+      addClassEntity(component);
+  }
+
+  @Override
+  public void notifyCompositionCreation(Composition component) {
+    addComposition(component);
+  }
+
+  @Override
+  public void notifyDependencyCreation(Dependency component) {
+    addDependency(component);
+  }
+
+  @Override
+  public void notifyInheritanceCreation(Inheritance component) {
+    addInheritance(component);
+  }
+
+  @Override
+  public void notifyInnerClassCreation(InnerClass component) {
+    addInnerClass(component);
+  }
+
+  @Override
+  public void notifyInterfaceEntityCreation(InterfaceEntity component) {
+    addInterfaceEntity(component);
+  }
+
+  @Override
+  public void notifyEnumEntityCreation(EnumEntity component) {
+    addEnumEntity(component);
+  }
+
+  @Override
+  public void notifyMultiCreation(Multi component) {
+    addMulti(component);
+  }
+
+  @Override
+  public void notifyChangeZOrder(Entity entity, int index) {
+    changeZOrder(entity, index);
+  }
+
+  @Override
+  public void notifyRemoveComponent(IDiagramComponent component) {
+    removeComponent(component);
+  }
+
+  public Point getVisibleCenter() {
+    Rectangle loc = getScene().getVisibleRect();
+    return new Point((int) (loc.getCenterX() * getInversedScale()),
+                     (int) (loc.getCenterY() * getInversedScale()));
+  }
+  
+  public Rectangle computeVisibleCenterBounds(Dimension size)
+  {
+    Rectangle rect = new Rectangle(size);
+    Point center = getVisibleCenter();
+    rect.x = center.x - size.width / 2;
+    rect.y = center.y - size.height / 2;
+    return rect;
+  }
+
+  public void refreshAllComponents() {
+    for (GraphicComponent c : getAllComponents())
+      c.notifyObservers();
+  }
+  
   public interface ObtainColor {
     public Color getColor(ColoredComponent c);
   }

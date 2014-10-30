@@ -20,7 +20,6 @@ import javax.swing.JRadioButtonMenuItem;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import swing.PanelClassDiagram;
 import swing.SPanelDiagramComponent;
 import swing.Slyum;
 import swing.XmlElement;
@@ -28,6 +27,8 @@ import utility.PersonalizedIcon;
 import change.BufferCreation;
 import change.Change;
 import classDiagram.IDiagramComponent;
+import java.util.LinkedList;
+import swing.MultiViewManager;
 import swing.SColorAssigner;
 import swing.slyumCustomizedComponents.SRadioButtonMenuItem;
 
@@ -58,6 +59,23 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
   protected boolean pictureMode = false;
   protected Point locationContextMenuRequested;
+  protected boolean ligthDelete;
+
+  public static void askNewColorForSelectedItems() {
+    MultiViewManager.getSelectedGraphicView().changeColorForSelectedItems();
+  }
+  
+  public static LinkedList<GraphicComponent> getGraphicComponentsAssociedWith(
+      IDiagramComponent diagramComponent) {
+    LinkedList<GraphicComponent> results = new LinkedList<>();
+    for (GraphicView graphicView : MultiViewManager.getAllGraphicViews()) {
+      GraphicComponent gc = graphicView.searchAssociedComponent(diagramComponent);
+      if (gc != null)
+        results.add(gc);
+    }
+      
+    return results;
+  }
 
   /**
    * !!! This constructor is use for create the graphic view, don't use in
@@ -93,11 +111,6 @@ public abstract class GraphicComponent extends Observable implements ActionListe
     }
   }
 
-  public static void askNewColorForSelectedItems() {
-    PanelClassDiagram.getInstance().getCurrentGraphicView()
-            .changeColorForSelectedItems();
-  }
-
   /**
    * Confirm ghost changes. If component have a ghost representation, call this
    * method will translate and scale the component bounds with the ghost bounds.
@@ -129,9 +142,13 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    * Delete this component from the parent. Delete a component will delete all
    * line associed with this component. A deleted component will no longer be
    * drawn or managed by the graphic view. This operation is irreversible.
+   * The diagram component associed with will be deleted only if it don't
+   * exist in another view.
    */
   public void delete() {
-    if (!parent.containComponent(this)) return;
+    if (!parent.containsComponent(this)) return;
+    
+    boolean mustDeleteComponent = museDeleteAssociedComponent();
 
     // Unselect the component.
     setSelected(false);
@@ -144,14 +161,17 @@ public abstract class GraphicComponent extends Observable implements ActionListe
     // Search and remove the UML associated component.
     final IDiagramComponent associed = getAssociedComponent();
 
-    if (associed != null) parent.getClassDiagram().removeComponent(associed);
+    if (associed != null && mustDeleteComponent) 
+      parent.getClassDiagram().removeComponent(associed);
 
     // Search and delete all lines (relations, associations, etc...)
     // associated with this component.
     for (final LineView lv : parent.getLinesViewAssociedWith(this))
-
       lv.delete();
-
+  }
+  
+  protected boolean museDeleteAssociedComponent() {
+    return true;
   }
 
   /**
@@ -163,6 +183,11 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    */
   public void drawSelectedEffect(Graphics2D g2) {
 
+  }
+  
+  public boolean existsInOthersViews() {
+    return GraphicComponent.getGraphicComponentsAssociedWith(
+        getAssociedComponent()).size() > 1;
   }
 
   /**
@@ -403,7 +428,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    *          the popupMenu to display or hide.
    */
   public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
-    GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+    GraphicView gv = MultiViewManager.getSelectedGraphicView();
     locationContextMenuRequested = e.getPoint();
 
     if (e.isPopupTrigger()) {
@@ -540,7 +565,6 @@ public abstract class GraphicComponent extends Observable implements ActionListe
     if (isSelected() != selected) {
       this.selected = selected;
       repaint();
-
       parent.componentSelected(selected);
     }
 

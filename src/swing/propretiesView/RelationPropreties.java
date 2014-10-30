@@ -13,13 +13,14 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import swing.slyumCustomizedComponents.FlatPanel;
-import swing.PanelClassDiagram;
 import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.components.Entity;
 import classDiagram.relationships.Association;
 import classDiagram.relationships.Association.NavigateDirection;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Role;
+import swing.MultiViewManager;
 import swing.slyumCustomizedComponents.SRadioButton;
 import swing.slyumCustomizedComponents.TextFieldWithPrompt;
 
@@ -194,8 +195,9 @@ public class RelationPropreties extends GlobalPropreties {
 
         textFieldLabel.setText(dependency.getLabel());
       }
-      btnChangeOrientation.changeActionListener(PanelClassDiagram.getInstance()
-              .getCurrentGraphicView().searchAssociedComponent(currentObject));
+      btnChangeOrientation.changeActionListener(
+          MultiViewManager.getSelectedGraphicView()
+                          .searchAssociedComponent(currentObject));
       setVisibleNavigationBtn(currentObject instanceof Binary);
       btnChangeOrientation.setVisible(currentObject instanceof Binary
               || currentObject instanceof Dependency);
@@ -204,14 +206,18 @@ public class RelationPropreties extends GlobalPropreties {
 
   private void setMenuItemText() {
     if (currentObject != null && currentObject instanceof Association) {
-      String sourceName = ((Association) currentObject).getSource().getName(), targetName = ((Association) currentObject)
-              .getTarget().getName();
-      radBidirectional
-              .setText("Bidirectional");
-      radFirstToSecond.setText(String
-              .format("%s -> %s", sourceName, targetName));
-      radSecondToFirst.setText(String
-              .format("%s -> %s", targetName, sourceName));
+      Entity source = ((Association) currentObject).getSource(), 
+             target = ((Association) currentObject).getTarget();
+      if (source != null && target != null) {
+       String sourceName = source.getName(), 
+              targetName = target.getName();
+        radBidirectional
+                .setText("Bidirectional");
+        radFirstToSecond.setText(String
+                .format("%s -> %s", sourceName, targetName));
+        radSecondToFirst.setText(String
+                .format("%s -> %s", targetName, sourceName)); 
+      }
     }
   }
 

@@ -32,6 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.LayoutStyle;
+import swing.MultiViewManager;
 import swing.PanelClassDiagram;
 import swing.Slyum;
 
@@ -113,7 +114,7 @@ public class DiagramPropreties extends GlobalPropreties {
     if (panel == null) return;
 
     File fileOpen = PanelClassDiagram.getFileOpen();
-    GraphicView gv = panel.getCurrentGraphicView();
+    GraphicView gv = MultiViewManager.getSelectedGraphicView();
     ClassDiagram cd = gv.getClassDiagram();
 
     if (fileOpen != null) {

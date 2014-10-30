@@ -17,22 +17,33 @@ import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
+import graphic.GraphicView;
+import graphic.entity.EntityView;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -42,6 +53,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
+import swing.MultiViewManager;
 import swing.PanelClassDiagram;
 import swing.slyumCustomizedComponents.SScrollPane;
 import swing.Slyum;
@@ -57,9 +69,11 @@ import utility.PersonalizedIcon;
  */
 public class HierarchicalView 
     extends JPanel 
-    implements IComponentsObserver, TreeSelectionListener, Observer {
+    implements IComponentsObserver, TreeSelectionListener, Observer, 
+               MouseListener, KeyListener {
   
   private final DefaultMutableTreeNode 
+      viewsNode,
       entitiesNode, 
       associationsNode,
       inheritancesNode, 
@@ -81,6 +95,8 @@ public class HierarchicalView
     setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
     setBackground(null);
     setForeground(Color.GRAY);
+    setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0,
+            Slyum.THEME_COLOR));
     
     txtFieldClassDiagramName = new JTextField() {
       @Override
@@ -128,6 +144,9 @@ public class HierarchicalView
     final DefaultMutableTreeNode root = new DefaultMutableTreeNode(
             classDiagram.getName());
 
+    viewsNode = new DefaultMutableTreeNode("Views");
+    root.add(viewsNode);
+
     entitiesNode = new DefaultMutableTreeNode("Entities");
     root.add(entitiesNode);
 
@@ -143,12 +162,32 @@ public class HierarchicalView
     treeModel = new DefaultTreeModel(root) {
       @Override
       public void removeNodeFromParent(MutableTreeNode node) {
-        ((IClassDiagramNode) node).remove();
+        if (node instanceof IClassDiagramNode)
+          ((IClassDiagramNode) node).remove();
         super.removeNodeFromParent(node);
       }
     };
     tree = new STree(treeModel);
+    tree.setDragEnabled(true);
+    tree.setTransferHandler(new TransferHandler(){
+
+      @Override
+      protected Transferable createTransferable(JComponent c) {
+        Object o = tree.getSelectionPath().getLastPathComponent();
+        if (o instanceof NodeEntity)
+          return (Transferable)((NodeEntity)o).getAssociedComponent();
+        return null;
+      }
+
+      @Override
+      public int getSourceActions(JComponent c) {
+        return COPY;
+      }
+    });
     tree.addTreeSelectionListener(this);
+    tree.addMouseListener(this);
+    tree.addKeyListener(this);
+    
     tree.getSelectionModel().setSelectionMode(
             TreeSelectionModel.SINGLE_TREE_SELECTION);
     tree.setCellRenderer(new TreeRenderer());
@@ -160,8 +199,23 @@ public class HierarchicalView
     classDiagram.addComponentsObserver(this);
     setMinimumSize(new Dimension(150, 200));
   }
+  
+  public void addView(GraphicView graphicView) {
+    viewsNode.insert(
+        new NodeView(graphicView, treeModel), 
+        getLastIndex(viewsNode));
+    treeModel.reload(viewsNode);
+  }
+  
+  public void setSelectedView(GraphicView graphicView) {
+    tree.setSelectionPath(
+        new TreePath(searchNodeViewAssociedWith(graphicView).getPath()));
+  }
+  
+  private int getLastIndex(DefaultMutableTreeNode node) {
+    return node.getLeafCount() + (node.isLeaf() ? -1 : 0);
+  }
 
-  @Override
   public void addAggregation(Aggregation component) {
     addAssociation(component, "resources/icon/aggregation.png");
   }
@@ -179,7 +233,6 @@ public class HierarchicalView
             PersonalizedIcon.createImageIcon(imgPath), tree), associationsNode);
   }
 
-  @Override
   public void addAssociationClass(AssociationClass component) {
     addNode(new NodeSimpleEntity(component, treeModel, tree,
             PersonalizedIcon
@@ -187,54 +240,45 @@ public class HierarchicalView
             entitiesNode);
   }
 
-  @Override
   public void addBinary(Binary component) {
     addAssociation(component, "resources/icon/association.png");
   }
 
-  @Override
   public void addClassEntity(ClassEntity component) {
     addNode(new NodeSimpleEntity(component, treeModel, tree,
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "class.png")),
             entitiesNode);
   }
 
-  @Override
   public void addInterfaceEntity(InterfaceEntity component) {
     addNode(new NodeSimpleEntity(component, treeModel, tree, PersonalizedIcon
             .createImageIcon(Slyum.ICON_PATH + "interface.png")),
             entitiesNode);
   }
 
-  @Override
   public void addEnumEntity(EnumEntity component) {
     addNode(new NodeEnumEntity(component, treeModel, tree,
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "enum.png")),
             entitiesNode);
   }
 
-  @Override
   public void addComposition(Composition component) {
     addAssociation(component, "resources/icon/composition.png");
   }
 
-  @Override
   public void addDependency(Dependency component) {
     addNode(new NodeDepedency(component, treeModel, tree), dependenciesNode);
   }
 
-  @Override
   public void addInheritance(Inheritance component) {
     addNode(new NodeInheritance(component, treeModel, tree), inheritancesNode);
   }
 
-  @Override
   public void addInnerClass(InnerClass component) {
     addNode(new NodeInnerClass(component, treeModel, tree), inheritancesNode);
 
   }
 
-  @Override
   public void addMulti(Multi component) {
     addAssociation(component, "resources/icon/multi.png");
   }
@@ -299,13 +343,12 @@ public class HierarchicalView
       quickSort(node, i, high);
   }
 
-  @Override
   public void changeZOrder(Entity entity, int index) {
     
     /* Nothing to do since we sort the tree alphabetically.
     
-    LinkedList<EntityView> evs = PanelClassDiagram.getInstance()
-            .getCurrentGraphicView().getSelectedEntities();
+    LinkedList<EntityView> evs = 
+        MultiViewManager.getSelectedGraphicView().getSelectedEntities();
 
     final NodeEntity ne = (NodeEntity) searchAssociedNodeIn(entity,
             entitiesNode);
@@ -318,7 +361,6 @@ public class HierarchicalView
       ev.setSelected(true);*/
   }
 
-  @Override
   public void removeComponent(IDiagramComponent component) {
     final IClassDiagramNode associedNode = searchAssociedNode(component);
 
@@ -327,13 +369,41 @@ public class HierarchicalView
       component.deleteObserver((Observer) associedNode);
     }
   }
+  
+  public void removeView(GraphicView graphicView) {
+    NodeView nodeView = searchNodeViewAssociedWith(graphicView);
+
+    if (nodeView != null) {
+      treeModel.removeNodeFromParent((DefaultMutableTreeNode) nodeView);
+      graphicView.deleteObserver((Observer) nodeView);
+    }
+  }
+  
+  public void removeViews() {
+    List<GraphicView> gvs = MultiViewManager.getAllGraphicViews();
+    gvs.remove(MultiViewManager.getRootGraphicView());
+    
+    for (GraphicView gv : gvs)
+      removeView(gv);
+  }
+  
+  public NodeView searchNodeViewAssociedWith(GraphicView graphicView) {
+    NodeView child;
+
+    for (int i = 0; i < viewsNode.getChildCount(); i++) {
+      child = (NodeView) viewsNode.getChildAt(i);
+
+      if (child.getGraphicView() == graphicView)
+        return child;
+    }
+    return null;
+  }
 
   /**
    * Search in the entire structure of JTree the node associated with the given
    * UML object. Return null if no associated object are found.
    * 
-   * @param o
-   *          the object associated with a node
+   * @param o the object associated with a node
    * @return the node associated with the object; or null if no node are found
    */
   public IClassDiagramNode searchAssociedNode(Object o) {
@@ -359,12 +429,13 @@ public class HierarchicalView
    * @return the node associated with the object; or null if no node are found
    */
   public static IClassDiagramNode searchAssociedNodeIn(Object o, TreeNode root) {
-    IClassDiagramNode child = null;
+    IClassDiagramNode child;
 
     for (int i = 0; i < root.getChildCount(); i++) {
       child = (IClassDiagramNode) root.getChildAt(i);
 
-      if (child.getAssociedComponent().equals(o)) return child;
+      if (child.getAssociedComponent().equals(o)) 
+        return child;
 
       if (!root.getChildAt(i).isLeaf())
         searchAssociedNodeIn(o, root.getChildAt(i));
@@ -389,7 +460,10 @@ public class HierarchicalView
       if (e.isAddedPath(treePath2)) 
         paths.add(treePath2);
     
-    PanelClassDiagram.getInstance().getCurrentGraphicView().unselectAll();
+    GraphicView selectedGraphicView = 
+        MultiViewManager.getSelectedGraphicView();
+    if (selectedGraphicView != null)
+      selectedGraphicView.unselectAll();
 
     for (final TreePath treePath : paths) {
       final Object o = treePath.getLastPathComponent();
@@ -427,10 +501,149 @@ public class HierarchicalView
 
   @Override
   public void update(Observable o, Object arg) {
-    if (o instanceof ClassDiagram)
-      setDiagramName(((ClassDiagram)o).getName());
+    if (o instanceof ClassDiagram) {
+      String name = ((ClassDiagram)o).getName();
+      setDiagramName(name);
+      viewsNode.getFirstLeaf().setUserObject(name);
+    }
   }
 
+  @Override
+  public void notifyAggregationCreation(Aggregation component) {
+    addAggregation(component);
+  }
+
+  @Override
+  public void notifyAssociationClassCreation(AssociationClass component) {
+    addAssociationClass(component);
+  }
+
+  @Override
+  public void notifyBinaryCreation(Binary component) {
+    addBinary(component);
+  }
+
+  @Override
+  public void notifyClassEntityCreation(ClassEntity component) {
+    addClassEntity(component);
+  }
+
+  @Override
+  public void notifyCompositionCreation(Composition component) {
+    addComposition(component);
+  }
+
+  @Override
+  public void notifyDependencyCreation(Dependency component) {
+    addDependency(component);
+  }
+
+  @Override
+  public void notifyInheritanceCreation(Inheritance component) {
+    addInheritance(component);
+  }
+
+  @Override
+  public void notifyInnerClassCreation(InnerClass component) {
+    addInnerClass(component);
+  }
+
+  @Override
+  public void notifyInterfaceEntityCreation(InterfaceEntity component) {
+    addInterfaceEntity(component);
+  }
+
+  @Override
+  public void notifyEnumEntityCreation(EnumEntity component) {
+    addEnumEntity(component);
+  }
+
+  @Override
+  public void notifyMultiCreation(Multi component) {
+    addMulti(component);
+  }
+
+  @Override
+  public void notifyChangeZOrder(Entity entity, int index) {
+    changeZOrder(entity, index);
+  }
+
+  @Override
+  public void notifyRemoveComponent(IDiagramComponent component) {
+    removeComponent(component);
+  }
+
+  @Override
+  public void mouseClicked(MouseEvent e) {
+   
+  }
+  
+  public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
+        
+    if (SwingUtilities.isRightMouseButton(e)) {
+      popupMenu.show(e.getComponent(), (int) (e.getX()), (int) (e.getY()));
+      TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+      if (path != null) 
+        tree.setSelectionPath(path);
+    }
+  }
+
+  @Override
+  public void mousePressed(MouseEvent e) {
+    int selRow = tree.getRowForLocation(e.getX(), e.getY());
+    TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
+    if(selRow != -1) {
+      Object lastComponent = selPath.getLastPathComponent();
+      if (lastComponent instanceof NodeView) {
+        NodeView nodeView = (NodeView)lastComponent;
+
+        maybeShowPopup(e, nodeView.getPopupMenu());
+
+        // Double click for open view
+        if(e.getClickCount() == 2)
+          MultiViewManager.openView(nodeView.getGraphicView());
+      }
+    }
+  }
+
+  @Override
+  public void mouseReleased(MouseEvent e) {
+    
+  }
+
+  @Override
+  public void mouseEntered(MouseEvent e) {
+    
+  }
+
+  @Override
+  public void mouseExited(MouseEvent e) {
+    
+  }
+
+  @Override
+  public void keyTyped(KeyEvent e) {
+  }
+
+  @Override
+  public void keyPressed(KeyEvent e) {
+    
+  }
+
+  @Override
+  public void keyReleased(KeyEvent e) {
+    TreePath selectionPath = tree.getSelectionPath();
+    if (selectionPath != null) {
+      Object selectedNode = selectionPath.getLastPathComponent();
+      if (selectedNode != null && selectedNode instanceof NodeView) {
+        NodeView selectedNodeView = (NodeView)selectedNode;
+        if (e.getKeyCode() == KeyEvent.VK_DELETE &&
+            selectedNodeView.getGraphicView() != MultiViewManager.getRootGraphicView())
+          MultiViewManager.removeView(selectedNodeView.getGraphicView());
+      }
+    }
+  }
+  
   public static class STree extends JTree {
     private boolean stopFireEvent;
 

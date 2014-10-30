@@ -42,7 +42,10 @@ import change.BufferBounds;
 import change.Change;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
+import classDiagram.components.EnumEntity;
+import classDiagram.components.InterfaceEntity;
 
 /**
  * Represent the view of an entity in UML structure.
@@ -56,6 +59,17 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
   public static final float BORDER_WIDTH = 1.2f;
   public static final int VERTICAL_SPACEMENT = 10; // margin
+  
+  public static EntityView createFromEntity(
+      GraphicView graphicView, Entity entity) {
+     if (entity.getClass() == ClassEntity.class)
+        return new ClassView(graphicView, (ClassEntity)entity);
+     else if (entity.getClass() == InterfaceEntity.class)
+        return new InterfaceView(graphicView, (InterfaceEntity)entity);
+     else if (entity.getClass() == EnumEntity.class)
+        return new EnumView(graphicView, (EnumEntity)entity);
+    return null;
+  }
 
   /**
    * Get the default color used then a new entity is created.
@@ -371,6 +385,11 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     parent.removeComponent(leftMovableSquare);
     parent.removeComponent(rightMovableSquare);
   }
+  
+  @Override
+  protected boolean museDeleteAssociedComponent() {
+    return !existsInOthersViews();
+  }
 
   @Override
   public void drawSelectedEffect(Graphics2D g2) {
@@ -428,7 +447,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
    * @return an array containing all TextBox
    */
   public List<TextBox> getAllTextBox() {
-    List<TextBox> tb = new LinkedList<TextBox>();
+    List<TextBox> tb = new LinkedList<>();
     tb.add(entityName);
     return tb;
   }
@@ -839,5 +858,13 @@ public abstract class EntityView extends MovableComponent implements Observer, C
       if (textbox.getAssociedComponent() == search) return textbox;
 
     return null;
+  }
+
+  public void setLocationRelativeTo(Point dropPoint) {
+    Rectangle newBounds = new Rectangle(new Dimension(
+        getBounds().width, getBounds().height));
+    newBounds.x = dropPoint.x - getBounds().width / 2;
+    newBounds.y = dropPoint.y - getBounds().height / 2;
+    setBounds(newBounds);
   }
 }

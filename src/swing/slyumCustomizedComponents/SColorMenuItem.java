@@ -9,6 +9,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import swing.MultiViewManager;
 import swing.PanelClassDiagram;
 
 /**
@@ -79,8 +80,8 @@ public class SColorMenuItem extends JMenu {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-          PanelClassDiagram.getInstance().getCurrentGraphicView()
-                           .setColorForSelectedItems(color);
+          MultiViewManager.getSelectedGraphicView()
+                          .setColorForSelectedItems(color);
         }
       });
     }

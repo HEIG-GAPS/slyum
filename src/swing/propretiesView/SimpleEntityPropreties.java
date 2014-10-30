@@ -48,6 +48,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+import swing.MultiViewManager;
 import swing.slyumCustomizedComponents.FlatPanel;
 import swing.PanelClassDiagram;
 import swing.slyumCustomizedComponents.SButton;
@@ -1026,9 +1027,9 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-          ClassView classView = (ClassView)PanelClassDiagram
-              .getInstance().getCurrentGraphicView()
-              .searchAssociedComponent(currentObject);
+          ClassView classView = 
+              (ClassView)MultiViewManager.getSelectedGraphicView()
+                                         .searchAssociedComponent(currentObject);
           classView.addConstructor();
         }
       });

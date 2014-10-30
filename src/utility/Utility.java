@@ -35,7 +35,7 @@ import javax.swing.KeyStroke;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import swing.EditCommentaryDialog;
+import swing.UserInputDialog;
 import swing.PropertyLoader;
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Multiplicity;
@@ -73,7 +73,7 @@ public class Utility {
   };
 
   public static String proposeNewName(String message) {
-    EditCommentaryDialog ecd = new EditCommentaryDialog("",
+    UserInputDialog ecd = new UserInputDialog("",
             "Slyum - Change name", message);
     ecd.setVisible(true);
 

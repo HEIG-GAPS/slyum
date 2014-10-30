@@ -3,17 +3,15 @@ package swing;
 import swing.slyumCustomizedComponents.SSplitPane;
 import change.Change;
 import classDiagram.ClassDiagram;
-import graphic.GraphicComponent;
+import classDiagram.verifyName.SyntaxeNameException;
 import graphic.GraphicView;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
-import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.io.File;
@@ -21,7 +19,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -39,6 +36,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.filechooser.FileFilter;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.OutputKeys;
@@ -47,6 +45,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.xml.sax.SAXException;
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.PropretiesChanger;
 import utility.MultiBorderLayout;
@@ -108,13 +107,13 @@ public class PanelClassDiagram extends JPanel {
   private ClassDiagram classDiagram;
   private HierarchicalView hierarchicalView;
   private File currentFile = null;
-  private GraphicView graphicView;
   private boolean disabledUpdate = false;
   private WatchEvent.Kind<Path> fileChanged;
   private WatchFileListener watchFileListener;
+  private boolean xmlImportation = false;
 
   SSplitPane splitInner, // Split graphicview part and properties part.
-            splitOuter; // Split inner split and hierarchical part.
+             splitOuter; // Split inner split and hierarchical part.
 
   public void setDividerBottom(float location) {
     splitInner.setDividerLocation(location);
@@ -163,7 +162,6 @@ public class PanelClassDiagram extends JPanel {
     setBackground(Slyum.DEFAULT_BACKGROUND);
 
     // Create new graphiView, contain class diagram.
-    graphicView = new GraphicView(getClassDiagram());
     setTransferHandler(new FileHandler());
     
     watchFileListener = new WatchFileListener() {
@@ -178,6 +176,8 @@ public class PanelClassDiagram extends JPanel {
         fileChanged = StandardWatchEventKinds.ENTRY_DELETE;
       }
     };
+    hierarchicalView = new HierarchicalView(getClassDiagram());
+    MultiViewManager.initialize(getClassDiagram(), hierarchicalView);
 
     // Personalized ToolBar Layout
     add(SPanelFileComponent.getInstance(), BorderLayout.NORTH);
@@ -185,29 +185,49 @@ public class PanelClassDiagram extends JPanel {
     add(SPanelElement.getInstance(), BorderLayout.NORTH);
 
     // Construct inner split pane.
-    splitInner = new SSplitPane(JSplitPane.VERTICAL_SPLIT,
-            graphicView.getScrollPane(), PropretiesChanger.getInstance());
+    splitInner = new SSplitPane(
+        JSplitPane.VERTICAL_SPLIT,
+        STab.getInstance(), 
+        PropretiesChanger.getInstance());
+    
     splitInner.setResizeWeight(1.d);
 
     // Construct outer split pane.
     splitOuter = new SSplitPane(
         JSplitPane.HORIZONTAL_SPLIT,
-        hierarchicalView = new HierarchicalView(getClassDiagram()), 
+        hierarchicalView, 
         splitInner);
     
+    hierarchicalView.addView(MultiViewManager.getRootGraphicView());
     splitOuter.setResizeWeight(0.d);
     splitOuter.setBorder(
         BorderFactory.createMatteBorder(2, 0, 0, 0, Slyum.THEME_COLOR));
 
     add(splitOuter, BorderLayout.CENTER);
 
+    // Escape key
     getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
             KeyStroke.getKeyStroke("ESCAPE"), "escapePressed");
     getActionMap().put("escapePressed", new AbstractAction() {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        graphicView.deleteCurrentFactory();
+        MultiViewManager.getSelectedGraphicView().deleteCurrentFactory();
+      }
+    });
+
+    // CTRL + W key
+    getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
+            KeyStroke.getKeyStroke('W', 
+            Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), "CtrlWPressed");
+    getActionMap().put("CtrlWPressed", new AbstractAction() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        GraphicView selected = MultiViewManager.getSelectedGraphicView(),
+                     root = MultiViewManager.getRootGraphicView();
+        if (selected != root)
+          MultiViewManager.closeView(selected);
       }
     });
     getClassDiagram().addObserver(hierarchicalView);
@@ -220,23 +240,23 @@ public class PanelClassDiagram extends JPanel {
     
     if (fullScreen) {
       
-      // Set the same border for the diagram than the one for the splitter.
-      graphicView.getScrollPane().setBorder(
+      // Set the same border for the diagram than the one for the splitter.      
+      STab.getInstance().setBorder(
           BorderFactory.createMatteBorder(2, 0, 0, 0, Slyum.THEME_COLOR));
       
       // Remove the splitter and replace it with the diagram.
       remove(splitOuter);
-      add(graphicView.getScrollPane(), BorderLayout.CENTER);
+      add(STab.getInstance(), BorderLayout.CENTER);
       
       // Save the bottom divider location since we remove it's left component.
       savedDividerBottomLocation = getDividerBottom();
     } else {
       
       // Remove the border of the diagram.
-      graphicView.getScrollPane().setBorder(null);
+      STab.getInstance().setBorder(null);
       
       // Restore the splitter and the diagram.
-      splitInner.setLeftComponent(graphicView.getScrollPane());
+      splitInner.setLeftComponent(STab.getInstance());
       add(splitOuter, BorderLayout.CENTER);
       
       // Restore tge bottom divider location.
@@ -297,7 +317,7 @@ public class PanelClassDiagram extends JPanel {
    * 
    * @return the class diagram
    */
-  public ClassDiagram getClassDiagram() {
+  public final ClassDiagram getClassDiagram() {
     if (classDiagram == null) {
       classDiagram = new ClassDiagram();
       classDiagram.addComponentsObserver(PropretiesChanger.getInstance());
@@ -312,19 +332,6 @@ public class PanelClassDiagram extends JPanel {
 
   public JButton getUndoButton() {
     return SPanelElement.getInstance().getUndoButton();
-  }
-
-  /**
-   * Get the current GraphicView.
-   * 
-   * @return the current GraphicView
-   */
-  public GraphicView getCurrentGraphicView() {
-    return graphicView;
-  }
-  
-  public List<GraphicView> getAllGraphicViews() {
-    return Arrays.asList(graphicView);
   }
 
   /**
@@ -398,12 +405,47 @@ public class PanelClassDiagram extends JPanel {
   public void cleanApplication() {
     setDiagramName("");
     classDiagram.removeAll();
-    graphicView.removeAll();
+    cleanViews();
+    MultiViewManager.getRootGraphicView().removeAll();
+    STab.getInstance().setSelectedIndex(0);
     setCurrentFile(null);
+  }
+  
+  /**
+   * Remove all tabs, nodes and graphicviews from this PanelClassDiagram.
+   * Do not remove them from current file. This method is generally used with
+   * by cleanApplication when opening a new file.
+   */
+  private void cleanViews() {
+    cleanTabs();
+    cleanHierarchicalView();
+    
+    // Clean graphic views last!
+    MultiViewManager.cleanGraphicViews();
+  }
+  
+  private void cleanTabs() {
+    
+    while (STab.getInstance().getTabCount() > 2) {
+      STab.getInstance().getTabComponentAt(1).getGraphicView().removeAll();
+      STab.getInstance().remove(1);
+    }
+  }
+  
+  private void cleanHierarchicalView() {
+    hierarchicalView.removeViews();    
   }
   
   public void setVisibleDiagramName(boolean visible) {
     hierarchicalView.setVisibleClassDiagramName(visible);
+  }
+
+  public boolean isXmlImportation() {
+    return xmlImportation;
+  }
+
+  public void setXmlImportation(boolean isXmlImportation) {
+    this.xmlImportation = isXmlImportation;
   }
   
   public void setDiagramName(String name) {
@@ -475,25 +517,31 @@ public class PanelClassDiagram extends JPanel {
       return;
     }
 
-    graphicView.getScrollPane().setVisible(false);
-
+    cleanApplication();
+    
+    final GraphicView rootGraphicView = MultiViewManager.getSelectedGraphicView();
+    rootGraphicView.getScrollPane().setVisible(false);
+    
     final boolean isBlocked = Change.isBlocked();
     Change.setBlocked(true);
 
     setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+    setXmlImportation(true);
 
     try {
       SAXParser parser = factory.newSAXParser();
-      XMLParser handler = new XMLParser(classDiagram, graphicView);
+      XMLParser handler = new XMLParser(classDiagram);
       parser.parse(file, handler);
       handler.createDiagram();
-    } catch (Exception e) {
+    } catch (SyntaxeNameException | IOException | ParserConfigurationException | SAXException e) {
       showErrorImportationMessage(e);
-      graphicView.setPaintBackgroundLast(true);
-      graphicView.goRepaint();
+      
+      rootGraphicView.setPaintBackgroundLast(true);
+      rootGraphicView.goRepaint();
     }
 
-    graphicView.getScrollPane().setVisible(true);
+    rootGraphicView.getScrollPane().setVisible(true);
+    setXmlImportation(false);
 
     Change.setBlocked(isBlocked);
 
@@ -508,14 +556,13 @@ public class PanelClassDiagram extends JPanel {
 
       @Override
       public void run() {
-        graphicView.paintBackgroundFirst();
-        graphicView.unselectAll();
+        rootGraphicView.paintBackgroundFirst();
+        
+        rootGraphicView.unselectAll();
+        rootGraphicView.refreshAllComponents();
 
-        for (GraphicComponent c : getCurrentGraphicView().getAllComponents())
-          c.notifyObservers();
-
-        graphicView.getScrollPane().getVerticalScrollBar().setValue(0);
-        graphicView.getScrollPane().getHorizontalScrollBar().setValue(0);
+        rootGraphicView.getScrollPane().getVerticalScrollBar().setValue(0);
+        rootGraphicView.getScrollPane().getHorizontalScrollBar().setValue(0);
         
         System.gc();
       }
@@ -531,14 +578,11 @@ public class PanelClassDiagram extends JPanel {
     final JFileChooser fc = new JFileChooser(
             Slyum.getCurrentDirectoryFileChooser());
     fc.setAcceptAllFileFilterUsed(false);
-
     fc.addChoosableFileFilter(new SlyFileChooser());
 
     final int result = fc.showOpenDialog(this);
-
     if (result == JFileChooser.APPROVE_OPTION)
-
-    openFromXML(fc.getSelectedFile());
+      openFromXML(fc.getSelectedFile());
   }
 
   /**
@@ -573,7 +617,7 @@ public class PanelClassDiagram extends JPanel {
   public void print() {
     setCursor(new Cursor(Cursor.WAIT_CURSOR));
     try {
-      if (SlyumPrinterJob.print(getCurrentGraphicView()))
+      if (SlyumPrinterJob.print(MultiViewManager.getSelectedGraphicView()))
         SMessageDialog.showInformationMessage("Print completed successfully");
     } catch (PrinterException ex) {
       Logger.getLogger(
@@ -602,16 +646,23 @@ public class PanelClassDiagram extends JPanel {
         if (SMessageDialog.showQuestionMessageOkCancel(file
                 + " already exists. Overwrite?") == JOptionPane.CANCEL_OPTION)
           return;
-
-      if (extension.equals("png"))
-        ImageIO.write(graphicView.getScreen(BufferedImage.TYPE_INT_ARGB_PRE),
-                extension, file);
-      else if (extension.equals("jpg") || extension.equals("gif"))
-        ImageIO.write(graphicView.getScreen(BufferedImage.TYPE_INT_RGB),
-                extension, file);
-      else
-        SMessageDialog.showErrorMessage("Extension \"." + extension
-                + "\" not supported.\nSupported extensions : png, jpg, gif.");
+      
+      GraphicView graphicView = MultiViewManager.getSelectedGraphicView();
+      switch (extension) {
+        case "png":
+          ImageIO.write(graphicView.getScreen(BufferedImage.TYPE_INT_ARGB_PRE),
+              extension, file);
+          break;
+        case "jpg":
+        case "gif":
+          ImageIO.write(graphicView.getScreen(BufferedImage.TYPE_INT_RGB),
+              extension, file);
+          break;
+        default:
+          SMessageDialog.showErrorMessage("Extension \"." + extension
+              + "\" not supported.\nSupported extensions : png, jpg, gif.");
+          break;
+      }
 
     } catch (final Exception e) {
       SMessageDialog
@@ -655,19 +706,17 @@ public class PanelClassDiagram extends JPanel {
   }
 
   private void showErrorImportationMessage(Exception e) {
-    SMessageDialog
-            .showErrorMessage("Cannot open projet. Error reading from file.\nMessage : "
+    SMessageDialog.showErrorMessage("Cannot open projet. Error reading from file.\nMessage : "
                     + e.getMessage());
 
     e.printStackTrace();
-
     cleanApplication();
-    graphicView.setVisible(true);
+    MultiViewManager.getSelectedGraphicView().setVisible(true);
   }
 
   public void openFromXmlAndAsk(File file) {
-    if (!askForSave()) return;
-
+    if (!askForSave()) 
+      return;
     openFromXML(file);
   }
 

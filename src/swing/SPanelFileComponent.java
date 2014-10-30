@@ -1,16 +1,11 @@
 package swing;
 
-import swing.slyumCustomizedComponents.SSeparator;
-import swing.slyumCustomizedComponents.SToolBar;
-import swing.slyumCustomizedComponents.SToolBarButton;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
-import swing.PanelClassDiagram;
 import swing.slyumCustomizedComponents.SButton;
-import swing.Slyum;
 import swing.slyumCustomizedComponents.SSeparator;
 import swing.slyumCustomizedComponents.SToolBar;
 import swing.slyumCustomizedComponents.SToolBarButton;
@@ -59,7 +54,7 @@ public class SPanelFileComponent extends SToolBar implements ActionListener {
       p.exportAsImage();
 
     else if (Slyum.ACTION_KLIPPER.equals(e.getActionCommand()))
-      p.getCurrentGraphicView().copyDiagramToClipboard();
+      MultiViewManager.getSelectedGraphicView().copyDiagramToClipboard();
 
     else if (Slyum.ACTION_PRINT.equals(e.getActionCommand())) p.initPrinting();
   }

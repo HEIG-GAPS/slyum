@@ -21,6 +21,7 @@ import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
+import classDiagram.relationships.Relation;
 import java.util.Observable;
 
 /**
@@ -34,7 +35,7 @@ import java.util.Observable;
  * 
  */
 public class ClassDiagram extends Observable 
-                          implements IComponentsObserver, XmlElement {
+                          implements XmlElement, INameObserver {
   private static int currentID = 0;
 
   public static int getNextId() {
@@ -50,35 +51,30 @@ public class ClassDiagram extends Observable
     return Utility.count(type, components);
   }
 
-  @Override
   public void addAggregation(Aggregation component) {
     for (final IComponentsObserver c : observers)
-      c.addAggregation(component);
-
+      c.notifyAggregationCreation(component);
     addComponent(component);
   }
 
-  @Override
   public void addAssociationClass(AssociationClass component) {
     for (final IComponentsObserver c : observers)
-      c.addAssociationClass(component);
+      c.notifyAssociationClassCreation(component);
 
     addComponent(component);
     entities.addFirst(component);
   }
 
-  @Override
   public void addBinary(Binary component) {
     for (final IComponentsObserver c : observers)
-      c.addBinary(component);
+      c.notifyBinaryCreation(component);
 
     addComponent(component);
   }
 
-  @Override
   public void addClassEntity(ClassEntity component) {
     for (final IComponentsObserver c : observers)
-      c.addClassEntity(component);
+      c.notifyClassEntityCreation(component);
     addComponent(component);
     entities.addFirst(component);
   }
@@ -91,7 +87,8 @@ public class ClassDiagram extends Observable
    * @return true if the component has been added; false otherwise
    */
   private boolean addComponent(IDiagramComponent component) {
-    if (component.getId() > currentID) setCurrentId(component.getId() + 1);
+    if (component.getId() > currentID) 
+      setCurrentId(component.getId() + 1);
 
     if (!components.contains(component)) {
       components.addFirst(component);
@@ -112,68 +109,60 @@ public class ClassDiagram extends Observable
     return observers.add(c);
   }
 
-  @Override
   public void addComposition(Composition component) {
     for (final IComponentsObserver c : observers)
-      c.addComposition(component);
+      c.notifyCompositionCreation(component);
 
     addComponent(component);
   }
 
-  @Override
   public void addDependency(Dependency component) {
     for (final IComponentsObserver c : observers)
-      c.addDependency(component);
+      c.notifyDependencyCreation(component);
 
     addComponent(component);
   }
 
-  @Override
   public void addInheritance(Inheritance component) {
     for (final IComponentsObserver c : observers)
-      c.addInheritance(component);
+      c.notifyInheritanceCreation(component);
 
     addComponent(component);
   }
 
-  @Override
   public void addInnerClass(InnerClass component) {
 
     for (final IComponentsObserver c : observers)
-      c.addInnerClass(component);
+      c.notifyInnerClassCreation(component);
 
     addComponent(component);
   }
 
-  @Override
   public void addInterfaceEntity(InterfaceEntity component) {
     for (final IComponentsObserver c : observers)
-      c.addInterfaceEntity(component);
+      c.notifyInterfaceEntityCreation(component);
 
     addComponent(component);
     entities.addFirst(component);
   }
 
-  @Override
   public void addEnumEntity(EnumEntity component) {
     for (final IComponentsObserver c : observers)
-      c.addEnumEntity(component);
+      c.notifyEnumEntityCreation(component);
 
     addComponent(component);
     entities.addFirst(component);
   }
 
-  @Override
   public void addMulti(Multi component) {
     if (components.contains(component)) return;
 
     for (final IComponentsObserver c : observers)
-      c.addMulti(component);
+      c.notifyMultiCreation(component);
 
     addComponent(component);
   }
 
-  @Override
   public void changeZOrder(Entity entity, int index) {
     if (index < 0 || index >= entities.size()) return;
 
@@ -185,7 +174,7 @@ public class ClassDiagram extends Observable
     // Change.push(new BufferZOrder(entity, index));
 
     for (final IComponentsObserver c : observers)
-      c.changeZOrder(entity, index);
+      c.notifyChangeZOrder(entity, index);
   }
 
   /**
@@ -214,6 +203,14 @@ public class ClassDiagram extends Observable
   public String getName() {
     return name;
   }
+  
+  public LinkedList<Relation> getAllRelations() {
+    LinkedList<Relation> relations = new LinkedList<>();
+    for (IDiagramComponent component : components)
+      if (component instanceof Relation)
+        relations.add((Relation)component);
+    return relations;
+  }
 
   /**
    * Remove all components in class diagram.
@@ -224,7 +221,6 @@ public class ClassDiagram extends Observable
       removeComponent(components.get(0));
   }
 
-  @Override
   public void removeComponent(IDiagramComponent component) {
     components.remove(component);
 
@@ -233,7 +229,7 @@ public class ClassDiagram extends Observable
     if (component instanceof Entity) entities.remove(component);
 
     for (final IComponentsObserver c : observers)
-      c.removeComponent(component);
+      c.notifyRemoveComponent(component);
   }
 
   /**
@@ -303,7 +299,7 @@ public class ClassDiagram extends Observable
   public Element getXmlElement(Document doc) {
 
     Element classDiagram = doc.createElement(getXmlTagName());
-  classDiagram.setAttribute("name", getName());
+    classDiagram.setAttribute("name", getName());
     for (IDiagramComponent component : components)
       classDiagram.appendChild(component.getXmlElement(doc));
 

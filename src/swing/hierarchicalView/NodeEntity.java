@@ -4,6 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.ImageIcon;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
@@ -25,6 +26,8 @@ public abstract class NodeEntity
   
   protected final Entity entity;
   protected final ImageIcon icon;
+  protected final STree tree;
+  protected final DefaultTreeModel treeModel;
 
   /**
    * Create a new node associated with an entity.

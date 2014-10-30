@@ -59,7 +59,9 @@ import utility.SMessageDialog;
 public class Slyum extends JFrame implements ActionListener {
   
   private static final String APP_NAME = "Slyum";
-  public static final String VERSION = "4.1.0";
+  // !! Always  X.Y.Z (for update safety), even if it's 0.
+  public static final String VERSION = "5.0.0";
+  
   public final static String EXTENTION = "sly";
   public final static String FULL_EXTENTION = String.format(".%s", EXTENTION);
   public final static String APP_DIR_NAME = APP_NAME;
@@ -69,7 +71,7 @@ public class Slyum extends JFrame implements ActionListener {
   public static final Color TEXT_COLOR = new Color(34, 34, 34);
   public final static Color DEFAULT_BACKGROUND = new Color(239, 239, 242);
   public final static Color BACKGROUND_FORHEAD = new Color(246, 246, 246);
-  public final static Color THEME_COLOR = new Color(0, 122, 204);
+  public final static Color THEME_COLOR = new Color(0, 122, 204); // 007ACC
   public final static Color DEFAULT_BORDER_COLOR = new Color(169, 169, 169);
   public static final Color DISABLE_COLOR = Color.GRAY;
 
@@ -223,7 +225,7 @@ public class Slyum extends JFrame implements ActionListener {
   public final static Font DEFAULT_FONT;
   public final static Font UI_FONT;
   
-  private final static Logger LOGGER = Logger.getLogger(Slyum.class.getName());
+  public final static Logger LOGGER = Logger.getLogger(Slyum.class.getName());
   
   public static Font addSystemFont(String fileName) {
     Font font = null;
@@ -634,7 +636,7 @@ public class Slyum extends JFrame implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     PanelClassDiagram p = PanelClassDiagram.getInstance();
-    GraphicView gv = p.getCurrentGraphicView();
+    GraphicView gv = MultiViewManager.getSelectedGraphicView();
 
     switch (e.getActionCommand()) {
       case Slyum.ACTION_SAVE_AS:
@@ -659,8 +661,7 @@ public class Slyum extends JFrame implements ActionListener {
                   .showErrorMessage("An error occured while opening project. Please report.");
         break;
       case ACTION_PAGE_SETUP:
-        SlyumPrinterJob.pageDialog(
-                PanelClassDiagram.getInstance().getCurrentGraphicView());
+        SlyumPrinterJob.pageDialog(MultiViewManager.getSelectedGraphicView());
         break;
       case ACTION_PROPERTIES:
         openProperties();
@@ -688,30 +689,30 @@ public class Slyum extends JFrame implements ActionListener {
         gv.unselectAll();
         break;
       case ACTION_ZOOM_PLUS:
-        PanelClassDiagram.getInstance().getCurrentGraphicView().forwardScale();
+        MultiViewManager.getSelectedGraphicView().forwardScale();
         break;
       case ACTION_ZOOM_MINUS:
-        PanelClassDiagram.getInstance().getCurrentGraphicView().backScale();
+        MultiViewManager.getSelectedGraphicView().backScale();
         break;
       case ACTION_ZOOM_ADAPT:
-        PanelClassDiagram.getInstance().getCurrentGraphicView()
+        MultiViewManager.getSelectedGraphicView()
                 .adaptDiagramToWindow();
         break;
       case ACTION_ZOOM_ADAPT_SELECTION:
-        PanelClassDiagram.getInstance().getCurrentGraphicView()
+        MultiViewManager.getSelectedGraphicView()
                 .adaptSelectionToWindow();
         break;
       case ACTION_ZOOM_1:
-        PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(1.0);
+        MultiViewManager.getSelectedGraphicView().setScale(1.0);
         break;
       case ACTION_ZOOM_0_5:
-        PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(0.5);
+        MultiViewManager.getSelectedGraphicView().setScale(0.5);
         break;
       case ACTION_ZOOM_1_5:
-        PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(1.5);
+        MultiViewManager.getSelectedGraphicView().setScale(1.5);
         break;
       case ACTION_ZOOM_2:
-        PanelClassDiagram.getInstance().getCurrentGraphicView().setScale(2.0);
+        MultiViewManager.getSelectedGraphicView().setScale(2.0);
         break;
       case ACTION_LOCATE:
         try {

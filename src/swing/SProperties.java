@@ -973,10 +973,10 @@ public class SProperties extends JDialog {
             boolean selected = chckbxViewTitleOnExport.isSelected();
             PanelClassDiagram.setVisibleCurrentDiagramName(!selected);
             for (GraphicView gv : 
-                PanelClassDiagram.getInstance().getAllGraphicViews())
+                MultiViewManager.getAllGraphicViews())
               gv.setVisibleDiagramName(selected);
             setVisible(false);
-            PanelClassDiagram.getInstance().getCurrentGraphicView().repaint();
+            MultiViewManager.getSelectedGraphicView().repaint();
           }
 
         });

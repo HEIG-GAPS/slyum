@@ -29,6 +29,7 @@ import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.EnumEntity;
 import classDiagram.components.EnumValue;
+import swing.MultiViewManager;
 
 public class EnumView extends EntityView {
 
@@ -241,13 +242,13 @@ public class EnumView extends EntityView {
   }
 
   public static List<EnumView> getAll() {
-    return extractEnumViewFromList(PanelClassDiagram.getInstance()
-            .getCurrentGraphicView().getEntitiesView());
+    return extractEnumViewFromList(
+        MultiViewManager.getSelectedGraphicView().getEntitiesView());
   }
 
   public static List<EnumView> getSelected() {
-    return extractEnumViewFromList(PanelClassDiagram.getInstance()
-            .getCurrentGraphicView().getSelectedEntities());
+    return extractEnumViewFromList(
+        MultiViewManager.getSelectedGraphicView().getSelectedEntities());
   }
 
   private static List<EnumView> extractEnumViewFromList(List<EntityView> list) {
@@ -266,7 +267,8 @@ public class EnumView extends EntityView {
   }
 
   protected void restoreEntity() {
-    parent.getClassDiagram().addEnumEntity((EnumEntity) getAssociedComponent());
+    if (!existsInOthersViews())
+      parent.getClassDiagram().addEnumEntity((EnumEntity) getAssociedComponent());
   }
 
   private void updateMenuItemView() {

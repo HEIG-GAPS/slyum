@@ -333,14 +333,17 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
     Change.setBlocked(true);
 
     for (final TextBox tb : tbRoles)
-
       tb.delete();
 
     for (final RelationGrip grip : points)
-
       parent.removeComponent(grip);
 
     Change.setBlocked(isBlocked);
+  }
+
+  @Override
+  protected boolean museDeleteAssociedComponent() {
+    return !existsInOthersViews();
   }
 
   /**

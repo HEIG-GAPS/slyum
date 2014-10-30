@@ -115,8 +115,8 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
 
         @Override
         public void actionPerformed(ActionEvent e) {
-          PanelClassDiagram.getInstance().getCurrentGraphicView()
-                           .setColorForSelectedItems(btn.getColor());
+          MultiViewManager.getSelectedGraphicView()
+                          .setColorForSelectedItems(btn.getColor());
         }
       });
     }
@@ -153,7 +153,7 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
         super.setValue(value);
 
         if (PanelClassDiagram.getInstance() != null)
-          PanelClassDiagram.getInstance().getCurrentGraphicView().repaint();
+          MultiViewManager.getSelectedGraphicView().repaint();
       }
     };
     sliderZoom.setPreferredSize(new Dimension(100, 15));
@@ -202,14 +202,14 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
 
   @Override
   public void componentSelectionChanged() {
-    GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+    GraphicView gv = MultiViewManager.getSelectedGraphicView();
     btnDelete.setEnabled(gv.countSelectedComponents() > 0);
     btnDuplicate.setEnabled(gv.countSelectedEntities() > 0);
     updateBtnState();
   }
 
   public void updateBtnState() {
-    GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+    GraphicView gv = MultiViewManager.getSelectedGraphicView();
     int nb = gv.countSelectedEntities();
     int nbColoredComponents = gv.getSelectedColoredComponents().length;
     
@@ -236,7 +236,7 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    GraphicView gv = PanelClassDiagram.getInstance().getCurrentGraphicView();
+    GraphicView gv = MultiViewManager.getSelectedGraphicView();
     gv.setStopRepaint(true);
     switch (e.getActionCommand()) {
       case Slyum.ACTION_UNDO:
