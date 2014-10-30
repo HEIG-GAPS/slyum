@@ -861,11 +861,6 @@ public class Slyum extends JFrame implements ActionListener {
     {
       final SPanelElement p = SPanelElement.getInstance();
 
-      // Menu item Color
-      menuItem = createMenuItem("Color", "color", KeyEvent.VK_C, KEY_COLOR,
-              ACTION_COLOR, p.getBtnColor());
-      menu.add(menuItem);
-
       // Menu item Duplicate
       menuItem = createMenuItem("Duplicate", "duplicate", KeyEvent.VK_D,
               KEY_DUPLICATE, ACTION_DUPLICATE, p.getBtnDuplicate());
@@ -876,6 +871,16 @@ public class Slyum extends JFrame implements ActionListener {
       menuItem = createMenuItem("Delete", "delete", KeyEvent.VK_E, KEY_DELETE,
               ACTION_DELETE, p.getBtnDelete());
       menuItem.setEnabled(false);
+      menu.add(menuItem);
+
+      // Menu item Color
+      menuItem = createMenuItem("Color", "color", KeyEvent.VK_C, KEY_COLOR,
+              ACTION_COLOR, p.getBtnColor());
+      menu.add(menuItem);
+
+      // Menu item Recent Color
+      menuItem = SColorAssigner.createMenuRecentColor();
+      p.getBtnColor().linkComponent(menuItem);
       menu.add(menuItem);
     }
 

@@ -221,11 +221,11 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
 
     enable = nb > 0;
     adujst.setEnabled(enable);
-    for (JButton btn : btnsColor)
-      btn.setEnabled(enable);
     
     enable = nbColoredComponents > 0;
     btnColor.setEnabled(enable);
+    for (JButton btn : btnsColor)
+      btn.setEnabled(enable);
 
     enable = gv.countEntities() > 1 && gv.countSelectedEntities() > 0;
     top.setEnabled(enable);

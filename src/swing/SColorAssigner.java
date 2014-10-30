@@ -23,8 +23,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.LinkedList;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
+import swing.slyumCustomizedComponents.SColorMenuItem;
 import swing.slyumCustomizedComponents.SToolBarButton;
 
 /**
@@ -34,10 +33,12 @@ import swing.slyumCustomizedComponents.SToolBarButton;
  * @version 1.0 - 25.07.2011
  */
 public class SColorAssigner extends JDialog {
+  
   private static final long serialVersionUID = -1975479020681307211L;
   private static JColorChooser colorChooser = new JColorChooser();
   private static RecentColorManager recentColorManager = new RecentColorManager();
-  public static JMenu createMenuRecentColor() {
+  
+  public static SColorMenuItem createMenuRecentColor() {
     return recentColorManager.createMenuRecentColor();
   }
   
@@ -148,9 +149,11 @@ public class SColorAssigner extends JDialog {
   
   public static class RecentColorManager {
     
-    private LinkedList<JMenu> menus = new LinkedList<>();
+    public final short HISTORY_SIZE = 3;
+    
+    private LinkedList<SColorMenuItem> menus = new LinkedList<>();
     private LinkedList<RecentColorButton[]> buttons = new LinkedList<>();
-    private Color[] recentColors = new Color[3];
+    private Color[] recentColors = new Color[HISTORY_SIZE];
 
     private void addColor(Color color) {
       updateArrayColor(color);
@@ -190,7 +193,7 @@ public class SColorAssigner extends JDialog {
     }
     
     private void notifyComponents() {
-      for (JMenu menu : menus)
+      for (SColorMenuItem menu : menus)
         notifyMenu(menu);
       
       for (RecentColorButton[] btns : buttons)
@@ -205,19 +208,14 @@ public class SColorAssigner extends JDialog {
       }
     }
     
-    private void notifyMenu(JMenu menu) {
-      int lastIndex = getLastColorIndex();
-      for (int i = 0; i < lastIndex; i++) {
-        JMenuItem menuColor = menu.getItem(i);
-        menuColor.setVisible(true);
-        menuColor.setBackground(recentColors[i]);
-      }
+    private void notifyMenu(SColorMenuItem menu) {
+      menu.updateColors(recentColors);
     }
     
-    private JMenu createMenuRecentColor() {
-      JMenu menuRecentColor = new JMenu("Recent Color");
-      menus.add(menuRecentColor);
-      return menuRecentColor;
+    private SColorMenuItem createMenuRecentColor() {
+      SColorMenuItem colorMenuItem = new SColorMenuItem("Recent Color");
+      menus.add(colorMenuItem);
+      return colorMenuItem;
     }
 
     private RecentColorButton[] createButtonsRecentColor() {

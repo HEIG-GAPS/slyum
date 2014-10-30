@@ -28,6 +28,7 @@ import utility.PersonalizedIcon;
 import change.BufferCreation;
 import change.Change;
 import classDiagram.IDiagramComponent;
+import swing.SColorAssigner;
 import swing.slyumCustomizedComponents.SRadioButtonMenuItem;
 
 /**
@@ -79,14 +80,17 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    
-    if (Slyum.ACTION_NEW_NOTE_ASSOCIED.equals(e.getActionCommand()))
-      parent.linkNewNoteWithSelectedEntities();
-
-    else if ("ColorContextMenu".equals(e.getActionCommand()))
-      askNewColorForSelectedItems();
-    else
-      SPanelDiagramComponent.getInstance().actionPerformed(e);
+    switch (e.getActionCommand()) {
+      case Slyum.ACTION_NEW_NOTE_ASSOCIED:
+        parent.linkNewNoteWithSelectedEntities();
+        break;
+      case "ColorContextMenu":
+        askNewColorForSelectedItems();
+        break;
+      default:
+        SPanelDiagramComponent.getInstance().actionPerformed(e);
+        break;
+    }
   }
 
   public static void askNewColorForSelectedItems() {
@@ -299,15 +303,25 @@ public abstract class GraphicComponent extends Observable implements ActionListe
   private void init() {
     // Create context menu.
     popupMenu = new JPopupMenu();
-
+    
     JMenuItem menuItem;
 
     miNewNote = menuItem = makeMenuItem("New note",
             Slyum.ACTION_NEW_NOTE_ASSOCIED, "note");
+    menuItem.setVisible(displayGeneralMenuItems());
     popupMenu.add(menuItem);
 
     menuItem = makeMenuItem("Change color...", "ColorContextMenu", "color");
+    menuItem.setVisible(displayGeneralMenuItems());
     popupMenu.add(menuItem);
+
+    menuItem = SColorAssigner.createMenuRecentColor();
+    menuItem.setVisible(displayGeneralMenuItems());
+    popupMenu.add(menuItem);
+  }
+  
+  protected boolean displayGeneralMenuItems() {
+    return true;
   }
 
   /**
