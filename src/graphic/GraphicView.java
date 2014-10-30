@@ -42,7 +42,6 @@ import graphic.textbox.TextBoxCommentary;
 import graphic.textbox.TextBoxDiagramName;
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GradientPaint;
@@ -570,8 +569,6 @@ public class GraphicView extends GraphicComponent
 
     JMenuItem menuItem;
 
-    popupMenu.addSeparator();
-
     // Menu item add class
     menuItem = makeMenuItem("Add Class", Slyum.ACTION_NEW_CLASS, "class");
     popupMenu.add(menuItem);
@@ -638,6 +635,11 @@ public class GraphicView extends GraphicComponent
     txtBoxDiagramName.setVisible(Slyum.isViewTitleOnExport());
     addOthersComponents(txtBoxDiagramName);
     classDiagram.addObserver(txtBoxDiagramName);
+  }
+
+  @Override
+  protected boolean displayGeneralMenuItems() {
+    return false;
   }
 
   private void addSPanelListener() {
