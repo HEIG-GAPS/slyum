@@ -147,6 +147,12 @@ public class Slyum extends JFrame implements ActionListener {
   public static final String ACTION_COLOR = "Color";
   public static final String ACTION_DELETE = "Delete";
   public static final String ACTION_DUPLICATE = "duplicate";
+  
+  public static final String ACTION_OPEN_VIEW = "openView";
+  public static final String ACTION_CLOSE_VIEW = "closeView";
+  public static final String ACTION_DELETE_VIEW = "deleteView";
+  public static final String ACTION_ADD_VIEW = "addView";
+  public static final String ACTION_DUPLICATE_VIEW = "duplicateVuew";
 
   public static final String ACTION_ADJUST_INHERITANCE = "adjust-inheritance";
   
@@ -198,6 +204,10 @@ public class Slyum extends JFrame implements ActionListener {
   public static final String KEY_MOVE_BOTTOM = "ctrl alt DOWN";
   
   public final static String KEY_FULL_SCREEN = "ctrl ENTER";
+  public final static String KEY_CLOSE_VIEW = "ctrl W";
+  public final static String KEY_DELETE_VIEW = "ctrl DELETE";
+  public final static String KEY_ADD_VIEW = "INSERT";
+  public final static String KEY_DUPLICATE_VIEW = "ctrl INSERT";
 
   public final static String KEY_ZOOM_PLUS = "ctrl PLUS";
   public final static String KEY_ZOOM_MINUS = "ctrl MINUS";
@@ -725,6 +735,21 @@ public class Slyum extends JFrame implements ActionListener {
       case ACTION_FULL_SCREEN:
         PanelClassDiagram.getInstance().setFullScreen(menuItemFullScreen.isSelected());
         break;
+      case ACTION_OPEN_VIEW:
+        SMessageDialog.showErrorMessage("Not implemeted");
+        break;
+      case ACTION_CLOSE_VIEW:
+        MultiViewManager.closeSelectedViewWithWarning();
+        break;
+      case ACTION_ADD_VIEW:
+        MultiViewManager.addAndOpenNewView();
+        break;
+      case ACTION_DUPLICATE_VIEW:
+        SMessageDialog.showErrorMessage("Not implemeted");
+        break;
+      case ACTION_DELETE_VIEW:
+        MultiViewManager.removeSelectedView();
+        break;
     }
   }
 
@@ -1004,6 +1029,37 @@ public class Slyum extends JFrame implements ActionListener {
       menuItemFullScreen.setActionCommand(ACTION_FULL_SCREEN);
       menuItemFullScreen.addActionListener(this);
       menu.add(menuItemFullScreen);
+      menu.addSeparator();
+      
+      // Sub Menu Open view
+      JMenu subMenu = new JMenu("Open View");
+      subMenu.setMnemonic(KeyEvent.VK_O);
+      menu.add(subMenu);
+
+      // Menus open views
+      menuItem = createMenuItem("bla bla", "icon", KeyEvent.VK_I,
+              null, ACTION_OPEN_VIEW);
+      menu.add(menuItem);
+      
+      // Menu close
+      menuItem = createMenuItem("Close View", "icon", KeyEvent.VK_C,
+              KEY_CLOSE_VIEW, ACTION_CLOSE_VIEW);
+      menu.add(menuItem);
+      
+      // Menu add
+      menuItem = createMenuItem("Add View...", "icon", KeyEvent.VK_A,
+              KEY_ADD_VIEW, ACTION_ADD_VIEW);
+      menu.add(menuItem);
+      
+      // Menu duplicate
+      menuItem = createMenuItem("Duplicate View", "icon", KeyEvent.VK_T,
+              KEY_DUPLICATE_VIEW, ACTION_DUPLICATE_VIEW);
+      menu.add(menuItem);
+      
+      // Menu delete
+      menuItem = createMenuItem("Delete View", "icon", KeyEvent.VK_D,
+              KEY_DELETE_VIEW, ACTION_DELETE_VIEW);
+      menu.add(menuItem);      
     }
 
     {
