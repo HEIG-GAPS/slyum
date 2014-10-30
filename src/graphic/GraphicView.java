@@ -1,6 +1,7 @@
 package graphic;
 
 import change.BufferBounds;
+import change.BufferColor;
 import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IComponentsObserver;
@@ -153,8 +154,8 @@ public class GraphicView extends GraphicComponent
    * @param componentMouseHover the previous mouse hover component
    * @param e the mouse event
    */
-  public static void computeComponentEventEnter(GraphicComponent component,
-          GraphicComponent componentMouseHover, MouseEvent e) {
+  public static void computeComponentEventEnter(
+      GraphicComponent component, GraphicComponent componentMouseHover, MouseEvent e) {
     if (component != componentMouseHover) {
       if (componentMouseHover != null) componentMouseHover.gMouseExited(e);
 
@@ -173,11 +174,13 @@ public class GraphicView extends GraphicComponent
   }
 
   public static ViewEntity getDefaultViewEntities() {
-    String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.VIEW_ENTITIES);
+    String prop = 
+        PropertyLoader.getInstance().getProperties()
+                      .getProperty(PropertyLoader.VIEW_ENTITIES);
+    
     ViewEntity view = ViewEntity.ALL;
-
-    if (prop != null) view = ViewEntity.valueOf(prop);
+    if (prop != null) 
+      view = ViewEntity.valueOf(prop);
 
     return view;
   }
@@ -190,6 +193,18 @@ public class GraphicView extends GraphicComponent
     if (prop != null) view = Boolean.parseBoolean(prop);
 
     return view;
+  }
+
+  public static boolean getDefaultVisibleTypes() {
+    String prop = 
+        PropertyLoader.getInstance().getProperties()
+                      .getProperty(PropertyLoader.VIEW_TYPES);
+    
+    boolean visible = true;
+    if (prop != null) 
+      visible = Boolean.valueOf(prop);
+
+    return visible;
   }
 
   public static void setButtonFactory(SButton btn) {
@@ -326,7 +341,8 @@ public class GraphicView extends GraphicComponent
    * Search a component in the given who are on the location given. This method
    * uses the isAtPosition() method from GraphicComponent for know if the
    * location given is on the component or not. Return null if no component are
-   * found. This method return the first component found in the list.
+   * found. This method return the first component found in
+   * @param <T> the list.
    * 
    * @param components
    *          the list of component extent from GraphicComponent
@@ -609,8 +625,6 @@ public class GraphicView extends GraphicComponent
 
     JMenuItem menuItem;
 
-    popupMenu.addSeparator();
-
     // Menu item add class
     menuItem = makeMenuItem("Add Class", Slyum.ACTION_NEW_CLASS, "class");
     popupMenu.add(menuItem);
@@ -679,16 +693,27 @@ public class GraphicView extends GraphicComponent
     addOthersComponents(txtBoxDiagramName);
   }
 
+  @Override
+  protected boolean displayGeneralMenuItems() {
+    return false;
+  }
+
   private void addSPanelListener() {
     addListenerSelectionChanged(SPanelElement.getInstance());
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if ("Color".equals(e.getActionCommand()))
-      new SColorAssigner(this);
-    else
+    if ("Color".equals(e.getActionCommand())) {
+      SColorAssigner ca = new SColorAssigner();
+      if (ca.isAccepted())
+        if (ca.isDefaultColor())
+          setDefaultColorForComponents(this);
+        else
+          setColorForComponents(ca.getColor(), this);
+    } else {
       super.actionPerformed(e);
+    }
 
     Slyum.getInstance().actionPerformed(e);
   }
@@ -1090,8 +1115,6 @@ public class GraphicView extends GraphicComponent
   /**
    * Align all selected entities with the leftmost or rightmost selected entity.
    * Make same space between all selected entities.
-   * 
-   * @param true for align left; false for align right
    */
   public void alignVertical(boolean left) {
     boolean isRecord = Change.isRecord();
@@ -1134,19 +1157,60 @@ public class GraphicView extends GraphicComponent
 
   /**
    * Get all selected component and change their color.
-   * 
-   * @param newColor
-   *          the new color for selected components
    */
   public void changeColorForSelectedItems() {
+    SColorAssigner ca = new SColorAssigner();
+    if (ca.isAccepted())
+      if (ca.isDefaultColor())
+        setDefaultColorForSelectedItems();
+      else
+        setColorForSelectedItems(ca.getColor());
+  }
+  
+  public void setColorForSelectedItems(final Color color) {
+    setColorForComponents(color, getSelectedColoredComponents());
+  }
+  
+  public void setDefaultColorForSelectedItems() {
+    setDefaultColorForComponents(getSelectedColoredComponents());
+  }
+  
+  public void setColorForComponents(final Color color, ColoredComponent... components) {
+    changeComponentsColor(new ObtainColor() {
+      @Override
+      public Color getColor(ColoredComponent c) {
+        return color;
+      }
+    }, components);    
+  }
+  
+  public void setDefaultColorForComponents(ColoredComponent... components) {
+    changeComponentsColor(new ObtainColor() {
+      @Override
+      public Color getColor(ColoredComponent c) {
+        return c.getDefaultColor();
+      }
+    }, components);    
+  }
+  
+  public ColoredComponent[] getSelectedColoredComponents() { 
     List<GraphicComponent> gc = getSelectedComponents();
     List<ColoredComponent> colored = getColoredComponents(gc);
+    return (ColoredComponent[]) colored.toArray(new ColoredComponent[colored.size()]);
+  }
 
-    if (gc.isEmpty()) colored.add(this);
-
-    new SColorAssigner(
-            (ColoredComponent[]) colored.toArray(new ColoredComponent[colored
-                    .size()]));
+  public void changeComponentsColor(
+      ObtainColor o, ColoredComponent... components) {
+    boolean isRecord = Change.isRecord();
+    Change.record();
+    for (ColoredComponent c : components) {
+      // Set default style before save color.
+      c.setDefaultStyle();
+      Change.push(new BufferColor(c));
+      c.setColor(o.getColor(c));
+      Change.push(new BufferColor(c));
+    }
+    if (!isRecord) Change.stopRecord();
   }
 
   /**
@@ -1613,8 +1677,8 @@ public class GraphicView extends GraphicComponent
    * @return all selected component
    */
   public LinkedList<GraphicComponent> getSelectedComponents() {
-    LinkedList<GraphicComponent> components = new LinkedList<GraphicComponent>();
-    LinkedList<GraphicComponent> selected = new LinkedList<GraphicComponent>();
+    LinkedList<GraphicComponent> components = new LinkedList<>();
+    LinkedList<GraphicComponent> selected = new LinkedList<>();
 
     components.addAll(entities);
     components.addAll(linesView);
@@ -2695,5 +2759,9 @@ public class GraphicView extends GraphicComponent
   public void refreshAllComponents() {
     for (GraphicComponent c : getAllComponents())
       c.notifyObservers();
+  }
+  
+  public interface ObtainColor {
+    public Color getColor(ColoredComponent c);
   }
 }

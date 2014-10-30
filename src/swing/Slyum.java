@@ -33,6 +33,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -148,6 +149,8 @@ public class Slyum extends JFrame implements ActionListener {
   public static final String ACTION_DUPLICATE = "duplicate";
 
   public static final String ACTION_ADJUST_INHERITANCE = "adjust-inheritance";
+  
+  public static final String ACTION_FULL_SCREEN = "fullScreen";
 
   public static final String ACTION_ZOOM_ADAPT = "ZoomAdapt";
   public static final String ACTION_ZOOM_ADAPT_SELECTION = "ZoomAdaptSelection";
@@ -193,6 +196,8 @@ public class Slyum extends JFrame implements ActionListener {
   public static final String KEY_MOVE_UP = "ctrl alt RIGHT";
   public static final String KEY_MOVE_DOWN = "ctrl alt LEFT";
   public static final String KEY_MOVE_BOTTOM = "ctrl alt DOWN";
+  
+  public final static String KEY_FULL_SCREEN = "ctrl ENTER";
 
   public final static String KEY_ZOOM_PLUS = "ctrl PLUS";
   public final static String KEY_ZOOM_MINUS = "ctrl MINUS";
@@ -252,8 +257,11 @@ public class Slyum extends JFrame implements ActionListener {
 
   private static Slyum instance;
   private static JMenuItem undo, redo;
-
+  private static JCheckBoxMenuItem menuItemFullScreen;
   private static String windowTitle = APP_NAME;
+  private static int savedDividerBottomLocation, 
+                     savedDividerLeftLocation;
+
 
   private static String[] arguments;
   private JMenu menuFile;
@@ -283,6 +291,10 @@ public class Slyum extends JFrame implements ActionListener {
         instance.initializationComplete();
       }
     });
+  }
+  
+  public static void setSelectedMenuItemFullScreen(boolean selected) {
+    menuItemFullScreen.setSelected(selected);
   }
 
   public static boolean argumentIsChangeStackStatePrinted() {
@@ -371,6 +383,23 @@ public class Slyum extends JFrame implements ActionListener {
 
     return enable;
   }
+
+  public static boolean isFullScreenMode() {
+    String prop = PropertyLoader.getInstance().getProperties()
+            .getProperty(PropertyLoader.FULL_SCREEN_MODE);
+    boolean enable = false;
+
+    if (prop != null) enable = Boolean.parseBoolean(prop);
+
+    return enable;
+  }
+
+  public static void setFullScreenMode(boolean fullScreen) {
+    PropertyLoader.getInstance().getProperties()
+                  .put(PropertyLoader.FULL_SCREEN_MODE, String.valueOf(fullScreen));
+    PropertyLoader.getInstance().push();
+  }
+
   
   public static boolean isViewTitleOnExport() {
     String prop = PropertyLoader.getInstance().getProperties()
@@ -521,6 +550,9 @@ public class Slyum extends JFrame implements ActionListener {
 
         if (dividerLeft != null)
           panel.setDividerLeft(Float.valueOf(dividerLeft));
+        
+        if (isFullScreenMode())
+          panel.setFullScreen(true);
         
         IssuesInformation.mustDisplayMessage();
       }
@@ -686,9 +718,12 @@ public class Slyum extends JFrame implements ActionListener {
         try {
           Desktop.getDesktop().open(
               PanelClassDiagram.getFileOpen().getParentFile());
-        } catch (Exception e1) {
-          SMessageDialog.showErrorMessage("No open file!");
+        } catch (IOException ex) {
+          SMessageDialog.showErrorMessage("No file open!");
         }
+        break;
+      case ACTION_FULL_SCREEN:
+        PanelClassDiagram.getInstance().setFullScreen(menuItemFullScreen.isSelected());
         break;
     }
   }
@@ -862,11 +897,6 @@ public class Slyum extends JFrame implements ActionListener {
     {
       final SPanelElement p = SPanelElement.getInstance();
 
-      // Menu item Color
-      menuItem = createMenuItem("Color", "color", KeyEvent.VK_C, KEY_COLOR,
-              ACTION_COLOR, p.getBtnColor());
-      menu.add(menuItem);
-
       // Menu item Duplicate
       menuItem = createMenuItem("Duplicate", "duplicate", KeyEvent.VK_D,
               KEY_DUPLICATE, ACTION_DUPLICATE, p.getBtnDuplicate());
@@ -877,6 +907,16 @@ public class Slyum extends JFrame implements ActionListener {
       menuItem = createMenuItem("Delete", "delete", KeyEvent.VK_E, KEY_DELETE,
               ACTION_DELETE, p.getBtnDelete());
       menuItem.setEnabled(false);
+      menu.add(menuItem);
+
+      // Menu item Color
+      menuItem = createMenuItem("Color", "color", KeyEvent.VK_C, KEY_COLOR,
+              ACTION_COLOR, p.getBtnColor());
+      menu.add(menuItem);
+
+      // Menu item Recent Color
+      menuItem = SColorAssigner.createMenuRecentColor();
+      p.getBtnColor().linkComponent(menuItem);
       menu.add(menuItem);
     }
 
@@ -951,6 +991,19 @@ public class Slyum extends JFrame implements ActionListener {
       menuItem = createMenuItemDisable("Move Bottom", "bottom", KeyEvent.VK_M,
               KEY_MOVE_BOTTOM, ACTION_MOVE_BOTTOM, p.getBtnBottom());
       menu.add(menuItem);
+    }
+    
+    {
+      // Menu View
+      menu = new JMenu("View");
+      menu.setMnemonic(KeyEvent.VK_V);
+      menuBar.add(menu);
+      
+      menuItemFullScreen = new JCheckBoxMenuItem("Full Screen");
+      menuItemFullScreen.setAccelerator(KeyStroke.getKeyStroke(KEY_FULL_SCREEN));
+      menuItemFullScreen.setActionCommand(ACTION_FULL_SCREEN);
+      menuItemFullScreen.addActionListener(this);
+      menu.add(menuItemFullScreen);
     }
 
     {
@@ -1268,6 +1321,7 @@ public class Slyum extends JFrame implements ActionListener {
   private void _exit() {
     // Save properties before closing.
     PanelClassDiagram.getInstance().saveSplitLocationInProperties();
+    setFullScreenMode(menuItemFullScreen.isSelected());
 
     System.exit(0);
   }

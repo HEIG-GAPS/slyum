@@ -19,39 +19,32 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.filechooser.FileFilter;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.PropretiesChanger;
@@ -130,6 +123,22 @@ public class PanelClassDiagram extends JPanel {
     splitOuter.setDividerLocation(location);
   }
 
+  public void setDividerBottom(int location) {
+    splitInner.setDividerLocation(location);
+  }
+
+  public void setDividerLeft(int location) {
+    splitOuter.setDividerLocation(location);
+  }
+
+  public int getDividerBottom() {
+    return splitInner.getDividerLocation();
+  }
+
+  public int getDividerLeft() {
+    return splitOuter.getDividerLocation();
+  }
+
   public void saveSplitLocationInProperties() {
     Properties properties = PropertyLoader.getInstance().getProperties();
     float dividerLocationBottom, dividerLocationLeft;
@@ -143,6 +152,7 @@ public class PanelClassDiagram extends JPanel {
             / (float) (splitOuter.getWidth() - splitOuter.getDividerSize());
     properties.put(PropertyLoader.DIVIDER_LEFT,
             String.valueOf(dividerLocationLeft));
+    PropertyLoader.getInstance().push();
   }
 
   private PanelClassDiagram() {
@@ -175,16 +185,23 @@ public class PanelClassDiagram extends JPanel {
     add(SPanelElement.getInstance(), BorderLayout.NORTH);
 
     // Construct inner split pane.
-    splitInner = new SSplitPane(JSplitPane.VERTICAL_SPLIT,
-             STab.getInstance(), PropretiesChanger.getInstance());
-    splitInner.setResizeWeight(1.0);
+    splitInner = new SSplitPane(
+        JSplitPane.VERTICAL_SPLIT,
+        STab.getInstance(), 
+        PropretiesChanger.getInstance());
+    
+    splitInner.setResizeWeight(1.d);
 
     // Construct outer split pane.
     splitOuter = new SSplitPane(
         JSplitPane.HORIZONTAL_SPLIT,
-        hierarchicalView, splitInner);
-    splitOuter.setResizeWeight(0.0);
+        hierarchicalView, 
+        splitInner);
+    
     hierarchicalView.addView(MultiViewManager.getRootGraphicView());
+    splitOuter.setResizeWeight(0.d);
+    splitOuter.setBorder(
+        BorderFactory.createMatteBorder(2, 0, 0, 0, Slyum.THEME_COLOR));
 
     add(splitOuter, BorderLayout.CENTER);
 
@@ -214,6 +231,39 @@ public class PanelClassDiagram extends JPanel {
       }
     });
     getClassDiagram().addObserver(hierarchicalView);
+  }
+  
+  private int savedDividerBottomLocation;
+  
+  public void setFullScreen(boolean fullScreen) {
+    Slyum.setSelectedMenuItemFullScreen(fullScreen);
+    
+    if (fullScreen) {
+      
+      // Set the same border for the diagram than the one for the splitter.      
+      STab.getInstance().setBorder(
+          BorderFactory.createMatteBorder(2, 0, 0, 0, Slyum.THEME_COLOR));
+      
+      // Remove the splitter and replace it with the diagram.
+      remove(splitOuter);
+      add(STab.getInstance(), BorderLayout.CENTER);
+      
+      // Save the bottom divider location since we remove it's left component.
+      savedDividerBottomLocation = getDividerBottom();
+    } else {
+      
+      // Remove the border of the diagram.
+      STab.getInstance().setBorder(null);
+      
+      // Restore the splitter and the diagram.
+      splitInner.setLeftComponent(STab.getInstance());
+      add(splitOuter, BorderLayout.CENTER);
+      
+      // Restore tge bottom divider location.
+      setDividerBottom(savedDividerBottomLocation);
+    }
+    validate();
+    repaint();
   }
 
   /**

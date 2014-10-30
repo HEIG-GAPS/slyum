@@ -31,10 +31,13 @@ public class SSplitPane extends JSplitPane {
           @Override
           public void setBorder(Border border) {}
 
+          @Override
           protected JButton createLeftOneTouchButton() {
             JButton b = new JButton() {
+              @Override
               public void setBorder(Border b) {}
 
+              @Override
               public void paint(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -72,6 +75,7 @@ public class SSplitPane extends JSplitPane {
               }
 
               // Don't want the button to participate in focus traversable.
+              @Override
               public boolean isFocusTraversable() {
                 return false;
               }
@@ -88,10 +92,13 @@ public class SSplitPane extends JSplitPane {
            * Creates and return an instance of JButton that can be used to
            * collapse the right component in the split pane.
            */
+          @Override
           protected JButton createRightOneTouchButton() {
             JButton b = new JButton() {
+              @Override
               public void setBorder(Border border) {}
 
+              @Override
               public void paint(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -129,6 +136,7 @@ public class SSplitPane extends JSplitPane {
               }
 
               // Don't want the button to participate in focus traversable.
+              @Override
               public boolean isFocusTraversable() {
                 return false;
               }

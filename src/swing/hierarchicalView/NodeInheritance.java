@@ -22,7 +22,9 @@ import swing.hierarchicalView.HierarchicalView.STree;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public class NodeInheritance extends DefaultMutableTreeNode implements ICustomizedIconNode, Observer, IClassDiagramNode
+public class NodeInheritance 
+    extends AbstractNode 
+    implements ICustomizedIconNode, Observer, IClassDiagramNode
 
 {
   /**
@@ -42,9 +44,6 @@ public class NodeInheritance extends DefaultMutableTreeNode implements ICustomiz
   }
 
   private final Inheritance inheritance;
-  private final STree tree;
-
-  private final DefaultTreeModel treeModel;
 
   /**
    * Create a new node associated with an inheritance.
@@ -56,9 +55,10 @@ public class NodeInheritance extends DefaultMutableTreeNode implements ICustomiz
    * @param tree
    *          the JTree
    */
-  public NodeInheritance(Inheritance inheritance, DefaultTreeModel treeModel,
-          STree tree) {
-    super(generateName(inheritance));
+  public NodeInheritance(
+      Inheritance inheritance, DefaultTreeModel treeModel, STree tree) {
+    
+    super(generateName(inheritance), treeModel, tree);
 
     if (treeModel == null)
       throw new IllegalArgumentException("treeModel is null");

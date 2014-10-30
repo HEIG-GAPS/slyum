@@ -21,7 +21,7 @@ import swing.hierarchicalView.HierarchicalView.STree;
  * @version 1.0 - 28.07.2011
  */
 public abstract class NodeEntity 
-    extends DefaultMutableTreeNode 
+    extends AbstractNode 
     implements Observer, IClassDiagramNode, ICustomizedIconNode {
   
   protected final Entity entity;
@@ -41,14 +41,16 @@ public abstract class NodeEntity
    * @param icon
    *          the customized icon
    */
-  public NodeEntity(Entity entity, DefaultTreeModel treeModel, STree tree,
-          ImageIcon icon) {
-    super(entity.getName());
+  public NodeEntity(
+      Entity entity, DefaultTreeModel treeModel, STree tree, ImageIcon icon) {
+    
+    super(entity.getName(), treeModel, tree);
 
     if (treeModel == null)
       throw new IllegalArgumentException("treeModel is null");
 
-    if (tree == null) throw new IllegalArgumentException("tree is null");
+    if (tree == null)
+      throw new IllegalArgumentException("tree is null");
 
     this.entity = entity;
     this.treeModel = treeModel;
