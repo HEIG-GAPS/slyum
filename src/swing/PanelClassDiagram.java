@@ -539,7 +539,9 @@ public class PanelClassDiagram extends JPanel {
         rootGraphicView.paintBackgroundFirst();
         
         rootGraphicView.unselectAll();
-        rootGraphicView.refreshAllComponents();
+        
+        for (GraphicView gv : MultiViewManager.getAllGraphicViews())
+          gv.refreshAllComponents();
 
         rootGraphicView.getScrollPane().getVerticalScrollBar().setValue(0);
         rootGraphicView.getScrollPane().getHorizontalScrollBar().setValue(0);

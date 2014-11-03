@@ -40,7 +40,23 @@ public class NodeView
     
     popupMenu = new JPopupMenu();
     
+    // Menu item open
     JMenuItem item = new JMenuItem(
+        "Open", 
+        PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "element-view-open.png"));
+    
+    item.setEnabled(graphicView != MultiViewManager.getRootGraphicView());
+    item.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        MultiViewManager.openView(NodeView.this.graphicView);
+      }
+    });
+    popupMenu.add(item);
+    
+    // Menu item delete
+    item = new JMenuItem(
         "Delete", 
         PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete.png"));
     

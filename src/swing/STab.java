@@ -96,7 +96,10 @@ public class STab extends JTabbedPane {
       @Override
       public void mousePressed(MouseEvent e) {
         if(getBoundsAt(getTabCount() - 1).contains(e.getPoint()))
-          MultiViewManager.addAndOpenNewView();
+          if (MultiViewManager.getAllClosedGraphicViews().isEmpty())
+            MultiViewManager.addAndOpenNewView();
+          else
+            NewViewDialog.displayDialog();
       }      
     });
     

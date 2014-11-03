@@ -1587,24 +1587,34 @@ public class GraphicView extends GraphicComponent
   public JPanel getScene() {
     return scene;
   }
+  
+  public BufferedImage getScreen(int type) {
+    return getScreen(type, txtBoxDiagramName.isVisible());
+  }
 
   /**
-   * Make a picture (BufferedImage) representing the scene.
+   * Make a picture (BufferedImage) representing the scene. Call refreshAllComponents
+   * before calling this method and then call it with SwingUtilites.invokeLater.
    * 
+   * @param type int imageType
+   * @param displayName must paint the border and the name in the top left corner.
    * @return a picture representing the scene
    */
-  public BufferedImage getScreen(int type) {
+  public BufferedImage getScreen(int type, boolean displayName) {
+    
     setPictureMode(true);
     
     final int margin = 20;
     int marginTop = margin;
-    boolean displayName = txtBoxDiagramName.isVisible();
     
     if (displayName)
       marginTop += txtBoxDiagramName.getBounds().height;
     
     int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxX = 0, maxY = 0;
     final LinkedList<GraphicComponent> components = getAllDiagramComponents();
+    
+    if (components.size() == 0)
+      return null;
 
     // Compute the rectangle englobing all graphic components.
     for (final GraphicComponent c : components) {
@@ -1639,16 +1649,18 @@ public class GraphicView extends GraphicComponent
       c.paintComponent(g2);
     
     // Paint diagram's name
-    g2.translate(-margin, -marginTop);
-    txtBoxDiagramName.paintComponentAt(g2, new Point(minX, minY));
-    
-    if (displayName && isTitleBorderPainted()) {
-      g2.setStroke(new BasicStroke(DEFAULT_TITLE_BORDER_WIDTH));
-      g2.draw(new Rectangle2D.Float(
-          minX,
-          minY,
-          img.getWidth() - DEFAULT_TITLE_BORDER_WIDTH,
-          img.getHeight() - DEFAULT_TITLE_BORDER_WIDTH));
+    if (displayName) {
+      g2.translate(-margin, -marginTop);
+      txtBoxDiagramName.paintComponentAt(g2, new Point(minX, minY));
+
+      if (isTitleBorderPainted()) {
+        g2.setStroke(new BasicStroke(DEFAULT_TITLE_BORDER_WIDTH));
+        g2.draw(new Rectangle2D.Float(
+            minX,
+            minY,
+            img.getWidth() - DEFAULT_TITLE_BORDER_WIDTH,
+            img.getHeight() - DEFAULT_TITLE_BORDER_WIDTH));
+      }
     }
     setPictureMode(false);
     return img;
@@ -2756,6 +2768,10 @@ public class GraphicView extends GraphicComponent
     return rect;
   }
 
+  /**
+   * Notify obsevers of all components. This will replace and recalculate all
+   * component's location to fit at their correct location.
+   */
   public void refreshAllComponents() {
     for (GraphicComponent c : getAllComponents())
       c.notifyObservers();
