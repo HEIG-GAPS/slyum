@@ -515,6 +515,7 @@ public class Slyum extends JFrame implements ActionListener {
 
   public Font defaultFont;
   private JMenuItem menuItemLocate;
+  private JMenu menuOpenViews;
 
   public JMenuItem getMenuItemLocate() {
     return menuItemLocate;
@@ -1032,14 +1033,12 @@ public class Slyum extends JFrame implements ActionListener {
       menu.addSeparator();
       
       // Sub Menu Open view
-      JMenu subMenu = new JMenu("Open View");
-      subMenu.setMnemonic(KeyEvent.VK_O);
-      menu.add(subMenu);
-
-      // Menus open views
-      menuItem = createMenuItem("bla bla", "icon", KeyEvent.VK_I,
-              null, ACTION_OPEN_VIEW);
-      menu.add(menuItem);
+      menuOpenViews = new JMenu("Open View");
+      menuOpenViews.setIcon(PersonalizedIcon.createImageIcon(
+          Slyum.ICON_PATH + "element-view-open.png"));
+      menuOpenViews.setMnemonic(KeyEvent.VK_O);
+      menuOpenViews.setEnabled(false);
+      menu.add(menuOpenViews);
       
       // Menu close
       menuItem = createMenuItem("Close View", "icon", KeyEvent.VK_C,
@@ -1047,7 +1046,7 @@ public class Slyum extends JFrame implements ActionListener {
       menu.add(menuItem);
       
       // Menu add
-      menuItem = createMenuItem("Add View...", "icon", KeyEvent.VK_A,
+      menuItem = createMenuItem("Add View...", "element-view-add", KeyEvent.VK_A,
               KEY_ADD_VIEW, ACTION_ADD_VIEW);
       menu.add(menuItem);
       
@@ -1057,7 +1056,7 @@ public class Slyum extends JFrame implements ActionListener {
       menu.add(menuItem);
       
       // Menu delete
-      menuItem = createMenuItem("Delete View", "icon", KeyEvent.VK_D,
+      menuItem = createMenuItem("Delete View", "element-view-delete", KeyEvent.VK_D,
               KEY_DELETE_VIEW, ACTION_DELETE_VIEW);
       menu.add(menuItem);      
     }

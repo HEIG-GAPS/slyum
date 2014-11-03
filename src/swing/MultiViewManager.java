@@ -59,6 +59,14 @@ public class MultiViewManager {
     return (List<GraphicView>) instance.graphicViews.clone();
   }
   
+  public static List<GraphicView> getAllClosedGraphicViews() {
+    LinkedList<GraphicView> list = new LinkedList<>();
+    for (GraphicView gv : getAllGraphicViews())
+      if (!gv.isOpenInTab())
+        list.add(gv);
+    return list;
+  }
+  
   public static boolean isGraphicViewOpened(GraphicView graphicView) {
     return STab.getInstance().getAllGraphicsView().contains(graphicView);
   }    
