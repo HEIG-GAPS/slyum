@@ -7,6 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -289,7 +290,8 @@ public class STab extends JTabbedPane {
   
   static class ClosableTitleTab extends GraphicViewTabComponent {
     public ClosableTitleTab(final JTabbedPane pane, GraphicView graphicView) {
-      super(pane, graphicView);      
+      super(pane, graphicView);
+      label.setPreferredSize(new Dimension(110, 30));    
       add(new LabelClose(), BorderLayout.EAST);
       graphicView.addObserver(this);
     }
