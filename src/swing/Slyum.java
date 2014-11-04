@@ -1025,7 +1025,7 @@ public class Slyum extends JFrame implements ActionListener {
       menu.setMnemonic(KeyEvent.VK_V);
       menuBar.add(menu);
       
-      menuItemFullScreen = new JCheckBoxMenuItem("Full Screen");
+      menuItemFullScreen = new JCheckBoxMenuItem("Diagram Only");
       menuItemFullScreen.setAccelerator(KeyStroke.getKeyStroke(KEY_FULL_SCREEN));
       menuItemFullScreen.setActionCommand(ACTION_FULL_SCREEN);
       menuItemFullScreen.addActionListener(this);
