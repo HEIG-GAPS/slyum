@@ -7,7 +7,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -28,11 +27,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import utility.PersonalizedIcon;
 
-/**
- *
- * @author David Miserez <david.miserez@heig-vd.ch>
- */
 public class STab extends JTabbedPane {
+  
   
   private static STab instance;
   private int saveCurrentSelectedIndex;
@@ -51,7 +47,7 @@ public class STab extends JTabbedPane {
   private STab(GraphicView graphicView) {
     
     // Add main tab.
-    super.add("", graphicView.getScrollPane());
+    super.add(GraphicView.ROOT_VIEW_DEFAULT_NAME, graphicView.getScrollPane());
     saveCurrentSelectedIndex = 0;
     
     setTabComponentAt(0, new GraphicViewTabComponent(this, graphicView));
@@ -277,7 +273,7 @@ public class STab extends JTabbedPane {
       if (o instanceof ClassDiagram) {
         String text = ((ClassDiagram)o).getName();
         if (text.isEmpty())
-          text = "Main view";
+          text = GraphicView.ROOT_VIEW_DEFAULT_NAME;
         pane.setTitleAt(i, text);
         label.setText(text);
       }

@@ -131,7 +131,9 @@ public class GraphicView extends GraphicComponent
     };
   }
 
-  public final static String NO_NAMED_VIEW = "New view";
+  
+  public final static String ROOT_VIEW_DEFAULT_NAME = "Main view";
+  public final static String NO_NAMED_VIEW = "Unnamed view";
   public final static boolean BACKGROUND_GRADIENT = false;
   public final static boolean ENTITY_GRADIENT = false;
   public final static boolean CTRL_FOR_GRIP = false;

@@ -18,7 +18,6 @@ import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
 import graphic.GraphicView;
-import graphic.entity.EntityView;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
@@ -504,7 +503,8 @@ public class HierarchicalView
     if (o instanceof ClassDiagram) {
       String name = ((ClassDiagram)o).getName();
       setDiagramName(name);
-      viewsNode.getFirstLeaf().setUserObject(name);
+      viewsNode.getFirstLeaf().setUserObject(
+          name.isEmpty() ? GraphicView.ROOT_VIEW_DEFAULT_NAME : name);
     }
   }
 
