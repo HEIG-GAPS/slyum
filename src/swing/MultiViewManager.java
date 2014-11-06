@@ -160,8 +160,7 @@ public class MultiViewManager {
   public static void removeView(GraphicView graphicView) {
     if (graphicView == getRootGraphicView())
       throw new IllegalArgumentException(
-          "You cannot remove the root graphic view. " + 
-          "Call GraphicView.clean instead.");
+          "You cannot remove the main graphic view. ");
     
     if (SMessageDialog.showQuestionMessageYesNo(
         "Are you sure you want to delete the view \"" + graphicView.getName() + 

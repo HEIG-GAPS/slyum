@@ -5,9 +5,12 @@ import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.verifyName.SyntaxeNameException;
 import graphic.GraphicView;
+import graphic.export.ExportViewEps;
+import graphic.export.ExportViewImage;
+import graphic.export.ExportViewPdf;
+import graphic.export.ExportViewSvg;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
-import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -25,7 +28,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -275,7 +277,8 @@ public class PanelClassDiagram extends JPanel {
         final String extension = Utility.getExtension(f);
         if (extension != null)
           if (extension.equals("jpg") || extension.equals("png")
-                  || extension.equals("gif")) return true;
+                  || extension.equals("gif")) 
+            return true;
 
         return false;
       }
@@ -288,8 +291,70 @@ public class PanelClassDiagram extends JPanel {
 
     final int result = fc.showSaveDialog(this);
 
-    if (result == JFileChooser.APPROVE_OPTION)
-      saveImageTo(fc.getSelectedFile());
+    if (result == JFileChooser.APPROVE_OPTION) {
+      
+      File file = fc.getSelectedFile();
+      String extension = Utility.getExtension(file);
+
+      if (extension == null)
+        file = new File(file.getPath() + ".png");
+      
+      exportFileTo(file);
+    }
+  }
+  
+  private FileFilter createChoosableFileFilter(final String extension) {
+    return new FileFilter() {
+
+      @Override
+      public boolean accept(File f) {
+        if (f.isDirectory()) return true;
+
+        final String fileExtension = Utility.getExtension(f);
+        if (fileExtension != null)
+          if (fileExtension.equals(extension)) return true;
+
+        return false;
+      }
+
+      @Override
+      public String getDescription() {
+        return "Fichier " + extension.toUpperCase() + " (*." + extension + ")";
+      }
+
+      @Override
+      public String toString() {
+        return "." + extension;
+      }
+    };
+  }
+  
+  public void exportAsVectoriel(String selectedExtension, String... extensions) {
+    final JFileChooser fc = new JFileChooser(
+            Slyum.getCurrentDirectoryFileChooser());
+    fc.setAcceptAllFileFilterUsed(false);
+
+    for (String extension : extensions) {
+      FileFilter ff = createChoosableFileFilter(extension);
+      
+      fc.addChoosableFileFilter(ff);
+      if (extension.equals(selectedExtension))
+        fc.setFileFilter(ff);
+    }
+    
+
+    final int result = fc.showSaveDialog(this);
+
+    if (result == JFileChooser.APPROVE_OPTION) {
+      
+      File file = fc.getSelectedFile();
+      String extension = Utility.getExtension(file);
+
+      if (extension == null)
+        file = new File(file.getPath() + fc.getFileFilter().toString());
+      
+      exportFileTo(file);
+    }
   }
 
   /**
@@ -615,14 +680,9 @@ public class PanelClassDiagram extends JPanel {
    * @param file
    *          the file where to save a picture.
    */
-  public void saveImageTo(File file) {
+  public void exportFileTo(File file) {
     try {
       String extension = Utility.getExtension(file);
-
-      if (extension == null) {
-        extension = "png";
-        file = new File(file.getPath() + "." + extension);
-      }
 
       if (file.exists())
         if (SMessageDialog.showQuestionMessageOkCancel(file
@@ -632,13 +692,24 @@ public class PanelClassDiagram extends JPanel {
       GraphicView graphicView = MultiViewManager.getSelectedGraphicView();
       switch (extension) {
         case "png":
-          ImageIO.write(graphicView.getScreen(BufferedImage.TYPE_INT_ARGB_PRE),
+          ImageIO.write(ExportViewImage.create(graphicView).export(),
               extension, file);
           break;
         case "jpg":
         case "gif":
-          ImageIO.write(graphicView.getScreen(BufferedImage.TYPE_INT_RGB),
+          ImageIO.write(ExportViewImage.create(
+                  graphicView, 
+                  BufferedImage.TYPE_INT_RGB).export(),
               extension, file);
+          break;
+        case "pdf":
+          ExportViewPdf.create(graphicView, file).export();
+          break;
+        case "svg":
+          ExportViewSvg.create(graphicView, file).export();
+          break;
+        case "eps":
+          ExportViewEps.create(graphicView, file).export();
           break;
         default:
           SMessageDialog.showErrorMessage("Extension \"." + extension

@@ -28,6 +28,7 @@ import graphic.entity.EntityView;
 import graphic.entity.EnumView;
 import graphic.entity.InterfaceView;
 import graphic.entity.SimpleEntityView;
+import graphic.export.ExportViewImage;
 import graphic.factory.CreateComponent;
 import graphic.factory.MultiFactory;
 import graphic.relations.AggregationView;
@@ -1587,10 +1588,6 @@ public class GraphicView extends GraphicComponent
   public JPanel getScene() {
     return scene;
   }
-  
-  public BufferedImage getScreen(int type) {
-    return getScreen(type, txtBoxDiagramName.isVisible());
-  }
 
   /**
    * Make a picture (BufferedImage) representing the scene. Call refreshAllComponents
@@ -1664,6 +1661,10 @@ public class GraphicView extends GraphicComponent
     }
     setPictureMode(false);
     return img;
+  }
+
+  public TextBoxDiagramName getTxtBoxDiagramName() {
+    return txtBoxDiagramName;
   }
 
   @Override
@@ -2253,7 +2254,7 @@ public class GraphicView extends GraphicComponent
     
     Utility.setRenderQuality(g);
     
-    BufferedImage m_bi = getScreen(BufferedImage.TYPE_INT_ARGB_PRE);
+    BufferedImage m_bi = ExportViewImage.create(this).export();
     int wPage = (int) pageFormat.getImageableWidth(),
         hPage = (int) pageFormat.getImageableHeight(),
         wBi = m_bi.getWidth(),

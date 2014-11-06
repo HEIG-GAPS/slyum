@@ -2,6 +2,7 @@
 package swing;
 
 import graphic.GraphicView;
+import graphic.export.ExportViewImage;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
@@ -61,7 +62,7 @@ public class SlyumPrinterJob {
    * @return PageFormat.PORTRAIT or PageFormat.LANDSCAPE.
    */
   public static int getPreferredOrientation(GraphicView graphicView) {
-    BufferedImage bi = graphicView.getScreen(BufferedImage.TYPE_INT_ARGB_PRE);
+    BufferedImage bi = ExportViewImage.create(graphicView).export();
     Dimension sceneSize = new Dimension(bi.getWidth(), bi.getHeight());
     
     if (sceneSize.width > sceneSize.height)
