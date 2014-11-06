@@ -24,6 +24,8 @@ directory. The current version of Slyum can be found in the About box
 Take the utils/version.html file and copy it to the "previous release/<current version>/" too.
 
 0) Don't forget to update the version number in swing.Slyum.java ("version" constant).
+   Create the jar. In the Files view from Netbeans, rigth click on nbbuild-xml -> Run Target -> Other Targets -> package-for-store.
+   The created jar will be located in the store folder.
 
 1) Executable Java (.jar)
    Put in the "latest release/" directory the compiled jar version of the 
