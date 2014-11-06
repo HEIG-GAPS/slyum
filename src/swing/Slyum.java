@@ -115,7 +115,10 @@ public class Slyum extends JFrame implements ActionListener {
   public static final String ACTION_OPEN = "Open";
   public static final String ACTION_SAVE = "Save";
   public static final String ACTION_SAVE_AS = "SaveAs";
-  public static final String ACTION_EXPORT = "Export";
+  public static final String ACTION_EXPORT_IMAGE = "ExportImage";
+  public static final String ACTION_EXPORT_PDF = "ExportPdf";
+  public static final String ACTION_EXPORT_EPS = "ExportEps";
+  public static final String ACTION_EXPORT_SVG = "ExportSvg";
   public static final String ACTION_KLIPPER = "Klipper";
   public static final String ACTION_PRINT = "Print";
   public static final String ACTION_PAGE_SETUP = "PageSetup";
@@ -177,7 +180,10 @@ public class Slyum extends JFrame implements ActionListener {
   public final static String KEY_OPEN_PROJECT = "ctrl O";
   public final static String KEY_SAVE = "ctrl S";
   public final static String KEY_SAVE_AS = "ctrl shift S";
-  public final static String KEY_EXPORT = "ctrl E";
+  public final static String KEY_EXPORT_IMAGE = "ctrl E";
+  public final static String KEY_EXPORT_PDF = "ctrl F";
+  public final static String KEY_EXPORT_EPS = "ctrl G";
+  public final static String KEY_EXPORT_SVG = "ctrl V";
   public final static String KEY_KLIPPER = "ctrl C";
   public final static String KEY_PRINT = "ctrl P";
   public final static String KEY_PROPERTIES = "alt ENTER";
@@ -749,7 +755,20 @@ public class Slyum extends JFrame implements ActionListener {
         SMessageDialog.showErrorMessage("Not implemeted");
         break;
       case ACTION_DELETE_VIEW:
+        try {
         MultiViewManager.removeSelectedView();
+        } catch (IllegalArgumentException ex) {
+          SMessageDialog.showErrorMessage(ex.getMessage());
+        }
+        break;
+      case ACTION_EXPORT_PDF:
+        PanelClassDiagram.getInstance().exportAsVectoriel("pdf", new String[] {"pdf", "svg", "eps"});
+        break;
+      case ACTION_EXPORT_SVG:
+        PanelClassDiagram.getInstance().exportAsVectoriel("svg", new String[] {"pdf", "svg", "eps"});
+        break;
+      case ACTION_EXPORT_EPS:
+        PanelClassDiagram.getInstance().exportAsVectoriel("eps", new String[] {"pdf", "svg", "eps"});
         break;
     }
   }
@@ -847,11 +866,35 @@ public class Slyum extends JFrame implements ActionListener {
       menu.add(menuItem);
 
       menu.addSeparator();
-
-      // Menu item Export as image...
-      menuItem = createMenuItem("Export as image...", "export", KeyEvent.VK_M,
-              KEY_EXPORT, ACTION_EXPORT, p.getBtnExport());
-      menu.add(menuItem);
+      
+      // SubMenu Export as...
+      {
+        JMenu subMenu = new JMenu("Export");
+        subMenu.setMnemonic(KeyEvent.VK_E);
+        menu.add(subMenu);
+        
+        // Menu item Export as image...
+        menuItem = createMenuItem("As Image...", "export", KeyEvent.VK_I,
+                KEY_EXPORT_IMAGE, ACTION_EXPORT_IMAGE, p.getBtnExportImage());
+        subMenu.add(menuItem);
+        
+        // Menu item Export as PDF...
+        menuItem = createMenuItem("As PDF...", "pdf-16", KeyEvent.VK_P,
+                KEY_EXPORT_PDF, ACTION_EXPORT_PDF);
+        subMenu.add(menuItem);
+        
+        // Menu item Export as SVG...
+        menuItem = createMenuItem("As SVG...", "svg-16", KeyEvent.VK_S,
+                KEY_EXPORT_SVG, ACTION_EXPORT_SVG);
+        subMenu.add(menuItem);
+        
+        // Menu item Export as EPS...
+        menuItem = createMenuItem("As EPS...", "eps-16", KeyEvent.VK_E,
+                KEY_EXPORT_EPS, ACTION_EXPORT_EPS);
+        subMenu.add(menuItem);
+        
+        menu.add(subMenu);
+      }
 
       // Menu item Copy to clipboard
       menuItem = createMenuItem("Copy selection to clipboard", "klipper",
@@ -1051,7 +1094,7 @@ public class Slyum extends JFrame implements ActionListener {
       menu.add(menuItem);
       
       // Menu duplicate
-      menuItem = createMenuItem("Duplicate View", "icon", KeyEvent.VK_T,
+      menuItem = createMenuItem("Duplicate View", "element-view-duplicate", KeyEvent.VK_T,
               KEY_DUPLICATE_VIEW, ACTION_DUPLICATE_VIEW);
       menu.add(menuItem);
       

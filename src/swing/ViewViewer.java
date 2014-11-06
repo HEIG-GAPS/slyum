@@ -1,6 +1,7 @@
 package swing;
 
 import graphic.GraphicView;
+import graphic.export.ExportViewImage;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -279,7 +280,7 @@ public class ViewViewer
     
     @Override
     protected BufferedImage getImageOverview() {
-      return graphicView.getScreen(BufferedImage.TYPE_INT_ARGB, false);
+      return ExportViewImage.create(graphicView, false).export();
     }
   }
 }
