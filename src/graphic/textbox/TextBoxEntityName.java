@@ -65,15 +65,16 @@ public class TextBoxEntityName extends TextBox {
     super.setBounds(bounds);
 
     if (textDim.width > bounds.width)
-
-    this.bounds.width = bounds.width;
+      this.bounds.width = bounds.width;
 
     classWidth = bounds.width;
   }
 
   @Override
   public void setText(String text) {
-    if (!TypeName.getInstance().verifyName(text)) return;
+    if (entity.getName().equals(text) || 
+        !TypeName.getInstance().verifyName(text)) 
+      return;
 
     entity.setName(text);
     super.setText(text);

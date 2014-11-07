@@ -30,6 +30,7 @@ public class AbstractNode extends DefaultMutableTreeNode {
     super.setUserObject(userObject);
     
     if (getParent() != null)
-      HierarchicalView.sortAlphabetically((DefaultMutableTreeNode)getParent(), treeModel);
+      HierarchicalView.sortAlphabetically(
+          (DefaultMutableTreeNode)getParent(), treeModel, tree);
   }
 }

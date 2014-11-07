@@ -292,10 +292,11 @@ public class HierarchicalView
    */
   public void addNode(DefaultMutableTreeNode leaf, DefaultMutableTreeNode parent) {
     parent.insert(leaf, 0);
-    sortAlphabetically(parent, treeModel);
+    sortAlphabetically(parent, treeModel, tree);
   }
   
-  public static void sortAlphabetically(DefaultMutableTreeNode parent, DefaultTreeModel treeModel) {
+  public static void sortAlphabetically(
+      DefaultMutableTreeNode parent, DefaultTreeModel treeModel, STree tree) {
     int count = parent.getChildCount();
     
     if (count < 2)
@@ -305,11 +306,14 @@ public class HierarchicalView
     for (int i = 0; i < count; ++i) {
       DefaultMutableTreeNode child = (DefaultMutableTreeNode)parent.getChildAt(i);
       if (!child.isLeaf())
-        sortAlphabetically(child, treeModel);
+        sortAlphabetically(child, treeModel, tree);
     }
     
     quickSort(parent, 0, count-1);
+    
+    tree.stopFireEvent = true;
     treeModel.reload(parent);
+    tree.stopFireEvent = false;
   }
   
   private static void quickSort(DefaultMutableTreeNode node, int low, int high) {

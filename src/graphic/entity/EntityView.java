@@ -660,7 +660,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   }
 
   /**
-   * Delete all TextBox and regenerate them. !! This could method take time !!
+   * Delete all TextBox and regenerate them.
    */
   public void regenerateEntity() {
     boolean isStopRepaint = parent.getStopRepaint();
