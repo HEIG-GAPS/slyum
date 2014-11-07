@@ -2,7 +2,6 @@ package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
-import graphic.entity.SimpleEntityView;
 import graphic.relations.InnerClassView;
 
 import java.awt.Color;
@@ -10,10 +9,12 @@ import java.awt.Graphics2D;
 
 import swing.SPanelDiagramComponent;
 import utility.SMessageDialog;
-import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
+import graphic.entity.ClassView;
+import graphic.entity.EntityView;
+import graphic.entity.EnumView;
 
-public class InnerClassFactory extends InheritanceFactory {
+public class InnerClassFactory extends RelationFactory {
   public final String ERROR_CREATION_MESSAGE = "Inner class creation failed.\nYou must make a bond between two classes or class -> interface.";
 
   public InnerClassFactory(GraphicView parent) {
@@ -26,15 +27,10 @@ public class InnerClassFactory extends InheritanceFactory {
   @Override
   public GraphicComponent create() {
     try {
-      if (componentMousePressed instanceof SimpleEntityView
-              && componentMouseReleased instanceof SimpleEntityView) {
-        SimpleEntityView source = (SimpleEntityView) componentMousePressed;
-        SimpleEntityView target = (SimpleEntityView) componentMouseReleased;
-
-        if (!Inheritance.validate(source.getComponent(), target.getComponent())) {
-          repaint();
-          return null;
-        }
+      if (componentMousePressed instanceof EntityView
+              && componentMouseReleased instanceof EntityView) {
+        EntityView source = (EntityView) componentMousePressed;
+        EntityView target = (EntityView) componentMouseReleased;
 
         InnerClass innerClass = new InnerClass(source.getComponent(),
                 target.getComponent());
@@ -67,5 +63,11 @@ public class InnerClassFactory extends InheritanceFactory {
   @Override
   protected void creationFailed() {
     SMessageDialog.showErrorMessage(ERROR_CREATION_MESSAGE);
+  }
+
+  @Override
+  protected boolean isFirstComponentValid() {
+    return componentMousePressed instanceof ClassView ||
+           componentMousePressed instanceof EnumView;
   }
 }

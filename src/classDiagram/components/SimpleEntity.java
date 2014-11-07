@@ -13,15 +13,13 @@ import change.BufferClass;
 import change.BufferCreationAttribute;
 import change.BufferCreationMethod;
 import change.Change;
-import classDiagram.relationships.Inheritance;
+import classDiagram.relationships.IParentChild;
 
 public class SimpleEntity extends Entity {
 
   protected Visibility visibility = Visibility.PUBLIC;
   protected LinkedList<Attribute> attributes = new LinkedList<>();
-  protected List<Inheritance> childs = new LinkedList<>();
   protected LinkedList<Method> methods = new LinkedList<>();
-  protected List<Inheritance> parents = new LinkedList<>();
   private boolean _isAbstract = false;
   private Attribute lastAddedAttribute;
   private Method lastAddedMethod;
@@ -88,20 +86,6 @@ public class SimpleEntity extends Entity {
   }
 
   /**
-   * Add a new child.
-   * 
-   * @param child
-   *          the new child
-   */
-  public void addChild(Inheritance child) {
-    if (child == null) throw new IllegalArgumentException("child is null");
-
-    childs.add(child);
-
-    setChanged();
-  }
-
-  /**
    * Add a new method.
    * 
    * @param method
@@ -131,20 +115,6 @@ public class SimpleEntity extends Entity {
     return true;
   }
 
-  /**
-   * Add a new parent.
-   * 
-   * @param parent
-   *          the new parent
-   */
-  public void addParent(Inheritance parent) {
-    if (parent == null) throw new IllegalArgumentException("parent is null");
-
-    parents.add(parent);
-
-    setChanged();
-  }
-
   public int countStaticMethods() {
     int i = 0;
     for (Method m : getMethods())
@@ -157,33 +127,13 @@ public class SimpleEntity extends Entity {
     return getMethods().size() - countStaticMethods() == 0;
   }
 
-  public LinkedList<SimpleEntity> getAllChilds() {
-    LinkedList<SimpleEntity> allChilds = new LinkedList<SimpleEntity>();
-    allChilds.add(this);
-
-    for (Inheritance p : childs)
-      allChilds.addAll(p.getChild().getAllChilds());
-
-    return allChilds;
-  }
-
-  public LinkedList<SimpleEntity> getAllParents() {
-    final LinkedList<SimpleEntity> allParents = new LinkedList<SimpleEntity>();
-    allParents.add(this);
-
-    for (final Inheritance p : parents)
-      allParents.addAll(p.getParent().getAllParents());
-
-    return allParents;
-  }
-
   /**
    * Get a copy of the attribute's list.
    * 
    * @return an array containing all attributes of the entity.
    */
   public LinkedList<Attribute> getAttributes() {
-    final LinkedList<Attribute> copy = new LinkedList<Attribute>();
+    final LinkedList<Attribute> copy = new LinkedList<>();
 
     for (final Attribute a : attributes)
       copy.add(a);
@@ -197,7 +147,7 @@ public class SimpleEntity extends Entity {
    * @return an array containing all methods of the entity.
    */
   public LinkedList<Method> getMethods() {
-    final LinkedList<Method> copy = new LinkedList<Method>();
+    final LinkedList<Method> copy = new LinkedList<>();
 
     for (final Method m : methods)
       copy.add(m);
@@ -233,24 +183,6 @@ public class SimpleEntity extends Entity {
    */
   public boolean isAbstract() {
     return _isAbstract;
-  }
-
-  public boolean isChildOf(Entity entity) {
-    boolean isChild = false;
-
-    for (final Inheritance i : parents)
-      isChild |= i.getParent().isChildOf(entity);
-
-    return isChild || equals(entity);
-  }
-
-  public boolean isParentOf(Entity entity) {
-    boolean isParent = false;
-
-    for (final Inheritance i : childs)
-      isParent |= i.getChild().isParentOf(entity);
-
-    return isParent || equals(entity);
   }
 
   /**
@@ -305,18 +237,6 @@ public class SimpleEntity extends Entity {
   }
 
   /**
-   * Remove the child.
-   * 
-   * @param child
-   *          the child to remove
-   */
-  public void removeChild(Inheritance child) {
-    childs.remove(child);
-
-    setChanged();
-  }
-
-  /**
    * Remove the method.
    * 
    * @param method
@@ -338,18 +258,6 @@ public class SimpleEntity extends Entity {
     }
 
     return false;
-  }
-
-  /**
-   * Remove the parent.
-   * 
-   * @param parent
-   *          the parent to remove
-   */
-  public void removeParent(Inheritance parent) {
-    parents.remove(parent);
-
-    setChanged();
   }
 
   /**
@@ -393,14 +301,6 @@ public class SimpleEntity extends Entity {
     Change.push(new BufferClass(this));
 
     setChanged();
-  }
-
-  public List<Inheritance> getChilds() {
-    return childs;
-  }
-
-  public List<Inheritance> getParents() {
-    return parents;
   }
 
   public Attribute getLastAddedAttribute() {

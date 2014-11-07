@@ -59,7 +59,6 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
   protected boolean pictureMode = false;
   protected Point locationContextMenuRequested;
-  protected boolean ligthDelete;
 
   public static void askNewColorForSelectedItems() {
     MultiViewManager.getSelectedGraphicView().changeColorForSelectedItems();
@@ -167,7 +166,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
     // Search and delete all lines (relations, associations, etc...)
     // associated with this component.
     for (final LineView lv : parent.getLinesViewAssociedWith(this))
-      lv.delete();
+      lv.ligthDelete();
   }
   
   protected boolean museDeleteAssociedComponent() {

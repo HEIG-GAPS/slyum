@@ -1573,7 +1573,10 @@ public class GraphicView extends GraphicComponent
    */
   @Override
   public String getName() {
-    return name == null || name.isEmpty() ? NO_NAMED_VIEW : name;
+    return (name == null || name.isEmpty() ?
+        (MultiViewManager.getRootGraphicView() == this ? 
+          ROOT_VIEW_DEFAULT_NAME : NO_NAMED_VIEW) :
+        name);
   }
   
   @Override

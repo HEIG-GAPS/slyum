@@ -65,18 +65,13 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
 
   public final static float LINE_WIDTH = 1.f;
   protected Stroke lineStroke = new BasicStroke(LINE_WIDTH);
-
   protected LinkedList<RelationGrip> points = new LinkedList<>();
-
   private Cursor previousCursor;
-
   private int saveGrip;
-
   private boolean acceptGripCreation = false;
-
   private BufferBounds[] bb = new BufferBounds[2];
-
   private Point anchor1MousePressed, anchor2MousePressed;
+  protected boolean ligthDelete;
 
   // More ratio is bigger, more the line near horizontal / vertical degree
   // will be adjusted.
@@ -340,10 +335,16 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
 
     Change.setBlocked(isBlocked);
   }
+  
+  public void ligthDelete() {
+    ligthDelete = true;
+    delete();
+    ligthDelete = false;
+  }
 
   @Override
   protected boolean museDeleteAssociedComponent() {
-    return !existsInOthersViews();
+    return !ligthDelete || !existsInOthersViews();
   }
 
   /**

@@ -1,6 +1,6 @@
 package swing;
 
-import swing.slyumCustomizedComponents.SScrollPane;
+import classDiagram.components.Entity;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -19,7 +19,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
@@ -28,7 +27,6 @@ import javax.swing.border.EmptyBorder;
 import utility.Utility;
 import classDiagram.components.Method;
 import classDiagram.components.SimpleEntity;
-import javax.swing.BorderFactory;
 import swing.slyumCustomizedComponents.SList;
 
 public class OverridesAndImplementationsDialog extends JDialog {
@@ -180,10 +178,12 @@ public class OverridesAndImplementationsDialog extends JDialog {
   private Vector<CheckableItem> createData() {
     items = new Vector<CheckableItem>();
 
-    for (final SimpleEntity e : parent.getAllParents())
-
+    for (final Entity e : parent.getAllParents()) {
+      
+      SimpleEntity se = (SimpleEntity)e;
+      
       out:
-      for (final Method m : e.getMethods()) {
+      for (final Method m : se.getMethods()) {
         for (final CheckableItem c : items)
           if (c.getMethod().equals(m)) continue out;
 
@@ -193,6 +193,7 @@ public class OverridesAndImplementationsDialog extends JDialog {
         ci.setSelected(child.getMethods().contains(m));
         items.add(ci);
       }
+    }
 
     return items;
   }

@@ -654,19 +654,29 @@ public class XMLParser extends DefaultHandler {
 
   public void importInheritances() {
     for (final Inheritance h : umlClassDiagram.diagrameElement.inheritance) {
-      final classDiagram.components.SimpleEntity child = (classDiagram.components.SimpleEntity) classDiagram
-              .searchComponentById(h.child);
-      final classDiagram.components.SimpleEntity parent = (classDiagram.components.SimpleEntity) classDiagram
-              .searchComponentById(h.parent);
 
       if (h.innerClass) {
-        final classDiagram.relationships.InnerClass innerClass = new classDiagram.relationships.InnerClass(
-                child, parent, h.id);
+        final classDiagram.components.Entity child = 
+            (classDiagram.components.Entity) classDiagram.searchComponentById(h.child);
+        
+        final classDiagram.components.Entity parent = 
+            (classDiagram.components.Entity) classDiagram.searchComponentById(h.parent);
+
+        final classDiagram.relationships.InnerClass innerClass = 
+            new classDiagram.relationships.InnerClass(child, parent, h.id);
+        
         classDiagram.addInnerClass(innerClass);
         innerClass.notifyObservers();
+        
       } else {
-        final classDiagram.relationships.Inheritance i = new classDiagram.relationships.Inheritance(
-                child, parent, h.id);
+        final classDiagram.components.SimpleEntity child = 
+            (classDiagram.components.SimpleEntity) classDiagram.searchComponentById(h.child);
+        
+        final classDiagram.components.SimpleEntity parent = 
+            (classDiagram.components.SimpleEntity) classDiagram.searchComponentById(h.parent);
+        
+        final classDiagram.relationships.Inheritance i = 
+            new classDiagram.relationships.Inheritance(child, parent, h.id);
         classDiagram.addInheritance(i);
         i.notifyObservers();
       }

@@ -23,7 +23,6 @@ import javax.swing.JPopupMenu;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import swing.PanelClassDiagram;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent;

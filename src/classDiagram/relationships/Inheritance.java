@@ -21,7 +21,8 @@ import classDiagram.components.SimpleEntity;
  * @author David Miserez
  * @version 1.0 - 24.07.2011
  */
-public class Inheritance extends Observable implements Relation {
+public class Inheritance extends Observable implements Relation, IParentChild {
+  
   public static boolean validate(Entity child, Entity parent) {
     /* Cette méthode de validation est a revoir. Désactivation en attendant.
      * boolean valide = true; valide &= child != parent; for (Entity e :
@@ -31,14 +32,14 @@ public class Inheritance extends Observable implements Relation {
      * "Impossible to create inheritance association."); return valide; */
     
     // Test qu'une classe ne peut être parente d'une interface.
-    boolean test =  child instanceof InterfaceEntity && parent instanceof InterfaceEntity ||
-           child instanceof ClassEntity;
+    boolean test = child instanceof InterfaceEntity && 
+                    parent instanceof InterfaceEntity ||
+                    child instanceof ClassEntity;
     return test;
   }
 
-  protected SimpleEntity child, parent;
-
   protected final int id;
+  protected SimpleEntity child, parent;
 
   /**
    * Create a new inheritance with the given entities child and parent.
@@ -62,6 +63,8 @@ public class Inheritance extends Observable implements Relation {
    *          the child entity
    * @param parent
    *          the parent entity
+   * @param id
+   *         the unique ID of the component.
    */
   public Inheritance(SimpleEntity child, SimpleEntity parent, int id) {
     init(child, parent);
@@ -74,6 +77,7 @@ public class Inheritance extends Observable implements Relation {
    * 
    * @return the child for this inheritance
    */
+  @Override
   public SimpleEntity getChild() {
     return child;
   }
@@ -88,6 +92,7 @@ public class Inheritance extends Observable implements Relation {
    * 
    * @return the parent for this inheritance
    */
+  @Override
   public SimpleEntity getParent() {
     return parent;
   }
@@ -123,10 +128,15 @@ public class Inheritance extends Observable implements Relation {
    * @param child
    *          the new child for this inheritance
    */
-  public void setChild(SimpleEntity child) {
+  @Override
+  public void setChild(Entity child) {
+    if (!(child instanceof SimpleEntity))
+      throw new IllegalArgumentException(
+          "Child must be an instance of SimpleEntity.");
+    
     this.child.removeParent(this);
-    this.child = child;
-    child.addParent(this);
+    this.child = (SimpleEntity)child;
+    this.child.addParent(this);
     setChanged();
   }
 
@@ -136,10 +146,16 @@ public class Inheritance extends Observable implements Relation {
    * @param parent
    *          the new parent for this inheritance
    */
-  public void setParent(SimpleEntity parent) {
+  @Override
+  public void setParent(Entity parent) {
+    
+    if (!(parent instanceof SimpleEntity))
+      throw new IllegalArgumentException(
+          "Parent must be an instance of SimpleEntity.");
+    
     this.parent.removeChild(this);
-    this.parent = parent;
-    parent.addChild(this);
+    this.parent = (SimpleEntity)parent;
+    this.parent.addChild(this);
     setChanged();
   }
 

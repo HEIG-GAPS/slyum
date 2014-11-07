@@ -118,13 +118,11 @@ public class InheritanceView extends RelationView {
 
     this.inheritance = inheritance;
 
-    if (getClass() == InheritanceView.class) {
-      popupMenu.addSeparator();
-      popupMenu.add(menuItemOI = makeMenuItem("Overrides & Implementations...",
-              "O&I", "method"));
-      popupMenu.add(makeMenuItem("Autopath", Slyum.ACTION_ADJUST_INHERITANCE,
-              "adjust-inheritance"));
-    }
+    popupMenu.addSeparator();
+    popupMenu.add(menuItemOI = makeMenuItem("Overrides & Implementations...",
+            "O&I", "method"));
+    popupMenu.add(makeMenuItem("Autopath", Slyum.ACTION_ADJUST_INHERITANCE,
+            "adjust-inheritance"));
 
     if (inheritance.getParent().getClass() == InterfaceEntity.class)
       lineStroke = new BasicStroke(LINE_WIDTH, BasicStroke.CAP_BUTT,
@@ -141,14 +139,17 @@ public class InheritanceView extends RelationView {
   @Override
   public void actionPerformed(ActionEvent e) {
     super.actionPerformed(e);
-    if ("O&I".equals(e.getActionCommand()))
-      inheritance.showOverridesAndImplementations();
-    else if (Slyum.ACTION_ADJUST_INHERITANCE.equals(e.getActionCommand())) {
-      parent.adjustInheritances();
-
-      // parent.adjustInheritances() will not adjust this inheritance if
-      // it's not selected. This code will.
-      if (!isSelected()) adjustInheritance();
+    if (null != e.getActionCommand())
+      switch (e.getActionCommand()) {
+      case "O&I":
+        inheritance.showOverridesAndImplementations();
+        break;
+      case Slyum.ACTION_ADJUST_INHERITANCE:
+        parent.adjustInheritances();
+        // parent.adjustInheritances() will not adjust this inheritance if
+        // it's not selected. This code will.
+        if (!isSelected()) adjustInheritance();
+        break;
     }
   }
 
