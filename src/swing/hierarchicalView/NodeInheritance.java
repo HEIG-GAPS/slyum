@@ -4,7 +4,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.ImageIcon;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
@@ -65,10 +64,7 @@ public class NodeInheritance
 
     if (tree == null) throw new IllegalArgumentException("tree is null");
 
-    this.tree = tree;
     this.inheritance = inheritance;
-    this.treeModel = treeModel;
-
     inheritance.addObserver(this);
   }
 

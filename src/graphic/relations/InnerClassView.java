@@ -1,5 +1,8 @@
 package graphic.relations;
 
+import classDiagram.IDiagramComponent;
+import classDiagram.components.Entity;
+import classDiagram.components.SimpleEntity;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 
@@ -9,8 +12,12 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 
 import classDiagram.relationships.Inheritance;
+import classDiagram.relationships.InnerClass;
+import graphic.GraphicComponent;
+import graphic.entity.SimpleEntityView;
+import utility.SMessageDialog;
 
-public class InnerClassView extends InheritanceView {
+public class InnerClassView extends RelationView {
 
   /**
    * Paint the extremity of the relation in the direction given by the source
@@ -62,16 +69,80 @@ public class InnerClassView extends InheritanceView {
     g2.drawLine(ref.x + vectorXN1, ref.y + vectorYN1, ref.x + vectorXN2, ref.y
             + vectorYN2);
   }
+  
+  private InnerClass innerClass;
 
   public InnerClassView(GraphicView parent, EntityView source,
-          EntityView target, Inheritance inheritance, Point posSource,
+          EntityView target, InnerClass innerClass, Point posSource,
           Point posTarget, boolean checkRecursivity) {
-    super(parent, source, target, inheritance, posSource, posTarget,
+    super(parent, source, target, innerClass, posSource, posTarget,
             checkRecursivity);
+    
+    this.innerClass = innerClass;
   }
 
   @Override
   protected void drawExtremity(Graphics2D g2, Point source, Point target) {
     paintExtremity(g2, source, target, getColor());
+  }
+  @Override
+  public void delete() {
+    super.delete();
+
+    innerClass.getChild().removeParent(innerClass);
+    innerClass.getParent().removeChild(innerClass);
+  }
+
+  @Override
+  public IDiagramComponent getAssociedComponent() {
+    return innerClass;
+  }
+
+  @Override
+  public boolean relationChanged(
+      MagneticGrip gripSource, GraphicComponent target) {
+
+    return super.relationChanged(gripSource, target);
+  }
+
+  /**
+   * Set the child of the inheritance
+   * 
+   * @param child
+   *          the new child of the inheritance
+   */
+  public void setChild(EntityView child) {
+    innerClass.setChild((Entity)child.getAssociedComponent());
+  }
+
+  /**
+   * Set the parent of the inheritance
+   * 
+   * @param parent
+   *          the new parent of the inheritance
+   */
+  public void setParent(EntityView parent) {
+    innerClass.setParent((Entity) parent.getAssociedComponent());
+  }
+
+  @Override
+  public void setSelected(boolean select) {
+    if (isSelected() == select) return;
+    super.setSelected(select);
+    innerClass.select();
+
+    if (select)
+      innerClass.notifyObservers(IDiagramComponent.UpdateMessage.SELECT);
+    else
+      innerClass.notifyObservers(IDiagramComponent.UpdateMessage.UNSELECT);
+  }
+
+  @Override
+  public void restore() {
+    super.restore();
+    parent.getClassDiagram().addInnerClass(
+            (InnerClass) getAssociedComponent());
+
+    repaint();
   }
 }
