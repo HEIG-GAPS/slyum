@@ -1,6 +1,7 @@
 package swing;
 
 import classDiagram.ClassDiagram;
+import graphic.GraphicComponent;
 import graphic.GraphicView;
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
+import swing.dialog.DialogDeleteView;
 import swing.hierarchicalView.HierarchicalView;
 import utility.SMessageDialog;
 import utility.WatchDir;
@@ -162,16 +164,38 @@ public class MultiViewManager {
       throw new IllegalArgumentException(
           "You cannot remove the main graphic view. ");
     
-    if (SMessageDialog.showQuestionMessageYesNo(
-        "Are you sure you want to delete the view \"" + graphicView.getName() + 
-        "\"?\nThis action can't be undone.") == JOptionPane.NO_OPTION)
+    // Ask the user if he realy want to delete the view.
+    if (!DialogDeleteView.show(
+          graphicView.getName(), 
+          getArrayNameComponents(graphicView.getAllDiagramComponents())))
       return;
     
     if (graphicView.isOpenInTab())
       closeView(graphicView);
+    
+    cleanViewBeforeDelete(graphicView);
     instance.hierarchicalView.removeView(graphicView);
     removeViewInFile(graphicView);
     instance.graphicViews.remove(graphicView);
+  }
+  
+  private static String[] getArrayNameComponents(List<GraphicComponent> components) {
+    int size = components.size();
+    String[] strs = new String[size];
+    for (int i = 0; i < size; ++i)
+      strs[i] = components.get(i).getAssociedComponent().toString();
+    return strs;
+  }
+  
+  /**
+   * Delete all component's view that are only in this view.
+   * @param graphicView The view.
+   */
+  private static void cleanViewBeforeDelete(GraphicView graphicView) {
+    for (GraphicComponent gc : graphicView.getAllDiagramComponents()) {
+      if (!gc.existsInOthersViews())
+        gc.delete();
+    }
   }
   
   public static void removeSelectedView() {
