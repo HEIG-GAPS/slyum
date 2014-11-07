@@ -22,7 +22,6 @@ import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.text.AttributedString;
 
-import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 
 import swing.PropertyLoader;

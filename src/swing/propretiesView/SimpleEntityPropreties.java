@@ -1360,11 +1360,11 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     modelAttributes.clearAll();
     modelMethods.clearAll();
 
-    for (int i = 0; i < attributes.size(); i++)
-      modelAttributes.addAttribute(attributes.get(i));
+    for (Attribute attribute : attributes)
+      modelAttributes.addAttribute(attribute);
 
-    for (int i = 0; i < methods.size(); i++)
-      modelMethods.addMethod(methods.get(i));
+    for (Method method : methods)
+      modelMethods.addMethod(method);
 
     btnRemoveMethod.setEnabled(false);
     btnRemoveAttribute.setEnabled(false);
