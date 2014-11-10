@@ -6,8 +6,6 @@ import graphic.entity.EntityView;
 import graphic.entity.EnumView;
 import swing.SPanelDiagramComponent;
 import classDiagram.components.EnumEntity;
-import javax.swing.SwingUtilities;
-
 public class EnumFactory extends EntityFactory {
 
   public EnumFactory(GraphicView parent) {
@@ -25,14 +23,6 @@ public class EnumFactory extends EntityFactory {
     parent.addEntity(e);
     classDiagram.addEnumEntity(ee);
     initializeBounds(e);
-    
-    SwingUtilities.invokeLater(new Runnable() {
-
-      @Override
-      public void run() {
-        e.editingName();
-      }
-    });
     
     return e;
   }

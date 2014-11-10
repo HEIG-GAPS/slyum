@@ -7,7 +7,6 @@ import graphic.entity.InterfaceView;
 import swing.SPanelDiagramComponent;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Visibility;
-import javax.swing.SwingUtilities;
 
 /**
  * InterfaceFactory allows to create a new interface view associated with a new
@@ -41,14 +40,6 @@ public class InterfaceFactory extends EntityFactory {
     parent.addEntity(i);
     classDiagram.addInterfaceEntity(ie);
     initializeBounds(i);
-    
-    SwingUtilities.invokeLater(new Runnable() {
-
-      @Override
-      public void run() {
-        i.editingName();
-      }
-    });
     
     return i;
   }

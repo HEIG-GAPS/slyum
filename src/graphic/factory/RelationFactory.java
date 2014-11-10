@@ -164,7 +164,7 @@ public abstract class RelationFactory extends ComponentFactory {
     componentMouseReleased = parent.getComponentAtPosition(mouseReleased);
 
     points.add(mouseLocation);
-    if ((view = create()) != null) {
+    if ((createdComponent = view = create()) != null) {
       parent.deleteCurrentFactory();
       componentMousePressed.setDefaultStyle();
       componentMouseReleased.setDefaultStyle();

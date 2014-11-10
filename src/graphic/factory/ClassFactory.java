@@ -7,7 +7,6 @@ import graphic.entity.EntityView;
 import swing.SPanelDiagramComponent;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Visibility;
-import javax.swing.SwingUtilities;
 
 /**
  * ClassFactory allows to create a new class view associated with a new class
@@ -44,14 +43,6 @@ public class ClassFactory extends EntityFactory {
     initializeBounds(c);
     parent.addEntity(c);
     classDiagram.addClassEntity(classEntity);
-    
-    SwingUtilities.invokeLater(new Runnable() {
-
-      @Override
-      public void run() {
-        c.editingName();
-      }
-    });
     
     return c;
   }

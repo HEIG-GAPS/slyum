@@ -43,7 +43,9 @@ public abstract class ComponentFactory extends CreateComponent {
 
     componentMouseReleased = parent.getComponentAtPosition(mouseReleased);
 
-    if (create() == null && Slyum.isShowErrorMessage()) creationFailed();
+    if ((createdComponent = create()) == null && 
+        Slyum.isShowErrorMessage()) 
+      creationFailed();
 
     parent.deleteCurrentFactory();
   }
