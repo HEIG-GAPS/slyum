@@ -92,7 +92,7 @@ public class MultiFactory extends CreateComponent {
 
       @Override
       public void actionPerformed(ActionEvent e) {
-        create();
+        createdComponent = create();
       }
     });
     parent.getScene().add(buttons[0]);

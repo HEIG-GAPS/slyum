@@ -22,6 +22,7 @@ import classDiagram.ClassDiagram;
  */
 public abstract class CreateComponent extends GraphicComponent {
   protected ClassDiagram classDiagram;
+  protected GraphicComponent createdComponent;
 
   public CreateComponent(GraphicView parent) {
     super(parent);
@@ -50,6 +51,10 @@ public abstract class CreateComponent extends GraphicComponent {
 
   public Cursor getCursor() {
     return Cursor.getDefaultCursor();
+  }
+
+  public GraphicComponent getCreatedComponent() {
+    return createdComponent;
   }
 
   @Override

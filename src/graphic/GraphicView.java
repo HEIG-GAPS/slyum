@@ -455,6 +455,7 @@ public class GraphicView extends GraphicComponent
   private GraphicComponent componentMousePressed;
 
   private CreateComponent currentFactory;
+  private GraphicComponent justCreatedComponent;
 
   private final LinkedList<EntityView> entities = new LinkedList<>();
 
@@ -1342,6 +1343,7 @@ public class GraphicView extends GraphicComponent
   public void deleteCurrentFactory() {
     if (currentFactory != null) {
       currentFactory.deleteFactory();
+      justCreatedComponent = currentFactory.getCreatedComponent();
       currentFactory = null;
     }
     getScene().setCursor(Cursor.getDefaultCursor());
@@ -1429,6 +1431,13 @@ public class GraphicView extends GraphicComponent
             getAllComponents(), pos);
 
     return component == null ? this : component;
+  }
+  
+  public GraphicComponent getComponentMouseHover(Point mouseLocation) {
+    if (currentFactory != null)
+      return currentFactory;
+    
+    return getComponentAtPosition(mouseLocation);
   }
 
   /**
@@ -1921,12 +1930,14 @@ public class GraphicView extends GraphicComponent
   @Override
   public void mouseClicked(MouseEvent e) {
     e = adapteMouseEvent(e);
+    
     GraphicComponent component;
-
-    if (currentFactory != null)
-      component = currentFactory;
-    else
-      component = getComponentAtPosition(e.getPoint());
+    if (justCreatedComponent != null) {
+      component = justCreatedComponent;
+      justCreatedComponent = null;
+    } else {
+      component = getComponentMouseHover(e.getPoint());
+    }
 
     if (mouseButton != MouseEvent.BUTTON2 || component == this)
       component.gMouseClicked(e);
@@ -2005,18 +2016,11 @@ public class GraphicView extends GraphicComponent
     visibleRect = getScene().getVisibleRect();
     mousePressedLocation = e.getPoint();
 
-    GraphicComponent component;
-
-    if (currentFactory != null)
-      component = currentFactory;
-    else
-      component = getComponentAtPosition(e.getPoint());
-
     // Save the last component mouse pressed.
-    componentMousePressed = component;
+    componentMousePressed = getComponentMouseHover(e.getPoint());
 
-    if (e.getButton() != MouseEvent.BUTTON2 || component == this)
-      component.gMousePressed(e);
+    if (e.getButton() != MouseEvent.BUTTON2 || componentMousePressed == this)
+      componentMousePressed.gMousePressed(e);
     else
       unselectAll();
   }

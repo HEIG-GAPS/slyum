@@ -110,6 +110,14 @@ public abstract class EntityFactory extends ComponentFactory {
         view.setBounds(new Rectangle(mouseReleased.x - DEFAULT_SIZE.width / 2,
                 mouseReleased.y - DEFAULT_SIZE.height / 2, DEFAULT_SIZE.width,
                 DEFAULT_SIZE.height));
+        
+        SwingUtilities.invokeLater(new Runnable() {
+
+          @Override
+          public void run() {
+            view.editingName();
+          }
+        });
 
       }
     });

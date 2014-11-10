@@ -54,7 +54,6 @@ public abstract class GraphicComponent extends Observable implements ActionListe
   protected JMenuItem miNewNote;
 
   private boolean selected = false;
-
   private boolean visible = true;
 
   protected boolean pictureMode = false;
@@ -535,8 +534,6 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    * during drawing. But it is the responsibility of the sub class to use it or
    * not.
    * 
-   * @param color
-   *          the new rgb 32-bits color for this component
    */
   public void setColor(int rgb) {
     setColor(new Color(rgb));
