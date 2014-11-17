@@ -1386,6 +1386,39 @@ public class GraphicView extends GraphicComponent
         components.add(o);
     return components;
   }
+  
+  /**
+   * Get all graphics components having a diagram component associated with.
+   * @return a list of all graphic component having a diagram component.
+   */
+  public LinkedList<GraphicComponent> getAllComponentsAssociated() {
+    LinkedList<GraphicComponent> components = new LinkedList<>();
+    for (GraphicComponent gc : getAllComponents())
+      if (gc.getAssociedComponent() != null)
+        components.add(gc);
+    return components;
+  }
+  
+  /**
+   * Get all unique graphics components having a diagram component associated with.
+   * A unique graphic component is a component that exist only in this view.
+   * @return a list of all graphic component having a diagram component.
+   */
+  public LinkedList<GraphicComponent> getAllGraphicalUniqueComponent() {
+    return getUniqueComponentsFrom(getAllComponentsAssociated());
+  }
+  
+  public LinkedList<EntityView> getAllUniqueEntities() {
+    return getUniqueComponentsFrom(getEntitiesView());
+  }
+  
+  private <T extends GraphicComponent> LinkedList<T> getUniqueComponentsFrom(LinkedList<T> components) {
+    LinkedList<T> results = new LinkedList<>();
+    for (GraphicComponent gc : components)
+      if (!gc.existsInOthersViews())
+        results.add((T) gc);
+    return results;
+  }
 
   @Override
   public Rectangle getBounds() {
