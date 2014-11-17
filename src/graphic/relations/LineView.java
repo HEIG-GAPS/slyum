@@ -24,6 +24,8 @@ import utility.Utility;
 import change.BufferBounds;
 import change.BufferCreation;
 import change.Change;
+import classDiagram.IDiagramComponent;
+import javax.swing.SwingUtilities;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -62,9 +64,10 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
   }
 
   boolean justSelected = false;
-
+  
   public final static float LINE_WIDTH = 1.f;
-  protected Stroke lineStroke = new BasicStroke(LINE_WIDTH);
+      
+  protected Stroke lineStroke = getDefaultLineStroke();
   protected LinkedList<RelationGrip> points = new LinkedList<>();
   private Cursor previousCursor;
   private int saveGrip;
@@ -318,6 +321,28 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
       // redirect event mouseDragged from relation to new grip.
       parent.setComponentMousePressed(grip);
     }
+  }
+  
+  public void center() {
+    
+    SwingUtilities.invokeLater(new Runnable() {
+
+      @Override
+      public void run() {
+    
+        GraphicComponent gSource = getFirstPoint().getAssociedComponentView(), 
+                         gTarget = getLastPoint().getAssociedComponentView();
+
+        Point pSourceCenter = new Point((int)gSource.getBounds().getCenterX(), 
+                                        (int)gSource.getBounds().getCenterY()),
+              pTargetCenter = new Point((int)gTarget.getBounds().getCenterX(), 
+                                        (int)gTarget.getBounds().getCenterY());
+
+        getFirstPoint().setAnchor(pSourceCenter);
+        getLastPoint().setAnchor(pTargetCenter);
+        reinitializeTextBoxesLocation();
+      }
+    });
   }
 
   @Override
@@ -877,11 +902,51 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
    *          the source grip.
    * @param target
    *          the new component.
-   * @return if the change is successful.
    */
-  protected void changeLinkedComponent(MagneticGrip gripSource,
-          GraphicComponent target) {
+  public void changeLinkedComponent(
+      MagneticGrip gripSource, GraphicComponent target) {
+    
     gripSource.setAssociedComponentView(target);
     reinitGrips();
+  }
+
+  /**
+   * Change the component associed to the grip by the new specified.
+   * 
+   * @param gripSource
+   *          the source grip.
+   * @param target
+   *          the new component.
+   */
+  public void changeLinkedComponent(
+      MagneticGrip gripSource, IDiagramComponent target) {
+    
+    GraphicComponent targetView = parent.searchAssociedComponent(target);
+    
+    if (targetView == null) {
+      ligthDelete = true;
+      delete();
+      ligthDelete = false;
+      return;
+    }
+    
+    gripSource.setAssociedComponentView(targetView);
+    reinitGrips();
+  }
+  
+  public MagneticGrip getMagneticGripFromComponent(
+      IDiagramComponent component) {
+    
+    if (getFirstPoint().getAssociedComponent() == component)
+      return getFirstPoint();
+    else if (getLastPoint().getAssociedComponent() == component)
+      return getLastPoint();
+    
+    throw new IllegalArgumentException(
+        "The component is not associed with this relation.");
+  }
+  
+  final protected Stroke getDefaultLineStroke() {
+    return new BasicStroke(LINE_WIDTH);
   }
 }

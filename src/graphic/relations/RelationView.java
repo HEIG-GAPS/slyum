@@ -20,9 +20,11 @@ import org.w3c.dom.Element;
 
 import utility.Utility;
 import change.Change;
+import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
 import classDiagram.relationships.*;
+import swing.MultiViewManager;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -100,17 +102,58 @@ public abstract class RelationView extends LineView implements Observer {
   }
 
   @Override
-  public boolean relationChanged(MagneticGrip gripSource,
-          GraphicComponent target) {
+  public boolean relationChanged(
+      MagneticGrip gripSource, GraphicComponent target) {
 
     if (!(target instanceof EntityView)) return false;
 
-    RelationChanger.changeRelation(relation,
-            gripSource.equals(getFirstPoint()),
-            (Entity) target.getAssociedComponent());
+    // Update model
+    RelationChanger.changeRelation(
+        relation,
+        gripSource.equals(getFirstPoint()),
+        (Entity)target.getAssociedComponent());
 
-    changeLinkedComponent(gripSource, target);
+    // Update views
+    adaptRelationsToComponent(relation);
+    
     return true;
+  }
+  
+  public static void adaptRelationsToComponent(Relation relation) {
+    for (GraphicView view : MultiViewManager.getAllGraphicViews()) {
+      RelationView relationView = (RelationView)view.searchAssociedComponent(relation);
+      if (relationView != null) {
+        relationView.adaptRelationToComponent();
+      } else {
+        
+        // Create the relation view if it necessary.
+        EntityView 
+            source = (EntityView)view.searchAssociedComponent(relation.getSource()), 
+            target = (EntityView)view.searchAssociedComponent(relation.getTarget());
+        
+        if (source != null && target != null) {
+          RelationView rv = RelationView.createFromRelation(
+              view, relation, source, target);
+          view.addLineView(rv);
+          rv.center();
+        }
+      }
+    }
+  }
+  
+  /**
+   * Check the component's ends and update the view
+   * in reagards of.
+   */
+  public void adaptRelationToComponent() {
+    IDiagramComponent source = relation.getSource(),
+                      target = relation.getTarget();
+    
+    if (source != getFirstPoint().getAssociedComponent())
+      changeLinkedComponent(getFirstPoint(), source);
+    
+    if (target != getLastPoint().getAssociedComponent())
+      changeLinkedComponent(getLastPoint(), target);
   }
 
   /**
