@@ -1,8 +1,10 @@
 package swing;
 
 import classDiagram.ClassDiagram;
+import classDiagram.components.Entity;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
+import graphic.entity.EntityView;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -167,7 +169,7 @@ public class MultiViewManager {
     // Ask the user if he realy want to delete the view.
     if (!DialogDeleteView.show(
           graphicView.getName(), 
-          getArrayNameComponents(graphicView.getAllDiagramComponents())))
+          getArrayNameComponents(graphicView.getAllUniqueEntities())))
       return;
     
     if (graphicView.isOpenInTab())
@@ -179,11 +181,11 @@ public class MultiViewManager {
     instance.graphicViews.remove(graphicView);
   }
   
-  private static String[] getArrayNameComponents(List<GraphicComponent> components) {
+  private static String[] getArrayNameComponents(List<EntityView> components) {
     int size = components.size();
     String[] strs = new String[size];
     for (int i = 0; i < size; ++i)
-      strs[i] = components.get(i).getAssociedComponent().toString();
+      strs[i] = ((Entity)components.get(i).getAssociedComponent()).getName();
     return strs;
   }
   
@@ -192,10 +194,8 @@ public class MultiViewManager {
    * @param graphicView The view.
    */
   private static void cleanViewBeforeDelete(GraphicView graphicView) {
-    for (GraphicComponent gc : graphicView.getAllDiagramComponents()) {
-      if (!gc.existsInOthersViews())
-        gc.delete();
-    }
+    for (GraphicComponent gc : graphicView.getAllGraphicalUniqueComponent())
+      gc.delete();
   }
   
   public static void removeSelectedView() {
