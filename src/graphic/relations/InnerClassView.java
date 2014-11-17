@@ -2,7 +2,7 @@ package graphic.relations;
 
 import classDiagram.IDiagramComponent;
 import classDiagram.components.Entity;
-import classDiagram.components.SimpleEntity;
+import classDiagram.components.InterfaceEntity;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 
@@ -11,10 +11,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import graphic.GraphicComponent;
-import graphic.entity.SimpleEntityView;
+import graphic.entity.InterfaceView;
 import utility.SMessageDialog;
 
 public class InnerClassView extends RelationView {
@@ -73,8 +72,9 @@ public class InnerClassView extends RelationView {
   private InnerClass innerClass;
 
   public InnerClassView(GraphicView parent, EntityView source,
-          EntityView target, InnerClass innerClass, Point posSource,
-          Point posTarget, boolean checkRecursivity) {
+        EntityView target, InnerClass innerClass, Point posSource,
+        Point posTarget, boolean checkRecursivity) {
+    
     super(parent, source, target, innerClass, posSource, posTarget,
             checkRecursivity);
     
@@ -85,6 +85,7 @@ public class InnerClassView extends RelationView {
   protected void drawExtremity(Graphics2D g2, Point source, Point target) {
     paintExtremity(g2, source, target, getColor());
   }
+  
   @Override
   public void delete() {
     super.delete();
@@ -96,13 +97,6 @@ public class InnerClassView extends RelationView {
   @Override
   public IDiagramComponent getAssociedComponent() {
     return innerClass;
-  }
-
-  @Override
-  public boolean relationChanged(
-      MagneticGrip gripSource, GraphicComponent target) {
-
-    return super.relationChanged(gripSource, target);
   }
 
   /**
@@ -135,6 +129,25 @@ public class InnerClassView extends RelationView {
       innerClass.notifyObservers(IDiagramComponent.UpdateMessage.SELECT);
     else
       innerClass.notifyObservers(IDiagramComponent.UpdateMessage.UNSELECT);
+  }
+
+  @Override
+  public boolean relationChanged(
+      MagneticGrip gripSource, GraphicComponent target) {
+    
+    if (target.getClass() == InterfaceView.class) return false;
+
+    return super.relationChanged(gripSource, target);
+  }
+
+  @Override
+  public void changeOrientation() {
+    if (innerClass.getParent().getClass() == InterfaceEntity.class)
+      SMessageDialog.showErrorMessage(
+          "Unable to reverse this relation.\n" + 
+          "An interface cannot have nested classes.");
+    else
+      super.changeOrientation();
   }
 
   @Override

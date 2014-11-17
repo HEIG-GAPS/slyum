@@ -859,6 +859,7 @@ public class GraphicView extends GraphicComponent
     final List<RelationView> createdRelationViews = new LinkedList<>();
     
     addEntity(entityView);
+    
     Entity entity1 = (Entity)entityView.getAssociedComponent();
     HashMap<Relation, Entity> linked = entity1.getLinkedEntities();
     for (Relation relation : linked.keySet()) {
@@ -892,20 +893,8 @@ public class GraphicView extends GraphicComponent
         entityView.regenerateEntity();
         entityView.adjustWidth();
         
-        for (RelationView rv : createdRelationViews) {
-          
-          GraphicComponent gSource = rv.getFirstPoint().getAssociedComponentView(), 
-                           gTarget = rv.getLastPoint().getAssociedComponentView();
-
-          Point pSourceCenter = new Point((int)gSource.getBounds().getCenterX(), 
-                                          (int)gSource.getBounds().getCenterY()),
-                pTargetCenter = new Point((int)gTarget.getBounds().getCenterX(), 
-                                          (int)gTarget.getBounds().getCenterY());
-          
-          rv.getFirstPoint().setAnchor(pSourceCenter);
-          rv.getLastPoint().setAnchor(pTargetCenter);
-          rv.reinitializeTextBoxesLocation();
-        }
+        for (RelationView rv : createdRelationViews)
+          rv.center();
       }
     });
   }

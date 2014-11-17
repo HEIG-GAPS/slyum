@@ -23,6 +23,7 @@ import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.SimpleEntity;
 import classDiagram.relationships.Inheritance;
+import java.awt.Stroke;
 import utility.SMessageDialog;
 
 /**
@@ -125,8 +126,13 @@ public class InheritanceView extends RelationView {
             "adjust-inheritance"));
 
     if (inheritance.getParent().getClass() == InterfaceEntity.class)
-      lineStroke = new BasicStroke(LINE_WIDTH, BasicStroke.CAP_BUTT,
-              BasicStroke.JOIN_MITER, 10.0f, new float[] { 7.f }, 0.0f);
+      lineStroke = getInterfaceLineStroke();
+  }
+  
+  private Stroke getInterfaceLineStroke() {
+    return new BasicStroke(
+        LINE_WIDTH, BasicStroke.CAP_BUTT,
+        BasicStroke.JOIN_MITER, 10.0f, new float[] { 7.f }, 0.0f);
   }
 
   @Override
@@ -174,12 +180,33 @@ public class InheritanceView extends RelationView {
   @Override
   public boolean relationChanged(
       MagneticGrip gripSource, GraphicComponent target) {
-    if (!(target instanceof EntityView)
-            || !Inheritance.validate((Entity) gripSource
-                    .getAssociedComponentView().getAssociedComponent(),
-                    (Entity) target.getAssociedComponent())) return false;
+    
+    Entity newChild, newParent;
+    
+    if (gripSource == getFirstPoint()) {
+      newChild = (Entity)target.getAssociedComponent();
+      newParent = (Entity)getLastPoint().getAssociedComponentView().getAssociedComponent();
+    } else {
+      newChild = (Entity)getFirstPoint().getAssociedComponentView().getAssociedComponent();
+      newParent = (Entity)target.getAssociedComponent();
+    }
+    
+    if (!(target instanceof EntityView) || 
+        !Inheritance.validate(newChild, newParent)) 
+      return false;
 
     return super.relationChanged(gripSource, target);
+  }
+
+  @Override
+  public void adaptRelationToComponent() {
+    
+    super.adaptRelationToComponent();
+    
+    if (inheritance.getTarget().getClass() == InterfaceEntity.class)
+      lineStroke = getInterfaceLineStroke();
+    else
+      lineStroke = getDefaultLineStroke();
   }
 
   @Override

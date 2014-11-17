@@ -2,7 +2,6 @@ package graphic.entity;
 
 import graphic.GraphicView;
 import classDiagram.components.Attribute;
-import classDiagram.components.EnumEntity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Method;
 
