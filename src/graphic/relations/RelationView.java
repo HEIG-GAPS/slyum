@@ -43,49 +43,78 @@ import swing.MultiViewManager;
 public abstract class RelationView extends LineView implements Observer {
   public final static String ACTION_CHANGE_ORIENTATION = "change-orientation";
   
-  public static RelationView createFromRelation(
-      GraphicView graphicView, Relation relation, EntityView source,
-      EntityView target) {
-    
-    Point pSourceCenter = new Point((int)source.getBounds().getCenterX(), 
-                                    (int)source.getBounds().getCenterY()),
-          pTargetCenter = new Point((int)target.getBounds().getCenterX(), 
-                                    (int)target.getBounds().getCenterY());
-     if (relation.getClass() == Binary.class)
-        return new BinaryView(graphicView, source, target, (Binary)relation, 
-                              pSourceCenter, pTargetCenter, false);
-     
-     else if (relation.getClass() == Aggregation.class)
-        return new AggregationView(graphicView, source, target, (Aggregation)relation, 
-                              pSourceCenter, pTargetCenter, false);
-       
-     else if (relation.getClass() == Composition.class)
-        return new CompositionView(graphicView, source, target, (Composition)relation, 
-                              pSourceCenter, pTargetCenter, false);
-     
-     else if (relation.getClass() == Dependency.class)
-        return new DependencyView(graphicView, source, target, (Dependency)relation, 
-                              pSourceCenter, pTargetCenter, false);
-     
-     else if (relation.getClass() == Inheritance.class)
-        return new InheritanceView(graphicView, source, target, (Inheritance)relation, 
-                              pSourceCenter, pTargetCenter, false);
-     
-     else if (relation.getClass() == InnerClass.class)
-        return new InnerClassView(graphicView, source, target, (InnerClass)relation, 
-                              pSourceCenter, pTargetCenter, false);
-     
-     //else if (relation.getClass() == Multi.class)
+  public static void adaptRelationsToComponent(Relation relation) {
+    for (GraphicView view : MultiViewManager.getAllGraphicViews()) {
+      
+      RelationView relationView = 
+          (RelationView)view.searchAssociedComponent(relation);
+      
+      if (relationView != null) {
+        relationView.adaptRelationToComponent();
+      } else {
         
+        // Create the relation view if it necessary.
+        EntityView
+            source = (EntityView)view.searchAssociedComponent(relation.getSource()),
+            target = (EntityView)view.searchAssociedComponent(relation.getTarget());
+        
+        if (source != null && target != null) {
+          GraphicComponent gc = view.createAndAddRelation(relation, source, target);
+          
+          if (gc instanceof RelationView)
+            ((RelationView)gc).center();
+        }
+      }
+    }
+  }
+
+  public static RelationView createFromRelation(
+      GraphicView graphicView,
+      Relation relation,
+      EntityView source,
+      EntityView target) {
+    Point pSourceCenter = new Point((int)source.getBounds().getCenterX(), 
+        (int)source.getBounds().getCenterY()),
+    pTargetCenter = new Point((int)target.getBounds().getCenterX(),
+        (int)target.getBounds().getCenterY());
+    if (relation.getClass() == Binary.class)
+      return new BinaryView(graphicView, source, target, (Binary)relation,
+          pSourceCenter, pTargetCenter, false);
+    
+    else if (relation.getClass() == Aggregation.class)
+      return new AggregationView(graphicView, source, target, (Aggregation)relation,
+          pSourceCenter, pTargetCenter, false);
+    
+    else if (relation.getClass() == Composition.class)
+      return new CompositionView(graphicView, source, target, (Composition)relation,
+          pSourceCenter, pTargetCenter, false);
+    
+    else if (relation.getClass() == Dependency.class)
+      return new DependencyView(graphicView, source, target, (Dependency)relation,
+          pSourceCenter, pTargetCenter, false);
+    
+    else if (relation.getClass() == Inheritance.class)
+      return new InheritanceView(graphicView, source, target, (Inheritance)relation,
+          pSourceCenter, pTargetCenter, false);
+    
+    else if (relation.getClass() == InnerClass.class)
+      return new InnerClassView(graphicView, source, target, (InnerClass)relation,
+          pSourceCenter, pTargetCenter, false);
+    //else if (relation.getClass() == Multi.class)
+     
     return null;
   }
   
   
   private Relation relation;
 
-  public RelationView(GraphicView graphicView, GraphicComponent source,
-          GraphicComponent target, Relation component, Point posSource,
-          Point posTarget, boolean checkRecursivity) {
+  public RelationView(GraphicView graphicView, 
+                      GraphicComponent source,
+                      GraphicComponent target, 
+                      Relation component, 
+                      Point posSource,
+                      Point posTarget, 
+                      boolean checkRecursivity) {
     super(graphicView, source, target, posSource, posTarget, checkRecursivity);
 
     if (component == null)
@@ -102,43 +131,12 @@ public abstract class RelationView extends LineView implements Observer {
   }
 
   @Override
-  public boolean relationChanged(
-      MagneticGrip gripSource, GraphicComponent target) {
-
-    if (!(target instanceof EntityView)) return false;
-
-    // Update model
-    RelationChanger.changeRelation(
-        relation,
-        gripSource.equals(getFirstPoint()),
-        (Entity)target.getAssociedComponent());
-
-    // Update views
-    adaptRelationsToComponent(relation);
-    
-    return true;
-  }
-  
-  public static void adaptRelationsToComponent(Relation relation) {
-    for (GraphicView view : MultiViewManager.getAllGraphicViews()) {
-      RelationView relationView = (RelationView)view.searchAssociedComponent(relation);
-      if (relationView != null) {
-        relationView.adaptRelationToComponent();
-      } else {
-        
-        // Create the relation view if it necessary.
-        EntityView 
-            source = (EntityView)view.searchAssociedComponent(relation.getSource()), 
-            target = (EntityView)view.searchAssociedComponent(relation.getTarget());
-        
-        if (source != null && target != null) {
-          RelationView rv = RelationView.createFromRelation(
-              view, relation, source, target);
-          view.addLineView(rv);
-          rv.center();
-        }
-      }
-    }
+  public void actionPerformed(
+      ActionEvent e) {
+    if (ACTION_CHANGE_ORIENTATION.equals(e.getActionCommand()))
+      changeOrientation();
+    else
+      super.actionPerformed(e);
   }
   
   /**
@@ -206,8 +204,29 @@ public abstract class RelationView extends LineView implements Observer {
   }
 
   /**
-   * Return an array with all gripd bounds.
+   * Set all points bounds with the given array. First points will be set with
+   * the first index in array, second with the second, etc...
    * 
+   * @param pointsBounds
+   *          an array of bounds, size must be the same than the number of
+   *          points.
+   */
+  public void setAllPointsBounds(Rectangle[] pointsBounds) {
+    LinkedList<RelationGrip> grips = getPoints();
+    if (pointsBounds.length != grips.size())
+      throw new IllegalArgumentException("Array of bounds not the same size "
+          + "than number of points in relation.");
+    
+    int i = 0;
+    for (RelationGrip grip : grips) {
+      grip.setBounds(pointsBounds[i]);
+      i++;
+    }
+  }
+  
+  /**
+   * Return an array with all gripd bounds.
+   *
    * @return an array with all gripd bounds.
    */
   public Rectangle[] getPointsBounds() {
@@ -221,30 +240,8 @@ public abstract class RelationView extends LineView implements Observer {
     return bufferBoundsPoints;
   }
 
-  /**
-   * Set all points bounds with the given array. First points will be set with
-   * the first index in array, second with the second, etc...
-   * 
-   * @param pointsBounds
-   *          an array of bounds, size must be the same than the number of
-   *          points.
-   */
-  public void setAllPointsBounds(Rectangle[] pointsBounds) {
-    LinkedList<RelationGrip> grips = getPoints();
-    if (pointsBounds.length != grips.size())
-      throw new IllegalArgumentException("Array of bounds not the same size "
-              + "than number of points in relation.");
-
-    int i = 0;
-    for (RelationGrip grip : grips) {
-      grip.setBounds(pointsBounds[i]);
-      i++;
-    }
-  }
-
-  @Override
-  public String getXmlTagName() {
-    return "relationView";
+  public Relation getRelation() {
+    return relation;
   }
 
   @Override
@@ -267,37 +264,47 @@ public abstract class RelationView extends LineView implements Observer {
 
       // Textbox de titre d'association
       relationView.appendChild(Utility.boundsToXmlElement(doc, tbRoles.get(0)
-              .getBounds(), "labelAssociation"));
-
+          .getBounds(), "labelAssociation"));
+      
       // S'il y a des rôles et des multiplicités.
       if (tbRoles.size() >= 3) {
         relationView.appendChild(Utility.boundsToXmlElement(doc, tbRoles.get(1)
-                .getBounds(), "roleAssociation"));
+            .getBounds(), "roleAssociation"));
         relationView.appendChild(Utility.boundsToXmlElement(doc, tbRoles.get(2)
-                .getBounds(), "roleAssociation"));
-
+            .getBounds(), "roleAssociation"));
+        
         relationView.appendChild(Utility.boundsToXmlElement(doc,
-                ((TextBoxRole) tbRoles.get(1)).getTextBoxMultiplicity()
-                        .getBounds(), "multipliciteAssociation"));
+                                                            ((TextBoxRole) tbRoles.get(1)).getTextBoxMultiplicity()
+                                                                .getBounds(), "multipliciteAssociation"));
         relationView.appendChild(Utility.boundsToXmlElement(doc,
-                ((TextBoxRole) tbRoles.get(2)).getTextBoxMultiplicity()
-                        .getBounds(), "multipliciteAssociation"));
+                                                            ((TextBoxRole) tbRoles.get(2)).getTextBoxMultiplicity()
+                                                                .getBounds(), "multipliciteAssociation"));
       }
     }
 
     return relationView;
   }
-
-  public Relation getRelation() {
-    return relation;
+  
+  @Override
+  public String getXmlTagName() {
+    return "relationView";
   }
 
   @Override
-  public void actionPerformed(ActionEvent e) {
-    if (ACTION_CHANGE_ORIENTATION.equals(e.getActionCommand()))
-      changeOrientation();
-    else
-      super.actionPerformed(e);
+  public boolean relationChanged(MagneticGrip gripSource, GraphicComponent target) {
+    
+    if (!(target instanceof EntityView)) return false;
+    
+    // Update model
+    RelationChanger.changeRelation(
+        relation,
+        gripSource.equals(getFirstPoint()),
+        (Entity)target.getAssociedComponent());
+    
+    // Update views
+    adaptRelationsToComponent(relation);
+    
+    return true;
   }
 
   @Override
@@ -317,4 +324,5 @@ public abstract class RelationView extends LineView implements Observer {
     else
       repaint();
   }
+
 }

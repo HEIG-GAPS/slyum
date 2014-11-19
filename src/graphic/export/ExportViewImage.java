@@ -47,6 +47,9 @@ public class ExportViewImage extends ExportView {
     // Create the buffered image with margin.   
     Rectangle outerBounds = getOuterBounds();
     
+    if (getOuterBounds().width <= 0 || getOuterBounds().height <= 0)
+      return new BufferedImage(10, 10, type);
+    
     final BufferedImage img = new BufferedImage(
         outerBounds.width + DEFAULT_TITLE_BORDER_WIDTH*2,
         outerBounds.height + DEFAULT_TITLE_BORDER_WIDTH*2, 

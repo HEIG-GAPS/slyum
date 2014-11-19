@@ -1,5 +1,8 @@
 package swing.hierarchicalView;
 
+import classDiagram.IDiagramComponent;
+import graphic.GraphicComponent;
+import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -35,7 +38,17 @@ public class TreeRenderer extends DefaultTreeCellRenderer {
     else if (value instanceof ICustomizedIconNode) {
       setIcon(((ICustomizedIconNode) value).getCustomizedIcon());
     } 
-
+    
+    if (value instanceof IClassDiagramNode) {
+      
+      IDiagramComponent component = ((IClassDiagramNode)value).getAssociedComponent();
+      
+      if (value instanceof AbstractNode && // Only main component must be treated.
+          component != null && 
+          GraphicComponent.countGraphicComponentsAssociedWith(component) == 0)
+        setForeground(Color.RED);
+    }
+    
     return this;
   }
 }

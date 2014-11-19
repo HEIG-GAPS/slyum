@@ -11,8 +11,17 @@ import javax.swing.tree.TreePath;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
+import graphic.GraphicView;
+import graphic.entity.EntityView;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JMenuItem;
+import swing.MultiViewManager;
 import swing.PanelClassDiagram;
+import swing.Slyum;
 import swing.hierarchicalView.HierarchicalView.STree;
+import utility.PersonalizedIcon;
 
 /**
  * A JTree node associated with an entity UML.
@@ -20,14 +29,10 @@ import swing.hierarchicalView.HierarchicalView.STree;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public abstract class NodeEntity 
-    extends AbstractNode 
-    implements Observer, IClassDiagramNode, ICustomizedIconNode {
+public abstract class NodeEntity extends AbstractNode {
   
   protected final Entity entity;
   protected final ImageIcon icon;
-  protected final STree tree;
-  protected final DefaultTreeModel treeModel;
 
   /**
    * Create a new node associated with an entity.
@@ -58,6 +63,22 @@ public abstract class NodeEntity
     this.icon = icon;
 
     entity.addObserver(this);
+    
+    // Menu item open
+    JMenuItem item = new JMenuItem(
+        "Add to current view", 
+        PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "plus-16.png"));
+    
+    item.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        
+        MultiViewManager.getSelectedGraphicView()
+                        .createEntityWithRelations(NodeEntity.this.entity);
+      }
+    });
+    popupMenu.add(item, 0);
 
     reloadChildsNodes();
   }
@@ -72,11 +93,10 @@ public abstract class NodeEntity
     return icon;
   }
 
-  /**
-   * Remove and re-generate all child nodes according to methods and attributs
-   * containing by the entity.
-   */
-  protected abstract void reloadChildsNodes();
+  @Override
+  public void remove() {
+    removeAllChildren();
+  }
 
   @Override
   public void removeAllChildren() {
@@ -111,8 +131,9 @@ public abstract class NodeEntity
     }
   }
 
-  @Override
-  public void remove() {
-    removeAllChildren();
-  }
+  /**
+   * Remove and re-generate all child nodes according to methods and attributs
+   * containing by the entity.
+   */
+  protected abstract void reloadChildsNodes();
 }

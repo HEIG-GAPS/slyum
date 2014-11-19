@@ -121,33 +121,24 @@ public class GraphicView extends GraphicComponent
                                     Printable, 
                                     ColoredComponent {
 
-  public enum ViewEntity {
-    ALL, ONLY_ATTRIBUTES, ONLY_METHODS, NOTHING;
-
-    @Override
-    public String toString() {
-      return super.toString().charAt(0)
-              + super.toString().substring(1).toLowerCase().replace('_', ' ');
-    };
-  }
 
   
-  public final static String ROOT_VIEW_DEFAULT_NAME = "Main view";
-  public final static String NO_NAMED_VIEW = "Unnamed view";
   public final static boolean BACKGROUND_GRADIENT = false;
-  public final static boolean ENTITY_GRADIENT = false;
-  public final static boolean CTRL_FOR_GRIP = false;
   public final static Color BASIC_COLOR = new Color(241, 241, 243);
+  public final static boolean CTRL_FOR_GRIP = false;
+  public final static int DEFAULT_TITLE_BORDER_WIDTH = 1;
+  public static final boolean ENTITY_GRADIENT = false;
   public final static int GRID_COLOR = Color.DARK_GRAY.getRGB();
   public final static int GRID_POINT_OPACITY = 255;
   public final static int GRID_SIZE = 10;
   public final static boolean GRID_VISIBLE = true;
   public final static boolean IS_AUTOMATIC_GRID_COLOR = false;
-  public final static boolean IS_GRID_OPACITY_ENABLE = false;
   public final static boolean IS_GRID_ENABLE = true;
-  public final static double SCALE_STEP = 0.1;
-  public final static int DEFAULT_TITLE_BORDER_WIDTH = 1;
+  public final static boolean IS_GRID_OPACITY_ENABLE = false;
   public final static boolean IS_PAINT_TITLE_BORDER = true;
+  public static final String NO_NAMED_VIEW = "Unnamed view";
+  public static final String ROOT_VIEW_DEFAULT_NAME = "Main view";
+  public static final double SCALE_STEP = 0.1;
 
   /**
    * Compute mouse entered and exited event. the componentMouseHover can be the
@@ -166,86 +157,29 @@ public class GraphicView extends GraphicComponent
     }
   }
 
-  public static ParametersViewStyle getDefaultViewMethods() {
-    String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.VIEW_METHODS);
-    ParametersViewStyle view = ParametersViewStyle.TYPE_AND_NAME;
-
-    if (prop != null) view = ParametersViewStyle.valueOf(prop);
-
-    return view;
+  public static void deleteComponent(GraphicComponent component) {
+    boolean isRecord = Change.isRecord();
+    Change.record();
+    component.delete();
+    if (!isRecord) Change.stopRecord();
   }
 
-  public static ViewEntity getDefaultViewEntities() {
-    String prop = 
-        PropertyLoader.getInstance().getProperties()
-                      .getProperty(PropertyLoader.VIEW_ENTITIES);
+  public static void deleteComponents(List<GraphicComponent> components) {
+    if (components.isEmpty()) return;
     
-    ViewEntity view = ViewEntity.ALL;
-    if (prop != null) 
-      view = ViewEntity.valueOf(prop);
-
-    return view;
-  }
-
-  public static boolean getDefaultViewEnum() {
-    String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.VIEW_ENUM);
-    boolean view = true;
-
-    if (prop != null) view = Boolean.parseBoolean(prop);
-
-    return view;
-  }
-
-  public static boolean getDefaultVisibleTypes() {
-    String prop = 
-        PropertyLoader.getInstance().getProperties()
-                      .getProperty(PropertyLoader.VIEW_TYPES);
+    boolean isRecord = Change.isRecord();
+    Change.record();
     
-    boolean visible = true;
-    if (prop != null) 
-      visible = Boolean.valueOf(prop);
-
-    return visible;
+    for (GraphicComponent c : components)
+      c.delete();
+    
+    if (!isRecord) Change.stopRecord();
   }
 
-  public static void setButtonFactory(SButton btn) {
-    SPanelDiagramComponent.getInstance().setButtonModeStyle(btn);
-  }
-
-  public static boolean isAddGripMode() {
-    return SPanelDiagramComponent.getInstance().getMode() == Mode.GRIP;
-  }
-
-  public static boolean isBackgroundGradient() {
-    String gradientBool = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.BACKGROUND_GRADIENT);
-    boolean gradient = BACKGROUND_GRADIENT;
-
-    if (gradientBool != null) gradient = Boolean.parseBoolean(gradientBool);
-
-    return gradient;
-  }
-
-  public static boolean isEntityGradient() {
-    String gradientBool = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.ENTITY_GRADIENT);
-    boolean gradient = ENTITY_GRADIENT;
-
-    if (gradientBool != null) gradient = Boolean.parseBoolean(gradientBool);
-
-    return gradient;
-  }
-  
-  public static boolean isTitleBorderPainted() {
-    String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.PAINT_TITLE_BORDER);
-    boolean paint = IS_PAINT_TITLE_BORDER;
-
-    if (prop != null) paint = Boolean.parseBoolean(prop);
-
-    return paint;
+  public static void setAutomaticGridColor(boolean enable) {
+    PropertyLoader.getInstance().getProperties()
+        .put(PropertyLoader.AUTOMATIC_GRID_COLOR, String.valueOf(enable));
+    PropertyLoader.getInstance().push();
   }
 
   /**
@@ -256,7 +190,7 @@ public class GraphicView extends GraphicComponent
    */
   public static Color getBasicColor() {
     final String basicColor = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.COLOR_GRAPHIC_VIEW);
+        .getProperty(PropertyLoader.COLOR_GRAPHIC_VIEW);
     Color color;
 
     if (basicColor == null)
@@ -266,7 +200,70 @@ public class GraphicView extends GraphicComponent
 
     return color;
   }
+  
+  /**
+   * Set a new basic color for graphic views. The basic color is the color
+   * define by default for new graphic view.
+   *
+   * @param color
+   */
+  public static void setBasicColor(Color color) {
+    PropertyLoader
+        .getInstance()
+        .getProperties()
+        .put(PropertyLoader.COLOR_GRAPHIC_VIEW,
+                 String.valueOf(color.getRGB()));
+    PropertyLoader.getInstance().push();
+  }
 
+  public static void setButtonFactory(SButton btn) {
+    SPanelDiagramComponent.getInstance().setButtonModeStyle(btn);
+  }
+  
+  public static ViewEntity getDefaultViewEntities() {
+    String prop =
+    PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.VIEW_ENTITIES);
+    
+    ViewEntity view = ViewEntity.ALL;
+    if (prop != null)
+      view = ViewEntity.valueOf(prop);
+    
+    return view;
+  }
+  
+  public static boolean getDefaultViewEnum() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.VIEW_ENUM);
+    boolean view = true;
+    
+    if (prop != null) view = Boolean.parseBoolean(prop);
+    
+    return view;
+  }
+  
+  public static ParametersViewStyle getDefaultViewMethods() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.VIEW_METHODS);
+    ParametersViewStyle view = ParametersViewStyle.TYPE_AND_NAME;
+    
+    if (prop != null) view = ParametersViewStyle.valueOf(prop);
+    
+    return view;
+  }
+  
+  public static boolean getDefaultVisibleTypes() {
+    String prop =
+    PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.VIEW_TYPES);
+    
+    boolean visible = true;
+    if (prop != null)
+      visible = Boolean.valueOf(prop);
+    
+    return visible;
+  }
+  
   public static int getGridColor() {
     final String prop = PropertyLoader.getInstance().getProperties()
             .getProperty(PropertyLoader.GRID_COLOR);
@@ -278,66 +275,160 @@ public class GraphicView extends GraphicComponent
   }
   
 
-  public static int getGridSize() {
-    final String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.GRID_SIZE);
-    int size = GRID_SIZE;
-
-    if (prop != null) size = Integer.parseInt(prop);
-
-    return isGridEnable() ? size : 1;
-  }
-
-  public static boolean isGridVisible() {
-    final String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.GRID_VISIBLE);
-    boolean visible = GRID_VISIBLE;
-
-    if (prop != null) visible = Boolean.parseBoolean(prop);
-
-    return visible;
+  public static void setGridColor(int color) {
+    PropertyLoader.getInstance().getProperties()
+        .put(PropertyLoader.GRID_COLOR, String.valueOf(color));
+    PropertyLoader.getInstance().push();
   }
 
   public static int getGridOpacity() {
     if (!isGridOpacityEnable()) return 255;
 
     final String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.GRID_POINT_OPACITY);
+        .getProperty(PropertyLoader.GRID_POINT_OPACITY);
     int opacity = GRID_POINT_OPACITY;
 
     if (prop != null) opacity = Integer.parseInt(prop);
 
     return (int) (opacity * 2.55);
   }
-
-  public static boolean isAutomatiqueGridColor() {
-    String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.AUTOMATIC_GRID_COLOR);
-    boolean enable = IS_AUTOMATIC_GRID_COLOR;
-
-    if (prop != null) enable = Boolean.parseBoolean(prop);
-
-    return enable;
+  
+  public static void setGridPointOpacity(int opacity) {
+    PropertyLoader.getInstance().getProperties()
+        .put(PropertyLoader.GRID_POINT_OPACITY, String.valueOf(opacity));
+    PropertyLoader.getInstance().push();
+  }
+  
+  public static int getGridSize() {
+    final String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.GRID_SIZE);
+    int size = GRID_SIZE;
+    
+    if (prop != null) size = Integer.parseInt(prop);
+    
+    return isGridEnable() ? size : 1;
   }
 
-  public static boolean isGridOpacityEnable() {
-    final String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.GRID_OPACITY_ENABLE);
-    boolean enable = IS_GRID_OPACITY_ENABLE;
+  public static void setGridSize(int size) {
+    PropertyLoader.getInstance().getProperties()
+        .put(PropertyLoader.GRID_SIZE, String.valueOf(size));
+    PropertyLoader.getInstance().push();
 
+    // Update the components bounds for adapting with new grid.
+    for (GraphicView gv : MultiViewManager.getAllGraphicViews())
+      for (final GraphicComponent c : gv.getAllComponents())
+        c.setBounds(c.getBounds());
+  }
+  
+  public static void setGridVisibley(boolean visible) {
+    PropertyLoader.getInstance().getProperties()
+        .put(PropertyLoader.GRID_VISIBLE, String.valueOf(visible));
+    PropertyLoader.getInstance().push();
+  }
+  
+  public static  boolean isAddGripMode(
+          ) {
+    return SPanelDiagramComponent.getInstance().getMode() == Mode.GRIP;
+  }
+  
+  public static boolean isAddToSelection(MouseEvent e) {
+    return OSValidator.IS_MAC ? e.isMetaDown() : e.isControlDown() || e.isShiftDown();
+  }
+  
+  public static boolean isAutomatiqueGridColor() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.AUTOMATIC_GRID_COLOR);
+    boolean enable = IS_AUTOMATIC_GRID_COLOR;
+    
     if (prop != null) enable = Boolean.parseBoolean(prop);
-
+    
     return enable;
+  }
+  
+  public static boolean isBackgroundGradient() {
+    String gradientBool = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.BACKGROUND_GRADIENT);
+    boolean gradient = BACKGROUND_GRADIENT;
+    
+    if (gradientBool != null) gradient = Boolean.parseBoolean(gradientBool);
+    
+    return gradient;
+  }
+  
+  public static void setBackgroundGradient(boolean isGradient) {
+    PropertyLoader
+        .getInstance()
+        .getProperties()
+        .put(PropertyLoader.BACKGROUND_GRADIENT, String.valueOf(isGradient));
+    PropertyLoader.getInstance().push();
+  }
+
+  public static boolean isEntityGradient() {
+    String gradientBool = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.ENTITY_GRADIENT);
+    boolean gradient = ENTITY_GRADIENT;
+    
+    if (gradientBool != null) gradient = Boolean.parseBoolean(gradientBool);
+    
+    return gradient;
+  }
+  
+  public static void setEntityGradient(boolean isGradient) {
+    PropertyLoader.getInstance().getProperties()
+        .put(PropertyLoader.ENTITY_GRADIENT, String.valueOf(isGradient));
+    PropertyLoader.getInstance().push();
   }
 
   public static boolean isGridEnable() {
     final String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.GRID_ENABLE);
+        .getProperty(PropertyLoader.GRID_ENABLE);
     boolean enable = IS_GRID_ENABLE;
-
+    
     if (prop != null) enable = Boolean.parseBoolean(prop);
-
+    
     return enable;
+  }
+  
+  public static void setGridEnable(boolean enable) {
+    PropertyLoader.getInstance().getProperties()
+            .put(PropertyLoader.GRID_ENABLE, String.valueOf(enable));
+    PropertyLoader.getInstance().push();
+  }
+
+  public static boolean isGridOpacityEnable() {
+    final String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.GRID_OPACITY_ENABLE);
+    boolean enable = IS_GRID_OPACITY_ENABLE;
+    
+    if (prop != null) enable = Boolean.parseBoolean(prop);
+    
+    return enable;
+  }
+  
+  public static void setGridOpacityEnable(boolean enable) {
+    PropertyLoader.getInstance().getProperties()
+        .put(PropertyLoader.GRID_OPACITY_ENABLE, String.valueOf(enable));
+    PropertyLoader.getInstance().push();
+  }
+
+  public static boolean isGridVisible() {
+    final String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.GRID_VISIBLE);
+    boolean visible = GRID_VISIBLE;
+    
+    if (prop != null) visible = Boolean.parseBoolean(prop);
+    
+    return visible;
+  }
+
+  public static boolean isTitleBorderPainted() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.PAINT_TITLE_BORDER);
+    boolean paint = IS_PAINT_TITLE_BORDER;
+    
+    if (prop != null) paint = Boolean.parseBoolean(prop);
+    
+    return paint;
   }
 
   /**
@@ -346,123 +437,34 @@ public class GraphicView extends GraphicComponent
    * location given is on the component or not. Return null if no component are
    * found. This method return the first component found in
    * @param <T> the list.
-   * 
+   *
    * @param components
    *          the list of component extent from GraphicComponent
    * @param pos
    *          the location for find a component
    * @return the component found or null if no component are found
    */
-  public static <T extends GraphicComponent> T searchComponentWithPosition(
-          List<T> components, Point pos) {
+  public static <T extends GraphicComponent> T searchComponentWithPosition(List<T> components, Point pos) {
     for (final T c : components)
       if (c.isAtPosition(pos)) return c;
-
+    
     return null; // no component found
   }
-
-  public static void setAutomaticGridColor(boolean enable) {
-    PropertyLoader.getInstance().getProperties()
-            .put(PropertyLoader.AUTOMATIC_GRID_COLOR, String.valueOf(enable));
-    PropertyLoader.getInstance().push();
-  }
-
-  public static void setBackgroundGradient(boolean isGradient) {
-    PropertyLoader
-            .getInstance()
-            .getProperties()
-            .put(PropertyLoader.BACKGROUND_GRADIENT, String.valueOf(isGradient));
-    PropertyLoader.getInstance().push();
-  }
-
-  public static void setEntityGradient(boolean isGradient) {
-    PropertyLoader.getInstance().getProperties()
-            .put(PropertyLoader.ENTITY_GRADIENT, String.valueOf(isGradient));
-    PropertyLoader.getInstance().push();
-  }
-
-  public static void setGridSize(int size) {
-    PropertyLoader.getInstance().getProperties()
-            .put(PropertyLoader.GRID_SIZE, String.valueOf(size));
-    PropertyLoader.getInstance().push();
-
-    // Update the components bounds for adapting with new grid.
-    for (GraphicView gv : MultiViewManager.getAllGraphicViews())
-      for (final GraphicComponent c : gv.getAllComponents())
-        c.setBounds(c.getBounds());
-  }
-
-  /**
-   * Set a new basic color for graphic views. The basic color is the color
-   * define by default for new graphic view.
-   * 
-   * @param color
-   */
-  public static void setBasicColor(Color color) {
-    PropertyLoader
-            .getInstance()
-            .getProperties()
-            .put(PropertyLoader.COLOR_GRAPHIC_VIEW,
-                    String.valueOf(color.getRGB()));
-    PropertyLoader.getInstance().push();
-  }
-
-  public static void setGridColor(int color) {
-    PropertyLoader.getInstance().getProperties()
-            .put(PropertyLoader.GRID_COLOR, String.valueOf(color));
-    PropertyLoader.getInstance().push();
-  }
-
-  public static void setGridOpacityEnable(boolean enable) {
-    PropertyLoader.getInstance().getProperties()
-            .put(PropertyLoader.GRID_OPACITY_ENABLE, String.valueOf(enable));
-    PropertyLoader.getInstance().push();
-  }
-
-  public static void setGridEnable(boolean enable) {
-    PropertyLoader.getInstance().getProperties()
-            .put(PropertyLoader.GRID_ENABLE, String.valueOf(enable));
-    PropertyLoader.getInstance().push();
-  }
-
-  public static void setGridPointOpacity(int opacity) {
-    PropertyLoader.getInstance().getProperties()
-            .put(PropertyLoader.GRID_POINT_OPACITY, String.valueOf(opacity));
-    PropertyLoader.getInstance().push();
-  }
-
-  public static void setGridVisibley(boolean visible) {
-    PropertyLoader.getInstance().getProperties()
-            .put(PropertyLoader.GRID_VISIBLE, String.valueOf(visible));
-    PropertyLoader.getInstance().push();
-  }
-
-  public boolean getPaintBackgroundLast() {
-    return paintBackgroundLast;
-  }
-
-  public void setPaintBackgroundLast(boolean enable) {
-    paintBackgroundLast = enable;
-  }
-
-  public void paintBackgroundFirst() {
-    setPaintBackgroundLast(false);
-    repaint();
-  }
+  // use in printing
+  private final int MAX_PRINT_PAGE = 1;
 
   private final ClassDiagram classDiagram;
   // last component mouse pressed
   private GraphicComponent componentMousePressed;
 
   private CreateComponent currentFactory;
+  private final LinkedList<EntityView> entities = new LinkedList<>();
   private GraphicComponent justCreatedComponent;
 
-  private final LinkedList<EntityView> entities = new LinkedList<>();
+  private LinkedList<IListenerComponentSelectionChanged> lcsc = new LinkedList<>();
 
   private final LinkedList<LineView> linesView = new LinkedList<>();
-
-  // use in printing
-  private final int MAX_PRINT_PAGE = 1;
+  private int mouseButton = 0;
 
   private Point mousePressedLocation = new Point();
   private final LinkedList<MultiView> multiViews = new LinkedList<>();
@@ -471,6 +473,7 @@ public class GraphicView extends GraphicComponent
   private final LinkedList<TextBoxCommentary> notes = new LinkedList<>();
 
   private final LinkedList<GraphicComponent> othersComponents = new LinkedList<>();
+  private boolean paintBackgroundLast = false;
 
   // Selection rectangle.
   private Rectangle rubberBand = new Rectangle();
@@ -480,20 +483,12 @@ public class GraphicView extends GraphicComponent
   private final JPanel scene;
 
   private final JScrollPane scrollPane;
+  private boolean stopRepaint = false;
   private TextBoxDiagramName txtBoxDiagramName;
 
-  private float zoom = 1.0f;
-  private boolean stopRepaint = false;
-  private boolean paintBackgroundLast = false;
-
   private Rectangle visibleRect = new Rectangle();
-  private int mouseButton = 0;
+  private float zoom = 1.0f;
 
-  private LinkedList<IListenerComponentSelectionChanged> lcsc = new LinkedList<>();
-
-  public double getScale() {
-    return SPanelElement.getInstance().getSliderZoom().getValue() / 100.0;
-  }
 
   /**
    * Create a new graphic view representing the class diagram given. The new
@@ -528,23 +523,14 @@ public class GraphicView extends GraphicComponent
             try {
               Entity importedEntity = 
                   (Entity)support.getTransferable()
-                                 .getTransferData(Entity.ENTITY_FLAVOR);
-              if (containsDiagramComponent(importedEntity))
-              {
-                SMessageDialog.showErrorMessage(
-                    "The entity " + importedEntity.getName() + 
-                        " is already present in this view.\nYou can only add it once.");
-              } else {
-
+                      .getTransferData(Entity.ENTITY_FLAVOR);
+          
                 // Adding the imported entity view.
-                final EntityView importedEntityView = 
-                    EntityView.createFromEntity(
-                        GraphicView.this, importedEntity);
-                addEntityWithRelations(
-                    importedEntityView,
-                    support.getDropLocation().getDropPoint());
+                if (createEntityWithRelations(
+                    importedEntity,
+                    support.getDropLocation().getDropPoint()))
                 return true;
-              }
+             
             } catch (UnsupportedFlavorException | IOException ex) {
               Slyum.LOGGER.log(Level.SEVERE, null, ex);
             }
@@ -635,49 +621,49 @@ public class GraphicView extends GraphicComponent
 
     // Menu item add interface
     menuItem = makeMenuItem("Add Interface", Slyum.ACTION_NEW_INTERFACE,
-            "interface");
+        "interface");
     popupMenu.add(menuItem);
 
     // Menu item add class association
     menuItem = makeMenuItem("Add Association class",
-            Slyum.ACTION_NEW_CLASS_ASSOCIATION, "classAssoc");
+        Slyum.ACTION_NEW_CLASS_ASSOCIATION, "classAssoc");
     popupMenu.add(menuItem);
 
     popupMenu.addSeparator();
 
     // Menu item add generalize
     menuItem = makeMenuItem("Add Inheritance", Slyum.ACTION_NEW_GENERALIZE,
-            "generalize");
+        "generalize");
     popupMenu.add(menuItem);
 
     // Menu item add inner class
     menuItem = makeMenuItem("Add inner class", Slyum.ACTION_NEW_INNER_CLASS,
-            "innerClass");
+        "innerClass");
     popupMenu.add(menuItem);
 
     // Menu item add dependency
     menuItem = makeMenuItem("Add Dependency", Slyum.ACTION_NEW_DEPENDENCY,
-            "dependency");
+        "dependency");
     popupMenu.add(menuItem);
 
     // Menu item add association
     menuItem = makeMenuItem("Add Association", Slyum.ACTION_NEW_ASSOCIATION,
-            "association");
+        "association");
     popupMenu.add(menuItem);
 
     // Menu item add aggregation
     menuItem = makeMenuItem("Add Aggregation", Slyum.ACTION_NEW_AGGREGATION,
-            "aggregation");
+        "aggregation");
     popupMenu.add(menuItem);
 
     // Menu item add composition
     menuItem = makeMenuItem("Add Composition", Slyum.ACTION_NEW_COMPOSITION,
-            "composition");
+        "composition");
     popupMenu.add(menuItem);
 
     // Menu item add composition
     menuItem = makeMenuItem("Add Multi-association", Slyum.ACTION_NEW_MULTI,
-            "multi");
+        "multi");
     popupMenu.add(menuItem);
 
     popupMenu.addSeparator();
@@ -696,16 +682,7 @@ public class GraphicView extends GraphicComponent
     txtBoxDiagramName.setVisible(Slyum.isViewTitleOnExport());
     addOthersComponents(txtBoxDiagramName);
   }
-
-  @Override
-  protected boolean displayGeneralMenuItems() {
-    return false;
-  }
-
-  private void addSPanelListener() {
-    addListenerSelectionChanged(SPanelElement.getInstance());
-  }
-
+  
   @Override
   public void actionPerformed(ActionEvent e) {
     if ("Color".equals(e.getActionCommand())) {
@@ -721,23 +698,55 @@ public class GraphicView extends GraphicComponent
 
     Slyum.getInstance().actionPerformed(e);
   }
+  
+  public void adaptDiagramToWindow() {
+    adaptListToWindow(getAllComponents());
+  }
+  
+  public void adaptListToWindow(LinkedList<? extends GraphicComponent> list) {
+    final Rectangle limits = Utility.getLimits(list);
+    Rectangle vr = getScene().getVisibleRect(), l;
+    
+    l = Utility.scaleRect(limits, getScale());
+    
+    double xRatio = l.getWidth() / vr.getWidth();
+    double yRatio = l.getHeight() / vr.getHeight();
+    
+    if (xRatio > yRatio)
+      setScale(getScale() / xRatio);
+    else
+      setScale(getScale() / yRatio);
+    
+    // Must wait scaling.
+    SwingUtilities.invokeLater(new Runnable() {
+      
+      @Override
+      public void run() {
+        getScene().scrollRectToVisible(Utility.scaleRect(limits, getScale()));
+      }
+    });
+  }
 
+  public void adaptSelectionToWindow() {
+    adaptListToWindow(getSelectedComponents());
+  }
+  
   public void addAggregation(Aggregation component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
     if (result == null) {
       final LinkedList<Role> roles = component.getRoles();
       final EntityView source = (EntityView) searchAssociedComponent(roles
-              .getFirst().getEntity());
+          .getFirst().getEntity());
       final EntityView target = (EntityView) searchAssociedComponent(roles
-              .getLast().getEntity());
-
+          .getLast().getEntity());
+      
       // Are Components in this graphic view?
       if (source == null || target == null)
         return;
 
       addComponentIn(new AggregationView(this, source, target, component,
-              source.middleBounds(), target.middleBounds(), false), linesView);
+          source.middleBounds(), target.middleBounds(), false), linesView);
     }
   }
 
@@ -746,35 +755,35 @@ public class GraphicView extends GraphicComponent
 
     if (result == null) {
       final BinaryView bv = (BinaryView) searchAssociedComponent(component
-              .getAssociation());
-
+          .getAssociation());
+      
       // Are Components in this graphic view?
       if (bv == null)
         return;
       
       addComponentIn(new AssociationClassView(this, component, bv,
-              new Rectangle(100, 100, 100, 100)), entities);
+          new Rectangle(100, 100, 100, 100)), entities);
     }
   }
-
+  
   public void addBinary(Binary component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
     if (result == null) {
       final LinkedList<Role> roles = component.getRoles();
       final EntityView source = (EntityView) searchAssociedComponent(roles
-              .getFirst().getEntity());
+          .getFirst().getEntity());
       final EntityView target = (EntityView) searchAssociedComponent(roles
-              .getLast().getEntity());
-
+          .getLast().getEntity());
+      
       // Are Components in this graphic view?
       if (source == null || target == null)
         return;
       
       addComponentIn(
-              new BinaryView(this, source, target, component,
-                      source.middleBounds(), target.middleBounds(), false),
-              linesView);
+          new BinaryView(this, source, target, component,
+              source.middleBounds(), target.middleBounds(), false),
+          linesView);
     }
   }
 
@@ -784,14 +793,7 @@ public class GraphicView extends GraphicComponent
       addEntity(new ClassView(this, component));
   }
 
-  public void addEnumEntity(EnumEntity component) {
-    GraphicComponent result = searchAssociedComponent(component);
-    if (result == null)
-      addEntity(new EnumView(this, component));
-  }
-
-  public <T extends GraphicComponent> boolean addComponentIn(T component,
-          LinkedList<T> list) {
+  public <T extends GraphicComponent> boolean addComponentIn(T component, LinkedList<T> list) {
     if (component == null)
       throw new IllegalArgumentException("component is null");
 
@@ -802,42 +804,42 @@ public class GraphicView extends GraphicComponent
 
     return false;
   }
-
-  public void addComposition(Composition component) {
+  
+  public  void addComposition(Composition component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
     if (result == null) {
       final LinkedList<Role> roles = component.getRoles();
       final EntityView source = (EntityView) searchAssociedComponent(roles
-              .getFirst().getEntity());
+          .getFirst().getEntity());
       final EntityView target = (EntityView) searchAssociedComponent(roles
-              .getLast().getEntity());
-
+          .getLast().getEntity());
+      
       // Are Components in this graphic view?
       if (source == null || target == null)
         return;
 
       addComponentIn(new CompositionView(this, source, target, component,
-              source.middleBounds(), target.middleBounds(), false), linesView);
+          source.middleBounds(), target.middleBounds(), false), linesView);
     }
   }
-
+  
   public void addDependency(Dependency component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
     if (result == null) {
       final EntityView source = (EntityView) searchAssociedComponent(component
-              .getSource());
+          .getSource());
       final EntityView target = (EntityView) searchAssociedComponent(component
-              .getTarget());
-
+          .getTarget());
+      
       // Are Components in this graphic view?
       if (source == null || target == null)
         return;
 
       addComponentIn(
-              new DependencyView(this, source, target, component,
-                      source.middleBounds(), target.middleBounds(), false),
+          new DependencyView(this, source, target, component,
+              source.middleBounds(), target.middleBounds(), false),
               linesView);
     }
   }
@@ -853,89 +855,52 @@ public class GraphicView extends GraphicComponent
   public boolean addEntity(EntityView component) {    
     return addComponentIn(component, entities);
   }
-
-  private void addEntityWithRelations(
-      final EntityView entityView, final Point location) {
-    final List<RelationView> createdRelationViews = new LinkedList<>();
-    
-    addEntity(entityView);
-    
-    Entity entity1 = (Entity)entityView.getAssociedComponent();
-    HashMap<Relation, Entity> linked = entity1.getLinkedEntities();
-    for (Relation relation : linked.keySet()) {
-      Entity entity2 = linked.get(relation);
-      if (containsDiagramComponent(entity2)) {
-        EntityView source, target, entityView2 = (EntityView)searchAssociedComponent(entity2);
-        if (relation.getSource() == entity1) {
-          source = entityView;
-          target = entityView2;
-        } else {
-          source = entityView2;
-          target = entityView;
-        }
-        
-        final RelationView rv = RelationView.createFromRelation(
-              this, relation, source, target);
-        
-        addLineView(rv);
-        createdRelationViews.add(rv);
-      }
-    }
-    
-    
-    // Place the component corresponding to the mouse location drop.
-    SwingUtilities.invokeLater(new Runnable() {
-
-      @Override
-      public void run() {
-        
-        entityView.setLocationRelativeTo(location);
-        entityView.regenerateEntity();
-        entityView.adjustWidth();
-        
-        for (RelationView rv : createdRelationViews)
-          rv.center();
-      }
-    });
+  
+  public  void addEnumEntity(EnumEntity component) {
+    GraphicComponent result = searchAssociedComponent(component);
+    if (result == null)
+      addEntity(new EnumView(this, component));
   }
-
-  public void addInheritance(Inheritance component) {
+  
+  public void addInheritance(
+      Inheritance component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
     if (result == null) {
       final EntityView child = (EntityView) searchAssociedComponent(component
-              .getChild());
+          .getChild());
       final EntityView parent = (EntityView) searchAssociedComponent(component
-              .getParent());
-
+          .getParent());
+      
       // Are Components in this graphic view?
       if (child == null || parent == null)
         return;
 
       addComponentIn(
-              new InheritanceView(this, child, parent, component,
-                      child.middleBounds(), parent.middleBounds(), false),
-              linesView);
+          new InheritanceView(this, child, parent, component,
+              child.middleBounds(), parent.middleBounds(), false),
+          linesView);
     }
   }
-
-  public void addInnerClass(InnerClass component) {
+  
+  public void addInnerClass(
+      InnerClass component) {
     final GraphicComponent result = searchAssociedComponent(component);
 
     if (result == null) {
       final EntityView child = (EntityView) searchAssociedComponent(component
-              .getChild());
+          .getChild());
       final EntityView parent = (EntityView) searchAssociedComponent(component
-              .getParent());
-
+          .getParent());
+      
       // Are Components in this graphic view?
       if (child == null || parent == null)
         return;
 
       addComponentIn(
-              new InnerClassView(this, child, parent, component,
-                      child.middleBounds(), parent.middleBounds(), false),
-              linesView);
+          new InnerClassView(this, child, parent, component,
+              child.middleBounds(), parent.middleBounds(), false),
+          linesView);
     }
   }
 
@@ -958,18 +923,24 @@ public class GraphicView extends GraphicComponent
     return addComponentIn(component, linesView);
   }
 
-  public void addMulti(Multi component) {
-    final GraphicComponent result = searchAssociedComponent(component);
-    if (result == null)
-      addComponentIn(MultiFactory.createMulti(this, component), multiViews);
+  public boolean addListenerSelectionChanged(IListenerComponentSelectionChanged i) {
+    return lcsc.add(i);
   }
+  
+  public void addMulti(Multi component) {
+    
+    
+    final GraphicComponent result = searchAssociedComponent(component);
 
-  public void removeComponent(IDiagramComponent component) {
-    final GraphicComponent g = searchAssociedComponent(component);
-
-    if (g != null)
-
-    removeComponent(g);
+    if (result == null) {
+      for (Role role : component.getRoles())
+        
+        // Are Components in this graphic view?
+        if (searchAssociedComponent(role.getEntity()) == null)
+          return;
+      
+      addMultiView(MultiFactory.createMulti(this, component));
+    }
   }
 
   /**
@@ -995,10 +966,6 @@ public class GraphicView extends GraphicComponent
   public boolean addNotes(TextBoxCommentary component) {
     return addComponentIn(component, notes);
   }
-  
-  public boolean isOpenInTab() {
-    return MultiViewManager.isGraphicViewOpened(this);
-  }
 
   /**
    * Add a new graphic component. Adding a component means it will be drawn and
@@ -1010,32 +977,6 @@ public class GraphicView extends GraphicComponent
    */
   public boolean addOthersComponents(GraphicComponent component) {
     return addComponentIn(component, othersComponents);
-  }
-
-  public boolean addListenerSelectionChanged(
-          IListenerComponentSelectionChanged i) {
-    return lcsc.add(i);
-  }
-
-  public boolean removeListenerSelectionChanged(
-          IListenerComponentSelectionChanged i) {
-    return lcsc.remove(i);
-  }
-
-  /**
-   * Get all entities contents in this graphic view and adjust their width. See
-   * adjustWidth() method from EntityView.
-   */
-  public void adjustWidthAllEntities() {
-    adjustEntities(getEntitiesView());
-  }
-
-  /**
-   * Get all selected entities contents in this graphic view and adjust their
-   * width. See adjustWidth() method from EntityView.
-   */
-  public void adjustWidthSelectedEntities() {
-    adjustEntities(getSelectedEntities());
   }
 
   /**
@@ -1061,12 +1002,30 @@ public class GraphicView extends GraphicComponent
   }
 
   /**
+   * Get all entities contents in this graphic view and adjust their width. See
+   * adjustWidth() method from EntityView.
+   */
+  public void adjustWidthAllEntities() {
+    adjustEntities(getEntitiesView());
+  }
+
+  /**
+   * Get all selected entities contents in this graphic view and adjust their
+   * width. See adjustWidth() method from EntityView.
+   */
+  public void adjustWidthSelectedEntities(
+      ) {
+    adjustEntities(getSelectedEntities());
+  }
+
+  /**
    * Align all selected entities with the hightest or lowest selected entity.
    * Make same space between all selected entities.
    * 
    * @param top on top or bottom?
    */
-  public void alignHorizontal(boolean top) {
+  public void alignHorizontal(
+      boolean top) {
     int totalWidth = 0, bottom = Integer.MIN_VALUE;
 
     final LinkedList<EntityView> sorted = sortXLocation(getSelectedEntities());
@@ -1097,7 +1056,7 @@ public class GraphicView extends GraphicComponent
 
       Change.push(new BufferBounds(c));
       c.setBounds(new Rectangle(offset, top ? limits.y : bottom, bounds.width,
-              bounds.height));
+          bounds.height));
       Change.push(new BufferBounds(c));
       offset += bounds.width + space;
     }
@@ -1140,7 +1099,7 @@ public class GraphicView extends GraphicComponent
 
       Change.push(new BufferBounds(c));
       c.setBounds(new Rectangle(left ? limits.x : right, offset, bounds.width,
-              bounds.height));
+          bounds.height));
       Change.push(new BufferBounds(c));
       offset += bounds.height + space;
     }
@@ -1148,6 +1107,10 @@ public class GraphicView extends GraphicComponent
     if (!isRecord) Change.stopRecord();
   }
 
+  public void backScale() {
+    setScale(getScale() + SCALE_STEP);
+  }
+  
   /**
    * Get all selected component and change their color.
    */
@@ -1160,40 +1123,7 @@ public class GraphicView extends GraphicComponent
         setColorForSelectedItems(ca.getColor());
   }
   
-  public void setColorForSelectedItems(final Color color) {
-    setColorForComponents(color, getSelectedColoredComponents());
-  }
-  
-  public void setDefaultColorForSelectedItems() {
-    setDefaultColorForComponents(getSelectedColoredComponents());
-  }
-  
-  public void setColorForComponents(final Color color, ColoredComponent... components) {
-    changeComponentsColor(new ObtainColor() {
-      @Override
-      public Color getColor(ColoredComponent c) {
-        return color;
-      }
-    }, components);    
-  }
-  
-  public void setDefaultColorForComponents(ColoredComponent... components) {
-    changeComponentsColor(new ObtainColor() {
-      @Override
-      public Color getColor(ColoredComponent c) {
-        return c.getDefaultColor();
-      }
-    }, components);    
-  }
-  
-  public ColoredComponent[] getSelectedColoredComponents() { 
-    List<GraphicComponent> gc = getSelectedComponents();
-    List<ColoredComponent> colored = getColoredComponents(gc);
-    return (ColoredComponent[]) colored.toArray(new ColoredComponent[colored.size()]);
-  }
-
-  public void changeComponentsColor(
-      ObtainColor o, ColoredComponent... components) {
+  public void changeComponentsColor(ObtainColor o, ColoredComponent... components) {
     boolean isRecord = Change.isRecord();
     Change.record();
     for (ColoredComponent c : components) {
@@ -1230,15 +1160,6 @@ public class GraphicView extends GraphicComponent
   }
 
   /**
-   * Unselect all component.
-   */
-  public void unselectAll() {
-    LinkedList<GraphicComponent> components = getAllComponents();
-    for (GraphicComponent c : components)
-      c.setSelected(false);
-  }
-
-  /**
    * Hide the rubber band, compute components who was in rubber band and select
    * them.
    * @return the number of components in the rubber band.
@@ -1255,25 +1176,6 @@ public class GraphicView extends GraphicComponent
     return components.size();
   }
   
-  public List<GraphicComponent> getComponentsInRect(Rectangle rect) {
-    List<GraphicComponent> components = new LinkedList<>();
-
-    for (GraphicComponent c : getDiagramElements()) {
-      // see if the intersection area is the same that component area.
-      Rectangle bounds = c.getBounds();
-      Rectangle intersection = rubberBand.intersection(bounds);
-
-      int intersectionArea = intersection.width * intersection.height;
-      int componentArea = bounds.width * bounds.height;
-
-      // if it the same, the component is completely covered by the
-      // rubber band.
-      if (intersectionArea == componentArea)
-        components.add(c);
-    }
-    return components;
-  }
-
   /**
    * Call when a component is selected or unselected.
    * 
@@ -1290,6 +1192,14 @@ public class GraphicView extends GraphicComponent
     return next;
   }
 
+  public Rectangle computeVisibleCenterBounds(Dimension size) {
+    Rectangle rect = new Rectangle(size);
+    Point center = getVisibleCenter();
+    rect.x = center.x - size.width / 2;
+    rect.y = center.y - size.height / 2;
+    return rect;
+  }
+  
   /**
    * Return if the graphic component is in the graphic view or not.
    * 
@@ -1303,20 +1213,30 @@ public class GraphicView extends GraphicComponent
     return getAllComponents().contains(component);
   }
 
+  public void copyDiagramToClipboard() {
+    Toolkit.getDefaultToolkit().getSystemClipboard()
+        .setContents(new Utility.ImageSelection(getSelectedScreen()), null);
+  }
+  
+  public int countEntities(
+      ) {
+    return getEntitiesView().size();
+  }
+  
+  public int countNotes() {
+    return notes.size();
+  }
+  
   public int countSelectedComponents() {
     return getSelectedComponents().size();
   }
 
+  public int countSelectedComponents(Class<?> type) {
+    return Utility.count(type, getSelectedComponents());
+  }
+  
   public int countSelectedEntities() {
     return getSelectedEntities().size();
-  }
-
-  public int countEntities() {
-    return getEntitiesView().size();
-  }
-
-  public int countNotes() {
-    return notes.size();
   }
 
   public int countSelectedNotes() {
@@ -1326,6 +1246,21 @@ public class GraphicView extends GraphicComponent
     return count;
   }
 
+  public GraphicComponent createAndAddRelation(
+      Relation relation, EntityView source, EntityView target) {
+    
+    if (relation.getClass() == Multi.class) {
+      MultiView mv = new MultiView(parent, (Multi)relation);
+      addMultiView(mv);
+      return mv;
+    } else {
+      RelationView rv = RelationView.createFromRelation(
+          this, relation, source, target);
+      addLineView(rv);
+      return rv;
+    }
+  }
+  
   /**
    * Remove the current factory.
    */
@@ -1338,6 +1273,10 @@ public class GraphicView extends GraphicComponent
     getScene().setCursor(Cursor.getDefaultCursor());
   }
 
+  public void deleteSelectedComponents() {
+    deleteComponents(getSelectedComponents());
+  }
+  
   /**
    * Not use in Slyum 1.0. Draw beta margin of A4 format.
    * 
@@ -1355,19 +1294,86 @@ public class GraphicView extends GraphicComponent
     final Rectangle limits = Utility.getLimits(entities);
     g2.drawRect(limits.x, limits.y, (int) width, (int) height);
   }
-
-  private LinkedList<GraphicComponent> getCurrentComponents() {
-    final LinkedList<GraphicComponent> components = new LinkedList<>();
-
-    // Order is important, it is used to compute mouse event.
-    components.addAll(linesView);
-    components.addAll(multiViews);
-    components.addAll(entities);
-    components.addAll(notes);
-
-    return components;
+  
+  public void duplicateSelectedEntities() {
+    
+    boolean isRecord = Change.isRecord();
+    Change.record();
+    
+    for (final EntityView entityView : getSelectedEntities()) {
+      try {
+        final EntityView newView = entityView.clone();
+        Entity entity = ((Entity) newView.getAssociedComponent());
+        
+        // Récupération par réflexion de la méthode a appelé pour l'ajout.
+        // Le nom de la méthode doit être add<Type_Class>(<Type_Class> entity);
+        try {
+          parent.addEntity(newView);
+          classDiagram
+              .getClass()
+              .getMethod(
+                  String.format("add%s", entity.getClass()
+                      .getSimpleName()), entity.getClass())
+              .invoke(classDiagram, entity);
+          newView.regenerateEntity();
+          
+          SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+              entityView.setSelected(false);
+              newView.setSelected(true);
+              newView.repaint();
+            }
+          });
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      } catch (CloneNotSupportedException e) {
+        e.printStackTrace();
+      }
+    }
+    
+    if (!isRecord) Change.stopRecord();
   }
+  
+  public void forwardScale() {
+    setScale(getScale() - SCALE_STEP);
+  }
+  
+  @Override
+  public void gMouseDragged(MouseEvent e) {
+    if (mouseButton == MouseEvent.BUTTON1)
+      redrawRubberBand(mousePressedLocation, e.getPoint());
+  }
+  
+  @Override
+  public void gMousePressed(MouseEvent e) {
+    super.gMousePressed(e);
+    
+    switch (mouseButton) {
+      case MouseEvent.BUTTON1:
+        scene.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+        if (!isAddToSelection(e)) unselectAll();
+        break;
+        
+      case MouseEvent.BUTTON2:
+        scene.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+        break;
+    }
+  }
+  
+  @Override
+  public void gMouseReleased(MouseEvent e) {
+    super.gMouseReleased(e);
+    clearRubberBand();
+    final int nbrComponentSelected = countSelectedEntities();
 
+    if (nbrComponentSelected > 0 && e.getButton() == MouseEvent.BUTTON1)
+      new StyleCross(this, e.getPoint(), nbrComponentSelected);
+    
+    scene.setCursor(Cursor.getDefaultCursor());
+  }
+  
   /**
    * Get all components contains in graphic view.
    * 
@@ -1376,14 +1382,6 @@ public class GraphicView extends GraphicComponent
   public LinkedList<GraphicComponent> getAllComponents() {
     final LinkedList<GraphicComponent> components = getCurrentComponents();
     components.addAll(othersComponents);
-    return components;
-  }
-
-  public LinkedList<GraphicComponent> getAllDiagramComponents() {
-    final LinkedList<GraphicComponent> components = getCurrentComponents();
-    for (GraphicComponent o : othersComponents)
-      if (!(o instanceof SquareGrip) && !o.equals(txtBoxDiagramName)) 
-        components.add(o);
     return components;
   }
   
@@ -1399,6 +1397,27 @@ public class GraphicView extends GraphicComponent
     return components;
   }
   
+  public LinkedList<GraphicComponent> getAllDiagramComponents() {
+    final LinkedList<GraphicComponent> components = getCurrentComponents();
+    for (GraphicComponent o : othersComponents)
+      if (!(o instanceof SquareGrip) && !o.equals(txtBoxDiagramName)) 
+        components.add(o);
+    return components;
+  }
+  
+  /**
+   * Return all mains components. Mains components are associations and
+   * entities.
+   * @return All mains components.
+   */
+  public LinkedList<GraphicComponent> getAllMainComponents() {
+    LinkedList<GraphicComponent> mainComponents = new LinkedList<>();
+    mainComponents.addAll(entities);
+    mainComponents.addAll(linesView);
+    mainComponents.addAll(multiViews);
+    return mainComponents;
+  }
+
   /**
    * Get all unique graphics components having a diagram component associated with.
    * A unique graphic component is a component that exist only in this view.
@@ -1412,12 +1431,8 @@ public class GraphicView extends GraphicComponent
     return getUniqueComponentsFrom(getEntitiesView());
   }
   
-  private <T extends GraphicComponent> LinkedList<T> getUniqueComponentsFrom(LinkedList<T> components) {
-    LinkedList<T> results = new LinkedList<>();
-    for (GraphicComponent gc : components)
-      if (!gc.existsInOthersViews())
-        results.add((T) gc);
-    return results;
+  public LinkedList<GraphicComponent> getAllMainUniquesComponents() {
+    return getUniqueComponentsFrom(getAllMainComponents());
   }
 
   @Override
@@ -1425,18 +1440,42 @@ public class GraphicView extends GraphicComponent
     return scene.getBounds();
   }
 
+  @Override
+  public void setBounds(Rectangle bounds) {
+    scene.setBounds(bounds);
+  }
+  
   /**
    * Get the class diagram associated with this graphic view.
    * 
    * @return the class diagram associated with this graphic view.
    */
-  public ClassDiagram getClassDiagram() {
+  public  ClassDiagram getClassDiagram() {
     return classDiagram;
   }
 
   @Override
   public Color getColor() {
     return getBasicColor();
+  }
+  
+  @Override
+  public void setColor(Color color) {
+    setBasicColor(color);
+    
+    repaint();
+  }
+  
+  public  void setColorForSelectedItems(final Color color) {
+    setColorForComponents(color, getSelectedColoredComponents());
+  }
+  
+  public List<ColoredComponent> getColoredComponents(List<GraphicComponent> components) {
+    LinkedList<ColoredComponent> c = new LinkedList<>();
+    for (GraphicComponent g : components)
+      if (g instanceof ColoredComponent) c.add((ColoredComponent) g);
+    return c;
+
   }
 
   /**
@@ -1454,13 +1493,6 @@ public class GraphicView extends GraphicComponent
 
     return component == null ? this : component;
   }
-  
-  public GraphicComponent getComponentMouseHover(Point mouseLocation) {
-    if (currentFactory != null)
-      return currentFactory;
-    
-    return getComponentAtPosition(mouseLocation);
-  }
 
   /**
    * Same as searchComponentWithPosition(), but inverse the order of graphic
@@ -1472,8 +1504,8 @@ public class GraphicView extends GraphicComponent
    *          the location for find graphic components
    * @return the component found; or null if no component are found.
    */
-  public <T extends GraphicComponent> T getComponentListAtPosition(
-          LinkedList<T> list, Point pos) {
+  public  <T extends GraphicComponent> T getComponentListAtPosition(
+      LinkedList<T> list, Point pos) {
     // last component first
     final Iterator<T> iter = list.descendingIterator();
     final LinkedList<T> inversed = new LinkedList<T>();
@@ -1487,9 +1519,63 @@ public class GraphicView extends GraphicComponent
     return component;
   }
 
+  public GraphicComponent getComponentMouseHover(Point mouseLocation) {
+    if (currentFactory != null)
+      return currentFactory;
+    
+    return getComponentAtPosition(mouseLocation);
+  }
+  
+  /**
+   * Change the current pressed component by the component given.
+   *
+   * @param component
+   *          the new pressed component
+   */
+  public void setComponentMousePressed(GraphicComponent component) {
+    if (component == null)
+      throw new IllegalArgumentException("component is null");
+    
+    componentMousePressed = component;
+  }
+  
+  public  List<GraphicComponent> getComponentsInRect(Rectangle rect) {
+    List<GraphicComponent> components = new LinkedList<>();
+    
+    for (GraphicComponent c : getDiagramElements()) {
+      // see if the intersection area is the same that component area.
+      Rectangle bounds = c.getBounds();
+      Rectangle intersection = rubberBand.intersection(bounds);
+      
+      int intersectionArea = intersection.width * intersection.height;
+      int componentArea = bounds.width * bounds.height;
+
+      // if it the same, the component is completely covered by the
+      // rubber band.
+      if (intersectionArea == componentArea)
+        components.add(c);
+    }
+    return components;
+  }
+  
   @Override
   public Color getDefaultColor() {
     return BASIC_COLOR;
+  }
+
+  public void setDefaultColorForComponents(ColoredComponent... components) {
+    changeComponentsColor(new ObtainColor() {
+      @Override
+      public Color getColor(ColoredComponent c) {
+        return c.getDefaultColor();
+      }
+    }, components);    
+  }
+
+  public void setDefaultForSelectedEntities(boolean show) {
+    for (SimpleEntityView ev : SimpleEntityView
+            .getSelectedSimpleEntityView(this))
+      ev.setDisplayDefault(show);
   }
 
   /**
@@ -1503,8 +1589,8 @@ public class GraphicView extends GraphicComponent
    *          remove this component from arrays and no longer be found
    * @return the component found or null if no component are found
    */
-  public GraphicComponent getDiagramElementAtPosition(Point pos,
-          GraphicComponent except) {
+  public GraphicComponent getDiagramElementAtPosition(
+  Point pos, GraphicComponent except) {
     final LinkedList<GraphicComponent> components = getDiagramElements();
     components.remove(except);
 
@@ -1549,6 +1635,21 @@ public class GraphicView extends GraphicComponent
     return getComponentListAtPosition(entities, pos);
   }
 
+  public double getInversedScale() {
+    return 1 / getScale();
+  }
+  
+  /**
+   * Same as getComponentListAtPosition(), but only for lines views.
+   *
+   * @param pos
+   *          the location of line view to find
+   * @return the line view found or null if no line view are found
+   */
+  public LineView getLineViewAtPosition(Point pos) {
+    return getComponentListAtPosition(linesView, pos);
+  }
+
   /**
    * Get all lines views containing in graphic view.
    * 
@@ -1569,27 +1670,15 @@ public class GraphicView extends GraphicComponent
    * @return an array containing all relations associated with the given
    *         component
    */
-  public LinkedList<LineView> getLinesViewAssociedWith(
-          GraphicComponent component) {
+  public LinkedList<LineView> getLinesViewAssociedWith(GraphicComponent component) {
     final LinkedList<LineView> list = new LinkedList<>();
 
     for (final LineView lv : linesView)
       if (lv.getFirstPoint().getAssociedComponentView().equals(component)
-              || lv.getLastPoint().getAssociedComponentView().equals(component))
+          || lv.getLastPoint().getAssociedComponentView().equals(component))
         list.add(lv);
 
     return list;
-  }
-
-  /**
-   * Same as getComponentListAtPosition(), but only for lines views.
-   * 
-   * @param pos
-   *          the location of line view to find
-   * @return the line view found or null if no line view are found
-   */
-  public LineView getLineViewAtPosition(Point pos) {
-    return getComponentListAtPosition(linesView, pos);
   }
 
   @SuppressWarnings("unchecked")
@@ -1605,8 +1694,8 @@ public class GraphicView extends GraphicComponent
   @Override
   public String getName() {
     return (name == null || name.isEmpty() ?
-        (MultiViewManager.getRootGraphicView() == this ? 
-          ROOT_VIEW_DEFAULT_NAME : NO_NAMED_VIEW) :
+            (MultiViewManager.getRootGraphicView() == this ?
+             ROOT_VIEW_DEFAULT_NAME : NO_NAMED_VIEW) :
         name);
   }
   
@@ -1614,6 +1703,31 @@ public class GraphicView extends GraphicComponent
   public void setName(String name) {
     this.name = name;
     setChanged();
+  }
+  
+  public boolean getPaintBackgroundLast(
+          ) {
+    return paintBackgroundLast;
+  }
+  
+  public void setPaintBackgroundLast(boolean enable) {
+    paintBackgroundLast = enable;
+  }
+
+  @Override
+  public void setPictureMode(boolean enable) {
+    super.setPictureMode(enable);
+
+    for (GraphicComponent c : getAllComponents())
+      c.setPictureMode(enable);
+  }
+  
+  public double getScale() {
+    return SPanelElement.getInstance().getSliderZoom().getValue() / 100.0;
+  }
+
+  public void setScale(double scale) {
+    SPanelElement.getInstance().getSliderZoom().setValue((int) (scale * 100.0));
   }
 
   /**
@@ -1653,8 +1767,8 @@ public class GraphicView extends GraphicComponent
     for (final GraphicComponent c : components) {
       final Rectangle bounds = c.getBounds();
       final Point max = new Point(bounds.x + bounds.width, bounds.y
-              + bounds.height);
-
+                                                           + bounds.height);
+      
       if (minX > bounds.x) minX = bounds.x;
       if (minY > bounds.y) minY = bounds.y;
       if (maxX < max.x) maxX = max.x;
@@ -1665,7 +1779,7 @@ public class GraphicView extends GraphicComponent
 
     // Create the buffered image with margin.
     final BufferedImage img = new BufferedImage(bounds.width + margin * 2,
-            bounds.height + margin + marginTop, type);
+        bounds.height + margin + marginTop, type);
     final Graphics2D g2 = img.createGraphics();
     Utility.setRenderQuality(g2);
 
@@ -1675,7 +1789,7 @@ public class GraphicView extends GraphicComponent
     if (type == BufferedImage.TYPE_INT_RGB) {
       g2.setColor(Color.WHITE);
       g2.fillRect(bounds.x - margin, bounds.y - margin, bounds.width + margin
-              * 2, bounds.height + margin + marginTop);
+                                                                       * 2, bounds.height + margin + marginTop);
     }
     // Paint all components on picture.
     for (final GraphicComponent c : components)
@@ -1699,18 +1813,6 @@ public class GraphicView extends GraphicComponent
     return img;
   }
 
-  public TextBoxDiagramName getTxtBoxDiagramName() {
-    return txtBoxDiagramName;
-  }
-
-  @Override
-  public void setPictureMode(boolean enable) {
-    super.setPictureMode(enable);
-
-    for (GraphicComponent c : getAllComponents())
-      c.setPictureMode(enable);
-  }
-
   /**
    * Get the scrollPane containing the scene.
    * 
@@ -1720,6 +1822,12 @@ public class GraphicView extends GraphicComponent
     return scrollPane;
   }
 
+  public ColoredComponent[] getSelectedColoredComponents() {
+    List<GraphicComponent> gc = getSelectedComponents();
+    List<ColoredComponent> colored = getColoredComponents(gc);
+    return (ColoredComponent[]) colored.toArray(new ColoredComponent[colored.size()]);
+  }
+  
   /**
    * Get all selected component containing in graphic view.
    * 
@@ -1738,15 +1846,6 @@ public class GraphicView extends GraphicComponent
       if (c.isSelected()) selected.add(c);
 
     return selected;
-  }
-
-  public List<ColoredComponent> getColoredComponents(
-          List<GraphicComponent> components) {
-    LinkedList<ColoredComponent> c = new LinkedList<>();
-    for (GraphicComponent g : components)
-      if (g instanceof ColoredComponent) c.add((ColoredComponent) g);
-    return c;
-
   }
 
   /**
@@ -1777,8 +1876,8 @@ public class GraphicView extends GraphicComponent
     for (final GraphicComponent c : components) {
       final Rectangle bounds = c.getBounds();
       final Point max = new Point(bounds.x + bounds.width, bounds.y
-              + bounds.height);
-
+                                                           + bounds.height);
+      
       if (minX > bounds.x) minX = bounds.x;
       if (minY > bounds.y) minY = bounds.y;
       if (maxX < max.x) maxX = max.x;
@@ -1791,7 +1890,7 @@ public class GraphicView extends GraphicComponent
 
     // Create the buffered image with margin.
     BufferedImage img = new BufferedImage(bounds.width + margin * 2,
-            bounds.height + margin * 2, BufferedImage.TYPE_INT_ARGB);
+        bounds.height + margin * 2, BufferedImage.TYPE_INT_ARGB);
     Graphics2D g2 = img.createGraphics();
     Utility.setRenderQuality(g2);
 
@@ -1808,11 +1907,50 @@ public class GraphicView extends GraphicComponent
     return img;
   }
   
-  private void applyBorderTitleToImage(BufferedImage img) {
-    Graphics2D g2 = img.createGraphics();
-    g2.drawRect(0, 0, img.getWidth(), img.getHeight());
+  public boolean getStopRepaint() {
+    return stopRepaint;
   }
 
+  public void setStopRepaint(boolean enable) {
+    stopRepaint = enable;
+  }
+  
+  public TextBoxDiagramName getTxtBoxDiagramName() {
+    return txtBoxDiagramName;
+  }
+  
+  public Point getVisibleCenter() {
+    Rectangle loc = getScene().getVisibleRect();
+    return new Point((int) (loc.getCenterX() * getInversedScale()),
+        (int) (loc.getCenterY() * getInversedScale()));
+  }
+  
+  public void setVisibleDiagramName(boolean visible) {
+    txtBoxDiagramName.setVisible(visible);
+    txtBoxDiagramName.repaint();
+  }
+
+  @Override
+  public Element getXmlElement(Document doc) {
+    Element graphicView = doc.createElement(getXmlTagName());
+    graphicView.setAttribute("name", getName());
+    graphicView.setAttribute("open", String.valueOf(isOpenInTab()));
+    graphicView.setAttribute("grid", String.valueOf(getGridSize()));
+
+    for (GraphicComponent c : getAllComponents()) {
+      Element el = c.getXmlElement(doc);
+      if (el != null && c.getClass() != MultiLineView.class)
+        graphicView.appendChild(el);
+    }
+    
+    return graphicView;
+  }
+  
+  @Override
+  public String getXmlTagName() {
+    return "umlView";
+  }
+  
   /**
    * Get the police zoom. Use for compute police size.
    * 
@@ -1821,43 +1959,36 @@ public class GraphicView extends GraphicComponent
   public float getZoom() {
     return zoom;
   }
+  
+  /**
+   * Set the font zoom. The zoom is multiplied with the font size for computing
+   * new size. Default value : 1.0f.
+   *
+   * @param zoom
+   *          the new zoom
+   */
+  public void setZoom(float zoom) {
+    if (zoom < 0.5) return;
 
-  @Override
-  public void gMouseDragged(MouseEvent e) {
-    if (mouseButton == MouseEvent.BUTTON1)
-      redrawRubberBand(mousePressedLocation, e.getPoint());
+    this.zoom = zoom;
+
+    // The font size can only be compute with a graphic context. We must
+    // call a repainting for update the font size before redrawing the
+    // scene.
+    getScene().paintImmediately(0, 0, 1, 1);
+    getScene().repaint();
+    
+    // Adjut the width for selected entities.
+    adjustWidthSelectedEntities();
+    
+    for (final EntityView entity : getEntitiesView())
+      
+      entity.updateHeight();
   }
 
-  @Override
-  public void gMousePressed(MouseEvent e) {
-    super.gMousePressed(e);
-
-    switch (mouseButton) {
-      case MouseEvent.BUTTON1:
-        scene.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
-        if (!isAddToSelection(e)) unselectAll();
-        break;
-
-      case MouseEvent.BUTTON2:
-        scene.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-        break;
-    }
-  }
-
-  public static boolean isAddToSelection(MouseEvent e) {
-    return OSValidator.IS_MAC ? e.isMetaDown() : e.isControlDown() || e.isShiftDown();
-  }
-
-  @Override
-  public void gMouseReleased(MouseEvent e) {
-    super.gMouseReleased(e);
-    clearRubberBand();
-    final int nbrComponentSelected = countSelectedEntities();
-
-    if (nbrComponentSelected > 0 && e.getButton() == MouseEvent.BUTTON1)
-      new StyleCross(this, e.getPoint(), nbrComponentSelected);
-
-    scene.setCursor(Cursor.getDefaultCursor());
+  public void goRepaint() {
+    setStopRepaint(false);
+    repaint();
   }
 
   /**
@@ -1878,33 +2009,9 @@ public class GraphicView extends GraphicComponent
   public boolean isAtPosition(Point mouse) {
     return true;
   }
-
-  public void copyDiagramToClipboard() {
-    Toolkit.getDefaultToolkit().getSystemClipboard()
-            .setContents(new Utility.ImageSelection(getSelectedScreen()), null);
-  }
-
-  public void deleteSelectedComponents() {
-    deleteComponents(getSelectedComponents());
-  }
   
-  public static void deleteComponents(List<GraphicComponent> components) {
-    if (components.isEmpty()) return;
-    
-    boolean isRecord = Change.isRecord();
-    Change.record();
-    
-    for (GraphicComponent c : components)
-      c.delete();
-    
-    if (!isRecord) Change.stopRecord();
-  }
-  
-  public static void deleteComponent(GraphicComponent component) {
-    boolean isRecord = Change.isRecord();
-    Change.record();
-    component.delete();
-    if (!isRecord) Change.stopRecord();
+  public boolean isOpenInTab() {
+    return MultiViewManager.isGraphicViewOpened(this);
   }
 
   @Override
@@ -1937,13 +2044,13 @@ public class GraphicView extends GraphicComponent
       for (GraphicComponent ev : e)
         if (LineCommentary.checkCreate(ev, tbc, false))
           parent.addLineView(new LineCommentary(parent, ev, tbc, new Point(),
-                  new Point(), false));
+              new Point(), false));
     }
     
     tbc.setBounds(computeVisibleCenterBounds(
-      new Dimension(tbc.getBounds().width, tbc.getBounds().height)));
+        new Dimension(tbc.getBounds().width, tbc.getBounds().height)));
     parent.addNotes(tbc);
-
+    
     if (!isRecord) 
       Change.stopRecord();
     goRepaint();
@@ -1973,15 +2080,15 @@ public class GraphicView extends GraphicComponent
 
     if (mouseButton == MouseEvent.BUTTON2) {
       int dx = (int) (mousePressedLocation.x * getScale() - e.getX()), dy = (int) (mousePressedLocation.y
-              * getScale() - e.getY());
-
+                                                                                   * getScale() - e.getY());
+      
       visibleRect.translate(dx, dy);
 
       newVisibleRect = new Rectangle(visibleRect);
     } else
       newVisibleRect = new Rectangle((int) ((double) ea.getX() * getScale()),
-              (int) ((double) ea.getY() * getScale()), 1, 1);
-
+          (int) ((double) ea.getY() * getScale()), 1, 1);
+    
     if (currentFactory != null)
       component = currentFactory;
     else
@@ -2073,7 +2180,42 @@ public class GraphicView extends GraphicComponent
       }
     }
   }
+  
+  public void moveZOrderBottomSelectedEntities() {
+    boolean isRecord = Change.isRecord();
+    Change.record();
+    
+    for (EntityView ev : getSelectedEntities())
 
+      getClassDiagram().changeZOrder(ev.getComponent(), 0);
+    
+    if (!isRecord) Change.stopRecord();
+  }
+  
+  public void moveZOrderDownSelectedEntities() {
+    boolean isRecord = Change.isRecord();
+    Change.record();
+    
+    for (EntityView ev : getSelectedEntities())
+      
+      getClassDiagram().changeZOrder(ev.getComponent(),
+                                     getEntitiesView().indexOf(ev) - 1);
+    
+    if (!isRecord) Change.stopRecord();
+  }
+  
+  public void moveZOrderTopSelectedEntities() {
+    boolean isRecord = Change.isRecord();
+    Change.record();
+    
+    for (EntityView ev : getSelectedEntities())
+      
+      getClassDiagram().changeZOrder(ev.getComponent(),
+                                     getEntitiesView().size() - 1);
+    
+    if (!isRecord) Change.stopRecord();
+  }
+  
   public void moveZOrderUpSelectedEntities() {
     LinkedList<EntityView> evs = getSelectedEntities();
     LinkedList<EntityView> evsSorted = new LinkedList<>();
@@ -2098,140 +2240,88 @@ public class GraphicView extends GraphicComponent
 
     for (EntityView ev : evsSorted)
       getClassDiagram().changeZOrder(ev.getComponent(),
-              getEntitiesView().indexOf(ev) + 1);
+                                     getEntitiesView().indexOf(ev) + 1);
 
     if (!isRecord) Change.stopRecord();
   }
-
-  public void moveZOrderDownSelectedEntities() {
-    boolean isRecord = Change.isRecord();
-    Change.record();
-
-    for (EntityView ev : getSelectedEntities())
-
-      getClassDiagram().changeZOrder(ev.getComponent(),
-              getEntitiesView().indexOf(ev) - 1);
-
-    if (!isRecord) Change.stopRecord();
+  
+  @Override
+  public void notifyAggregationCreation(Aggregation component) {
+    addAggregation(component);
   }
-
-  public void moveZOrderTopSelectedEntities() {
-    boolean isRecord = Change.isRecord();
-    Change.record();
-
-    for (EntityView ev : getSelectedEntities())
-
-      getClassDiagram().changeZOrder(ev.getComponent(),
-              getEntitiesView().size() - 1);
-
-    if (!isRecord) Change.stopRecord();
-  }
-
-  public void moveZOrderBottomSelectedEntities() {
-    boolean isRecord = Change.isRecord();
-    Change.record();
-
-    for (EntityView ev : getSelectedEntities())
-
-      getClassDiagram().changeZOrder(ev.getComponent(), 0);
-
-    if (!isRecord) Change.stopRecord();
-  }
-
-  protected MouseEvent adapteMouseEvent(MouseEvent e) {
-    return new MouseEvent(e.getComponent(), e.getID(), e.getWhen(),
-            e.getModifiersEx(), (int) (e.getX() * getInversedScale()),
-            (int) (e.getY() * getInversedScale()), e.getXOnScreen(),
-            e.getYOnScreen(), e.getClickCount(), e.isPopupTrigger(),
-            e.getButton());
-  }
-
-  public double getInversedScale() {
-    return 1 / getScale();
-  }
-
-  /**
-   * Paint the background with the specified color. A point grid is drawing with
-   * space specified by gridSize.
-   * 
-   * @param gridSize
-   *          space between point. 0 for no grid.
-   * @param color
-   *          the background-color.
-   */
-  protected void paintBackground(int gridSize, Color color, Graphics2D g2) {
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-            RenderingHints.VALUE_ANTIALIAS_OFF);
-
-    Rectangle vr = getScene().getVisibleRect();
-    boolean gradient = isBackgroundGradient();
-
-    // Paint a gradient from top to bottom.
-    if (gradient)
-      g2.setPaint(new GradientPaint(0, 0, color, 0, scene.getHeight(), color
-              .brighter()));
-    else
-      g2.setColor(color);
-
-    g2.fillRect(vr.x, vr.y, vr.width, vr.height);
-
-    // Draw grid
-    if (isVisible() && isGridEnable() && isGridVisible() && getGridSize() >= 10) {
-
-      final int grayLevel = Utility.getColorGrayLevel(getColor());
-      Color gridColor = new Color(getGridColor());
-
-      if (isAutomatiqueGridColor())
-        gridColor = new Color(grayLevel, grayLevel, grayLevel, getGridOpacity());
-      else
-        gridColor = new Color(gridColor.getRed(), gridColor.getGreen(),
-                gridColor.getBlue(), getGridOpacity());
-
-      g2.setColor(gridColor);
-
-      double gridSizeScale = (double) gridSize * getScale();
-
-      for (double x = (int) (vr.x / gridSizeScale) * gridSizeScale; x < vr.x
-              + vr.width + gridSizeScale; x += gridSizeScale)
-        for (double y = (int) (vr.y / gridSizeScale) * gridSizeScale; y < vr.y
-                + vr.height + gridSizeScale; y += gridSizeScale)
-          g2.draw(new Line2D.Double(x, y, x, y));
-    }
+  
+  @Override
+  public void notifyAssociationClassCreation(AssociationClass component) {
+    addAssociationClass(component);
   }
 
   @Override
+  public void notifyBinaryCreation(Binary component) {
+    addBinary(component);
+  }
+  
+  @Override
+  public void notifyChangeZOrder(Entity entity, int index) {
+    changeZOrder(entity, index);
+  }
+  
+  @Override
+  public void notifyClassEntityCreation(ClassEntity component) {
+    if (MultiViewManager.getSelectedGraphicView()== this ||
+        PanelClassDiagram.getInstance().isXmlImportation())
+      addClassEntity(component);
+  }
+
+  @Override
+  public void notifyCompositionCreation(Composition component) {
+    addComposition(component);
+  }
+  
+  @Override
+  public void notifyDependencyCreation(Dependency component) {
+    addDependency(component);
+  }
+
+  @Override
+  public void notifyEnumEntityCreation(EnumEntity component) {
+    addEnumEntity(component);
+  }
+
+  @Override
+  public void notifyInheritanceCreation(Inheritance component) {
+    addInheritance(component);
+  }
+  
+  @Override
+  public void notifyInnerClassCreation(InnerClass component) {
+    addInnerClass(component);
+  }
+  
+  @Override
+  public void notifyInterfaceEntityCreation(InterfaceEntity component) {
+    addInterfaceEntity(component);
+  }
+  
+  @Override
+  public void notifyMultiCreation(Multi component) {
+    addMulti(component);
+  }
+  
+  @Override
+  public void notifyRemoveComponent(IDiagramComponent component) {
+    final GraphicComponent g = searchAssociedComponent(component);
+    if (g != null)
+      g.delete();
+  }
+  
+  public void paintBackgroundFirst() {
+    setPaintBackgroundLast(false);
+    repaint();
+  }
+  
+  @Override
   public void paintComponent(Graphics2D g2) {
     paintScene(g2);
-  }
-
-  /**
-   * Paint the rubber band for selected multiple items.
-   * 
-   * @param rubberBand
-   *          the bounds of the rubber band
-   * @param color
-   *          the color of the rubber band
-   * @param g2
-   *          the graphic context
-   */
-  protected void paintRubberBand(Rectangle rubberBand, Color color,
-          Graphics2D g2) {
-    final Color transparentColor = new Color(color.getRed(), color.getGreen(),
-            color.getBlue(), 50);
-
-    final BasicStroke dashed = new BasicStroke(1.2f, BasicStroke.CAP_BUTT,
-            BasicStroke.JOIN_MITER);
-
-    g2.setStroke(dashed);
-    g2.setColor(transparentColor);
-    g2.fillRect(rubberBand.x, rubberBand.y, rubberBand.width, rubberBand.height);
-
-    g2.setColor(color);
-    g2.drawRect(rubberBand.x, rubberBand.y, rubberBand.width, rubberBand.height);
-  }
-
-  public int countSelectedComponents(Class<?> type) {
-    return Utility.count(type, getSelectedComponents());
   }
 
   /**
@@ -2268,8 +2358,8 @@ public class GraphicView extends GraphicComponent
     final Color rubberBandColor = new Color(grayLevel, grayLevel, grayLevel);
 
     paintRubberBand(rubberBand, isAutomatiqueGridColor() ? rubberBandColor
-            : new Color(getGridColor()), g2);
-
+                                : new Color(getGridColor()), g2);
+    
     g2.scale(inversedScale, inversedScale);
 
     if (getPaintBackgroundLast())
@@ -2277,8 +2367,7 @@ public class GraphicView extends GraphicComponent
   }
 
   @Override
-  public int print(Graphics g, PageFormat pageFormat, int pageIndex)
-          throws PrinterException {
+  public int print(Graphics g, PageFormat pageFormat, int pageIndex) throws PrinterException {
     
     if (pageIndex >= MAX_PRINT_PAGE)
       return NO_SUCH_PAGE;
@@ -2287,15 +2376,15 @@ public class GraphicView extends GraphicComponent
     
     BufferedImage m_bi = ExportViewImage.create(this).export();
     int wPage = (int) pageFormat.getImageableWidth(),
-        hPage = (int) pageFormat.getImageableHeight(),
-        wBi = m_bi.getWidth(),
-        hBi = m_bi.getHeight(),
+    hPage = (int) pageFormat.getImageableHeight(),
+    wBi = m_bi.getWidth(),
+    hBi = m_bi.getHeight(),
         wScaled = wBi,
         hScaled = hBi;
     
     // Compute the ratio for scaling the scene into one page.
     float wScale = (float)wBi / wPage,
-          hScale = (float)hBi / hPage;
+    hScale = (float)hBi / hPage;
     
     // If the scene overflow the page, scale it for not overbounding the page.
     if (wScale > 1.0f || hScale > 1.0f)
@@ -2318,25 +2407,12 @@ public class GraphicView extends GraphicComponent
   }
 
   /**
-   * Clear and repaint the rubber band with the new bounds compute from Points
-   * given in parameters.
-   * 
-   * @param origin
-   *          where the user clicked for make a rubber band
-   * @param mouse
-   *          the current mouse location
+   * Notify obsevers of all components. This will replace and recalculate all
+   * component's location to fit at their correct location.
    */
-  protected void redrawRubberBand(Point origin, Point mouse) {
-    // Save previous bounds for redrawing.
-    final Rectangle repaintRect = new Rectangle(rubberBand);
-
-    rubberBand = new Rectangle(origin.x, origin.y, mouse.x - origin.x, mouse.y
-            - origin.y);
-
-    rubberBand = Utility.normalizeRect(rubberBand);
-
-    scene.repaint(repaintRect);
-    scene.repaint(new Rectangle(rubberBand));
+  public void refreshAllComponents() {
+    for (GraphicComponent c : getAllComponents())
+      c.notifyObservers();
   }
 
   /**
@@ -2347,12 +2423,12 @@ public class GraphicView extends GraphicComponent
       c.delete();
     Change.clear();
   }
-
-  @Override
-  public void setColor(Color color) {
-    setBasicColor(color);
-
-    repaint();
+  
+  public void removeComponent(IDiagramComponent component) {
+    final GraphicComponent g = searchAssociedComponent(component);
+    
+    if (g != null)
+      removeComponent(g);
   }
 
   /**
@@ -2377,12 +2453,15 @@ public class GraphicView extends GraphicComponent
     success |= notes.remove(component);
 
     if (success)
-
-    component.repaint();
-
+      component.repaint();
+    
     return success;
   }
 
+  public boolean removeListenerSelectionChanged(IListenerComponentSelectionChanged i) {
+    return lcsc.remove(i);
+  }
+  
   @Override
   public void repaint() {
     scene.repaint();
@@ -2408,18 +2487,6 @@ public class GraphicView extends GraphicComponent
   }
 
   /**
-   * Select the given component and unselect all other.
-   * 
-   * @param gc
-   *          the component to selected
-   */
-  public void selectOnly(GraphicComponent gc) {
-    unselectAll();
-    gc.setSelected(true);
-    gc.notifyObservers();
-  }
-
-  /**
    * Select all diagram elements.
    */
   public void selectAll() {
@@ -2433,105 +2500,29 @@ public class GraphicView extends GraphicComponent
     PanelClassDiagram.getInstance().setDisabledUpdate(false);
   }
 
-  public void goRepaint() {
-    setStopRepaint(false);
-    repaint();
-  }
-
-  public void setStopRepaint(boolean enable) {
-    stopRepaint = enable;
-  }
-
-  public boolean getStopRepaint() {
-    return stopRepaint;
-  }
-
-  @Override
-  public void setBounds(Rectangle bounds) {
-    scene.setBounds(bounds);
-  }
-
   /**
-   * Change the current pressed component by the component given.
-   * 
-   * @param component
-   *          the new pressed component
+   * Select the given component and unselect all other.
+   *
+   * @param gc
+   *          the component to selected
    */
-  public void setComponentMousePressed(GraphicComponent component) {
-    if (component == null)
-      throw new IllegalArgumentException("component is null");
-
-    componentMousePressed = component;
+  public void selectOnly(GraphicComponent gc) {
+    unselectAll();
+    gc.setSelected(true);
+    gc.notifyObservers();
   }
-
-  public void adaptListToWindow(LinkedList<? extends GraphicComponent> list) {
-    final Rectangle limits = Utility.getLimits(list);
-    Rectangle vr = getScene().getVisibleRect(), l;
-
-    l = Utility.scaleRect(limits, getScale());
-
-    double xRatio = l.getWidth() / vr.getWidth();
-    double yRatio = l.getHeight() / vr.getHeight();
-
-    if (xRatio > yRatio)
-      setScale(getScale() / xRatio);
-    else
-      setScale(getScale() / yRatio);
-
-    // Must wait scaling.
-    SwingUtilities.invokeLater(new Runnable() {
-
+  
+  public void setColorForComponents(final Color color, ColoredComponent... components) {
+    changeComponentsColor(new ObtainColor() {
       @Override
-      public void run() {
-        getScene().scrollRectToVisible(Utility.scaleRect(limits, getScale()));
+      public Color getColor(ColoredComponent c) {
+        return color;
       }
-    });
+    }, components);
   }
-
-  public void adaptDiagramToWindow() {
-    adaptListToWindow(getAllComponents());
-  }
-
-  public void adaptSelectionToWindow() {
-    adaptListToWindow(getSelectedComponents());
-  }
-
-  public void setScale(double scale) {
-    SPanelElement.getInstance().getSliderZoom().setValue((int) (scale * 100.0));
-  }
-
-  public void backScale() {
-    setScale(getScale() + SCALE_STEP);
-  }
-
-  public void forwardScale() {
-    setScale(getScale() - SCALE_STEP);
-  }
-
-  /**
-   * Set the font zoom. The zoom is multiplied with the font size for computing
-   * new size. Default value : 1.0f.
-   * 
-   * @param zoom
-   *          the new zoom
-   */
-  public void setZoom(float zoom) {
-    if (zoom < 0.5) return;
-
-    this.zoom = zoom;
-
-    // The font size can only be compute with a graphic context. We must
-    // call a repainting for update the font size before redrawing the
-    // scene.
-    getScene().paintImmediately(0, 0, 1, 1);
-    getScene().repaint();
-
-    // Adjut the width for selected entities.
-    adjustWidthSelectedEntities();
-
-    for (final EntityView entity : getEntitiesView())
-
-      entity.updateHeight();
+  
+  public void setDefaultColorForSelectedItems() {
+    setDefaultColorForComponents(getSelectedColoredComponents());
   }
 
   /**
@@ -2542,14 +2533,8 @@ public class GraphicView extends GraphicComponent
    */
   public void showAttributsForSelectedEntity(boolean show) {
     for (SimpleEntityView ev : SimpleEntityView
-            .getSelectedSimpleEntityView(this))
+        .getSelectedSimpleEntityView(this))
       ev.setDisplayAttributes(show);
-  }
-
-  public void setDefaultForSelectedEntities(boolean show) {
-    for (SimpleEntityView ev : SimpleEntityView
-            .getSelectedSimpleEntityView(this))
-      ev.setDisplayDefault(show);
   }
 
   /**
@@ -2575,7 +2560,7 @@ public class GraphicView extends GraphicComponent
   public LinkedList<EntityView> sortXLocation(LinkedList<EntityView> list) {
     @SuppressWarnings("unchecked")
     final LinkedList<EntityView> cpyList = (LinkedList<EntityView>) list
-            .clone();
+        .clone();
     final LinkedList<EntityView> sorted = new LinkedList<EntityView>();
 
     // sort list from x location
@@ -2609,7 +2594,7 @@ public class GraphicView extends GraphicComponent
   public LinkedList<EntityView> sortYLocation(LinkedList<EntityView> list) {
     @SuppressWarnings("unchecked")
     final LinkedList<EntityView> cpyList = (LinkedList<EntityView>) list
-            .clone();
+        .clone();
     final LinkedList<EntityView> sorted = new LinkedList<EntityView>();
 
     // sort list from y location
@@ -2631,67 +2616,14 @@ public class GraphicView extends GraphicComponent
 
     return sorted;
   }
-
-  @Override
-  public String getXmlTagName() {
-    return "umlView";
-  }
-
-  @Override
-  public Element getXmlElement(Document doc) {
-    Element graphicView = doc.createElement(getXmlTagName());
-    graphicView.setAttribute("name", getName());
-    graphicView.setAttribute("open", String.valueOf(isOpenInTab()));
-    graphicView.setAttribute("grid", String.valueOf(getGridSize()));
-
-    for (GraphicComponent c : getAllComponents()) {
-      Element el = c.getXmlElement(doc);
-      if (el != null && c.getClass() != MultiLineView.class)
-        graphicView.appendChild(el);
-    }
-
-    return graphicView;
-  }
-
-  public void duplicateSelectedEntities() {
-
-    boolean isRecord = Change.isRecord();
-    Change.record();
-
-    for (final EntityView entityView : getSelectedEntities()) {
-      try {
-        final EntityView newView = entityView.clone();
-        Entity entity = ((Entity) newView.getAssociedComponent());
-
-        // Récupération par réflexion de la méthode a appelé pour l'ajout.
-        // Le nom de la méthode doit être add<Type_Class>(<Type_Class> entity);
-        try {
-          parent.addEntity(newView);
-          classDiagram
-                  .getClass()
-                  .getMethod(
-                          String.format("add%s", entity.getClass()
-                                  .getSimpleName()), entity.getClass())
-                  .invoke(classDiagram, entity);
-          newView.regenerateEntity();
-
-          SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-              entityView.setSelected(false);
-              newView.setSelected(true);
-              newView.repaint();
-            }
-          });
-        } catch (Exception e) {
-          e.printStackTrace();
-        }
-      } catch (CloneNotSupportedException e) {
-        e.printStackTrace();
-      }
-    }
-
-    if (!isRecord) Change.stopRecord();
+  
+  /**
+   * Unselect all component.
+   */
+  public void unselectAll() {
+    LinkedList<GraphicComponent> components = getAllComponents();
+    for (GraphicComponent c : components)
+      c.setSelected(false);
   }
 
   /**
@@ -2709,104 +2641,227 @@ public class GraphicView extends GraphicComponent
     getScene().revalidate();
   }
   
-  public void setVisibleDiagramName(boolean visible) {
-    txtBoxDiagramName.setVisible(visible);
-    txtBoxDiagramName.repaint();
+  protected MouseEvent adapteMouseEvent(MouseEvent e) {
+    return new MouseEvent(e.getComponent(), e.getID(), e.getWhen(),
+        e.getModifiersEx(), (int) (e.getX() * getInversedScale()),
+        (int) (e.getY() * getInversedScale()), e.getXOnScreen(),
+        e.getYOnScreen(), e.getClickCount(), e.isPopupTrigger(),
+        e.getButton());
   }
   
   @Override
-  public void notifyAggregationCreation(Aggregation component) {
-    addAggregation(component);
+  protected boolean displayGeneralMenuItems() {
+    return false;
   }
   
-  private boolean containsDiagramComponent(IDiagramComponent diagramComponent) {
-    return searchAssociedComponent(diagramComponent) != null;
-  }
+  /**
+   * Paint the background with the specified color. A point grid is drawing with
+   * space specified by gridSize.
+   *
+   * @param gridSize
+   *          space between point. 0 for no grid.
+   * @param color
+   *          the background-color.
+   */
+  protected void paintBackground(int gridSize, Color color, Graphics2D g2) {
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                        RenderingHints.VALUE_ANTIALIAS_OFF);
+    
+    Rectangle vr = getScene().getVisibleRect();
+    boolean gradient = isBackgroundGradient();
+    
+    // Paint a gradient from top to bottom.
+    if (gradient)
+      g2.setPaint(new GradientPaint(0, 0, color, 0, scene.getHeight(), color
+              .brighter()));
+    else
+      g2.setColor(color);
 
-  @Override
-  public void notifyAssociationClassCreation(AssociationClass component) {
-    addAssociationClass(component);
-  }
+    g2.fillRect(vr.x, vr.y, vr.width, vr.height);
 
-  @Override
-  public void notifyBinaryCreation(Binary component) {
-    addBinary(component);
-  }
+    // Draw grid
+    if (isVisible() && isGridEnable() && isGridVisible() && getGridSize() >= 10) {
 
-  @Override
-  public void notifyClassEntityCreation(ClassEntity component) {
-    if (MultiViewManager.getSelectedGraphicView()== this ||
-        PanelClassDiagram.getInstance().isXmlImportation())
-      addClassEntity(component);
-  }
-
-  @Override
-  public void notifyCompositionCreation(Composition component) {
-    addComposition(component);
-  }
-
-  @Override
-  public void notifyDependencyCreation(Dependency component) {
-    addDependency(component);
-  }
-
-  @Override
-  public void notifyInheritanceCreation(Inheritance component) {
-    addInheritance(component);
-  }
-
-  @Override
-  public void notifyInnerClassCreation(InnerClass component) {
-    addInnerClass(component);
-  }
-
-  @Override
-  public void notifyInterfaceEntityCreation(InterfaceEntity component) {
-    addInterfaceEntity(component);
-  }
-
-  @Override
-  public void notifyEnumEntityCreation(EnumEntity component) {
-    addEnumEntity(component);
-  }
-
-  @Override
-  public void notifyMultiCreation(Multi component) {
-    addMulti(component);
-  }
-
-  @Override
-  public void notifyChangeZOrder(Entity entity, int index) {
-    changeZOrder(entity, index);
-  }
-
-  @Override
-  public void notifyRemoveComponent(IDiagramComponent component) {
-    removeComponent(component);
-  }
-
-  public Point getVisibleCenter() {
-    Rectangle loc = getScene().getVisibleRect();
-    return new Point((int) (loc.getCenterX() * getInversedScale()),
-                     (int) (loc.getCenterY() * getInversedScale()));
-  }
-  
-  public Rectangle computeVisibleCenterBounds(Dimension size)
-  {
-    Rectangle rect = new Rectangle(size);
-    Point center = getVisibleCenter();
-    rect.x = center.x - size.width / 2;
-    rect.y = center.y - size.height / 2;
-    return rect;
+      final int grayLevel = Utility.getColorGrayLevel(getColor());
+      Color gridColor = new Color(getGridColor());
+      
+      if (isAutomatiqueGridColor())
+        gridColor = new Color(grayLevel, grayLevel, grayLevel, getGridOpacity());
+      else
+        gridColor = new Color(gridColor.getRed(), gridColor.getGreen(),
+            gridColor.getBlue(), getGridOpacity());
+      
+      g2.setColor(gridColor);
+      
+      double gridSizeScale = (double) gridSize * getScale();
+      
+      for (double x = (int) (vr.x / gridSizeScale) * gridSizeScale; x < vr.x
+                                                                        + vr.width + gridSizeScale; x += gridSizeScale)
+        for (double y = (int) (vr.y / gridSizeScale) * gridSizeScale; y < vr.y
+                + vr.height + gridSizeScale; y += gridSizeScale)
+          g2.draw(new Line2D.Double(x, y, x, y));
+    }
   }
 
   /**
-   * Notify obsevers of all components. This will replace and recalculate all
-   * component's location to fit at their correct location.
+   * Paint the rubber band for selected multiple items.
+   *
+   * @param rubberBand
+   *          the bounds of the rubber band
+   * @param color
+   *          the color of the rubber band
+   * @param g2
+   *          the graphic context
    */
-  public void refreshAllComponents() {
-    for (GraphicComponent c : getAllComponents())
-      c.notifyObservers();
+  protected void paintRubberBand(Rectangle rubberBand, Color color, Graphics2D g2) {
+    final Color transparentColor = new Color(color.getRed(), color.getGreen(),
+        color.getBlue(), 50);
+    
+    final BasicStroke dashed = new BasicStroke(1.2f, BasicStroke.CAP_BUTT,
+        BasicStroke.JOIN_MITER);
+    
+    g2.setStroke(dashed);
+    g2.setColor(transparentColor);
+    g2.fillRect(rubberBand.x, rubberBand.y, rubberBand.width, rubberBand.height);
+    
+    g2.setColor(color);
+    g2.drawRect(rubberBand.x, rubberBand.y, rubberBand.width, rubberBand.height);
+  }
+  
+  /**
+   * Clear and repaint the rubber band with the new bounds compute from Points
+   * given in parameters.
+   *
+   * @param origin
+   *          where the user clicked for make a rubber band
+   * @param mouse
+   *          the current mouse location
+   */
+  protected void redrawRubberBand(Point origin, Point mouse) {
+    // Save previous bounds for redrawing.
+    final Rectangle repaintRect = new Rectangle(rubberBand);
+    
+    rubberBand = new Rectangle(origin.x, origin.y, mouse.x - origin.x, mouse.y
+                                                                       - origin.y);
+    
+    rubberBand = Utility.normalizeRect(rubberBand);
+    
+    scene.repaint(repaintRect);
+    scene.repaint(new Rectangle(rubberBand));
+  }
+  
+  
+  public boolean createEntityWithRelations(Entity entity, Point location) {
+    
+    return addEntityWithRelations(
+        EntityView.createFromEntity(GraphicView.this, entity), 
+        location);
+  }
+  
+  public boolean createEntityWithRelations(Entity entity)
+  {
+    Point loc = getScene().getVisibleRect().getLocation();
+    loc.translate(100, 100);
+    return createEntityWithRelations(entity, loc);
+  }
+  
+  public boolean addEntityWithRelations(final EntityView entityView, final Point location) {
+    
+    if (containsDiagramComponent(entityView.getAssociedComponent()))
+    {
+      SMessageDialog.showErrorMessage(
+          "The entity " + ((Entity)entityView.getAssociedComponent()).getName() + 
+              " is already present in this view.\nYou can only add it once.");
+      return false;
+    }
+    
+    final List<RelationView> createdRelationViews = new LinkedList<>();
+    
+    addEntity(entityView);
+    
+    Entity entity1 = (Entity)entityView.getAssociedComponent();
+    HashMap<Relation, Entity> linked = entity1.getLinkedEntities();
+    for (Relation relation : linked.keySet()) {
+      Entity entity2 = linked.get(relation);
+      if (containsDiagramComponent(entity2)) {
+        EntityView source, target, entityView2 = (EntityView)searchAssociedComponent(entity2);
+        if (relation.getSource() == entity1) {
+          source = entityView;
+          target = entityView2;
+        } else {
+          source = entityView2;
+          target = entityView;
+        }
+        
+        GraphicComponent gc = createAndAddRelation(relation, source, target);
+        
+        if (gc instanceof RelationView)
+          createdRelationViews.add((RelationView)gc);
+      }
+    }
+    
+    
+    // Place the component corresponding to the mouse location drop.
+    SwingUtilities.invokeLater(new Runnable() {
+      
+      @Override
+      public void run() {
+        
+        entityView.setLocationRelativeTo(location);
+        entityView.regenerateEntity();
+        entityView.adjustWidth();
+        
+        for (RelationView rv : createdRelationViews)
+          rv.center();
+      }
+    });
+    
+    return true;
+  }
+
+  private void addSPanelListener() {
+    addListenerSelectionChanged(SPanelElement.getInstance());
+  }
+
+  private void applyBorderTitleToImage(BufferedImage img) {
+    Graphics2D g2 = img.createGraphics();
+    g2.drawRect(0, 0, img.getWidth(), img.getHeight());
+  }
+
+  private boolean containsDiagramComponent(IDiagramComponent diagramComponent) {
+    return searchAssociedComponent(diagramComponent) != null;
+  }
+    
+  private LinkedList<GraphicComponent> getCurrentComponents()
+  {
+    final LinkedList<GraphicComponent> components = new LinkedList<>();
+
+    // Order is important, it is used to compute mouse event.
+    components.addAll(linesView);
+    components.addAll(multiViews);
+    components.addAll(entities);
+    components.addAll(notes);
+
+    return components;
+  }
+
+  private <T extends GraphicComponent> LinkedList<T> getUniqueComponentsFrom(LinkedList<T> components) {
+    LinkedList<T> results = new LinkedList<>();
+    for (GraphicComponent gc : components)
+      if (!gc.existsInOthersViews())
+        results.add((T) gc);
+    return results;
+  }
+
+  public enum ViewEntity {
+
+    ALL, ONLY_ATTRIBUTES, ONLY_METHODS, NOTHING;
+
+    @Override
+    public String toString() {
+      return super.toString().charAt(0)
+              + super.toString().substring(1).toLowerCase().replace('_', ' ');
+    }
   }
   
   public interface ObtainColor {

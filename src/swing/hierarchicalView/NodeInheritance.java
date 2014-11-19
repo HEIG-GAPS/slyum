@@ -21,11 +21,7 @@ import swing.hierarchicalView.HierarchicalView.STree;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public class NodeInheritance 
-    extends AbstractNode 
-    implements ICustomizedIconNode, Observer, IClassDiagramNode
-
-{
+public class NodeInheritance extends AbstractNode {
   /**
 	 * 
 	 */

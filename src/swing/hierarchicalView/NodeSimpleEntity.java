@@ -28,6 +28,7 @@ public class NodeSimpleEntity extends NodeEntity {
     for (final Method m : simpleEntity.getMethods())
       add(new NodeMethod(m, treeModel, tree));
 
+    HierarchicalView.sortAlphabetically(this, treeModel, tree);
     treeModel.reload(this);
   }
 }

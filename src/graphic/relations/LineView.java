@@ -367,11 +367,6 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
     ligthDelete = false;
   }
 
-  @Override
-  protected boolean museDeleteAssociedComponent() {
-    return !ligthDelete || !existsInOthersViews();
-  }
-
   /**
    * This method is called when extremity must be drawed. By default LineView
    * have no extremity.

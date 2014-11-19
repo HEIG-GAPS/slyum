@@ -387,11 +387,6 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   }
   
   @Override
-  protected boolean museDeleteAssociedComponent() {
-    return !existsInOthersViews();
-  }
-
-  @Override
   public void drawSelectedEffect(Graphics2D g2) {
     if (pictureMode) return;
 
