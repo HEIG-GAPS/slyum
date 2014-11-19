@@ -15,6 +15,10 @@ public class XmlFactory {
 
   private static XmlFactory instance = new XmlFactory();
 
+  public static Document getDocument() {
+    return instance.generate();
+  }
+
   private XmlFactory() {}
 
   private Document createNewDocument() {
@@ -45,10 +49,6 @@ public class XmlFactory {
     doc.appendChild(classDiagram);
 
     return doc;
-  }
-
-  public static Document getDocument() {
-    return instance.generate();
   }
 
 }
