@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package swing.hierarchicalView;
 
 import graphic.GraphicView;
@@ -20,17 +14,13 @@ import swing.MultiViewManager;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 
-/**
- *
- * @author David Miserez <david.miserez@heig-vd.ch>
- */
 public class NodeView 
-  extends DefaultMutableTreeNode
+    extends DefaultMutableTreeNode
     implements ICustomizedIconNode, Observer {
   
   private GraphicView graphicView;
-  private DefaultTreeModel treeModel;
   private JPopupMenu popupMenu;
+  private DefaultTreeModel treeModel;
 
   public NodeView(GraphicView graphicView, DefaultTreeModel treeModel) {
     super(graphicView.getName());
@@ -71,13 +61,13 @@ public class NodeView
     popupMenu.add(item);
   }
 
-  public GraphicView getGraphicView() {
-    return graphicView;
-  }
-
   @Override
   public ImageIcon getCustomizedIcon() {
     return PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "element-view.png");
+  }
+
+  public GraphicView getGraphicView() {
+    return graphicView;
   }
 
   @Override
@@ -90,6 +80,5 @@ public class NodeView
 
   JPopupMenu getPopupMenu() {
     return popupMenu;
-  }
-  
+  }  
 }

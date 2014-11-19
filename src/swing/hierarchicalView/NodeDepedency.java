@@ -1,10 +1,8 @@
 package swing.hierarchicalView;
 
 import java.util.Observable;
-import java.util.Observer;
 
 import javax.swing.ImageIcon;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
@@ -22,9 +20,7 @@ import swing.hierarchicalView.HierarchicalView.STree;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public class NodeDepedency 
-    extends AbstractNode
-    implements IClassDiagramNode, ICustomizedIconNode, Observer {
+public class NodeDepedency extends AbstractNode {
 
   /**
    * Return the title that the node must show according to its dependency.

@@ -19,12 +19,12 @@ public class NodeEnumEntity extends NodeEntity {
   @Override
   protected void reloadChildsNodes() {
     DefaultMutableTreeNode node;
-    EnumEntity entity = (EnumEntity) super.entity;
+    EnumEntity enumEntity =  (EnumEntity)super.entity;
 
-    setUserObject(entity.getName());
+    setUserObject(enumEntity.getName());
     removeAllChildren();
 
-    for (EnumValue a : entity.getEnumValues()) {
+    for (EnumValue a : enumEntity.getEnumValues()) {
       node = new NodeEnumValue(a, treeModel, tree);
       add(node);
     }

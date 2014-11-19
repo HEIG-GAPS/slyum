@@ -29,7 +29,9 @@ import change.Change;
 import classDiagram.IDiagramComponent;
 import java.util.LinkedList;
 import swing.MultiViewManager;
+import swing.PanelClassDiagram;
 import swing.SColorAssigner;
+import swing.hierarchicalView.HierarchicalView;
 import swing.slyumCustomizedComponents.SRadioButtonMenuItem;
 
 /**
@@ -43,59 +45,66 @@ import swing.slyumCustomizedComponents.SRadioButtonMenuItem;
  * @version 1.0 - 25.07.2011
  */
 public abstract class GraphicComponent extends Observable implements ActionListener, XmlElement {
-  private Color color = Color.DARK_GRAY;
-  // Save the location of the mouse uses for computing the movement or the
-  // resize.
-  protected Point mousePressed = new Point();
-
-  protected GraphicView parent;
-
-  protected JPopupMenu popupMenu;
-  protected JMenuItem miNewNote;
-
-  private boolean selected = false;
-  private boolean visible = true;
-
-  protected boolean pictureMode = false;
-  protected Point locationContextMenuRequested;
 
   public static void askNewColorForSelectedItems() {
     MultiViewManager.getSelectedGraphicView().changeColorForSelectedItems();
   }
-  
-  public static LinkedList<GraphicComponent> getGraphicComponentsAssociedWith(
-      IDiagramComponent diagramComponent) {
+
+  public static int countGraphicComponentsAssociedWith(IDiagramComponent diagramComponent) {
+    return GraphicComponent.getGraphicComponentsAssociedWith(diagramComponent).size();
+  }
+
+  public static LinkedList<GraphicComponent> getGraphicComponentsAssociedWith(IDiagramComponent diagramComponent) {
     LinkedList<GraphicComponent> results = new LinkedList<>();
     for (GraphicView graphicView : MultiViewManager.getAllGraphicViews()) {
       GraphicComponent gc = graphicView.searchAssociedComponent(diagramComponent);
       if (gc != null)
         results.add(gc);
     }
-      
+    
     return results;
   }
+  
+  protected Point locationContextMenuRequested;
+  protected JMenuItem miNewNote;
+  // Save the location of the mouse uses for computing the movement or the
+  // resize.
+  protected Point mousePressed = new Point();
 
+  protected GraphicView parent;
+  protected boolean pictureMode = false;
+
+  protected JPopupMenu popupMenu;
+  private Color color = Color.DARK_GRAY;
+
+  private boolean selected = false;
+  private boolean visible = true;
+
+
+  public GraphicComponent(GraphicView parent) {
+    if (parent == null) throw new IllegalArgumentException("parent is null");
+    
+    this.parent = parent;
+    
+    init();
+  }
+  
   /**
    * !!! This constructor is use for create the graphic view, don't use in
    * another way !!! Graphic view is the parent for all other components, but
    * can't give itself to this constructor in its constructor...
    */
-  GraphicComponent() {
+  GraphicComponent(
+  ) {
     parent = (GraphicView) this;
 
     init();
   }
 
-  public GraphicComponent(GraphicView parent) {
-    if (parent == null) throw new IllegalArgumentException("parent is null");
-
-    this.parent = parent;
-
-    init();
-  }
-
   @Override
-  public void actionPerformed(ActionEvent e) {
+  public void actionPerformed(
+      ActionEvent e)
+  {
     switch (e.getActionCommand()) {
       case Slyum.ACTION_NEW_NOTE_ASSOCIED:
         parent.linkNewNoteWithSelectedEntities();
@@ -145,8 +154,6 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    */
   public void delete() {
     if (!parent.containsComponent(this)) return;
-    
-    boolean mustDeleteComponent = museDeleteAssociedComponent();
 
     // Unselect the component.
     setSelected(false);
@@ -156,20 +163,12 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
     parent.removeComponent(this);
 
-    // Search and remove the UML associated component.
-    final IDiagramComponent associed = getAssociedComponent();
-
-    if (associed != null && mustDeleteComponent) 
-      parent.getClassDiagram().removeComponent(associed);
-
     // Search and delete all lines (relations, associations, etc...)
     // associated with this component.
     for (final LineView lv : parent.getLinesViewAssociedWith(this))
       lv.ligthDelete();
-  }
-  
-  protected boolean museDeleteAssociedComponent() {
-    return true;
+    
+    PanelClassDiagram.refreshHierarchicalView();
   }
 
   /**
@@ -184,63 +183,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
   }
   
   public boolean existsInOthersViews() {
-    return GraphicComponent.getGraphicComponentsAssociedWith(
-        getAssociedComponent()).size() > 1;
-  }
-
-  /**
-   * Some graphic component is associed with a structural UML component (like
-   * classes, methods, relations, ...). Return null if no component are
-   * associated. !!! GraphicComponent and GraphicComponent associated with UML
-   * component should be separated in newer version !!!
-   * 
-   * @return
-   */
-  public IDiagramComponent getAssociedComponent() {
-    return null;
-  }
-
-  /**
-   * Get the bounds of this component. The bounds is the minimum (x, y) location
-   * and the width and height is compute in this way (maxX - minX) and (maxY -
-   * minY).
-   * 
-   * @return the bounds of this component.
-   */
-  public abstract Rectangle getBounds();
-
-  public GraphicView getGraphicView() {
-    return parent;
-  }
-
-  /**
-   * Get the color of this component. The color can be used by the component
-   * during drawing. But it is the responsibility of the sub class to use it or
-   * not.
-   * 
-   * @return the color of this component.
-   */
-  public Color getColor() {
-    return new Color(color.getRGB());
-  }
-
-  /**
-   * Get the mouse pressed location.
-   * 
-   * @return the mouse pressed location.
-   */
-  public Point getMousePressed() {
-    return mousePressed;
-  }
-
-  /**
-   * Get the popup menu for this component. The popup menu is shown when user
-   * make a right-click on it. Some component hides this menu and don't use it.
-   * 
-   * @return the popup menu.
-   */
-  public JPopupMenu getPopupMenu() {
-    return popupMenu;
+    return GraphicComponent.countGraphicComponentsAssociedWith(getAssociedComponent()) > 1;
   }
 
   /**
@@ -318,33 +261,110 @@ public abstract class GraphicComponent extends Observable implements ActionListe
     maybeShowPopup(e, popupMenu);
   }
 
-  public void restore() {}
+  /**
+   * Some graphic component is associed with a structural UML component (like
+   * classes, methods, relations, ...). Return null if no component are
+   * associated. !!! GraphicComponent and GraphicComponent associated with UML
+   * component should be separated in newer version !!!
+   *
+   * @return
+   */
+  public IDiagramComponent getAssociedComponent() {
+    return null;
+  }
+
+  public IDiagramComponent getAssociedXmlElement() {
+    return getAssociedComponent();
+  }
 
   /**
-   * Calls by the constructor for initialize components.
+   * Get the bounds of this component. The bounds is the minimum (x, y) location
+   * and the width and height is compute in this way (maxX - minX) and (maxY -
+   * minY).
+   *
+   * @return the bounds of this component.
    */
-  private void init() {
-    // Create context menu.
-    popupMenu = new JPopupMenu();
-    
-    JMenuItem menuItem;
+  public abstract Rectangle getBounds();
 
-    miNewNote = menuItem = makeMenuItem("New note",
-            Slyum.ACTION_NEW_NOTE_ASSOCIED, "note");
-    menuItem.setVisible(displayGeneralMenuItems());
-    popupMenu.add(menuItem);
+  /**
+   * Set the bounds for the component. Any component don't have rectangulare
+   * bounds and this method can have no effect on them. Calls the appropriate
+   * method of sub element for changed theirs bounds.
+   *
+   * @param bounds
+   *          the new bounds for this component
+   */
+  public abstract void setBounds(Rectangle bounds);
 
-    menuItem = makeMenuItem("Change color...", "ColorContextMenu", "color");
-    menuItem.setVisible(displayGeneralMenuItems());
-    popupMenu.add(menuItem);
+  /**
+   * Get the color of this component. The color can be used by the component
+   * during drawing. But it is the responsibility of the sub class to use it or
+   * not.
+   *
+   * @return the color of this component.
+   */
+  public Color getColor() {
+    return new Color(color.getRGB());
+  }
 
-    menuItem = SColorAssigner.createMenuRecentColor();
-    menuItem.setVisible(displayGeneralMenuItems());
-    popupMenu.add(menuItem);
+  /**
+   * Set the color for this component. The color can be used by the component
+   * during drawing. But it is the responsibility of the sub class to use it or
+   * not.
+   *
+   */
+  public void setColor(int rgb) {
+    setColor(new Color(rgb));
+  }
+
+  /**
+   * Set the color for this component. The color can be used by the component
+   * during drawing. But it is the responsibility of the sub class to use it or
+   * not.
+   *
+   * @param color
+   *          the new color for this component
+   */
+  public void setColor(Color color) {
+    this.color = new Color(color.getRGB());
+    repaint();
+  }
+
+  public GraphicView getGraphicView() {
+    return parent;
+  }
+
+  /**
+   * Get the mouse pressed location.
+   *
+   * @return the mouse pressed location.
+   */
+  public Point getMousePressed() {
+    return mousePressed;
+  }
+
+  public void setPictureMode(boolean enable) {
+    pictureMode = enable;
+  }
+
+  /**
+   * Get the popup menu for this component. The popup menu is shown when user
+   * make a right-click on it. Some component hides this menu and don't use it.
+   *
+   * @return the popup menu.
+   */
+  public JPopupMenu getPopupMenu() {
+    return popupMenu;
+  }
+
+  @Override
+  public Element getXmlElement(Document doc) {
+    return null;
   }
   
-  protected boolean displayGeneralMenuItems() {
-    return true;
+  @Override
+  public String getXmlTagName() {
+    return null;
   }
 
   /**
@@ -367,12 +387,40 @@ public abstract class GraphicComponent extends Observable implements ActionListe
   }
 
   /**
+   * Set the selected state for this component.
+   *
+   * @param selected
+   *          the new selected state for this component.
+   */
+  public void setSelected(boolean selected) {
+    if (isSelected() != selected) {
+      this.selected = selected;
+      repaint();
+      parent.componentSelected(selected);
+    }
+
+    setChanged();
+  }
+
+  /**
    * Return if the component is visible or not.
    * 
    * @return true if the component is visible; false otherwise
    */
   public boolean isVisible() {
     return visible;
+  }
+
+  /**
+   * Set the visible state for this component. This method repaint the
+   * component. Note that, by default, hide a component means that it will no
+   * longer be drawn.
+   *
+   * @param visible
+   */
+  public void setVisible(boolean visible) {
+    this.visible = visible;
+    repaint();
   }
 
   /**
@@ -388,8 +436,8 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    */
   public JMenuItem makeMenuItem(String name, String action, String imgIcon) {
     final ImageIcon img = PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
-            + imgIcon + ".png");
-
+                                                           + imgIcon + ".png");
+    
     final JMenuItem menuItem = new JMenuItem(name, img);
     menuItem.setActionCommand(action);
     menuItem.addActionListener(this);
@@ -407,8 +455,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    *          the group for this JRadioButtonMenuItem
    * @return the new JRadioButtonMenuItem created
    */
-  public JRadioButtonMenuItem makeRadioButtonMenuItem(String name,
-          String action, ButtonGroup group) {
+  public JRadioButtonMenuItem makeRadioButtonMenuItem(String name, String action, ButtonGroup group) {
     final JRadioButtonMenuItem rbMenuItem = new SRadioButtonMenuItem(name);
     rbMenuItem.setActionCommand(action);
     rbMenuItem.addActionListener(this);
@@ -432,8 +479,8 @@ public abstract class GraphicComponent extends Observable implements ActionListe
     if (e.isPopupTrigger()) {
       miNewNote.setEnabled(getAssociedComponent() != null);
       popupMenu.show(e.getComponent(),
-              (int) (e.getX() / gv.getInversedScale()),
-              (int) (e.getY() / gv.getInversedScale()));
+                     (int) (e.getX() / gv.getInversedScale()),
+                     (int) (e.getY() / gv.getInversedScale()));
     }
   }
 
@@ -495,6 +542,8 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    */
   public void resizeRight(MouseEvent e) {}
 
+  public void restore() {}
+
   /**
    * Calls this method for saving mouse location. Mouse location is used by
    * components for compute moving or resizing.
@@ -504,39 +553,6 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    */
   public void saveMouseLocation(MouseEvent e) {
     mousePressed = new Point(e.getPoint());
-  }
-
-  /**
-   * Set the bounds for the component. Any component don't have rectangulare
-   * bounds and this method can have no effect on them. Calls the appropriate
-   * method of sub element for changed theirs bounds.
-   * 
-   * @param bounds
-   *          the new bounds for this component
-   */
-  public abstract void setBounds(Rectangle bounds);
-
-  /**
-   * Set the color for this component. The color can be used by the component
-   * during drawing. But it is the responsibility of the sub class to use it or
-   * not.
-   * 
-   * @param color
-   *          the new color for this component
-   */
-  public void setColor(Color color) {
-    this.color = new Color(color.getRGB());
-    repaint();
-  }
-
-  /**
-   * Set the color for this component. The color can be used by the component
-   * during drawing. But it is the responsibility of the sub class to use it or
-   * not.
-   * 
-   */
-  public void setColor(int rgb) {
-    setColor(new Color(rgb));
   }
 
   /**
@@ -552,54 +568,36 @@ public abstract class GraphicComponent extends Observable implements ActionListe
   public void setMouseHoverStyle() {}
 
   /**
-   * Set the selected state for this component.
-   * 
-   * @param selected
-   *          the new selected state for this component.
-   */
-  public void setSelected(boolean selected) {
-    if (isSelected() != selected) {
-      this.selected = selected;
-      repaint();
-      parent.componentSelected(selected);
-    }
-
-    setChanged();
-  }
-
-  /**
    * Some component have different styles. Calls this method draw the component
    * with its mouse clicked style.
    */
   public void setStyleClicked() {}
 
+  protected boolean displayGeneralMenuItems() {
+    return true;
+  }
+
   /**
-   * Set the visible state for this component. This method repaint the
-   * component. Note that, by default, hide a component means that it will no
-   * longer be drawn.
-   * 
-   * @param visible
+   * Calls by the constructor for initialize components.
    */
-  public void setVisible(boolean visible) {
-    this.visible = visible;
-    repaint();
+  private void init() {
+    // Create context menu.
+    popupMenu = new JPopupMenu();
+    
+    JMenuItem menuItem;
+    
+    miNewNote = menuItem = makeMenuItem("New note",
+                                        Slyum.ACTION_NEW_NOTE_ASSOCIED, "note");
+    menuItem.setVisible(displayGeneralMenuItems());
+    popupMenu.add(menuItem);
+    
+    menuItem = makeMenuItem("Change color...", "ColorContextMenu", "color");
+    menuItem.setVisible(displayGeneralMenuItems());
+    popupMenu.add(menuItem);
+    
+    menuItem = SColorAssigner.createMenuRecentColor();
+    menuItem.setVisible(displayGeneralMenuItems());
+    popupMenu.add(menuItem);
   }
 
-  public void setPictureMode(boolean enable) {
-    pictureMode = enable;
-  }
-
-  @Override
-  public String getXmlTagName() {
-    return null;
-  }
-
-  @Override
-  public Element getXmlElement(Document doc) {
-    return null;
-  }
-
-  public IDiagramComponent getAssociedXmlElement() {
-    return getAssociedComponent();
-  }
 }

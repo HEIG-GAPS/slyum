@@ -1,7 +1,6 @@
 package swing.hierarchicalView;
 
 import classDiagram.IDiagramComponent;
-import classDiagram.relationships.Inheritance;
 import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -9,14 +8,11 @@ import swing.Slyum;
 import utility.PersonalizedIcon;
 import classDiagram.relationships.InnerClass;
 import java.util.Observable;
-import java.util.Observer;
 import javax.swing.tree.TreePath;
 import swing.PanelClassDiagram;
 import swing.hierarchicalView.HierarchicalView.STree;
 
-public class NodeInnerClass
-    extends AbstractNode 
-    implements ICustomizedIconNode, Observer, IClassDiagramNode {
+public class NodeInnerClass extends AbstractNode {
 
   private static final long serialVersionUID = -4534430187776530177L;
   public static String generateName(InnerClass innerClass) {
@@ -39,9 +35,17 @@ public class NodeInnerClass
   }
 
   @Override
+  public IDiagramComponent getAssociedComponent() {
+    return innerClass;
+  }
+
+  @Override
   public ImageIcon getCustomizedIcon() {
     return PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "innerClass.png");
   }
+
+  @Override
+  public void remove() { }
 
   @Override
   public void update(Observable observable, Object o) {
@@ -65,13 +69,5 @@ public class NodeInnerClass
       treeModel.reload(this);
     }
   }
-
-  @Override
-  public IDiagramComponent getAssociedComponent() {
-    return innerClass;
-  }
-
-  @Override
-  public void remove() { }
 
 }

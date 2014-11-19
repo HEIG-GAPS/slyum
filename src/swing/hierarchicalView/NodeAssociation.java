@@ -21,9 +21,7 @@ import swing.hierarchicalView.HierarchicalView.STree;
  * @author David Miserez
  * @version 1.0 - 28.07.2011
  */
-public class NodeAssociation 
-    extends AbstractNode 
-    implements IClassDiagramNode, ICustomizedIconNode, Observer {
+public class NodeAssociation extends AbstractNode {
 
   /**
    * Return the title that the node must show according to its association.
@@ -51,9 +49,6 @@ public class NodeAssociation
 
   private final Association association;
   private final ImageIcon imageIcon;
-  private final STree tree;
-
-  private final DefaultTreeModel treeModel;
 
   /**
    * Create a new node association with an association.
@@ -98,6 +93,12 @@ public class NodeAssociation
   }
 
   @Override
+  public void remove() {
+    for (final Role role : association.getRoles())
+      role.deleteObserver(this);
+  }
+
+  @Override
   public void update(Observable observable, Object o) {
     if (o != null && o instanceof UpdateMessage) {
       final TreePath path = new TreePath(getPath());
@@ -117,11 +118,5 @@ public class NodeAssociation
       setUserObject(generateName(association));
       treeModel.reload(this);
     }
-  }
-
-  @Override
-  public void remove() {
-    for (final Role role : association.getRoles())
-      role.deleteObserver(this);
   }
 }

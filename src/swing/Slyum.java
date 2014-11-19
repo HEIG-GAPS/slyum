@@ -58,204 +58,219 @@ import utility.SMessageDialog;
  */
 public class Slyum extends JFrame implements ActionListener {
   
-  private static final String APP_NAME = "Slyum";
-  // !! Always  X.Y.Z (for update safety), even if it's 0.
-  public static final String VERSION = "5.0.0";
+  public static final String ACTION_ABOUT = "About";
+  public static final String ACTION_ADD_VIEW = "addView";
   
-  public final static String EXTENTION = "sly";
-  public final static String FULL_EXTENTION = String.format(".%s", EXTENTION);
-  public final static String APP_DIR_NAME = APP_NAME;
-  public final static String FILE_SEPARATOR = 
-      System.getProperty("file.separator");
-  public final static Point DEFAULT_SIZE = new Point(1024, 760);
-  public static final Color TEXT_COLOR = new Color(34, 34, 34);
-  public final static Color DEFAULT_BACKGROUND = new Color(239, 239, 242);
-  public final static Color BACKGROUND_FORHEAD = new Color(246, 246, 246);
-  public final static Color THEME_COLOR = new Color(0, 122, 204); // 007ACC
-  public final static Color DEFAULT_BORDER_COLOR = new Color(169, 169, 169);
-  public static final Color DISABLE_COLOR = Color.GRAY;
+  public final static String ACTION_ADJUST_INHERITANCE = "adjust-inheritance";
+  public final static String ACTION_ADJUST_WIDTH = "AdjustWidth";
+  public final static String ACTION_ALIGN_BOTTOM = "AlignBottom";
+  public final static String ACTION_ALIGN_LEFT = "AlignLeft";
+  public final static String ACTION_ALIGN_RIGHT = "AlignRight";
+  public static final String ACTION_ALIGN_TOP = "AlignTop";
+  public final static String ACTION_CLOSE_VIEW = "closeView";
+  public final static String ACTION_COLOR = "Color";
+  public final static String ACTION_DELETE = "Delete"; 
+  public final static String ACTION_DELETE_VIEW = "deleteView";
+  public static final String ACTION_DUPLICATE = "duplicate";
+  public final static String ACTION_DUPLICATE_VIEW = "duplicateVuew";
+  public final static String ACTION_EXIT = "Exit";
+  public final static String ACTION_EXPORT_EPS = "ExportEps";
 
-  // Don't use the file separator here. Java resources are get with
-  // getResource() and didn't support back-slash character on Windows.
-  public final static String RESOURCES_PATH = "resources/";
-  public final static String ICON_PATH = RESOURCES_PATH + "icon/";
-  public final static String FONTS_PATH = RESOURCES_PATH + "fonts/";
+  public final static String ACTION_EXPORT_IMAGE = "ExportImage";
 
-  public final static int DEFAULT_FONT_SIZE = 12;
-
-  private static final String URL_UPDATE_PAGE = "https://drive.google.com/folderview?id=0B8LiFU0_u3AZdTRPY0JKallDRm8&usp=sharing";
-  private static final String URL_PROJECT_PAGE = "https://code.google.com/p/slyum/";
-  private static final String URL_ISSUES_PAGE = "https://code.google.com/p/slyum/issues/list";
-  // Properties
-  public final static boolean SHOW_CROSS_MENU = true;
-  public final static boolean SHOW_ERRORS_MESSAGES = true;
-  public final static boolean SHOW_OPENJDK_WARNING = true;
-  public final static boolean VIEW_TITLE_ON_EXPORT_DEFAULT = true;
-  public final static int WINDOWS_MAXIMIZED = Frame.MAXIMIZED_BOTH;
-  public final static Dimension WINDOWS_SIZE = new Dimension(DEFAULT_SIZE.x,
-          DEFAULT_SIZE.y);
-  public final static boolean IS_AUTO_ADJUST_INHERITANCE = true;
-  public final static Mode MODE_CURSOR = Mode.CURSOR;
+  public static final String ACTION_EXPORT_PDF = "ExportPdf";
+  public static final String ACTION_EXPORT_SVG = "ExportSvg";
+  public static final String ACTION_FULL_SCREEN = "fullScreen";
+  public final static String ACTION_HELP = "Help";
+  public final static String ACTION_KLIPPER = "Klipper";
+  public final static String ACTION_LOCATE = "locate";
 
   // Action command
   public static final String ACTION_MODE_CURSOR = "ModeCursor";
   public static final String ACTION_MODE_GRIP = "ModeGrip";
-  public static final String ACTION_ABOUT = "About";
-  public static final String ACTION_HELP = "Help";
-  public static final String ACTION_EXIT = "Exit";
-  public static final String ACTION_OPEN_RECENT_RPOJECT = "openRecentProject";
-  public static final String ACTION_PROPERTIES = "Properties";
-  public static final String ACTION_UPDATE = "Update";
-  public static final String ACTION_PATCH_NOTE = "PatchNote";
-  public static final String ACTION_REPORT_ISSUE = "ReportIssue";
-  public static final String ACTION_PROJECT_PAGE = "ProjectPage";
-  public static final String ACTION_SELECT_ALL = "SelectAll";
-  public static final String ACTION_UNSELECT_ALL = "UnselectAll";
-  public static final String ACTION_NEW_PROJECT = "NewProject";
-  public static final String ACTION_OPEN = "Open";
-  public static final String ACTION_SAVE = "Save";
-  public static final String ACTION_SAVE_AS = "SaveAs";
-  public static final String ACTION_EXPORT_IMAGE = "ExportImage";
-  public static final String ACTION_EXPORT_PDF = "ExportPdf";
-  public static final String ACTION_EXPORT_EPS = "ExportEps";
-  public static final String ACTION_EXPORT_SVG = "ExportSvg";
-  public static final String ACTION_KLIPPER = "Klipper";
-  public static final String ACTION_PRINT = "Print";
-  public static final String ACTION_PAGE_SETUP = "PageSetup";
-  public static final String ACTION_NEW_LINK_NOTE = "LinkNote";
+  public static final String ACTION_MOVE_BOTTOM = "MoveBottom";
+  public static final String ACTION_MOVE_DOWN = "MoveDown";
+  public static final String ACTION_MOVE_TOP = "MoveTop";
+  public static final String ACTION_MOVE_UP = "MoveUp";
+  public static final String ACTION_NEW_AGGREGATION = "NewAggregation";
+  public static final String ACTION_NEW_ASSOCIATION = "NewAssociation";
   public static final String ACTION_NEW_CLASS = "NewClass";
-  public static final String ACTION_NEW_INTERFACE = "NewInterface";
+  public static final String ACTION_NEW_CLASS_ASSOCIATION = "NewClassAssociation";
+  public static final String ACTION_NEW_COMPOSITION = "NewComposition";
+  public static final String ACTION_NEW_DEPENDENCY = "NewDependency";
   public static final String ACTION_NEW_ENUM = "NewEnum";
   public static final String ACTION_NEW_GENERALIZE = "NewGeneralize";
   public static final String ACTION_NEW_INNER_CLASS = "NewInnerClass";
-  public static final String ACTION_NEW_DEPENDENCY = "NewDependency";
-  public static final String ACTION_NEW_ASSOCIATION = "NewAssociation";
-  public static final String ACTION_NEW_AGGREGATION = "NewAggregation";
-  public static final String ACTION_NEW_COMPOSITION = "NewComposition";
-  public static final String ACTION_NEW_CLASS_ASSOCIATION = "NewClassAssociation";
+  public static final String ACTION_NEW_INTERFACE = "NewInterface";
+  public static final String ACTION_NEW_LINK_NOTE = "LinkNote";
   public static final String ACTION_NEW_MULTI = "NewMulti";
   public static final String ACTION_NEW_NOTE = "NewNote";
   public static final String ACTION_NEW_NOTE_ASSOCIED = "NewNoteAssocied";
-  public static final String ACTION_ALIGN_TOP = "AlignTop";
-  public static final String ACTION_ALIGN_BOTTOM = "AlignBottom";
-  public static final String ACTION_ALIGN_LEFT = "AlignLeft";
-  public static final String ACTION_ALIGN_RIGHT = "AlignRight";
-  public static final String ACTION_ADJUST_WIDTH = "AdjustWidth";
-  public static final String ACTION_UNDO = "Undo";
-  public static final String ACTION_REDO = "Redo";
-  public static final String ACTION_MOVE_TOP = "MoveTop";
-  public static final String ACTION_MOVE_UP = "MoveUp";
-  public static final String ACTION_MOVE_DOWN = "MoveDown";
-  public static final String ACTION_MOVE_BOTTOM = "MoveBottom";
-  public static final String ACTION_COLOR = "Color";
-  public static final String ACTION_DELETE = "Delete";
-  public static final String ACTION_DUPLICATE = "duplicate";
-  
+  public static final String ACTION_NEW_PROJECT = "NewProject";
+  public static final String ACTION_OPEN = "Open";
+  public static final String ACTION_OPEN_RECENT_RPOJECT = "openRecentProject";
   public static final String ACTION_OPEN_VIEW = "openView";
-  public static final String ACTION_CLOSE_VIEW = "closeView";
-  public static final String ACTION_DELETE_VIEW = "deleteView";
-  public static final String ACTION_ADD_VIEW = "addView";
-  public static final String ACTION_DUPLICATE_VIEW = "duplicateVuew";
-
-  public static final String ACTION_ADJUST_INHERITANCE = "adjust-inheritance";
+  public static final String ACTION_PAGE_SETUP = "PageSetup";
+  public static final String ACTION_PATCH_NOTE = "PatchNote";
+  public static final String ACTION_PRINT = "Print";
+  public static final String ACTION_PROJECT_PAGE = "ProjectPage";
+  public static final String ACTION_PROPERTIES = "Properties";
+  public static final String ACTION_REDO = "Redo";
+  public static final String ACTION_REPORT_ISSUE = "ReportIssue";
+  public static final String ACTION_SAVE = "Save";
+  public static final String ACTION_SAVE_AS = "SaveAs";
+  public static final String ACTION_SELECT_ALL = "SelectAll";
   
-  public static final String ACTION_FULL_SCREEN = "fullScreen";
+  public static final String ACTION_TEXTBOX_DOWN = "MoveTextBoxDown";
+  public static final String ACTION_TEXTBOX_UP = "MoveTextBoxUp";
+  public static final String ACTION_UNDO = "Undo";
+  public static final String ACTION_UNSELECT_ALL = "UnselectAll";
+  public static final String ACTION_UPDATE = "Update";
 
-  public static final String ACTION_ZOOM_ADAPT = "ZoomAdapt";
-  public static final String ACTION_ZOOM_ADAPT_SELECTION = "ZoomAdaptSelection";
-  public static final String ACTION_ZOOM_PLUS = "Zoom +";
-  public static final String ACTION_ZOOM_MINUS = "Zoom -";
   public static final String ACTION_ZOOM_0_5 = "Zoom 0.5x";
   public static final String ACTION_ZOOM_1 = "Zoom 1x";
   public static final String ACTION_ZOOM_1_5 = "Zoom 1.5x";
   public static final String ACTION_ZOOM_2 = "Zoom 2x";
 
-  public static final String ACTION_TEXTBOX_UP = "MoveTextBoxUp";
-  public static final String ACTION_TEXTBOX_DOWN = "MoveTextBoxDown";
+  public static final String ACTION_ZOOM_ADAPT = "ZoomAdapt";
+  public static final String ACTION_ZOOM_ADAPT_SELECTION = "ZoomAdaptSelection";
   
-  public static final String ACTION_LOCATE = "locate";
+  public static final String ACTION_ZOOM_MINUS = "Zoom -";
+  public final static String ACTION_ZOOM_PLUS = "Zoom +";
+  public static final String APP_NAME = "Slyum";
+  public final static String APP_DIR_NAME = APP_NAME;
+  public final static Color BACKGROUND_FORHEAD = new Color(246, 246, 246);
+  public final static Color DEFAULT_BACKGROUND = new Color(239, 239, 242);
+  public final static Color DEFAULT_BORDER_COLOR = new Color(169, 169, 169);
+  public final static Font DEFAULT_FONT;
+  public final static int DEFAULT_FONT_SIZE = 12;
+  public final static Point DEFAULT_SIZE = new Point(1024, 760);
+  public final static Color DISABLE_COLOR = Color.GRAY;
+  public final static String EXTENTION = "sly";
+  public final static String FILE_SEPARATOR = System.getProperty("file.separator");
+  // Don't use the file separator here. Java resources are get with
+  // getResource() and didn't support back-slash character on Windows.
+  public static final String RESOURCES_PATH = "resources/";
+  public final static String FONTS_PATH = RESOURCES_PATH + "fonts/";
 
-  // Accelerator
-  public final static String KEY_NEW_PROJECT = "ctrl N";
-  public final static String KEY_OPEN_PROJECT = "ctrl O";
-  public final static String KEY_SAVE = "ctrl S";
-  public final static String KEY_SAVE_AS = "ctrl shift S";
-  public final static String KEY_EXPORT_IMAGE = "ctrl E";
-  public final static String KEY_EXPORT_PDF = "ctrl F";
-  public final static String KEY_EXPORT_EPS = "ctrl G";
-  public final static String KEY_EXPORT_SVG = "ctrl V";
-  public final static String KEY_KLIPPER = "ctrl C";
-  public final static String KEY_PRINT = "ctrl P";
-  public final static String KEY_PROPERTIES = "alt ENTER";
-  public final static String KEY_EXIT = "alt F4";
+  public final static String FULL_EXTENTION = String.format(".%s", EXTENTION);
+  public final static String ICON_PATH = RESOURCES_PATH + "icon/";
+  public static final boolean IS_AUTO_ADJUST_INHERITANCE = true;
+  public static final String KEY_ADD_VIEW = "INSERT";
 
-  public final static String KEY_UNDO = "ctrl Z";
-  public final static String KEY_REDO = "ctrl Y";
-  public static final String KEY_SELECT_ALL = "ctrl A";
-  public static final String KEY_UNSELECT_ALL = "ctrl U";
-
-  public static final String KEY_COLOR = "ctrl L";
-  public static final String KEY_DUPLICATE = "ctrl D";
-  public static final String KEY_DELETE = "DELETE";
 
   public final static String KEY_ADJUST_SIZE = "ctrl 1";
-  public final static String KEY_ALIGN_UP = "ctrl UP";
+  public final static String KEY_AGGREGATION = "G";
   public final static String KEY_ALIGN_DOWN = "ctrl DOWN";
   public final static String KEY_ALIGN_LEFT = "ctrl LEFT";
   public final static String KEY_ALIGN_RIGHT = "ctrl RIGHT";
 
-  public static final String KEY_MOVE_TOP = "ctrl alt UP";
-  public static final String KEY_MOVE_UP = "ctrl alt RIGHT";
-  public static final String KEY_MOVE_DOWN = "ctrl alt LEFT";
-  public static final String KEY_MOVE_BOTTOM = "ctrl alt DOWN";
+  public static final String KEY_ALIGN_UP = "ctrl UP";
+  public static final String KEY_ASSOCIATION = "A";
+  public static final String KEY_ASSOCIATION_CLASS = "X";
+  public static final String KEY_CLASS = "C";
   
-  public final static String KEY_FULL_SCREEN = "ctrl ENTER";
   public final static String KEY_CLOSE_VIEW = "ctrl W";
+  public static final String KEY_COLOR = "ctrl L";
+  public static final String KEY_COMPOSITION = "P";
+  public static final String KEY_DEFAULT_MODE = "Q";
+  public static final String KEY_DELETE = "DELETE";
   public final static String KEY_DELETE_VIEW = "ctrl DELETE";
-  public final static String KEY_ADD_VIEW = "INSERT";
+  public final static String KEY_DEPENDENCY = "D";
+  public static final String KEY_DUPLICATE = "ctrl D";
   public final static String KEY_DUPLICATE_VIEW = "ctrl INSERT";
 
-  public final static String KEY_ZOOM_PLUS = "ctrl PLUS";
-  public final static String KEY_ZOOM_MINUS = "ctrl MINUS";
-  public final static String KEY_ZOOM_ADAPT = "ctrl shift Z";
-  public final static String KEY_ZOOM_1 = "1";
-
-  public final static String KEY_DEFAULT_MODE = "Q";
-  public final static String KEY_GRIPS_MODE = "W";
-  public final static String KEY_CLASS = "C";
   public final static String KEY_ENUM = "E";
-  public final static String KEY_INTERFACE = "I";
-  public final static String KEY_ASSOCIATION_CLASS = "X";
+  public final static String KEY_EXIT = "alt F4";
+  public final static String KEY_EXPORT_EPS = "ctrl G";
+  public final static String KEY_EXPORT_IMAGE = "ctrl E";
+
+  public final static String KEY_EXPORT_PDF = "ctrl F";
+  public static final String KEY_EXPORT_SVG = "ctrl V";
+  public static final String KEY_FULL_SCREEN = "ctrl ENTER";
+  public final static String KEY_GRIPS_MODE = "W";
+  public final static String KEY_HELP = "F1";
   public final static String KEY_INHERITANCE = "H";
   public final static String KEY_INNER_CLASS = "R";
-  public final static String KEY_DEPENDENCY = "D";
-  public final static String KEY_ASSOCIATION = "A";
-  public final static String KEY_AGGREGATION = "G";
-  public final static String KEY_COMPOSITION = "P";
-  public final static String KEY_MULTI_ASSOCIATION = "M";
-  public final static String KEY_NOTE = "O";
+  public final static String KEY_INTERFACE = "I";
+  public final static String KEY_KLIPPER = "ctrl C";
   public final static String KEY_LINK_NOTE = "L";
+  public final static String KEY_MOVE_BOTTOM = "ctrl alt DOWN";
+  public static final String KEY_MOVE_DOWN = "ctrl alt LEFT";
+  public static final String KEY_MOVE_TOP = "ctrl alt UP";
+  public static final String KEY_MOVE_UP = "ctrl alt RIGHT";
+  public final static String KEY_MULTI_ASSOCIATION = "M";
+  // Accelerator
+  public static final String KEY_NEW_PROJECT = "ctrl N";
+  public final static String KEY_NOTE = "O";
+  public final static String KEY_OPEN_PROJECT = "ctrl O";
 
-  public final static String KEY_HELP = "F1";
+  public final static String KEY_PRINT = "ctrl P";
   
-  public final static Font DEFAULT_FONT;
-  public final static Font UI_FONT;
+  public final static String KEY_PROPERTIES = "alt ENTER";
+  public final static String KEY_REDO = "ctrl Y";
+  public static final String KEY_SAVE = "ctrl S";
+  public static final String KEY_SAVE_AS = "ctrl shift S";
+  public static final String KEY_SELECT_ALL = "ctrl A";
+  public static final String KEY_UNDO = "ctrl Z";
+  public static final String KEY_UNSELECT_ALL = "ctrl U";
+  public static final String KEY_ZOOM_1 = "1";
+  public static final String KEY_ZOOM_ADAPT = "ctrl shift Z";
+  public static final String KEY_ZOOM_MINUS = "ctrl MINUS";
+  public static final String KEY_ZOOM_PLUS = "ctrl PLUS";
   
   public final static Logger LOGGER = Logger.getLogger(Slyum.class.getName());
+  
+
+  public static final Mode MODE_CURSOR = Mode.CURSOR;
+  // Properties
+  public static final boolean SHOW_CROSS_MENU = true;
+  public static final boolean SHOW_ERRORS_MESSAGES = true;
+  public static final boolean SHOW_OPENJDK_WARNING = true;
+  public static final Color TEXT_COLOR = new Color(34, 34, 34);
+  public static final Color THEME_COLOR = new Color(0, 122, 204); // 007ACC
+  public static final Font UI_FONT;
+  // !! Always  X.Y.Z (for update safety), even if it's 0.
+  public static final String VERSION = "5.0.0";
+  public static final boolean VIEW_TITLE_ON_EXPORT_DEFAULT = true;
+  public static final int WINDOWS_MAXIMIZED = Frame.MAXIMIZED_BOTH;
+  public static final Dimension WINDOWS_SIZE = new Dimension(DEFAULT_SIZE.x,
+      DEFAULT_SIZE.y);
+  private static final String ARGUMENT_EXIT_WITHOUT_ASK = "-exitWithoutAsk";
+  private static final String ARGUMENT_PRINT_CHANGE_STACK_STATE = "-printChanges";
+  private static final String URL_ISSUES_PAGE = "https://code.google.com/p/slyum/issues/list";
+  private static final String URL_PROJECT_PAGE = "https://code.google.com/p/slyum/";
+  private static final String URL_UPDATE_PAGE = "https://drive.google.com/folderview?id=0B8LiFU0_u3AZdTRPY0JKallDRm8&usp=sharing";
+  private static String[] arguments;
+
+  private static Slyum instance;
+  private static JCheckBoxMenuItem menuItemFullScreen;
+  private static JMenuItem redo;
+  private static final String ACTION_CLEAN_DIAGRAM = "CleanDiagram";
+  private static int savedDividerBottomLocation, 
+                     savedDividerLeftLocation;
+
+
+  private static JMenuItem undo;
+  private static String windowTitle = APP_NAME;
+  static {
+    DEFAULT_FONT = addSystemFont("Ubuntu-R");
+    UI_FONT = addSystemFont("segoeui");
+  }
   
   public static Font addSystemFont(String fileName) {
     Font font = null;
     try {
-      font = 
-          Font.createFont(
-              Font.TRUETYPE_FONT,
+      font =
+      Font.createFont(
+          Font.TRUETYPE_FONT,
               Slyum.class.getResource(
                   String.format("%s%s.ttf", FONTS_PATH, fileName)).openStream()
-          ).deriveFont(Font.PLAIN, DEFAULT_FONT_SIZE);
+      ).deriveFont(Font.PLAIN, DEFAULT_FONT_SIZE);
       
       // Save the new font in local environment.
-      GraphicsEnvironment ge = 
-          GraphicsEnvironment.getLocalGraphicsEnvironment();
+      GraphicsEnvironment ge =
+      GraphicsEnvironment.getLocalGraphicsEnvironment();
       ge.registerFont(font);
     } catch (IOException | FontFormatException | NullPointerException e) {
       System.err.println("Unable to import font:" + fileName);
@@ -263,63 +278,6 @@ public class Slyum extends JFrame implements ActionListener {
     return font;
   }
   
-  static {
-    DEFAULT_FONT = addSystemFont("Ubuntu-R");
-    UI_FONT = addSystemFont("segoeui");
-  }
-
-  private static final String ARGUMENT_PRINT_CHANGE_STACK_STATE = "-printChanges";
-  private static final String ARGUMENT_EXIT_WITHOUT_ASK = "-exitWithoutAsk";
-
-  private static Slyum instance;
-  private static JMenuItem undo, redo;
-  private static JCheckBoxMenuItem menuItemFullScreen;
-  private static String windowTitle = APP_NAME;
-  private static int savedDividerBottomLocation, 
-                     savedDividerLeftLocation;
-
-
-  private static String[] arguments;
-  private JMenu menuFile;
-
-  public static void main(String[] args) {
-    Locale.setDefault(Locale.ENGLISH);
-    arguments = args;
-    setUIProperties();
-    
-    try {
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (ClassNotFoundException | InstantiationException | 
-             IllegalAccessException | UnsupportedLookAndFeelException e) {
-      final String MSG = "Unable to load Look and Feel";
-      LOGGER.log(Level.SEVERE, MSG, e);
-      SMessageDialog.showErrorMessage(MSG);
-    }
-    
-    if (UpdateInfo.isUpdateCheckedAtLaunch())
-      UpdateInfo.getNewUpdate(true);
-    showWarningForOpenJDK();
-    instance = new Slyum();
-    SwingUtilities.invokeLater(new Runnable() {
-
-      @Override
-      public void run() {
-        instance.initializationComplete();
-      }
-    });
-  }
-  
-  public static void setSelectedMenuItemFullScreen(boolean selected) {
-    menuItemFullScreen.setSelected(selected);
-  }
-
-  public static boolean argumentIsChangeStackStatePrinted() {
-    for (String s : arguments)
-      if (s.equals(ARGUMENT_PRINT_CHANGE_STACK_STATE)) return true;
-
-    return false;
-  }
-
   public static boolean argumentExitWithoutAsk() {
     for (String s : arguments)
       if (s.equals(ARGUMENT_EXIT_WITHOUT_ASK)) return true;
@@ -341,6 +299,13 @@ public class Slyum extends JFrame implements ActionListener {
     return null;
   }
 
+  public static boolean argumentIsChangeStackStatePrinted() {
+    for (String s : arguments)
+      if (s.equals(ARGUMENT_PRINT_CHANGE_STACK_STATE)) return true;
+    
+    return false;
+  }
+  
   /**
    * Create the application directory.
    * 
@@ -357,6 +322,20 @@ public class Slyum extends JFrame implements ActionListener {
     }
   }
 
+  public static void enableFullScreenMode(Window window) {
+    String className = "com.apple.eawt.FullScreenUtilities";
+    String methodName = "setWindowCanFullScreen";
+    
+    try {
+      Class<?> clazz = Class.forName(className);
+      Method method = clazz.getMethod(methodName, new Class<?>[]{
+        Window.class, boolean.class});
+      method.invoke(null, window, true);
+    } catch (Throwable t) {
+      System.err.println("Full screen mode is not supported");
+    }
+  }
+  
   public static String getCurrentDirectoryFileChooser() {
     String defaultPath = null;
 
@@ -368,10 +347,41 @@ public class Slyum extends JFrame implements ActionListener {
     return defaultPath;
   }
 
+  public static void setCurrentDirectoryFileChooser(String path) {
+    PropertyLoader.getInstance().getProperties()
+        .put("PathForFileChooser", String.valueOf(path));
+    PropertyLoader.getInstance().push();
+  }
+  
+  public static Font getDefaultFont() {
+    return getInstance()._getDefaultFont();
+  }
+  
+  public static void setEnableRedoButtons(boolean enable) {
+    PanelClassDiagram.getInstance().getRedoButton().setEnabled(enable);
+    redo.setEnabled(enable);
+  }
+  
+  public static void setEnableUndoButtons(boolean enable) {
+    PanelClassDiagram.getInstance().getUndoButton().setEnabled(enable);
+    undo.setEnabled(enable);
+  }
+  
   public static Slyum getInstance() {
     return instance;
   }
 
+  
+  public static Mode getModeCursor() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.MODE_CURSOR);
+    Mode mode = MODE_CURSOR;
+    
+    if (prop != null) mode = Mode.valueOf(prop);
+    
+    return mode;
+  }
+  
   public static String getPathAppDir() {
     String fileName = "";
     String appData = System.getenv("APPDATA");
@@ -390,111 +400,8 @@ public class Slyum extends JFrame implements ActionListener {
     return fileName;
   }
 
-  public static boolean isShowOpenJDKWarning() {
-    String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty("showOpenJDKWarning");
-    boolean enable = SHOW_OPENJDK_WARNING;
-
-    if (prop != null) enable = Boolean.parseBoolean(prop);
-
-    return enable;
-  }
-
-  public static boolean isFullScreenMode() {
-    String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.FULL_SCREEN_MODE);
-    boolean enable = false;
-
-    if (prop != null) enable = Boolean.parseBoolean(prop);
-
-    return enable;
-  }
-
-  public static void setFullScreenMode(boolean fullScreen) {
-    PropertyLoader.getInstance().getProperties()
-                  .put(PropertyLoader.FULL_SCREEN_MODE, String.valueOf(fullScreen));
-    PropertyLoader.getInstance().push();
-  }
-
-  
-  public static boolean isViewTitleOnExport() {
-    String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.VIEW_TITLE_ON_EXPORT);
-    boolean enable = VIEW_TITLE_ON_EXPORT_DEFAULT;
-    if (prop != null) enable = Boolean.parseBoolean(prop);
-    return enable;
-  }
-
-  public static boolean isAutoAdjustInheritance() {
-    String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.AUTO_ADJUST_INHERITANCE);
-    boolean enable = IS_AUTO_ADJUST_INHERITANCE;
-
-    if (prop != null) enable = Boolean.parseBoolean(prop);
-
-    return enable;
-  }
-
-  public static Mode getModeCursor() {
-    String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.MODE_CURSOR);
-    Mode mode = MODE_CURSOR;
-
-    if (prop != null) mode = Mode.valueOf(prop);
-
-    return mode;
-  }
-
-  public static boolean isShowCrossMenu() {
-    final String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty("ShowCrossMenu");
-    boolean enable = SHOW_CROSS_MENU;
-
-    if (prop != null) enable = Boolean.parseBoolean(prop);
-
-    return enable;
-  }
-
-  public static boolean isShowErrorMessage() {
-    final String prop = PropertyLoader.getInstance().getProperties()
-            .getProperty("ShowErrorMessages");
-    boolean enable = SHOW_ERRORS_MESSAGES;
-
-    if (prop != null) enable = Boolean.parseBoolean(prop);
-
-    return enable;
-  }
-
-  public static void setCurrentDirectoryFileChooser(String path) {
-    PropertyLoader.getInstance().getProperties()
-            .put("PathForFileChooser", String.valueOf(path));
-    PropertyLoader.getInstance().push();
-  }
-
-  public static void setEnableRedoButtons(boolean enable) {
-    PanelClassDiagram.getInstance().getRedoButton().setEnabled(enable);
-    redo.setEnabled(enable);
-  }
-
-  public static void setEnableUndoButtons(boolean enable) {
-    PanelClassDiagram.getInstance().getUndoButton().setEnabled(enable);
-    undo.setEnabled(enable);
-  }
-
-  public static void setShowCrossMenu(boolean show) {
-    PropertyLoader.getInstance().getProperties().put("ShowCrossMenu", show);
-    PropertyLoader.getInstance().push();
-  }
-
-  public static void setShowErrorMessage(boolean show) {
-    PropertyLoader.getInstance().getProperties().put("ShowErrorMessages", show);
-    PropertyLoader.getInstance().push();
-  }
-
-  public static void setShowOpenJDKWarning(boolean show) {
-    PropertyLoader.getInstance().getProperties()
-            .put("showOpenJDKWarning", show);
-    PropertyLoader.getInstance().push();
+  public static void setSelectedMenuItemFullScreen(boolean selected) {
+    menuItemFullScreen.setSelected(selected);
   }
 
   public static void setSmallIcons(boolean use) {
@@ -506,34 +413,167 @@ public class Slyum extends JFrame implements ActionListener {
     Slyum.getInstance().setTitle(windowTitle + (visible ? "*" : ""));
   }
 
-  private static void showWarningForOpenJDK() {
-    if (isShowOpenJDKWarning() && OSValidator.IS_UNIX)
-      new NoRepopDialog(
-              "Problems are observed with OpenJRE. If you use OpenJRE, we encourage you to get official Sun JRE.")
-              .setVisible(true);
+  public static boolean isAutoAdjustInheritance() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.AUTO_ADJUST_INHERITANCE);
+    boolean enable = IS_AUTO_ADJUST_INHERITANCE;
+    
+    if (prop != null) enable = Boolean.parseBoolean(prop);
+    
+    return enable;
+  }
+
+  public static boolean isFullScreenMode() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.FULL_SCREEN_MODE);
+    boolean enable = false;
+    
+    if (prop != null) enable = Boolean.parseBoolean(prop);
+
+    return enable;
+  }
+
+  public static void setFullScreenMode(boolean fullScreen) {
+    PropertyLoader.getInstance().getProperties()
+        .put(PropertyLoader.FULL_SCREEN_MODE, String.valueOf(fullScreen));
+    PropertyLoader.getInstance().push();
+  }
+
+  public static boolean isShowCrossMenu() {
+    final String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty("ShowCrossMenu");
+    boolean enable = SHOW_CROSS_MENU;
+
+    if (prop != null) enable = Boolean.parseBoolean(prop);
+
+    return enable;
+  }
+
+  public static void setShowCrossMenu(boolean show) {
+    PropertyLoader.getInstance().getProperties().put("ShowCrossMenu", show);
+    PropertyLoader.getInstance().push();
+  }
+
+  public static boolean isShowErrorMessage() {
+    final String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty("ShowErrorMessages");
+    boolean enable = SHOW_ERRORS_MESSAGES;
+
+    if (prop != null) enable = Boolean.parseBoolean(prop);
+
+    return enable;
+  }
+
+  public static void setShowErrorMessage(boolean show) {
+    PropertyLoader.getInstance().getProperties().put("ShowErrorMessages", show);
+    PropertyLoader.getInstance().push();
+  }
+
+  public static boolean isShowOpenJDKWarning() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty("showOpenJDKWarning");
+    boolean enable = SHOW_OPENJDK_WARNING;
+    
+    if (prop != null) enable = Boolean.parseBoolean(prop);
+    
+    return enable;
+  }
+
+  public static void setShowOpenJDKWarning(boolean show) {
+    PropertyLoader.getInstance().getProperties()
+        .put("showOpenJDKWarning", show);
+    PropertyLoader.getInstance().push();
+  }
+
+  public static boolean isViewTitleOnExport() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.VIEW_TITLE_ON_EXPORT);
+    boolean enable = VIEW_TITLE_ON_EXPORT_DEFAULT;
+    if (prop != null) enable = Boolean.parseBoolean(prop);
+    return enable;
+  }
+
+  public static void main(String[] args) {
+    Locale.setDefault(Locale.ENGLISH);
+    arguments = args;
+    setUIProperties();
+    
+    try {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    } catch (ClassNotFoundException | InstantiationException |
+        IllegalAccessException | UnsupportedLookAndFeelException e) {
+      final String MSG = "Unable to load Look and Feel";
+      LOGGER.log(Level.SEVERE, MSG, e);
+      SMessageDialog.showErrorMessage(MSG);
+    }
+    
+    if (UpdateInfo.isUpdateCheckedAtLaunch())
+      UpdateInfo.getNewUpdate(true);
+    showWarningForOpenJDK();
+    instance = new Slyum();
+    SwingUtilities.invokeLater(new Runnable() {
+      
+      @Override
+      public void run() {
+        instance.initializationComplete();
+      }
+    });
+  }
+
+  public static void openURL(String url) {
+    try {
+      java.awt.Desktop.getDesktop().browse(new URI(url));
+    } catch (URISyntaxException | IOException e) {
+      SMessageDialog
+          .showErrorMessage("Unable to open " + url + ".");
+    }
   }
 
   public static void updateWindowTitle(File projectName) {
     windowTitle = APP_NAME
-            + (projectName == null ? "" : " - " + projectName.getPath());
+                  + (projectName == null ? "" : " - " + projectName.getPath());
     Slyum.getInstance().setTitle(windowTitle);
   }
 
+  /**
+   * Initialize the properties of Slyum.
+   */
+  private static void setUIProperties() {
+    System.setProperty("awt.useSystemAAFontSettings", "on");
+    System.setProperty("swing.aatext", "true");
+    
+    Font f = UI_FONT.deriveFont(13.0f);
+    UIManager.put("Button.font", f);
+    UIManager.put("Label.font", f);
+    UIManager.put("CheckBox.font", f);
+    UIManager.put("RadioButton.font", f);
+    UIManager.put("TabbedPane.font", f);
+    UIManager.put("TitledBorder.font", f);
+    UIManager.put("List.font", f);
+    UIManager.put("Menu.font", f);
+    UIManager.put("MenuItem.font", f);
+    UIManager.put("RadioButtonMenuItem.font", f);
+    UIManager.put("ComboBox.font", f);
+    UIManager.put("Table.font", f);
+    UIManager.put("TextField.font", f);
+    UIManager.put("TextArea.font", f);
+    UIManager.put("OptionPane.informationIcon", PersonalizedIcon.getInfoIcon());
+    UIManager.put("OptionPane.errorIcon", PersonalizedIcon.getErrorIcon());
+    UIManager.put("OptionPane.warningIcon", PersonalizedIcon.getWarningIcon());
+    UIManager.put("OptionPane.questionIcon", PersonalizedIcon.getQuestionIcon());
+  }
+
+  private static void showWarningForOpenJDK() {
+    if (isShowOpenJDKWarning() && OSValidator.IS_UNIX)
+      new NoRepopDialog(
+          "Problems are observed with OpenJRE. If you use OpenJRE, we encourage you to get official Sun JRE.")
+          .setVisible(true);
+  }
+
   public Font defaultFont;
+  private JMenu menuFile;
   private JMenuItem menuItemLocate;
   private JMenu menuOpenViews;
-
-  public JMenuItem getMenuItemLocate() {
-    return menuItemLocate;
-  }
-
-  public Font _getDefaultFont() {
-    return defaultFont;
-  }
-
-  public static Font getDefaultFont() {
-    return getInstance()._getDefaultFont();
-  }
 
   /**
    * Create a new Slyum :D (slyyy slyy slyyyyy)!
@@ -546,108 +586,8 @@ public class Slyum extends JFrame implements ActionListener {
     initEventListener();
   }
 
-  public void initializationComplete() {
-    SPanelDiagramComponent.getInstance().setMode(getModeCursor());
-    instance.setVisible(true);
-
-    // Locate dividers.
-    SwingUtilities.invokeLater(new Runnable() {
-
-      @Override
-      public void run() {
-
-        PanelClassDiagram panel = PanelClassDiagram.getInstance();
-        Properties properties = PropertyLoader.getInstance().getProperties();
-        String dividerBottom = properties
-                .getProperty(PropertyLoader.DIVIDER_BOTTOM), dividerLeft = properties
-                .getProperty(PropertyLoader.DIVIDER_LEFT);
-
-        if (dividerBottom != null)
-          panel.setDividerBottom(Float.valueOf(dividerBottom));
-
-        if (dividerLeft != null)
-          panel.setDividerLeft(Float.valueOf(dividerLeft));
-        
-        if (isFullScreenMode())
-          panel.setFullScreen(true);
-        
-        IssuesInformation.mustDisplayMessage();
-      }
-    });
-
-    String file = argumentGetFile();
-    if (file == null) file = RecentProjectManager.getMoreRecentFile();
-
-    if (file != null) PanelClassDiagram.openSlyFile(file);
-  }
-
-  private void initFont() {
-    defaultFont = DEFAULT_FONT;
-  }
-
-  private void initEventListener() {
-    addWindowListener(new WindowAdapter() {
-
-      @Override
-      public void windowActivated(WindowEvent e) {
-        PanelClassDiagram.refresh();
-      }
-
-      @Override
-      public void windowClosing(WindowEvent e) {
-        super.windowClosing(e);
-        exit();
-      }
-    });
-  }
-
-  public static void enableFullScreenMode(Window window) {
-    String className = "com.apple.eawt.FullScreenUtilities";
-    String methodName = "setWindowCanFullScreen";
-
-    try {
-      Class<?> clazz = Class.forName(className);
-      Method method = clazz.getMethod(methodName, new Class<?>[]{
-                Window.class, boolean.class});
-      method.invoke(null, window, true);
-    } catch (Throwable t) {
-      System.err.println("Full screen mode is not supported");
-    }
-  }
-  
-  private void handleMacOSX() {
-    if (OSValidator.IS_MAC) {
-      System.setProperty("apple.laf.useScreenMenuBar", "true");
-      enableFullScreenMode(this);
-      try {
-        // Generate and register the OSXAdapter, passing it a hash of all the
-        // methods we wish to
-        // use as delegates for various com.apple.eawt.ApplicationListener
-        // methods
-        OSXAdapter.setQuitHandler(this,
-                getClass().getDeclaredMethod("exit", (Class[]) null));
-        OSXAdapter.setAboutHandler(this,
-                getClass().getDeclaredMethod("openAbout", (Class[]) null));
-        OSXAdapter.setPreferencesHandler(this,
-                getClass().getDeclaredMethod("openProperties", (Class[]) null));
-        // OSXAdapter.setFileHandler(this,
-        // getClass().getDeclaredMethod("loadImageFile", new
-        // Class[]{String.class}));
-      } catch (NoSuchMethodException | SecurityException e) {
-        System.err.println("Error while loading the OSXAdapter:");
-        Writer sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-      }
-    }
-  }
-
-  public void openAbout() {
-    new AboutBox(this);
-  }
-
-  public void openProperties() {
-    new SProperties();
+  public Font _getDefaultFont() {
+    return defaultFont;
   }
 
   @Override
@@ -671,11 +611,11 @@ public class Slyum extends JFrame implements ActionListener {
       case ACTION_OPEN_RECENT_RPOJECT:
         if (e.getSource() instanceof JMenuItemHistory)
           PanelClassDiagram.getInstance().openFromXmlAndAsk(
-                  new File(((JMenuItemHistory) e.getSource()).getHistoryPath()
-                          .toString()));
+              new File(((JMenuItemHistory) e.getSource()).getHistoryPath()
+                  .toString()));
         else
           SMessageDialog
-                  .showErrorMessage("An error occured while opening project. Please report.");
+              .showErrorMessage("An error occured while opening project. Please report.");
         break;
       case ACTION_PAGE_SETUP:
         SlyumPrinterJob.pageDialog(MultiViewManager.getSelectedGraphicView());
@@ -713,11 +653,11 @@ public class Slyum extends JFrame implements ActionListener {
         break;
       case ACTION_ZOOM_ADAPT:
         MultiViewManager.getSelectedGraphicView()
-                .adaptDiagramToWindow();
+            .adaptDiagramToWindow();
         break;
       case ACTION_ZOOM_ADAPT_SELECTION:
         MultiViewManager.getSelectedGraphicView()
-                .adaptSelectionToWindow();
+            .adaptSelectionToWindow();
         break;
       case ACTION_ZOOM_1:
         MultiViewManager.getSelectedGraphicView().setScale(1.0);
@@ -756,7 +696,7 @@ public class Slyum extends JFrame implements ActionListener {
         break;
       case ACTION_DELETE_VIEW:
         try {
-        MultiViewManager.removeSelectedView();
+          MultiViewManager.removeSelectedView();
         } catch (IllegalArgumentException ex) {
           SMessageDialog.showErrorMessage(ex.getMessage());
         }
@@ -770,58 +710,170 @@ public class Slyum extends JFrame implements ActionListener {
       case ACTION_EXPORT_EPS:
         PanelClassDiagram.getInstance().exportAsVectoriel("eps", new String[] {"pdf", "svg", "eps"});
         break;
+      case ACTION_CLEAN_DIAGRAM:
+        PanelClassDiagram.cleanComponents();
+        break;
     }
   }
 
-  /**
-   * Initialize the properties of the frame.
-   */
-  private void setFrameProperties() {
-    setName(APP_NAME);
-    setTitle(getName());
-    setIconImage(PersonalizedIcon.getLogo().getImage());
-    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-    setMinimumSize(new Dimension(400, 400));
-    setSize(WINDOWS_SIZE);
-    setExtendedState(WINDOWS_MAXIMIZED);
-    setContentPane(PanelClassDiagram.getInstance());
-  }
-
-  /**
-   * Initialize the properties of Slyum.
-   */
-  private static void setUIProperties() {
-    System.setProperty("awt.useSystemAAFontSettings", "on");
-    System.setProperty("swing.aatext", "true");
-
-    Font f = UI_FONT.deriveFont(13.0f);
-    UIManager.put("Button.font", f);
-    UIManager.put("Label.font", f);
-    UIManager.put("CheckBox.font", f);
-    UIManager.put("RadioButton.font", f);
-    UIManager.put("TabbedPane.font", f);
-    UIManager.put("TitledBorder.font", f);
-    UIManager.put("List.font", f);
-    UIManager.put("Menu.font", f);
-    UIManager.put("MenuItem.font", f);
-    UIManager.put("RadioButtonMenuItem.font", f);
-    UIManager.put("ComboBox.font", f);
-    UIManager.put("Table.font", f);
-    UIManager.put("TextField.font", f);
-    UIManager.put("TextArea.font", f);
-    UIManager.put("OptionPane.informationIcon", PersonalizedIcon.getInfoIcon());
-    UIManager.put("OptionPane.errorIcon", PersonalizedIcon.getErrorIcon());
-    UIManager.put("OptionPane.warningIcon", PersonalizedIcon.getWarningIcon());
-    UIManager.put("OptionPane.questionIcon", PersonalizedIcon.getQuestionIcon());
-  }
-
-  public static void openURL(String url) {
-    try {
-      java.awt.Desktop.getDesktop().browse(new URI(url));
-    } catch (URISyntaxException | IOException e) {
-      SMessageDialog
-              .showErrorMessage("Unable to open " + url + ".");
+  public JMenuItem createMenuItem(String text, String iconName, int mnemonic, String accelerator, String actionCommand, ActionListener al) {
+    JMenuItem item;
+    final String imgLocation = ICON_PATH + iconName + ".png";
+    
+    final ImageIcon icon = PersonalizedIcon.createImageIcon(imgLocation);
+    
+    item = new JMenuItem(text, icon);
+    item.setMnemonic(mnemonic);
+    item.setActionCommand(actionCommand);
+    if (accelerator != null && accelerator.contains("ctrl")
+        && OSValidator.IS_MAC) {
+      accelerator = accelerator.replace("ctrl", "meta");
+      accelerator = accelerator.replace("control", "meta");
     }
+    item.setAccelerator(KeyStroke.getKeyStroke(accelerator));
+    item.addActionListener(al);
+    
+    return item;
+  }
+  
+  public JMenuItem createMenuItem(String text, String iconName, int mnemonic, String accelerator, String actionCommand, SButton link) {
+    JMenuItem item = createMenuItem(text, iconName, mnemonic, accelerator,
+                                                              actionCommand, link.getActionListeners()[0]);
+    
+    link.linkComponent(item);
+    
+    return item;
+  }
+
+  public JMenuItem createMenuItem(String text, String iconName, int mnemonic, String accelerator, String actionCommand) {
+    return createMenuItem(text, iconName, mnemonic, accelerator, actionCommand,
+            this);
+  }
+
+  public JMenuItem createMenuItemDisable(String text, String iconName, int mnemonic, String accelerator, String actionCommand, SButton link) {
+    JMenuItem item = createMenuItem(text, iconName, mnemonic, accelerator,
+                                                              actionCommand, link);
+    
+    item.setEnabled(false);
+    
+    return item;
+  }
+  
+  public void deleteMenuItemHistory() {
+    boolean remove = false;
+    for (int i = 0; i < menuFile.getItemCount(); i++) {
+      JMenuItem m = menuFile.getItem(i);
+      if (m != null && m.getActionCommand().equals(ACTION_OPEN_RECENT_RPOJECT)) {
+        remove = true;
+        menuFile.remove(m);
+        i--;
+      }
+    }
+
+    // Suppression du séparateur.
+    if (remove) menuFile.remove((OSValidator.IS_MAC ? 10 : 14));
+  }
+  
+  /**
+   * Quit the app.
+   *
+   * This method is public because on the MacOSX handler.
+   *
+   * @return True if the exit operation could be done or False if it has been
+   *         canceled.
+   */
+  public boolean exit() {
+    PanelClassDiagram p = PanelClassDiagram.getInstance();
+    
+    if (argumentExitWithoutAsk())
+      _exit();
+    else
+      switch (p.askSavingCurrentProject()) {
+        case JOptionPane.CANCEL_OPTION:
+          return false;
+          
+        case JOptionPane.YES_OPTION:
+          p.saveToXML(false);
+          _exit();
+          break;
+
+        case JOptionPane.NO_OPTION:
+          _exit();
+          break;
+      }
+    return true;
+  }
+  
+  public JMenuItem getMenuItemLocate() {
+    return menuItemLocate;
+  }
+  
+  public void initializationComplete() {
+    SPanelDiagramComponent.getInstance().setMode(getModeCursor());
+    instance.setVisible(true);
+    
+    // Locate dividers.
+    SwingUtilities.invokeLater(new Runnable() {
+      
+      @Override
+      public void run() {
+        
+        PanelClassDiagram panel = PanelClassDiagram.getInstance();
+        Properties properties = PropertyLoader.getInstance().getProperties();
+        String dividerBottom = properties
+            .getProperty(PropertyLoader.DIVIDER_BOTTOM), dividerLeft = properties
+                .getProperty(PropertyLoader.DIVIDER_LEFT);
+        
+        if (dividerBottom != null)
+          panel.setDividerBottom(Float.valueOf(dividerBottom));
+        
+        if (dividerLeft != null)
+          panel.setDividerLeft(Float.valueOf(dividerLeft));
+        
+        if (isFullScreenMode())
+          panel.setFullScreen(true);
+        
+        IssuesInformation.mustDisplayMessage();
+      }
+    });
+    
+    String file = argumentGetFile();
+    if (file == null) file = RecentProjectManager.getMoreRecentFile();
+    
+    if (file != null) PanelClassDiagram.openSlyFile(file);
+  }
+  
+  public void openAbout() {
+    new AboutBox(this);
+  }
+  
+  public void openProperties() {
+    new SProperties();
+  }
+  
+  public void updateMenuItemHistory() {
+    deleteMenuItemHistory();
+    
+    List<String> histories = RecentProjectManager.getHistoryList();
+    
+    if (histories.size() > 0)
+      menuFile.insertSeparator((OSValidator.IS_MAC ? 10 : 14));
+    
+    for (String s : histories) {
+      JMenuItemHistory menuItem = new JMenuItemHistory(formatHistoryEntry(s));
+      menuItem.setActionCommand(ACTION_OPEN_RECENT_RPOJECT);
+      menuItem.addActionListener(this);
+      menuItem.setHistoryPath(Paths.get(s));
+      menuFile.add(menuItem, (OSValidator.IS_MAC ? 10 : 15));
+    }
+  }
+  
+  private void _exit() {
+    // Save properties before closing.
+    PanelClassDiagram.getInstance().saveSplitLocationInProperties();
+    setFullScreenMode(menuItemFullScreen.isSelected());
+
+    System.exit(0);
   }
 
   /**
@@ -1159,6 +1211,12 @@ public class Slyum extends JFrame implements ActionListener {
       // Menu item Zoom2x
       menuItem = createMenuItem("2:1 (200 %)", "", 0, null, ACTION_ZOOM_2);
       subMenu.add(menuItem);
+      menu.addSeparator();
+      
+      menuItem = new JMenuItem("Clean diagram");
+      menuItem.setActionCommand(ACTION_CLEAN_DIAGRAM);
+      menuItem.addActionListener(this);
+      menu.add(menuItem);
 
       menu.addSeparator();
       // Menu item default mode
@@ -1283,44 +1341,12 @@ public class Slyum extends JFrame implements ActionListener {
 
       // Menu item About
       menuItem = createMenuItem("About Slyum...", "about", KeyEvent.VK_A, null,
-              ACTION_ABOUT);
+                                                                          ACTION_ABOUT);
       menu.add(menuItem);
     }
 
     // Apply the menu bar.
     setJMenuBar(menuBar);
-  }
-
-  public void deleteMenuItemHistory() {
-    boolean remove = false;
-    for (int i = 0; i < menuFile.getItemCount(); i++) {
-      JMenuItem m = menuFile.getItem(i);
-      if (m != null && m.getActionCommand().equals(ACTION_OPEN_RECENT_RPOJECT)) {
-        remove = true;
-        menuFile.remove(m);
-        i--;
-      }
-    }
-
-    // Suppression du séparateur.
-    if (remove) menuFile.remove((OSValidator.IS_MAC ? 10 : 14));
-  }
-
-  public void updateMenuItemHistory() {
-    deleteMenuItemHistory();
-
-    List<String> histories = RecentProjectManager.getHistoryList();
-
-    if (histories.size() > 0)
-      menuFile.insertSeparator((OSValidator.IS_MAC ? 10 : 14));
-
-    for (String s : histories) {
-      JMenuItemHistory menuItem = new JMenuItemHistory(formatHistoryEntry(s));
-      menuItem.setActionCommand(ACTION_OPEN_RECENT_RPOJECT);
-      menuItem.addActionListener(this);
-      menuItem.setHistoryPath(Paths.get(s));
-      menuFile.add(menuItem, (OSValidator.IS_MAC ? 10 : 15));
-    }
   }
 
   private String formatHistoryEntry(String entry) {
@@ -1338,91 +1364,75 @@ public class Slyum extends JFrame implements ActionListener {
 
     return text;
   }
-
-  public JMenuItem createMenuItem(String text, String iconName, int mnemonic,
-          String accelerator, String actionCommand, ActionListener al) {
-    JMenuItem item;
-    final String imgLocation = ICON_PATH + iconName + ".png";
-
-    final ImageIcon icon = PersonalizedIcon.createImageIcon(imgLocation);
-
-    item = new JMenuItem(text, icon);
-    item.setMnemonic(mnemonic);
-    item.setActionCommand(actionCommand);
-    if (accelerator != null && accelerator.contains("ctrl")
-            && OSValidator.IS_MAC) {
-      accelerator = accelerator.replace("ctrl", "meta");
-      accelerator = accelerator.replace("control", "meta");
+  
+  private void handleMacOSX() {
+    if (OSValidator.IS_MAC) {
+      System.setProperty("apple.laf.useScreenMenuBar", "true");
+      enableFullScreenMode(this);
+      try {
+        // Generate and register the OSXAdapter, passing it a hash of all the
+        // methods we wish to
+        // use as delegates for various com.apple.eawt.ApplicationListener
+        // methods
+        OSXAdapter.setQuitHandler(this,
+                                  getClass().getDeclaredMethod("exit", (Class[]) null));
+        OSXAdapter.setAboutHandler(this,
+                                   getClass().getDeclaredMethod("openAbout", (Class[]) null));
+        OSXAdapter.setPreferencesHandler(this,
+                                         getClass().getDeclaredMethod("openProperties", (Class[]) null));
+        // OSXAdapter.setFileHandler(this,
+        // getClass().getDeclaredMethod("loadImageFile", new
+        // Class[]{String.class}));
+      } catch (NoSuchMethodException | SecurityException e) {
+        System.err.println("Error while loading the OSXAdapter:");
+        Writer sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+      }
     }
-    item.setAccelerator(KeyStroke.getKeyStroke(accelerator));
-    item.addActionListener(al);
-
-    return item;
   }
 
-  public JMenuItem createMenuItem(String text, String iconName, int mnemonic,
-          String accelerator, String actionCommand, SButton link) {
-    JMenuItem item = createMenuItem(text, iconName, mnemonic, accelerator,
-            actionCommand, link.getActionListeners()[0]);
+  private void initEventListener() {
+    addWindowListener(new WindowAdapter() {
 
-    link.linkComponent(item);
-
-    return item;
+      @Override
+      public void windowActivated(WindowEvent e) {
+        PanelClassDiagram.refresh();
+      }
+      
+      @Override
+      public void windowClosing(WindowEvent e) {
+        super.windowClosing(e);
+        exit();
+      }
+    });
   }
-
-  public JMenuItem createMenuItemDisable(String text, String iconName,
-          int mnemonic, String accelerator, String actionCommand, SButton link) {
-    JMenuItem item = createMenuItem(text, iconName, mnemonic, accelerator,
-            actionCommand, link);
-
-    item.setEnabled(false);
-
-    return item;
+  
+  private void initFont() {
+    defaultFont = DEFAULT_FONT;
   }
-
-  public JMenuItem createMenuItem(String text, String iconName, int mnemonic,
-          String accelerator, String actionCommand) {
-    return createMenuItem(text, iconName, mnemonic, accelerator, actionCommand,
-            this);
+  
+  /**
+   * Open the help file.
+   */
+  private void openHelp() {
+    openURL("https://docs.google.com/file/d/0B8LiFU0_u3AZX2NYSmpwMW9TdGc/edit");
   }
 
   /**
-   * Quit the app.
-   * 
-   * This method is public because on the MacOSX handler.
-   * 
-   * @return True if the exit operation could be done or False if it has been
-   *         canceled.
+   * Initialize the properties of the frame.
    */
-  public boolean exit() {
-    PanelClassDiagram p = PanelClassDiagram.getInstance();
-
-    if (argumentExitWithoutAsk())
-      _exit();
-    else
-      switch (p.askSavingCurrentProject()) {
-        case JOptionPane.CANCEL_OPTION:
-          return false;
-
-        case JOptionPane.YES_OPTION:
-          p.saveToXML(false);
-          _exit();
-          break;
-
-        case JOptionPane.NO_OPTION:
-          _exit();
-          break;
-      }
-    return true;
+  private void setFrameProperties() {
+    setName(APP_NAME);
+    setTitle(getName());
+    setIconImage(PersonalizedIcon.getLogo().getImage());
+    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    setMinimumSize(new Dimension(400, 400));
+    setSize(WINDOWS_SIZE);
+    setExtendedState(WINDOWS_MAXIMIZED);
+    setContentPane(PanelClassDiagram.getInstance());
   }
 
-  private void _exit() {
-    // Save properties before closing.
-    PanelClassDiagram.getInstance().saveSplitLocationInProperties();
-    setFullScreenMode(menuItemFullScreen.isSelected());
-
-    System.exit(0);
-  }
 
   private class JMenuItemHistory extends JMenuItem {
     private static final long serialVersionUID = -6696714308788403479L;
@@ -1441,10 +1451,4 @@ public class Slyum extends JFrame implements ActionListener {
     }
   }
 
-  /**
-   * Open the help file.
-   */
-  private void openHelp() {
-    openURL("https://docs.google.com/file/d/0B8LiFU0_u3AZX2NYSmpwMW9TdGc/edit");
-  }
 }
