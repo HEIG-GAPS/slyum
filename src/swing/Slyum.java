@@ -72,7 +72,6 @@ public class Slyum extends JFrame implements ActionListener {
   public final static String ACTION_DELETE = "Delete"; 
   public final static String ACTION_DELETE_VIEW = "deleteView";
   public static final String ACTION_DUPLICATE = "duplicate";
-  public final static String ACTION_DUPLICATE_VIEW = "duplicateVuew";
   public final static String ACTION_EXIT = "Exit";
   public final static String ACTION_EXPORT_EPS = "ExportEps";
 
@@ -691,9 +690,6 @@ public class Slyum extends JFrame implements ActionListener {
       case ACTION_ADD_VIEW:
         MultiViewManager.addAndOpenNewView();
         break;
-      case ACTION_DUPLICATE_VIEW:
-        SMessageDialog.showErrorMessage("Not implemeted");
-        break;
       case ACTION_DELETE_VIEW:
         try {
           MultiViewManager.removeSelectedView();
@@ -1143,11 +1139,6 @@ public class Slyum extends JFrame implements ActionListener {
       // Menu add
       menuItem = createMenuItem("Add View...", "element-view-add", KeyEvent.VK_A,
               KEY_ADD_VIEW, ACTION_ADD_VIEW);
-      menu.add(menuItem);
-      
-      // Menu duplicate
-      menuItem = createMenuItem("Duplicate View", "element-view-duplicate", KeyEvent.VK_T,
-              KEY_DUPLICATE_VIEW, ACTION_DUPLICATE_VIEW);
       menu.add(menuItem);
       
       // Menu delete
