@@ -55,6 +55,34 @@ public abstract class Entity extends Type implements Cloneable, Transferable {
   }
 
   /**
+   * Add a new child.
+   *
+   * @param child
+   *          the new child
+   */
+  public void addChild(IParentChild child) {
+    if (child == null) throw new IllegalArgumentException("child is null");
+    
+    childs.add(child);
+    
+    setChanged();
+  }
+
+  /**
+   * Add a new parent.
+   *
+   * @param parent
+   *          the new parent
+   */
+  public void addParent(IParentChild parent) {
+    if (parent == null) throw new IllegalArgumentException("parent is null");
+    
+    parents.add(parent);
+    
+    setChanged();
+  }
+  
+  /**
    * Add a new role.
    * 
    * @param role
@@ -68,10 +96,56 @@ public abstract class Entity extends Type implements Cloneable, Transferable {
     setChanged();
   }
 
-  public List<Role> getRoles() {
-    return new LinkedList<>(roles);
+  @Override
+  public Entity clone() throws CloneNotSupportedException {
+    try {
+      // Création de la copie par réflexion.
+      String classToInstanciate = getClass().equals(AssociationClass.class) ? ClassEntity.class
+          .getName() : getClass().getName();
+      Entity entity = (Entity) Class.forName(classToInstanciate)
+          .getConstructor(String.class).newInstance(getName());
+      
+      // Copie des attributs primitifs
+      entity.setStereotype(getStereotype());
+      return entity;
+      
+    } catch (
+        ClassNotFoundException | NoSuchMethodException |  SecurityException |
+            InstantiationException | IllegalAccessException |
+            IllegalArgumentException | InvocationTargetException e) {
+      SMessageDialog.showErrorMessage(
+          "An error occured when copying the entity.\nPlease send a report.");
+      Slyum.LOGGER.log(
+          Level.SEVERE,
+          "An error occured when copying the entity.", e);
+    }
+    return null;
   }
   
+  public LinkedList<Entity> getAllChilds() {
+    LinkedList<Entity> allChilds = new LinkedList<>();
+    allChilds.add(this);
+    
+    for (IParentChild p : childs)
+      allChilds.addAll(p.getChild().getAllChilds());
+
+    return allChilds;
+  }
+
+  public LinkedList<Entity> getAllParents() {
+    final LinkedList<Entity> allParents = new LinkedList<>();
+    allParents.add(this);
+    
+    for (final IParentChild p : parents)
+      allParents.addAll(p.getParent().getAllParents());
+
+    return allParents;
+  }
+
+  public List<IParentChild> getChilds() {
+    return childs;
+  }
+
   /**
    * Return all entities associed with this one. Associed means that there 
    * is a relation between this entity and another one.
@@ -79,8 +153,8 @@ public abstract class Entity extends Type implements Cloneable, Transferable {
    */
   public HashMap<Relation, Entity> getLinkedEntities() {
     HashMap<Relation, Entity> entities = new HashMap<>();
-    for (Relation relation : PanelClassDiagram.getInstance().getClassDiagram()
-                                              .getAllRelations()) {
+    for (Relation relation : 
+        PanelClassDiagram.getInstance().getClassDiagram().getRelations()) {
       if (relation.getSource() == this)
         entities.put(relation, relation.getTarget());
       
@@ -90,22 +164,12 @@ public abstract class Entity extends Type implements Cloneable, Transferable {
     return entities;
   }
 
-  /**
-   * Use in XML exportation. Get the type of the entity.
-   * 
-   * @return the type of the entity.
-   */
-  protected abstract String getEntityType();
+  public List<IParentChild> getParents() {
+    return parents;
+  }
 
-  /**
-   * Us in XML exportation. Get a string to add new tags if necessary.
-   * 
-   * @param depth
-   *          the number of tabs to add before each tag
-   * @return the tag to add before the closure tag.
-   */
-  protected String getLastBalise(int depth) {
-    return ""; // no last balise
+  public  List<Role> getRoles() {
+    return new LinkedList<>(roles);
   }
 
   /**
@@ -115,19 +179,6 @@ public abstract class Entity extends Type implements Cloneable, Transferable {
    */
   public String getStereotype() {
     return stereotype;
-  }
-
-  @Override
-  public boolean setName(String name) {
-    BufferClass bc = new BufferClass(this);
-    boolean b = super.setName(name);
-
-    if (b) {
-      Change.push(bc);
-      Change.push(new BufferClass(this));
-    }
-
-    return b;
   }
 
   /**
@@ -143,67 +194,16 @@ public abstract class Entity extends Type implements Cloneable, Transferable {
     this.stereotype = stereotype;
   }
 
-  public boolean isNameItalic() {
-    return false;
-  }
-
-  /**
-   * Move the object's position in the given array by the given offset. Offset
-   * is added to the current index to compute the new index. The offset can be
-   * positive or negative.
-   * 
-   * @param list
-   *          the list containing the object to move
-   * @param o
-   *          the object to move
-   * @param offset
-   *          the offset for compute the new index
-   */
-  protected <T extends Object> void moveComponentPosition(List<T> list, T o,
-          int offset) {
-    int index = list.indexOf(o);
-
-    if (index != -1) {
-      Change.push(new BufferIndex<T>(this, list, o));
-
-      list.remove(o);
-      list.add(index + offset, o);
-
-      Change.push(new BufferIndex<T>(this, list, o));
-
-      setChanged();
-    }
+  @Override
+  public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+    if (!isDataFlavorSupported(flavor))
+      throw new UnsupportedFlavorException(flavor);
+    return this;
   }
 
   @Override
-  public Entity clone() throws CloneNotSupportedException {
-    try {
-      // Création de la copie par réflexion.
-      String classToInstanciate = getClass().equals(AssociationClass.class) ? ClassEntity.class
-              .getName() : getClass().getName();
-      Entity entity = (Entity) Class.forName(classToInstanciate)
-              .getConstructor(String.class).newInstance(getName());
-
-      // Copie des attributs primitifs
-      entity.setStereotype(getStereotype());
-      return entity;
-
-    } catch (
-        ClassNotFoundException | NoSuchMethodException |  SecurityException | 
-        InstantiationException | IllegalAccessException | 
-        IllegalArgumentException | InvocationTargetException e) {
-      SMessageDialog.showErrorMessage(
-          "An error occured when copying the entity.\nPlease send a report.");
-      Slyum.LOGGER.log(
-          Level.SEVERE, 
-          "An error occured when copying the entity.", e);
-    }
-    return null;
-  }
-
-  @Override
-  public String getXmlTagName() {
-    return "entity";
+  public DataFlavor[] getTransferDataFlavors() {
+    return flavors;
   }
 
   @Override
@@ -218,69 +218,8 @@ public abstract class Entity extends Type implements Cloneable, Transferable {
   }
 
   @Override
-  public DataFlavor[] getTransferDataFlavors() {
-    return flavors;
-  }
-
-  @Override
-  public boolean isDataFlavorSupported(DataFlavor flavor) {
-    return Arrays.asList(getTransferDataFlavors()).contains(flavor);
-  }
-
-  @Override
-  public Object getTransferData(DataFlavor flavor) 
-      throws UnsupportedFlavorException, IOException {
-    if (!isDataFlavorSupported(flavor))
-      throw new UnsupportedFlavorException(flavor);
-    return this;
-  }
-
-  /**
-   * Add a new child.
-   * 
-   * @param child
-   *          the new child
-   */
-  public void addChild(IParentChild child) {
-    if (child == null) throw new IllegalArgumentException("child is null");
-
-    childs.add(child);
-
-    setChanged();
-  }
-
-  /**
-   * Add a new parent.
-   * 
-   * @param parent
-   *          the new parent
-   */
-  public void addParent(IParentChild parent) {
-    if (parent == null) throw new IllegalArgumentException("parent is null");
-
-    parents.add(parent);
-
-    setChanged();
-  }
-
-  public LinkedList<Entity> getAllChilds() {
-    LinkedList<Entity> allChilds = new LinkedList<>();
-    allChilds.add(this);
-
-    for (IParentChild p : childs)
-      allChilds.addAll(p.getChild().getAllChilds());
-
-    return allChilds;
-  }
-
-  public LinkedList<Entity> getAllParents() {
-    final LinkedList<Entity> allParents = new LinkedList<>();
-    allParents.add(this);
-
-    for (final IParentChild p : parents)
-      allParents.addAll(p.getParent().getAllParents());
-
-    return allParents;
+  public String getXmlTagName() {
+    return "entity";
   }
 
   public boolean isChildOf(Entity entity) {
@@ -290,6 +229,15 @@ public abstract class Entity extends Type implements Cloneable, Transferable {
       isChild |= i.getParent().isChildOf(entity);
 
     return isChild || equals(entity);
+  }
+
+  @Override
+  public boolean isDataFlavorSupported(DataFlavor flavor) {
+    return Arrays.asList(getTransferDataFlavors()).contains(flavor);
+  }
+
+  public boolean isNameItalic() {
+    return false;
   }
 
   public boolean isParentOf(Entity entity) {
@@ -325,11 +273,61 @@ public abstract class Entity extends Type implements Cloneable, Transferable {
     setChanged();
   }
 
-  public List<IParentChild> getChilds() {
-    return childs;
+  @Override
+  public boolean setName(String name) {
+    BufferClass bc = new BufferClass(this);
+    boolean b = super.setName(name);
+    
+    if (b) {
+      Change.push(bc);
+      Change.push(new BufferClass(this));
+    }
+
+    return b;
   }
 
-  public List<IParentChild> getParents() {
-    return parents;
+  /**
+   * Use in XML exportation. Get the type of the entity.
+   *
+   * @return the type of the entity.
+   */
+  protected abstract String getEntityType();
+
+  /**
+   * Us in XML exportation. Get a string to add new tags if necessary.
+   *
+   * @param depth
+   *          the number of tabs to add before each tag
+   * @return the tag to add before the closure tag.
+   */
+  protected String getLastBalise(int depth) {
+    return ""; // no last balise
+  }
+
+  /**
+   * Move the object's position in the given array by the given offset. Offset
+   * is added to the current index to compute the new index. The offset can be
+   * positive or negative.
+   *
+   * @param list
+   *          the list containing the object to move
+   * @param o
+   *          the object to move
+   * @param offset
+   *          the offset for compute the new index
+   */
+  protected <T extends Object> void moveComponentPosition(List<T> list, T o, int offset) {
+    int index = list.indexOf(o);
+    
+    if (index != -1) {
+      Change.push(new BufferIndex<T>(this, list, o));
+      
+      list.remove(o);
+      list.add(index + offset, o);
+      
+      Change.push(new BufferIndex<T>(this, list, o));
+
+      setChanged();
+    }
   }
 }

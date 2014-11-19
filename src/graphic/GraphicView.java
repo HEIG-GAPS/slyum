@@ -1702,6 +1702,7 @@ public class GraphicView extends GraphicComponent
   @Override
   public void setName(String name) {
     this.name = name;
+    Change.setHasChange(true);
     setChanged();
   }
   
