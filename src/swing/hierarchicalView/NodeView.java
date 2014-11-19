@@ -12,6 +12,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import swing.MultiViewManager;
 import swing.Slyum;
+import swing.UserInputDialog;
 import utility.PersonalizedIcon;
 
 public class NodeView 
@@ -41,6 +42,34 @@ public class NodeView
       @Override
       public void actionPerformed(ActionEvent e) {
         MultiViewManager.openView(NodeView.this.graphicView);
+      }
+    });
+    popupMenu.add(item);
+    
+    // Menu item rename
+    item = new JMenuItem(
+        "Rename", 
+        PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "element-view-open.png"));
+    
+    item.setEnabled(graphicView != MultiViewManager.getRootGraphicView());
+    item.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        GraphicView gv = NodeView.this.graphicView;
+        String gvName = gv.getName();
+        
+        UserInputDialog dialog = new UserInputDialog(
+            gvName, 
+            "Slyum - Rename view", 
+            "Enter a new name for the view \"" + gvName + "\":");
+        
+        dialog.setVisible(true);
+        
+        if (dialog.isAccepted()) {
+          gv.setName(dialog.getText());
+          gv.notifyObservers();
+        }
       }
     });
     popupMenu.add(item);
