@@ -211,10 +211,16 @@ public class PanelClassDiagram extends JPanel {
    * Remove all not associed with view components.
    */
   public static void cleanComponents() {
+    int count = 0;
+    
     ClassDiagram cd = PanelClassDiagram.getInstance().classDiagram;
     for (IDiagramComponent component : cd.getAllMainsComponents())
-        if (GraphicComponent.countGraphicComponentsAssociedWith(component) == 0)
+        if (GraphicComponent.countGraphicComponentsAssociedWith(component) == 0) {
           cd.removeComponent(component);
+          ++count;
+        }
+    
+    SMessageDialog.showInformationMessage("Cleaning complete!\n" + count + " component(s) removed.");
   }
   
   /**
