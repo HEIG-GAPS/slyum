@@ -104,6 +104,24 @@ public class MultiViewManager {
     return newGraphicView;
   }
   
+  public static void renameView(GraphicView graphicView, String newName) {
+    if (MultiViewManager.getRootGraphicView() == graphicView) {
+      ClassDiagram cd = graphicView.getClassDiagram();
+      cd.setName(newName);
+      cd.notifyObservers();
+      return;
+    }
+    
+    graphicView.setName(newName);
+    graphicView.notifyObservers();
+  }
+  
+  public static String getViewName(GraphicView graphicView) {
+    if (MultiViewManager.getRootGraphicView() == graphicView)
+      return graphicView.getClassDiagram().getName();
+    return graphicView.getName();
+  }
+  
   public static GraphicView openView(GraphicView graphicView) {
     
     if (graphicView == null)

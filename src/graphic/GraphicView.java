@@ -131,7 +131,7 @@ public class GraphicView extends GraphicComponent
   public final static Color BASIC_COLOR = new Color(241, 241, 243);
   public final static boolean CTRL_FOR_GRIP = false;
   public final static int DEFAULT_TITLE_BORDER_WIDTH = 1;
-  public static final boolean ENTITY_GRADIENT = false;
+  public final static boolean ENTITY_GRADIENT = false;
   public final static int GRID_COLOR = Color.DARK_GRAY.getRGB();
   public final static int GRID_POINT_OPACITY = 255;
   public final static int GRID_SIZE = 10;
@@ -140,9 +140,9 @@ public class GraphicView extends GraphicComponent
   public final static boolean IS_GRID_ENABLE = true;
   public final static boolean IS_GRID_OPACITY_ENABLE = false;
   public final static boolean IS_PAINT_TITLE_BORDER = true;
-  public static final String NO_NAMED_VIEW = "Unnamed view";
-  public static final String ROOT_VIEW_DEFAULT_NAME = "Main view";
-  public static final double SCALE_STEP = 0.1;
+  public final static String NO_NAMED_VIEW = "Unnamed view";
+  public final static String ROOT_VIEW_DEFAULT_NAME = "Main view";
+  public final static double SCALE_STEP = 0.1;
 
   /**
    * Compute mouse entered and exited event. the componentMouseHover can be the

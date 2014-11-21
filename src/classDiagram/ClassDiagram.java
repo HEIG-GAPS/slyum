@@ -171,6 +171,7 @@ public class ClassDiagram extends Observable
   public void clean() {
     removeAll();
     initDefaultAttributes();
+    setChanged();
   }
   
   public int countComponents(Class<?> type) {

@@ -162,7 +162,7 @@ public class DiagramPropreties
  @Override
   public void updateComponentInformations(UpdateMessage msg) {
     PanelClassDiagram panel = PanelClassDiagram.getInstance();
-    if (panel == null || panel.getCurrentFile() == null) {
+    if (panel == null) {
       west.setVisible(false);
       return;
     }
