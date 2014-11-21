@@ -1,5 +1,6 @@
 package swing;
 
+import classDiagram.ClassDiagram.ViewEntity;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.AssociationClass;
@@ -70,7 +71,17 @@ public class XMLParser extends DefaultHandler {
   private class ClassDiagram {
     LinkedList<UMLView> uMLView = new LinkedList<>();
     DiagramElements diagrameElement = null;
+    
     String name = "";
+    
+    classDiagram.ClassDiagram.ViewEntity defaultViewEntities = 
+        GraphicView.getDefaultViewEntities();
+    
+    ParametersViewStyle defaultViewMethods = 
+        GraphicView.getDefaultViewMethods();
+    
+    boolean defaultViewEnum = GraphicView.getDefaultViewEnum();
+    boolean defaultVisibleTypes = GraphicView.getDefaultVisibleTypes();
   }
 
   private class ComponentView {
@@ -381,8 +392,13 @@ public class XMLParser extends DefaultHandler {
       throws SyntaxeNameException, SAXNotRecognizedException {
     
     MultiViewManager.setSelectedGraphicView(0);
+    
     GraphicView rootGraphicView = MultiViewManager.getSelectedGraphicView();
     classDiagram.setName(umlClassDiagram.name);
+    classDiagram.setViewEntity(umlClassDiagram.defaultViewEntities);
+    classDiagram.setDefaultViewMethods(umlClassDiagram.defaultViewMethods);
+    classDiagram.setDefaultViewEnum(umlClassDiagram.defaultViewEnum);
+    classDiagram.setVisibleType(umlClassDiagram.defaultVisibleTypes);
     classDiagram.notifyObservers();
     
     // Don't change the order !!
@@ -888,7 +904,25 @@ public class XMLParser extends DefaultHandler {
         } break;
       case "diagramElements":
         umlClassDiagram.diagrameElement = new DiagramElements();
-          umlClassDiagram.name = attributes.getValue("name");
+        
+        umlClassDiagram.name = attributes.getValue("name");
+        
+        if (attributes.getValue("defaultViewEntities") != null)
+          umlClassDiagram.defaultViewEntities = ViewEntity.valueOf(
+              attributes.getValue("defaultViewEntities"));
+        
+        if (attributes.getValue("defaultViewMethods") != null)
+          umlClassDiagram.defaultViewMethods = 
+              ParametersViewStyle.valueOf(attributes.getValue("defaultViewMethods"));
+        
+        if (attributes.getValue("defaultViewEnum") != null)
+          umlClassDiagram.defaultViewEnum = 
+              Boolean.valueOf(attributes.getValue("defaultViewEnum"));
+        
+        if (attributes.getValue("defaultVisibleTypes") != null)
+          umlClassDiagram.defaultVisibleTypes = 
+              Boolean.valueOf(attributes.getValue("defaultVisibleTypes"));
+        
         break;
       case "entity":
         try {

@@ -1,7 +1,7 @@
 package graphic.entity;
 
+import classDiagram.ClassDiagram.ViewEntity;
 import graphic.GraphicView;
-import graphic.GraphicView.ViewEntity;
 import graphic.textbox.TextBox;
 import graphic.textbox.TextBoxAttribute;
 import graphic.textbox.TextBoxMethod;
@@ -35,139 +35,55 @@ import classDiagram.components.PrimitiveType;
 import classDiagram.components.SimpleEntity;
 import classDiagram.components.Visibility;
 import swing.MultiViewManager;
+import swing.PanelClassDiagram;
 
 public abstract class SimpleEntityView extends EntityView {
 
-  // Style de vue
-  private boolean displayDefault = true;
-  private boolean displayAttributes = true;
-  protected boolean displayMethods = true;
+  public static List<SimpleEntityView> getAll() {
+    LinkedList<SimpleEntityView> simples = new LinkedList<>();
+    for (EntityView view :
+        MultiViewManager.getSelectedGraphicView().getEntitiesView())
+      if (view instanceof SimpleEntityView)
+        simples.add((SimpleEntityView) view);
+    return simples;
+  }
+
+  public static List<SimpleEntityView> getSelectedSimpleEntityView(GraphicView parent) {
+    List<SimpleEntityView> simples = new LinkedList<>();
+    for (EntityView view : parent.getSelectedEntities())
+      if (view instanceof SimpleEntityView)
+        simples.add((SimpleEntityView) view);
+    return simples;
+  }
 
   // Attributs et méthodes
   protected LinkedList<TextBoxAttribute> attributesView = new LinkedList<>();
+  protected boolean displayMethods = true;
+
 
   protected LinkedList<TextBoxMethod> methodsView = new LinkedList<>();
 
-  // Elements pour le menu contextuel
-  private JMenuItem menuItemStatic, menuItemAbstract, menuItemViewDefault,
-          menuItemViewAll, menuItemViewAttributes, menuItemViewMethods,
-          menuItemViewNothing, menuItemMethodsDefault, menuItemMethodsAll,
-          menuItemMethodsType, menuItemMethodsName, menuItemMethodsNothing;
+  private boolean displayAttributes = true;
+  // Style de vue
+  private boolean displayDefault = true;
 
   private ButtonGroup groupView, groupViewMethods;
+  private JMenuItem menuItemAbstract;
+  private JMenuItem menuItemMethodsAll;
+  private JMenuItem menuItemMethodsDefault;
+  private JMenuItem menuItemMethodsName;
+  private JMenuItem menuItemMethodsNothing;
+  private JMenuItem menuItemMethodsType;
+  private JMenuItem menuItemStatic;
+  private JMenuItem menuItemViewAll;
+  private JMenuItem menuItemViewAttributes;
+  private JMenuItem menuItemViewDefault;
+  private JMenuItem menuItemViewMethods;
+  private JMenuItem menuItemViewNothing;
 
   public SimpleEntityView(GraphicView parent, SimpleEntity component) {
     super(parent, component);
     initViewType();
-  }
-
-  @Override
-  protected void initializeMenuItemsAddElements(JPopupMenu popupmenu) {
-    popupMenu.add(makeMenuItem("Add attribute", "AddAttribute", "attribute"));
-    popupMenu.add(makeMenuItem("Add method", "AddMethod", "method"));
-    popupMenu.addSeparator();
-  }
-
-  @Override
-  protected void initializeMenuItemsPropertiesElements(JPopupMenu popupMenu) {
-    popupMenu.add(menuItemAbstract = makeMenuItem("Abstract", "Abstract",
-            "abstract"));
-    popupMenu.add(menuItemStatic = makeMenuItem("Static", "Static", "static"));
-    popupMenu.addSeparator();
-  }
-
-  @Override
-  protected void initializeMenuViews(JPopupMenu popupMenu) {
-    JMenu subMenu;
-    subMenu = new JMenu("View");
-    subMenu.setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
-            + "eye.png"));
-    groupView = new ButtonGroup();
-
-    // Item Default
-    menuItemViewDefault = makeRadioButtonMenuItem("Default", "ViewDefault",
-            groupView);
-    menuItemViewDefault.setSelected(true);
-    subMenu.add(menuItemViewDefault);
-
-    // Item All
-    subMenu.add(
-            menuItemViewAll = makeRadioButtonMenuItem("All", "ViewAll",
-                    groupView), 1);
-
-    // Item Only attributes
-    subMenu.add(
-            menuItemViewAttributes = makeRadioButtonMenuItem("Only attributes",
-                    "ViewAttribute", groupView), 2);
-
-    // Item Only methods
-    subMenu.add(
-            menuItemViewMethods = makeRadioButtonMenuItem("Only Methods",
-                    "ViewMethods", groupView), 3);
-
-    // Item Nothing
-    subMenu.add(menuItemViewNothing = makeRadioButtonMenuItem("Nothing",
-            "ViewNothing", groupView));
-
-    popupMenu.add(subMenu);
-
-    // Menu VIEW METHODS
-    subMenu = new JMenu("Methods View");
-    subMenu.setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
-            + "eye.png"));
-    groupViewMethods = new ButtonGroup();
-
-    menuItemMethodsDefault = makeRadioButtonMenuItem("Default",
-            "ViewMethodsDefault", groupViewMethods);
-    menuItemMethodsDefault.setSelected(true);
-    subMenu.add(menuItemMethodsDefault);
-
-    subMenu.add(
-            menuItemMethodsAll = makeRadioButtonMenuItem("Type and Name",
-                    "ViewTypeAndName", groupViewMethods), 1);
-
-    subMenu.add(
-            menuItemMethodsType = makeRadioButtonMenuItem("Type", "ViewType",
-                    groupViewMethods), 2);
-
-    subMenu.add(
-            menuItemMethodsName = makeRadioButtonMenuItem("Name", "ViewName",
-                    groupViewMethods), 3);
-
-    subMenu.add(menuItemMethodsNothing = makeRadioButtonMenuItem("Nothing",
-            "ViewMethodNothing", groupViewMethods));
-
-    popupMenu.add(subMenu);
-    popupMenu.addSeparator();
-  }
-
-  final public void initViewType() {
-    if (displayDefault) {
-      ViewEntity view = GraphicView.getDefaultViewEntities();
-      switch (view) {
-        case ALL:
-          displayAttributes = true;
-          displayMethods = true;
-          break;
-        case NOTHING:
-          displayAttributes = false;
-          displayMethods = false;
-          break;
-        case ONLY_ATTRIBUTES:
-          displayAttributes = true;
-          displayMethods = false;
-          break;
-        case ONLY_METHODS:
-          displayAttributes = false;
-          displayMethods = true;
-          break;
-        default:
-          displayAttributes = true;
-          displayMethods = true;
-          break;
-      }
-      updateHeight();
-    }
   }
 
   @Override
@@ -207,7 +123,7 @@ public abstract class SimpleEntityView extends EntityView {
       if (pressedTextBox == null) {
         component = getAssociedComponent();
         ((SimpleEntity) component).setAbstract(!((SimpleEntity) component)
-                .isAbstract());
+            .isAbstract());
       } else {
         component = pressedTextBox.getAssociedComponent();
         ((Method) component).setAbstract(!((Method) component).isAbstract());
@@ -221,16 +137,16 @@ public abstract class SimpleEntityView extends EntityView {
         ((Method) component).setStatic(!((Method) component).isStatic());
       component.notifyObservers();
     } else if (Slyum.ACTION_TEXTBOX_UP.equals(e.getActionCommand())
-            || Slyum.ACTION_TEXTBOX_DOWN.equals(e.getActionCommand())) {
+               || Slyum.ACTION_TEXTBOX_DOWN.equals(e.getActionCommand())) {
       int offset = 1;
       if (Slyum.ACTION_TEXTBOX_UP.equals(e.getActionCommand())) offset = -1;
       if (pressedTextBox.getClass() == TextBoxAttribute.class) {
         final Attribute attribute = (Attribute) ((TextBoxAttribute) pressedTextBox)
-                .getAssociedComponent();
+            .getAssociedComponent();
         ((SimpleEntity) component).moveAttributePosition(attribute, offset);
       } else if (pressedTextBox.getClass() == TextBoxMethod.class) {
         final Method method = (Method) ((TextBoxMethod) pressedTextBox)
-                .getAssociedComponent();
+            .getAssociedComponent();
         ((SimpleEntity) component).moveMethodPosition(method, offset);
       } else if (Slyum.ACTION_DUPLICATE.equals(e.getActionCommand())) {
         if (pressedTextBox != null) {
@@ -242,7 +158,7 @@ public abstract class SimpleEntityView extends EntityView {
             entity.addAttribute(attribute);
             entity.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
             entity.moveAttributePosition(attribute,
-                    attributes.indexOf(component) - attributes.size() + 1);
+                                         attributes.indexOf(component) - attributes.size() + 1);
             entity.notifyObservers();
           } else {
             Method method = new Method((Method) component);
@@ -250,7 +166,7 @@ public abstract class SimpleEntityView extends EntityView {
             entity.addMethod(method);
             entity.notifyObservers(UpdateMessage.ADD_METHOD_NO_EDIT);
             entity.moveMethodPosition(method, methods.indexOf(component)
-                    - methods.size() + 1);
+                                              - methods.size() + 1);
             entity.notifyObservers();
           }
         }
@@ -259,21 +175,12 @@ public abstract class SimpleEntityView extends EntityView {
     }
   }
 
-  public static List<SimpleEntityView> getAll() {
-    LinkedList<SimpleEntityView> simples = new LinkedList<>();
-    for (EntityView view : 
-        MultiViewManager.getSelectedGraphicView().getEntitiesView())
-      if (view instanceof SimpleEntityView)
-        simples.add((SimpleEntityView) view);
-    return simples;
-  }
-
   /**
    * Create a new attribute with default type and name.
    */
   public void addAttribute() {
     final Attribute attribute = new Attribute("attribute",
-            PrimitiveType.VOID_TYPE);
+        PrimitiveType.VOID_TYPE);
     prepareNewAttribute(attribute);
 
     ((SimpleEntity) component).addAttribute(attribute);
@@ -304,7 +211,7 @@ public abstract class SimpleEntityView extends EntityView {
    */
   public void addMethod() {
     final Method method = new Method("method", PrimitiveType.VOID_TYPE,
-            Visibility.PUBLIC, ((SimpleEntity) component));
+        Visibility.PUBLIC, ((SimpleEntity) component));
     prepareNewMethod(method);
 
     if (((SimpleEntity) component).addMethod(method))
@@ -331,6 +238,119 @@ public abstract class SimpleEntityView extends EntityView {
     if (editing) newTextBox.editing();
   }
 
+  @Override
+  public SimpleEntityView clone() throws CloneNotSupportedException {
+    
+    SimpleEntityView view = (SimpleEntityView) super.clone();
+    view.displayDefault = displayDefault;
+    view.displayAttributes = displayAttributes;
+    view.displayMethods = displayMethods;
+    return view;
+  }
+
+  @Override
+  public int computeHeight(int classNameHeight, int stereotypeHeight, int elementsHeight) {
+    int height = super.computeHeight(classNameHeight, stereotypeHeight,
+                                                      elementsHeight);
+    
+    if (displayMethods) height += 10 + elementsHeight * methodsView.size();
+    if (displayAttributes)
+      height += 10 + elementsHeight * attributesView.size();
+    return height;
+  }
+  
+  @Override
+  public List<TextBox> getAllTextBox() {
+    List<TextBox> tb = super.getAllTextBox();
+    tb.addAll(methodsView);
+    tb.addAll(attributesView);
+    return tb;
+  }
+  
+  @Override
+  public SimpleEntity getComponent() {
+    return (SimpleEntity) super.getComponent();
+  }
+
+  /**
+   * Set the display state for attributes.
+   *
+   * @param display
+   *          the new display state for attributes.
+   */
+  public void setDisplayAttributes(boolean display) {
+    displayAttributes = display;
+    displayDefault = false;
+    updateHeight();
+  }
+  
+  public void setDisplayDefault(boolean display) {
+    displayDefault = display;
+    initViewType();
+  }
+
+  /**
+   * Set the display state for methods.
+   *
+   * @param display
+   *          the new display state for methods.
+   */
+  public void setDisplayMethods(boolean display) {
+    displayMethods = display;
+    displayDefault = false;
+    updateHeight();
+  }
+  
+  @Override
+  public void setPictureMode(boolean enable) {
+    super.setPictureMode(enable);
+    for (TextBox t : methodsView)
+      t.setPictureMode(enable);
+    for (TextBox t : attributesView)
+      t.setPictureMode(enable);
+  }
+  
+  @Override
+  public Element getXmlElement(Document doc) {
+    Element entityView = super.getXmlElement(doc);
+    entityView.setAttribute("displayDefault", String.valueOf(displayDefault));
+    entityView.setAttribute("displayAttributes",
+                            String.valueOf(displayAttributes));
+    entityView.setAttribute("displayMethods", String.valueOf(displayMethods));
+    return entityView;
+  }
+  
+  public final void initViewType(
+  ) {
+    if (displayDefault) {
+      ViewEntity view = 
+          PanelClassDiagram.getInstance().getClassDiagram().getDefaultViewEntities();
+      switch (view) {
+        case ALL:
+          displayAttributes = true;
+          displayMethods = true;
+          break;
+        case NOTHING:
+          displayAttributes = false;
+          displayMethods = false;
+          break;
+        case ONLY_ATTRIBUTES:
+          displayAttributes = true;
+          displayMethods = false;
+          break;
+        case ONLY_METHODS:
+          displayAttributes = false;
+          displayMethods = true;
+          break;
+        default:
+          displayAttributes = true;
+          displayMethods = true;
+          break;
+      }
+      updateHeight();
+    }
+  }
+
   /**
    * Return if attributes are displayed or not.
    * 
@@ -348,6 +368,40 @@ public abstract class SimpleEntityView extends EntityView {
   public boolean isMethodsDisplayed() {
     return displayMethods;
   }
+  
+  @Override
+  public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
+    if (e.isPopupTrigger()) {
+      updateMenuItemView();
+      updateMenuItemMethodsView();
+      
+      menuItemAbstract.setEnabled(false);
+      
+      // If context menu is requested on a TextBox, customize popup menu.
+      if (pressedTextBox != null) {
+        Boolean isConstructor = pressedTextBox.getAssociedComponent().getClass()
+            .equals(ConstructorMethod.class);
+        menuItemStatic.setEnabled(!isConstructor);
+        
+        menuItemMoveUp.setEnabled(attributesView.indexOf(pressedTextBox) != 0
+                                  && methodsView.indexOf(pressedTextBox) != 0);
+        menuItemMoveDown
+            .setEnabled((attributesView.size() == 0 || attributesView
+                .indexOf(pressedTextBox) != attributesView.size() - 1)
+                            && (methodsView.size() == 0 || methodsView
+                                .indexOf(pressedTextBox) != methodsView.size() - 1));
+        if (pressedTextBox instanceof TextBoxMethod)
+          menuItemAbstract.setEnabled(!isConstructor);
+        
+      } else {
+        menuItemMoveUp.setEnabled(false);
+        menuItemMoveDown.setEnabled(false);
+        menuItemStatic.setEnabled(false);
+        menuItemAbstract.setEnabled(true);
+      }
+    }
+    super.maybeShowPopup(e, popupMenu);
+  }
 
   /**
    * Change the display style of parameters for all methods.
@@ -361,49 +415,6 @@ public abstract class SimpleEntityView extends EntityView {
   }
 
   /**
-   * Change the display style of parameters for the pressed TextBox if exists,
-   * or for all otherwise.
-   * 
-   * @param newStyle
-   *          the new display style
-   */
-  private void methodViewChangeClicked(ParametersViewStyle newStyle) {
-    if (pressedTextBox instanceof TextBoxMethod)
-      ((Method) pressedTextBox.getAssociedComponent())
-              .setParametersViewStyle(newStyle);
-    else
-      for (SimpleEntityView ev : getSelectedSimpleEntityView(parent))
-        ev.methodViewChange(newStyle);
-  }
-
-  public static List<SimpleEntityView> getSelectedSimpleEntityView(
-          GraphicView parent) {
-    List<SimpleEntityView> simples = new LinkedList<>();
-    for (EntityView view : parent.getSelectedEntities())
-      if (view instanceof SimpleEntityView)
-        simples.add((SimpleEntityView) view);
-    return simples;
-  }
-
-  /**
-   * Method called before creating a new attribute, if modifications on
-   * attribute is necessary.
-   * 
-   * @param attribute
-   *          the attribute to prepare
-   */
-  protected abstract void prepareNewAttribute(Attribute attribute);
-
-  /**
-   * Method called before creating a new method, if modifications on method is
-   * necessary.
-   * 
-   * @param method
-   *          the method to prepare
-   */
-  protected abstract void prepareNewMethod(Method method);
-
-  /**
    * Remove the attribute associated with TextBoxAttribute from model (UML).
    * 
    * @param tbAttribute
@@ -412,7 +423,7 @@ public abstract class SimpleEntityView extends EntityView {
    */
   public boolean removeAttribute(TextBoxAttribute tbAttribute) {
     if (((SimpleEntity) component).removeAttribute((Attribute) tbAttribute
-            .getAssociedComponent())) {
+        .getAssociedComponent())) {
       component.notifyObservers();
       updateHeight();
       return true;
@@ -430,7 +441,7 @@ public abstract class SimpleEntityView extends EntityView {
    */
   public boolean removeMethod(TextBoxMethod tbMethod) {
     if (((SimpleEntity) component).removeMethod((Method) tbMethod
-            .getAssociedComponent())) {
+        .getAssociedComponent())) {
       component.notifyObservers();
 
       updateHeight();
@@ -440,177 +451,128 @@ public abstract class SimpleEntityView extends EntityView {
 
     return false;
   }
-
-  public void setDisplayDefault(boolean display) {
-    displayDefault = display;
-    initViewType();
+  
+  @Override
+  public boolean removeTextBox(TextBox tb) {
+    if (tb instanceof TextBoxAttribute)
+      return removeAttribute((TextBoxAttribute) tb);
+    else if (tb instanceof TextBoxMethod)
+      return removeMethod((TextBoxMethod) tb);
+    return false;
   }
-
-  /**
-   * Set the display state for attributes.
-   * 
-   * @param display
-   *          the new display state for attributes.
-   */
-  public void setDisplayAttributes(boolean display) {
-    displayAttributes = display;
-    displayDefault = false;
-    updateHeight();
-  }
-
-  /**
-   * Set the display state for methods.
-   * 
-   * @param display
-   *          the new display state for methods.
-   */
-  public void setDisplayMethods(boolean display) {
-    displayMethods = display;
-    displayDefault = false;
-    updateHeight();
-  }
-
-  private void updateMenuItemView() {
-    JMenuItem menuItemToSelect;
-
-    // Check si toutes les entités sélectionnées ont le même type de vue.
-    List<SimpleEntityView> selected = getSelectedSimpleEntityView(parent);
-    for (int i = 0; i < selected.size() - 1; i++) {
-      SimpleEntityView view = selected.get(i), next = selected.get(i + 1);
-      if (view.displayDefault != next.displayDefault
-              || view.displayAttributes != next.displayAttributes
-              || view.displayMethods != next.displayMethods) {
-        groupView.clearSelection();
-        return;
-      }
-    }
-
-    if (displayDefault)
-      menuItemToSelect = menuItemViewDefault;
-    else if (displayAttributes && displayMethods)
-      menuItemToSelect = menuItemViewAll;
-    else if (displayAttributes)
-      menuItemToSelect = menuItemViewAttributes;
-    else if (displayMethods)
-      menuItemToSelect = menuItemViewMethods;
-    else
-      menuItemToSelect = menuItemViewNothing;
-
-    groupView.setSelected(menuItemToSelect.getModel(), true);
-  }
-
-  private void updateMenuItemMethodsView() {
-    JMenuItem itemToSelect;
-    ParametersViewStyle newView = null;
-
-    if (pressedTextBox == null) {
-      // Check si toutes les méthodes des entités sélectionnées ont la même vue.
-      List<SimpleEntityView> selected = getSelectedSimpleEntityView(parent);
-      List<TextBoxMethod> textbox = new LinkedList<>();
-      for (SimpleEntityView view : selected)
-        textbox.addAll(view.methodsView);
-
-      for (int i = 0; i < textbox.size() - 1; i++) {
-        Method current = (Method) textbox.get(i).getAssociedComponent();
-        Method next = (Method) textbox
-                .get(i + 1).getAssociedComponent();
-        if (!current.getConcretParametersViewStyle().equals(
-                next.getConcretParametersViewStyle())) {
-          groupViewMethods.clearSelection();
-          return;
-        }
-      }
-
-      if (textbox.size() > 0)
-        newView = ((Method) textbox.get(0).getAssociedComponent())
-                .getConcretParametersViewStyle();
-    } else if (pressedTextBox instanceof TextBoxMethod) {
-      newView = ((Method) pressedTextBox.getAssociedComponent())
-              .getConcretParametersViewStyle();
-    }
-
-    if (newView != null) {
-      switch (newView) {
-        case DEFAULT:
-          itemToSelect = menuItemMethodsDefault;
+  
+  @Override
+  public void update(Observable observable, Object object) {
+    boolean enable = false;
+    if (object != null && object.getClass() == UpdateMessage.class)
+      switch ((UpdateMessage) object) {
+        case ADD_ATTRIBUTE:
+          enable = true;
+        case ADD_ATTRIBUTE_NO_EDIT:
+          addAttribute(((SimpleEntity) component).getLastAddedAttribute(),
+                       enable);
           break;
-        case NAME:
-          itemToSelect = menuItemMethodsName;
+        case ADD_METHOD:
+          enable = true;
+        case ADD_METHOD_NO_EDIT:
+          addMethod(((SimpleEntity) component).getLastAddedMethod(), enable);
           break;
-
-        case NOTHING:
-          itemToSelect = menuItemMethodsNothing;
-          break;
-
-        case TYPE:
-          itemToSelect = menuItemMethodsType;
-          break;
-
-        case TYPE_AND_NAME:
-          itemToSelect = menuItemMethodsAll;
-          break;
-
         default:
-          itemToSelect = menuItemMethodsAll;
+          super.update(observable, object);
           break;
       }
+    else
+      regenerateEntity();
+  }
+  
+  @Override
+  protected void initializeMenuItemsAddElements(JPopupMenu popupmenu) {
+    popupMenu.add(makeMenuItem("Add attribute", "AddAttribute", "attribute"));
+    popupMenu.add(makeMenuItem("Add method", "AddMethod", "method"));
+    popupMenu.addSeparator();
+  }
+  
+  @Override
+  protected void initializeMenuItemsPropertiesElements(JPopupMenu popupMenu) {
+    popupMenu.add(menuItemAbstract = makeMenuItem("Abstract", "Abstract",
+                                                              "abstract"));
+    popupMenu.add(menuItemStatic = makeMenuItem("Static", "Static", "static"));
+    popupMenu.addSeparator();
+  }
+  
+  @Override
+  protected void initializeMenuViews(JPopupMenu popupMenu) {
+    JMenu subMenu;
+    subMenu = new JMenu("View");
+    subMenu.setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
+                                                     + "eye.png"));
+    groupView = new ButtonGroup();
+    
+    // Item Default
+    menuItemViewDefault = makeRadioButtonMenuItem("Default", "ViewDefault",
+                                                             groupView);
+    menuItemViewDefault.setSelected(true);
+    subMenu.add(menuItemViewDefault);
+    
+    // Item All
+    subMenu.add(
+        menuItemViewAll = makeRadioButtonMenuItem("All", "ViewAll",
+                                                             groupView), 1);
+    
+    // Item Only attributes
+    subMenu.add(
+        menuItemViewAttributes = makeRadioButtonMenuItem("Only attributes",
+                                                             "ViewAttribute", groupView), 2);
+    
+    // Item Only methods
+    subMenu.add(
+        menuItemViewMethods = makeRadioButtonMenuItem("Only Methods",
+                                                          "ViewMethods", groupView), 3);
+    
+    // Item Nothing
+    subMenu.add(menuItemViewNothing = makeRadioButtonMenuItem("Nothing",
+                                                              "ViewNothing", groupView));
+    
+    popupMenu.add(subMenu);
+    
+    // Menu VIEW METHODS
+    subMenu = new JMenu("Methods View");
+    subMenu.setIcon(PersonalizedIcon.createImageIcon(Slyum.ICON_PATH
+                                                     + "eye.png"));
+    groupViewMethods = new ButtonGroup();
+    
+    menuItemMethodsDefault = makeRadioButtonMenuItem("Default",
+                                                     "ViewMethodsDefault", groupViewMethods);
+    menuItemMethodsDefault.setSelected(true);
+    subMenu.add(menuItemMethodsDefault);
+    
+    subMenu.add(
+        menuItemMethodsAll = makeRadioButtonMenuItem("Type and Name",
+                                                     "ViewTypeAndName", groupViewMethods), 1);
+    
+    subMenu.add(
+        menuItemMethodsType = makeRadioButtonMenuItem("Type", "ViewType",
+                                                              groupViewMethods), 2);
+    
+    subMenu.add(
+        menuItemMethodsName = makeRadioButtonMenuItem("Name", "ViewName",
+                                                                  groupViewMethods), 3);
+    
+    subMenu.add(menuItemMethodsNothing = makeRadioButtonMenuItem("Nothing",
+            "ViewMethodNothing", groupViewMethods));
 
-      groupViewMethods.setSelected(itemToSelect.getModel(), true);
-    }
+    popupMenu.add(subMenu);
+    popupMenu.addSeparator();
   }
 
   @Override
-  public int computeHeight(int classNameHeight, int stereotypeHeight,
-          int elementsHeight) {
-    int height = super.computeHeight(classNameHeight, stereotypeHeight,
-            elementsHeight);
-
-    if (displayMethods) height += 10 + elementsHeight * methodsView.size();
-    if (displayAttributes)
-      height += 10 + elementsHeight * attributesView.size();
-    return height;
-  }
-
-  @Override
-  public List<TextBox> getAllTextBox() {
-    List<TextBox> tb = super.getAllTextBox();
-    tb.addAll(methodsView);
-    tb.addAll(attributesView);
-    return tb;
-  }
-
-  @Override
-  public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
-    if (e.isPopupTrigger()) {
-      updateMenuItemView();
-      updateMenuItemMethodsView();
-
-      menuItemAbstract.setEnabled(false);
-
-      // If context menu is requested on a TextBox, customize popup menu.
-      if (pressedTextBox != null) {
-        Boolean isConstructor = pressedTextBox.getAssociedComponent().getClass()
-                                              .equals(ConstructorMethod.class);
-        menuItemStatic.setEnabled(!isConstructor);
-
-        menuItemMoveUp.setEnabled(attributesView.indexOf(pressedTextBox) != 0
-                && methodsView.indexOf(pressedTextBox) != 0);
-        menuItemMoveDown
-                .setEnabled((attributesView.size() == 0 || attributesView
-                        .indexOf(pressedTextBox) != attributesView.size() - 1)
-                        && (methodsView.size() == 0 || methodsView
-                                .indexOf(pressedTextBox) != methodsView.size() - 1));
-        if (pressedTextBox instanceof TextBoxMethod)
-          menuItemAbstract.setEnabled(!isConstructor);
-
-      } else {
-        menuItemMoveUp.setEnabled(false);
-        menuItemMoveDown.setEnabled(false);
-        menuItemStatic.setEnabled(false);
-        menuItemAbstract.setEnabled(true);
-      }
-    }
-    super.maybeShowPopup(e, popupMenu);
+  protected void innerRegenerate() {
+    methodsView.clear();
+    attributesView.clear();
+    for (Attribute a : ((SimpleEntity) component).getAttributes())
+      addAttribute(a, false);
+    for (Method m : ((SimpleEntity) component).getMethods())
+      addMethod(m, false);
   }
 
   @Override
@@ -652,80 +614,127 @@ public abstract class SimpleEntityView extends EntityView {
     return offset;
   }
 
-  @Override
-  protected void innerRegenerate() {
-    methodsView.clear();
-    attributesView.clear();
-    for (Attribute a : ((SimpleEntity) component).getAttributes())
-      addAttribute(a, false);
-    for (Method m : ((SimpleEntity) component).getMethods())
-      addMethod(m, false);
+  /**
+   * Method called before creating a new attribute, if modifications on
+   * attribute is necessary.
+   *
+   * @param attribute
+   *          the attribute to prepare
+   */
+  protected abstract void prepareNewAttribute(Attribute attribute);
+  
+  /**
+   * Method called before creating a new method, if modifications on method is
+   * necessary.
+   *
+   * @param method
+   *          the method to prepare
+   */
+  protected abstract void prepareNewMethod(Method method);
+  
+  /**
+   * Change the display style of parameters for the pressed TextBox if exists,
+   * or for all otherwise.
+   *
+   * @param newStyle
+   *          the new display style
+   */
+  private void methodViewChangeClicked(ParametersViewStyle newStyle) {
+    if (pressedTextBox instanceof TextBoxMethod)
+      ((Method) pressedTextBox.getAssociedComponent())
+          .setParametersViewStyle(newStyle);
+    else
+      for (SimpleEntityView ev : getSelectedSimpleEntityView(parent))
+        ev.methodViewChange(newStyle);
   }
+  
+  private void updateMenuItemMethodsView() {
+    JMenuItem itemToSelect;
+    ParametersViewStyle newView = null;
 
-  @Override
-  public boolean removeTextBox(TextBox tb) {
-    if (tb instanceof TextBoxAttribute)
-      return removeAttribute((TextBoxAttribute) tb);
-    else if (tb instanceof TextBoxMethod)
-      return removeMethod((TextBoxMethod) tb);
-    return false;
-  }
+    if (pressedTextBox == null) {
+      // Check si toutes les méthodes des entités sélectionnées ont la même vue.
+      List<SimpleEntityView> selected = getSelectedSimpleEntityView(parent);
+      List<TextBoxMethod> textbox = new LinkedList<>();
+      for (SimpleEntityView view : selected)
+        textbox.addAll(view.methodsView);
 
-  @Override
-  public void setPictureMode(boolean enable) {
-    super.setPictureMode(enable);
-    for (TextBox t : methodsView)
-      t.setPictureMode(enable);
-    for (TextBox t : attributesView)
-      t.setPictureMode(enable);
-  }
+      for (int i = 0; i < textbox.size() - 1; i++) {
+        Method current = (Method) textbox.get(i).getAssociedComponent();
+        Method next = (Method) textbox
+            .get(i + 1).getAssociedComponent();
+        if (!current.getConcretParametersViewStyle().equals(
+            next.getConcretParametersViewStyle())) {
+          groupViewMethods.clearSelection();
+          return;
+        }
+      }
 
-  @Override
-  public SimpleEntity getComponent() {
-    return (SimpleEntity) super.getComponent();
-  }
+      if (textbox.size() > 0)
+        newView = ((Method) textbox.get(0).getAssociedComponent())
+            .getConcretParametersViewStyle();
+    } else if (pressedTextBox instanceof TextBoxMethod) {
+      newView = ((Method) pressedTextBox.getAssociedComponent())
+          .getConcretParametersViewStyle();
+    }
 
-  @Override
-  public SimpleEntityView clone() throws CloneNotSupportedException {
-
-    SimpleEntityView view = (SimpleEntityView) super.clone();
-    view.displayDefault = displayDefault;
-    view.displayAttributes = displayAttributes;
-    view.displayMethods = displayMethods;
-    return view;
-  }
-
-  @Override
-  public void update(Observable observable, Object object) {
-    boolean enable = false;
-    if (object != null && object.getClass() == UpdateMessage.class)
-      switch ((UpdateMessage) object) {
-        case ADD_ATTRIBUTE:
-          enable = true;
-        case ADD_ATTRIBUTE_NO_EDIT:
-          addAttribute(((SimpleEntity) component).getLastAddedAttribute(),
-                  enable);
+    if (newView != null) {
+      switch (newView) {
+        case DEFAULT:
+          itemToSelect = menuItemMethodsDefault;
           break;
-        case ADD_METHOD:
-          enable = true;
-        case ADD_METHOD_NO_EDIT:
-          addMethod(((SimpleEntity) component).getLastAddedMethod(), enable);
+        case NAME:
+          itemToSelect = menuItemMethodsName;
           break;
+
+        case NOTHING:
+          itemToSelect = menuItemMethodsNothing;
+          break;
+
+        case TYPE:
+          itemToSelect = menuItemMethodsType;
+          break;
+
+        case TYPE_AND_NAME:
+          itemToSelect = menuItemMethodsAll;
+          break;
+
         default:
-          super.update(observable, object);
+          itemToSelect = menuItemMethodsAll;
           break;
       }
+
+      groupViewMethods.setSelected(itemToSelect.getModel(), true);
+    }
+  }
+  
+  private void updateMenuItemView() {
+    JMenuItem menuItemToSelect;
+    
+    // Check si toutes les entités sélectionnées ont le même type de vue.
+    List<SimpleEntityView> selected = getSelectedSimpleEntityView(parent);
+    for (int i = 0; i < selected.size() - 1; i++) {
+      SimpleEntityView view = selected.get(i), next = selected.get(i + 1);
+      if (view.displayDefault != next.displayDefault
+              || view.displayAttributes != next.displayAttributes
+              || view.displayMethods != next.displayMethods) {
+        groupView.clearSelection();
+        return;
+      }
+    }
+
+    if (displayDefault)
+      menuItemToSelect = menuItemViewDefault;
+    else if (displayAttributes && displayMethods)
+      menuItemToSelect = menuItemViewAll;
+    else if (displayAttributes)
+      menuItemToSelect = menuItemViewAttributes;
+    else if (displayMethods)
+      menuItemToSelect = menuItemViewMethods;
     else
-      regenerateEntity();
+      menuItemToSelect = menuItemViewNothing;
+
+    groupView.setSelected(menuItemToSelect.getModel(), true);
   }
 
-  @Override
-  public Element getXmlElement(Document doc) {
-    Element entityView = super.getXmlElement(doc);
-    entityView.setAttribute("displayDefault", String.valueOf(displayDefault));
-    entityView.setAttribute("displayAttributes",
-            String.valueOf(displayAttributes));
-    entityView.setAttribute("displayMethods", String.valueOf(displayMethods));
-    return entityView;
-  }
 }

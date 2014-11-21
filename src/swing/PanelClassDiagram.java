@@ -50,6 +50,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.xml.sax.SAXException;
 import swing.hierarchicalView.HierarchicalView;
+import swing.propretiesView.DiagramPropreties;
 import swing.propretiesView.PropretiesChanger;
 import swing.slyumCustomizedComponents.SSplitPane;
 import utility.MultiBorderLayout;
@@ -200,7 +201,7 @@ public class PanelClassDiagram extends JPanel {
 
   public void cleanApplication() {
     setDiagramName("");
-    classDiagram.removeAll();
+    classDiagram.clean();
     cleanViews();
     MultiViewManager.getRootGraphicView().removeAll();
     STab.getInstance().setSelectedIndex(0);
@@ -590,6 +591,8 @@ public class PanelClassDiagram extends JPanel {
     setCursor(null);
     
     RecentProjectManager.addhistoryEntry(file.getAbsolutePath());
+        
+    DiagramPropreties.getInstance().updateComponentInformations(null);
 
     SwingUtilities.invokeLater(new Runnable() {
 

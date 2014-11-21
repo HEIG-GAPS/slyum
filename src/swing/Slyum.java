@@ -409,7 +409,8 @@ public class Slyum extends JFrame implements ActionListener {
   }
 
   public static void setStarOnTitle(boolean visible) {
-    Slyum.getInstance().setTitle(windowTitle + (visible ? "*" : ""));
+    if (Slyum.getInstance() != null)
+      Slyum.getInstance().setTitle(windowTitle + (visible ? "*" : ""));
   }
 
   public static boolean isAutoAdjustInheritance() {

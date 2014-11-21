@@ -29,6 +29,7 @@ import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.EnumEntity;
 import classDiagram.components.EnumValue;
 import swing.MultiViewManager;
+import swing.PanelClassDiagram;
 
 public class EnumView extends EntityView {
 
@@ -227,7 +228,7 @@ public class EnumView extends EntityView {
         return true;
       case DEFAULT:
       default:
-        return GraphicView.getDefaultViewEnum();
+        return PanelClassDiagram.getInstance().getClassDiagram().getDefaultViewEnum();
     }
   }
 

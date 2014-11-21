@@ -121,7 +121,7 @@ public class PropretiesChanger extends SScrollPane implements IComponentsObserve
   @Override
   public void setViewportView(Component view) {
     if (view == null)
-      super.setViewportView(labelNoComponent);
+      super.setViewportView(DiagramPropreties.getInstance());
     else
       super.setViewportView(view);
   }

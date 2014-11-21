@@ -54,11 +54,14 @@ import classDiagram.components.InterfaceEntity;
  * @version 1.0 - 25.07.2011
  */
 public abstract class EntityView extends MovableComponent implements Observer, ColoredComponent, Cloneable {
+  public static final float BORDER_WIDTH = 1.2f;
+  public static final Color DEFAULT_BORDER_COLOR = new Color(65, 65, 65);
+  public static final int VERTICAL_SPACEMENT = 10; // margin
   public static final Color baseColor = new Color(255, 247, 225);
   private static Color basicColor = new Color(baseColor.getRGB());
 
-  public static final float BORDER_WIDTH = 1.2f;
-  public static final int VERTICAL_SPACEMENT = 10; // margin
+  private static final Font stereotypeFontBasic = new Font(
+      Slyum.getInstance().defaultFont.getFamily(), 0, 11);
   
   public static EntityView createFromEntity(
       GraphicView graphicView, Entity entity) {
@@ -90,6 +93,17 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   };
 
   /**
+   * Set the basic color. Basic color is used as default color while creating a
+   * new entity.
+   *
+   * @param color
+   *          the new basic color
+   */
+  public static void setBasicColor(Color color) {
+    basicColor = new Color(color.getRGB());
+  }
+  
+  /**
    * Compute the point intersecting the lines given. Return Point(-1.0f, -1.0f)
    * if lines are //.
    * 
@@ -102,29 +116,29 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   public static Point2D ptIntersectsLines(Line2D line1, Line2D line2) {
     // convert line2D to point
     final Point p1 = new Point((int) line1.getP1().getX(), (int) line1.getP1()
-            .getY());
+        .getY());
     final Point p2 = new Point((int) line1.getP2().getX(), (int) line1.getP2()
-            .getY());
+        .getY());
     final Point p3 = new Point((int) line2.getP1().getX(), (int) line2.getP1()
-            .getY());
+        .getY());
     final Point p4 = new Point((int) line2.getP2().getX(), (int) line2.getP2()
-            .getY());
-
+        .getY());
+    
     // compute intersection point between two line
     // (http://en.wikipedia.org/wiki/Line-line_intersection)
     final int denom = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y)
-            * (p3.x - p4.x);
-
+                                                      * (p3.x - p4.x);
+    
     // no intersection (lines //)
     if (denom == 0) return new Point2D.Float(-1.0f, -1.0f);
 
     final int x = ((p1.x * p2.y - p1.y * p2.x) * (p3.x - p4.x) - (p1.x - p2.x)
-            * (p3.x * p4.y - p3.y * p4.x))
-            / denom;
+                                                                 * (p3.x * p4.y - p3.y * p4.x))
+                  / denom;
     final int y = ((p1.x * p2.y - p1.y * p2.x) * (p3.y - p4.y) - (p1.y - p2.y)
-            * (p3.x * p4.y - p3.y * p4.x))
-            / denom;
-
+                                                                 * (p3.x * p4.y - p3.y * p4.x))
+                  / denom;
+    
     return new Point2D.Float(x, y);
   }
 
@@ -142,9 +156,8 @@ public abstract class EntityView extends MovableComponent implements Observer, C
    *          the next point
    * @return the intersection point; or null if no points found
    */
-  public static Point searchNearestEgde(Rectangle bounds, Point first,
-          Point next) {
-
+  public static Point searchNearestEgde(Rectangle bounds, Point first, Point next) {
+    
     // One offset needed to avoid intersection with the wrong line.
     if (bounds.x + bounds.width <= first.x)
       first.x = bounds.x + bounds.width - 1;
@@ -156,14 +169,14 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
     Line2D relationLine = new Line2D.Float(first.x, first.y, next.x, next.y);
     Line2D lineTop = new Line2D.Float(bounds.x, bounds.y, bounds.x
-            + bounds.width, bounds.y);
+                                                          + bounds.width, bounds.y);
     Line2D lineRight = new Line2D.Float(bounds.x + bounds.width, bounds.y,
-            bounds.x + bounds.width, bounds.y + bounds.height);
+        bounds.x + bounds.width, bounds.y + bounds.height);
     Line2D lineBottom = new Line2D.Float(bounds.x + bounds.width, bounds.y
-            + bounds.height, bounds.x, bounds.y + bounds.height);
+                                                                  + bounds.height, bounds.x, bounds.y + bounds.height);
     Line2D lineLeft = new Line2D.Float(bounds.x, bounds.y + bounds.height,
-            bounds.x, bounds.y);
-
+        bounds.x, bounds.y);
+    
     Point2D ptIntersectTop = ptIntersectsLines(relationLine, lineTop);
     Point2D ptIntersectRight = ptIntersectsLines(relationLine, lineRight);
     Point2D ptIntersectBottom = ptIntersectsLines(relationLine, lineBottom);
@@ -172,26 +185,26 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     // line is to infinite, we must verify that the point find interst the
     // correct edge and the relation.
     int distTop = (int) lineTop.ptSegDist(ptIntersectTop)
-            + (int) relationLine.ptSegDist(ptIntersectTop);
+                  + (int) relationLine.ptSegDist(ptIntersectTop);
     int distRight = (int) lineRight.ptSegDist(ptIntersectRight)
-            + (int) relationLine.ptSegDist(ptIntersectRight);
+                    + (int) relationLine.ptSegDist(ptIntersectRight);
     int distBottom = (int) lineBottom.ptSegDist(ptIntersectBottom)
-            + (int) relationLine.ptSegDist(ptIntersectBottom);
+                     + (int) relationLine.ptSegDist(ptIntersectBottom);
     int distLeft = (int) lineLeft.ptSegDist(ptIntersectLeft)
-            + (int) relationLine.ptSegDist(ptIntersectLeft);
-
+                   + (int) relationLine.ptSegDist(ptIntersectLeft);
+    
     if (ptIntersectTop != null && distTop == 0) {
       return new Point(RelationGrip.adjust((int) ptIntersectTop.getX()),
-              (int) ptIntersectTop.getY());
-
+          (int) ptIntersectTop.getY());
+      
     } else if (ptIntersectRight != null && distRight == 0) {
       return new Point((int) ptIntersectRight.getX(),
-              RelationGrip.adjust((int) ptIntersectRight.getY()));
-
+          RelationGrip.adjust((int) ptIntersectRight.getY()));
+      
     } else if (ptIntersectBottom != null && distBottom == 0) {
       return new Point(RelationGrip.adjust((int) ptIntersectBottom.getX()),
-              (int) ptIntersectBottom.getY());
-
+          (int) ptIntersectBottom.getY());
+      
     } else if (ptIntersectLeft != null && distLeft == 0) {
       return new Point((int) ptIntersectLeft.getX(),
               RelationGrip.adjust((int) ptIntersectLeft.getY()));
@@ -201,36 +214,23 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     }
   }
 
-  /**
-   * Set the basic color. Basic color is used as default color while creating a
-   * new entity.
-   * 
-   * @param color
-   *          the new basic color
-   */
-  public static void setBasicColor(Color color) {
-    basicColor = new Color(color.getRGB());
-  }
-
   /* Colors */
   public final Color DEFAULT_TEXT_COLOR = new Color(40, 40, 40);
-  public static final Color DEFAULT_BORDER_COLOR = new Color(65, 65, 65);
+  protected Entity component;
+  protected JMenuItem menuItemDelete;
+  protected JMenuItem menuItemMoveDown;
+  protected JMenuItem menuItemMoveUp;
+  protected TextBox pressedTextBox;
+  protected GraphicComponent saveTextBoxMouseHover;
 
   private Rectangle bounds = new Rectangle();
-  protected Entity component;
   private Color defaultColor;
 
   private final TextBoxEntityName entityName;
 
-  protected TextBox pressedTextBox;
-  protected JMenuItem menuItemDelete, menuItemMoveUp, menuItemMoveDown;
 
   private Cursor saveCursor = Cursor.getDefaultCursor();
 
-  protected GraphicComponent saveTextBoxMouseHover;
-
-  private static final Font stereotypeFontBasic = new Font(
-          Slyum.getInstance().defaultFont.getFamily(), 0, 11);
   private Font stereotypeFont = stereotypeFontBasic;
 
   public EntityView(final GraphicView parent, Entity component) {
@@ -243,62 +243,16 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     entityName = new TextBoxEntityName(parent, component);
     initializeComponents();
   }
-
-  final protected void initializeComponents() {
-
-    JMenuItem menuItem;
-
-    // Create the popup menu.
-    popupMenu.addSeparator();
-    initializeMenuItemsAddElements(popupMenu);
-    initializeMenuItemsPropertiesElements(popupMenu);
-
-    menuItemMoveUp = makeMenuItem("Move up", Slyum.ACTION_TEXTBOX_UP,
-            "arrow-up");
-    menuItemMoveUp.setEnabled(false);
-    popupMenu.add(menuItemMoveUp);
-
-    menuItemMoveDown = makeMenuItem("Move down", Slyum.ACTION_TEXTBOX_DOWN,
-            "arrow-down");
-    menuItemMoveDown.setEnabled(false);
-    popupMenu.add(menuItemMoveDown);
-
-    popupMenu.addSeparator();
-
-    popupMenu
-            .add(makeMenuItem("Duplicate", Slyum.ACTION_DUPLICATE, "duplicate"));
-    popupMenu.add(menuItemDelete = makeMenuItem("Delete", "Delete", "delete"));
-
-    popupMenu.addSeparator();
-    initializeMenuViews(popupMenu);
-
-    SPanelElement p = SPanelElement.getInstance();
-    menuItem = makeMenuItem("Move top", Slyum.ACTION_MOVE_TOP, "top");
-    p.getBtnTop().linkComponent(menuItem);
-    popupMenu.add(menuItem);
-
-    menuItem = makeMenuItem("Up", Slyum.ACTION_MOVE_UP, "up");
-    p.getBtnUp().linkComponent(menuItem);
-    popupMenu.add(menuItem);
-
-    menuItem = makeMenuItem("Down", Slyum.ACTION_MOVE_DOWN, "down");
-    p.getBtnDown().linkComponent(menuItem);
-    popupMenu.add(menuItem);
-
-    menuItem = makeMenuItem("Move bottom", Slyum.ACTION_MOVE_BOTTOM, "bottom");
-    p.getBtnBottom().linkComponent(menuItem);
-    popupMenu.add(menuItem);
-
-    component.addObserver(this);
-    setColor(getBasicColor());
+  
+  public void _delete() {
+    
+    boolean isRecord = Change.isRecord();
+    Change.record();
+    
+    delete();
+    
+    if (!isRecord) Change.stopRecord();
   }
-
-  protected abstract void initializeMenuItemsAddElements(JPopupMenu popupmenu);
-
-  protected abstract void initializeMenuItemsPropertiesElements(
-          JPopupMenu popupMenu);
-
-  protected abstract void initializeMenuViews(JPopupMenu popupMenu);
 
   @Override
   public void actionPerformed(ActionEvent e) {
@@ -323,7 +277,8 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   /**
    * Adjust the width according to its content.
    */
-  public void adjustWidth() {
+  public void adjustWidth(
+  ) {
     int width = Short.MIN_VALUE;
 
     for (final TextBox tb : getAllTextBox()) {
@@ -337,8 +292,31 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
     Change.push(new BufferBounds(this));
     setBounds(new Rectangle(bounds.x, bounds.y, width
-            + GraphicView.getGridSize() + 15, bounds.height));
+                                                + GraphicView.getGridSize() + 15, bounds.height));
     Change.push(new BufferBounds(this));
+  }
+  
+  @Override
+  public EntityView clone() throws CloneNotSupportedException {
+    try {
+      Rectangle newBounds = getBounds();
+      String classToInstanciate = getClass().equals(AssociationClassView.class) ? ClassView.class
+          .getName() : getClass().getName();
+      int gridSize = GraphicView.getGridSize();
+      newBounds.translate(gridSize, gridSize);
+      Entity entity = ((Entity) getAssociedComponent()).clone();
+      EntityView view = (EntityView) Class.forName(classToInstanciate)
+          .getConstructor(GraphicView.class, entity.getClass())
+          .newInstance(parent, entity);
+      view.regenerateEntity();
+
+      view.setBounds(newBounds);
+      view.setColor(defaultColor);
+      return view;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 
   @Override
@@ -357,8 +335,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
    *          the height of each element (methods, attributes)
    * @return the height of the class
    */
-  public int computeHeight(int classNameHeight, int stereotypeHeight,
-          int elementsHeight) {
+  public int computeHeight(int classNameHeight, int stereotypeHeight, int elementsHeight) {
     int height = VERTICAL_SPACEMENT;
 
     if (!component.getStereotype().isEmpty()) height += stereotypeHeight;
@@ -366,16 +343,6 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     height += classNameHeight;
 
     return height + 10;
-  }
-
-  public void _delete() {
-
-    boolean isRecord = Change.isRecord();
-    Change.record();
-
-    delete();
-
-    if (!isRecord) Change.stopRecord();
   }
 
   @Override
@@ -392,13 +359,13 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
     final Color backColor = getColor();
     final Color fill = new Color(backColor.getRed(), backColor.getGreen(),
-            backColor.getBlue(), 100);
-
+        backColor.getBlue(), 100);
+    
     final Color border = backColor.darker();
     final BasicStroke borderStroke = new BasicStroke(1.0f,
             BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
-            new float[] { 2.0f }, 0.0f);
-
+        new float[] { 2.0f }, 0.0f);
+    
     g2.setColor(fill);
     g2.fillRect(ghost.x, ghost.y, ghost.width, ghost.height);
 
@@ -418,59 +385,25 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     final Color selectColor = new Color(100, 100, 100);
 
     final BasicStroke dashed = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
-            BasicStroke.JOIN_MITER, 10.0f, new float[] { 2f }, 0.0f);
-
+        BasicStroke.JOIN_MITER, 10.0f, new float[] { 2f }, 0.0f);
+    
     final Rectangle inRectangle = new Rectangle(bounds.x + PADDING, bounds.y
-            + PADDING, bounds.width - 2 * PADDING, bounds.height - 2 * PADDING);
-
+                                                                    + PADDING, bounds.width - 2 * PADDING, bounds.height - 2 * PADDING);
+    
     final Rectangle outRectangle = new Rectangle(bounds.x - PADDING, bounds.y
-            - PADDING, bounds.width + 2 * PADDING, bounds.height + 2 * PADDING);
-
+                                                                     - PADDING, bounds.width + 2 * PADDING, bounds.height + 2 * PADDING);
+    
     g2.setStroke(dashed);
     g2.setColor(selectColor);
 
     g2.drawRect(inRectangle.x, inRectangle.y, inRectangle.width,
-            inRectangle.height);
+                                              inRectangle.height);
     g2.drawRect(outRectangle.x, outRectangle.y, outRectangle.width,
-            outRectangle.height);
+                                                outRectangle.height);
   }
-
-  /**
-   * get all textBox displayed by the entity. TextBox returned are: - textBox
-   * for entity name - textBox for attributes - textBox for methods
-   * 
-   * @return an array containing all TextBox
-   */
-  public List<TextBox> getAllTextBox() {
-    List<TextBox> tb = new LinkedList<>();
-    tb.add(entityName);
-    return tb;
-  }
-
-  @Override
-  public IDiagramComponent getAssociedComponent() {
-    return component;
-  }
-
-  @Override
-  public Rectangle getBounds() {
-    if (bounds == null) bounds = new Rectangle();
-
-    return new Rectangle(bounds);
-  }
-
-  /**
-   * Get the entity (UML) associed with this entity view. Same as
-   * getAssociedComponent().
-   * 
-   * @return the component associed.
-   */
-  public Entity getComponent() {
-    return component;
-  }
-
-  public Color getDefaultColor() {
-    return getBasicColor();
+  
+  public void editingName() {
+    entityName.editing();
   }
 
   @Override
@@ -518,10 +451,10 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   @Override
   public void gMouseMoved(MouseEvent e) {
     final GraphicComponent textBoxMouseHover = GraphicView
-            .searchComponentWithPosition(getAllTextBox(), e.getPoint());
+        .searchComponentWithPosition(getAllTextBox(), e.getPoint());
     GraphicView.computeComponentEventEnter(textBoxMouseHover,
-            saveTextBoxMouseHover, e);
-
+                                           saveTextBoxMouseHover, e);
+    
     saveTextBoxMouseHover = textBoxMouseHover;
   }
 
@@ -530,21 +463,131 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     pressedTextBox = searchTextBoxAtLocation(e.getPoint());
     super.gMousePressed(e);
   }
-
+  
   /**
-   * Search and return the Textbox (methods and attributes) at the given
-   * location.
-   * 
-   * @param location
-   *          the location where find a TextBox
-   * @return the found TextBox
+   * get all textBox displayed by the entity. TextBox returned are: - textBox
+   * for entity name - textBox for attributes - textBox for methods
+   *
+   * @return an array containing all TextBox
    */
-  private TextBox searchTextBoxAtLocation(Point location) {
-    final List<TextBox> tb = getAllTextBox();
-    tb.remove(entityName);
-    return GraphicView.searchComponentWithPosition(tb, location);
+  public List<TextBox> getAllTextBox() {
+    List<TextBox> tb = new LinkedList<>();
+    tb.add(entityName);
+    return tb;
+  }
+  
+  @Override
+  public IDiagramComponent getAssociedComponent() {
+    return component;
+  }
+  
+  @Override
+  public Rectangle getBounds() {
+    if (bounds == null) bounds = new Rectangle();
+    
+    return new Rectangle(bounds);
+  }
+  
+  @Override
+  public void setBounds(Rectangle bounds) {
+    // Save current bounds, change bounds and repaint old bounds and new
+    // bounds.
+    final Rectangle repaintBounds = new Rectangle(getBounds());
+    
+    final Rectangle newBounds = new Rectangle(ajustOnGrid(bounds.x),
+        ajustOnGrid(bounds.y), ajustOnGrid(bounds.width), bounds.height);
+    
+    newBounds.width = newBounds.width < MINIMUM_SIZE.x ? MINIMUM_SIZE.x
+            : newBounds.width;
+
+    this.bounds = newBounds;
+
+    parent.getScene().repaint(repaintBounds);
+    parent.getScene().repaint(newBounds);
+    
+    // Move graphics elements associated with this component
+    leftMovableSquare.setBounds(computeLocationResizer(0));
+    rightMovableSquare.setBounds(computeLocationResizer(bounds.width));
+
+    setChanged();
+    notifyObservers();
   }
 
+  @Override
+  public Color getColor() {
+    if (pictureMode) return defaultColor;
+    return super.getColor();
+  }
+  
+  @Override
+  public void setColor(Color color) {
+    setCurrentColor(color);
+    defaultColor = color;
+  }
+  
+  /**
+   * Get the entity (UML) associed with this entity view. Same as
+   * getAssociedComponent().
+   *
+   * @return the component associed.
+   */
+  public Entity getComponent() {
+    return component;
+  }
+  
+  /**
+   * Set the current color for this entity.
+   *
+   * @param color
+   *          the current color.
+   */
+  public void setCurrentColor(Color color) {
+    super.setColor(color);
+  }
+  
+  @Override
+  public Color getDefaultColor() {
+    return getBasicColor();
+  }
+
+  public void setLocationRelativeTo(Point dropPoint) {
+    Rectangle newBounds = new Rectangle(new Dimension(
+        getBounds().width, getBounds().height));
+    newBounds.x = dropPoint.x - getBounds().width / 2;
+    newBounds.y = dropPoint.y - getBounds().height / 2;
+    setBounds(newBounds);
+  }
+  
+  @Override
+  public void setSelected(boolean select) {
+    super.setSelected(select);
+    component.select();
+
+    if (select)
+      component.notifyObservers(UpdateMessage.SELECT);
+    else
+      component.notifyObservers(UpdateMessage.UNSELECT);
+    
+    if (!select) for (final TextBox t : getAllTextBox())
+      t.setSelected(false);
+  }
+  
+  @Override
+  public Element getXmlElement(Document doc) {
+    Element entityView = doc.createElement(getXmlTagName());
+    entityView.setAttribute("componentID",
+                            String.valueOf(getAssociedComponent().getId()));
+    entityView.setAttribute("color", String.valueOf(defaultColor.getRGB()));
+    entityView.appendChild(Utility.boundsToXmlElement(doc, getBounds(),
+                                                           "geometry"));
+    return entityView;
+  }
+  
+  @Override
+  public String getXmlTagName() {
+    return "componentView";
+  }
+  
   @Override
   public boolean isAtPosition(Point mouse) {
     return bounds.contains(mouse);
@@ -566,9 +609,6 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     super.maybeShowPopup(e, popupMenu);
   }
 
-  protected abstract int paintTextBoxes(Graphics2D g2, Rectangle bounds,
-          int textboxHeight, int offset);
-
   @Override
   public void paintComponent(Graphics2D g2) {
     if (!isVisible()) return;
@@ -576,26 +616,26 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     Paint background;
     if (GraphicView.isEntityGradient())
       background = new GradientPaint(bounds.x, bounds.y, getColor(), bounds.x
-              + bounds.width, bounds.y + bounds.height, getColor().darker());
+                                                                     + bounds.width, bounds.y + bounds.height, getColor().darker());
     else
       background = getColor();
 
     String className = component.getName();
 
     FontMetrics classNameMetrics = g2.getFontMetrics(entityName
-            .getEffectivFont());
+        .getEffectivFont());
     int classNameWidth = classNameMetrics.stringWidth(className);
     int classNameHeight = classNameMetrics.getHeight();
 
     Dimension classNameSize = new Dimension(classNameWidth, classNameHeight);
 
     stereotypeFont = stereotypeFont.deriveFont(stereotypeFontBasic.getSize()
-            * parent.getZoom());
-
+                                               * parent.getZoom());
+    
     g2.setFont(stereotypeFont);
     String stereotype = Utility.truncate(g2, "<< " + component.getStereotype()
-            + " >>", bounds.width - 15);
-
+                                             + " >>", bounds.width - 15);
+    
     FontMetrics stereotypeMetrics = g2.getFontMetrics(stereotypeFont);
     int stereotypeWidth = stereotypeMetrics.stringWidth(stereotype);
     int stereotypeHeight = stereotypeMetrics.getHeight();
@@ -606,20 +646,20 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     int textBoxHeight = metrics.getHeight();
 
     bounds.height = computeHeight(classNameSize.height, stereotypeHeight,
-            textBoxHeight);
-
+                                                        textBoxHeight);
+    
     Rectangle bounds = getBounds();
 
     int offset = bounds.y + VERTICAL_SPACEMENT / 2;
     int stereotypeLocationWidth = bounds.x
-            + (bounds.width - stereotypeSize.width) / 2;
-
+                                  + (bounds.width - stereotypeSize.width) / 2;
+    
     entityName.setBounds(new Rectangle(1, 1, bounds.width - 15,
-            textBoxHeight + 2));
+        textBoxHeight + 2));
     Rectangle entityNameBounds = entityName.getBounds();
     int classNameLocationX = bounds.x + (bounds.width - entityNameBounds.width)
-            / 2;
-
+                                        / 2;
+    
     // draw background
     g2.setPaint(background);
     g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
@@ -642,7 +682,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     offset += /* classNameSize.height + */VERTICAL_SPACEMENT / 2;
 
     entityName.setBounds(new Rectangle(classNameLocationX, offset,
-            bounds.width - 15, textBoxHeight + 2));
+        bounds.width - 15, textBoxHeight + 2));
     entityName.paintComponent(g2);
 
     offset += entityNameBounds.height;
@@ -669,8 +709,6 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     updateHeight();
   }
 
-  protected abstract void innerRegenerate();
-
   /**
    * Generic method for remove the associated component for the given TextBox.
    * 
@@ -686,44 +724,17 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   }
 
   @Override
-  public void setBounds(Rectangle bounds) {
-    // Save current bounds, change bounds and repaint old bounds and new
-    // bounds.
-    final Rectangle repaintBounds = new Rectangle(getBounds());
-
-    final Rectangle newBounds = new Rectangle(ajustOnGrid(bounds.x),
-            ajustOnGrid(bounds.y), ajustOnGrid(bounds.width), bounds.height);
-
-    newBounds.width = newBounds.width < MINIMUM_SIZE.x ? MINIMUM_SIZE.x
-            : newBounds.width;
-
-    this.bounds = newBounds;
-
-    parent.getScene().repaint(repaintBounds);
-    parent.getScene().repaint(newBounds);
-
-    // Move graphics elements associated with this component
-    leftMovableSquare.setBounds(computeLocationResizer(0));
-    rightMovableSquare.setBounds(computeLocationResizer(bounds.width));
-
-    setChanged();
-    notifyObservers();
+  public void restore() {
+    super.restore();
+    parent.addOthersComponents(leftMovableSquare);
+    parent.addOthersComponents(rightMovableSquare);
   }
 
-  @Override
-  public void setColor(Color color) {
-    setCurrentColor(color);
-    defaultColor = color;
-  }
-
-  /**
-   * Set the current color for this entity.
-   * 
-   * @param color
-   *          the current color.
-   */
-  public void setCurrentColor(Color color) {
-    super.setColor(color);
+  public TextBox searchAssociedTextBox(IDiagramComponent search) {
+    for (TextBox textbox : getAllTextBox())
+      if (textbox.getAssociedComponent() == search) return textbox;
+    
+    return null;
   }
 
   @Override
@@ -733,29 +744,9 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   }
 
   @Override
-  public Color getColor() {
-    if (pictureMode) return defaultColor;
-    return super.getColor();
-  }
-
-  @Override
   public void setMouseHoverStyle() {
     setCurrentColor(getColor().brighter());
     repaint();
-  }
-
-  @Override
-  public void setSelected(boolean select) {
-    super.setSelected(select);
-    component.select();
-
-    if (select)
-      component.notifyObservers(UpdateMessage.SELECT);
-    else
-      component.notifyObservers(UpdateMessage.UNSELECT);
-
-    if (!select) for (final TextBox t : getAllTextBox())
-      t.setSelected(false);
   }
 
   @Override
@@ -764,26 +755,6 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     repaint();
   }
   
-  public void editingName() {
-    entityName.editing();
-  }
-
-  @Override
-  public String getXmlTagName() {
-    return "componentView";
-  }
-
-  @Override
-  public Element getXmlElement(Document doc) {
-    Element entityView = doc.createElement(getXmlTagName());
-    entityView.setAttribute("componentID",
-            String.valueOf(getAssociedComponent().getId()));
-    entityView.setAttribute("color", String.valueOf(defaultColor.getRGB()));
-    entityView.appendChild(Utility.boundsToXmlElement(doc, getBounds(),
-            "geometry"));
-    return entityView;
-  }
-
   @Override
   public void update(Observable arg0, Object arg1) {
     if (arg1 != null && arg1.getClass() == UpdateMessage.class)
@@ -817,49 +788,77 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     setChanged();
     notifyObservers();
   }
+  
+  protected final void initializeComponents() {
+    
+    JMenuItem menuItem;
+    
+    // Create the popup menu.
+    popupMenu.addSeparator();
+    initializeMenuItemsAddElements(popupMenu);
+    initializeMenuItemsPropertiesElements(popupMenu);
+    
+    menuItemMoveUp = makeMenuItem("Move up", Slyum.ACTION_TEXTBOX_UP,
+                                             "arrow-up");
+    menuItemMoveUp.setEnabled(false);
+    popupMenu.add(menuItemMoveUp);
+    
+    menuItemMoveDown = makeMenuItem("Move down", Slyum.ACTION_TEXTBOX_DOWN,
+                                                 "arrow-down");
+    menuItemMoveDown.setEnabled(false);
+    popupMenu.add(menuItemMoveDown);
 
-  @Override
-  public void restore() {
-    super.restore();
-    parent.addOthersComponents(leftMovableSquare);
-    parent.addOthersComponents(rightMovableSquare);
+    popupMenu.addSeparator();
+
+    popupMenu
+            .add(makeMenuItem("Duplicate", Slyum.ACTION_DUPLICATE, "duplicate"));
+    popupMenu.add(menuItemDelete = makeMenuItem("Delete", "Delete", "delete"));
+
+    popupMenu.addSeparator();
+    initializeMenuViews(popupMenu);
+
+    SPanelElement p = SPanelElement.getInstance();
+    menuItem = makeMenuItem("Move top", Slyum.ACTION_MOVE_TOP, "top");
+    p.getBtnTop().linkComponent(menuItem);
+    popupMenu.add(menuItem);
+    
+    menuItem = makeMenuItem("Up", Slyum.ACTION_MOVE_UP, "up");
+    p.getBtnUp().linkComponent(menuItem);
+    popupMenu.add(menuItem);
+    
+    menuItem = makeMenuItem("Down", Slyum.ACTION_MOVE_DOWN, "down");
+    p.getBtnDown().linkComponent(menuItem);
+    popupMenu.add(menuItem);
+
+    menuItem = makeMenuItem("Move bottom", Slyum.ACTION_MOVE_BOTTOM, "bottom");
+    p.getBtnBottom().linkComponent(menuItem);
+    popupMenu.add(menuItem);
+
+    component.addObserver(this);
+    setColor(getBasicColor());
   }
 
-  @Override
-  public EntityView clone() throws CloneNotSupportedException {
-    try {
-      Rectangle newBounds = getBounds();
-      String classToInstanciate = getClass().equals(AssociationClassView.class) ? ClassView.class
-              .getName() : getClass().getName();
-      int gridSize = GraphicView.getGridSize();
-      newBounds.translate(gridSize, gridSize);
-      Entity entity = ((Entity) getAssociedComponent()).clone();
-      EntityView view = (EntityView) Class.forName(classToInstanciate)
-              .getConstructor(GraphicView.class, entity.getClass())
-              .newInstance(parent, entity);
-      view.regenerateEntity();
+  protected abstract void initializeMenuItemsAddElements(JPopupMenu popupmenu);
 
-      view.setBounds(newBounds);
-      view.setColor(defaultColor);
-      return view;
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return null;
-  }
+  protected abstract void initializeMenuItemsPropertiesElements(JPopupMenu popupMenu);
 
-  public TextBox searchAssociedTextBox(IDiagramComponent search) {
-    for (TextBox textbox : getAllTextBox())
-      if (textbox.getAssociedComponent() == search) return textbox;
+  protected abstract void initializeMenuViews(JPopupMenu popupMenu);
 
-    return null;
-  }
+  protected abstract void innerRegenerate();
 
-  public void setLocationRelativeTo(Point dropPoint) {
-    Rectangle newBounds = new Rectangle(new Dimension(
-        getBounds().width, getBounds().height));
-    newBounds.x = dropPoint.x - getBounds().width / 2;
-    newBounds.y = dropPoint.y - getBounds().height / 2;
-    setBounds(newBounds);
+  protected abstract int paintTextBoxes(Graphics2D g2, Rectangle bounds, int textboxHeight, int offset);
+
+  /**
+   * Search and return the Textbox (methods and attributes) at the given
+   * location.
+   *
+   * @param location
+   *          the location where find a TextBox
+   * @return the found TextBox
+   */
+  private TextBox searchTextBoxAtLocation(Point location) {
+    final List<TextBox> tb = getAllTextBox();
+    tb.remove(entityName);
+    return GraphicView.searchComponentWithPosition(tb, location);
   }
 }

@@ -14,6 +14,7 @@ import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Attribute;
 import classDiagram.components.Method;
+import swing.PanelClassDiagram;
 
 /**
  * A TextBox is a graphic component from Slyum containing a String. The
@@ -90,7 +91,7 @@ public class TextBoxAttribute extends TextBox implements Observer {
   @Override
   public String getText() {
     String text = getStringFromAttribute(attribute);
-    if (!GraphicView.getDefaultVisibleTypes())
+    if (!PanelClassDiagram.getInstance().getClassDiagram().getDefaultVisibleTypes())
       text = text.replace(getFullStrungType(), "");
     return text;
   }
