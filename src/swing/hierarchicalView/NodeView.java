@@ -56,7 +56,7 @@ public class NodeView
       @Override
       public void actionPerformed(ActionEvent e) {
         GraphicView gv = NodeView.this.graphicView;
-        String gvName = gv.getName();
+        String gvName = MultiViewManager.getViewName(gv);
         
         UserInputDialog dialog = new UserInputDialog(
             gvName, 
@@ -65,10 +65,8 @@ public class NodeView
         
         dialog.setVisible(true);
         
-        if (dialog.isAccepted()) {
-          gv.setName(dialog.getText());
-          gv.notifyObservers();
-        }
+        if (dialog.isAccepted())
+          MultiViewManager.renameView(gv, dialog.getText());
       }
     });
     popupMenu.add(item);

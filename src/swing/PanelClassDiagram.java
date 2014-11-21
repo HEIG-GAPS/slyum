@@ -206,6 +206,7 @@ public class PanelClassDiagram extends JPanel {
     MultiViewManager.getRootGraphicView().removeAll();
     STab.getInstance().setSelectedIndex(0);
     setCurrentFile(null);
+    classDiagram.notifyObservers();
   }
   
   /**
