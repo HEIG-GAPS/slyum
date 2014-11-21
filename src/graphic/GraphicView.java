@@ -4,6 +4,7 @@ import change.BufferBounds;
 import change.BufferColor;
 import change.Change;
 import classDiagram.ClassDiagram;
+import classDiagram.ClassDiagram.ViewEntity;
 import classDiagram.IComponentsObserver;
 import classDiagram.IDiagramComponent;
 import classDiagram.INameObserver;
@@ -77,6 +78,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
@@ -119,7 +122,8 @@ public class GraphicView extends GraphicComponent
                                     IComponentsObserver, 
                                     INameObserver,
                                     Printable, 
-                                    ColoredComponent {
+                                    ColoredComponent,
+                                    Observer {
 
 
   
@@ -506,6 +510,7 @@ public class GraphicView extends GraphicComponent
       throw new IllegalArgumentException("classDiagram is null");
 
     this.classDiagram = classDiagram;
+    classDiagram.addObserver(this);
     
     scene = new JPanel(null) {
       {
@@ -2627,6 +2632,21 @@ public class GraphicView extends GraphicComponent
       c.setSelected(false);
   }
 
+  @Override
+  public void update(Observable o, Object arg) {
+    if (o.getClass() == ClassDiagram.class) {
+      if (arg != null && arg instanceof Boolean && (Boolean)arg)
+        for (SimpleEntityView entity : SimpleEntityView.getAll())
+          entity.initViewType();
+      repaint();
+    }
+  }
+  
+  public void regenerateAllEntities() {
+    for (EntityView ev : getEntitiesView())
+      ev.regenerateEntity();
+  }
+
   /**
    * Compute a new preferred size for the scrollPane. Calls when graphic
    * component is resized or moved.
@@ -2852,17 +2872,6 @@ public class GraphicView extends GraphicComponent
       if (!gc.existsInOthersViews())
         results.add((T) gc);
     return results;
-  }
-
-  public enum ViewEntity {
-
-    ALL, ONLY_ATTRIBUTES, ONLY_METHODS, NOTHING;
-
-    @Override
-    public String toString() {
-      return super.toString().charAt(0)
-              + super.toString().substring(1).toLowerCase().replace('_', ' ');
-    }
   }
   
   public interface ObtainColor {

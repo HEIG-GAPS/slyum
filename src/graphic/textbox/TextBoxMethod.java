@@ -15,6 +15,7 @@ import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Method;
 import classDiagram.components.Method.ParametersViewStyle;
+import swing.PanelClassDiagram;
 
 /**
  * A TextBox is a graphic component from Slyum containing a String. The
@@ -35,10 +36,8 @@ public class TextBoxMethod extends TextBox implements Observer {
   /**
    * Create a new TextBoxMethod with the given Method.
    * 
-   * @param parent
-   *          the graphic view
-   * @param attribute
-   *          the method
+   * @param parent the graphic view
+   * @param method the method
    */
   public TextBoxMethod(GraphicView parent, Method method) {
     super(parent, method.getStringFromMethod());
@@ -65,30 +64,15 @@ public class TextBoxMethod extends TextBox implements Observer {
   }
 
   @Override
-  public String getText() {
-    String text = method.getStringFromMethod();
-    if (!GraphicView.getDefaultVisibleTypes())
-      text = text.replace(method.getFullStringReturnType(), "");
-    return text;
+  public void setBounds(Rectangle bounds) {
+    if (bounds == null) throw new IllegalArgumentException("bounds is null");
+    
+    this.bounds = new Rectangle(bounds);
   }
 
   @Override
   public String getEditingText() {
     return method.getStringFromMethod(ParametersViewStyle.TYPE_AND_NAME);
-  }
-
-  @Override
-  public void initAttributeString(AttributedString ats) {
-    if (method.isStatic())
-      ats.addAttribute(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON, 2,
-              ats.getIterator().getEndIndex());
-  }
-
-  @Override
-  public void setBounds(Rectangle bounds) {
-    if (bounds == null) throw new IllegalArgumentException("bounds is null");
-
-    this.bounds = new Rectangle(bounds);
   }
 
   @Override
@@ -106,14 +90,24 @@ public class TextBoxMethod extends TextBox implements Observer {
   }
 
   @Override
+  public String getText() {
+    String text = method.getStringFromMethod();
+    if (!PanelClassDiagram.getInstance().getClassDiagram().getDefaultVisibleTypes())
+      text = text.replace(method.getFullStringReturnType(), "");
+    return text;
+  }
+
+  @Override
   public void setText(String text) {
     method.setText(text);
     super.setText(method.getStringFromMethod());
   }
 
   @Override
-  protected String truncate(Graphics2D g2, String text, int width) {
-    return Utility.truncate(g2, text, width);
+  public void initAttributeString(AttributedString ats) {
+    if (method.isStatic())
+      ats.addAttribute(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON, 2,
+                                                                            ats.getIterator().getEndIndex());
   }
 
   @Override
@@ -140,5 +134,10 @@ public class TextBoxMethod extends TextBox implements Observer {
   @Override
   protected boolean mustPaintSelectedStyle() {
     return mouseHover;
+  }
+  
+  @Override
+  protected String truncate(Graphics2D g2, String text, int width) {
+    return Utility.truncate(g2, text, width);
   }
 }

@@ -18,6 +18,7 @@ import classDiagram.verifyName.MethodName;
 import classDiagram.verifyName.TypeName;
 import classDiagram.verifyName.VariableName;
 import javax.swing.ImageIcon;
+import swing.PanelClassDiagram;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 
@@ -33,36 +34,21 @@ public class Method
 
   public static final String REGEX_SEMANTIC_METHOD = Variable.REGEX_SEMANTIC_ATTRIBUTE;
 
-  /**
-   * Enumeration class for the mode of display parameters in methods.
-   * 
-   * @author David Miserez
-   * @version 1.0 - 25.07.2011
-   */
-  public enum ParametersViewStyle {
-    DEFAULT, NAME, NOTHING, TYPE, TYPE_AND_NAME;
-
-    @Override
-    public String toString() {
-      return super.toString().charAt(0)
-              + super.toString().substring(1).toLowerCase().replace('_', ' ');
-    }
-  };
 
   public static boolean checkSemantic(String name) {
     return name.indexOf(' ') == -1;
     //return name.matches(REGEX_SEMANTIC_METHOD);
   }
+  protected final int id = ClassDiagram.getNextId();
 
   private boolean _isAbstract = false;
   private boolean _isStatic = false;
+  private ParametersViewStyle currentStyle;
   private final SimpleEntity entity;
-  protected final int id = ClassDiagram.getNextId();
   private String name;
   private final LinkedList<Variable> parameters = new LinkedList<>();
   private Type returnType;
   private Visibility visibility;
-  private ParametersViewStyle currentStyle;
 
   /**
    * Create a new method.
@@ -106,15 +92,6 @@ public class Method
   }
   
   /**
-   * Construct a copy of the Method with the given SimpleEntity.
-   * @param newEntity The new SimpleEntity associed.
-   * @return  The new Method.
-   */
-  public Method createCopy(SimpleEntity newEntity) {
-    return new Method(this, newEntity);
-  }
-
-  /**
    * Constructor of copy.
    * 
    * @param method
@@ -122,27 +99,6 @@ public class Method
    */
   public Method(Method method) {
     this(method, method.entity);
-  }
-
-  public void setMethod(Method method) {
-    boolean isRecord = Change.isRecord();
-    Change.record();
-
-    this.name = method.name;
-    this.returnType = method.returnType;
-    this.visibility = method.visibility;
-    this._isAbstract = method._isAbstract;
-    this._isStatic = method._isStatic;
-
-    clearParameters();
-
-    for (Variable parameter : method.parameters)
-
-      this.parameters.add(new Variable(parameter));
-
-    if (!isRecord) Change.stopRecord();
-
-    notifyObservers();
   }
 
   /**
@@ -178,9 +134,51 @@ public class Method
     setChanged();
   }
 
+  /**
+   * Construct a copy of the Method with the given SimpleEntity.
+   * @param newEntity The new SimpleEntity associed.
+   * @return  The new Method.
+   */
+  public Method createCopy(SimpleEntity newEntity) {
+    return new Method(this, newEntity);
+  }
+
+  public ParametersViewStyle getConcretParametersViewStyle() {
+    return currentStyle;
+  }
+
+  public String getFullStringReturnType() {
+    return " : " + getReturnType();
+  }
+
   @Override
   public int getId() {
     return id;
+  }
+
+  public ImageIcon getImageIcon() {
+    return PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "method.png");
+  }
+
+  public void setMethod(Method method) {
+    boolean isRecord = Change.isRecord();
+    Change.record();
+    
+    this.name = method.name;
+    this.returnType = method.returnType;
+    this.visibility = method.visibility;
+    this._isAbstract = method._isAbstract;
+    this._isStatic = method._isStatic;
+    
+    clearParameters();
+    
+    for (Variable parameter : method.parameters)
+      
+      this.parameters.add(new Variable(parameter));
+    
+    if (!isRecord) Change.stopRecord();
+
+    notifyObservers();
   }
 
   /**
@@ -203,8 +201,33 @@ public class Method
   }
 
   /**
+   * Get the style of displaying parameters.
+   *
+   * @return the style of displaying parameters
+   */
+  public ParametersViewStyle getParametersViewStyle() {
+    if (currentStyle == ParametersViewStyle.DEFAULT)
+      return PanelClassDiagram.getInstance().getClassDiagram()
+                              .getDefaultViewMethods();
+
+    return currentStyle;
+  }
+
+  /**
+   * Change the style of displaying parameters.
+   *
+   * @param newStyle
+   *          the new style
+   */
+  public void setParametersViewStyle(ParametersViewStyle newStyle) {
+    currentStyle = newStyle;
+    setChanged();
+    notifyObservers();
+  }
+
+  /**
    * Get the return type.
-   * 
+   *
    * @return the return type
    */
   public Type getReturnType() {
@@ -214,136 +237,46 @@ public class Method
   }
 
   /**
-   * Get the visibility.
-   * 
-   * @return the visibility
+   * Get a String representing the Method.
+   *
+   * @param method
+   *          the method to convert to String
+   * @param style
+   *          the style of display for parameters
+   * @return the string converted
    */
-  public Visibility getVisibility() {
-    return visibility;
+  public String getStringFromMethod(ParametersViewStyle style) {
+    String signature = getVisibility().toCar() + " " + getName() + " (";
+    final LinkedList<Variable> parameters = getParameters();
+    
+    if (style != ParametersViewStyle.NOTHING)
+      
+      for (int i = 0; i < parameters.size(); i++) {
+        if (!parameters.get(i).getName().isEmpty())
+          if (style == ParametersViewStyle.TYPE_AND_NAME)
+            
+            signature += parameters.get(i).getName() + " : "
+                         + parameters.get(i).getType();
+          
+          else if (style == ParametersViewStyle.NAME)
+            signature += parameters.get(i).getName();
+        
+        if (style == ParametersViewStyle.TYPE)
+          signature += parameters.get(i).getType();
+        
+        if (i < parameters.size() - 1) signature += ", ";
+      }
+    
+    return signature + ")" + getFullStringReturnType();
   }
 
-  /**
-   * Get the abstract state of the method.
-   * 
-   * @return the abstract state of the method
-   */
-  public boolean isAbstract() {
-    return _isAbstract;
-  }
-
-  /**
-   * Get the static state of the method.
-   * 
-   * @return the static state of the method
-   */
-  public boolean isStatic() {
-    return _isStatic;
-  }
-
-  public void moveParameterPosition(Variable parameter, int offset) {
-    final int index = parameters.indexOf(parameter);
-
-    if (index != -1) {
-      parameters.remove(parameter);
-      parameters.add(index + offset, parameter);
-
-      setChanged();
-    }
-  }
-
-  public void removeParameters(Variable parameter) {
-    Change.push(new BufferMethod(this));
-    parameters.remove(parameter);
-    parameter.deleteObserver(this);
-    Change.push(new BufferMethod(this));
-
-    setChanged();
-  }
-
-  @Override
-  public void select() {
-    setChanged();
-  }
-
-  /**
-   * Set the abstract state of the method.
-   * 
-   * @param isAbstract
-   *          the new abstract state
-   */
-  public void setAbstract(boolean isAbstract) {
-    if (isAbstract() == isAbstract) return;
-
-    if (isAbstract && !entity.isAbstract()) {
-      SMessageDialog.showErrorMessage("Class must be abstract.");
-      return;
-    }
-
-    Change.push(new BufferMethod(this));
-    _isAbstract = isAbstract;
-    Change.push(new BufferMethod(this));
-
-    setChanged();
-  }
-
-  /**
-   * Set the name of the method.
-   * 
-   * @param name
-   *          the new name of the method
-   */
-  public boolean setName(String name) {
-    if (!MethodName.getInstance().verifyName(name) || name.equals(getName()))
-      return false;
-
-    Change.push(new BufferMethod(this));
-    this.name = name;
-    Change.push(new BufferMethod(this));
-
-    setChanged();
-
-    return true;
-  }
-
-  /**
-   * Set the return type of the method.
-   * 
-   * @param returnType
-   *          the new return type
-   */
-  public boolean setReturnType(Type returnType) {
-    if (getReturnType() != null
-            && returnType.getName().equals(getReturnType().getName()))
-      return false;
-
-    Change.push(new BufferMethod(this));
-    this.returnType = returnType;
-    Change.push(new BufferMethod(this));
-
-    setChanged();
-
-    return true;
-  }
-
-  /**
-   * Set the static state of the method.
-   * 
-   * @param isStatic
-   *          the new static state
-   */
-  public void setStatic(boolean isStatic) {
-    if (isStatic() == isStatic) return;
-
-    Change.push(new BufferMethod(this));
-    _isStatic = isStatic;
-    Change.push(new BufferMethod(this));
-
-    setChanged();
+  public String getStringFromMethod() {
+    return getStringFromMethod(getParametersViewStyle());
   }
 
   public void setText(String text) {
     if (text.length() == 0
-            || text.equals(getStringFromMethod(ParametersViewStyle.TYPE_AND_NAME)))
+        || text.equals(getStringFromMethod(ParametersViewStyle.TYPE_AND_NAME)))
       return;
 
     String returnType = getReturnType().getName();
@@ -378,8 +311,8 @@ public class Method
             String name = variable[0].trim(), type = variable[1].trim();
 
             if (!VariableName.getInstance().verifyName(name)
-                    || !TypeName.getInstance().verifyName(type)) continue;
-
+                || !TypeName.getInstance().verifyName(type)) continue;
+            
             par.add(new Variable(name, new Type(type)));
           }
         }
@@ -387,7 +320,7 @@ public class Method
 
       if (arguments.length > 1) {
         String rt = arguments[1].substring(arguments[1].indexOf(":") + 1)
-                .trim();
+            .trim();
         if (TypeName.getInstance().verifyName(rt)) returnType = rt;
       }
     }
@@ -412,6 +345,15 @@ public class Method
   }
 
   /**
+   * Get the visibility.
+   *
+   * @return the visibility
+   */
+  public Visibility getVisibility() {
+    return visibility;
+  }
+  
+  /**
    * Set the visibility of the method.
    * 
    * @param visibility
@@ -428,16 +370,6 @@ public class Method
     Change.push(new BufferMethod(this));
 
     setChanged();
-  }
-
-  @Override
-  public String toString() {
-    return getName();
-  }
-
-  @Override
-  public String getXmlTagName() {
-    return "method";
   }
 
   @Override
@@ -458,82 +390,156 @@ public class Method
   }
 
   @Override
+  public String getXmlTagName() {
+    return "method";
+  }
+
+  /**
+   * Get the abstract state of the method.
+   *
+   * @return the abstract state of the method
+   */
+  public boolean isAbstract() {
+    return _isAbstract;
+  }
+  
+  /**
+   * Set the abstract state of the method.
+   *
+   * @param isAbstract
+   *          the new abstract state
+   */
+  public void setAbstract(boolean isAbstract) {
+    if (isAbstract() == isAbstract) return;
+    
+    if (isAbstract && !entity.isAbstract()) {
+      SMessageDialog.showErrorMessage("Class must be abstract.");
+      return;
+    }
+
+    Change.push(new BufferMethod(this));
+    _isAbstract = isAbstract;
+    Change.push(new BufferMethod(this));
+
+    setChanged();
+  }
+
+  /**
+   * Get the static state of the method.
+   *
+   * @return the static state of the method
+   */
+  public boolean isStatic() {
+    return _isStatic;
+  }
+  
+  /**
+   * Set the static state of the method.
+   *
+   * @param isStatic
+   *          the new static state
+   */
+  public void setStatic(boolean isStatic) {
+    if (isStatic() == isStatic) return;
+    
+    Change.push(new BufferMethod(this));
+    _isStatic = isStatic;
+    Change.push(new BufferMethod(this));
+    
+    setChanged();
+  }
+  
+  public void moveParameterPosition(Variable parameter, int offset) {
+    final int index = parameters.indexOf(parameter);
+    
+    if (index != -1) {
+      parameters.remove(parameter);
+      parameters.add(index + offset, parameter);
+      
+      setChanged();
+    }
+  }
+
+  public void removeParameters(Variable parameter) {
+    Change.push(new BufferMethod(this));
+    parameters.remove(parameter);
+    parameter.deleteObserver(this);
+    Change.push(new BufferMethod(this));
+    
+    setChanged();
+  }
+  
+  @Override
+  public void select() {
+    setChanged();
+  }
+  
+  /**
+   * Set the name of the method.
+   *
+   * @param name
+   *          the new name of the method
+   * @return if the name has changed.
+   */
+  public boolean setName(String name) {
+    if (!MethodName.getInstance().verifyName(name) || name.equals(getName()))
+      return false;
+
+    Change.push(new BufferMethod(this));
+    this.name = name;
+    Change.push(new BufferMethod(this));
+    
+    setChanged();
+    
+    return true;
+  }
+  
+  /**
+   * Set the return type of the method.
+   *
+   * @param returnType
+   *          the new return type
+   * @return if the return type has changed.
+   */
+  public boolean setReturnType(Type returnType) {
+    if (getReturnType() != null
+        && returnType.getName().equals(getReturnType().getName()))
+      return false;
+
+    Change.push(new BufferMethod(this));
+    this.returnType = returnType;
+    Change.push(new BufferMethod(this));
+
+    setChanged();
+
+    return true;
+  }
+
+  @Override
+  public String toString() {
+    return getName();
+  }
+  
+  @Override
   public void update(Observable arg0, Object arg1) {
     // parameter's changed
     setChanged();
   }
-
-  /**
-   * Get the style of displaying parameters.
-   * 
-   * @return the style of displaying parameters
-   */
-  public ParametersViewStyle getParametersViewStyle() {
-    if (currentStyle == ParametersViewStyle.DEFAULT)
-      return GraphicView.getDefaultViewMethods();
-
-    return currentStyle;
-  }
-
-  public ParametersViewStyle getConcretParametersViewStyle() {
-    return currentStyle;
-  }
-
-  /**
-   * Change the style of displaying parameters.
-   * 
-   * @param newStyle
-   *          the new style
-   */
-  public void setParametersViewStyle(ParametersViewStyle newStyle) {
-    currentStyle = newStyle;
-    setChanged();
-    notifyObservers();
-  }
-
-  /**
-   * Get a String representing the Method.
-   * 
-   * @param method
-   *          the method to convert to String
-   * @param style
-   *          the style of display for parameters
-   * @return the string converted
-   */
-  public String getStringFromMethod(ParametersViewStyle style) {
-    String signature = getVisibility().toCar() + " " + getName() + " (";
-    final LinkedList<Variable> parameters = getParameters();
-
-    if (style != ParametersViewStyle.NOTHING)
-
-      for (int i = 0; i < parameters.size(); i++) {
-        if (!parameters.get(i).getName().isEmpty())
-          if (style == ParametersViewStyle.TYPE_AND_NAME)
-
-            signature += parameters.get(i).getName() + " : "
-                    + parameters.get(i).getType();
-
-          else if (style == ParametersViewStyle.NAME)
-            signature += parameters.get(i).getName();
-
-        if (style == ParametersViewStyle.TYPE)
-          signature += parameters.get(i).getType();
-
-        if (i < parameters.size() - 1) signature += ", ";
-      }
-
-    return signature + ")" + getFullStringReturnType();
-  }
   
-  public String getFullStringReturnType() {
-    return " : " + getReturnType();
-  }
+  /**
+   * Enumeration class for the mode of display parameters in methods.
+   *
+   * @author David Miserez
+   * @version 1.0 - 25.07.2011
+   */
+  public enum ParametersViewStyle {
 
-  public String getStringFromMethod() {
-    return getStringFromMethod(getParametersViewStyle());
-  }
-  
-  public ImageIcon getImageIcon() {
-    return PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "method.png");
+    DEFAULT, NAME, NOTHING, TYPE, TYPE_AND_NAME;
+    
+    @Override
+    public String toString() {
+      return super.toString().charAt(0)
+              + super.toString().substring(1).toLowerCase().replace('_', ' ');
+    }
   }
 }

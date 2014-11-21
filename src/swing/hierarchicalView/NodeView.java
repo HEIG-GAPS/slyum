@@ -51,7 +51,6 @@ public class NodeView
         "Rename", 
         PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "element-view-open.png"));
     
-    item.setEnabled(graphicView != MultiViewManager.getRootGraphicView());
     item.addActionListener(new ActionListener() {
 
       @Override

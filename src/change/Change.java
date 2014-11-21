@@ -1,6 +1,7 @@
 package change;
 
 import java.util.LinkedList;
+import swing.PanelClassDiagram;
 
 import swing.Slyum;
 
@@ -165,6 +166,9 @@ public class Change {
   }
 
   protected static void checkToolbarButtonState() {
+    if (PanelClassDiagram.getInstance() == null)
+      return;
+    
     Slyum.setEnableRedoButtons(pointer < stack.size() - 1);
     Slyum.setEnableUndoButtons(pointer > 0);
   }

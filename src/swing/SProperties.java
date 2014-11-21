@@ -1,8 +1,8 @@
 package swing;
 
+import classDiagram.ClassDiagram.ViewEntity;
 import graphic.ColoredComponent;
 import graphic.GraphicView;
-import graphic.GraphicView.ViewEntity;
 import graphic.entity.EntityView;
 import graphic.entity.EnumView;
 import graphic.entity.SimpleEntityView;
@@ -64,15 +64,32 @@ import swing.slyumCustomizedComponents.SRadioButton;
 import update.UpdateInfo;
 
 public class SProperties extends JDialog {
-  private ButtonColor btnColor;
   private ButtonColor btnBackgroundColor;
+  private ButtonColor btnColor;
   private ButtonColor btnDefaultClassColor;
-  private JPanel contentPanel = new JPanel(), panelLabelAlert;
+  private JCheckBox chckbxAutoAdjustInheritance;
+  private JCheckBox chckbxCheckUpdateAtLaunch;
+  private JCheckBox chckbxDisableCrossPopup;
+  private JCheckBox chckbxDisableErrorMessage;
+  private JCheckBox chckbxEnableGrid;
+  private JCheckBox chckbxOpacityGrid;
+  private JCheckBox chckbxPaintTitleBorder;
+  private JCheckBox chckbxShowGrid;
+  private JCheckBox chckbxViewEnum;
+  private JCheckBox chckbxViewTitleOnExport;
+  private JCheckBox chckbxViewTypes;
+  private JCheckBox ckbBackgroundGradient;
+  private JCheckBox ckbEntityGradient;
+  private JPanel contentPanel = new JPanel();
   private JLabel lblPreviewFont = new JLabel();
   private SList<String> listName;
   private SList<Integer> listSize;
-  private JComboBox<ParametersViewStyle> listViewMethods;
   private JComboBox<ViewEntity> listViewEntities;
+  private JComboBox<ParametersViewStyle> listViewMethods;
+  private JPanel panelLabelAlert;
+  private JPanel panel_Grid;
+  private JPanel panel_grid_color;
+  private JPanel panel_grid_opacity;
   private JRadioButton rdbtnAutomaticcolor;
   private JRadioButton rdbtnLow;
   private JRadioButton rdbtnMax;
@@ -80,47 +97,6 @@ public class SProperties extends JDialog {
   private JRadioButton rdbtnSelectedColor;
   private JSlider sliderGridPoint;
   private JSlider sliderGridSize;
-  private JCheckBox chckbxOpacityGrid;
-  private JCheckBox chckbxDisableErrorMessage;
-  private JCheckBox chckbxDisableCrossPopup;
-  private JCheckBox chckbxAutoAdjustInheritance;
-  private JCheckBox ckbBackgroundGradient;
-  private JCheckBox ckbEntityGradient;
-  private JCheckBox chckbxShowGrid;
-  private JCheckBox chckbxViewEnum;
-  private JCheckBox chckbxViewTitleOnExport;
-  private JCheckBox chckbxPaintTitleBorder;
-  private JCheckBox chckbxCheckUpdateAtLaunch;
-  private JCheckBox chckbxViewTypes;
-  private JPanel panel_Grid, panel_grid_color, panel_grid_opacity;
-  private JCheckBox chckbxEnableGrid;
-
-  private abstract class ButtonColor extends FlatButton 
-                                     implements ColoredComponent {
-
-    public ButtonColor(String name) {
-      super(name);
-      setBorder(BorderFactory.createCompoundBorder(
-          BorderFactory.createLineBorder(Slyum.THEME_COLOR),
-          getBorder()));
-    }
-
-    @Override
-    public Color getColor() {
-      return getBackground();
-    }
-
-    @Override
-    public void setColor(Color color) {
-      setBackground(color);
-    }
-
-    @Override
-    public void setDefaultStyle() {
-      setBackground(getDefaultColor());
-    }
-
-  }
 
   /**
    * Create the dialog.
@@ -1029,9 +1005,29 @@ public class SProperties extends JDialog {
     setVisible(true);
   }
 
+  private void checkPaintTitleBorderEnabled() {
+    if (chckbxPaintTitleBorder == null ||
+        chckbxViewTitleOnExport == null)
+      return;
+    
+    chckbxPaintTitleBorder.setEnabled(
+        chckbxViewTitleOnExport.isSelected());
+  }
+
+  private void setEnableGrid(boolean enable) {
+    setEnableComponent(panel_Grid, chckbxEnableGrid.isSelected());
+    setEnableStyleGrid(chckbxShowGrid.isSelected()
+                       && chckbxEnableGrid.isSelected());
+  }
+
+  private void setEnableStyleGrid(boolean enable) {
+    setEnableComponent(panel_grid_opacity, enable);
+    setEnableComponent(panel_grid_color, enable);
+  }
+
   private void init() {
     String gripOpacity = PropertyLoader.getInstance().getProperties()
-            .getProperty(PropertyLoader.GRID_POINT_OPACITY);
+        .getProperty(PropertyLoader.GRID_POINT_OPACITY);
     gripOpacity = gripOpacity == null ? "100" : gripOpacity;
 
     btnBackgroundColor.setBackground(GraphicView.getBasicColor());
@@ -1080,42 +1076,46 @@ public class SProperties extends JDialog {
     setEnableGrid(chckbxEnableGrid.isSelected());
   }
 
-  private void setEnableStyleGrid(boolean enable) {
-    setEnableComponent(panel_grid_opacity, enable);
-    setEnableComponent(panel_grid_color, enable);
-  }
-
-  private void setEnableGrid(boolean enable) {
-    setEnableComponent(panel_Grid, chckbxEnableGrid.isSelected());
-    setEnableStyleGrid(chckbxShowGrid.isSelected()
-            && chckbxEnableGrid.isSelected());
-  }
-
   private void setEnableComponent(JPanel p, boolean enable) {
     p.setEnabled(enable);
 
     for (Component child : p.getComponents())
-
       if (child instanceof JPanel)
-
         setEnableComponent((JPanel) child, enable);
       else
-
         child.setEnabled(enable);
-  }
-  
-  private void checkPaintTitleBorderEnabled() {
-    if (chckbxPaintTitleBorder == null ||
-        chckbxViewTitleOnExport == null)
-      return;
-    
-    chckbxPaintTitleBorder.setEnabled(
-        chckbxViewTitleOnExport.isSelected());
   }
 
   private void showOpacityWarning() {
     SMessageDialog.showWarningMessage(
             SMessageDialog.WARNING_OPTION_DECREASE_PERF, this);
+  }
+
+  private abstract class ButtonColor
+      extends FlatButton
+  implements ColoredComponent {
+    
+    public ButtonColor(String name) {
+      super(name);
+      setBorder(BorderFactory.createCompoundBorder(
+          BorderFactory.createLineBorder(Slyum.THEME_COLOR),
+          getBorder()));
+    }
+    
+    @Override
+    public Color getColor() {
+      return getBackground();
+    }
+    
+    @Override
+    public void setColor(Color color) {
+      setBackground(color);
+    }
+    
+    @Override
+    public void setDefaultStyle() {
+      setBackground(getDefaultColor());
+    }
   }
 
 }
