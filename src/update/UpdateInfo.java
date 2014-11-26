@@ -46,13 +46,12 @@ import utility.Utility;
 public class UpdateInfo extends JDialog {
   
   public static boolean isUpdateAvailable() {
-    return true;/*
     try {
       return getIntVersion(Updater.getLatestVersion()) > getIntVersion(Slyum.VERSION);
     } catch (Exception ex) {
       Logger.getLogger(UpdateInfo.class.getName()).log(Level.SEVERE, null, ex);
     }
-    return false;*/
+    return false;
   }
   
   public static void getNewUpdate() {
@@ -230,7 +229,7 @@ public class UpdateInfo extends JDialog {
       SMessageDialog.showErrorMessage("Unable to get the updater.");
     }
     try {
-      String[] run = {"java", "-jar", updaterFile, Slyum.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()};
+      String[] run = {"java", "-jar", updaterFile, new File(Slyum.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent()};
       Runtime.getRuntime().exec(run);
     } catch (URISyntaxException | IOException ex) {
       ex.printStackTrace();

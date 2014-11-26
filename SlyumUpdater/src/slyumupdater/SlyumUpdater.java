@@ -108,7 +108,13 @@ public class SlyumUpdater extends JFrame {
   }
 
   private void launch() {
-    String[] run = {"java", "-jar", slyumPath};
+    String[] run;
+    
+    if (slyumPath.contains(".app/Contents/Java")) // App bundle on Mac OS X
+      run = new String[] {"open", slyumPath.substring(0, slyumPath.indexOf("/Contents/Java"))};
+    else
+      run = new String[] {"java", "-jar", slyumPath};
+    
     try {
       Runtime.getRuntime().exec(run);
     } catch (IOException ex) {
