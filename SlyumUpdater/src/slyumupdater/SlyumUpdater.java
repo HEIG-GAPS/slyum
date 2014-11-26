@@ -43,8 +43,13 @@ public class SlyumUpdater extends JFrame {
   private JScrollPane sp;
   private JPanel pan1;
   private JPanel pan2;
+  private String slyumPath;
 
   public SlyumUpdater() {
+  }
+
+  private SlyumUpdater(String slyumPath) {
+    this.slyumPath = slyumPath;
     initComponents();
     outText.setText("Contacting Download Server...");
     download();
@@ -90,12 +95,11 @@ public class SlyumUpdater extends JFrame {
               System.out.println(getDownloadLinkFromHost());
               downloadFile(getDownloadLinkFromHost());
               unzip();
-              copyFiles(new File(root), new File("").getAbsolutePath());
+              copyFiles(new File(root), new File(slyumPath).getAbsolutePath());
               cleanup();
               launch();
               outText.setText(outText.getText() + "\nUpdate Finished!");
             } catch (Exception ex) {
-              ex.printStackTrace();
               JOptionPane.showMessageDialog(null, "An error occured while preforming update!");
             }
           }
@@ -104,7 +108,7 @@ public class SlyumUpdater extends JFrame {
   }
 
   private void launch() {
-    String[] run = {"java", "-jar", "Slyum.jar"};
+    String[] run = {"java", "-jar", slyumPath};
     try {
       Runtime.getRuntime().exec(run);
     } catch (IOException ex) {
@@ -208,11 +212,14 @@ public class SlyumUpdater extends JFrame {
     return TagDownload.getContentTag(tagDownload);
   }
 
-  public static void main(String args[]) {
+  public static void main(final String args[]) {
+    if (args.length != 1)
+      JOptionPane.showMessageDialog(null, "Arguments length probleme!");
+    
     java.awt.EventQueue.invokeLater(new Runnable() {
       @Override
       public void run() {
-        new SlyumUpdater().setVisible(true);
+        new SlyumUpdater(args[0]).setVisible(true);
       }
     });
   }

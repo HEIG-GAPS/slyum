@@ -71,23 +71,23 @@
 
     -->
     
-    <taskdef name="bundleapp"
-             classname="com.oracle.appbundler.AppBundlerTask"   
-             classpath="tools/appbundler-1.0.jar" />
+  <taskdef name="bundleapp"
+           classname="com.oracle.appbundler.AppBundlerTask"   
+           classpath="tools/appbundler-1.0.jar" />
 
-    <target name="bundle-slyum">
-        <bundleapp outputdirectory="dist"
-            name="Slyum"
-            displayname="Slyum"
-            identifier="ch.slyum"
-            mainclassname="swing.Slyum"
-            icon="tools/icns/slyum.icns"
-            shortversion="3.2.2"
-            copyright="GAPS - HEIG-VD">
-            <classpath file="dist/Slyum.jar" />
-        </bundleapp>
-    </target>
-	
+  <target name="bundle-slyum">
+      <bundleapp outputdirectory="dist"
+          name="Slyum"
+          displayname="Slyum"
+          identifier="ch.slyum"
+          mainclassname="swing.Slyum"
+          icon="tools/icns/slyum.icns"
+          shortversion="3.2.2"
+          copyright="GAPS - HEIG-VD">
+          <classpath file="dist/Slyum.jar" />
+      </bundleapp>
+  </target>
+
 	<target name="package-for-store" depends="jar">
 
         <!-- Change the value of this property to be the name of your JAR,

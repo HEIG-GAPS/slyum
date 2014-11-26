@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -45,12 +46,13 @@ import utility.Utility;
 public class UpdateInfo extends JDialog {
   
   public static boolean isUpdateAvailable() {
+    return true;/*
     try {
       return getIntVersion(Updater.getLatestVersion()) > getIntVersion(Slyum.VERSION);
     } catch (Exception ex) {
       Logger.getLogger(UpdateInfo.class.getName()).log(Level.SEVERE, null, ex);
     }
-    return false;
+    return false;*/
   }
   
   public static void getNewUpdate() {
@@ -227,10 +229,10 @@ public class UpdateInfo extends JDialog {
       Logger.getLogger(UpdateInfo.class.getName()).log(Level.SEVERE, null, ex);
       SMessageDialog.showErrorMessage("Unable to get the updater.");
     }
-    String[] run = {"java","-jar", updaterFile};
     try {
+      String[] run = {"java", "-jar", updaterFile, Slyum.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()};
       Runtime.getRuntime().exec(run);
-    } catch (Exception ex) {
+    } catch (URISyntaxException | IOException ex) {
       ex.printStackTrace();
       SMessageDialog.showErrorMessage(
           "An error occured when trying to update Slyum.");
