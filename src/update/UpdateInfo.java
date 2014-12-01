@@ -229,8 +229,14 @@ public class UpdateInfo extends JDialog {
       SMessageDialog.showErrorMessage("Unable to get the updater.");
     }
     try {
-      String[] run = {"java", "-jar", updaterFile, new File(Slyum.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParent()};
+      String applicationPath = new File(
+          Slyum.class.getProtectionDomain().getCodeSource()
+               .getLocation().toURI().getPath()).getParent();
+      
+      String[] run = {"java", "-jar", updaterFile, applicationPath};
+      
       Runtime.getRuntime().exec(run);
+      
     } catch (URISyntaxException | IOException ex) {
       ex.printStackTrace();
       SMessageDialog.showErrorMessage(
