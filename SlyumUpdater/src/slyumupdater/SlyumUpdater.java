@@ -36,6 +36,9 @@ public class SlyumUpdater extends JFrame {
 
   private Thread worker;
   private final String root = "update" + System.getProperty("file.separator");
+  private static final String macOsPath = "/Contents/Java";
+  private static final String macOsAppPath = ".app" + macOsPath;
+  
   public static final String tagDownload = "[download]";
 
   private JTextArea outText;
@@ -110,8 +113,8 @@ public class SlyumUpdater extends JFrame {
   private void launch() {
     String[] run;
     
-    if (slyumPath.contains(".app/Contents/Java")) // App bundle on Mac OS X
-      run = new String[] {"open", slyumPath.substring(0, slyumPath.indexOf("/Contents/Java"))};
+    if (isAppBundle())
+      run = new String[] {"open", getAppBundlePath()};
     else
       run = new String[] {"java", "-jar", slyumPath};
     
@@ -121,6 +124,19 @@ public class SlyumUpdater extends JFrame {
       ex.printStackTrace();
     }
     System.exit(0);
+  }
+  
+  private String getAppBundlePath() {
+    return slyumPath.substring(0, slyumPath.indexOf(macOsPath));
+  }
+  
+  private boolean isAppBundle() {
+    return isMac() && slyumPath.contains(macOsAppPath);
+  }
+  
+  private static boolean isMac() {
+    final String os = System.getProperty("os.name").toLowerCase();
+    return os.contains("mac");
   }
 
   private void cleanup() {

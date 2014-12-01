@@ -230,11 +230,10 @@ public class Slyum extends JFrame implements ActionListener {
   public static final Color THEME_COLOR = new Color(0, 122, 204); // 007ACC
   public static final Font UI_FONT;
   // !! Always  X.Y.Z (for update safety), even if it's 0.
-  public static final String VERSION = "5.0.0";
+  public static final String VERSION = "2.0.0";
   public static final boolean VIEW_TITLE_ON_EXPORT_DEFAULT = true;
   public static final int WINDOWS_MAXIMIZED = Frame.MAXIMIZED_BOTH;
-  public static final Dimension WINDOWS_SIZE = new Dimension(DEFAULT_SIZE.x,
-      DEFAULT_SIZE.y);
+  public static final Dimension WINDOWS_SIZE = new Dimension(DEFAULT_SIZE.x, DEFAULT_SIZE.y);
   private static final String ARGUMENT_EXIT_WITHOUT_ASK = "-exitWithoutAsk";
   private static final String ARGUMENT_PRINT_CHANGE_STACK_STATE = "-printChanges";
   private static final String URL_ISSUES_PAGE = "https://code.google.com/p/slyum/issues/list";
@@ -246,9 +245,6 @@ public class Slyum extends JFrame implements ActionListener {
   private static JCheckBoxMenuItem menuItemFullScreen;
   private static JMenuItem redo;
   private static final String ACTION_CLEAN_DIAGRAM = "CleanDiagram";
-  private static int savedDividerBottomLocation, 
-                     savedDividerLeftLocation;
-
 
   private static JMenuItem undo;
   private static String windowTitle = APP_NAME;
@@ -370,7 +366,6 @@ public class Slyum extends JFrame implements ActionListener {
     return instance;
   }
 
-  
   public static Mode getModeCursor() {
     String prop = PropertyLoader.getInstance().getProperties()
         .getProperty(PropertyLoader.MODE_CURSOR);
