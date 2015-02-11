@@ -75,10 +75,11 @@ public class UpdateInfo extends JDialog {
     }
   }
 
-  private static final String updaterDirectory = Slyum.getPathAppDir();
-  private static final String updaterFile = 
+  public static final String updaterDirectory = Slyum.getPathAppDir();
+  public static final String UPDATER_FILE = 
      updaterDirectory + Slyum.FILE_SEPARATOR +"SlyumUpdater.jar";
-  private static final String tagUpdater = "[updater]";
+  public static final String TAG_UPDATER = "[updater]";
+  public static final String TAG_UPDATER_VERSION = "[updaterVersion]";
     
   private JEditorPane infoPane;
   private JScrollPane scp;
@@ -195,18 +196,22 @@ public class UpdateInfo extends JDialog {
   }
   
   private void initializeUpdater() throws MalformedURLException, Exception {
-    File f = new File(updaterFile);
-    if (f.exists())
+    File f = new File(UPDATER_FILE);
+    int updaterVersion = Integer.parseInt(TagDownload.getContentTag(TAG_UPDATER_VERSION));
+    
+    if (f.exists() && Slyum.getUpdaterVersion() >= updaterVersion)
       return;
     
     if (!new File(updaterDirectory).exists())
       new File(updaterDirectory).mkdirs();
     
-    URL website = new URL(TagDownload.getContentTag(tagUpdater));
+    URL website = new URL(TagDownload.getContentTag(TAG_UPDATER));
     try (ReadableByteChannel rbc = Channels.newChannel(website.openStream()); 
-         FileOutputStream fos = new FileOutputStream(updaterFile)) {
+         FileOutputStream fos = new FileOutputStream(UPDATER_FILE)) {
       fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
     }
+    
+    Slyum.setUpdaterVersion(updaterVersion);
   }
   
   private void update() {
@@ -233,7 +238,7 @@ public class UpdateInfo extends JDialog {
           Slyum.class.getProtectionDomain().getCodeSource()
                .getLocation().toURI().getPath()).getParent();
       
-      String[] run = {"java", "-jar", updaterFile, applicationPath};
+      String[] run = {"java", "-jar", UPDATER_FILE, applicationPath};
       
       Runtime.getRuntime().exec(run);
       
