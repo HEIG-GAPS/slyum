@@ -41,6 +41,7 @@ public class PropertyLoader {
   public static final String PAINT_TITLE_BORDER = "PaintTitleBorder";
   public static final String CHECK_UPDATE_AT_LAUNCH = "CheckUpdateAtLaunch";
   public static final String FULL_SCREEN_MODE = "FullScreenMode";
+  public static final String UPDATER_VERSION = "UpdaterVersion";
 
   public static final String filename = Slyum.getPathAppDir()
           + Slyum.FILE_SEPARATOR + "config.properties";
