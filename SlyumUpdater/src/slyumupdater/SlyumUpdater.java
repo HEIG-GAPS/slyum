@@ -36,6 +36,7 @@ public class SlyumUpdater extends JFrame {
 
   private Thread worker;
   private final String root = "update" + System.getProperty("file.separator");
+  private static final String slyumNameFile = System.getProperty("file.separator") + "Slyum.jar";
   private static final String macOsPath = "/Contents/Java";
   private static final String macOsAppPath = ".app" + macOsPath;
   
@@ -116,7 +117,7 @@ public class SlyumUpdater extends JFrame {
     if (isAppBundle())
       run = new String[] {"open", getAppBundlePath()};
     else
-      run = new String[] {"java", "-jar", slyumPath};
+      run = new String[] {"java", "-jar", slyumPath + slyumNameFile};
     
     try {
       Runtime.getRuntime().exec(run);

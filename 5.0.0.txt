@@ -1,0 +1,11 @@
+Multi view!!!!!!!!!!!!!!!!!!!
+New shortcut for creating diagram components. A lot easier.
+Possibility to hide / show types in diagram.
+You can now directly editing an entity's name after its creation.
+Add shortcuts for recent colors used.
+Add diagram only mode (hide the left and the bottom panel).
+New menu Export for exporting diagram in PDF, SVG and EPS format.
+Diagram'es properties: diagrams have now proper properties.
+Components in tree are now alphabetically sorted.
+Various bugfixes.
+Updater must work on Mac OS X.
