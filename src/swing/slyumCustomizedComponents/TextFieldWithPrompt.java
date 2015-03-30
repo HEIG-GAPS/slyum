@@ -85,7 +85,6 @@ public class TextFieldWithPrompt extends JTextField {
   @Override
   protected void paintComponent(Graphics g) {
     super.paintComponent(g);
-    repaint();
     Graphics2D g2 = (Graphics2D)g.create();
     utility.Utility.setRenderQuality(g2);
     
