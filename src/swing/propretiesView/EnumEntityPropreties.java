@@ -86,7 +86,9 @@ public class EnumEntityPropreties extends GlobalPropreties {
       tableEnumValues.getCellEditor().stopCellEditing();
     
     EnumEntity enumEntity = (EnumEntity) currentObject;
-    txtFieldName.setText(enumEntity.getName());
+    
+    if (!txtFieldName.getText().equals(enumEntity.getName()))
+      txtFieldName.setText(enumEntity.getName());
     enumEntity.addObserver(this);
 
     // Mise à jour des champs de la table
