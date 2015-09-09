@@ -274,8 +274,6 @@ public class MultiViewManager {
       int viewIndex = instance.graphicViews.indexOf(graphicView);
       Document doc = getDocumentFromCurrentFile();
       
-      WatchDir.ignoreNextEvents(getCurrentPath(), 2);
-      
       doc.getFirstChild().removeChild(doc.getElementsByTagName("umlView").item(viewIndex));
       saveDocumentInCurrentFile(doc);
     } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
@@ -289,7 +287,6 @@ public class MultiViewManager {
     try {
       Document doc = getDocumentFromCurrentFile();
       
-      WatchDir.ignoreNextEvents(getCurrentPath(), 2);
       doc.getFirstChild().appendChild(graphicView.getXmlElement(doc));
       saveDocumentInCurrentFile(doc);
     } catch (ParserConfigurationException | SAXException | IOException | TransformerException ex) {
@@ -307,13 +304,7 @@ public class MultiViewManager {
   
   private static void saveDocumentInCurrentFile(Document doc) 
       throws TransformerConfigurationException, TransformerException {
-    
-      // write the content into xml file
-      TransformerFactory transformerFactory = TransformerFactory.newInstance();
-      Transformer transformer = transformerFactory.newTransformer();
-      DOMSource source = new DOMSource(doc);
-      StreamResult result = new StreamResult(getCurrentFile());
-      transformer.transform(source, result);
+    PanelClassDiagram.saveDocumentInCurrentFile(doc, PanelClassDiagram.getFileOpen());
   }
   
   private static boolean isXmlImportation() {

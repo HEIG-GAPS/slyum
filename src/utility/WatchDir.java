@@ -60,7 +60,7 @@ public class WatchDir {
   }
   
   public void _stopWatchingFile(Path file, boolean stopWatching) {
-    System.out.println(file + " " + stopWatching);
+    System.out.println(file + " stop watching: " + stopWatching);
     keys.get(searchByPath(file)).isDisable = stopWatching;
   }
   
@@ -164,10 +164,11 @@ public class WatchDir {
       Path child = skey.dir().resolve(name);
       
       if (child.equals(skey.file) && !skey.isDisable && skey.ignorePostDec() == 0) {
-        if (kind == ENTRY_DELETE)
+        if (kind == ENTRY_DELETE) {
           skey.listener.fileDeleted();
-        else if (kind == ENTRY_MODIFY)
+        } else if (kind == ENTRY_MODIFY) {
           skey.listener.fileModified(); 
+        }
       }
 
       // reset key and remove from set if directory no longer accessible

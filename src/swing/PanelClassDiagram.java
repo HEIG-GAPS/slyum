@@ -44,10 +44,12 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.DiagramPropreties;
@@ -679,28 +681,35 @@ public class PanelClassDiagram extends JPanel {
     if (selectFile || currentFile == null || !currentFile.exists())
       if (!initCurrentSaveFile()) return;
 
-    // Ignore les deux prochains event qui sont générés par Slyum.
-    WatchDir.ignoreNextEvents(getCurrentPath(), 2);
-    
-    // Génération du document xml.
-    DOMSource xmlInput = new DOMSource(XmlFactory.getDocument());
-
     // Création et configuration du Transformer. Sauvegarde du fichier.
     try {
-      TransformerFactory transformerFactory = TransformerFactory.newInstance();
-      Transformer transformer = transformerFactory.newTransformer();
-      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-      transformer.setOutputProperty(
-          "{http://xml.apache.org/xslt}indent-amount", "2");
-      transformer.setOutputProperty(OutputKeys.ENCODING, "iso-8859-15");
-      StreamResult xmlOutput = new StreamResult(currentFile);
-      transformer.transform(xmlInput, xmlOutput);
+      PanelClassDiagram.saveDocumentInCurrentFile(XmlFactory.getDocument(), getCurrentFile());
     } catch (TransformerException e) {
       Logger.getGlobal().log(Level.SEVERE, "Unable to save file.", e);
       SMessageDialog.showErrorMessage(e.getLocalizedMessage());
     }
     Change.setHasChange(false);
     RecentProjectManager.addhistoryEntry(currentFile.getAbsolutePath());
+  }
+  
+  public static void saveDocumentInCurrentFile(
+      Document document, File currentFile) throws TransformerConfigurationException, TransformerException {
+    
+    Path currentPath = currentFile.toPath(); 
+   
+    WatchDir.ignoreNextEvents(currentPath, 2);
+
+    // write the content into xml file
+    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    Transformer transformer = transformerFactory.newTransformer();
+    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+    transformer.setOutputProperty(
+        "{http://xml.apache.org/xslt}indent-amount", "2");
+    transformer.setOutputProperty(OutputKeys.ENCODING, "iso-8859-15");
+
+    DOMSource source = new DOMSource(document);
+    StreamResult result = new StreamResult(currentFile);
+    transformer.transform(source, result);
   }
   
   private void _refresh() {
