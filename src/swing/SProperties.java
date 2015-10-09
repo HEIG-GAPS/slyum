@@ -87,6 +87,7 @@ public class SProperties extends JDialog {
   private SList<Integer> listSize;
   private JComboBox<ViewEntity> listViewEntities;
   private JComboBox<ParametersViewStyle> listViewMethods;
+  private JComboBox<Integer> listRecentColorsSize;
   private JPanel panelLabelAlert;
   private JPanel panel_Grid;
   private JPanel panel_grid_color;
@@ -804,7 +805,7 @@ public class SProperties extends JDialog {
           }
           {
             chckbxDisplayDiagramInformationsOnExport = 
-                new SCheckBox("Paint diagram's informations");
+                new SCheckBox("Export diagram's informations");
             GridBagConstraints gbc_chckbxDiagramInformationsOnExport = 
                 new GridBagConstraints();
             gbc_chckbxDiagramInformationsOnExport.insets = new Insets(0, 5, 0, 0);
@@ -833,12 +834,14 @@ public class SProperties extends JDialog {
             panelInnerGeneral.add(chckbxViewTypes, gbc_chckbxViewTypes);
           }
           {
-            JPanel panelViews = new JPanel(new GridLayout(2, 2, 10, 10));
+            JPanel panelViews = new JPanel(new GridLayout(3, 2, 10, 10));
             panelViews.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
             ParametersViewStyle[] values = { ParametersViewStyle.TYPE_AND_NAME,
                     ParametersViewStyle.TYPE, ParametersViewStyle.NAME,
                     ParametersViewStyle.NOTHING };
+            
+            Integer[] sizeValues = { 3, 4, 5, 6, 7};
 
             GridBagConstraints gbc_panelViews = new GridBagConstraints();
 
@@ -846,11 +849,14 @@ public class SProperties extends JDialog {
                     new DefaultComboBoxModel<>(values));
             listViewEntities = new SComboBox<>(new DefaultComboBoxModel<>(
                     ViewEntity.values()));
+            listRecentColorsSize = new SComboBox<>(new DefaultComboBoxModel<>(sizeValues));
 
             panelViews.add(new JLabel("Entities view type:"));
             panelViews.add(listViewEntities);
             panelViews.add(new JLabel("Methods view type:"));
             panelViews.add(listViewMethods);
+            panelViews.add(new JLabel("Recent colors history size:"));
+            panelViews.add(listRecentColorsSize);
 
             gbc_panelViews.insets = new Insets(0, 5, 0, 0);
             gbc_panelViews.anchor = GridBagConstraints.WEST;
@@ -885,6 +891,10 @@ public class SProperties extends JDialog {
 
           @Override
           public void actionPerformed(ActionEvent e) {
+            
+            boolean needRestart = false;
+            needRestart |= Slyum.getRecentColorsSize() != (int)listRecentColorsSize.getSelectedItem();
+            
             try {
               Properties properties = PropertyLoader.getInstance()
                       .getProperties();
@@ -926,6 +936,8 @@ public class SProperties extends JDialog {
               properties.put(PropertyLoader.VIEW_ENTITIES,
                       String.valueOf(listViewEntities.getSelectedItem())
                               .toUpperCase().replace(' ', '_'));
+              properties.put(PropertyLoader.RECENT_COLORS_SIZE,
+                      String.valueOf(listRecentColorsSize.getSelectedItem()));
               properties.put(PropertyLoader.VIEW_TYPES,
                       String.valueOf(chckbxViewTypes.isSelected()));
 
@@ -954,18 +966,23 @@ public class SProperties extends JDialog {
               e1.printStackTrace();
             }
 
-            Color newEntityColor = btnDefaultClassColor.getBackground();
-            for (SimpleEntityView entity : SimpleEntityView.getAll())
+            SimpleEntityView.getAll().stream().forEach((entity) -> {
               entity.initViewType();
+            });
 
-            for (EnumView enums : EnumView.getAll())
+            EnumView.getAll().stream().forEach((enums) -> {
               enums.updateHeight();
+            });
 
             boolean selected = chckbxViewTitleOnExport.isSelected();
             PanelClassDiagram.setVisibleCurrentDiagramName(!selected);
-            for (GraphicView gv : 
-                MultiViewManager.getAllGraphicViews())
+            MultiViewManager.getAllGraphicViews().stream().forEach((gv) -> {
               gv.setVisibleDiagramName(selected);
+            });
+            
+            if (needRestart)
+              SMessageDialog.showWarningMessage("You must restart Slyum to apply these changes.", SProperties.this);
+              
             setVisible(false);
             MultiViewManager.getSelectedGraphicView().repaint();
           }
@@ -1083,6 +1100,7 @@ public class SProperties extends JDialog {
     chckbxViewTypes.setSelected(GraphicView.getDefaultVisibleTypes());
     listViewMethods.setSelectedItem(GraphicView.getDefaultViewMethods());
     listViewEntities.setSelectedItem(GraphicView.getDefaultViewEntities());
+    listRecentColorsSize.setSelectedItem(Slyum.getRecentColorsSize());
 
     if (GraphicView.isAutomatiqueGridColor())
       rdbtnAutomaticcolor.setSelected(true);

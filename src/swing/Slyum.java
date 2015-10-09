@@ -27,6 +27,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -454,6 +455,47 @@ public class Slyum extends JFrame implements ActionListener {
     PropertyLoader.getInstance().push();
   }
 
+  public static int getRecentColorsSize() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.RECENT_COLORS_SIZE);
+    int size = 3;
+    
+    if (prop != null) size = Integer.valueOf(prop);
+
+    return size;
+  }
+  
+  public static void initRecentColors() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.RECENT_COLORS);
+    
+    if (prop == null || prop.isEmpty())
+      return;
+    
+    String[] strRecentColors = prop.split(";");
+    
+    for (String color : strRecentColors)
+      try {
+        SColorAssigner.addRecentColor(new Color(Integer.valueOf(color)));
+      } catch (NumberFormatException e) {
+        
+      }
+  }
+  
+  public static void saveRecentColors() {
+    if (SColorAssigner.getRecentColors().length == 0)
+      return;
+    
+    String strColors = String.join(
+        ";", Arrays.stream(SColorAssigner.getRecentColors())
+                   .filter(c -> c != null)
+                   .map(c -> String.valueOf(c.getRGB())).toArray(size -> new String[size]));
+    
+    PropertyLoader.getInstance().getProperties()
+        .put(PropertyLoader.RECENT_COLORS, strColors);
+    PropertyLoader.getInstance().push();
+  }
+
   public static boolean isShowCrossMenu() {
     final String prop = PropertyLoader.getInstance().getProperties()
         .getProperty("ShowCrossMenu");
@@ -854,6 +896,7 @@ public class Slyum extends JFrame implements ActionListener {
           panel.setFullScreen(true);
         
         IssuesInformation.mustDisplayMessage();
+        initRecentColors();
       }
     });
     
@@ -902,6 +945,7 @@ public class Slyum extends JFrame implements ActionListener {
   private void _exit() {
     // Save properties before closing.
     PanelClassDiagram.getInstance().saveSplitLocationInProperties();
+    saveRecentColors();
     setFullScreenMode(menuItemFullScreen.isSelected());
 
     System.exit(0);

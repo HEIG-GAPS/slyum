@@ -22,6 +22,7 @@ import utility.Utility;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.Arrays;
 import java.util.LinkedList;
 import swing.slyumCustomizedComponents.SColorMenuItem;
 import swing.slyumCustomizedComponents.SToolBarButton;
@@ -44,6 +45,14 @@ public class SColorAssigner extends JDialog {
   
   public static RecentColorButton[] createButtonsRecentColor() {
     return recentColorManager.createButtonsRecentColor();
+  }
+  
+  public static Color[] getRecentColors() {
+    return recentColorManager.recentColors;
+  }
+  
+  public static void addRecentColor(Color color) {
+    recentColorManager.addColor(color);
   }
   
   private final JPanel contentPanel = new JPanel();
@@ -149,7 +158,7 @@ public class SColorAssigner extends JDialog {
   
   public static class RecentColorManager {
     
-    public final short HISTORY_SIZE = 3;
+    public final short HISTORY_SIZE = (short)Slyum.getRecentColorsSize();
     
     private LinkedList<SColorMenuItem> menus = new LinkedList<>();
     private LinkedList<RecentColorButton[]> buttons = new LinkedList<>();
@@ -219,14 +228,14 @@ public class SColorAssigner extends JDialog {
     }
 
     private RecentColorButton[] createButtonsRecentColor() {
-      RecentColorButton[] btnsRecentColor = new RecentColorButton[3];
+      RecentColorButton[] btnsRecentColor = new RecentColorButton[HISTORY_SIZE];
       buttons.add(btnsRecentColor);
       
       for (int i = 0; i < btnsRecentColor.length; i++)
         btnsRecentColor[i] = new RecentColorButton();
       
       return btnsRecentColor;
-    } 
+    }
   }
   
   public static class RecentColorButton extends SToolBarButton {
