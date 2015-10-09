@@ -204,6 +204,7 @@ public class PanelClassDiagram extends JPanel {
   public void cleanApplication() {
     setDiagramName("");
     classDiagram.clean();
+    DiagramPropreties.clearDiagramsInformation();
     cleanViews();
     MultiViewManager.getRootGraphicView().removeAll();
     STab.getInstance().setSelectedIndex(0);

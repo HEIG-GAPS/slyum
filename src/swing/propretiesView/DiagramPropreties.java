@@ -8,12 +8,16 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import swing.PanelClassDiagram;
 import swing.slyumCustomizedComponents.SCheckBox;
 import swing.slyumCustomizedComponents.SComboBox;
@@ -24,6 +28,18 @@ public class DiagramPropreties
 
   private static DiagramPropreties instance;
 
+  public static String getDiagramsInformations() {
+    return getInstance().txaDiagramsInformations.getText();
+  }
+  
+  public static void setDiagramsInformations(String informations) {
+    getInstance().txaDiagramsInformations.setText(informations);
+  }
+  
+  public static void clearDiagramsInformation() {
+    getInstance().txaDiagramsInformations.setText("");
+  }
+  
   public static DiagramPropreties getInstance() {
     if (instance == null) instance = new DiagramPropreties();
     return instance;
@@ -33,7 +49,8 @@ public class DiagramPropreties
     instance.updateComponentInformations(null);
   }
 
-  JPanel west = createJPanelInformations();
+  JPanel west = createJPanelInformations(),
+         panelInformations = createJPanelInformations();
   
   private final String ACTION_ENTITY_VIEW = "1",
                        ACTION_METHODS_VIEW = "2",
@@ -44,6 +61,8 @@ public class DiagramPropreties
   private final SComboBox<Method.ParametersViewStyle> cbbParametersView;
   private final SCheckBox chkDisplayTypes;
   private final SCheckBox chkViewEnum;
+  private final JTextArea txaDiagramsInformations;
+  
   private boolean raiseEvent;
 
   private DiagramPropreties() {
@@ -106,9 +125,45 @@ public class DiagramPropreties
     pnlDiagramProperties.add(lblTitle);
     pnlDiagramProperties.add(west);
     
+    JPanel pnlDiagramInformations = new JPanel();
+    pnlDiagramInformations.setLayout(
+        new BoxLayout(pnlDiagramInformations, BoxLayout.Y_AXIS));
+    pnlDiagramInformations.setMaximumSize(new Dimension(140, Short.MAX_VALUE));
+    
+    JLabel lblInformationsTitle = new JLabel("Diagram's informations");
+    lblInformationsTitle.setHorizontalTextPosition(JLabel.LEFT);
+    lblInformationsTitle.setVerticalTextPosition(JLabel.BOTTOM);
+    lblInformationsTitle.setBorder(BorderFactory.createEmptyBorder(0, 10, 5, 0));
+    
+    panelInformations.setBorder(null);
+    
+    txaDiagramsInformations = new JTextArea();
+    txaDiagramsInformations.setLineWrap(true);
+    txaDiagramsInformations.setWrapStyleWord(true);
+    txaDiagramsInformations.addKeyListener(new KeyAdapter() {
+
+      @Override
+      public void keyPressed(KeyEvent e) {
+        
+        change.Change.setHasChange(true);
+        PanelClassDiagram.getInstance().getClassDiagram().setInformation(txaDiagramsInformations.getText());
+      }
+      
+    });    
+    
+    JScrollPane textAreaPane = new JScrollPane(txaDiagramsInformations);
+    textAreaPane.setPreferredSize(new Dimension(250, 0));
+    textAreaPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    textAreaPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+    panelInformations.add(textAreaPane);
+    
+    pnlDiagramInformations.add(lblInformationsTitle);
+    pnlDiagramInformations.add(panelInformations);
     
     setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
     add(pnlDiagramProperties);
+    add(Box.createHorizontalStrut(10));
+    add(pnlDiagramInformations);
     add(Box.createHorizontalGlue());
     add(new JLabel("Select a component to see it's members"));
     add(Box.createHorizontalGlue());

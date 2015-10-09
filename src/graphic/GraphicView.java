@@ -1815,6 +1815,33 @@ public class GraphicView extends GraphicComponent
             img.getHeight() - DEFAULT_TITLE_BORDER_WIDTH));
       }
     }
+    
+    // Paint diagram's informations
+    if (Slyum.isDisplayedDiagramInformationOnExport()) {
+      
+      final int WIDTH = 200;
+      final int HEIGHT = 100;
+      
+      Rectangle informationsRectangle = new Rectangle(
+          img.getWidth() - DEFAULT_TITLE_BORDER_WIDTH - WIDTH, 
+          img.getHeight() - DEFAULT_TITLE_BORDER_WIDTH - HEIGHT, 
+          WIDTH, HEIGHT);
+      
+      g2.setStroke(new BasicStroke(DEFAULT_TITLE_BORDER_WIDTH));
+      g2.setBackground(Color.WHITE);
+      g2.setColor(Color.BLACK);
+      
+      g2.fillRect(informationsRectangle.x, 
+                  informationsRectangle.y, 
+                  informationsRectangle.width, 
+                  informationsRectangle.height);
+      
+      g2.drawRect(informationsRectangle.x, 
+                  informationsRectangle.y, 
+                  informationsRectangle.width, 
+                  informationsRectangle.height);
+    }
+    
     setPictureMode(false);
     return img;
   }

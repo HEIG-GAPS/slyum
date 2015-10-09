@@ -5,11 +5,19 @@ import graphic.GraphicView;
 import static graphic.GraphicView.DEFAULT_TITLE_BORDER_WIDTH;
 import static graphic.GraphicView.isTitleBorderPainted;
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.font.FontRenderContext;
+import java.awt.font.LineBreakMeasurer;
+import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
+import java.text.AttributedCharacterIterator;
+import java.text.AttributedString;
 import java.util.LinkedList;
+import swing.PanelClassDiagram;
+import swing.Slyum;
 import utility.Utility;
 
 
@@ -97,7 +105,102 @@ public abstract class ExportView {
       }
     }
     
+    // Paint diagram's informations
+    if (Slyum.isDisplayedDiagramInformationOnExport()) {
+      
+      final int WIDTH = 250;
+      final int INFORMATIONS_PADDING = 5;
+      final int INFORMATION_MARGIN = 10;
+      final int ROUNDED = 10;
+      
+      g2d.setStroke(new BasicStroke(DEFAULT_TITLE_BORDER_WIDTH));
+      
+      FontRenderContext frc = g2d.getFontRenderContext();
+      String informations = PanelClassDiagram.getInstance().getClassDiagram().getInformations();
+      AttributedString styledText = new AttributedString(informations);
+      AttributedCharacterIterator iterator = styledText.getIterator();
+      LineBreakMeasurer measurer = new LineBreakMeasurer(iterator, frc);
+      int start = iterator.getBeginIndex(),
+          end = iterator.getEndIndex();
+      
+      measurer.setPosition(start);
+      
+      int REAL_WIDTH = WIDTH - INFORMATIONS_PADDING * 2;
+      
+      // Compute height
+      float height = 0,
+            width = 0;
+      while (measurer.getPosition() < end) {
+        TextLayout layout = measurer.nextLayout(REAL_WIDTH, getLimitAtReturnChar(measurer, REAL_WIDTH, informations), true);
+        
+        if (width < layout.getAdvance())
+          width = layout.getAdvance();
+        
+        height += layout.getAscent() + layout.getDescent() + layout.getLeading();
+      }
+      
+      width = Math.min(width, REAL_WIDTH);
+      
+      width += INFORMATIONS_PADDING * 2;
+      height += INFORMATIONS_PADDING * 2;
+      
+      Rectangle outerBounds = getOuterBounds();
+      
+      Rectangle informationsRectangle = new Rectangle(
+          outerBounds.x + outerBounds.width - (int)width  - DEFAULT_TITLE_BORDER_WIDTH - INFORMATION_MARGIN, 
+          outerBounds.y + outerBounds.height - (int)height  - DEFAULT_TITLE_BORDER_WIDTH - INFORMATION_MARGIN, 
+          (int)width, (int)height);
+      
+      // Draw border and background
+      g2d.setColor(new Color(250, 250, 250));
+      g2d.fillRoundRect(informationsRectangle.x, 
+                        informationsRectangle.y, 
+                        informationsRectangle.width, 
+                        informationsRectangle.height,
+                        ROUNDED,
+                        ROUNDED);
+      
+      g2d.setColor(Color.BLACK);
+      g2d.drawRoundRect(informationsRectangle.x, 
+                        informationsRectangle.y, 
+                        informationsRectangle.width, 
+                        informationsRectangle.height,
+                        ROUNDED,
+                        ROUNDED);
+      
+      // Draw text
+      float y = informationsRectangle.y + INFORMATIONS_PADDING,
+            x = informationsRectangle.x + INFORMATIONS_PADDING;
+      
+      g2d.setColor(new Color(50, 50, 50));
+      
+      measurer.setPosition(0);
+      while (measurer.getPosition() < end) {
+        
+        TextLayout layout = measurer.nextLayout(REAL_WIDTH, getLimitAtReturnChar(measurer, REAL_WIDTH, informations), true);
+        
+        y += layout.getAscent();
+        layout.draw(g2d, x, y);
+        y += layout.getDescent() + layout.getLeading();
+      }
+    }
+    
     graphicView.setPictureMode(false);
     return g2d;
+  }
+  
+  private int getLimitAtReturnChar(LineBreakMeasurer measurer, int width, String text) {
+    
+    int next = measurer.nextOffset(width);
+    int limit = next;
+    
+    if (limit <= text.length())
+      for (int i = measurer.getPosition(); i < next; ++i)
+        if (text.charAt(i) == '\n') {
+          limit = i + 1;
+          break;
+        }
+    
+   return limit; 
   }
 }

@@ -38,6 +38,7 @@ public class PropertyLoader {
   public static final String VIEW_TYPES = "ViewTypes";
   public static final String VIEW_ENUM = "ViewEnum";
   public static final String VIEW_TITLE_ON_EXPORT = "ViewTitleOnExport";
+  public static final String DISPLAY_DIAGRAM_INFORMATIONS_ON_EXPORT = "DisplayDiagramInformationsOnExpert";
   public static final String PAINT_TITLE_BORDER = "PaintTitleBorder";
   public static final String CHECK_UPDATE_AT_LAUNCH = "CheckUpdateAtLaunch";
   public static final String FULL_SCREEN_MODE = "FullScreenMode";

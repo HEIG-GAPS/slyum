@@ -9,3 +9,4 @@ Diagram'es properties: diagrams have now proper properties.
 Components in tree are now alphabetically sorted.
 Various bugfixes.
 Updater must work on Mac OS X.
+Add diagrams informations to appear on the exported schema.

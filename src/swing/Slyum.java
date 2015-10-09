@@ -235,6 +235,7 @@ public class Slyum extends JFrame implements ActionListener {
   // !! Always  X.Y.Z (for update safety), even if it's 0.
   public static final String VERSION = "5.0.0";
   public static final boolean VIEW_TITLE_ON_EXPORT_DEFAULT = true;
+  public static final boolean DISPLAY_DIAGRAM_INFORMATIONS_ON_EXPERT_DEFAULT = true;
   public static final int WINDOWS_MAXIMIZED = Frame.MAXIMIZED_BOTH;
   public static final Dimension WINDOWS_SIZE = new Dimension(DEFAULT_SIZE.x, DEFAULT_SIZE.y);
   private static final String ARGUMENT_EXIT_WITHOUT_ASK = "-exitWithoutAsk";
@@ -503,6 +504,14 @@ public class Slyum extends JFrame implements ActionListener {
     String prop = PropertyLoader.getInstance().getProperties()
         .getProperty(PropertyLoader.VIEW_TITLE_ON_EXPORT);
     boolean enable = VIEW_TITLE_ON_EXPORT_DEFAULT;
+    if (prop != null) enable = Boolean.parseBoolean(prop);
+    return enable;
+  }
+  
+  public static boolean isDisplayedDiagramInformationOnExport() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.DISPLAY_DIAGRAM_INFORMATIONS_ON_EXPORT);
+    boolean enable = DISPLAY_DIAGRAM_INFORMATIONS_ON_EXPERT_DEFAULT;
     if (prop != null) enable = Boolean.parseBoolean(prop);
     return enable;
   }

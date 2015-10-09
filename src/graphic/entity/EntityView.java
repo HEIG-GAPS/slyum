@@ -277,8 +277,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   /**
    * Adjust the width according to its content.
    */
-  public void adjustWidth(
-  ) {
+  public void adjustWidth() {    
     int width = Short.MIN_VALUE;
 
     for (final TextBox tb : getAllTextBox()) {
@@ -287,12 +286,11 @@ public abstract class EntityView extends MovableComponent implements Observer, C
       if (tbWidth > width) width = tbWidth; // get the longer content
     }
 
-    // change the width according to the grid
-    final Rectangle bounds = getBounds();
-
     Change.push(new BufferBounds(this));
-    setBounds(new Rectangle(bounds.x, bounds.y, width
-                                                + GraphicView.getGridSize() + 15, bounds.height));
+    
+    setBounds(new Rectangle(
+        bounds.x, bounds.y, width + GraphicView.getGridSize() + 15, bounds.height));
+    
     Change.push(new BufferBounds(this));
   }
   

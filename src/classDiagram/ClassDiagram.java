@@ -54,6 +54,7 @@ public class ClassDiagram extends Observable
   private boolean defaultViewEnum;
   private Method.ParametersViewStyle defaultViewMethods;
   private String name = "";
+  private String informations = "";
   private ViewEntity viewEntity;
   private boolean visibleType;
 
@@ -254,6 +255,14 @@ public class ClassDiagram extends Observable
   public String getName() {
     return name;
   }
+  
+  public String getInformations() {
+    return informations;
+  }
+  
+  public void setInformation(String informations) {
+    this.informations = informations;
+  }
 
   /**
    * Set the name of class diagram.
@@ -301,6 +310,7 @@ public class ClassDiagram extends Observable
     
     //Attributs
     classDiagram.setAttribute("name", getName());
+    classDiagram.setAttribute("informations", getInformations());
     classDiagram.setAttribute("defaultViewEntities", getDefaultViewEntities().name());
     classDiagram.setAttribute("defaultViewMethods", getDefaultViewMethods().name());
     classDiagram.setAttribute("defaultViewEnum", String.valueOf(getDefaultViewEnum()));

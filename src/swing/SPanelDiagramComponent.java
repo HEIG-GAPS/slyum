@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import utility.PersonalizedIcon;
@@ -221,7 +222,8 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
   public void actionPerformed(ActionEvent e) {
     
     // Disable shortcut if user is currently editing text.
-    if (Slyum.getInstance().getFocusOwner() instanceof JTextField)
+    if (Slyum.getInstance().getFocusOwner() instanceof JTextField ||
+        Slyum.getInstance().getFocusOwner() instanceof JTextArea)
       return;
     
     GraphicView gv = MultiViewManager.getSelectedGraphicView();

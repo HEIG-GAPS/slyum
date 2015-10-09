@@ -77,6 +77,7 @@ public class SProperties extends JDialog {
   private JCheckBox chckbxShowGrid;
   private JCheckBox chckbxViewEnum;
   private JCheckBox chckbxViewTitleOnExport;
+  private JCheckBox chckbxDisplayDiagramInformationsOnExport;
   private JCheckBox chckbxViewTypes;
   private JCheckBox ckbBackgroundGradient;
   private JCheckBox ckbEntityGradient;
@@ -802,12 +803,24 @@ public class SProperties extends JDialog {
                            gbc_chckbxPaintTitleBorder);
           }
           {
+            chckbxDisplayDiagramInformationsOnExport = 
+                new SCheckBox("Paint diagram's informations");
+            GridBagConstraints gbc_chckbxDiagramInformationsOnExport = 
+                new GridBagConstraints();
+            gbc_chckbxDiagramInformationsOnExport.insets = new Insets(0, 5, 0, 0);
+            gbc_chckbxDiagramInformationsOnExport.anchor = GridBagConstraints.WEST;
+            gbc_chckbxDiagramInformationsOnExport.gridx = 0;
+            gbc_chckbxDiagramInformationsOnExport.gridy = 5;
+            panelInnerGeneral.add(chckbxDisplayDiagramInformationsOnExport, 
+                                  gbc_chckbxDiagramInformationsOnExport);
+          }
+          {
             chckbxViewEnum = new SCheckBox("View enum values");
             GridBagConstraints gbc_chckbxViewEnum = new GridBagConstraints();
             gbc_chckbxViewEnum.insets = new Insets(0, 5, 0, 0);
             gbc_chckbxViewEnum.anchor = GridBagConstraints.WEST;
             gbc_chckbxViewEnum.gridx = 0;
-            gbc_chckbxViewEnum.gridy = 5;
+            gbc_chckbxViewEnum.gridy = 6;
             panelInnerGeneral.add(chckbxViewEnum, gbc_chckbxViewEnum);
           }
           {
@@ -816,7 +829,7 @@ public class SProperties extends JDialog {
             gbc_chckbxViewTypes.insets = new Insets(0, 5, 0, 0);
             gbc_chckbxViewTypes.anchor = GridBagConstraints.WEST;
             gbc_chckbxViewTypes.gridx = 0;
-            gbc_chckbxViewTypes.gridy = 6;
+            gbc_chckbxViewTypes.gridy = 7;
             panelInnerGeneral.add(chckbxViewTypes, gbc_chckbxViewTypes);
           }
           {
@@ -842,7 +855,7 @@ public class SProperties extends JDialog {
             gbc_panelViews.insets = new Insets(0, 5, 0, 0);
             gbc_panelViews.anchor = GridBagConstraints.WEST;
             gbc_panelViews.gridx = 0;
-            gbc_panelViews.gridy = 7;
+            gbc_panelViews.gridy = 8;
             panelInnerGeneral.add(panelViews, gbc_panelViews);
           }
           panelGeneral.add(panelInnerGeneral);
@@ -897,6 +910,8 @@ public class SProperties extends JDialog {
                       String.valueOf(chckbxViewEnum.isSelected()));
               properties.put(PropertyLoader.VIEW_TITLE_ON_EXPORT,
                       String.valueOf(chckbxViewTitleOnExport.isSelected()));
+              properties.put(PropertyLoader.DISPLAY_DIAGRAM_INFORMATIONS_ON_EXPORT,
+                      String.valueOf(chckbxDisplayDiagramInformationsOnExport.isSelected()));              
               properties.put(PropertyLoader.PAINT_TITLE_BORDER,
                       String.valueOf(chckbxPaintTitleBorder.isSelected()));
               properties.put(PropertyLoader.CHECK_UPDATE_AT_LAUNCH,
@@ -1061,6 +1076,7 @@ public class SProperties extends JDialog {
     chckbxAutoAdjustInheritance.setSelected(Slyum.isAutoAdjustInheritance());
     chckbxViewEnum.setSelected(GraphicView.getDefaultViewEnum());
     chckbxViewTitleOnExport.setSelected(Slyum.isViewTitleOnExport());
+    chckbxDisplayDiagramInformationsOnExport.setSelected(Slyum.isDisplayedDiagramInformationOnExport());
     chckbxPaintTitleBorder.setSelected(GraphicView.isTitleBorderPainted());
     chckbxCheckUpdateAtLaunch.setSelected(UpdateInfo.isUpdateCheckedAtLaunch());
     chckbxEnableGrid.setSelected(GraphicView.isGridEnable());

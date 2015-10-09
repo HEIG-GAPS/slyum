@@ -47,6 +47,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.helpers.DefaultHandler;
+import swing.propretiesView.DiagramPropreties;
 import utility.SMessageDialog;
 
 /**
@@ -73,6 +74,7 @@ public class XMLParser extends DefaultHandler {
     DiagramElements diagrameElement = null;
     
     String name = "";
+    String informations = "";
     
     classDiagram.ClassDiagram.ViewEntity defaultViewEntities = 
         GraphicView.getDefaultViewEntities();
@@ -395,6 +397,8 @@ public class XMLParser extends DefaultHandler {
     
     GraphicView rootGraphicView = MultiViewManager.getSelectedGraphicView();
     classDiagram.setName(umlClassDiagram.name);
+    classDiagram.setInformation(umlClassDiagram.informations);
+    DiagramPropreties.setDiagramsInformations(umlClassDiagram.informations);
     classDiagram.setViewEntity(umlClassDiagram.defaultViewEntities);
     classDiagram.setDefaultViewMethods(umlClassDiagram.defaultViewMethods);
     classDiagram.setDefaultViewEnum(umlClassDiagram.defaultViewEnum);
@@ -906,6 +910,7 @@ public class XMLParser extends DefaultHandler {
         umlClassDiagram.diagrameElement = new DiagramElements();
         
         umlClassDiagram.name = attributes.getValue("name");
+        umlClassDiagram.informations = attributes.getValue("informations");
         
         if (attributes.getValue("defaultViewEntities") != null)
           umlClassDiagram.defaultViewEntities = ViewEntity.valueOf(
