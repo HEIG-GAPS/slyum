@@ -278,7 +278,7 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
     super.gMouseClicked(e);
 
     if (e.getClickCount() == 2) {
-      final UserInputDialog ecd = new UserInputDialog(text,
+      final UserInputDialog ecd = new UserInputDialog(text.equals(DEFAULT_TEXT) ? "" : text,
               "Slyum - Commentary editor", "Edit commentary : ");
       ecd.setVisible(true);
 
