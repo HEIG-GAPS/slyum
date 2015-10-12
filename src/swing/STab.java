@@ -265,6 +265,7 @@ public class STab extends JTabbedPane {
           return null;
         }
       }, BorderLayout.WEST);
+      label.setPreferredSize(new Dimension(130, 30));
     }
     
     @Override
@@ -287,7 +288,7 @@ public class STab extends JTabbedPane {
   static class ClosableTitleTab extends GraphicViewTabComponent {
     public ClosableTitleTab(final JTabbedPane pane, GraphicView graphicView) {
       super(pane, graphicView);
-      label.setPreferredSize(new Dimension(110, 30));    
+      label.setPreferredSize(new Dimension(110, 30));
       add(new LabelClose(), BorderLayout.EAST);
       graphicView.addObserver(this);
     }

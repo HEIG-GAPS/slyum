@@ -6,6 +6,7 @@ import graphic.GraphicView;
 import graphic.textbox.TextBox;
 import graphic.textbox.TextBoxLabel;
 
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -674,20 +675,60 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
 
     g2.setStroke(lineStroke);
     g2.setColor(getColor());
+    
+    LinkedList<GraphicComponent> components = parent.getAllComponents();
+    int index = components.indexOf(this);
+    LineView[] lines = components.stream()
+                                 .filter(g -> g instanceof LineView && 
+                                              index > components.indexOf(g))
+                                 .toArray(size -> new LineView[size]);
 
     final int nbrPoints = points.size();
     final int[] pointsX = new int[nbrPoints];
     final int[] pointsY = new int[nbrPoints];
+    LinkedList<Point> arcsPointsX = new LinkedList<>();
+    LinkedList<Point> arcsPointsY = new LinkedList<>();
+    Point2D.Double previousPoint = null;
 
     for (int i = 0; i < nbrPoints; i++) {
       pointsX[i] = points.get(i).getAnchor().x;
       pointsY[i] = points.get(i).getAnchor().y;
+      Point2D.Double currentPoint = new Point2D.Double(pointsX[i], pointsY[i]);
+      /*
+      if (previousPoint != null) {
+        Line2D.Double currentLine = new Line2D.Double(previousPoint, currentPoint);
+        
+        for (LineView lv : lines) {
+          for (Line2D.Double line : lv.getLines()) {
+            if (CustomMath.Geometry.)
+          }
+        }
+      }
+      
+      previousPoint = currentPoint;*/
     }
 
     g2.drawPolyline(pointsX, pointsY, nbrPoints);
 
     drawExtremity(g2, points.get(points.size() - 2).getAnchor(), points
             .getLast().getAnchor());
+  }
+  
+  public LinkedList<Line2D.Double> getLines() {
+    LinkedList<Line2D.Double> lines = new LinkedList<>();
+    Point2D.Double previousPoint = null;
+    
+    for (RelationGrip rg : getPoints()) {
+      Point p = rg.getAnchor();
+      Point2D.Double currentPoint = new Point2D.Double(p.getX(), p.getY());
+      
+      if (previousPoint != null)
+        lines.add(new Line2D.Double(previousPoint, currentPoint));
+      
+      previousPoint = currentPoint;
+    }
+    
+    return lines;
   }
 
   /**
@@ -714,10 +755,8 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
    * changed. This method define if the new GraphicComponent is compatible with
    * the LineView. If not, the GraphicComponent stay inchanged.
    * 
-   * @param oldCompo
-   *          the old GraphicComponent before change
-   * @param newCompo
-   *          the new GraphicComnponent afetr change
+   * @param gripdSource
+   * @param target
    * @return true if the new GraphicCOmponent is compatible; false otherwise
    */
   public boolean relationChanged(MagneticGrip gripdSource,
