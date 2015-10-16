@@ -27,6 +27,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -78,6 +79,7 @@ public class Slyum extends JFrame implements ActionListener {
   public static final String ACTION_DUPLICATE = "duplicate";
   public final static String ACTION_EXIT = "Exit";
   public final static String ACTION_EXPORT_EPS = "ExportEps";
+  public final static String ACTION_NEW_WINDOW = "NewWindow";
 
   public final static String ACTION_EXPORT_IMAGE = "ExportImage";
 
@@ -221,6 +223,7 @@ public class Slyum extends JFrame implements ActionListener {
   public static final String KEY_ZOOM_ADAPT = "ctrl shift Z";
   public static final String KEY_ZOOM_MINUS = "ctrl MINUS";
   public static final String KEY_ZOOM_PLUS = "ctrl PLUS";
+  public static final String KEY_NEW_WINDOW = "ctrl shit W";
   
   public final static Logger LOGGER = Logger.getLogger(Slyum.class.getName());
   
@@ -691,6 +694,13 @@ public class Slyum extends JFrame implements ActionListener {
     GraphicView gv = MultiViewManager.getSelectedGraphicView();
 
     switch (e.getActionCommand()) {
+      case ACTION_NEW_WINDOW:
+        try {
+          openNewApplicationInstance();
+        } catch (IOException | URISyntaxException ex) {
+          SMessageDialog.showErrorMessage("An error has occurred while opening a new window.", this);
+        }
+        break;
       case Slyum.ACTION_SAVE_AS:
         p.saveToXML(true);
         break;
@@ -1011,6 +1021,13 @@ public class Slyum extends JFrame implements ActionListener {
       menu.add(menuItem);
 
       menu.addSeparator();
+      
+      // Menu item open new instance
+      menuItem = createMenuItem("New Window", "logo16", KeyEvent.VK_W, 
+              KEY_NEW_WINDOW, ACTION_NEW_WINDOW);
+      menu.add(menuItem);
+
+      menu.addSeparator();
 
       // Menu item save
       menuItem = createMenuItem("Save", "save", KeyEvent.VK_S, KEY_SAVE,
@@ -1021,7 +1038,7 @@ public class Slyum extends JFrame implements ActionListener {
       menuItem = createMenuItem("Save As...", "save-as", KeyEvent.VK_A,
               KEY_SAVE_AS, ACTION_SAVE_AS);
       menu.add(menuItem);
-
+      
       menu.addSeparator();
       
       // SubMenu Export as...
@@ -1549,6 +1566,24 @@ public class Slyum extends JFrame implements ActionListener {
     public Path getHistoryPath() {
       return historyPath;
     }
+  }
+  
+  public static void openNewApplicationInstance() throws IOException, URISyntaxException {
+    final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+    final File currentJar = new File(Slyum.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+
+    /* is it a jar file? */
+    if(!currentJar.getName().endsWith(".jar"))
+      return;
+
+    /* Build command: java -jar application.jar */
+    final ArrayList<String> command = new ArrayList<>();
+    command.add(javaBin);
+    command.add("-jar");
+    command.add(currentJar.getPath());
+
+    final ProcessBuilder builder = new ProcessBuilder(command);
+    builder.start();
   }
 
 }

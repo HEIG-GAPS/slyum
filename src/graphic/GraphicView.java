@@ -994,8 +994,7 @@ public class GraphicView extends GraphicComponent
     boolean isRecord = Change.isRecord();
     Change.record();
 
-    for (EntityView ev : list)
-      ev.adjustWidth();
+    list.stream().forEach(ev -> ev.adjustWidth());
 
     if (!isRecord) Change.stopRecord();
   }

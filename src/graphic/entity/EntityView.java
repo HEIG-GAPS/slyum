@@ -225,6 +225,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
   private Rectangle bounds = new Rectangle();
   private Color defaultColor;
+  private int fullWidthStereotype = 0;
 
   private final TextBoxEntityName entityName;
 
@@ -285,6 +286,8 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
       if (tbWidth > width) width = tbWidth; // get the longer content
     }
+    
+    if (fullWidthStereotype > width) width = fullWidthStereotype;
 
     Change.push(new BufferBounds(this));
     
@@ -631,11 +634,12 @@ public abstract class EntityView extends MovableComponent implements Observer, C
                                                * parent.getZoom());
     
     g2.setFont(stereotypeFont);
-    String stereotype = Utility.truncate(g2, "<< " + component.getStereotype()
-                                             + " >>", bounds.width - 15);
+    final String fullStereotype = "<< " + component.getStereotype() + " >>";
+    final String truncatStereotype = Utility.truncate(g2, fullStereotype, bounds.width - 15);
+    final FontMetrics stereotypeMetrics = g2.getFontMetrics(stereotypeFont);
     
-    FontMetrics stereotypeMetrics = g2.getFontMetrics(stereotypeFont);
-    int stereotypeWidth = stereotypeMetrics.stringWidth(stereotype);
+    fullWidthStereotype = stereotypeMetrics.stringWidth(fullStereotype);
+    int stereotypeWidth = stereotypeMetrics.stringWidth(truncatStereotype);
     int stereotypeHeight = stereotypeMetrics.getHeight();
 
     Dimension stereotypeSize = new Dimension(stereotypeWidth, stereotypeHeight);
@@ -673,7 +677,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
       g2.setFont(stereotypeFont);
       g2.setColor(DEFAULT_TEXT_COLOR);
-      g2.drawString(stereotype, stereotypeLocationWidth, offset);
+      g2.drawString(truncatStereotype, stereotypeLocationWidth, offset);
     }
 
     // draw class name
