@@ -58,8 +58,7 @@ public class DialogDeleteView extends javax.swing.JDialog {
         "No component in the view will be deleted.";
     else
       strComponentsDeleted = 
-        "The following components will be removed since they no " +
-        "longer exists in another view:\n";
+        "The following components only exists in this vew:\n";
     
     for (String strC : componentsDeleted)
       strComponentsDeleted += "\n  - " + strC;
@@ -115,7 +114,7 @@ public class DialogDeleteView extends javax.swing.JDialog {
     txtComponentsDeleted.setOpaque(false);
     scrollPane.setViewportView(txtComponentsDeleted);
 
-    lblDescription2.setText("This action can't be undone.");
+    lblDescription2.setText("This action can't be undone (even when reloading the project).");
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
@@ -129,8 +128,10 @@ public class DialogDeleteView extends javax.swing.JDialog {
             .addComponent(lblIcon)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(lblDescription, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
-              .addComponent(lblDescription2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+              .addComponent(lblDescription2, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+              .addGroup(layout.createSequentialGroup()
+                .addComponent(lblDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))))
           .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
             .addGap(0, 0, Short.MAX_VALUE)
             .addComponent(btnDelete)
@@ -176,7 +177,6 @@ public class DialogDeleteView extends javax.swing.JDialog {
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JButton btnCancel;
   private javax.swing.JButton btnDelete;
-  private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JLabel lblDescription;
   private javax.swing.JLabel lblDescription2;
   private javax.swing.JLabel lblIcon;

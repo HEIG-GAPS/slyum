@@ -9,6 +9,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 
 import classDiagram.relationships.Aggregation;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -44,20 +46,14 @@ public class AggregationView extends BinaryView {
    */
   public static void paintExtremity(Graphics2D g2, Point source, Point target,
           Color color, Color borderColor) {
+    final Line2D.Double line = new Line2D.Double(source, target);
     final double deltaX = target.x - source.x;
     final double deltaY = target.y - source.y;
     final double alpha = Math.atan2(deltaY, deltaX);
     final double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 
-    double x = Math.cos(alpha) * (length - 13.0) + source.x;
-    double y = Math.sin(alpha) * (length - 13.0) + source.y;
-
-    final Point ref = new Point((int) x, (int) y);
-
-    x = Math.cos(alpha) * (length - 26.0) + source.x;
-    y = Math.sin(alpha) * (length - 26.0) + source.y;
-
-    final Point ref2 = new Point((int) x, (int) y);
+    final Point2D ref = utility.Utility.getPointOnLineByDistance(line, -13.0);
+    final Point2D ref2 = utility.Utility.getPointOnLineByDistance(line, -26.0);
 
     final int vectorX = target.x
             - (int) (Math.cos(alpha) * (length - 7.0) + source.x);
@@ -69,10 +65,10 @@ public class AggregationView extends BinaryView {
     final int vectorXN2 = vectorY;
     final int vectorYN2 = -vectorX;
 
-    final int[] pointsX = new int[] { target.x, ref.x + vectorXN1, ref2.x,
-            ref.x + vectorXN2 };
-    final int[] pointsY = new int[] { target.y, ref.y + vectorYN1, ref2.y,
-            ref.y + vectorYN2 };
+    final int[] pointsX = new int[] { target.x, (int)ref.getX() + vectorXN1, (int)ref2.getX(),
+            (int)ref.getX() + vectorXN2 };
+    final int[] pointsY = new int[] { target.y, (int)ref.getY() + vectorYN1, (int)ref2.getY(),
+            (int)ref.getY() + vectorYN2 };
 
     g2.setStroke(new BasicStroke(LINE_WIDTH));
     g2.setColor(color);

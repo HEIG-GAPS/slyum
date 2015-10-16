@@ -26,7 +26,9 @@ import change.BufferBounds;
 import change.BufferCreation;
 import change.Change;
 import classDiagram.IDiagramComponent;
+import java.util.stream.Collectors;
 import javax.swing.SwingUtilities;
+import swing.Slyum;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -683,32 +685,52 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
                                               index > components.indexOf(g))
                                  .toArray(size -> new LineView[size]);
 
+    final short LENGTH_ARC = Slyum.getSizeIntersectionLine().getSize();
     final int nbrPoints = points.size();
-    final int[] pointsX = new int[nbrPoints];
-    final int[] pointsY = new int[nbrPoints];
-    LinkedList<Point> arcsPointsX = new LinkedList<>();
-    LinkedList<Point> arcsPointsY = new LinkedList<>();
     Point2D.Double previousPoint = null;
 
     for (int i = 0; i < nbrPoints; i++) {
-      pointsX[i] = points.get(i).getAnchor().x;
-      pointsY[i] = points.get(i).getAnchor().y;
-      Point2D.Double currentPoint = new Point2D.Double(pointsX[i], pointsY[i]);
-      /*
+      Point2D.Double currentPoint = new Point2D.Double(
+          points.get(i).getAnchor().x, points.get(i).getAnchor().y);
+      
       if (previousPoint != null) {
         Line2D.Double currentLine = new Line2D.Double(previousPoint, currentPoint);
+        List<Point2D.Double> intersectPts = new LinkedList<>();
         
-        for (LineView lv : lines) {
-          for (Line2D.Double line : lv.getLines()) {
-            if (CustomMath.Geometry.)
+        if (Slyum.isShowIntersectionLine()) {
+          for (LineView lv : lines)
+            intersectPts.addAll(
+              lv.getLines().stream().map((line) -> Utility.getLinesIntersection(currentLine, line))
+                                    .filter((intersectPt) -> (intersectPt != null))
+                                    .collect(Collectors.toList()));
+        
+          intersectPts = intersectPts.stream()
+            .sorted((e1, e2) -> Double.compare(e2.distance(currentPoint), e1.distance(currentPoint)))
+            .collect(Collectors.toList());
+
+          for (Point2D.Double pt : intersectPts) {
+            Rectangle rect = new Rectangle((int)pt.getX() - LENGTH_ARC, (int)pt.getY() - LENGTH_ARC, LENGTH_ARC * 2, LENGTH_ARC * 2);
+
+            g2.drawArc(rect.x, rect.y, rect.width, rect.height, -(int)Utility.getLineAngleDegree(currentLine), 180);
+
+            Point2D pt1 = Utility.getPointOnLineByDistance(
+                new Line2D.Double(currentLine.getP1(), pt), -LENGTH_ARC),
+                    pt2 = Utility.getPointOnLineByDistance(
+                new Line2D.Double(currentLine.getP2(), pt), -LENGTH_ARC);
+
+            g2.drawLine((int)previousPoint.x, (int)previousPoint.y, 
+                        (int)pt1.getX(), (int)pt1.getY());
+
+            previousPoint = new Point2D.Double(pt2.getX(), pt2.getY());
           }
         }
+        
+        g2.drawLine((int)previousPoint.x, (int)previousPoint.y, 
+                    (int)currentPoint.x, (int)currentPoint.y);
       }
       
-      previousPoint = currentPoint;*/
+      previousPoint = currentPoint;
     }
-
-    g2.drawPolyline(pointsX, pointsY, nbrPoints);
 
     drawExtremity(g2, points.get(points.size() - 2).getAnchor(), points
             .getLast().getAnchor());

@@ -40,6 +40,7 @@ import swing.PropertyLoader;
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Multiplicity;
 import java.awt.Dimension;
+import java.awt.geom.Line2D;
 import java.util.List;
 import swing.Slyum;
 import swing.slyumCustomizedComponents.SComboBox;
@@ -239,6 +240,63 @@ public class Utility {
     return closestPoint;
   }
 
+  public static Point2D.Double getLinesIntersection(
+      Line2D.Double firstLine, Line2D.Double secondLine) {
+    Point2D a = firstLine.getP1(),
+            b = firstLine.getP2(),
+            c = secondLine.getP1(),
+            d = secondLine.getP2();
+    
+    if (!firstLine.intersectsLine(secondLine))
+      return null;
+    
+    double denom = ((a.getX() - b.getX()) * (c.getY() - d.getY())) - 
+                   ((a.getY() - b.getY()) * (c.getX() - d.getX()));
+    
+    if (denom == 0)
+      return null;
+    
+    double axbyaybx = (a.getX() * b.getY()) - (a.getY() * b.getX());
+    double cxdycydx = (c.getX() * d.getY()) - (c.getY() * d.getX());
+    
+    double intersectX = ((axbyaybx * (c.getX() - d.getX())) -
+                        ((a.getX() - b.getX()) * cxdycydx)) / denom;
+    
+    double intersecty = ((axbyaybx * (c.getY() - d.getY())) -
+                        ((a.getY() - b.getY()) * cxdycydx)) / denom;
+    
+    return new Point2D.Double(intersectX, intersecty);
+  }
+  
+  public static Point2D.Double getPointOnLineByDistance(
+      Line2D.Double line, double distance) {
+    
+    Point2D source = line.getP1(),
+            target = line.getP2();
+    
+    final double deltaX = target.getX() - source.getX();
+    final double deltaY = target.getY() - source.getY();
+    final double alpha = getLineAngleRadian(line);
+    final double length = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+    double x = Math.cos(alpha) * (length + distance) + source.getX();
+    double y = Math.sin(alpha) * (length + distance) + source.getY();
+    
+    return new Point2D.Double(x, y);
+  }
+  
+  public static double getLineAngleRadian(Line2D line) {
+    Point2D source = line.getP1(),
+            target = line.getP2();
+    final double deltaX = target.getX() - source.getX();
+    final double deltaY = target.getY() - source.getY();
+    return Math.atan2(deltaY, deltaX);    
+  }
+  
+  public static double getLineAngleDegree(Line2D line) {
+    return Math.toDegrees(getLineAngleRadian(line));
+  }
+  
   /**
    * Find a JMenuItem in the JPopupMenu given that correspond to the given text.
    * Return null if no JMenuItem is found. The given text must not be the exact

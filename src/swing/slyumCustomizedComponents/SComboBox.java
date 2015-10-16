@@ -1,7 +1,6 @@
 package swing.slyumCustomizedComponents;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -22,7 +21,6 @@ import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
-import javax.swing.plaf.ComponentUI;
 import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 import javax.swing.plaf.basic.BasicComboBoxUI;
@@ -64,7 +62,7 @@ public class SComboBox<E> extends JComboBox<E> {
 
       @Override
       public void mouseEntered(MouseEvent e) {
-        if (!isFocusOwner())
+        if (!isFocusOwner() && isEnabled())
           setBorder(BorderFactory.createLineBorder(
               Slyum.DEFAULT_BORDER_COLOR.darker()));
       }
@@ -106,7 +104,11 @@ public class SComboBox<E> extends JComboBox<E> {
               Rectangle bounds = new Rectangle(c.getWidth(), c.getHeight());
               
               // Background
-              g.setColor(Color.WHITE);
+              if (isEnabled())
+                g.setColor(Color.WHITE);
+              else
+                g.setColor(Color.LIGHT_GRAY);
+              
               g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
               
               // Arrow
@@ -199,7 +201,12 @@ public class SComboBox<E> extends JComboBox<E> {
       @Override
       public void paintCurrentValueBackground(
           Graphics g, Rectangle bounds, boolean hasFocus) {
-        g.setColor(Color.WHITE);
+        
+        if (isEnabled())
+          g.setColor(Color.WHITE);
+        else
+          g.setColor(Color.LIGHT_GRAY);
+        
         g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
       }
 

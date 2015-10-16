@@ -496,6 +496,36 @@ public class Slyum extends JFrame implements ActionListener {
     PropertyLoader.getInstance().push();
   }
 
+  public static boolean isShowIntersectionLine() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.SHOW_INTERSECTION_LINE);
+    boolean value = true;
+    
+    if (prop != null) value = Boolean.valueOf(prop);
+
+    return value;
+  }
+  
+  public static void setShowIntersectionLine(boolean show) {
+    PropertyLoader.getInstance().getProperties().put(PropertyLoader.SHOW_INTERSECTION_LINE, show);
+    PropertyLoader.getInstance().push();
+  }
+
+  public static SProperties.IntersectionLineSize getSizeIntersectionLine() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.SIZE_INTERSECTION_LINE);
+    SProperties.IntersectionLineSize lineSize = SProperties.IntersectionLineSize.MEDIUM;
+    
+    if (prop != null) lineSize = SProperties.IntersectionLineSize.valueOf(prop);
+
+    return lineSize;
+  }
+  
+  public static void setShowIntersectionLine(SProperties.IntersectionLineSize lineSize) {
+    PropertyLoader.getInstance().getProperties().put(PropertyLoader.SIZE_INTERSECTION_LINE, lineSize.name());
+    PropertyLoader.getInstance().push();
+  }
+  
   public static boolean isShowCrossMenu() {
     final String prop = PropertyLoader.getInstance().getProperties()
         .getProperty("ShowCrossMenu");

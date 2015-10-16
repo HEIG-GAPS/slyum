@@ -45,6 +45,8 @@ public class PropertyLoader {
   public static final String UPDATER_VERSION = "UpdaterVersion";
   public static final String RECENT_COLORS = "RecentColors";
   public static final String RECENT_COLORS_SIZE = "RecentColorsSize";
+  public static final String SHOW_INTERSECTION_LINE = "ShowIntersectionLine";
+  public static final String SIZE_INTERSECTION_LINE = "SizeIntersectionLine";
 
   public static final String filename = Slyum.getPathAppDir()
           + Slyum.FILE_SEPARATOR + "config.properties";

@@ -56,6 +56,7 @@ import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.Utility;
 import classDiagram.components.Method.ParametersViewStyle;
+import java.awt.Graphics;
 import swing.slyumCustomizedComponents.FlatButton;
 import swing.slyumCustomizedComponents.SCheckBox;
 import swing.slyumCustomizedComponents.SComboBox;
@@ -81,13 +82,16 @@ public class SProperties extends JDialog {
   private JCheckBox chckbxViewTypes;
   private JCheckBox ckbBackgroundGradient;
   private JCheckBox ckbEntityGradient;
+  private JCheckBox ckbShowIntersectionLine;
   private JPanel contentPanel = new JPanel();
   private JLabel lblPreviewFont = new JLabel();
+  private JLabel lblIntersectionLineSize = new JLabel();
   private SList<String> listName;
   private SList<Integer> listSize;
   private JComboBox<ViewEntity> listViewEntities;
   private JComboBox<ParametersViewStyle> listViewMethods;
   private JComboBox<Integer> listRecentColorsSize;
+  private JComboBox<IntersectionLineSize> listIntersectionLineSize;
   private JPanel panelLabelAlert;
   private JPanel panel_Grid;
   private JPanel panel_grid_color;
@@ -782,13 +786,7 @@ public class SProperties extends JDialog {
             gbc_chckbxViewTitleOnExport.gridy = 3;
             panelInnerGeneral.add(chckbxViewTitleOnExport, 
                            gbc_chckbxViewTitleOnExport);
-            chckbxViewTitleOnExport.addChangeListener(new ChangeListener() {
-
-              @Override
-              public void stateChanged(ChangeEvent e) {
-                checkPaintTitleBorderEnabled();
-              }
-            });
+            chckbxViewTitleOnExport.addChangeListener(e -> checkPaintTitleBorderEnabled());
           }
           {
             chckbxPaintTitleBorder = 
@@ -834,6 +832,35 @@ public class SProperties extends JDialog {
             panelInnerGeneral.add(chckbxViewTypes, gbc_chckbxViewTypes);
           }
           {
+            ckbShowIntersectionLine = new SCheckBox("Display intersections line");
+            GridBagConstraints gbc_chckbxIntersectionLine = new GridBagConstraints();
+            gbc_chckbxIntersectionLine.insets = new Insets(0, 5, 0, 0);
+            gbc_chckbxIntersectionLine.anchor = GridBagConstraints.WEST;
+            gbc_chckbxIntersectionLine.gridx = 0;
+            gbc_chckbxIntersectionLine.gridy = 8;
+            panelInnerGeneral.add(ckbShowIntersectionLine, gbc_chckbxIntersectionLine);
+            
+            ckbShowIntersectionLine.addChangeListener(e -> checkDisplayIntersectionLine());
+          }
+          {
+            lblIntersectionLineSize = new JLabel("Intersections line size: ");
+            listIntersectionLineSize = new SComboBox<>(IntersectionLineSize.values());
+            listIntersectionLineSize.setFont(UIManager.getFont(("Label.font")));
+            checkDisplayIntersectionLine();
+            
+            JPanel p = new JPanel();
+            p.add(lblIntersectionLineSize);
+            p.add(listIntersectionLineSize);
+            
+            GridBagConstraints gbc_chckbxIntersectionLineSize = 
+                new GridBagConstraints();
+            gbc_chckbxIntersectionLineSize.insets = new Insets(0, 22, 0, 0);
+            gbc_chckbxIntersectionLineSize.anchor = GridBagConstraints.WEST;
+            gbc_chckbxIntersectionLineSize.gridx = 0;
+            gbc_chckbxIntersectionLineSize.gridy = 9;
+            panelInnerGeneral.add(p, gbc_chckbxIntersectionLineSize);
+          }
+          {
             JPanel panelViews = new JPanel(new GridLayout(3, 2, 10, 10));
             panelViews.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
@@ -861,7 +888,7 @@ public class SProperties extends JDialog {
             gbc_panelViews.insets = new Insets(0, 5, 0, 0);
             gbc_panelViews.anchor = GridBagConstraints.WEST;
             gbc_panelViews.gridx = 0;
-            gbc_panelViews.gridy = 8;
+            gbc_panelViews.gridy = 10;
             panelInnerGeneral.add(panelViews, gbc_panelViews);
           }
           panelGeneral.add(panelInnerGeneral);
@@ -940,6 +967,10 @@ public class SProperties extends JDialog {
                       String.valueOf(listRecentColorsSize.getSelectedItem()));
               properties.put(PropertyLoader.VIEW_TYPES,
                       String.valueOf(chckbxViewTypes.isSelected()));
+              properties.put(PropertyLoader.SHOW_INTERSECTION_LINE,
+                      String.valueOf(ckbShowIntersectionLine.isSelected()));
+              properties.put(PropertyLoader.SIZE_INTERSECTION_LINE,
+                      String.valueOf(((IntersectionLineSize)listIntersectionLineSize.getSelectedItem()).name()));
 
               String quality = "MAX";
 
@@ -1046,6 +1077,15 @@ public class SProperties extends JDialog {
         chckbxViewTitleOnExport.isSelected());
   }
 
+  private void checkDisplayIntersectionLine() {
+    if (ckbShowIntersectionLine == null ||
+        listIntersectionLineSize == null)
+      return;
+    
+    listIntersectionLineSize.setEnabled(
+        ckbShowIntersectionLine.isSelected());
+  }
+
   private void setEnableGrid(boolean enable) {
     setEnableComponent(panel_Grid, chckbxEnableGrid.isSelected());
     setEnableStyleGrid(chckbxShowGrid.isSelected()
@@ -1074,6 +1114,8 @@ public class SProperties extends JDialog {
     listName.setSelectedValue(TextBox.getFontName(), true);
     listSize.setSelectedValue(TextBox.getFontSize(), true);
     chckbxShowGrid.setSelected(GraphicView.isGridVisible());
+    ckbShowIntersectionLine.setSelected(Slyum.isShowIntersectionLine());
+    listIntersectionLineSize.setSelectedItem(Slyum.getSizeIntersectionLine());
 
     switch (Utility.getGraphicQualityType()) {
       case LOW:
@@ -1125,6 +1167,27 @@ public class SProperties extends JDialog {
             SMessageDialog.WARNING_OPTION_DECREASE_PERF, this);
   }
 
+  
+  
+  public static enum IntersectionLineSize {
+    SMALL("Small", (short)4),
+    MEDIUM("Medium", (short)6),
+    LARGE("Large", (short)8);
+    
+    private String text;
+    private short size;
+    
+    IntersectionLineSize(String text, short size) {
+      this.text = text;
+      this.size = size;
+    }
+
+    @Override
+    public String toString() { return text; }
+    
+    public short getSize() { return size; }
+  }
+  
   private abstract class ButtonColor
       extends FlatButton
   implements ColoredComponent {
