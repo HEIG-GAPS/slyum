@@ -50,7 +50,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import swing.MultiViewManager;
 import swing.slyumCustomizedComponents.FlatPanel;
-import swing.PanelClassDiagram;
 import swing.slyumCustomizedComponents.SButton;
 import swing.slyumCustomizedComponents.STable;
 import swing.Slyum;
@@ -775,7 +774,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     imgNoParameter.setVisible(false);
 
     // Tables
-    attributesTable = new STable(new AttributeTableModel());
+    attributesTable = new STable(new AttributeTableModel(), () -> addAttribute());
     attributesTable.setEmptyText("No attribute");
     attributesTable.setPreferredScrollableViewportSize(new Dimension(200, 0));
 
@@ -872,10 +871,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
-          ((SimpleEntity) currentObject).addAttribute(new Attribute(
-                  "attribute", PrimitiveType.VOID_TYPE));
-          ((SimpleEntity) currentObject)
-                  .notifyObservers(UpdateMessage.ADD_ATTRIBUTE);
+          addAttribute();
         }
       });
 
@@ -1397,6 +1393,13 @@ public class SimpleEntityPropreties extends GlobalPropreties {
               attributesTable.getRowCount(), attributesTable.getColumnCount(),
               true));
 
+  }
+  
+  private void addAttribute() {
+    SimpleEntity entity = (SimpleEntity)currentObject;
+    
+    entity.addAttribute(new Attribute("attribute", PrimitiveType.VOID_TYPE));
+    entity.notifyObservers(UpdateMessage.ADD_ATTRIBUTE);
   }
 
   private void stopEditingTables() {

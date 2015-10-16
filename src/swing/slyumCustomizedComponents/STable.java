@@ -22,6 +22,10 @@ import utility.EditableCellFocusAction;
 
 public class STable extends JTable {
   
+  public interface TableTriggerNewRow {
+    public void addRow();
+  }
+  
   public class CustomCellEditor extends DefaultCellEditor {
   
   // Hack to avoid unselection of editor when changing focus.
@@ -67,6 +71,7 @@ public class STable extends JTable {
   private int lastSelectedRow = -1;
   private JScrollPane scrollPane;
   private String emptyText = "";
+  private TableTriggerNewRow triggerNewRow;
 
   public STable(TableModel dm) {
     super(dm);
@@ -100,6 +105,16 @@ public class STable extends JTable {
        BorderFactory.createLineBorder(Slyum.DEFAULT_BORDER_COLOR));
     scrollPane.setBackground(Color.WHITE);
     scrollPane.getViewport().setOpaque(false);
+  }
+  
+  public STable(TableModel dm, TableTriggerNewRow trigger) {
+    this(dm);
+    
+    this.triggerNewRow = trigger;
+  }
+  
+  public void addRow() {
+    triggerNewRow.addRow();
   }
 
   public String getEmptyText() {
