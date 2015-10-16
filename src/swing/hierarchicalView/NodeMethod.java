@@ -80,7 +80,7 @@ public class NodeMethod extends DefaultMutableTreeNode implements Observer, ICla
       }
     } else {
       setUserObject(method.getName());
-      treeModel.reload(getParent());
+      treeModel.reload(this);
     }
   }
 

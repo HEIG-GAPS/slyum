@@ -6,6 +6,7 @@ import javax.swing.tree.DefaultTreeModel;
 import classDiagram.components.Attribute;
 import classDiagram.components.Method;
 import classDiagram.components.SimpleEntity;
+import javax.swing.tree.TreePath;
 import swing.hierarchicalView.HierarchicalView.STree;
 
 public class NodeSimpleEntity extends NodeEntity {
@@ -22,11 +23,13 @@ public class NodeSimpleEntity extends NodeEntity {
     setUserObject(simpleEntity.getName());
     removeAllChildren();
 
-    for (final Attribute a : simpleEntity.getAttributes())
+    simpleEntity.getAttributes().stream().forEach((a) -> {
       add(new NodeAttribute(a, treeModel, tree));
+    });
 
-    for (final Method m : simpleEntity.getMethods())
+    simpleEntity.getMethods().stream().forEach((m) -> {
       add(new NodeMethod(m, treeModel, tree));
+    });
 
     HierarchicalView.sortAlphabetically(this, treeModel, tree);
     treeModel.reload(this);

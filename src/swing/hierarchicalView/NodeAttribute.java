@@ -83,7 +83,7 @@ public class NodeAttribute
       }
     } else {
       setUserObject(attribute.getName());
-      treeModel.reload(getParent());
+      treeModel.reload(this);
     }
   }
 

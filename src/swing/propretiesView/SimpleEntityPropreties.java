@@ -228,7 +228,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
           break;
       }
 
-      attribute.notifyObservers(UpdateMessage.SELECT);
+      attribute.notifyObservers();
       attribute.getType().notifyObservers();
 
       attributesTable.addRowSelectionInterval(row, row);
