@@ -101,7 +101,7 @@ public class MultiLineView extends LineView {
 
     for (RelationGrip grip : points) {
       Point pt = grip.getAnchor();
-      pt.translate(1, 1);
+      //pt.translate(1, 1);
       line.appendChild(Utility.pointToXmlElement(pt, "point", doc));
     }
     multiLineView.appendChild(line);

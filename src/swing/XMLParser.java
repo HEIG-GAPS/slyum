@@ -845,6 +845,8 @@ public class XMLParser extends DefaultHandler {
           final MultiView xmlMV = umlView.multiView.get(component.getId());
 
           final LinkedList<MultiLineView> multiLinesView = mv.getMultiLinesView();
+          
+          mv.setBounds(xmlMV.multiViewBounds);
 
           for (int j = 0; j < multiLinesView.size(); j++) {
             final RelationView rl = xmlMV.multiLineView.get(j);

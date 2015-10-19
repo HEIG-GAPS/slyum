@@ -116,8 +116,7 @@ public class MagneticGrip extends RelationGrip implements Observer {
       Rectangle bounds = component.getBounds();
       RelationGrip nearGrip = relation.getNearestGrip(this);
       preferredAnchor = new Point(anchor.x - bounds.x, anchor.y - bounds.y);
-      super.setAnchor(component.computeAnchorLocation(anchor,
-              nearGrip.getAnchor()));
+      super.setAnchor(component.computeAnchorLocation(anchor, nearGrip.getAnchor()));
     } else {
       super.setAnchor(anchor);
     }
