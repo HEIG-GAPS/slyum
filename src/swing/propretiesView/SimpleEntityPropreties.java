@@ -494,13 +494,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      if (currentMethod == null) return;
-
-      currentMethod.addParameter(new Variable("p", new Type(
-              PrimitiveType.INTEGER_TYPE.getName())));
-      currentMethod.notifyObservers();
-      currentMethod.select();
-      currentMethod.notifyObservers(UpdateMessage.SELECT);
+      addParameters(currentMethod);
     }
 
     public void clearAll() {
@@ -529,6 +523,10 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
     public Variable getCurrentParameter() {
       return currentParameter;
+    }
+    
+    public Method getCurrentMethod() {
+      return currentMethod;
     }
 
     @Override
@@ -792,10 +790,12 @@ public class SimpleEntityPropreties extends GlobalPropreties {
             (MethodTableModel) methodsTable.getModel());
     methodsTable.addMouseListener((MethodTableModel) methodsTable.getModel());
 
-    parametersTable = new STable(new ParametersTableModel());
+    parametersTable = new STable(
+        new ParametersTableModel(), 
+        () -> addParameters(((ParametersTableModel)parametersTable.getModel()).getCurrentMethod()));
     parametersTable.setPreferredScrollableViewportSize(new Dimension(70, 0));
     parametersTable.getModel().addTableModelListener(
-            (ParametersTableModel) parametersTable.getModel());
+        (ParametersTableModel) parametersTable.getModel());
     parametersTable.addMouseListener((ParametersTableModel) parametersTable
             .getModel());
 
@@ -1400,14 +1400,13 @@ public class SimpleEntityPropreties extends GlobalPropreties {
       entity.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
   }
   
-  private void addParameters() {
-    
-
-      currentMethod.addParameter(new Variable("p", new Type(
-              PrimitiveType.INTEGER_TYPE.getName())));
-      currentMethod.notifyObservers();
-      currentMethod.select();
-      currentMethod.notifyObservers(UpdateMessage.SELECT);
+  private void addParameters(Method method) { 
+    if (method == null)
+      return;   
+    method.addParameter(new Variable("p", new Type(PrimitiveType.INTEGER_TYPE.getName())));
+    method.notifyObservers();
+    method.select();
+    method.notifyObservers(UpdateMessage.SELECT);
   }
   
   private void addMethod(boolean editRequest) {

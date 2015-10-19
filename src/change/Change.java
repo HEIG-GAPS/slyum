@@ -20,6 +20,8 @@ public class Change {
   public static void clear() {
     stack.clear();
     record.clear();
+    pointer = 0;
+    setHasChange(false);
     
     printStackState();
   }

@@ -98,7 +98,6 @@ public class PanelClassDiagram extends JPanel {
     getInstance()._refresh();
   }
   
-
   private ClassDiagram classDiagram;
   private File currentFile = null;
   private boolean disabledUpdate = false;
@@ -371,7 +370,7 @@ public class PanelClassDiagram extends JPanel {
     WatchDir.unregister(getCurrentPath());
     currentFile = file;
     Slyum.getInstance().getMenuItemLocate().setEnabled(file != null);
-    Change.setHasChange(false);
+    Change.clear();
     Slyum.updateWindowTitle(currentFile);
     
     if (file == null) return;
