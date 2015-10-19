@@ -1,23 +1,27 @@
 package change;
 
+import graphic.GraphicView;
+import java.util.HashMap;
 import java.util.LinkedList;
+import swing.MultiViewManager;
 import swing.PanelClassDiagram;
 
 import swing.Slyum;
 
 public class Change {
-  private static boolean _hasChange = false;
-  private static boolean addSinceLastRecord = false;
-  private static boolean block = false;
-  private static boolean isRecord = false;
-  private static int pointer = 0;
+  
+  private static HashMap<GraphicView, Change> changes = new HashMap<>();
+  
+  private boolean _hasChange = false;
+  private boolean addSinceLastRecord = false;
+  private boolean block = false;
+  private boolean isRecord = false;
+  private int pointer = 0;
 
-  private static LinkedList<Boolean> record = new LinkedList<>();
+  private LinkedList<Boolean> record = new LinkedList<>();
+  private LinkedList<Changeable> stack = new LinkedList<>();
 
-  private static LinkedList<Changeable> stack = new LinkedList<>();
-
-
-  public static void clear() {
+  public void _clear() {
     stack.clear();
     record.clear();
     pointer = 0;
@@ -26,7 +30,7 @@ public class Change {
     printStackState();
   }
 
-  public static void setHasChange(boolean changed) {
+  public void _setHasChange(boolean changed) {
     _hasChange = changed;
     
     Slyum.setStarOnTitle(changed);
@@ -34,38 +38,38 @@ public class Change {
     checkToolbarButtonState();
   }
 
-  public static Changeable getLast() {
+  public Changeable _getLast() {
     return stack.getLast();
   }
 
-  public static int getSize() {
+  public int _getSize() {
     return stack.size();
   }
 
-  public static boolean hasChange() {
+  public boolean _hasChange() {
     return _hasChange;
   }
 
-  public static boolean isBlocked() {
+  public boolean _isBlocked() {
     return block;
   }
 
-  public static void setBlocked(boolean blocked) {
+  public void _setBlocked(boolean blocked) {
     block = blocked;
   }
 
-  public static boolean isRecord() {
+  public boolean _isRecord() {
     return isRecord;
   }
 
-  public static void pop() {
+  public void _pop() {
     if (pointer == stack.size() - 1) pointer--;
     
     stack.removeLast();
     record.removeLast();
   }
 
-  public static void push(Changeable ch) {
+  public void _push(Changeable ch) {
     if (block) return;
 
     // Remove all elements positioned after index pointer.
@@ -96,12 +100,12 @@ public class Change {
    * redo is called, all pushes into a group will be undo / redo at the same
    * time.
    */
-  public static void record() {
+  public void _record() {
     addSinceLastRecord = false;
     isRecord = true;
   }
   
-  public static void redo() {
+  public void _redo() {
     if (pointer >= stack.size() - 1) return;
 
     final int increment = pointer % 2 == 0 ? 1 : 2;
@@ -124,7 +128,7 @@ public class Change {
    * Stop the current record. If no record is currently running this method have
    * no effect.
    */
-  public static void stopRecord() {
+  public void _stopRecord() {
     int size = stack.size();
 
     boolean b1 = addSinceLastRecord, b2 = isRecord;
@@ -146,7 +150,7 @@ public class Change {
     printStackState();
   }
   
-  public static void undo() {
+  public void _undo() {
     if (pointer <= 0) return;
     
     final int decrement = pointer % 2 > 0 ? 1 : 2;
@@ -167,7 +171,7 @@ public class Change {
       undo();
   }
 
-  protected static void checkToolbarButtonState() {
+  public void _checkToolbarButtonState() {
     if (PanelClassDiagram.getInstance() == null)
       return;
     
@@ -175,7 +179,7 @@ public class Change {
     Slyum.setEnableUndoButtons(pointer > 0);
   }
   
-  private static void printStackState() {
+  private void _printStackState() {
     if (!Slyum.argumentIsChangeStackStatePrinted()) return;
     
     System.out.println("Etat de la pile");
@@ -188,4 +192,85 @@ public class Change {
     System.out.println("--------------");
   }
 
+  public static Change getCurrentChangeObject() {
+    GraphicView currentGraphicView = MultiViewManager.getSelectedGraphicView();
+    
+    if (!changes.containsKey(currentGraphicView))
+      changes.put(currentGraphicView, new Change());
+    
+    return changes.get(currentGraphicView);
+  }
+
+  public static void clear() {
+    getCurrentChangeObject()._clear();
+  }
+
+  public static void setHasChange(boolean changed) {
+    getCurrentChangeObject()._setHasChange(changed);
+  }
+
+  public static Changeable getLast() {
+    return getCurrentChangeObject()._getLast();
+  }
+
+  public static int getSize() {
+    return getCurrentChangeObject()._getSize();
+  }
+
+  public static boolean hasChange() {
+    return getCurrentChangeObject()._hasChange();
+  }
+
+  public static boolean isBlocked() {
+    return getCurrentChangeObject()._isBlocked();
+  }
+
+  public static void setBlocked(boolean blocked) {
+    getCurrentChangeObject()._setBlocked(blocked);
+  }
+
+  public static boolean isRecord() {
+    return getCurrentChangeObject()._isRecord();
+  }
+
+  public static void pop() {
+    getCurrentChangeObject()._pop();
+  }
+
+  public static void push(Changeable ch) {
+    getCurrentChangeObject()._push(ch);
+  }
+
+  /**
+   * Begin a record. A record merge all new pushes in a same group. When undo /
+   * redo is called, all pushes into a group will be undo / redo at the same
+   * time.
+   */
+  public static void record() {
+    getCurrentChangeObject()._record();
+  }
+  
+  public static void redo() {
+    getCurrentChangeObject()._redo();
+  }
+
+  /**
+   * Stop the current record. If no record is currently running this method have
+   * no effect.
+   */
+  public static void stopRecord() {
+    getCurrentChangeObject()._stopRecord();
+  }
+  
+  public static void undo() {
+    getCurrentChangeObject()._undo();
+  }
+  
+  private static void printStackState() {
+    getCurrentChangeObject()._printStackState();
+  }
+
+  public static void checkToolbarButtonState() {
+    getCurrentChangeObject()._checkToolbarButtonState();
+  }
 }

@@ -1,5 +1,6 @@
 package swing;
 
+import change.Change;
 import classDiagram.ClassDiagram;
 import graphic.GraphicView;
 import java.awt.BasicStroke;
@@ -196,6 +197,7 @@ public class STab extends JTabbedPane {
     MultiViewManager.setSelectedGraphicView(currentGraphicView);
     currentGraphicView.unselectAll();
     currentGraphicView.refreshAllComponents();
+    Change.checkToolbarButtonState();
   }
   
   public void openTab(GraphicView graphicView) {

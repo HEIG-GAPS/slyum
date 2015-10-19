@@ -45,12 +45,16 @@ public class MultiViewManager {
   }
   
   public static GraphicView getSelectedGraphicView() {
+    try {
     STab.GraphicViewTabComponent component = 
         STab.getInstance().getTabComponentAt(
             STab.getInstance().getSelectedIndex());
     
     if (component != null)
       return component.getGraphicView();
+    } catch (Exception e) {
+      return null;
+    }
     return null;
   }
   
