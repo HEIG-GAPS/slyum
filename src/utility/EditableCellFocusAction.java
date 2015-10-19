@@ -26,17 +26,10 @@ public class EditableCellFocusAction extends WrappedAction implements ActionList
     int row = table.getSelectedRow();
     int column = table.getSelectedColumn();
     
-    if (originalColumn == table.getColumnCount() - 1 && column == 0 &&
-        originalRow == table.getRowCount() - 1 && row == 0) {
-      table.addRow();
-      return;
-    }
-
     // Keep invoking the original action until we find an editable cell
     while (!table.isCellEditable(row, column)) {
       invokeOriginalAction(e);
       
-
       // We didn't move anywhere, reset cell selection and get out.
       if (row == table.getSelectedRow() && column == table.getSelectedColumn()) {
         table.changeSelection(originalRow, originalColumn, false, false);
@@ -51,5 +44,10 @@ public class EditableCellFocusAction extends WrappedAction implements ActionList
         break;
       }
     }
+    
+    if (column == 0 && row == 0)
+      if (table.addRow())
+        table.changeSelection(table.getRowCount() - 1, 0, false, false);
+
   }
 }

@@ -113,8 +113,12 @@ public class STable extends JTable {
     this.triggerNewRow = trigger;
   }
   
-  public void addRow() {
-    triggerNewRow.addRow();
+  public boolean addRow() {
+    if (triggerNewRow != null) {
+      triggerNewRow.addRow();
+      return true;
+    }
+    return false;
   }
 
   public String getEmptyText() {

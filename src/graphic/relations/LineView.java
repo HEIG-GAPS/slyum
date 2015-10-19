@@ -699,10 +699,11 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
         
         if (Slyum.isShowIntersectionLine()) {
           for (LineView lv : lines)
-            intersectPts.addAll(
-              lv.getLines().stream().map((line) -> Utility.getLinesIntersection(currentLine, line))
-                                    .filter((intersectPt) -> (intersectPt != null))
-                                    .collect(Collectors.toList()));
+            if (mustPaintIntersection(lv))
+              intersectPts.addAll(
+                lv.getLines().stream().map((line) -> Utility.getLinesIntersection(currentLine, line))
+                                      .filter((intersectPt) -> (intersectPt != null))
+                                      .collect(Collectors.toList()));
         
           intersectPts = intersectPts.stream()
             .sorted((e1, e2) -> Double.compare(e2.distance(currentPoint), e1.distance(currentPoint)))
@@ -1004,5 +1005,9 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
   
   final protected Stroke getDefaultLineStroke() {
     return new BasicStroke(LINE_WIDTH);
+  }
+
+  private boolean mustPaintIntersection(LineView otherLineView) {
+    return lineStroke.equals(getDefaultLineStroke());
   }
 }

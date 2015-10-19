@@ -216,7 +216,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
         case 2: // visibility
           attribute.setVisibility(Visibility.valueOf(((String) data)
-                  .toUpperCase()));
+                   .toUpperCase()));
           break;
 
         case 3: // constant
@@ -266,7 +266,6 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
       }
     }
-
   }
 
   private class MethodTableModel 
@@ -480,7 +479,9 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
   }
 
-  private class ParametersTableModel extends AbstractTableModel implements Observer, TableModelListener, ActionListener, MouseListener {
+  private class ParametersTableModel 
+      extends AbstractTableModel 
+      implements Observer, TableModelListener, ActionListener, MouseListener {
     private static final long serialVersionUID = 8577198492892934888L;
 
     private final String[] columnNames = { "Parameter", "Type" };
@@ -774,7 +775,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     imgNoParameter.setVisible(false);
 
     // Tables
-    attributesTable = new STable(new AttributeTableModel(), () -> addAttribute());
+    attributesTable = new STable(new AttributeTableModel(), () -> addAttribute(false));
     attributesTable.setEmptyText("No attribute");
     attributesTable.setPreferredScrollableViewportSize(new Dimension(200, 0));
 
@@ -784,7 +785,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     attributesTable.addMouseListener((AttributeTableModel) attributesTable
             .getModel());
 
-    methodsTable = new STable(new MethodTableModel());
+    methodsTable = new STable(new MethodTableModel(), () -> addMethod(false));
     methodsTable.setEmptyText("No method");
     methodsTable.setPreferredScrollableViewportSize(new Dimension(200, 0));
     methodsTable.getModel().addTableModelListener(
@@ -871,7 +872,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
-          addAttribute();
+          addAttribute(true);
         }
       });
 
@@ -1005,10 +1006,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
         @Override
         public void actionPerformed(ActionEvent evt) {
-          SimpleEntity simpleEntity = (SimpleEntity)currentObject;
-          simpleEntity.addMethod(new Method("method", PrimitiveType.VOID_TYPE,
-                  Visibility.PUBLIC, simpleEntity));
-          simpleEntity.notifyObservers(UpdateMessage.ADD_METHOD);
+          addMethod(true);
         }
       });
       buttonWidth += button.getIcon().getIconWidth();
@@ -1045,10 +1043,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
         @Override
         public void actionPerformed(ActionEvent evt) {
-          SimpleEntity simpleEntity = (SimpleEntity)currentObject;
-          simpleEntity.addMethod(new Method("method", PrimitiveType.VOID_TYPE,
-                  Visibility.PUBLIC, simpleEntity));
-          simpleEntity.notifyObservers(UpdateMessage.ADD_METHOD);
+          addMethod(true);
         }
       });
       btnAddMethodForInterface.setVisible(false);
@@ -1161,8 +1156,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
     btnAddParameters.setAlignmentX(CENTER_ALIGNMENT);
     btnAddParameters.setEnabled(false);
-    btnAddParameters.addActionListener((ParametersTableModel) parametersTable
-            .getModel());
+    btnAddParameters.addActionListener((ParametersTableModel) parametersTable.getModel());
     btnPanel.add(btnAddParameters);
 
     btnLeftParameters.setAlignmentX(CENTER_ALIGNMENT);
@@ -1395,11 +1389,36 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
   }
   
-  private void addAttribute() {
+  private void addAttribute(boolean editRequest) {
     SimpleEntity entity = (SimpleEntity)currentObject;
     
     entity.addAttribute(new Attribute("attribute", PrimitiveType.VOID_TYPE));
-    entity.notifyObservers(UpdateMessage.ADD_ATTRIBUTE);
+    
+    if (editRequest)
+      entity.notifyObservers(UpdateMessage.ADD_ATTRIBUTE);
+    else
+      entity.notifyObservers(UpdateMessage.ADD_ATTRIBUTE_NO_EDIT);
+  }
+  
+  private void addParameters() {
+    
+
+      currentMethod.addParameter(new Variable("p", new Type(
+              PrimitiveType.INTEGER_TYPE.getName())));
+      currentMethod.notifyObservers();
+      currentMethod.select();
+      currentMethod.notifyObservers(UpdateMessage.SELECT);
+  }
+  
+  private void addMethod(boolean editRequest) {
+    SimpleEntity simpleEntity = (SimpleEntity)currentObject;
+    
+    simpleEntity.addMethod(new Method("method", PrimitiveType.VOID_TYPE, Visibility.PUBLIC, simpleEntity));
+    
+    if (editRequest)
+      simpleEntity.notifyObservers(UpdateMessage.ADD_METHOD);
+    else
+      simpleEntity.notifyObservers(UpdateMessage.ADD_METHOD_NO_EDIT);
   }
 
   private void stopEditingTables() {
