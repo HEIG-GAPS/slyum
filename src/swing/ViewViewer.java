@@ -5,6 +5,7 @@ import graphic.export.ExportViewImage;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -117,32 +118,51 @@ public class ViewViewer
   
   private void paintDiagramOverview(Graphics2D g2d) {
     
+    final int CONTENT_WIDTH = getWidth() - DiagramName.DIAGRAM_NAME_WIDTH,
+              CONTENT_HEIGHT = getHeight();
+    
     g2d.translate(DiagramName.DIAGRAM_NAME_WIDTH + 1, 0);
 
-    final int MINI_WIDTH = 300;
     BufferedImage image = currentHover.getImageOverview();
     
-    //TODO a enlever
-    if (image == null)
-      return;
-
-    int width = image.getWidth(), 
-        height = image.getHeight();
-
-    float ratio = height / (float)width;
-
-    int miniHeight = (int)(MINI_WIDTH * ratio);
+    if (image == null) {
+      final String EMPTY_DIAGRAM_MESSAGE = currentHover.getNoImageOverviewMessage();
+      
+      g2d.setColor(Color.black);
+      g2d.setFont(g2d.getFont().deriveFont(18.0f));
+      FontMetrics fm = g2d.getFontMetrics();
+      int widthMessage = fm.stringWidth(EMPTY_DIAGRAM_MESSAGE),
+          heightMessage = fm.getAscent() + fm.getDescent();
+      
+      g2d.drawString(EMPTY_DIAGRAM_MESSAGE, (CONTENT_WIDTH - widthMessage) / 2,
+                                            (CONTENT_HEIGHT - heightMessage) / 2);
+     return;
+    }
+    
+    int imgWidth = image.getWidth(), 
+        imgHeight = image.getHeight();
+    
+    if (imgWidth > CONTENT_WIDTH) {
+      imgHeight = (CONTENT_WIDTH * imgHeight) / imgWidth;
+      imgWidth = CONTENT_WIDTH;
+    }
+    
+    if (imgHeight > CONTENT_HEIGHT) {
+      imgWidth = (CONTENT_HEIGHT * imgWidth) / imgHeight;
+      imgHeight = CONTENT_HEIGHT;
+    }
 
     BufferedImage thumbnail = Scalr.resize(
         image, 
         Scalr.Method.ULTRA_QUALITY,
         Scalr.Mode.AUTOMATIC,
-        getWidth() - DiagramName.DIAGRAM_NAME_WIDTH, 
-        getHeight());
+        imgWidth, 
+        imgHeight);
+    
+    int thumbX = (CONTENT_WIDTH - thumbnail.getWidth()) / 2,
+        thumbY = (CONTENT_HEIGHT - thumbnail.getHeight()) / 2;
 
-    g2d.drawImage(
-        thumbnail,
-        0, 0, null);
+    g2d.drawImage(thumbnail, thumbX, thumbY, null);
   }
   
   private LeftButton getLeftButtonAtLocation(Point location) {
@@ -201,6 +221,7 @@ public class ViewViewer
     
   private class LeftButton {
   
+    static final String NO_IMAGE_MESSAGE = "click to create a new view...";
     static final int DIAGRAM_NAME_WIDTH = 180;
     static final int DIAGRAM_NAME_HEIGHT = 30;
     
@@ -256,9 +277,15 @@ public class ViewViewer
     protected BufferedImage getImageOverview() {
       return null;
     }
+    
+    protected String getNoImageOverviewMessage() {
+      return NO_IMAGE_MESSAGE;
+    }
   }
   
   private class DiagramName extends LeftButton {
+    
+    static final String NO_IMAGE_MESSAGE = "empty diagram";
     
     private GraphicView graphicView;
 
@@ -280,7 +307,14 @@ public class ViewViewer
     
     @Override
     protected BufferedImage getImageOverview() {
+      if (graphicView.getAllDiagramComponents().isEmpty())
+        return null;
       return ExportViewImage.create(graphicView, false).export();
+    }
+    
+    @Override
+    protected String getNoImageOverviewMessage() {
+      return NO_IMAGE_MESSAGE;
     }
   }
 }

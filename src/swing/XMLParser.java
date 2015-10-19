@@ -587,6 +587,9 @@ public class XMLParser extends DefaultHandler {
 
     for (final Association a : umlClassDiagram.diagrameElement.association) {
       classDiagram.relationships.Association ac = null;
+      
+      if (a.role.size() < 2)
+        throw new IllegalArgumentException("An association must have at least two roles.");
 
       final classDiagram.components.Entity source = (classDiagram.components.Entity) classDiagram
               .searchComponentById(a.role.getFirst().componentId);

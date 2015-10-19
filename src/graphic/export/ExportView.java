@@ -106,7 +106,8 @@ public abstract class ExportView {
     }
     
     // Paint diagram's informations
-    if (Slyum.isDisplayedDiagramInformationOnExport()) {
+    String informations = PanelClassDiagram.getInstance().getClassDiagram().getInformations();
+    if (Slyum.isDisplayedDiagramInformationOnExport() && !informations.isEmpty()) {
       
       final int WIDTH = 250;
       final int INFORMATIONS_PADDING = 5;
@@ -116,7 +117,6 @@ public abstract class ExportView {
       g2d.setStroke(new BasicStroke(DEFAULT_TITLE_BORDER_WIDTH));
       
       FontRenderContext frc = g2d.getFontRenderContext();
-      String informations = PanelClassDiagram.getInstance().getClassDiagram().getInformations();
       AttributedString styledText = new AttributedString(informations);
       AttributedCharacterIterator iterator = styledText.getIterator();
       LineBreakMeasurer measurer = new LineBreakMeasurer(iterator, frc);

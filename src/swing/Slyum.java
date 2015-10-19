@@ -244,8 +244,8 @@ public class Slyum extends JFrame implements ActionListener {
   public static final Dimension WINDOWS_SIZE = new Dimension(DEFAULT_SIZE.x, DEFAULT_SIZE.y);
   private static final String ARGUMENT_EXIT_WITHOUT_ASK = "-exitWithoutAsk";
   private static final String ARGUMENT_PRINT_CHANGE_STACK_STATE = "-printChanges";
-  private static final String URL_ISSUES_PAGE = "https://code.google.com/p/slyum/issues/list";
-  private static final String URL_PROJECT_PAGE = "https://code.google.com/p/slyum/";
+  private static final String URL_ISSUES_PAGE = "https://github.com/Slyum/slyum/issues";
+  private static final String URL_PROJECT_PAGE = "https://github.com/Slyum/slyum";
   private static final String URL_UPDATE_PAGE = "https://drive.google.com/folderview?id=0B8LiFU0_u3AZdTRPY0JKallDRm8&usp=sharing";
   private static String[] arguments;
 
