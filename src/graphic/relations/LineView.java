@@ -28,6 +28,7 @@ import change.Change;
 import classDiagram.IDiagramComponent;
 import java.util.stream.Collectors;
 import javax.swing.SwingUtilities;
+import swing.PanelClassDiagram;
 import swing.Slyum;
 
 /**
@@ -125,9 +126,6 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
     popupMenu.add(makeMenuItem("Delete relation", "Delete", "delete"));
 
     setColor(getBasicColor());
-
-    Change.push(new BufferCreation(false, this));
-    Change.push(new BufferCreation(true, this));
   }
 
   @Override
@@ -350,21 +348,26 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
 
   @Override
   public void delete() {
-    super.delete();
-
+    
+    if (ligthDelete)
+      super.delete();
+    else
+      deleteWithoutChanges();
+    
     final boolean isBlocked = Change.isBlocked();
     Change.setBlocked(true);
 
-    for (final TextBox tb : tbRoles)
-      tb.delete();
+    tbRoles.stream().forEach(tb -> tb.delete());
+    points.stream().forEach(grip -> parent.removeComponent(grip));
 
-    for (final RelationGrip grip : points)
-      parent.removeComponent(grip);
-
+    if (!ligthDelete)
+      parent.getClassDiagram().removeComponent(getAssociedComponent());
+    
     Change.setBlocked(isBlocked);
   }
   
-  public void ligthDelete() {
+  @Override
+  public void lightDelete() {
     ligthDelete = true;
     delete();
     ligthDelete = false;
@@ -857,22 +860,15 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
 
   @Override
   public void repaint() {
-    final Rectangle repaintBounds = getBounds();
-
-    parent.getScene().repaint(repaintBounds);
+    parent.getScene().repaint(getBounds());
   }
 
   @Override
   public void restore() {
-    for (final RelationGrip grip : points)
-
-      parent.addOthersComponents(grip);
-
-    for (final TextBox tb : tbRoles)
-
-      tb.restore();
-
+    points.stream().forEach(grip -> parent.addOthersComponents(grip));
+    tbRoles.stream().forEach(tb -> tb.restore());
     parent.addLineView(this);
+    repaint();
   }
 
   /**
@@ -981,9 +977,7 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
     GraphicComponent targetView = parent.searchAssociedComponent(target);
     
     if (targetView == null) {
-      ligthDelete = true;
-      delete();
-      ligthDelete = false;
+      lightDelete();
       return;
     }
     

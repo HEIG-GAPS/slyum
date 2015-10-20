@@ -47,9 +47,6 @@ public class RelationGrip extends SquareGrip {
       throw new IllegalArgumentException("relation is null");
 
     relation = relationView;
-
-    Change.push(new BufferCreation(false, this));
-    Change.push(new BufferCreation(true, this));
   }
 
   /**

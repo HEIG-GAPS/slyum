@@ -22,9 +22,7 @@ public abstract class AbstractNode
     extends DefaultMutableTreeNode 
     implements IClassDiagramNode, ICustomizedIconNode, Observer {
   
-  protected JPopupMenu popupMenu;
-
-  
+  protected JPopupMenu popupMenu; 
   protected STree tree;
   protected DefaultTreeModel treeModel;
 
@@ -39,13 +37,9 @@ public abstract class AbstractNode
         "Delete", 
         PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete.png"));
     
-    item.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        PanelClassDiagram.getInstance().getClassDiagram().removeComponent(
-            getAssociedComponent());
-      }
+    item.addActionListener((ActionEvent e) -> {
+      PanelClassDiagram.getInstance().getClassDiagram()
+                       .removeComponent(getAssociedComponent());
     });
     popupMenu.add(item);
   }

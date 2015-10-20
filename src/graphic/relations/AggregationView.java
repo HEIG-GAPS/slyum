@@ -138,13 +138,4 @@ public class AggregationView extends BinaryView {
     paintExtremity(g2, points.get(1).getAnchor(),
             points.getFirst().getAnchor(), Color.WHITE, getColor());
   }
-
-  @Override
-  public void restore() {
-    super.restore();
-    parent.getClassDiagram().addAggregation(
-            (Aggregation) getAssociedComponent());
-
-    repaint();
-  }
 }

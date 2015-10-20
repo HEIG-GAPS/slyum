@@ -82,10 +82,9 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
 
   public GraphicComponent(GraphicView parent) {
-    if (parent == null) throw new IllegalArgumentException("parent is null");
-    
-    this.parent = parent;
-    
+    if (parent == null) 
+      throw new IllegalArgumentException("parent is null");    
+    this.parent = parent;    
     init();
   }
   
@@ -94,10 +93,8 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    * another way !!! Graphic view is the parent for all other components, but
    * can't give itself to this constructor in its constructor...
    */
-  GraphicComponent(
-  ) {
+  GraphicComponent() {
     parent = (GraphicView) this;
-
     init();
   }
 
@@ -165,10 +162,20 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
     // Search and delete all lines (relations, associations, etc...)
     // associated with this component.
-    for (final LineView lv : parent.getLinesViewAssociedWith(this))
-      lv.ligthDelete();
+    parent.getLinesViewAssociedWith(this).stream().forEach(lv -> lv.lightDelete());
     
     PanelClassDiagram.refreshHierarchicalView();
+  }
+  
+  public void deleteWithoutChanges() {
+    boolean isBlocked = Change.isBlocked();
+    Change.setBlocked(true);
+    delete();
+    Change.setBlocked(isBlocked);
+  }
+  
+  public void lightDelete() {
+    delete();
   }
 
   /**

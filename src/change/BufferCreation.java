@@ -13,14 +13,12 @@ public class BufferCreation implements Changeable {
 
   @Override
   public void restore() {
-    if (isCreated)
-
+    if (isCreated) {
       gc.restore();
-
-    else {
+    } else {
       final boolean isBlocked = Change.isBlocked();
       Change.setBlocked(true);
-      gc.delete();
+      gc.lightDelete();
       Change.setBlocked(isBlocked);
     }
   }

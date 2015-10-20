@@ -43,7 +43,7 @@ public class NodeAssociation extends AbstractNode {
     for (Role role : roles)
       text += " - " + role.getEntity().getName();
 
-    // On efface le premier prÃ©fixe.
+    // On efface le premier préfixe.
     return text.substring(PREFIX.length());
   }
 
@@ -94,8 +94,7 @@ public class NodeAssociation extends AbstractNode {
 
   @Override
   public void remove() {
-    for (final Role role : association.getRoles())
-      role.deleteObserver(this);
+    association.getRoles().stream().forEach(role -> role.deleteObserver(this));
   }
 
   @Override

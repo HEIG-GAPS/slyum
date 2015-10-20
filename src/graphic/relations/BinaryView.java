@@ -63,15 +63,4 @@ public class BinaryView extends AssociationView {
     tbRoles.add(tb);
     parent.addOthersComponents(tb);
   }
-
-  @Override
-  public void restore() {
-    super.restore();
-
-    if (this.getClass().equals(BinaryView.class))
-
-    parent.getClassDiagram().addBinary((Binary) getAssociedComponent());
-
-    repaint();
-  }
 }
