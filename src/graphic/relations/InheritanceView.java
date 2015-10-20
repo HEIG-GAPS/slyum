@@ -251,15 +251,6 @@ public class InheritanceView extends RelationView {
       inheritance.notifyObservers(UpdateMessage.UNSELECT);
   }
 
-  @Override
-  public void restore() {
-    super.restore();
-    parent.getClassDiagram().addInheritance(
-            (Inheritance) getAssociedComponent());
-
-    repaint();
-  }
-
   public void adjustInheritance() {
     final int offsetChild = 10, offsetParent = offsetChild + 20; // px
     Rectangle boundsParent = getLastPoint().getAssociedComponentView()

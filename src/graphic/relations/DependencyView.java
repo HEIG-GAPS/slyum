@@ -153,12 +153,4 @@ public class DependencyView extends RelationView {
   public void setTarget(EntityView target) {
     dependency.setTarget((Entity) target.getAssociedComponent());
   }
-
-  @Override
-  public void restore() {
-    super.restore();
-    parent.getClassDiagram().addDependency((Dependency) getAssociedComponent());
-
-    repaint();
-  }
 }

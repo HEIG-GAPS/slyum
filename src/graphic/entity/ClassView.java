@@ -10,6 +10,8 @@ import classDiagram.components.SimpleEntity;
 import classDiagram.components.Visibility;
 import java.awt.event.ActionEvent;
 import javax.swing.JPopupMenu;
+import swing.PanelClassDiagram;
+import swing.hierarchicalView.HierarchicalView;
 
 /**
  * Represent the view of a class in UML structure.
@@ -42,7 +44,7 @@ public class ClassView extends SimpleEntityView {
   @Override
   public void restore() {
     super.restore();
-    parent.addEntity(this);
+    parent.addEntityWithRelations(this, this.middleBounds());
     restoreEntity();
     repaint();
   }

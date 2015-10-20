@@ -845,7 +845,6 @@ public class PanelClassDiagram extends JPanel {
   }
 
   public static void refreshHierarchicalView() {
-    HierarchicalView hView = PanelClassDiagram.getInstance().hierarchicalView;
-    hView.repaint();
+    PanelClassDiagram.getInstance().hierarchicalView.repaint();
   }
 }

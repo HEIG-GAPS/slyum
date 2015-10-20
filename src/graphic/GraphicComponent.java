@@ -546,7 +546,9 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    */
   public void resizeRight(MouseEvent e) {}
 
-  public void restore() {}
+  public void restore() {
+    PanelClassDiagram.refreshHierarchicalView();
+  }
 
   /**
    * Calls this method for saving mouse location. Mouse location is used by

@@ -2830,6 +2830,11 @@ public class GraphicView extends GraphicComponent
     Entity entity1 = (Entity)entityView.getAssociedComponent();
     HashMap<Relation, Entity> linked = entity1.getLinkedEntities();
     for (Relation relation : linked.keySet()) {
+      
+      // Is already in the GraphicView?
+      if (searchAssociedComponent(relation) != null)
+        continue;
+      
       Entity entity2 = linked.get(relation);
       if (containsDiagramComponent(entity2)) {
         EntityView source, target, entityView2 = (EntityView)searchAssociedComponent(entity2);
@@ -2848,7 +2853,6 @@ public class GraphicView extends GraphicComponent
       }
     }
     
-    
     // Place the component corresponding to the mouse location drop.
     SwingUtilities.invokeLater(new Runnable() {
       
@@ -2863,6 +2867,8 @@ public class GraphicView extends GraphicComponent
           rv.center();
       }
     });
+    
+    PanelClassDiagram.refreshHierarchicalView();
     
     return true;
   }

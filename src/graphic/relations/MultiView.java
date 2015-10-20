@@ -321,7 +321,7 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
     super.restore();
 
     parent.addMultiView(this);
-    parent.getClassDiagram().addMulti(multi);
+    //parent.getClassDiagram().addMulti(multi);
   }
 
   @Override

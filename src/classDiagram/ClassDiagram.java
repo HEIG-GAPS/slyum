@@ -346,8 +346,7 @@ public class ClassDiagram extends Observable
     if (component instanceof Entity) 
       entities.remove((Entity)component);
 
-    for (final IComponentsObserver c : observers)
-      c.notifyRemoveComponent(component);
+    observers.stream().forEach(c -> c.notifyRemoveComponent(component));
   }
 
   /**
