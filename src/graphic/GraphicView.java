@@ -1272,7 +1272,7 @@ public class GraphicView extends GraphicComponent
     if (currentFactory != null) {
       currentFactory.deleteFactory();
       justCreatedComponent = currentFactory.getCreatedComponent();
-      justCreatedComponent = justCreatedComponent instanceof LineView ? null : justCreatedComponent;
+      justCreatedComponent = justCreatedComponent instanceof EntityView ? justCreatedComponent : null;
       currentFactory = null;
     }
     getScene().setCursor(Cursor.getDefaultCursor());

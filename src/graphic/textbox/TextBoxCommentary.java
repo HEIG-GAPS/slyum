@@ -351,9 +351,7 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
   @Override
   public void restore() {
     super.restore();
-
     parent.addNotes(this);
-
     repaint();
   }
 

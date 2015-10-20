@@ -27,9 +27,11 @@ import change.BufferCreation;
 import change.Change;
 import classDiagram.IDiagramComponent;
 import java.util.stream.Collectors;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import swing.PanelClassDiagram;
 import swing.Slyum;
+import utility.SMessageDialog;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -126,6 +128,11 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
     popupMenu.add(makeMenuItem("Delete relation", "Delete", "delete"));
 
     setColor(getBasicColor());
+    
+    if (Change.isRecord()) {
+      Change.push(new BufferCreation(false, this));
+      Change.push(new BufferCreation(true, this));
+    }
   }
 
   @Override
@@ -348,6 +355,7 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
 
   @Override
   public void delete() {
+    if (!parent.containsComponent(this)) return;
     
     if (ligthDelete)
       super.delete();
@@ -363,6 +371,13 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
     if (!ligthDelete)
       parent.getClassDiagram().removeComponent(getAssociedComponent());
     
+    Change.setBlocked(isBlocked);
+  }
+  
+  public void deleteWithoutChanges() {
+    boolean isBlocked = Change.isBlocked();
+    Change.setBlocked(true);
+    super.delete();
     Change.setBlocked(isBlocked);
   }
   

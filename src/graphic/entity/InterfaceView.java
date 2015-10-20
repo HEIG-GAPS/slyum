@@ -47,7 +47,7 @@ public class InterfaceView extends SimpleEntityView {
   }
 
   protected void restoreEntity() {
-    if (!existsInOthersViews())
+    if (!componentAlreadyExists())
       parent.getClassDiagram().addInterfaceEntity((InterfaceEntity) getAssociedComponent());
   }
 }

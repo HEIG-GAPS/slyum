@@ -167,13 +167,6 @@ public abstract class GraphicComponent extends Observable implements ActionListe
     PanelClassDiagram.refreshHierarchicalView();
   }
   
-  public void deleteWithoutChanges() {
-    boolean isBlocked = Change.isBlocked();
-    Change.setBlocked(true);
-    delete();
-    Change.setBlocked(isBlocked);
-  }
-  
   public void lightDelete() {
     delete();
   }
@@ -191,6 +184,10 @@ public abstract class GraphicComponent extends Observable implements ActionListe
   
   public boolean existsInOthersViews() {
     return GraphicComponent.countGraphicComponentsAssociedWith(getAssociedComponent()) > 1;
+  }
+  
+  public boolean componentAlreadyExists() {
+    return GraphicComponent.countGraphicComponentsAssociedWith(getAssociedComponent()) > 0;
   }
 
   /**

@@ -167,7 +167,6 @@ public class Change {
     setHasChange(true);
     
     if (record.get(pointer))
-      
       undo();
   }
 
