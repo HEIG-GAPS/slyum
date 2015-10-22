@@ -33,4 +33,9 @@ public class BufferCreationMethod implements Changeable {
     }
   }
 
+  @Override
+  public Object getAssociedComponent() {
+    return method;
+  }
+
 }

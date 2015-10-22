@@ -21,4 +21,9 @@ public class BufferEnumValue implements Changeable {
     current.notifyObservers();
   }
 
+  @Override
+  public Object getAssociedComponent() {
+    return current;
+  }
+
 }

@@ -36,4 +36,9 @@ public class BufferClass implements Changeable {
 
     entity.notifyObservers();
   }
+
+  @Override
+  public Object getAssociedComponent() {
+    return entity;
+  }
 }

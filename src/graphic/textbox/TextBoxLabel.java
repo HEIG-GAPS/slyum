@@ -11,10 +11,6 @@ import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
 
-import change.BufferDeplacement;
-import change.Change;
-import change.Changeable;
-
 /**
  * A TextBox is a graphic component from Slyum containing a String. The
  * particularity of a TextBox is it text can be changed by double-clinking on
@@ -104,7 +100,6 @@ public abstract class TextBoxLabel extends TextBox implements Observer {
     super.gMousePressed(e);
     mousePosition = e.getPoint();
     previousCursor = parent.getScene().getCursor();
-    Change.push(new BufferDeplacement(this));
   }
 
   @Override
@@ -112,14 +107,6 @@ public abstract class TextBoxLabel extends TextBox implements Observer {
     Point pos = computeAnchor();
     deplacement = new Point(bounds.x - pos.x, bounds.y - pos.y);
     parent.getScene().setCursor(previousCursor);
-
-    Changeable c = Change.getLast();
-    if (c instanceof BufferDeplacement
-            && !((BufferDeplacement) Change.getLast()).getDeplacement().equals(
-                    getDeplacement()))
-      Change.push(new BufferDeplacement(this));
-    else
-      Change.pop();
   }
 
   public Point getDeplacement() {

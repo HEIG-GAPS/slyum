@@ -1,8 +1,15 @@
 package change;
 
+import classDiagram.IDiagramComponent;
+import graphic.GraphicComponent;
 import graphic.GraphicView;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import swing.MultiViewManager;
 import swing.PanelClassDiagram;
 
@@ -25,9 +32,9 @@ public class Change {
     stack.clear();
     record.clear();
     pointer = 0;
-    setHasChange(false);
+    _setHasChange(false);
     
-    printStackState();
+    _printStackState();
   }
 
   public void _setHasChange(boolean changed) {
@@ -35,7 +42,7 @@ public class Change {
     
     Slyum.setStarOnTitle(changed);
     
-    checkToolbarButtonState();
+    _checkToolbarButtonState();
   }
 
   public Changeable _getLast() {
@@ -84,15 +91,15 @@ public class Change {
     stack.add(ch);
     record.add(isRecord);
 
-    if (isRecord()) addSinceLastRecord = true;
+    if (_isRecord()) addSinceLastRecord = true;
 
     pointer = stack.size() - 1;
 
-    printStackState();
+    _printStackState();
 
-    checkToolbarButtonState();
+    _checkToolbarButtonState();
 
-    setHasChange(true);
+    _setHasChange(true);
   }
 
   /**
@@ -110,18 +117,18 @@ public class Change {
 
     final int increment = pointer % 2 == 0 ? 1 : 2;
 
-    final boolean isBlocked = Change.isBlocked();
-    setBlocked(true);
+    final boolean isBlocked = _isBlocked();
+    _setBlocked(true);
     stack.get(pointer += increment).restore();
-    setBlocked(isBlocked);
+    _setBlocked(isBlocked);
 
-    printStackState();
+    _printStackState();
 
-    checkToolbarButtonState();
+    _checkToolbarButtonState();
 
-    setHasChange(true);
+    _setHasChange(true);
 
-    if (record.get(pointer)) redo();
+    if (record.get(pointer)) _redo();
   }
 
   /**
@@ -137,7 +144,6 @@ public class Change {
     isRecord = false;
 
     if (b2 == false || size < 1 || !b1)
-      
       return;
     
     int b = pointer - 2;
@@ -147,7 +153,7 @@ public class Change {
     record.set(b + 1, false);
     record.set(pointer, false);
 
-    printStackState();
+    _printStackState();
   }
   
   public void _undo() {
@@ -155,19 +161,17 @@ public class Change {
     
     final int decrement = pointer % 2 > 0 ? 1 : 2;
     
-    final boolean isBlocked = Change.isBlocked();
-    setBlocked(true);
+    final boolean isBlocked = _isBlocked();
+    _setBlocked(true);
     stack.get(pointer -= decrement).restore();
-    setBlocked(isBlocked);
+    _setBlocked(isBlocked);
     
-    printStackState();
-    
-    checkToolbarButtonState();
-
-    setHasChange(true);
+    _printStackState();
+    _checkToolbarButtonState();
+    _setHasChange(true);
     
     if (record.get(pointer))
-      undo();
+      _undo();
   }
 
   public void _checkToolbarButtonState() {
@@ -184,7 +188,6 @@ public class Change {
     System.out.println("Etat de la pile");
     
     for (int i = 0; i < stack.size(); i++)
-      
       System.out.println(i + " - " + record.get(i)
               + (pointer == i ? " <--" : ""));
 

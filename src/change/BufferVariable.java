@@ -21,4 +21,8 @@ public class BufferVariable implements Changeable {
     variable.setVariable(copy);
   }
 
+  @Override
+  public Object getAssociedComponent() {
+    return variable;
+  }
 }

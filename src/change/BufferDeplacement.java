@@ -26,4 +26,9 @@ public class BufferDeplacement implements Changeable {
     return deplacement;
   }
 
+  @Override
+  public Object getAssociedComponent() {
+    return tbl;
+  }
+
 }

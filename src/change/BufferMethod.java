@@ -21,4 +21,9 @@ public class BufferMethod implements Changeable {
     method.setMethod(copy);
   }
 
+  @Override
+  public Object getAssociedComponent() {
+    return method;
+  }
+
 }

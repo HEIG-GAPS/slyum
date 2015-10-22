@@ -33,4 +33,9 @@ public class BufferCreationEnumValue implements Changeable {
     }
   }
 
+  @Override
+  public Object getAssociedComponent() {
+    return enumValue;
+  }
+
 }

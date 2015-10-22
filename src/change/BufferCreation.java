@@ -22,4 +22,9 @@ public class BufferCreation implements Changeable {
       Change.setBlocked(isBlocked);
     }
   }
+
+  @Override
+  public Object getAssociedComponent() {
+    return gc;
+  }
 }

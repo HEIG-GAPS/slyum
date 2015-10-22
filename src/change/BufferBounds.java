@@ -25,4 +25,9 @@ public class BufferBounds implements Changeable {
     return new Rectangle(bounds);
   }
 
+  @Override
+  public Object getAssociedComponent() {
+    return gc;
+  }
+
 }

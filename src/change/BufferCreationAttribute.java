@@ -36,4 +36,9 @@ public class BufferCreationAttribute implements Changeable {
 
   }
 
+  @Override
+  public Object getAssociedComponent() {
+    return attribute;
+  }
+
 }

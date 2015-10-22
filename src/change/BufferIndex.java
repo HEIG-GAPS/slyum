@@ -34,4 +34,9 @@ public class BufferIndex<T extends Object> implements Changeable {
     i.select();
     i.notifyObservers(IDiagramComponent.UpdateMessage.SELECT);
   }
+
+  @Override
+  public Object getAssociedComponent() {
+    return o;
+  }
 }

@@ -16,4 +16,9 @@ public class BufferNote implements Changeable {
     note.setText(text);
   }
 
+  @Override
+  public Object getAssociedComponent() {
+    return note;
+  }
+
 }

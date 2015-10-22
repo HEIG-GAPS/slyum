@@ -1,11 +1,11 @@
 package graphic.relations;
 
+import change.Change;
 import graphic.ColoredComponent;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.textbox.TextBox;
 import graphic.textbox.TextBoxLabel;
-
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -22,16 +22,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import utility.Utility;
-import change.BufferBounds;
-import change.BufferCreation;
-import change.Change;
 import classDiagram.IDiagramComponent;
 import java.util.stream.Collectors;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import swing.PanelClassDiagram;
 import swing.Slyum;
-import utility.SMessageDialog;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -78,7 +72,6 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
   private Cursor previousCursor;
   private int saveGrip;
   private boolean acceptGripCreation = false;
-  private BufferBounds[] bb = new BufferBounds[2];
   private Point anchor1MousePressed, anchor2MousePressed;
   protected boolean ligthDelete;
 
@@ -96,15 +89,10 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
 
     if (target == null) throw new IllegalArgumentException("target is null");
 
-    final boolean isBlocked = Change.isBlocked();
-    Change.setBlocked(true);
-
     final MagneticGrip first = new MagneticGrip(parent, this, source,
             posSource, posTarget);
     final MagneticGrip last = new MagneticGrip(parent, this, target, posTarget,
             posSource);
-
-    Change.setBlocked(isBlocked);
 
     // Initialize firsts grips (don't use addGrip method to do that, they
     // are inter-dependent!)
@@ -128,11 +116,6 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
     popupMenu.add(makeMenuItem("Delete relation", "Delete", "delete"));
 
     setColor(getBasicColor());
-    
-    if (Change.isRecord()) {
-      Change.push(new BufferCreation(false, this));
-      Change.push(new BufferCreation(true, this));
-    }
   }
 
   @Override
@@ -361,17 +344,13 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
       super.delete();
     else
       deleteWithoutChanges();
-    
-    final boolean isBlocked = Change.isBlocked();
-    Change.setBlocked(true);
 
     tbRoles.stream().forEach(tb -> tb.delete());
     points.stream().forEach(grip -> parent.removeComponent(grip));
 
-    if (!ligthDelete)
+    if (!ligthDelete) {
       parent.getClassDiagram().removeComponent(getAssociedComponent());
-    
-    Change.setBlocked(isBlocked);
+    }
   }
   
   public void deleteWithoutChanges() {
@@ -584,11 +563,6 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
 
     if (GraphicView.isAddGripMode()) acceptGripCreation = true;
 
-    if (e.getButton() == MouseEvent.BUTTON1) {
-      bb[0] = new BufferBounds(points.get(saveGrip));
-      bb[1] = new BufferBounds(points.get(saveGrip + 1));
-    }
-
     maybeShowPopup(e, popupMenu);
   }
 
@@ -596,23 +570,6 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
   public void gMouseReleased(MouseEvent e) {
     super.gMouseReleased(e);
     smoothLines();
-    if (e.getButton() == MouseEvent.BUTTON1) {
-      BufferBounds bb2 = new BufferBounds(points.get(saveGrip)), 
-                   bb3 = new BufferBounds(points.get(saveGrip + 1));
-
-      if (!(bb[0] != null && 
-            bb[0].getBounds().equals(bb2.getBounds()) && 
-            bb[1] != null && 
-            bb[1].getBounds().equals(bb3.getBounds()))) {
-        boolean isRecord = Change.isRecord();
-        Change.record();
-        Change.push(bb[0]);
-        Change.push(bb2);
-        Change.push(bb[1]);
-        Change.push(bb3);
-        if (!isRecord) Change.stopRecord();
-      }
-    }
     maybeShowPopup(e, popupMenu);
     acceptGripCreation = false;
     if (!isSelected()) showGrips(false);
@@ -660,12 +617,7 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
               + movement.y);
       final RelationGrip rg = points.get(i);
 
-      BufferBounds bbs = new BufferBounds(rg);
-
       rg.setAnchor(newAnchor);
-
-      Change.push(new BufferBounds(rg));
-      Change.push(bbs);
     }
   }
 

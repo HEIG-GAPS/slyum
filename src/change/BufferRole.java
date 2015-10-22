@@ -29,4 +29,9 @@ public class BufferRole implements Changeable {
     role.getMultiplicity().notifyObservers();
   }
 
+  @Override
+  public Object getAssociedComponent() {
+    return role;
+  }
+
 }

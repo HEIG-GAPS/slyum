@@ -20,4 +20,9 @@ public class BufferColor implements Changeable {
     ((GraphicComponent) gc).repaint();
   }
 
+  @Override
+  public Object getAssociedComponent() {
+    return gc;
+  }
+
 }

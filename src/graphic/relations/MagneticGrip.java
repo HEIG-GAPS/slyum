@@ -9,8 +9,6 @@ import java.awt.event.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
 
-import change.Change;
-
 /**
  * The relationGrip is a grip who customize a LineView. The LineView uses
  * RelationGrip for draw segments between each RelationGrip.
@@ -103,8 +101,6 @@ public class MagneticGrip extends RelationGrip implements Observer {
     setAnchor(e.getPoint());
     relation.smoothLines();
     relation.searchUselessAnchor(this);
-    pushBufferChangeMouseReleased(e);
-    Change.stopRecord();
     maybeShowPopup(e, relation);
     notifyObservers();
     relation.reinitializeTextBoxesLocation();

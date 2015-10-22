@@ -2858,13 +2858,16 @@ public class GraphicView extends GraphicComponent
       
       @Override
       public void run() {
+        boolean isBlocked = Change.isBlocked();
+        Change.setBlocked(true);
         
         entityView.setLocationRelativeTo(location);
         entityView.regenerateEntity();
         entityView.adjustWidth();
         
-        for (RelationView rv : createdRelationViews)
-          rv.center();
+        createdRelationViews.stream().forEach(rv -> rv.center());
+        
+        Change.setBlocked(isBlocked);
       }
     });
     

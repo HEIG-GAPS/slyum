@@ -10,9 +10,6 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
 import utility.Utility;
-import change.BufferBounds;
-import change.BufferCreation;
-import change.Change;
 import java.awt.Color;
 
 /**
@@ -101,11 +98,6 @@ public class RelationGrip extends SquareGrip {
   @Override
   public void gMousePressed(MouseEvent e) {
     isMouseDragged = false;
-
-    if (e.getButton() == MouseEvent.BUTTON1) {
-      Change.record();
-      Change.push(new BufferBounds(this));
-    }
     maybeShowPopup(e, relation);
   }
 
@@ -116,15 +108,12 @@ public class RelationGrip extends SquareGrip {
             .getAssociedComponentView(), target = relation.getLastPoint()
             .getAssociedComponentView();
 
-    pushBufferChangeMouseReleased(e);
     relation.smoothLines();
     relation.searchUselessAnchor(this);
 
     if (component != null
             && (component.equals(source) || component.equals(target)))
       delete();
-
-    Change.stopRecord();
 
     maybeShowPopup(e, relation);
     isMouseDragged = false;
@@ -146,14 +135,6 @@ public class RelationGrip extends SquareGrip {
       return super.getBorderColor();
     
     return super.getBorderColor().brighter().brighter().brighter();
-  }
-
-  protected void pushBufferChangeMouseReleased(MouseEvent e) {
-    if (e.getButton() == MouseEvent.BUTTON1) if (isMouseDragged) {
-      if (Change.getSize() % 2 == 1) Change.push(new BufferBounds(this));
-    } else {
-      Change.pop();
-    }
   }
 
   @Override
