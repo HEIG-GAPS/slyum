@@ -1,5 +1,6 @@
 package graphic.relations;
 
+import change.Change;
 import graphic.ColoredComponent;
 import graphic.GraphicView;
 import graphic.MovableComponent;
@@ -45,6 +46,7 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
   LinkedList<MultiLineView> mlvs = new LinkedList<>();
 
   private final Multi multi;
+  private boolean ligthDelete;
 
   /**
    * Create a new MultiView associated with the multi UML.
@@ -97,13 +99,30 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
     final JMenuItem menuItem = makeMenuItem("Delete", "Delete", "delete");
     popupMenu.add(menuItem);
 
-    super.pushBufferCreation();
-
     // Cet élément n'est pas redimensionnable. Suppression des grips.
+    boolean isBlocked = Change.isBlocked();
+    Change.setBlocked(true);
     leftMovableSquare.delete();
     rightMovableSquare.delete();
+    Change.setBlocked(isBlocked);
   }
 
+  @Override
+  public void apply(MouseEvent e) {
+    boolean isBlocked = Change.isBlocked();
+    Change.setBlocked(true);
+    super.apply(e);
+    Change.setBlocked(isBlocked);
+  }
+
+  @Override
+  public void gMouseReleased(MouseEvent e) {
+    boolean isBlocked = Change.isBlocked();
+    Change.setBlocked(true);
+    super.gMouseReleased(e);
+    Change.setBlocked(isBlocked);
+  }
+  
   @Override
   protected void pushBufferCreation() {
 
@@ -181,6 +200,34 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
     g2.setStroke(borderStroke);
     g2.setColor(color);
     g2.drawPolygon(polygon);
+  }
+  
+  @Override
+  public void delete() {
+    if (!parent.containsComponent(this)) return;
+    
+    if (ligthDelete)
+      super.delete();
+    else
+      deleteWithoutChanges();
+
+    if (!ligthDelete)
+      parent.getClassDiagram().removeComponent(getAssociedComponent());
+  }
+  
+  public void deleteWithoutChanges() {
+    boolean isBlocked = Change.isBlocked();
+    Change.setBlocked(true);
+    super.delete();
+    Change.setBlocked(isBlocked);
+  }
+  
+  @Override
+  public void lightDelete() {
+    boolean isLigthDelete = ligthDelete;
+    ligthDelete = true;
+    delete();
+    ligthDelete = isLigthDelete;
   }
 
   @Override

@@ -362,9 +362,10 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
   
   @Override
   public void lightDelete() {
+    boolean isLigthDelete = ligthDelete;
     ligthDelete = true;
     delete();
-    ligthDelete = false;
+    ligthDelete = isLigthDelete;
   }
 
   /**
