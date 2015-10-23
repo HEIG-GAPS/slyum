@@ -70,8 +70,9 @@ public class MultiLineView extends LineView {
     }
 
     super.delete();
-    mv.connexionRemoved(this);
-
+    
+    if (!ligthDelete)
+      mv.connexionRemoved(this);
   }
 
   @Override

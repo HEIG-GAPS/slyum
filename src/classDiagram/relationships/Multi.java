@@ -44,9 +44,7 @@ public class Multi extends Association {
     if (components.size() < 3)
       throw new IllegalArgumentException("multi : no more components");
 
-    for (final ClassEntity ce : components)
-
-      addClass(ce);
+    components.stream().forEach(ce -> addClass(ce));
 
     directed = NavigateDirection.BIDIRECTIONAL;
   }
@@ -71,7 +69,6 @@ public class Multi extends Association {
       throw new IllegalArgumentException("multi : no more components");
 
     for (final ClassEntity ce : components)
-
       addClass(ce);
 
     directed = NavigateDirection.BIDIRECTIONAL;
@@ -87,7 +84,8 @@ public class Multi extends Association {
     if (component == null)
       throw new IllegalArgumentException("component is null");
 
-    new Role(this, component, "");
+    if (getRoles().stream().filter(r -> r.getEntity().getId() == component.getId()).count() == 0)
+      new Role(this, component, "");
   }
 
   @Override

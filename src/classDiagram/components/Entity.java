@@ -11,6 +11,7 @@ import change.BufferClass;
 import change.BufferIndex;
 import change.Change;
 import classDiagram.relationships.IParentChild;
+import classDiagram.relationships.Multi;
 import classDiagram.relationships.Relation;
 import classDiagram.relationships.Role;
 import java.awt.datatransfer.DataFlavor;
@@ -155,11 +156,15 @@ public abstract class Entity extends Type implements Cloneable, Transferable {
     HashMap<Relation, Entity> entities = new HashMap<>();
     for (Relation relation : 
         PanelClassDiagram.getInstance().getClassDiagram().getRelations()) {
+      
       if (relation.getSource() == this)
         entities.put(relation, relation.getTarget());
       
       else if (relation.getTarget() == this) 
         entities.put(relation, relation.getSource());
+      
+      else if (relation instanceof Multi)
+        entities.put(relation, null);
     }
     return entities;
   }

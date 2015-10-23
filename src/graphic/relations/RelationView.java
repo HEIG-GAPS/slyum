@@ -61,7 +61,7 @@ public abstract class RelationView extends LineView implements Observer {
         if (source != null && target != null) {
           GraphicComponent gc = view.createAndAddRelation(relation, source, target);
           
-          if (gc instanceof RelationView)
+          if (gc != null && gc instanceof RelationView)
             ((RelationView)gc).center();
         }
       }

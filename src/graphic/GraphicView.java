@@ -1254,15 +1254,19 @@ public class GraphicView extends GraphicComponent
       Relation relation, EntityView source, EntityView target) {
     
     if (relation.getClass() == Multi.class) {
-      MultiView mv = new MultiView(parent, (Multi)relation);
-      addMultiView(mv);
-      return mv;
+      if (((Multi)relation).getRoles().stream().filter(r -> searchAssociedComponent(r.getEntity()) != null).count() > 2) {
+        MultiView mv = new MultiView(parent, (Multi)relation);
+        addMultiView(mv);
+        return mv;
+      }
     } else {
       RelationView rv = RelationView.createFromRelation(
           this, relation, source, target);
       addLineView(rv);
       return rv;
     }
+    
+    return null;
   }
   
   /**
@@ -2836,19 +2840,21 @@ public class GraphicView extends GraphicComponent
         continue;
       
       Entity entity2 = linked.get(relation);
-      if (containsDiagramComponent(entity2)) {
-        EntityView source, target, entityView2 = (EntityView)searchAssociedComponent(entity2);
-        if (relation.getSource() == entity1) {
-          source = entityView;
-          target = entityView2;
-        } else {
-          source = entityView2;
-          target = entityView;
-        }
+      if (containsDiagramComponent(entity2) || relation instanceof Multi) {
+        EntityView source = null, target = null, entityView2 = (EntityView)searchAssociedComponent(entity2);
+        
+        if (!(relation instanceof Multi))
+          if (relation.getSource() == entity1) {
+            source = entityView;
+            target = entityView2;
+          } else {
+            source = entityView2;
+            target = entityView;
+          }
         
         GraphicComponent gc = createAndAddRelation(relation, source, target);
         
-        if (gc instanceof RelationView)
+        if (gc!= null && gc instanceof RelationView)
           createdRelationViews.add((RelationView)gc);
       }
     }

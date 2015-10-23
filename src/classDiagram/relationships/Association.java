@@ -31,14 +31,12 @@ public abstract class Association extends Observable implements Relation, ILabel
   protected LinkedList<Role> roles;
 
   public Association() {
-    roles = new LinkedList<Role>();
-
+    roles = new LinkedList<>();
     id = ClassDiagram.getNextId();
   }
 
   public Association(int id) {
-    roles = new LinkedList<Role>();
-
+    roles = new LinkedList<>();
     this.id = id;
   }
 
@@ -49,7 +47,8 @@ public abstract class Association extends Observable implements Relation, ILabel
    *          the new role to add
    */
   public void addRole(Role role) {
-    roles.add(role);
+    if (!roles.contains(role))
+      roles.add(role);
   }
 
   /**
@@ -115,9 +114,8 @@ public abstract class Association extends Observable implements Relation, ILabel
    */
   public Role searchRoleByEntity(Entity entity) {
     for (final Role role : roles)
-
-      if (role.getEntity().equals(entity)) return role;
-
+      if (role.getEntity().equals(entity)) 
+        return role;
     return null;
   }
 
