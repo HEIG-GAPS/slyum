@@ -225,7 +225,7 @@ public class ClassDiagram extends Observable
   public void setDefaultViewEnum(boolean defaultViewEnum) {
     this.defaultViewEnum = defaultViewEnum;
     setChanged();
-    Change.setHasChange(true);
+    Change.setHasChangeGlobal(true);
   }
 
   public Method.ParametersViewStyle getDefaultViewMethods() {
@@ -235,7 +235,7 @@ public class ClassDiagram extends Observable
   public void setDefaultViewMethods(Method.ParametersViewStyle defaultViewMethods) {
     this.defaultViewMethods = defaultViewMethods;
     setChanged();
-    Change.setHasChange(true);
+    Change.setHasChangeGlobal(true);
   }
 
   public boolean getDefaultVisibleTypes() {
@@ -279,7 +279,7 @@ public class ClassDiagram extends Observable
       return;
     
     this.name = name;
-    Change.setHasChange(true);
+    Change.setHasChangeGlobal(true);
     setChanged();
   }
 
@@ -294,13 +294,13 @@ public class ClassDiagram extends Observable
   public void setViewEntity(ViewEntity viewEntity) {
     this.viewEntity = viewEntity;
     setChanged();
-    Change.setHasChange(true);
+    Change.setHasChangeGlobal(true);
   }
 
   public void setVisibleType(boolean visibleType) {
     this.visibleType = visibleType;
     setChanged();
-    Change.setHasChange(true);
+    Change.setHasChangeGlobal(true);
   }
   
   @Override

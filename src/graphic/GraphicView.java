@@ -162,22 +162,27 @@ public class GraphicView extends GraphicComponent
   }
 
   public static void deleteComponent(GraphicComponent component) {
-    boolean isRecord = Change.isRecord();
-    Change.record();
+    GraphicView gv = component.getGraphicView();
+    boolean isRecord = Change.isRecord(gv);
+    Change.record(gv);
     component.delete();
-    if (!isRecord) Change.stopRecord();
+    if (!isRecord) Change.stopRecord(gv);
   }
 
   public static void deleteComponents(List<GraphicComponent> components) {
     if (components.isEmpty()) return;
     
-    boolean isRecord = Change.isRecord();
-    Change.record();
+    GraphicView gv = components.get(0).getGraphicView();
+    if (components.stream().anyMatch(c -> !c.getGraphicView().equals(gv)))
+      throw new IllegalArgumentException("All components must belong to the same GraphicView.");
+    
+    boolean isRecord = Change.isRecord(gv);
+    Change.record(gv);
     
     for (GraphicComponent c : components)
       c.delete();
     
-    if (!isRecord) Change.stopRecord();
+    if (!isRecord) Change.stopRecord(gv);
   }
 
   public static void setAutomaticGridColor(boolean enable) {
@@ -991,12 +996,12 @@ public class GraphicView extends GraphicComponent
    * @param list the entities list to selected
    */
   public void adjustEntities(LinkedList<EntityView> list) {
-    boolean isRecord = Change.isRecord();
-    Change.record();
+    boolean isRecord = Change.isRecord(this);
+    Change.record(this);
 
     list.stream().forEach(ev -> ev.adjustWidth());
 
-    if (!isRecord) Change.stopRecord();
+    if (!isRecord) Change.stopRecord(this);
   }
 
   public void adjustInheritances() {
@@ -1052,8 +1057,8 @@ public class GraphicView extends GraphicComponent
 
     int offset = limits.x;
 
-    boolean isRecord = Change.isRecord();
-    Change.record();
+    boolean isRecord = Change.isRecord(this);
+    Change.record(this);
 
     for (final GraphicComponent c : sorted) {
       final Rectangle bounds = c.getBounds();
@@ -1065,16 +1070,17 @@ public class GraphicView extends GraphicComponent
       offset += bounds.width + space;
     }
 
-    if (!isRecord) Change.stopRecord();
+    if (!isRecord) Change.stopRecord(this);
   }
 
   /**
    * Align all selected entities with the leftmost or rightmost selected entity.
    * Make same space between all selected entities.
+   * @param left
    */
   public void alignVertical(boolean left) {
-    boolean isRecord = Change.isRecord();
-    Change.record();
+    boolean isRecord = Change.isRecord(this);
+    Change.record(this);
 
     int totalHeight = 0, right = Integer.MIN_VALUE;
 
@@ -1108,7 +1114,7 @@ public class GraphicView extends GraphicComponent
       offset += bounds.height + space;
     }
 
-    if (!isRecord) Change.stopRecord();
+    if (!isRecord) Change.stopRecord(this);
   }
 
   public void backScale() {
@@ -1128,8 +1134,8 @@ public class GraphicView extends GraphicComponent
   }
   
   public void changeComponentsColor(ObtainColor o, ColoredComponent... components) {
-    boolean isRecord = Change.isRecord();
-    Change.record();
+    boolean isRecord = Change.isRecord(this);
+    Change.record(this);
     for (ColoredComponent c : components) {
       // Set default style before save color.
       c.setDefaultStyle();
@@ -1137,7 +1143,7 @@ public class GraphicView extends GraphicComponent
       c.setColor(o.getColor(c));
       Change.push(new BufferColor(c));
     }
-    if (!isRecord) Change.stopRecord();
+    if (!isRecord) Change.stopRecord(this);
   }
 
   /**
@@ -1306,8 +1312,8 @@ public class GraphicView extends GraphicComponent
   
   public void duplicateSelectedEntities() {
     
-    boolean isRecord = Change.isRecord();
-    Change.record();
+    boolean isRecord = Change.isRecord(this);
+    Change.record(this);
     
     for (final EntityView entityView : getSelectedEntities()) {
       try {
@@ -1342,7 +1348,7 @@ public class GraphicView extends GraphicComponent
       }
     }
     
-    if (!isRecord) Change.stopRecord();
+    if (!isRecord) Change.stopRecord(this);
   }
   
   public void forwardScale() {
@@ -1711,7 +1717,7 @@ public class GraphicView extends GraphicComponent
   @Override
   public void setName(String name) {
     this.name = name;
-    Change.setHasChange(true);
+    Change.setHasChange(true, this);
     setChanged();
   }
   
@@ -2067,8 +2073,8 @@ public class GraphicView extends GraphicComponent
     LinkedList<GraphicComponent> e = getSelectedComponents();
     TextBoxCommentary tbc;
 
-    boolean isRecord = Change.isRecord();
-    Change.record();
+    boolean isRecord = Change.isRecord(this);
+    Change.record(this);
 
     if (e.isEmpty()) {
       tbc = new TextBoxCommentary(
@@ -2089,7 +2095,7 @@ public class GraphicView extends GraphicComponent
     parent.addNotes(tbc);
     
     if (!isRecord) 
-      Change.stopRecord();
+      Change.stopRecord(this);
     goRepaint();
   }
 
@@ -2219,38 +2225,34 @@ public class GraphicView extends GraphicComponent
   }
   
   public void moveZOrderBottomSelectedEntities() {
-    boolean isRecord = Change.isRecord();
-    Change.record();
+    boolean isRecord = Change.isRecord(this);
+    Change.record(this);
     
-    for (EntityView ev : getSelectedEntities())
-
-      getClassDiagram().changeZOrder(ev.getComponent(), 0);
+    getSelectedEntities().stream().forEach(ev -> getClassDiagram().changeZOrder(ev.getComponent(), 0));
     
-    if (!isRecord) Change.stopRecord();
+    if (!isRecord) Change.stopRecord(this);
   }
   
   public void moveZOrderDownSelectedEntities() {
-    boolean isRecord = Change.isRecord();
-    Change.record();
+    boolean isRecord = Change.isRecord(this);
+    Change.record(this);
     
-    for (EntityView ev : getSelectedEntities())
-      
-      getClassDiagram().changeZOrder(ev.getComponent(),
-                                     getEntitiesView().indexOf(ev) - 1);
+    getSelectedEntities()
+        .stream()
+        .forEach(ev -> getClassDiagram().changeZOrder(
+            ev.getComponent(), getEntitiesView().indexOf(ev) - 1));
     
-    if (!isRecord) Change.stopRecord();
+    if (!isRecord) Change.stopRecord(this);
   }
   
   public void moveZOrderTopSelectedEntities() {
-    boolean isRecord = Change.isRecord();
-    Change.record();
+    boolean isRecord = Change.isRecord(this);
+    Change.record(this);
     
-    for (EntityView ev : getSelectedEntities())
-      
-      getClassDiagram().changeZOrder(ev.getComponent(),
-                                     getEntitiesView().size() - 1);
+    getSelectedEntities().stream().forEach(ev -> getClassDiagram().changeZOrder(
+        ev.getComponent(), getEntitiesView().size() - 1));
     
-    if (!isRecord) Change.stopRecord();
+    if (!isRecord) Change.stopRecord(this);
   }
   
   public void moveZOrderUpSelectedEntities() {
@@ -2272,14 +2274,14 @@ public class GraphicView extends GraphicComponent
       max = -1;
     }
 
-    boolean isRecord = Change.isRecord();
-    Change.record();
+    boolean isRecord = Change.isRecord(this);
+    Change.record(this);
 
     for (EntityView ev : evsSorted)
       getClassDiagram().changeZOrder(ev.getComponent(),
                                      getEntitiesView().indexOf(ev) + 1);
 
-    if (!isRecord) Change.stopRecord();
+    if (!isRecord) Change.stopRecord(this);
   }
   
   @Override
@@ -2456,9 +2458,8 @@ public class GraphicView extends GraphicComponent
    * Remove all components in graphic view.
    */
   public void removeAll() {
-    for (final GraphicComponent c : getAllComponents())
-      c.delete();
-    Change.clear();
+    getAllComponents().stream().forEach(c -> c.delete());
+    Change.clear(this);
   }
   
   public void removeComponent(IDiagramComponent component) {
@@ -2864,8 +2865,8 @@ public class GraphicView extends GraphicComponent
       
       @Override
       public void run() {
-        boolean isBlocked = Change.isBlocked();
-        Change.setBlocked(true);
+        boolean isBlocked = Change.isBlocked(GraphicView.this);
+        Change.setBlocked(true, GraphicView.this);
         
         entityView.setLocationRelativeTo(location);
         entityView.regenerateEntity();
@@ -2873,7 +2874,7 @@ public class GraphicView extends GraphicComponent
         
         createdRelationViews.stream().forEach(rv -> rv.center());
         
-        Change.setBlocked(isBlocked);
+        Change.setBlocked(isBlocked, GraphicView.this);
       }
     });
     

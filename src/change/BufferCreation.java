@@ -1,6 +1,7 @@
 package change;
 
 import graphic.GraphicComponent;
+import graphic.GraphicView;
 
 public class BufferCreation implements Changeable {
   private boolean isCreated;
@@ -16,10 +17,11 @@ public class BufferCreation implements Changeable {
     if (isCreated) {
       gc.restore();
     } else {
-      final boolean isBlocked = Change.isBlocked();
-      Change.setBlocked(true);
+      GraphicView gv = gc.getGraphicView();
+      final boolean isBlocked = Change.isBlocked(gv);
+      Change.setBlocked(true, gv);
       gc.lightDelete();
-      Change.setBlocked(isBlocked);
+      Change.setBlocked(isBlocked, gv);
     }
   }
 

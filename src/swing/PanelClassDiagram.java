@@ -193,7 +193,7 @@ public class PanelClassDiagram extends JPanel {
    * @return 
    */
   public int askSavingCurrentProject() {
-    if (!Change.hasChange())
+    if (!Change.hasChangeGlobal())
       return JOptionPane.NO_OPTION;
     else
       return SMessageDialog
@@ -370,7 +370,7 @@ public class PanelClassDiagram extends JPanel {
     WatchDir.unregister(getCurrentPath());
     currentFile = file;
     Slyum.getInstance().getMenuItemLocate().setEnabled(file != null);
-    Change.clear();
+    Change.clearAll();
     Slyum.updateWindowTitle(currentFile);
     
     if (file == null) return;
@@ -565,8 +565,8 @@ public class PanelClassDiagram extends JPanel {
     final GraphicView rootGraphicView = MultiViewManager.getSelectedGraphicView();
     rootGraphicView.getScrollPane().setVisible(false);
     
-    final boolean isBlocked = Change.isBlocked();
-    Change.setBlocked(true);
+    //final boolean isBlocked = Change.isBlocked();
+    //Change.setBlocked(true);
 
     setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     setXmlImportation(true);
@@ -586,10 +586,10 @@ public class PanelClassDiagram extends JPanel {
     rootGraphicView.getScrollPane().setVisible(true);
     setXmlImportation(false);
 
-    Change.setBlocked(isBlocked);
+    //Change.setBlocked(isBlocked);
 
     setCurrentFile(file);
-    Change.setHasChange(false);
+    Change.setHasChangeGlobal(false);
 
     setCursor(null);
     
@@ -688,7 +688,7 @@ public class PanelClassDiagram extends JPanel {
       Logger.getGlobal().log(Level.SEVERE, "Unable to save file.", e);
       SMessageDialog.showErrorMessage(e.getLocalizedMessage());
     }
-    Change.setHasChange(false);
+    Change.setHasChangeGlobal(false);
     RecentProjectManager.addhistoryEntry(currentFile.getAbsolutePath());
   }
   
