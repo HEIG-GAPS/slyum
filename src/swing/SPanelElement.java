@@ -82,16 +82,18 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
   }
 
   private SPanelElement() {
-    add(undo = new SToolBarButton(
+    undo = new SToolBarButton(
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "undo.png"),
-            Slyum.ACTION_UNDO, Color.ORANGE, TT_UNDO, this));
-
-    add(redo = new SToolBarButton(
+            Slyum.ACTION_UNDO, Color.ORANGE, TT_UNDO, this);
+    
+    redo = new SToolBarButton(
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "redo.png"),
-            Slyum.ACTION_REDO, Color.ORANGE, TT_REDO, this));
-
+            Slyum.ACTION_REDO, Color.ORANGE, TT_REDO, this);
+    /*
+    add(undo);
+    add(redo);
     add(new SSeparator());
-
+    */
     add(createSButton(
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "multiNote.png"),
             Slyum.ACTION_NEW_NOTE_ASSOCIED, Color.CYAN, TT_ADD_NOTE, true));
