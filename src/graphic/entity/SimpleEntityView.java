@@ -34,6 +34,7 @@ import classDiagram.components.Method.ParametersViewStyle;
 import classDiagram.components.PrimitiveType;
 import classDiagram.components.SimpleEntity;
 import classDiagram.components.Visibility;
+import java.util.stream.Collectors;
 import swing.MultiViewManager;
 import swing.PanelClassDiagram;
 
@@ -41,10 +42,11 @@ public abstract class SimpleEntityView extends EntityView {
 
   public static List<SimpleEntityView> getAll() {
     LinkedList<SimpleEntityView> simples = new LinkedList<>();
-    for (EntityView view :
-        MultiViewManager.getSelectedGraphicView().getEntitiesView())
-      if (view instanceof SimpleEntityView)
-        simples.add((SimpleEntityView) view);
+    
+    for (GraphicView gv : MultiViewManager.getAllGraphicViews())
+      for (EntityView view : gv.getEntitiesView())
+        if (view instanceof SimpleEntityView)
+          simples.add((SimpleEntityView) view);
     return simples;
   }
 
@@ -320,8 +322,7 @@ public abstract class SimpleEntityView extends EntityView {
     return entityView;
   }
   
-  public final void initViewType(
-  ) {
+  public final void initViewType() {
     if (displayDefault) {
       ViewEntity view = 
           PanelClassDiagram.getInstance().getClassDiagram().getDefaultViewEntities();

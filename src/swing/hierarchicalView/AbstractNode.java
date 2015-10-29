@@ -1,5 +1,6 @@
 package swing.hierarchicalView;
 
+import change.Change;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
@@ -37,11 +38,12 @@ public abstract class AbstractNode
         "Delete", 
         PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "delete.png"));
     
-    item.addActionListener((ActionEvent e) -> {
-      PanelClassDiagram.getInstance().getClassDiagram()
-                       .removeComponent(getAssociedComponent());
-    });
+    item.addActionListener(getMenuItemDeleteActionListener());
     popupMenu.add(item);
+  }
+  
+  protected ActionListener getMenuItemDeleteActionListener() {
+    return (ActionEvent e) -> PanelClassDiagram.getInstance().getClassDiagram().removeComponent(getAssociedComponent());
   }
 
   public JPopupMenu getPopupMenu() {

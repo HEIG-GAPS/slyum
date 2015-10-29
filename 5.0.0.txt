@@ -1,13 +1,13 @@
-Multi view!!!!!!!!!!!!!!!!!!!
-New shortcut for creating diagram components. A lot easier.
+You can know create multiple views from the same structure (drag and drop elements from the tree view to add them in the view).
+You can interact with elements in the tree view by opening the contextual menu (rigth-click on an element).
+New shortcuts for creating diagram components.
 Possibility to hide / show types in diagram.
 You can now directly editing an entity's name after its creation.
-Add shortcuts for recent colors used.
+The last used colors (up to 7) are know saved.
 Add diagram only mode (hide the left and the bottom panel).
-New menu Export for exporting diagram in PDF, SVG and EPS format.
+New exportation formats: EPS, SVG and PDF are know available.
 Diagram'es properties: diagrams have now proper properties.
 Components in tree are now alphabetically sorted.
-Various bugfixes.
-Updater must work on Mac OS X.
 Add diagrams informations to appear on the exported schema.
 Display intersection line (can be turned off in settings).
+Various bugfixes and accessibility improvment.

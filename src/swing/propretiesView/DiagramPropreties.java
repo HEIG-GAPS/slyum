@@ -183,24 +183,20 @@ public class DiagramPropreties
       case ACTION_ENTITY_VIEW:
         cd.setViewEntity(
             (ClassDiagram.ViewEntity) cbbEntityView.getSelectedItem());
-    
         cd.notifyObservers(true);
         break;
       case ACTION_METHODS_VIEW:
         cd.setDefaultViewMethods(
             (Method.ParametersViewStyle) cbbParametersView.getSelectedItem());
-    
-    cd.notifyObservers();
+        cd.notifyObservers();
         break;
       case ACTION_VISIBLE_ENUM:
         cd.setDefaultViewEnum(chkViewEnum.isSelected());
-    
-    cd.notifyObservers();
+        cd.notifyObservers();
         break;
       case ACTION_VISIBLE_TYPE:
         cd.setVisibleType(chkDisplayTypes.isSelected());
-    
-    cd.notifyObservers();
+        cd.notifyObservers();
         break;
     }
   }

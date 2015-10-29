@@ -11,6 +11,7 @@ import javax.swing.tree.TreePath;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
+import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import java.awt.Point;
@@ -81,6 +82,20 @@ public abstract class NodeEntity extends AbstractNode {
     popupMenu.add(item, 0);
 
     reloadChildsNodes();
+  }
+  
+  @Override
+  protected ActionListener getMenuItemDeleteActionListener() {
+    return (ActionEvent e) -> MultiViewManager.getAllGraphicViews().stream()
+        .forEach(gv -> {
+          GraphicComponent gc = gv.searchAssociedComponent(getAssociedComponent());
+          if (gc != null) {
+            if (gc instanceof EntityView)
+              ((EntityView)gc)._delete();
+            else
+              gc.delete();
+          }
+        });
   }
 
   @Override

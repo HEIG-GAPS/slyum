@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-15" standalone="no"?>
 <classDiagram>
-  <diagramElements name="">
+  <diagramElements defaultViewEntities="ALL" defaultViewEnum="true" defaultViewMethods="NOTHING" defaultVisibleTypes="true" informations="" name="">
     <inheritance id="157">
       <child>151</child>
       <parent>141</parent>
@@ -165,7 +165,9 @@
         </multiplicity>
       </role>
     </association>
-    <entity entityType="CLASS" id="153" isAbstract="false" name="Aggregation" visibility="PUBLIC"/>
+    <entity entityType="CLASS" id="153" isAbstract="false" name="Aggregation" visibility="PUBLIC">
+      <attribute const="false" defaultValue="" isStatic="false" name="attribute" type="void" visibility="PRIVATE"/>
+    </entity>
     <entity entityType="CLASS" id="152" isAbstract="false" name="Composition" visibility="PUBLIC"/>
     <entity entityType="CLASS" id="151" isAbstract="false" name="Multi" visibility="PUBLIC"/>
     <entity entityType="CLASS" id="150" isAbstract="false" name="Binary" visibility="PUBLIC"/>
@@ -177,9 +179,13 @@
     <entity entityType="CLASS" id="80" isAbstract="false" name="InnerClass" visibility="PUBLIC"/>
     <entity entityType="CLASS" id="79" isAbstract="false" name="Inheritance" visibility="PUBLIC"/>
     <entity entityType="CLASS" id="78" isAbstract="false" name="Dependency" visibility="PUBLIC"/>
-    <entity entityType="CLASS" id="77" isAbstract="false" name="Multiplicity" visibility="PUBLIC"/>
+    <entity entityType="CLASS" id="77" isAbstract="false" name="Multiplicity" visibility="PUBLIC">
+      <method isAbstract="false" isStatic="false" name="method" returnType="void" view="DEFAULT" visibility="PUBLIC">
+        <variable const="false" name="p" type="int"/>
+      </method>
+    </entity>
   </diagramElements>
-  <umlView grid="10" name="view no name">
+  <umlView grid="10" name="Main view" open="true">
     <relationView color="-12566464" relationId="84">
       <line>
         <point>
@@ -402,32 +408,32 @@
         </point>
       </line>
       <labelAssociation>
-        <x>441</x>
-        <y>119</y>
+        <x>485</x>
+        <y>132</y>
         <w>42</w>
         <h>17</h>
       </labelAssociation>
       <roleAssociation>
-        <x>483</x>
-        <y>95</y>
+        <x>485</x>
+        <y>100</y>
         <w>0</w>
         <h>17</h>
       </roleAssociation>
       <roleAssociation>
-        <x>483</x>
-        <y>130</y>
+        <x>485</x>
+        <y>165</y>
         <w>0</w>
         <h>17</h>
       </roleAssociation>
       <multipliciteAssociation>
-        <x>455</x>
-        <y>102</y>
+        <x>454</x>
+        <y>100</y>
         <w>21</w>
         <h>17</h>
       </multipliciteAssociation>
       <multipliciteAssociation>
-        <x>463</x>
-        <y>132</y>
+        <x>467</x>
+        <y>165</y>
         <w>8</w>
         <h>17</h>
       </multipliciteAssociation>
@@ -478,40 +484,40 @@
       <line>
         <point>
           <x>451</x>
-          <y>291</y>
+          <y>301</y>
         </point>
         <point>
           <x>521</x>
-          <y>291</y>
+          <y>301</y>
         </point>
       </line>
       <labelAssociation>
-        <x>485</x>
-        <y>286</y>
+        <x>490</x>
+        <y>305</y>
         <w>0</w>
         <h>17</h>
       </labelAssociation>
       <roleAssociation>
-        <x>450</x>
-        <y>286</y>
+        <x>455</x>
+        <y>305</y>
         <w>0</w>
         <h>17</h>
       </roleAssociation>
       <roleAssociation>
-        <x>470</x>
-        <y>286</y>
+        <x>515</x>
+        <y>305</y>
         <w>0</w>
         <h>17</h>
       </roleAssociation>
       <multipliciteAssociation>
         <x>455</x>
-        <y>262</y>
+        <y>278</y>
         <w>8</w>
         <h>17</h>
       </multipliciteAssociation>
       <multipliciteAssociation>
-        <x>505</x>
-        <y>260</y>
+        <x>507</x>
+        <y>278</y>
         <w>8</w>
         <h>17</h>
       </multipliciteAssociation>
@@ -693,7 +699,7 @@
         <x>520</x>
         <y>270</y>
         <w>150</w>
-        <h>55</h>
+        <h>70</h>
       </geometry>
     </componentView>
     <componentView color="-3355393" componentID="78" displayAttributes="true" displayDefault="true" displayMethods="true">
@@ -789,26 +795,44 @@
         <x>280</x>
         <y>570</y>
         <w>150</w>
-        <h>55</h>
+        <h>70</h>
       </geometry>
     </componentView>
     <note color="-3342388" content="0..1, 0..*, 1, 1..*, etc...">
       <noteGeometry>
-        <x>530</x>
-        <y>200</y>
-        <w>89</w>
-        <h>45</h>
+        <x>700</x>
+        <y>140</y>
+        <w>139</w>
+        <h>30</h>
       </noteGeometry>
-      <noteLine color="-12566464" relationId="77">
+      <noteLine color="-12566464" relationId="83">
         <point>
-          <x>561</x>
-          <y>246</y>
+          <x>711</x>
+          <y>171</y>
         </point>
         <point>
-          <x>561</x>
-          <y>271</y>
+          <x>181</x>
+          <y>371</y>
         </point>
       </noteLine>
     </note>
+  </umlView>
+  <umlView grid="10" name="Named View View View View" open="true">
+    <componentView color="-2079" componentID="77" displayAttributes="true" displayDefault="true" displayMethods="true">
+      <geometry>
+        <x>490</x>
+        <y>240</y>
+        <w>120</w>
+        <h>70</h>
+      </geometry>
+    </componentView>
+    <componentView color="-2079" componentID="151" displayAttributes="true" displayDefault="true" displayMethods="true">
+      <geometry>
+        <x>250</x>
+        <y>200</y>
+        <w>80</w>
+        <h>55</h>
+      </geometry>
+    </componentView>
   </umlView>
 </classDiagram>

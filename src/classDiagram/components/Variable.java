@@ -39,7 +39,6 @@ public class Variable extends Observable implements IDiagramComponent {
    *          the name for the variable
    * @param type
    *          the type for the variable
-   * @throws SyntaxeException
    */
   public Variable(String name, Type type) {
     boolean isBlocked = Change.isBlocked();
