@@ -182,11 +182,6 @@ public class PropretiesChanger extends SScrollPane implements IComponentsObserve
   }
 
   @Override
-  public void notifyChangeZOrder(Entity entity, int index) {
-    // Nothing to do...
-  }
-
-  @Override
   public void notifyRemoveComponent(IDiagramComponent component) {
     // no components saving in this view
   }

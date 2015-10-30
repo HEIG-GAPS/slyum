@@ -1154,13 +1154,12 @@ public class GraphicView extends GraphicComponent
     setZoom(getZoom() + grow);
   }
 
-  public void changeZOrder(Entity first, int index) {
-    final EntityView firstView = (EntityView) searchAssociedComponent(first);
+  public void changeZOrder(EntityView entityView, int index) {
 
-    entities.remove(firstView);
-    entities.add(index, firstView);
+    entities.remove(entityView);
+    entities.add(index, entityView);
 
-    firstView.repaint();
+    entityView.repaint();
   }
 
   /**
@@ -2222,9 +2221,7 @@ public class GraphicView extends GraphicComponent
     boolean isRecord = Change.isRecord();
     Change.record();
     
-    for (EntityView ev : getSelectedEntities())
-
-      getClassDiagram().changeZOrder(ev.getComponent(), 0);
+    getSelectedEntities().stream().forEach(ev -> changeZOrder(ev, 0));
     
     if (!isRecord) Change.stopRecord();
   }
@@ -2233,10 +2230,8 @@ public class GraphicView extends GraphicComponent
     boolean isRecord = Change.isRecord();
     Change.record();
     
-    for (EntityView ev : getSelectedEntities())
-      
-      getClassDiagram().changeZOrder(ev.getComponent(),
-                                     getEntitiesView().indexOf(ev) - 1);
+    getSelectedEntities().stream().forEach(
+        ev -> changeZOrder(ev, getEntitiesView().indexOf(ev) - 1));
     
     if (!isRecord) Change.stopRecord();
   }
@@ -2245,10 +2240,8 @@ public class GraphicView extends GraphicComponent
     boolean isRecord = Change.isRecord();
     Change.record();
     
-    for (EntityView ev : getSelectedEntities())
-      
-      getClassDiagram().changeZOrder(ev.getComponent(),
-                                     getEntitiesView().size() - 1);
+    int lastIndex = getEntitiesView().size() - 1;
+    getSelectedEntities().stream().forEach(ev -> changeZOrder(ev, lastIndex));
     
     if (!isRecord) Change.stopRecord();
   }
@@ -2275,9 +2268,8 @@ public class GraphicView extends GraphicComponent
     boolean isRecord = Change.isRecord();
     Change.record();
 
-    for (EntityView ev : evsSorted)
-      getClassDiagram().changeZOrder(ev.getComponent(),
-                                     getEntitiesView().indexOf(ev) + 1);
+    getSelectedEntities().stream().forEach(
+        ev -> changeZOrder(ev, getEntitiesView().indexOf(ev) + 1));
 
     if (!isRecord) Change.stopRecord();
   }
@@ -2295,11 +2287,6 @@ public class GraphicView extends GraphicComponent
   @Override
   public void notifyBinaryCreation(Binary component) {
     addBinary(component);
-  }
-  
-  @Override
-  public void notifyChangeZOrder(Entity entity, int index) {
-    changeZOrder(entity, index);
   }
   
   @Override

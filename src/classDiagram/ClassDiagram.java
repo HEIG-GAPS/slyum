@@ -155,20 +155,6 @@ public class ClassDiagram extends Observable
     addComponent(component);
   }
 
-  public void changeZOrder(Entity entity, int index) {
-    if (index < 0 || index >= entities.size()) return;
-
-    // Change.push(new BufferZOrder(entity, entities.indexOf(entity)));
-
-    entities.remove(entity);
-    entities.add(index, entity);
-
-    // Change.push(new BufferZOrder(entity, index));
-
-    for (final IComponentsObserver c : observers)
-      c.notifyChangeZOrder(entity, index);
-  }
-
   public void clean() {
     removeAll();
     initDefaultAttributes();

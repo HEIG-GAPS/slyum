@@ -360,24 +360,6 @@ public class HierarchicalView
     treeModel.reload(viewsNode);
   }
   
-  public void changeZOrder(Entity entity, int index) {
-    
-    /* Nothing to do since we sort the tree alphabetically.
-     * 
-     * LinkedList<EntityView> evs =
-     * MultiViewManager.getSelectedGraphicView().getSelectedEntities();
-     * 
-     * final NodeEntity ne = (NodeEntity) searchAssociedNodeIn(entity,
-     * entitiesNode);
-     * 
-     * entitiesNode.remove(ne);
-     * entitiesNode.insert(ne, entitiesNode.getChildCount() - index);
-     * treeModel.reload(entitiesNode);
-     * 
-     * for (EntityView ev : evs)
-     * ev.setSelected(true);*/
-  }
-  
   public void setDiagramName(String name) {
     DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
     DefaultMutableTreeNode root = (DefaultMutableTreeNode) model.getRoot();
@@ -489,11 +471,6 @@ public class HierarchicalView
   @Override
   public void notifyBinaryCreation(Binary component) {
     addBinary(component);
-  }
-
-  @Override
-  public void notifyChangeZOrder(Entity entity, int index) {
-    changeZOrder(entity, index);
   }
 
   @Override

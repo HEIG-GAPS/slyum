@@ -102,16 +102,6 @@ public interface IComponentsObserver {
   public void notifyMultiCreation(Multi component);
 
   /**
-   * Changes the index of entity in the array and notifiy observers.
-   * 
-   * @param entity
-   *          the entity to move.
-   * @param index
-   *          the index to move the entity.
-   */
-  public void notifyChangeZOrder(Entity entity, int index);
-
-  /**
    * Removes the given component and notify that this component has been
    * removed.
    * 
