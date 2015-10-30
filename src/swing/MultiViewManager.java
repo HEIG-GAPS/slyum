@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -235,11 +236,11 @@ public class MultiViewManager {
   public static void changeViewStatInFile(GraphicView graphicView, boolean open) {
     if (getCurrentFile() == null)
       return;
+    
+    WatchDir.stopWatchingFile(getCurrentPath(), true);
     try {
       
       String strOpen = String.valueOf(open);
-      WatchDir.ignoreNextEvents(getCurrentPath(), 2);
-      
       Document doc = getDocumentFromCurrentFile();
       
       Node nodeUmlView = doc.getElementsByTagName("umlView").item(
@@ -254,9 +255,11 @@ public class MultiViewManager {
         openNode.setTextContent(strOpen);
       
       saveDocumentInCurrentFile(doc);
+      
     } catch (TransformerException | ParserConfigurationException | SAXException | IOException ex) {
       Logger.getLogger(PanelClassDiagram.class.getName()).log(Level.SEVERE, null, ex);
-    }
+    }    
+    SwingUtilities.invokeLater(() -> WatchDir.stopWatchingFile(getCurrentPath(), false));
 	}
   
   private static Path getCurrentPath() {

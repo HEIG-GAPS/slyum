@@ -697,7 +697,7 @@ public class PanelClassDiagram extends JPanel {
     
     Path currentPath = currentFile.toPath(); 
    
-    WatchDir.ignoreNextEvents(currentPath, 2);
+    WatchDir.stopWatchingFile(currentPath, true);
 
     // write the content into xml file
     TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -710,6 +710,8 @@ public class PanelClassDiagram extends JPanel {
     DOMSource source = new DOMSource(document);
     StreamResult result = new StreamResult(currentFile);
     transformer.transform(source, result);
+    
+    SwingUtilities.invokeLater(() -> WatchDir.stopWatchingFile(currentPath, false));
   }
   
   private void _refresh() {
