@@ -143,9 +143,15 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
    * 
    * @param point
    *          the point (x, y) for deleting the nearest grip.
+   * @return if any point 
    */
-  public void deleteNearestGripAt(Point point) {
-    getNearestGripAt(point).delete();
+  public boolean deleteNearestGripAt(Point point) {
+    RelationGrip rg = getNearestGripAt(point);
+    if (rg != null) {
+      rg.delete();
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -153,6 +159,7 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
    * 
    * @param point
    *          the point for getting the nearest RelationGrip.
+   * @return the nearest grip to the given point.
    */
   public RelationGrip getNearestGripAt(Point point) {
     double shorterDistance = Double.MAX_VALUE, currentDistance;
@@ -682,6 +689,9 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
 
           for (Point2D.Double pt : intersectPts) {
             Rectangle rect = new Rectangle((int)pt.getX() - LENGTH_ARC, (int)pt.getY() - LENGTH_ARC, LENGTH_ARC * 2, LENGTH_ARC * 2);
+            
+            if (rect.contains(currentPoint) || rect.contains(previousPoint))
+              continue;
 
             g2.drawArc(rect.x, rect.y, rect.width, rect.height, -(int)Utility.getLineAngleDegree(currentLine), 180);
 
