@@ -117,7 +117,7 @@ public class DiagramPropreties
         new BoxLayout(pnlDiagramProperties, BoxLayout.Y_AXIS));
     pnlDiagramProperties.setMaximumSize(new Dimension(140, Short.MAX_VALUE));
     
-    JLabel lblTitle = new JLabel("Diagram's properties");
+    JLabel lblTitle = new JLabel("Project's properties");
     lblTitle.setHorizontalTextPosition(JLabel.LEFT);
     lblTitle.setVerticalTextPosition(JLabel.BOTTOM);
     lblTitle.setBorder(BorderFactory.createEmptyBorder(0, 10, 5, 0));
@@ -130,7 +130,7 @@ public class DiagramPropreties
         new BoxLayout(pnlDiagramInformations, BoxLayout.Y_AXIS));
     pnlDiagramInformations.setMaximumSize(new Dimension(140, Short.MAX_VALUE));
     
-    JLabel lblInformationsTitle = new JLabel("Diagram's informations");
+    JLabel lblInformationsTitle = new JLabel("Project's informations");
     lblInformationsTitle.setHorizontalTextPosition(JLabel.LEFT);
     lblInformationsTitle.setVerticalTextPosition(JLabel.BOTTOM);
     lblInformationsTitle.setBorder(BorderFactory.createEmptyBorder(0, 10, 5, 0));

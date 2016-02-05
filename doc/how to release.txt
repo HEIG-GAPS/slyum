@@ -46,9 +46,9 @@ Take the utils/version.html file and copy it to the "previous release/<current v
 4) Update the description in Slyum Google Code.
 
 
------------------------
-Create the release for Mac OS X
--------------------------
+-----------------------------------
+- Create the release for Mac OS X -
+-----------------------------------
 
 
 http://www.rkuntz.org/pmwiki.php?n=Code.SparkleJava

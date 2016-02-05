@@ -251,7 +251,6 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
         offsetY += hgt; // new line
         offsetX = PADDING;
       }
-
       g2.drawString(currentText, bounds.x + offsetX, offsetY);
       offsetX += adv;
     }

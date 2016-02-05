@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -121,7 +122,7 @@ public class AboutBox extends JDialog {
                 20, bounds.height / 2 + 70);
         g2.drawString("Responsable : Donini Pier",
                 20, bounds.height / 2 + 90);
-        g2.drawString("Copyright © 2014 HEIG-VD", 20,
+        g2.drawString("Copyright © " + LocalDate.now().getYear() + " HEIG-VD", 20,
                 bounds.height / 2 + 120);
 
         g2.drawImage(imgHeigvd, bounds.x + bounds.width - imgHeigvd.getWidth()

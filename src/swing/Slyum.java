@@ -244,6 +244,7 @@ public class Slyum extends JFrame implements ActionListener {
   public static final Dimension WINDOWS_SIZE = new Dimension(DEFAULT_SIZE.x, DEFAULT_SIZE.y);
   private static final String ARGUMENT_EXIT_WITHOUT_ASK = "-exitWithoutAsk";
   private static final String ARGUMENT_PRINT_CHANGE_STACK_STATE = "-printChanges";
+  private static final String ARGUMENT_OPEN_NEW_PROJECT = "-newProject";
   private static final String URL_ISSUES_PAGE = "https://github.com/Slyum/slyum/issues";
   private static final String URL_PROJECT_PAGE = "https://github.com/Slyum/slyum";
   private static final String URL_UPDATE_PAGE = "https://drive.google.com/folderview?id=0B8LiFU0_u3AZdTRPY0JKallDRm8&usp=sharing";
@@ -284,6 +285,13 @@ public class Slyum extends JFrame implements ActionListener {
   public static boolean argumentExitWithoutAsk() {
     for (String s : arguments)
       if (s.equals(ARGUMENT_EXIT_WITHOUT_ASK)) return true;
+
+    return false;
+  }
+  
+  public static boolean argumentOpenWithNewProject() {
+    for (String s : arguments)
+      if (s.equals(ARGUMENT_OPEN_NEW_PROJECT)) return true;
 
     return false;
   }
@@ -941,7 +949,8 @@ public class Slyum extends JFrame implements ActionListener {
     });
     
     String file = argumentGetFile();
-    if (file == null) file = RecentProjectManager.getMoreRecentFile();
+    if (!argumentOpenWithNewProject() && file == null) 
+      file = RecentProjectManager.getMoreRecentFile();
     
     if (file != null) PanelClassDiagram.openSlyFile(file);
     
@@ -1581,6 +1590,7 @@ public class Slyum extends JFrame implements ActionListener {
     command.add(javaBin);
     command.add("-jar");
     command.add(currentJar.getPath());
+    command.add(ARGUMENT_OPEN_NEW_PROJECT);
 
     final ProcessBuilder builder = new ProcessBuilder(command);
     builder.start();

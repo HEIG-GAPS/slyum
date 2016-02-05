@@ -690,7 +690,7 @@ public class SProperties extends JDialog {
                 @Override
                 public void actionPerformed(ActionEvent arg0) {
                   SMessageDialog.showInformationMessage(
-                          "This will be implemented in futur update.", link);
+                          "This will be implemented in a futur update.", link);
                 }
               });
               final GridBagConstraints gbc_btnNewButton = new GridBagConstraints();

@@ -127,7 +127,7 @@
     </Container>
     <Component class="javax.swing.JLabel" name="lblDescription2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="This action can&apos;t be undone (even when reloading the project)."/>
+        <Property name="text" type="java.lang.String" value="This action can&apos;t be undone (a save will automatically be performed)."/>
       </Properties>
     </Component>
   </SubComponents>

@@ -58,7 +58,7 @@ public class DialogDeleteView extends javax.swing.JDialog {
         "No component in the view will be deleted.";
     else
       strComponentsDeleted = 
-        "The following components only exists in this vew:\n";
+        "The following components are only existing in this vew:\n";
     
     for (String strC : componentsDeleted)
       strComponentsDeleted += "\n  - " + strC;
@@ -114,7 +114,7 @@ public class DialogDeleteView extends javax.swing.JDialog {
     txtComponentsDeleted.setOpaque(false);
     scrollPane.setViewportView(txtComponentsDeleted);
 
-    lblDescription2.setText("This action can't be undone (even when reloading the project).");
+    lblDescription2.setText("This action can't be undone (a save will automatically be performed).");
 
     javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
     getContentPane().setLayout(layout);
