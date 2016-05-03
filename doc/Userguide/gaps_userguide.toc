@@ -1,0 +1,18 @@
+\select@language {francais}
+\select@language {francais}
+\select@language {french}
+\contentsline {chapter}{\numberline {1}Pr\IeC {\'e}sentation g\IeC {\'e}n\IeC {\'e}rale}{5}{chapter.1}
+\contentsline {chapter}{\numberline {2}Utilisation de Slyum}{7}{chapter.2}
+\contentsline {section}{\numberline {2.1}Cr\IeC {\'e}er un diagramme de classes}{7}{section.2.1}
+\contentsline {section}{\numberline {2.2}Liste des \IeC {\'e}l\IeC {\'e}ments}{7}{section.2.2}
+\contentsline {section}{\numberline {2.3}Propri\IeC {\'e}t\IeC {\'e}s des \IeC {\'e}l\IeC {\'e}ments}{8}{section.2.3}
+\contentsline {chapter}{\numberline {3}Fonctionnalit\IeC {\'e}s (\IeC {\`a} revoir)}{9}{chapter.3}
+\contentsline {chapter}{\numberline {4}Gestion de projet et vues}{11}{chapter.4}
+\contentsline {section}{\numberline {4.1}Projet}{11}{section.4.1}
+\contentsline {section}{\numberline {4.2}Vues}{11}{section.4.2}
+\contentsline {chapter}{\numberline {5}Composants UML}{13}{chapter.5}
+\contentsline {section}{\numberline {5.1}Entit\IeC {\'e}s}{13}{section.5.1}
+\contentsline {section}{\numberline {5.2}Relations}{13}{section.5.2}
+\contentsline {section}{\numberline {5.3}Notes}{13}{section.5.3}
+\contentsline {chapter}{\numberline {6}Outils de personnalisation}{15}{chapter.6}
+\contentsfinish 
