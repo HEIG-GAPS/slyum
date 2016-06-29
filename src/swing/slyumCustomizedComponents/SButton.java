@@ -90,6 +90,7 @@ public class SButton extends JButton {
   }
 
   public void linkComponent(Component c) {
-    linkedComponents.add(c);
+    if (!linkedComponents.contains(c))
+      linkedComponents.add(c);
   }
 }

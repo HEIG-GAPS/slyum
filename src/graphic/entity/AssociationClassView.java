@@ -103,8 +103,9 @@ public class AssociationClassView extends ClassView {
 
   @Override
   protected void restoreEntity() {
-    parent.getClassDiagram().addAssociationClass(
-            (AssociationClass) getAssociedComponent());
+    if (!componentAlreadyExists())
+      parent.getClassDiagram().addAssociationClass(
+              (AssociationClass) getAssociedComponent());
   }
 
   public AssociationClasseLine getAcl() {

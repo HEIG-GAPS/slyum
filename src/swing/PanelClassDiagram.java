@@ -219,10 +219,10 @@ public class PanelClassDiagram extends JPanel {
     
     ClassDiagram cd = PanelClassDiagram.getInstance().classDiagram;
     for (IDiagramComponent component : cd.getAllMainsComponents())
-        if (GraphicComponent.countGraphicComponentsAssociedWith(component) == 0) {
-          cd.removeComponent(component);
-          ++count;
-        }
+      if (GraphicComponent.countGraphicComponentsAssociedWith(component) == 0) {
+        cd.removeComponent(component);
+        ++count;
+      }
     
     SMessageDialog.showInformationMessage("Cleaning complete!\n" + count + " component(s) removed.");
   }

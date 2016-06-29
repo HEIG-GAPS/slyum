@@ -320,7 +320,6 @@ public class ClassDiagram extends Observable
    */
   public void removeAll() {
     while (components.size() > 0)
-
       removeComponent(components.get(0));
   }
   

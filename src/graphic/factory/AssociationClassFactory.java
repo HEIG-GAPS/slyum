@@ -78,9 +78,9 @@ public class AssociationClassFactory extends RelationFactory {
         if (!isRecord) Change.stopRecord();
 
         parent.addEntity(acv);
-        classDiagram.addAssociationClass(ac);
-
+        
         classDiagram.addBinary(ac.getAssociation());
+        classDiagram.addAssociationClass(ac);
 
       } catch (IllegalArgumentException a) {
         SMessageDialog.showErrorMessage(a.getMessage());

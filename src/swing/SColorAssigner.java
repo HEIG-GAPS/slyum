@@ -223,6 +223,7 @@ public class SColorAssigner extends JDialog {
     
     private SColorMenuItem createMenuRecentColor() {
       SColorMenuItem colorMenuItem = new SColorMenuItem("Recent Color");
+      notifyMenu(colorMenuItem);
       menus.add(colorMenuItem);
       return colorMenuItem;
     }

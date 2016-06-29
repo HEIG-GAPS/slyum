@@ -317,10 +317,6 @@ public class XMLParser extends DefaultHandler {
           ce = new ClassEntity(e.name, e.visibility, e.id);
           classDiagram.addClassEntity((ClassEntity) ce);
           ((ClassEntity) ce).setAbstract(e.isAbstract);
-          SMessageDialog
-                  .showInformationMessage("Association class "
-                          + ce.getName()
-                          + " has been converted into a normal class.\nIts association no longer exists during importation.");
           break;
         }
         

@@ -1,6 +1,5 @@
 package graphic;
 
-import graphic.relations.LineView;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -31,7 +30,7 @@ import java.util.LinkedList;
 import swing.MultiViewManager;
 import swing.PanelClassDiagram;
 import swing.SColorAssigner;
-import swing.hierarchicalView.HierarchicalView;
+import swing.SPanelElement;
 import swing.slyumCustomizedComponents.SRadioButtonMenuItem;
 
 /**

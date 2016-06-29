@@ -18,6 +18,7 @@ import swing.Slyum;
 public class Change {
   
   private static HashMap<GraphicView, Change> changes = new HashMap<>();
+  private static GraphicView currentGraphicView = null;
   
   private boolean _hasChange = false;
   private boolean addSinceLastRecord = false;
@@ -35,7 +36,7 @@ public class Change {
     _setHasChange(false);
     
     _printStackState();
-  }
+  }  
 
   public void _setHasChange(boolean changed) {
     _hasChange = changed;
@@ -181,6 +182,14 @@ public class Change {
     Slyum.setEnableRedoButtons(pointer < stack.size() - 1);
     Slyum.setEnableUndoButtons(pointer > 0);
   }
+
+  public static GraphicView getCurrentGraphicView() {
+    return currentGraphicView;
+  }
+
+  public static void setCurrentGraphicView(GraphicView currentGraphicView) {
+    Change.currentGraphicView = currentGraphicView;
+  }
   
   private void _printStackState() {
     if (!Slyum.argumentIsChangeStackStatePrinted()) return;
@@ -195,12 +204,15 @@ public class Change {
   }
 
   public static Change getCurrentChangeObject() {
-    GraphicView currentGraphicView = MultiViewManager.getSelectedGraphicView();
+    GraphicView chosenGraphicView = getCurrentGraphicView();
     
-    if (!changes.containsKey(currentGraphicView))
-      changes.put(currentGraphicView, new Change());
+    if (chosenGraphicView == null)
+      chosenGraphicView = MultiViewManager.getSelectedGraphicView();
     
-    return changes.get(currentGraphicView);
+    if (!changes.containsKey(chosenGraphicView))
+      changes.put(chosenGraphicView, new Change());
+    
+    return changes.get(chosenGraphicView);
   }
 
   public static void clear() {
@@ -239,7 +251,7 @@ public class Change {
     getCurrentChangeObject()._pop();
   }
 
-  public static void push(Changeable ch) {
+  public static void push(Changeable ch) {   
     getCurrentChangeObject()._push(ch);
   }
 

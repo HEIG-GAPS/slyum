@@ -1,4 +1,4 @@
-You can know create multiple views from the same structure (drag and drop entities from the tree view to add them in the view).
+You can know create multiple views from the same structure (drag and drop entities from the tree to add them in the view).
 You can interact with elements in the tree view by opening the contextual menu (rigth-click on an element).
 New shortcuts for creating diagram components (a lot easier).
 Possibility to hide / show types in diagram.
@@ -6,8 +6,9 @@ You can now directly editing an entity's name after its creation.
 The lasts used colors (up to 7, can be changed in settings) are know saved.
 Add diagram only mode (hide the left and the bottom panel)(Ctrl+Enter).
 New exportation formats: EPS, SVG and PDF are know availables.
-Diagrame's properties: diagrams have now its own properties (can be turned off in settings).
+Diagrame's properties: diagrams have now its own properties.
 Components in tree are now alphabetically sorted.
 Add diagrams informations to appear on the exported schema.
-Display intersection line (can be customized and turned off in settings).
+Display intersection lines (can be customized and turned off in settings).
+You can now open multiple windows of Slyum from the File -> New Window menu.
 Various bugfixes and accessibility improvment.

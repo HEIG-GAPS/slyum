@@ -31,11 +31,14 @@ public class SColorMenuItem extends JMenu {
     createMenuItems(colors.length);
     
     // Update item menu's color and display it.
+    boolean atLeastOneColor = false;
     for (int i = 0; i < colors.length; ++i)
-      if (colors[i] != null)
+      if (colors[i] != null) {
         getItem(i).setColor(colors[i]);
+        atLeastOneColor = true;
+      }
     
-    setEnabled(true);
+    setEnabled(atLeastOneColor);
   }
 
   @Override

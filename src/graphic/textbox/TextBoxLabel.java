@@ -77,6 +77,11 @@ public abstract class TextBoxLabel extends TextBox implements Observer {
   }
 
   @Override
+  public void delete() {
+    parent.removeComponent(this);
+  }
+
+  @Override
   public void gMouseDragged(MouseEvent e) {
     parent.getScene().setCursor(new Cursor(Cursor.MOVE_CURSOR));
     Point mouse = e.getPoint();

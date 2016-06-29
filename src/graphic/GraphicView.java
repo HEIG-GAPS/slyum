@@ -81,6 +81,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
 import javax.swing.JMenuItem;
@@ -174,8 +175,7 @@ public class GraphicView extends GraphicComponent
     boolean isRecord = Change.isRecord();
     Change.record();
     
-    for (GraphicComponent c : components)
-      c.delete();
+    components.stream().forEach((c) -> { c.delete(); });
     
     if (!isRecord) Change.stopRecord();
   }
@@ -1258,10 +1258,16 @@ public class GraphicView extends GraphicComponent
         addMultiView(mv);
         return mv;
       }
-    } else {
+    } else {      
       RelationView rv = RelationView.createFromRelation(
           this, relation, source, target);
       addLineView(rv);
+      
+      classDiagram.getEntities()
+          .stream()
+          .filter(r -> r instanceof AssociationClass && ((AssociationClass)r).getAssociation() == relation)
+          .forEach(r -> addAssociationClass((AssociationClass)r));
+      
       return rv;
     }
     

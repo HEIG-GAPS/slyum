@@ -980,6 +980,6 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
   }
 
   private boolean mustPaintIntersection(LineView otherLineView) {
-    return lineStroke.equals(getDefaultLineStroke());
+    return lineStroke.equals(otherLineView.lineStroke);
   }
 }

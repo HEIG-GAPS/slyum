@@ -247,12 +247,14 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   
   public void _delete() {
     
+    Change.setCurrentGraphicView(parent);
     boolean isRecord = Change.isRecord();
     Change.record();
     
     delete();
     
     if (!isRecord) Change.stopRecord();
+    Change.setCurrentGraphicView(null);
   }
 
   @Override

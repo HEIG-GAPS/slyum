@@ -47,12 +47,10 @@ public class WatchDir {
   public static void register(Path file, WatchFileListener listener) 
       throws IOException {
     getInstance()._register(file, listener);
-    System.out.println("File " + file + " registered.");
   }
   
   public static void unregister(Path file) {
     getInstance()._unregister(file);
-    System.out.println("File " + file + " unregistered.");
   }
   
   public static void stopWatchingFile(Path file, boolean stopWatching) {
@@ -60,7 +58,6 @@ public class WatchDir {
   }
   
   public void _stopWatchingFile(Path file, boolean stopWatching) {
-    System.out.println(file + " stop watching: " + stopWatching);
     keys.get(searchByPath(file)).isDisable = stopWatching;
   }
   
@@ -149,7 +146,6 @@ public class WatchDir {
 
       SlyumKey skey = keys.get(key);
       if (skey.file == null) {
-        System.err.println("This file is no longer watched.");
         continue;
       }
 
