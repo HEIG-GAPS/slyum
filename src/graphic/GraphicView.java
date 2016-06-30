@@ -2297,7 +2297,7 @@ public class GraphicView extends GraphicComponent
   
   @Override
   public void notifyClassEntityCreation(ClassEntity component) {
-    if (MultiViewManager.getSelectedGraphicView()== this ||
+    if (MultiViewManager.getSelectedGraphicView() == this ||
         PanelClassDiagram.getInstance().isXmlImportation())
       addClassEntity(component);
   }
@@ -2314,6 +2314,8 @@ public class GraphicView extends GraphicComponent
 
   @Override
   public void notifyEnumEntityCreation(EnumEntity component) {
+    if (MultiViewManager.getSelectedGraphicView() == this ||
+        PanelClassDiagram.getInstance().isXmlImportation())
     addEnumEntity(component);
   }
 
@@ -2329,6 +2331,8 @@ public class GraphicView extends GraphicComponent
   
   @Override
   public void notifyInterfaceEntityCreation(InterfaceEntity component) {
+    if (MultiViewManager.getSelectedGraphicView() == this ||
+        PanelClassDiagram.getInstance().isXmlImportation())
     addInterfaceEntity(component);
   }
   

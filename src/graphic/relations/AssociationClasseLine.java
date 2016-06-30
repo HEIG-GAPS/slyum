@@ -1,5 +1,6 @@
 package graphic.relations;
 
+import change.Change;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
@@ -32,8 +33,7 @@ public class AssociationClasseLine extends LineView {
   /**
    * Create a new AssociationClasseLine between source and target.
    * 
-   * @param parent
-   *          the graphic view
+   * @param graphicView
    * @param source
    *          the entity source
    * @param target

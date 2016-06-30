@@ -39,7 +39,9 @@ import swing.Slyum;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public abstract class LineView extends GraphicComponent implements ColoredComponent {
+public abstract class LineView extends GraphicComponent 
+                               implements ColoredComponent {
+  
   private static Color basicColor = Color.DARK_GRAY;
 
   /**
@@ -91,6 +93,7 @@ public abstract class LineView extends GraphicComponent implements ColoredCompon
 
     final MagneticGrip first = new MagneticGrip(parent, this, source,
             posSource, posTarget);
+    
     final MagneticGrip last = new MagneticGrip(parent, this, target, posTarget,
             posSource);
 

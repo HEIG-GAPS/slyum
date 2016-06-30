@@ -42,10 +42,12 @@ import change.BufferBounds;
 import change.Change;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.components.AssociationClass;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
 import classDiagram.components.EnumEntity;
 import classDiagram.components.InterfaceEntity;
+import graphic.relations.BinaryView;
 
 /**
  * Represent the view of an entity in UML structure.
@@ -71,6 +73,8 @@ public abstract class EntityView extends MovableComponent implements Observer, C
         return new InterfaceView(graphicView, (InterfaceEntity)entity);
      else if (entity.getClass() == EnumEntity.class)
         return new EnumView(graphicView, (EnumEntity)entity);
+     else if (entity.getClass() == AssociationClass.class)
+       return new AssociationClassView(graphicView, (AssociationClass)entity, (BinaryView)graphicView.searchAssociedComponent(((AssociationClass)entity).getAssociation()), new Rectangle());
     return null;
   }
 

@@ -572,10 +572,8 @@ public class XMLParser extends DefaultHandler {
   private void importAssociationClass() 
       throws SyntaxeNameException, SAXNotRecognizedException {
     for (final Entity e : umlClassDiagram.diagrameElement.entity)
-
       if (e.entityType == EntityType.ASSOCIATION_CLASS)
-
-      createEntity(e);
+        createEntity(e);
   }
 
   public void importAssociations() {

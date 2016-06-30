@@ -79,8 +79,11 @@ public class AssociationClassFactory extends RelationFactory {
 
         parent.addEntity(acv);
         
+        boolean isBlocked = Change.isBlocked();
+        Change.setBlocked(true);
         classDiagram.addBinary(ac.getAssociation());
         classDiagram.addAssociationClass(ac);
+        Change.setBlocked(isBlocked);
 
       } catch (IllegalArgumentException a) {
         SMessageDialog.showErrorMessage(a.getMessage());
