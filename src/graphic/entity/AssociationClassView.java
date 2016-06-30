@@ -42,17 +42,16 @@ public class AssociationClassView extends ClassView {
 
     this.binaryView = binaryView;
 
-    final Point first = binaryView.getFirstPoint().getAnchor(), last = binaryView
-            .getLastPoint().getAnchor();
-    final Point posTarget = new Point(first.x + (last.x - first.x) / 2, first.x
-            + (last.y - first.y) / 2);
+    if (binaryView != null) {
+      final Point first = binaryView.getFirstPoint().getAnchor(), last = binaryView
+              .getLastPoint().getAnchor();
+      final Point posTarget = new Point(first.x + (last.x - first.x) / 2, first.x
+              + (last.y - first.y) / 2);
 
-    parent.addLineView(acl = new AssociationClasseLine(parent, this,
-            binaryView, new Point(bounds.x + bounds.width / 2, bounds.y
-                    + bounds.height / 2), posTarget, true));
-
-    Change.push(new BufferCreation(false, this));
-    Change.push(new BufferCreation(true, this));
+      parent.addLineView(acl = new AssociationClasseLine(parent, this,
+              binaryView, new Point(bounds.x + bounds.width / 2, bounds.y
+                      + bounds.height / 2), posTarget, true));
+    }
   }
 
   /**
@@ -90,9 +89,11 @@ public class AssociationClassView extends ClassView {
                     + bounds.height / 2), new Point(posSource.x
                     + (posTarget.x - posSource.x) / 2, posSource.y
                     + (posTarget.y + posSource.y) / 2), true));
+  }
 
-    Change.push(new BufferCreation(false, this));
-    Change.push(new BufferCreation(true, this));
+  @Override
+  protected void pushBufferCreation() {
+    
   }
 
   @Override
@@ -114,5 +115,15 @@ public class AssociationClassView extends ClassView {
 
   public BinaryView getBinaryView() {
     return binaryView;
+  }
+
+  @Override
+  public void delete() {
+    boolean isBlocked = Change.isBlocked();
+    Change.setBlocked(true);
+    super.delete();
+    parent.getClassDiagram().removeComponent(getAssociedComponent());
+    Change.setBlocked(isBlocked);
+    Change.cleanChangeable(parent, this);
   }
 }

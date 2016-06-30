@@ -1,15 +1,8 @@
 package change;
 
-import classDiagram.IDiagramComponent;
-import graphic.GraphicComponent;
 import graphic.GraphicView;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import swing.MultiViewManager;
 import swing.PanelClassDiagram;
 
@@ -28,6 +21,23 @@ public class Change {
 
   private LinkedList<Boolean> record = new LinkedList<>();
   private LinkedList<Changeable> stack = new LinkedList<>();
+  
+  public void _cleanChangeable(Object component) {
+    for (int i = 0; i < stack.size(); ++i) {
+      if (stack.get(i).getAssociedComponent() == component) {
+        stack.remove(i);
+        record.remove(i);
+        pointer--;
+      }
+    }
+    
+    _checkToolbarButtonState();
+  }
+  
+  public static void cleanChangeable(GraphicView gv, Object component) {
+    if (changes.containsKey(gv))
+      changes.get(gv)._cleanChangeable(component);
+  }
 
   public void _clear() {
     stack.clear();

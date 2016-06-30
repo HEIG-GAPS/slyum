@@ -89,4 +89,13 @@ public class AssociationClasseLine extends LineView {
     relationView.appendChild(line);
     return relationView;
   }
+
+  @Override
+  public void delete() {
+    boolean isBlocked = Change.isBlocked();
+    Change.setBlocked(true);
+    super.delete();
+    getFirstPoint().getAssociedComponentView().delete();
+    Change.setBlocked(isBlocked);
+  }
 }
