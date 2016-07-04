@@ -1,6 +1,5 @@
 package swing.hierarchicalView;
 
-import change.Change;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
@@ -9,7 +8,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import swing.MultiViewManager;
 import swing.PanelClassDiagram;
 import swing.Slyum;
 import swing.hierarchicalView.HierarchicalView.STree;

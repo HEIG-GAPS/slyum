@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import swing.MultiViewManager;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 
@@ -44,9 +45,12 @@ public class TreeRenderer extends DefaultTreeCellRenderer {
       IDiagramComponent component = ((IClassDiagramNode)value).getAssociedComponent();
       
       if (value instanceof AbstractNode && // Only main component must be treated.
-          component != null && 
-          GraphicComponent.countGraphicComponentsAssociedWith(component) == 0)
-        setForeground(Color.RED);
+          component != null) {
+        if (GraphicComponent.countGraphicComponentsAssociedWith(component) == 0)
+          setForeground(Color.RED);
+        else if (MultiViewManager.getSelectedGraphicView().searchAssociedComponent(component) == null)
+          setForeground(Color.GRAY);
+      }   
     }
     
     return this;

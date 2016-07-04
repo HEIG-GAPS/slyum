@@ -149,6 +149,7 @@ public class MultiViewManager {
       STab.getInstance().setSelectedComponent(graphicView.getScrollPane());
     
     instance.hierarchicalView.setSelectedView(graphicView);
+    PanelClassDiagram.refreshHierarchicalView();
   }
   
   public static GraphicView closeView(GraphicView graphicView) {
