@@ -4,8 +4,8 @@ New shortcuts for creating diagram components (a lot easier).
 Possibility to hide / show types in diagram.
 You can now directly editing an entity's name after its creation.
 The lasts used colors (up to 7, can be changed in settings) are know saved.
-Add diagram only mode (hide the left and the bottom panel)(Ctrl+Enter).
-New exportation formats: EPS, SVG and PDF are know availables.
+Add diagram only mode (hide the left and the bottom panel)(ctrl+enter).
+New exportation formats: EPS, SVG and PDF are now availables.
 Diagrame's properties: diagrams have now its own properties.
 Components in tree are now alphabetically sorted.
 Add diagrams informations to appear on the exported schema.

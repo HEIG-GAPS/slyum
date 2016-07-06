@@ -33,8 +33,10 @@ public class LineCommentary extends LineView {
   public static boolean checkCreate(GraphicComponent source,
           GraphicComponent target, boolean showMessage) {
     boolean associed = true, graphic = true, ext, ok;
-    associed = !(source.getAssociedComponent() == null && target
-            .getAssociedComponent() == null);
+    if (source == null || target == null)
+      return false;
+    
+    associed = !(source.getAssociedComponent() == null && target.getAssociedComponent() == null);
     graphic = !(source instanceof GraphicView || target instanceof GraphicView);
     ext = source instanceof TextBoxCommentary
             || target instanceof TextBoxCommentary;

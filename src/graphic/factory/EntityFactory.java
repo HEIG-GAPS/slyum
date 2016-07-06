@@ -15,6 +15,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
+import swing.PanelClassDiagram;
 
 /**
  * EntityFactory allows to create a new entity view associated with a new entity
@@ -79,13 +80,15 @@ public abstract class EntityFactory extends ComponentFactory {
   public void paintComponent(Graphics2D g2) {
     final Color basicColor = EntityView.getBasicColor();
     final Color fillColor = new Color(basicColor.getRed(),
-            basicColor.getGreen(), basicColor.getBlue(), 20);
+            basicColor.getGreen(), basicColor.getBlue(), 100);
 
-    final GradientPaint backGradient = new GradientPaint(bounds.x, bounds.y,
+    if (GraphicView.isEntityGradient())
+      g2.setPaint(new GradientPaint(bounds.x, bounds.y,
             fillColor, bounds.x + bounds.width, bounds.y + bounds.height,
-            fillColor.darker());
-
-    g2.setPaint(backGradient);
+            fillColor.darker()));
+    else
+      g2.setColor(fillColor);
+    
     g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
     g2.setColor(fillColor.darker().darker().darker().darker().darker());
