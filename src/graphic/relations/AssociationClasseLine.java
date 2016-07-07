@@ -13,6 +13,7 @@ import org.w3c.dom.Element;
 
 import utility.Utility;
 import classDiagram.IDiagramComponent;
+import swing.PanelClassDiagram;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -92,10 +93,15 @@ public class AssociationClasseLine extends LineView {
 
   @Override
   public void delete() {
-    boolean isBlocked = Change.isBlocked();
-    Change.setBlocked(true);
-    super.delete();
-    getFirstPoint().getAssociedComponentView().delete();
-    Change.setBlocked(isBlocked);
+    
+    if (PanelClassDiagram.getInstance().isXmlImportation()) {
+      super.delete();
+    } else {
+      boolean isBlocked = Change.isBlocked();
+      Change.setBlocked(true);
+      super.delete();
+      getFirstPoint().getAssociedComponentView().delete();
+      Change.setBlocked(isBlocked);
+    }
   }
 }

@@ -1525,7 +1525,6 @@ public class GraphicView extends GraphicComponent
     final LinkedList<T> inversed = new LinkedList<T>();
 
     while (iter.hasNext())
-
       inversed.add(iter.next());
 
     final T component = searchComponentWithPosition(inversed, pos);

@@ -10,6 +10,8 @@ import java.awt.Rectangle;
 import change.BufferCreation;
 import change.Change;
 import classDiagram.components.AssociationClass;
+import swing.PanelClassDiagram;
+import swing.Slyum;
 
 /**
  * Represent the view of an association class in UML structure.
@@ -119,11 +121,16 @@ public class AssociationClassView extends ClassView {
 
   @Override
   public void delete() {
-    boolean isBlocked = Change.isBlocked();
-    Change.setBlocked(true);
-    super.delete();
-    parent.getClassDiagram().removeComponent(getAssociedComponent());
-    Change.setBlocked(isBlocked);
-    Change.cleanChangeable(parent, this);
+    
+    if (PanelClassDiagram.getInstance().isXmlImportation()) {
+      super.delete();
+    } else {
+      boolean isBlocked = Change.isBlocked();
+      Change.setBlocked(true);
+      super.delete();
+      parent.getClassDiagram().removeComponent(getAssociedComponent());
+      Change.setBlocked(isBlocked);
+      Change.cleanChangeable(parent, this);
+    }
   }
 }
