@@ -48,7 +48,8 @@ public class TreeRenderer extends DefaultTreeCellRenderer {
           component != null) {
         if (GraphicComponent.countGraphicComponentsAssociedWith(component) == 0)
           setForeground(Color.RED);
-        else if (MultiViewManager.getSelectedGraphicView().searchAssociedComponent(component) == null)
+        else if (MultiViewManager.getSelectedGraphicView() != null &&
+                 MultiViewManager.getSelectedGraphicView().searchAssociedComponent(component) == null)
           setForeground(Color.GRAY);
       }   
     }

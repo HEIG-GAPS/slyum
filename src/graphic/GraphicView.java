@@ -1155,6 +1155,9 @@ public class GraphicView extends GraphicComponent
   }
 
   public void changeZOrder(EntityView entityView, int index) {
+    
+    if (index < 0 || index > entities.size() - 1)
+      return;
 
     entities.remove(entityView);
     entities.add(index, entityView);

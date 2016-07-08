@@ -45,18 +45,19 @@ public class MultiViewManager {
     return instance.graphicViews.getFirst();
   }
   
+  static GraphicView lastSelectedGraphicView = null;
   public static GraphicView getSelectedGraphicView() {
     try {
-    STab.GraphicViewTabComponent component = 
-        STab.getInstance().getTabComponentAt(
-            STab.getInstance().getSelectedIndex());
-    
-    if (component != null)
-      return component.getGraphicView();
+      STab.GraphicViewTabComponent component = 
+          STab.getInstance().getTabComponentAt(
+              STab.getInstance().getSelectedIndex());
+
+      if (component != null)
+        return lastSelectedGraphicView = component.getGraphicView();
     } catch (Exception e) {
-      return null;
+      return lastSelectedGraphicView;
     }
-    return null;
+    return lastSelectedGraphicView;
   }
   
   public static List<GraphicView> getAllGraphicViews() {
