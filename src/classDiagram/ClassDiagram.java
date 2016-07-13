@@ -16,7 +16,6 @@ import classDiagram.components.EnumEntity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Method;
 import classDiagram.relationships.Aggregation;
-import classDiagram.relationships.Association;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Composition;
 import classDiagram.relationships.Dependency;
@@ -26,9 +25,6 @@ import classDiagram.relationships.Multi;
 import classDiagram.relationships.Relation;
 import graphic.GraphicView;
 import java.util.Observable;
-import swing.MultiViewManager;
-import swing.PanelClassDiagram;
-import swing.PropertyLoader;
 
 /**
  * This class contains all structurals UML components. Add classes, interfaces,

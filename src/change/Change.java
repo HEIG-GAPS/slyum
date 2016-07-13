@@ -224,9 +224,25 @@ public class Change {
     
     return changes.get(chosenGraphicView);
   }
+  
+  public static Change getGraphicViewChangeObject(GraphicView graphicView) {
+    
+    if (!changes.containsKey(graphicView))
+      return null;
+    
+    return changes.get(graphicView);
+  }
 
   public static void clear() {
     getCurrentChangeObject()._clear();
+  }
+
+  public static void clearAll() {
+    for (GraphicView gv : MultiViewManager.getAllGraphicViews()) {
+      Change change = getGraphicViewChangeObject(gv);
+      if (change != null)
+        change._clear();
+    }
   }
 
   public static void setHasChange(boolean changed) {

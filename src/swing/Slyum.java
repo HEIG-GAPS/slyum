@@ -821,7 +821,7 @@ public class Slyum extends JFrame implements ActionListener {
         PanelClassDiagram.getInstance().exportAsVectoriel("eps", new String[] {"pdf", "svg", "eps"});
         break;
       case ACTION_CLEAN_DIAGRAM:
-        PanelClassDiagram.cleanComponents();
+        SMessageDialog.showInformationMessage("Cleaning complete!\n" + PanelClassDiagram.cleanComponents() + " component(s) removed.");
         break;
     }
   }

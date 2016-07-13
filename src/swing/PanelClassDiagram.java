@@ -214,17 +214,21 @@ public class PanelClassDiagram extends JPanel {
   /**
    * Remove all not associed with view components.
    */
-  public static void cleanComponents() {
+  public static int cleanComponents() {
     int count = 0;
     
     ClassDiagram cd = PanelClassDiagram.getInstance().classDiagram;
     for (IDiagramComponent component : cd.getAllMainsComponents())
       if (GraphicComponent.countGraphicComponentsAssociedWith(component) == 0) {
+        
         cd.removeComponent(component);
+        
         ++count;
       }
     
-    SMessageDialog.showInformationMessage("Cleaning complete!\n" + count + " component(s) removed.");
+    Change.clearAll();
+    
+    return count;
   }
   
   /**
@@ -370,7 +374,7 @@ public class PanelClassDiagram extends JPanel {
     WatchDir.unregister(getCurrentPath());
     currentFile = file;
     Slyum.getInstance().getMenuItemLocate().setEnabled(file != null);
-    Change.clear();
+    cleanComponents();
     Slyum.updateWindowTitle(currentFile);
     
     if (file == null) return;
