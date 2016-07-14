@@ -257,6 +257,8 @@ public class Slyum extends JFrame implements ActionListener {
 
   private static JMenuItem undo;
   private static String windowTitle = APP_NAME;
+  private static boolean CLEAN_AT_OPENING_DEFAULT = true;
+  
   static {
     DEFAULT_FONT = addSystemFont("Ubuntu-R");
     UI_FONT = addSystemFont("segoeui");
@@ -639,6 +641,20 @@ public class Slyum extends JFrame implements ActionListener {
     windowTitle = APP_NAME
                   + (projectName == null ? "" : " - " + projectName.getPath());
     Slyum.getInstance().setTitle(windowTitle);
+  }
+
+  public static boolean isCleanAtOpeningEnable() {
+    String prop = PropertyLoader.getInstance().getProperties()
+        .getProperty(PropertyLoader.CLEAN_AT_OPENING);
+    boolean enable = CLEAN_AT_OPENING_DEFAULT;
+    if (prop != null) enable = Boolean.parseBoolean(prop);
+    return enable;
+  }
+
+  public static void setCleanAtOpeningEnable(boolean enabled) {
+    PropertyLoader.getInstance().getProperties()
+        .put(PropertyLoader.CLEAN_AT_OPENING, enabled);
+    PropertyLoader.getInstance().push();
   }
 
   /**

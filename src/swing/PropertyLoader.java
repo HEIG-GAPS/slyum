@@ -36,6 +36,7 @@ public class PropertyLoader {
   public static final String VIEW_METHODS = "ViewMethods";
   public static final String VIEW_ENTITIES = "ViewEntities";
   public static final String VIEW_TYPES = "ViewTypes";
+  public static final String CLEAN_AT_OPENING = "CleanAtOpening";
   public static final String VIEW_ENUM = "ViewEnum";
   public static final String VIEW_TITLE_ON_EXPORT = "ViewTitleOnExport";
   public static final String DISPLAY_DIAGRAM_INFORMATIONS_ON_EXPORT = "DisplayDiagramInformationsOnExpert";

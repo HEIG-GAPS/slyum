@@ -83,6 +83,7 @@ public class SProperties extends JDialog {
   private JCheckBox ckbBackgroundGradient;
   private JCheckBox ckbEntityGradient;
   private JCheckBox ckbShowIntersectionLine;
+  private JCheckBox ckbCleanDiagramAtOpening;
   private JPanel contentPanel = new JPanel();
   private JLabel lblPreviewFont = new JLabel();
   private JLabel lblIntersectionLineSize = new JLabel();
@@ -803,7 +804,7 @@ public class SProperties extends JDialog {
           }
           {
             chckbxDisplayDiagramInformationsOnExport = 
-                new SCheckBox("Export diagram's informations");
+                new SCheckBox("Export project's informations");
             GridBagConstraints gbc_chckbxDiagramInformationsOnExport = 
                 new GridBagConstraints();
             gbc_chckbxDiagramInformationsOnExport.insets = new Insets(0, 5, 0, 0);
@@ -832,12 +833,21 @@ public class SProperties extends JDialog {
             panelInnerGeneral.add(chckbxViewTypes, gbc_chckbxViewTypes);
           }
           {
+            ckbCleanDiagramAtOpening = new SCheckBox("Clean diagram while opening project");
+            GridBagConstraints gbc_ckbCleanDiagramAtOpening = new GridBagConstraints();
+            gbc_ckbCleanDiagramAtOpening.insets = new Insets(0, 5, 0, 0);
+            gbc_ckbCleanDiagramAtOpening.anchor = GridBagConstraints.WEST;
+            gbc_ckbCleanDiagramAtOpening.gridx = 0;
+            gbc_ckbCleanDiagramAtOpening.gridy = 8;
+            panelInnerGeneral.add(ckbCleanDiagramAtOpening, gbc_ckbCleanDiagramAtOpening);
+          }
+          {
             ckbShowIntersectionLine = new SCheckBox("Display intersections line");
             GridBagConstraints gbc_chckbxIntersectionLine = new GridBagConstraints();
             gbc_chckbxIntersectionLine.insets = new Insets(0, 5, 0, 0);
             gbc_chckbxIntersectionLine.anchor = GridBagConstraints.WEST;
             gbc_chckbxIntersectionLine.gridx = 0;
-            gbc_chckbxIntersectionLine.gridy = 8;
+            gbc_chckbxIntersectionLine.gridy = 9;
             panelInnerGeneral.add(ckbShowIntersectionLine, gbc_chckbxIntersectionLine);
             
             ckbShowIntersectionLine.addChangeListener(e -> checkDisplayIntersectionLine());
@@ -857,7 +867,7 @@ public class SProperties extends JDialog {
             gbc_chckbxIntersectionLineSize.insets = new Insets(0, 22, 0, 0);
             gbc_chckbxIntersectionLineSize.anchor = GridBagConstraints.WEST;
             gbc_chckbxIntersectionLineSize.gridx = 0;
-            gbc_chckbxIntersectionLineSize.gridy = 9;
+            gbc_chckbxIntersectionLineSize.gridy = 10;
             panelInnerGeneral.add(p, gbc_chckbxIntersectionLineSize);
           }
           {
@@ -888,7 +898,7 @@ public class SProperties extends JDialog {
             gbc_panelViews.insets = new Insets(0, 5, 0, 0);
             gbc_panelViews.anchor = GridBagConstraints.WEST;
             gbc_panelViews.gridx = 0;
-            gbc_panelViews.gridy = 10;
+            gbc_panelViews.gridy = 11;
             panelInnerGeneral.add(panelViews, gbc_panelViews);
           }
           panelGeneral.add(panelInnerGeneral);
@@ -967,6 +977,8 @@ public class SProperties extends JDialog {
                       String.valueOf(listRecentColorsSize.getSelectedItem()));
               properties.put(PropertyLoader.VIEW_TYPES,
                       String.valueOf(chckbxViewTypes.isSelected()));
+              properties.put(PropertyLoader.CLEAN_AT_OPENING,
+                      String.valueOf(ckbCleanDiagramAtOpening.isSelected()));
               properties.put(PropertyLoader.SHOW_INTERSECTION_LINE,
                       String.valueOf(ckbShowIntersectionLine.isSelected()));
               properties.put(PropertyLoader.SIZE_INTERSECTION_LINE,
@@ -1115,6 +1127,7 @@ public class SProperties extends JDialog {
     listSize.setSelectedValue(TextBox.getFontSize(), true);
     chckbxShowGrid.setSelected(GraphicView.isGridVisible());
     ckbShowIntersectionLine.setSelected(Slyum.isShowIntersectionLine());
+    ckbCleanDiagramAtOpening.setSelected(Slyum.isCleanAtOpeningEnable());
     listIntersectionLineSize.setSelectedItem(Slyum.getSizeIntersectionLine());
 
     switch (Utility.getGraphicQualityType()) {

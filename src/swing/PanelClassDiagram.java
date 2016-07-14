@@ -51,6 +51,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+import static swing.Slyum.isCleanAtOpeningEnable;
 import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.DiagramPropreties;
 import swing.propretiesView.PropretiesChanger;
@@ -374,7 +375,10 @@ public class PanelClassDiagram extends JPanel {
     WatchDir.unregister(getCurrentPath());
     currentFile = file;
     Slyum.getInstance().getMenuItemLocate().setEnabled(file != null);
-    cleanComponents();
+        
+    if (Slyum.isCleanAtOpeningEnable())
+      PanelClassDiagram.cleanComponents();
+        
     Slyum.updateWindowTitle(currentFile);
     
     if (file == null) return;
