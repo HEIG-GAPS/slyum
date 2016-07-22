@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -1546,6 +1547,18 @@ public class Slyum extends JFrame implements ActionListener {
       public void windowClosing(WindowEvent e) {
         super.windowClosing(e);
         exit();
+      }
+    });
+    
+    addWindowFocusListener(new WindowFocusListener() {
+      @Override
+      public void windowGainedFocus(WindowEvent e) {
+        PanelClassDiagram.refresh();
+      }
+
+      @Override
+      public void windowLostFocus(WindowEvent e) {
+        // nothing to do !
       }
     });
   }
