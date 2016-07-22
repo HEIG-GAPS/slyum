@@ -705,7 +705,8 @@ public class PanelClassDiagram extends JPanel {
     
     Path currentPath = currentFile.toPath(); 
    
-    WatchDir.stopWatchingFile(currentPath, true);
+    //WatchDir.stopWatchingFile(currentPath, true);
+    WatchDir.unregister(currentPath);
 
     // write the content into xml file
     TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -719,7 +720,13 @@ public class PanelClassDiagram extends JPanel {
     StreamResult result = new StreamResult(currentFile);
     transformer.transform(source, result);
     
-    SwingUtilities.invokeLater(() -> WatchDir.stopWatchingFile(currentPath, false));
+    //SwingUtilities.invokeLater(() -> WatchDir.stopWatchingFile(currentPath, false));
+    try {
+      WatchDir.register(currentPath, getInstance().watchFileListener);
+    } catch (IOException ioe) {
+      Logger.getLogger(PanelClassDiagram.class.getName()).log(
+          Level.SEVERE, "Unable to register file", ioe);
+    }
   }
   
   private void _refresh() {
