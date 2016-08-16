@@ -1,12 +1,12 @@
 package graphic.factory;
 
+import classDiagram.components.ClassEntity;
+import classDiagram.components.Visibility;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.ClassView;
 import graphic.entity.EntityView;
 import swing.SPanelDiagramComponent;
-import classDiagram.components.ClassEntity;
-import classDiagram.components.Visibility;
 
 /**
  * ClassFactory allows to create a new class view associated with a new class

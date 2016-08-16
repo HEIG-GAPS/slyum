@@ -1,5 +1,6 @@
 package graphic;
 
+import change.Change;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -7,11 +8,9 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
-
 import swing.Slyum;
 import utility.PersonalizedIcon;
 import utility.Utility;
-import change.Change;
 
 public class StyleCross extends GraphicComponent {
   private final String PATH = Slyum.ICON_PATH;

@@ -1,13 +1,13 @@
 package swing;
 
 import classDiagram.ClassDiagram.ViewEntity;
+import classDiagram.components.Method.ParametersViewStyle;
 import graphic.ColoredComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.entity.EnumView;
 import graphic.entity.SimpleEntityView;
 import graphic.textbox.TextBox;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -22,7 +22,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Properties;
-
 import javax.swing.AbstractAction;
 import javax.swing.AbstractListModel;
 import javax.swing.BorderFactory;
@@ -51,18 +50,15 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
-import utility.PersonalizedIcon;
-import utility.SMessageDialog;
-import utility.Utility;
-import classDiagram.components.Method.ParametersViewStyle;
-import java.awt.Graphics;
 import swing.slyumCustomizedComponents.FlatButton;
 import swing.slyumCustomizedComponents.SCheckBox;
 import swing.slyumCustomizedComponents.SComboBox;
 import swing.slyumCustomizedComponents.SList;
 import swing.slyumCustomizedComponents.SRadioButton;
 import update.UpdateInfo;
+import utility.PersonalizedIcon;
+import utility.SMessageDialog;
+import utility.Utility;
 
 public class SProperties extends JDialog {
   private ButtonColor btnBackgroundColor;

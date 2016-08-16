@@ -1,12 +1,5 @@
 package classDiagram.components;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import utility.SMessageDialog;
 import change.BufferClass;
 import change.BufferIndex;
 import change.Change;
@@ -21,9 +14,14 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import swing.PanelClassDiagram;
 import swing.Slyum;
+import utility.SMessageDialog;
 
 /**
  * Abstract class containing all classes parameters (attributes, methods,

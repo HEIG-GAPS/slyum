@@ -1,17 +1,13 @@
 package graphic.entity;
 
+import change.Change;
+import classDiagram.components.AssociationClass;
 import graphic.GraphicView;
 import graphic.relations.AssociationClasseLine;
 import graphic.relations.BinaryView;
-
 import java.awt.Point;
 import java.awt.Rectangle;
-
-import change.BufferCreation;
-import change.Change;
-import classDiagram.components.AssociationClass;
 import swing.PanelClassDiagram;
-import swing.Slyum;
 
 /**
  * Represent the view of an association class in UML structure.
@@ -130,7 +126,6 @@ public class AssociationClassView extends ClassView {
       super.delete();
       parent.getClassDiagram().removeComponent(getAssociedComponent());
       Change.setBlocked(isBlocked);
-      Change.cleanChangeable(parent, this);
     }
   }
 }

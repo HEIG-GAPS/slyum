@@ -2,10 +2,8 @@ package graphic.factory;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
-
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-
 import swing.Slyum;
 
 /**

@@ -1,14 +1,11 @@
 package classDiagram.relationships;
 
-import graphic.textbox.ILabelTitle;
-
-import java.util.Observable;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import classDiagram.ClassDiagram;
 import classDiagram.components.Entity;
+import graphic.textbox.ILabelTitle;
+import java.util.Observable;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Represent a dependency in UML structure.

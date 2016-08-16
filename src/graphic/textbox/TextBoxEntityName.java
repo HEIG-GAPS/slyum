@@ -1,14 +1,12 @@
 package graphic.textbox;
 
+import classDiagram.components.Entity;
+import classDiagram.verifyName.TypeName;
 import graphic.GraphicView;
-
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-
 import utility.Utility;
-import classDiagram.components.Entity;
-import classDiagram.verifyName.TypeName;
 
 /**
  * A TextBox is a graphic component from Slyum containing a String. The

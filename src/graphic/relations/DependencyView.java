@@ -1,17 +1,16 @@
 package graphic.relations;
 
-import graphic.GraphicView;
-import graphic.entity.EntityView;
-import graphic.textbox.TextBoxLabelTitle;
-
-import java.awt.BasicStroke;
-import java.awt.Graphics2D;
-import java.awt.Point;
-
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
+import classDiagram.relationships.Binary;
 import classDiagram.relationships.Dependency;
+import graphic.GraphicView;
+import graphic.entity.EntityView;
+import graphic.textbox.TextBoxLabelTitle;
+import java.awt.BasicStroke;
+import java.awt.Graphics2D;
+import java.awt.Point;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -152,5 +151,15 @@ public class DependencyView extends RelationView {
    */
   public void setTarget(EntityView target) {
     dependency.setTarget((Entity) target.getAssociedComponent());
+  }
+  
+  @Override
+  public void restore() {
+    super.restore();
+
+    if (this.getClass().equals(DependencyView.class))
+      parent.getClassDiagram().addDependency((Dependency) getAssociedComponent());
+
+    repaint();
   }
 }

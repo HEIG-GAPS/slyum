@@ -1,5 +1,9 @@
 package graphic.textbox;
 
+import change.BufferNote;
+import change.Change;
+import classDiagram.IDiagramComponent;
+import classDiagram.IDiagramComponent.UpdateMessage;
 import graphic.ColoredComponent;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
@@ -8,7 +12,6 @@ import graphic.entity.EntityView;
 import graphic.relations.LineCommentary;
 import graphic.relations.LineView;
 import graphic.relations.RelationGrip;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -19,21 +22,14 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-
 import javax.swing.JMenuItem;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import swing.UserInputDialog;
 import swing.Slyum;
+import swing.UserInputDialog;
 import swing.propretiesView.NoteProperties;
 import utility.PersonalizedIcon;
 import utility.Utility;
-import change.BufferNote;
-import change.Change;
-import classDiagram.IDiagramComponent;
-import classDiagram.IDiagramComponent.UpdateMessage;
 
 /**
  * A TextBoxCommentary is not a subclass of TextBox becauseit is not on signle

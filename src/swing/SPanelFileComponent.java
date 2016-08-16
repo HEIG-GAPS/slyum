@@ -3,13 +3,11 @@ package swing;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.ImageIcon;
 import swing.slyumCustomizedComponents.SButton;
 import swing.slyumCustomizedComponents.SSeparator;
 import swing.slyumCustomizedComponents.SToolBar;
 import swing.slyumCustomizedComponents.SToolBarButton;
-
 import utility.PersonalizedIcon;
 import utility.Utility;
 

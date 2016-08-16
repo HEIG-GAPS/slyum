@@ -1,16 +1,15 @@
 package swing.hierarchicalView;
 
 import classDiagram.IDiagramComponent;
-import javax.swing.ImageIcon;
-import javax.swing.tree.DefaultTreeModel;
-
-import swing.Slyum;
-import utility.PersonalizedIcon;
 import classDiagram.relationships.InnerClass;
 import java.util.Observable;
+import javax.swing.ImageIcon;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import swing.PanelClassDiagram;
+import swing.Slyum;
 import swing.hierarchicalView.HierarchicalView.STree;
+import utility.PersonalizedIcon;
 
 public class NodeInnerClass extends AbstractNode {
 

@@ -1,17 +1,18 @@
 package swing.propretiesView;
 
+import classDiagram.IDiagramComponent.UpdateMessage;
 import graphic.GraphicComponent;
 import graphic.relations.LineCommentary;
 import graphic.relations.LineView;
-
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.swing.AbstractListModel;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -20,15 +21,11 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
+import swing.Slyum;
 import swing.slyumCustomizedComponents.FlatPanel;
 import swing.slyumCustomizedComponents.SButton;
-import swing.Slyum;
-import utility.PersonalizedIcon;
-import classDiagram.IDiagramComponent.UpdateMessage;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import swing.slyumCustomizedComponents.SList;
+import utility.PersonalizedIcon;
 
 public class NoteProperties extends GlobalPropreties {
   private static NoteProperties instance;

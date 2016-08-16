@@ -1,15 +1,12 @@
 package swing;
 
+import classDiagram.ClassDiagram;
 import graphic.GraphicView;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import classDiagram.ClassDiagram;
 
 public class XmlFactory {
 

@@ -1,12 +1,12 @@
 package graphic.factory;
 
+import classDiagram.components.InterfaceEntity;
+import classDiagram.components.Visibility;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.entity.InterfaceView;
 import swing.SPanelDiagramComponent;
-import classDiagram.components.InterfaceEntity;
-import classDiagram.components.Visibility;
 
 /**
  * InterfaceFactory allows to create a new interface view associated with a new

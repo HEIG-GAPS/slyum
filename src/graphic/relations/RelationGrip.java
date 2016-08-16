@@ -3,14 +3,15 @@ package graphic.relations;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.SquareGrip;
-
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-
+import change.BufferBounds;
+import change.BufferCreation;
+import change.Change;
 import utility.Utility;
-import java.awt.Color;
 
 /**
  * The relationGrip is a grip who customize a LineView. The LineView uses
@@ -44,6 +45,9 @@ public class RelationGrip extends SquareGrip {
       throw new IllegalArgumentException("relation is null");
 
     relation = relationView;
+    
+    Change.push(new BufferCreation(false, this));
+    Change.push(new BufferCreation(true, this));
   }
 
   /**
@@ -98,6 +102,12 @@ public class RelationGrip extends SquareGrip {
   @Override
   public void gMousePressed(MouseEvent e) {
     isMouseDragged = false;
+    
+     if (e.getButton() == MouseEvent.BUTTON1) {
+      Change.record();
+      Change.push(new BufferBounds(this));
+    }
+     
     maybeShowPopup(e, relation);
   }
 
@@ -108,12 +118,15 @@ public class RelationGrip extends SquareGrip {
             .getAssociedComponentView(), target = relation.getLastPoint()
             .getAssociedComponentView();
 
+    pushBufferChangeMouseReleased(e);
     relation.smoothLines();
     relation.searchUselessAnchor(this);
 
     if (component != null
             && (component.equals(source) || component.equals(target)))
       delete();
+    
+    Change.stopRecord();
 
     maybeShowPopup(e, relation);
     isMouseDragged = false;
@@ -135,6 +148,14 @@ public class RelationGrip extends SquareGrip {
       return super.getBorderColor();
     
     return super.getBorderColor().brighter().brighter().brighter();
+  }
+  
+  protected void pushBufferChangeMouseReleased(MouseEvent e) {
+    if (e.getButton() == MouseEvent.BUTTON1) if (isMouseDragged) {
+      if (Change.getSize() % 2 == 1) Change.push(new BufferBounds(this));
+    } else {
+      Change.pop();
+    }
   }
 
   @Override

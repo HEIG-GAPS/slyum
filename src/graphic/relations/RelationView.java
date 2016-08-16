@@ -1,10 +1,21 @@
 package graphic.relations;
 
+import change.Change;
+import classDiagram.IDiagramComponent;
+import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.components.Entity;
+import classDiagram.relationships.Aggregation;
+import classDiagram.relationships.Binary;
+import classDiagram.relationships.Composition;
+import classDiagram.relationships.Dependency;
+import classDiagram.relationships.Inheritance;
+import classDiagram.relationships.InnerClass;
+import classDiagram.relationships.Relation;
+import classDiagram.relationships.RelationChanger;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.textbox.TextBoxRole;
-
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -12,19 +23,11 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
-
 import javax.swing.JMenuItem;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import utility.Utility;
-import change.Change;
-import classDiagram.IDiagramComponent;
-import classDiagram.IDiagramComponent.UpdateMessage;
-import classDiagram.components.Entity;
-import classDiagram.relationships.*;
 import swing.MultiViewManager;
+import utility.Utility;
 
 /**
  * The LineView class represent a collection of lines making a link between two

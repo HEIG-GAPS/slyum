@@ -1,9 +1,7 @@
 package utility;
 
 import java.net.URL;
-
 import javax.swing.ImageIcon;
-
 import swing.Slyum;
 
 public class PersonalizedIcon {

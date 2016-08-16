@@ -29,9 +29,9 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -53,8 +53,8 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import swing.MultiViewManager;
 import swing.PanelClassDiagram;
-import swing.slyumCustomizedComponents.SScrollPane;
 import swing.Slyum;
+import swing.slyumCustomizedComponents.SScrollPane;
 import utility.PersonalizedIcon;
 
 /**

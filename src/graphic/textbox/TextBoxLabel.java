@@ -1,7 +1,9 @@
 package graphic.textbox;
 
+import change.BufferDeplacement;
+import change.Change;
+import change.Changeable;
 import graphic.GraphicView;
-
 import java.awt.BasicStroke;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
@@ -105,6 +107,7 @@ public abstract class TextBoxLabel extends TextBox implements Observer {
     super.gMousePressed(e);
     mousePosition = e.getPoint();
     previousCursor = parent.getScene().getCursor();
+    Change.push(new BufferDeplacement(this));
   }
 
   @Override
@@ -112,6 +115,14 @@ public abstract class TextBoxLabel extends TextBox implements Observer {
     Point pos = computeAnchor();
     deplacement = new Point(bounds.x - pos.x, bounds.y - pos.y);
     parent.getScene().setCursor(previousCursor);
+    
+     Changeable c = Change.getLast();
+    if (c instanceof BufferDeplacement
+            && !((BufferDeplacement) Change.getLast()).getDeplacement().equals(
+                    getDeplacement()))
+      Change.push(new BufferDeplacement(this));
+    else
+      Change.pop();
   }
 
   public Point getDeplacement() {

@@ -1,15 +1,12 @@
 package graphic.factory;
 
+import classDiagram.ClassDiagram;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
-
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
-
 import swing.SPanelDiagramComponent;
-
-import classDiagram.ClassDiagram;
 
 /**
  * CreateComponent allows to create a new graphic component view. Give this

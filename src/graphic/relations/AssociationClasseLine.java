@@ -1,19 +1,16 @@
 package graphic.relations;
 
 import change.Change;
+import classDiagram.IDiagramComponent;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
-
 import java.awt.BasicStroke;
 import java.awt.Point;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import utility.Utility;
-import classDiagram.IDiagramComponent;
 import swing.PanelClassDiagram;
+import utility.Utility;
 
 /**
  * The LineView class represent a collection of lines making a link between two

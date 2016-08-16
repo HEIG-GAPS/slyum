@@ -1,19 +1,18 @@
 package graphic.factory;
 
+import change.BufferDeepCreation;
+import change.Change;
+import classDiagram.relationships.Association.NavigateDirection;
+import classDiagram.relationships.Composition;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.relations.AggregationView;
 import graphic.relations.CompositionView;
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-
 import swing.SPanelDiagramComponent;
-
-import classDiagram.relationships.Composition;
-import classDiagram.relationships.Association.NavigateDirection;
 
 /**
  * CompositionFactpry allows to create a new composition view associated with a
@@ -54,6 +53,9 @@ public class CompositionFactory extends RelationFactory {
 
       parent.addLineView(c);
       classDiagram.addComposition(composition);
+      
+      Change.push(new BufferDeepCreation(false, composition));
+      Change.push(new BufferDeepCreation(true, composition));
 
       parent.unselectAll();
       c.setSelected(true);

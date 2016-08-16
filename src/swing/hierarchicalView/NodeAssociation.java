@@ -1,17 +1,14 @@
 package swing.hierarchicalView;
 
-import java.util.LinkedList;
-import java.util.Observable;
-import java.util.Observer;
-
-import javax.swing.ImageIcon;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Association;
 import classDiagram.relationships.Role;
+import java.util.LinkedList;
+import java.util.Observable;
+import javax.swing.ImageIcon;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import swing.PanelClassDiagram;
 import swing.hierarchicalView.HierarchicalView.STree;
 

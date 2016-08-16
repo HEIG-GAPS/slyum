@@ -1,18 +1,17 @@
 package graphic.factory;
 
+import change.BufferDeepCreation;
+import change.Change;
+import classDiagram.relationships.Aggregation;
+import classDiagram.relationships.Association.NavigateDirection;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.relations.AggregationView;
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-
 import swing.SPanelDiagramComponent;
-
-import classDiagram.relationships.Aggregation;
-import classDiagram.relationships.Association.NavigateDirection;
 
 /**
  * AggregationFactory allows to create a new aggregation view associated with a
@@ -54,6 +53,9 @@ public class AggregationFactory extends RelationFactory {
 
       parent.addLineView(a);
       classDiagram.addAggregation(aggregation);
+      
+      Change.push(new BufferDeepCreation(false, aggregation));
+      Change.push(new BufferDeepCreation(true, aggregation));
 
       parent.unselectAll();
       a.setSelected(true);

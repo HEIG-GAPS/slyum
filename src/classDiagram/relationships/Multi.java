@@ -1,9 +1,8 @@
 package classDiagram.relationships;
 
-import java.util.LinkedList;
-
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
+import java.util.LinkedList;
 
 /**
  * Represent a multi-association in UML structure. A multi-association must have

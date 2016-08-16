@@ -1,17 +1,17 @@
 package graphic.factory;
 
+import change.BufferDeepCreation;
+import change.Change;
+import classDiagram.relationships.Inheritance;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.SimpleEntityView;
 import graphic.relations.InheritanceView;
-
 import java.awt.Color;
 import java.awt.Graphics2D;
-
 import swing.SPanelDiagramComponent;
 import swing.Slyum;
 import utility.SMessageDialog;
-import classDiagram.relationships.Inheritance;
 
 /**
  * InheritanceFactory allows to create a new inheritance view associated with a
@@ -61,6 +61,9 @@ public class InheritanceFactory extends RelationFactory {
 
         parent.addLineView(i);
         classDiagram.addInheritance(inheritance);
+      
+        Change.push(new BufferDeepCreation(false, inheritance));
+        Change.push(new BufferDeepCreation(true, inheritance));
 
         parent.unselectAll();
         i.setSelected(true);

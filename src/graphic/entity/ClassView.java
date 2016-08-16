@@ -1,17 +1,15 @@
 package graphic.entity;
 
 import classDiagram.IDiagramComponent;
-import graphic.GraphicView;
 import classDiagram.components.Attribute;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.ConstructorMethod;
 import classDiagram.components.Method;
 import classDiagram.components.SimpleEntity;
 import classDiagram.components.Visibility;
+import graphic.GraphicView;
 import java.awt.event.ActionEvent;
 import javax.swing.JPopupMenu;
-import swing.PanelClassDiagram;
-import swing.hierarchicalView.HierarchicalView;
 
 /**
  * Represent the view of a class in UML structure.
@@ -50,7 +48,7 @@ public class ClassView extends SimpleEntityView {
   }
 
   protected void restoreEntity() {
-    if (!componentAlreadyExists())
+    if (parent.getClassDiagram().searchComponentById(getAssociedComponent().getId()) == null)
       parent.getClassDiagram().addClassEntity(
               (ClassEntity) getAssociedComponent());
   }

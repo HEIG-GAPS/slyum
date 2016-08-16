@@ -1,12 +1,17 @@
 package graphic.relations;
 
 import change.Change;
+import classDiagram.IDiagramComponent;
+import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.relationships.Association.NavigateDirection;
+import classDiagram.relationships.Binary;
+import classDiagram.relationships.Multi;
+import classDiagram.relationships.Role;
 import graphic.ColoredComponent;
 import graphic.GraphicView;
 import graphic.MovableComponent;
 import graphic.entity.ClassView;
 import graphic.entity.EntityView;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -19,19 +24,10 @@ import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
-
 import javax.swing.JMenuItem;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
 import utility.Utility;
-import classDiagram.IDiagramComponent;
-import classDiagram.IDiagramComponent.UpdateMessage;
-import classDiagram.relationships.Binary;
-import classDiagram.relationships.Multi;
-import classDiagram.relationships.Role;
-import classDiagram.relationships.Association.NavigateDirection;
 
 /**
  * MultiView is represented by a diamond and it represents a multi-association
@@ -98,6 +94,8 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 
     final JMenuItem menuItem = makeMenuItem("Delete", "Delete", "delete");
     popupMenu.add(menuItem);
+    
+    super.pushBufferCreation();
 
     // Cet élément n'est pas redimensionnable. Suppression des grips.
     boolean isBlocked = Change.isBlocked();
@@ -106,28 +104,7 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
     rightMovableSquare.delete();
     Change.setBlocked(isBlocked);
   }
-
-  @Override
-  public void apply(MouseEvent e) {
-    boolean isBlocked = Change.isBlocked();
-    Change.setBlocked(true);
-    super.apply(e);
-    Change.setBlocked(isBlocked);
-  }
-
-  @Override
-  public void gMouseReleased(MouseEvent e) {
-    boolean isBlocked = Change.isBlocked();
-    Change.setBlocked(true);
-    super.gMouseReleased(e);
-    Change.setBlocked(isBlocked);
-  }
   
-  @Override
-  protected void pushBufferCreation() {
-
-  }
-
   @Override
   public void actionPerformed(ActionEvent e) {
     super.actionPerformed(e);
@@ -206,10 +183,10 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
   public void delete() {
     if (!parent.containsComponent(this)) return;
     
-    if (ligthDelete)
+    //if (ligthDelete)
       super.delete();
-    else
-      deleteWithoutChanges();
+    //else
+      //deleteWithoutChanges();
 
     if (!ligthDelete)
       parent.getClassDiagram().removeComponent(getAssociedComponent());

@@ -81,7 +81,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
 import javax.swing.JMenuItem;
@@ -95,13 +94,13 @@ import swing.IListenerComponentSelectionChanged;
 import swing.MultiViewManager;
 import swing.PanelClassDiagram;
 import swing.PropertyLoader;
-import swing.slyumCustomizedComponents.SButton;
 import swing.SColorAssigner;
 import swing.SPanelDiagramComponent;
 import swing.SPanelDiagramComponent.Mode;
 import swing.SPanelElement;
-import swing.slyumCustomizedComponents.SScrollPane;
 import swing.Slyum;
+import swing.slyumCustomizedComponents.SButton;
+import swing.slyumCustomizedComponents.SScrollPane;
 import utility.OSValidator;
 import utility.SMessageDialog;
 import utility.Utility;
@@ -1133,9 +1132,9 @@ public class GraphicView extends GraphicComponent
     for (ColoredComponent c : components) {
       // Set default style before save color.
       c.setDefaultStyle();
-      Change.push(new BufferColor(c));
+      Change.push(new BufferColor(c, parent));
       c.setColor(o.getColor(c));
-      Change.push(new BufferColor(c));
+      Change.push(new BufferColor(c, parent));
     }
     if (!isRecord) Change.stopRecord();
   }
@@ -2868,7 +2867,6 @@ public class GraphicView extends GraphicComponent
         
         entityView.setLocationRelativeTo(location);
         entityView.regenerateEntity();
-        entityView.adjustWidth();
         
         createdRelationViews.stream().forEach(rv -> rv.center());
         

@@ -1,6 +1,9 @@
 package graphic;
 
 
+import change.BufferCreation;
+import change.Change;
+import classDiagram.IDiagramComponent;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -8,30 +11,23 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.LinkedList;
 import java.util.Observable;
-
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import swing.SPanelDiagramComponent;
-import swing.Slyum;
-import swing.XmlElement;
-import utility.PersonalizedIcon;
-import change.BufferCreation;
-import change.Change;
-import classDiagram.IDiagramComponent;
-import java.util.LinkedList;
 import swing.MultiViewManager;
 import swing.PanelClassDiagram;
 import swing.SColorAssigner;
-import swing.SPanelElement;
+import swing.SPanelDiagramComponent;
+import swing.Slyum;
+import swing.XmlElement;
 import swing.slyumCustomizedComponents.SRadioButtonMenuItem;
+import utility.PersonalizedIcon;
 
 /**
  * Represent a graphic component in Slyum. Graphics components can't be draw

@@ -1,14 +1,12 @@
 package classDiagram.components;
 
-import java.util.Observable;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import change.BufferEnumValue;
 import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
+import java.util.Observable;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class EnumValue extends Observable 
                        implements IDiagramComponent, Cloneable {

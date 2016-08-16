@@ -1,7 +1,6 @@
 package graphic.entity;
 
 import java.awt.Component;
-
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
 import javax.swing.JMenu;

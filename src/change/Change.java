@@ -1,17 +1,19 @@
 package change;
 
-import graphic.GraphicView;
-import java.util.HashMap;
 import java.util.LinkedList;
-import swing.MultiViewManager;
 import swing.PanelClassDiagram;
-
 import swing.Slyum;
 
 public class Change {
   
-  private static HashMap<GraphicView, Change> changes = new HashMap<>();
-  private static GraphicView currentGraphicView = null;
+  private static Change instance;
+
+  public static Change getInstance() {
+    if (instance == null)
+      instance = new Change();
+    
+    return instance;
+  }
   
   private boolean _hasChange = false;
   private boolean addSinceLastRecord = false;
@@ -21,43 +23,42 @@ public class Change {
 
   private LinkedList<Boolean> record = new LinkedList<>();
   private LinkedList<Changeable> stack = new LinkedList<>();
-  
-  public void _cleanChangeable(Object component) {
-    for (int i = 0; i < stack.size(); ++i) {
-      if (stack.get(i).getAssociedComponent() == component) {
-        stack.remove(i);
-        record.remove(i);
-        pointer--;
-      }
-    }
-    
-    _checkToolbarButtonState();
-  }
-  
-  public static void cleanChangeable(GraphicView gv, Object component) {
-    if (changes.containsKey(gv))
-      changes.get(gv)._cleanChangeable(component);
-  }
 
   public void _clear() {
     stack.clear();
     record.clear();
     pointer = 0;
-    _setHasChange(false);
+    setHasChange(false);
     
-    _printStackState();
-  }  
+    printStackState();
+  }
+  
+  public static void clear() {
+    getInstance()._clear();
+  }
 
   public void _setHasChange(boolean changed) {
     _hasChange = changed;
     
     Slyum.setStarOnTitle(changed);
     
-    _checkToolbarButtonState();
+    checkToolbarButtonState();
+  }
+  
+  public static void setHasChange(boolean changed) {
+    getInstance()._setHasChange(changed);
+  }
+  
+  public static Changeable getLast() {
+    return getInstance()._getLast();
   }
 
   public Changeable _getLast() {
     return stack.getLast();
+  }
+  
+  public static int getSize() {
+    return getInstance()._getSize();
   }
 
   public int _getSize() {
@@ -68,16 +69,36 @@ public class Change {
     return _hasChange;
   }
 
+  public static boolean hasChange() {
+    return getInstance()._hasChange();
+  }
+
   public boolean _isBlocked() {
     return block;
+  }
+
+  public static boolean isBlocked() {
+    return getInstance()._isBlocked();
   }
 
   public void _setBlocked(boolean blocked) {
     block = blocked;
   }
 
+  public static void setBlocked(boolean blocked) {
+    getInstance()._setBlocked(blocked);
+  }
+
   public boolean _isRecord() {
     return isRecord;
+  }
+
+  public static boolean isRecord() {
+    return getInstance()._isRecord();
+  }
+  
+  public static void pop() {
+    getInstance()._pop();
   }
 
   public void _pop() {
@@ -102,15 +123,19 @@ public class Change {
     stack.add(ch);
     record.add(isRecord);
 
-    if (_isRecord()) addSinceLastRecord = true;
+    if (isRecord()) addSinceLastRecord = true;
 
     pointer = stack.size() - 1;
 
-    _printStackState();
+    printStackState();
 
-    _checkToolbarButtonState();
+    checkToolbarButtonState();
 
-    _setHasChange(true);
+    setHasChange(true);
+  }
+  
+  public static void push(Changeable ch) {
+    getInstance()._push(ch);
   }
 
   /**
@@ -123,23 +148,27 @@ public class Change {
     isRecord = true;
   }
   
+  public static void record() {
+    getInstance()._record();
+  }
+  
   public void _redo() {
     if (pointer >= stack.size() - 1) return;
 
     final int increment = pointer % 2 == 0 ? 1 : 2;
 
-    final boolean isBlocked = _isBlocked();
-    _setBlocked(true);
+    final boolean isBlocked = isBlocked();
+    setBlocked(true);
     stack.get(pointer += increment).restore();
-    _setBlocked(isBlocked);
+    setBlocked(isBlocked);
 
-    _printStackState();
+    printStackState();
 
-    _checkToolbarButtonState();
+    checkToolbarButtonState();
 
-    _setHasChange(true);
+    setHasChange(true);
 
-    if (record.get(pointer)) _redo();
+    if (record.get(pointer)) redo();
   }
 
   /**
@@ -164,7 +193,19 @@ public class Change {
     record.set(b + 1, false);
     record.set(pointer, false);
 
-    _printStackState();
+    printStackState();
+  }
+  
+  public static void stopRecord() {
+    getInstance()._stopRecord();
+  }
+  
+  public static void undo() {
+    getInstance()._undo();
+  }
+  
+  public static void redo() {
+    getInstance()._redo();
   }
   
   public void _undo() {
@@ -172,17 +213,21 @@ public class Change {
     
     final int decrement = pointer % 2 > 0 ? 1 : 2;
     
-    final boolean isBlocked = _isBlocked();
-    _setBlocked(true);
+    final boolean isBlocked = isBlocked();
+    setBlocked(true);
     stack.get(pointer -= decrement).restore();
-    _setBlocked(isBlocked);
+    setBlocked(isBlocked);
     
-    _printStackState();
-    _checkToolbarButtonState();
-    _setHasChange(true);
+    printStackState();
+    checkToolbarButtonState();
+    setHasChange(true);
     
     if (record.get(pointer))
-      _undo();
+      undo();
+  }
+  
+  public static void checkToolbarButtonState() {
+    getInstance()._checkToolbarButtonState();
   }
 
   public void _checkToolbarButtonState() {
@@ -192,16 +237,8 @@ public class Change {
     Slyum.setEnableRedoButtons(pointer < stack.size() - 1);
     Slyum.setEnableUndoButtons(pointer > 0);
   }
-
-  public static GraphicView getCurrentGraphicView() {
-    return currentGraphicView;
-  }
-
-  public static void setCurrentGraphicView(GraphicView currentGraphicView) {
-    Change.currentGraphicView = currentGraphicView;
-  }
   
-  private void _printStackState() {
+  private void printStackState() {
     if (!Slyum.argumentIsChangeStackStatePrinted()) return;
     
     System.out.println("Etat de la pile");
@@ -211,106 +248,5 @@ public class Change {
               + (pointer == i ? " <--" : ""));
 
     System.out.println("--------------");
-  }
-
-  public static Change getCurrentChangeObject() {
-    GraphicView chosenGraphicView = getCurrentGraphicView();
-    
-    if (chosenGraphicView == null)
-      chosenGraphicView = MultiViewManager.getSelectedGraphicView();
-    
-    if (!changes.containsKey(chosenGraphicView))
-      changes.put(chosenGraphicView, new Change());
-    
-    return changes.get(chosenGraphicView);
-  }
-  
-  public static Change getGraphicViewChangeObject(GraphicView graphicView) {
-    
-    if (!changes.containsKey(graphicView))
-      return null;
-    
-    return changes.get(graphicView);
-  }
-
-  public static void clear() {
-    getCurrentChangeObject()._clear();
-  }
-
-  public static void clearAll() {
-    for (GraphicView gv : MultiViewManager.getAllGraphicViews()) {
-      Change change = getGraphicViewChangeObject(gv);
-      if (change != null)
-        change._clear();
-    }
-  }
-
-  public static void setHasChange(boolean changed) {
-    getCurrentChangeObject()._setHasChange(changed);
-  }
-
-  public static Changeable getLast() {
-    return getCurrentChangeObject()._getLast();
-  }
-
-  public static int getSize() {
-    return getCurrentChangeObject()._getSize();
-  }
-
-  public static boolean hasChange() {
-    return getCurrentChangeObject()._hasChange();
-  }
-
-  public static boolean isBlocked() {
-    return getCurrentChangeObject()._isBlocked();
-  }
-
-  public static void setBlocked(boolean blocked) {
-    getCurrentChangeObject()._setBlocked(blocked);
-  }
-
-  public static boolean isRecord() {
-    return getCurrentChangeObject()._isRecord();
-  }
-
-  public static void pop() {
-    getCurrentChangeObject()._pop();
-  }
-
-  public static void push(Changeable ch) {   
-    getCurrentChangeObject()._push(ch);
-  }
-
-  /**
-   * Begin a record. A record merge all new pushes in a same group. When undo /
-   * redo is called, all pushes into a group will be undo / redo at the same
-   * time.
-   */
-  public static void record() {
-    getCurrentChangeObject()._record();
-  }
-  
-  public static void redo() {
-    getCurrentChangeObject()._redo();
-  }
-
-  /**
-   * Stop the current record. If no record is currently running this method have
-   * no effect.
-   */
-  public static void stopRecord() {
-    getCurrentChangeObject()._stopRecord();
-  }
-  
-  public static void undo() {
-    getCurrentChangeObject()._undo();
-  }
-  
-  private static void printStackState() {
-    getCurrentChangeObject()._printStackState();
-  }
-
-  public static void checkToolbarButtonState() {
-    getCurrentChangeObject()._checkToolbarButtonState();
   }
 }

@@ -1,14 +1,12 @@
 package graphic.relations;
 
+import classDiagram.relationships.Aggregation;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-
-import classDiagram.relationships.Aggregation;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
@@ -137,5 +135,14 @@ public class AggregationView extends BinaryView {
   protected void drawExtremity(Graphics2D g2, Point source, Point target) {
     paintExtremity(g2, points.get(1).getAnchor(),
             points.getFirst().getAnchor(), Color.WHITE, getColor());
+  }
+  
+  @Override
+  public void restore() {
+    super.restore();
+    parent.getClassDiagram().addAggregation(
+            (Aggregation) getAssociedComponent());
+
+    repaint();
   }
 }

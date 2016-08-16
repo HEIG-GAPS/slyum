@@ -1,18 +1,15 @@
 package graphic.relations;
 
+import classDiagram.relationships.Multi;
+import classDiagram.relationships.Role;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.textbox.TextBoxRole;
-
 import java.awt.Point;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
 import utility.Utility;
-import classDiagram.relationships.Multi;
-import classDiagram.relationships.Role;
 
 /**
  * The LineView class represent a collection of lines making a link between two

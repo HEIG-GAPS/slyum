@@ -1,14 +1,6 @@
 package classDiagram;
 
 import change.Change;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import swing.XmlElement;
-import utility.Utility;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
@@ -24,7 +16,13 @@ import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Relation;
 import graphic.GraphicView;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Observable;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import swing.XmlElement;
+import utility.Utility;
 
 /**
  * This class contains all structurals UML components. Add classes, interfaces,
@@ -59,31 +57,37 @@ public class ClassDiagram extends Observable
   }
   
   public void addAggregation(Aggregation component) {
-    for (final IComponentsObserver c : observers)
-      c.notifyAggregationCreation(component);
-    addComponent(component);
+    
+    if (addComponent(component))
+      for (final IComponentsObserver c : observers)
+        c.notifyAggregationCreation(component);    
   }
 
   public void addAssociationClass(AssociationClass component) {
-    for (final IComponentsObserver c : observers)
-      c.notifyAssociationClassCreation(component);
+    
+    if (addComponent(component)) {
+      for (final IComponentsObserver c : observers)
+        c.notifyAssociationClassCreation(component);
 
-    addComponent(component);
-    entities.addFirst(component);
+
+      entities.addFirst(component);
+    }
   }
 
   public void addBinary(Binary component) {
-    for (final IComponentsObserver c : observers)
-      c.notifyBinaryCreation(component);
-
-    addComponent(component);
+    
+    if (addComponent(component))
+      for (final IComponentsObserver c : observers)
+        c.notifyBinaryCreation(component);
   }
 
   public void addClassEntity(ClassEntity component) {
-    for (final IComponentsObserver c : observers)
-      c.notifyClassEntityCreation(component);
-    addComponent(component);
-    entities.addFirst(component);
+    
+    if (addComponent(component)) {
+      for (final IComponentsObserver c : observers)
+        c.notifyClassEntityCreation(component);
+      entities.addFirst(component);
+    }
   }
 
   /**
@@ -98,48 +102,52 @@ public class ClassDiagram extends Observable
   }
 
   public void addComposition(Composition component) {
-    for (final IComponentsObserver c : observers)
-      c.notifyCompositionCreation(component);
-
-    addComponent(component);
+    
+    if (addComponent(component))
+      for (final IComponentsObserver c : observers)
+        c.notifyCompositionCreation(component);
   }
 
   public void addDependency(Dependency component) {
-    for (final IComponentsObserver c : observers)
-      c.notifyDependencyCreation(component);
     
-    addComponent(component);
+    if (addComponent(component))
+      for (final IComponentsObserver c : observers)
+        c.notifyDependencyCreation(component);
   }
 
   public void addEnumEntity(EnumEntity component) {
-    for (final IComponentsObserver c : observers)
-      c.notifyEnumEntityCreation(component);
     
-    addComponent(component);
-    entities.addFirst(component);
+    if (addComponent(component)) {
+      for (final IComponentsObserver c : observers)
+        c.notifyEnumEntityCreation(component);
+
+
+      entities.addFirst(component);
+    }
   }
 
   public void addInheritance(Inheritance component) {
-    for (final IComponentsObserver c : observers)
-      c.notifyInheritanceCreation(component);
-
-    addComponent(component);
+    
+    if (addComponent(component))
+      for (final IComponentsObserver c : observers)
+        c.notifyInheritanceCreation(component);
   }
 
   public void addInnerClass(InnerClass component) {
 
-    for (final IComponentsObserver c : observers)
-      c.notifyInnerClassCreation(component);
-
-    addComponent(component);
+    if (addComponent(component))
+      for (final IComponentsObserver c : observers)
+        c.notifyInnerClassCreation(component);
   }
 
   public void addInterfaceEntity(InterfaceEntity component) {
-    for (final IComponentsObserver c : observers)
-      c.notifyInterfaceEntityCreation(component);
+    
+    if (addComponent(component)) {
+      for (final IComponentsObserver c : observers)
+        c.notifyInterfaceEntityCreation(component);
 
-    addComponent(component);
-    entities.addFirst(component);
+      entities.addFirst(component);
+    }
   }
 
   public void addMulti(Multi component) {

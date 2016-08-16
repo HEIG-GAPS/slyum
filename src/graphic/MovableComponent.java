@@ -1,16 +1,14 @@
 package graphic;
 
+import change.BufferBounds;
+import change.BufferCreation;
+import change.Change;
 import graphic.entity.GripEntity;
 import graphic.relations.LineView;
-
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-
-import change.BufferBounds;
-import change.BufferCreation;
-import change.Change;
 
 /**
  * This graphic class represant all movable and resizable component with a ghost

@@ -1,11 +1,10 @@
 package classDiagram.components;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import change.BufferAttribute;
 import change.Change;
 import classDiagram.verifyName.TypeName;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Represent an attribute in UML structure.

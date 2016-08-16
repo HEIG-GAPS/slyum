@@ -1,13 +1,23 @@
 package graphic.entity;
 
+import change.BufferBounds;
+import change.BufferDeepCreation;
+import change.Change;
+import classDiagram.IDiagramComponent;
+import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.components.AssociationClass;
+import classDiagram.components.ClassEntity;
+import classDiagram.components.Entity;
+import classDiagram.components.EnumEntity;
+import classDiagram.components.InterfaceEntity;
 import graphic.ColoredComponent;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.MovableComponent;
+import graphic.relations.BinaryView;
 import graphic.relations.RelationGrip;
 import graphic.textbox.TextBox;
 import graphic.textbox.TextBoxEntityName;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -27,27 +37,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
+import swing.PanelClassDiagram;
 import swing.PropertyLoader;
 import swing.SPanelElement;
 import swing.Slyum;
 import utility.Utility;
-import change.BufferBounds;
-import change.Change;
-import classDiagram.IDiagramComponent;
-import classDiagram.IDiagramComponent.UpdateMessage;
-import classDiagram.components.AssociationClass;
-import classDiagram.components.ClassEntity;
-import classDiagram.components.Entity;
-import classDiagram.components.EnumEntity;
-import classDiagram.components.InterfaceEntity;
-import graphic.relations.BinaryView;
 
 /**
  * Represent the view of an entity in UML structure.
@@ -221,9 +219,9 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   /* Colors */
   public final Color DEFAULT_TEXT_COLOR = new Color(40, 40, 40);
   protected Entity component;
-  protected JMenuItem menuItemDelete;
-  protected JMenuItem menuItemMoveDown;
-  protected JMenuItem menuItemMoveUp;
+  protected JMenuItem menuItemDelete, menuItemMoveDown, 
+                      menuItemMoveUp;
+  
   protected TextBox pressedTextBox;
   protected GraphicComponent saveTextBoxMouseHover;
 
@@ -250,15 +248,12 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   }
   
   public void _delete() {
-    
-    Change.setCurrentGraphicView(parent);
     boolean isRecord = Change.isRecord();
     Change.record();
     
     delete();
     
     if (!isRecord) Change.stopRecord();
-    Change.setCurrentGraphicView(null);
   }
 
   @Override
@@ -274,6 +269,8 @@ public abstract class EntityView extends MovableComponent implements Observer, C
       else {
         _delete();
       }
+    } else if ("DeepDelete".equals(e.getActionCommand())) {
+      change.Helper.deepDeleteEntityView(this);
     } else if (Slyum.ACTION_DUPLICATE.equals(e.getActionCommand())) {
       if (pressedTextBox == null) parent.duplicateSelectedEntities();
     } else {
@@ -607,9 +604,11 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
       // If context menu is requested on a TextBox, customize popup menu.
       if (pressedTextBox == null) {
-        text += component.getName();
+        text += "from this view";
         menuItemMoveUp.setEnabled(false);
         menuItemMoveDown.setEnabled(false);
+      } else {
+        text += pressedTextBox.getText();
       }
       menuItemDelete.setText(text);
     }
@@ -818,9 +817,9 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
     popupMenu.addSeparator();
 
-    popupMenu
-            .add(makeMenuItem("Duplicate", Slyum.ACTION_DUPLICATE, "duplicate"));
-    popupMenu.add(menuItemDelete = makeMenuItem("Delete", "Delete", "delete"));
+    popupMenu.add(makeMenuItem("Duplicate", Slyum.ACTION_DUPLICATE, "duplicate"));
+    popupMenu.add(menuItemDelete = makeMenuItem("Delete from this view", "Delete", "delete"));
+    popupMenu.add(makeMenuItem("Delete", "DeepDelete", "delete"));
 
     popupMenu.addSeparator();
     initializeMenuViews(popupMenu);

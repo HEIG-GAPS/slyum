@@ -1,7 +1,9 @@
 package swing.propretiesView;
 
+import classDiagram.components.Visibility;
+import classDiagram.relationships.Multiplicity;
+import classDiagram.relationships.Role;
 import graphic.textbox.TextBoxMultiplicity;
-
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -11,17 +13,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
-
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-
 import swing.slyumCustomizedComponents.FlatPanel;
-import utility.Utility;
-import classDiagram.components.Visibility;
-import classDiagram.relationships.Multiplicity;
-import classDiagram.relationships.Role;
 import swing.slyumCustomizedComponents.TextFieldWithPrompt;
+import utility.Utility;
 
 /**
  * Represent a JPanel containing all Swing components for edit role.

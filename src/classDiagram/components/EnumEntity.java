@@ -1,14 +1,11 @@
 package classDiagram.components;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import change.BufferCreationEnumValue;
 import change.Change;
-
+import java.util.LinkedList;
+import java.util.List;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import swing.XMLParser.EntityType;
 
 public class EnumEntity extends Entity {

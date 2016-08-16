@@ -1,26 +1,23 @@
 package swing;
 
+import change.Change;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.ImageIcon;
-
-import utility.PersonalizedIcon;
-import swing.slyumCustomizedComponents.SSlider;
-import utility.Utility;
-import change.Change;
 import java.util.LinkedList;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import swing.SColorAssigner.RecentColorButton;
 import swing.slyumCustomizedComponents.SButton;
 import swing.slyumCustomizedComponents.SSeparator;
+import swing.slyumCustomizedComponents.SSlider;
 import swing.slyumCustomizedComponents.SToolBar;
 import swing.slyumCustomizedComponents.SToolBarButton;
+import utility.PersonalizedIcon;
+import utility.Utility;
 
 public class SPanelElement extends SToolBar implements ActionListener, IListenerComponentSelectionChanged {
   private static final String TT_UNDO = "Undo "

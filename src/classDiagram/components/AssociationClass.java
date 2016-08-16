@@ -1,13 +1,12 @@
 package classDiagram.components;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import swing.XMLParser.EntityType;
-import utility.Utility;
+import classDiagram.relationships.Association.NavigateDirection;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Role;
-import classDiagram.relationships.Association.NavigateDirection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import swing.XMLParser.EntityType;
+import utility.Utility;
 
 /**
  * Represent an association class in UML structure.

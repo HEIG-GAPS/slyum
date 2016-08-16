@@ -3,7 +3,6 @@ package graphic.factory;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -13,9 +12,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-
 import javax.swing.SwingUtilities;
-import swing.PanelClassDiagram;
 
 /**
  * EntityFactory allows to create a new entity view associated with a new entity

@@ -1,29 +1,27 @@
 package graphic.relations;
 
-import graphic.GraphicComponent;
-import graphic.GraphicView;
-import graphic.entity.EntityView;
-import graphic.entity.SimpleEntityView;
-
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-
-import swing.Slyum;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.SimpleEntity;
+import classDiagram.relationships.Binary;
 import classDiagram.relationships.Inheritance;
+import graphic.GraphicComponent;
+import graphic.GraphicView;
+import graphic.entity.EntityView;
+import graphic.entity.SimpleEntityView;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Stroke;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import swing.Slyum;
 import utility.SMessageDialog;
 
 /**
@@ -325,6 +323,16 @@ public class InheritanceView extends RelationView {
 
     // Remove useless grips (if the entities are aligned).
     searchUselessAnchor(getFirstPoint());
+  }
+  
+  @Override
+  public void restore() {
+    super.restore();
+
+    if (this.getClass().equals(InheritanceView.class))
+      parent.getClassDiagram().addInheritance((Inheritance) getAssociedComponent());
+
+    repaint();
   }
 
 }

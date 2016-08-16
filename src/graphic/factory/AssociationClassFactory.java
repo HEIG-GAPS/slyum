@@ -1,21 +1,19 @@
 package graphic.factory;
 
-import graphic.GraphicComponent;
-import graphic.GraphicView;
-import graphic.entity.AssociationClassView;
-import graphic.entity.ClassView;
-import graphic.relations.BinaryView;
-
-import java.awt.Point;
-import java.awt.Rectangle;
-
-import swing.SPanelDiagramComponent;
-import utility.SMessageDialog;
 import change.Change;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.Entity;
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Binary;
+import graphic.GraphicComponent;
+import graphic.GraphicView;
+import graphic.entity.AssociationClassView;
+import graphic.entity.ClassView;
+import graphic.relations.BinaryView;
+import java.awt.Point;
+import java.awt.Rectangle;
+import swing.SPanelDiagramComponent;
+import utility.SMessageDialog;
 
 /**
  * AssociationClassFactory allows to create a new association class view

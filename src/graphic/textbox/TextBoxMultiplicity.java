@@ -1,21 +1,18 @@
 package graphic.textbox;
 
+import classDiagram.relationships.Association;
+import classDiagram.relationships.Multiplicity;
+import classDiagram.relationships.Role;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.relations.AssociationView;
 import graphic.relations.LineView;
 import graphic.relations.MagneticGrip;
-
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.Observable;
-
 import javax.swing.SwingUtilities;
-
-import classDiagram.relationships.Association;
-import classDiagram.relationships.Multiplicity;
-import classDiagram.relationships.Role;
 
 /**
  * A TextBox is a graphic component from Slyum containing a String. The

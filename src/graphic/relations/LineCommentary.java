@@ -1,15 +1,12 @@
 package graphic.relations;
 
+import classDiagram.IDiagramComponent.UpdateMessage;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.textbox.TextBoxCommentary;
-
 import java.awt.BasicStroke;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
-
 import swing.propretiesView.NoteProperties;
-import classDiagram.IDiagramComponent.UpdateMessage;
 
 /**
  * The LineView class represent a collection of lines making a link between two

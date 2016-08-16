@@ -1,15 +1,13 @@
 package classDiagram.components;
 
-import java.util.Observable;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import change.BufferVariable;
 import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
 import classDiagram.verifyName.VariableName;
+import java.util.Observable;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Represent a variable in UML structure.

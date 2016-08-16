@@ -48,7 +48,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.helpers.DefaultHandler;
 import swing.propretiesView.DiagramPropreties;
-import utility.SMessageDialog;
 
 /**
  * This class read the XML file and create the diagram UML structured from this.
