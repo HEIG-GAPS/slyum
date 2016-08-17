@@ -1,5 +1,6 @@
 package graphic.entity;
 
+import change.BufferDeepCreation;
 import change.Change;
 import classDiagram.components.AssociationClass;
 import graphic.GraphicView;
@@ -87,11 +88,9 @@ public class AssociationClassView extends ClassView {
                     + bounds.height / 2), new Point(posSource.x
                     + (posTarget.x - posSource.x) / 2, posSource.y
                     + (posTarget.y + posSource.y) / 2), true));
-  }
-
-  @Override
-  protected void pushBufferCreation() {
     
+    Change.push(new BufferDeepCreation(false, binaryView.getAssociedComponent()));
+    Change.push(new BufferDeepCreation(true, binaryView.getAssociedComponent()));
   }
 
   @Override
@@ -102,7 +101,7 @@ public class AssociationClassView extends ClassView {
 
   @Override
   protected void restoreEntity() {
-    if (!componentAlreadyExists())
+    if (parent.getClassDiagram().searchComponentById(getAssociedComponent().getId()) == null)
       parent.getClassDiagram().addAssociationClass(
               (AssociationClass) getAssociedComponent());
   }

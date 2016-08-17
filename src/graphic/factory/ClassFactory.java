@@ -25,8 +25,6 @@ public class ClassFactory extends EntityFactory {
    * 
    * @param parent
    *          the graphic view
-   * @param classDiagram
-   *          the class diagram
    */
   public ClassFactory(GraphicView parent) {
     super(parent);

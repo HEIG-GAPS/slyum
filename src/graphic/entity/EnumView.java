@@ -263,7 +263,7 @@ public class EnumView extends EntityView {
   }
 
   protected void restoreEntity() {
-    if (!componentAlreadyExists())
+    if (parent.getClassDiagram().searchComponentById(getAssociedComponent().getId()) == null)
       parent.getClassDiagram().addEnumEntity((EnumEntity) getAssociedComponent());
   }
 

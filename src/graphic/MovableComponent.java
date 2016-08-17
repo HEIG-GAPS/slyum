@@ -2,6 +2,7 @@ package graphic;
 
 import change.BufferBounds;
 import change.BufferCreation;
+import change.BufferFirstCreation;
 import change.Change;
 import graphic.entity.GripEntity;
 import graphic.relations.LineView;
@@ -73,7 +74,7 @@ public abstract class MovableComponent extends GraphicComponent {
   }
 
   protected void pushBufferCreation() {
-    Change.push(new BufferCreation(false, this));
+    Change.push(new BufferFirstCreation(this));
     Change.push(new BufferCreation(true, this));
   }
 
