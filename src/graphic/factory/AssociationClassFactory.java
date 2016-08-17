@@ -1,5 +1,6 @@
 package graphic.factory;
 
+import change.BufferDeepCreation;
 import change.Change;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.Entity;
@@ -68,10 +69,17 @@ public class AssociationClassFactory extends RelationFactory {
 
         boolean isRecord = Change.isRecord();
         Change.record();
+        
+        BufferDeepCreation buf1, buf2;
+        Change.push(buf1 = new BufferDeepCreation(false, null));
+        Change.push(buf2 = new BufferDeepCreation(true, null));
 
         acv = new AssociationClassView(parent, ac, source, target,
                 (Point) mousePressed.clone(), (Point) mouseReleased.clone(),
                 bounds);
+        
+        buf1.setComponent(acv.getBinaryView().getAssociedComponent());
+        buf2.setComponent(acv.getBinaryView().getAssociedComponent());    
 
         if (!isRecord) Change.stopRecord();
 

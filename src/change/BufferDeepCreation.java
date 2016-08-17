@@ -21,13 +21,8 @@ public class BufferDeepCreation implements Changeable {
 
   public BufferDeepCreation(boolean isCreated, IDiagramComponent component) {
     this.isCreated = isCreated;
-    this.component = component;
     
-    bufferedGraphicComponent = 
-      MultiViewManager.getAllGraphicViews().stream()
-          .filter(gv -> gv.searchAssociedComponent(component) != null)
-          .map(gv -> new BufferCreation(isCreated, gv.searchAssociedComponent(component)))
-          .collect(Collectors.toList());
+    setComponent(component);
   }
 
   @Override
@@ -38,6 +33,20 @@ public class BufferDeepCreation implements Changeable {
   @Override
   public Object getAssociedComponent() {
     return component;
+  }
+  
+  public void setComponent(IDiagramComponent component) {
+    
+    if (component == null)
+      return;
+    
+    this.component = component;
+    
+    bufferedGraphicComponent = 
+      MultiViewManager.getAllGraphicViews().stream()
+          .filter(gv -> gv.searchAssociedComponent(component) != null)
+          .map(gv -> new BufferCreation(isCreated, gv.searchAssociedComponent(component)))
+          .collect(Collectors.toList());    
   }
 
 }

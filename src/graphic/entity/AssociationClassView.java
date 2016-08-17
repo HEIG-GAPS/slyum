@@ -88,9 +88,6 @@ public class AssociationClassView extends ClassView {
                     + bounds.height / 2), new Point(posSource.x
                     + (posTarget.x - posSource.x) / 2, posSource.y
                     + (posTarget.y + posSource.y) / 2), true));
-    
-    Change.push(new BufferDeepCreation(false, binaryView.getAssociedComponent()));
-    Change.push(new BufferDeepCreation(true, binaryView.getAssociedComponent()));
   }
 
   @Override
