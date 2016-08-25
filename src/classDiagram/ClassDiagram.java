@@ -1,5 +1,6 @@
 package classDiagram;
 
+import change.BufferDiagramComponentCreation;
 import change.Change;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.ClassEntity;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Observable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import swing.MultiViewManager;
 import swing.XmlElement;
 import utility.Utility;
 
@@ -96,12 +98,17 @@ public class ClassDiagram extends Observable
         if (notifyGraphicView || !(c instanceof GraphicView))
           c.notifyBinaryCreation(component);
   }
-
+  
   public void addClassEntity(ClassEntity component) {
+    addClassEntity(component, true);
+  }
+
+  public void addClassEntity(ClassEntity component, boolean notifyGraphicView) {
     
     if (addComponent(component)) {
       for (final IComponentsObserver c : observers)
-        c.notifyClassEntityCreation(component);
+        if (notifyGraphicView || !(c instanceof GraphicView))
+          c.notifyClassEntityCreation(component);
       entities.addFirst(component);
     }
   }
@@ -140,12 +147,17 @@ public class ClassDiagram extends Observable
         if (notifyGraphicView || !(c instanceof GraphicView))
           c.notifyDependencyCreation(component);
   }
-
+  
   public void addEnumEntity(EnumEntity component) {
+    addEnumEntity(component, true);
+  }
+
+  public void addEnumEntity(EnumEntity component, boolean notifyGraphicView) {
     
     if (addComponent(component)) {
       for (final IComponentsObserver c : observers)
-        c.notifyEnumEntityCreation(component);
+        if (notifyGraphicView || !(c instanceof GraphicView))
+          c.notifyEnumEntityCreation(component);
 
       entities.addFirst(component);
     }
@@ -174,12 +186,17 @@ public class ClassDiagram extends Observable
         if (notifyGraphicView || !(c instanceof GraphicView))
           c.notifyInnerClassCreation(component);
   }
-
+  
   public void addInterfaceEntity(InterfaceEntity component) {
+    addInterfaceEntity(component, true);
+  }
+
+  public void addInterfaceEntity(InterfaceEntity component, boolean notifyGraphicView) {
     
     if (addComponent(component)) {
       for (final IComponentsObserver c : observers)
-        c.notifyInterfaceEntityCreation(component);
+        if (notifyGraphicView || !(c instanceof GraphicView))
+          c.notifyInterfaceEntityCreation(component);
 
       entities.addFirst(component);
     }
@@ -375,10 +392,39 @@ public class ClassDiagram extends Observable
 
     // Optimizes this (create more array for specific elements, not just an
     // array for all components.
-    if (component instanceof Entity) 
+    if (component instanceof Entity)
       entities.remove((Entity)component);
 
     observers.stream().forEach(c -> c.notifyRemoveComponent(component));
+    
+    if (GraphicView.countGraphicComponentsAssociedWith(component) == 0) {
+      
+      boolean isRecord = Change.isRecord();
+      Change.record();
+      
+      Change.push(new BufferDiagramComponentCreation(true, component));
+      Change.push(new BufferDiagramComponentCreation(false, component));
+      
+      // Remove association class associed with relation.
+      for (Entity entity : getEntities())
+        if (entity instanceof AssociationClass && 
+            ((AssociationClass)entity).getAssociation() == component)
+          removeComponent(entity);
+      
+      // Remove associed relations.
+      for (Relation relation : getRelations())
+        if (component instanceof Entity && (
+              relation.getSource() == (Entity)component ||
+              relation.getTarget() == (Entity)component)) {
+          removeComponent(relation);
+        }
+      
+      removeComponent(component);
+      
+      if (!isRecord)
+        Change.stopRecord();
+     }
+    
   }
 
   /**

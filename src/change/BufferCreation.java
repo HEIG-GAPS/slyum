@@ -25,7 +25,7 @@ public class BufferCreation extends BufferGraphicView {
     } else {
       final boolean isBlocked = Change.isBlocked();
       Change.setBlocked(true);
-      gc.delete();
+      gc.lightDelete();
       Change.setBlocked(isBlocked);
     }
   }
