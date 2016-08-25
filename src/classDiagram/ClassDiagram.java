@@ -57,18 +57,28 @@ public class ClassDiagram extends Observable
   }
   
   public void addAggregation(Aggregation component) {
+    addAggregation(component, true);
+  }
+  
+  public void addAggregation(Aggregation component, boolean notifyGraphicView) {
     
     if (addComponent(component))
       for (final IComponentsObserver c : observers)
-        c.notifyAggregationCreation(component);    
+        if (notifyGraphicView || !(c instanceof GraphicView))
+          c.notifyAggregationCreation(component);    
   }
 
   public void addAssociationClass(AssociationClass component) {
+    addAssociationClass(component, true);
+  }
+  
+  public void addAssociationClass(AssociationClass component, boolean notifyGraphicView) {
     
     if (addComponent(component)) {
+      
       for (final IComponentsObserver c : observers)
-        c.notifyAssociationClassCreation(component);
-
+        if (notifyGraphicView || !(c instanceof GraphicView))
+          c.notifyAssociationClassCreation(component);
 
       entities.addFirst(component);
     }
@@ -76,9 +86,15 @@ public class ClassDiagram extends Observable
 
   public void addBinary(Binary component) {
     
+    addBinary(component, true);
+  }
+
+  public void addBinary(Binary component, boolean notifyGraphicView) {
+    
     if (addComponent(component))
       for (final IComponentsObserver c : observers)
-        c.notifyBinaryCreation(component);
+        if (notifyGraphicView || !(c instanceof GraphicView))
+          c.notifyBinaryCreation(component);
   }
 
   public void addClassEntity(ClassEntity component) {
@@ -100,19 +116,29 @@ public class ClassDiagram extends Observable
   public boolean addComponentsObserver(IComponentsObserver c) {
     return observers.add(c);
   }
-
+  
   public void addComposition(Composition component) {
-    
-    if (addComponent(component))
-      for (final IComponentsObserver c : observers)
-        c.notifyCompositionCreation(component);
+    addComposition(component, true);
   }
 
-  public void addDependency(Dependency component) {
+  public void addComposition(Composition component, boolean notifyGraphicView) {
     
     if (addComponent(component))
       for (final IComponentsObserver c : observers)
-        c.notifyDependencyCreation(component);
+        if (notifyGraphicView || !(c instanceof GraphicView))
+          c.notifyCompositionCreation(component);
+  }
+  
+  public void addDependency(Dependency component) {
+    addDependency(component, true);
+  }
+
+  public void addDependency(Dependency component, boolean notifyGraphicView) {
+    
+    if (addComponent(component))
+      for (final IComponentsObserver c : observers)
+        if (notifyGraphicView || !(c instanceof GraphicView))
+          c.notifyDependencyCreation(component);
   }
 
   public void addEnumEntity(EnumEntity component) {
@@ -121,23 +147,32 @@ public class ClassDiagram extends Observable
       for (final IComponentsObserver c : observers)
         c.notifyEnumEntityCreation(component);
 
-
       entities.addFirst(component);
     }
   }
-
+  
   public void addInheritance(Inheritance component) {
+    addInheritance(component, true);
+  }
+
+  public void addInheritance(Inheritance component, boolean notifyGraphicView) {
     
     if (addComponent(component))
       for (final IComponentsObserver c : observers)
-        c.notifyInheritanceCreation(component);
+        if (notifyGraphicView || !(c instanceof GraphicView))
+          c.notifyInheritanceCreation(component);
+  }
+  
+  public void addInnerClass(InnerClass component) {
+    addInnerClass(component, true);
   }
 
-  public void addInnerClass(InnerClass component) {
+  public void addInnerClass(InnerClass component, boolean notifyGraphicView) {
 
     if (addComponent(component))
       for (final IComponentsObserver c : observers)
-        c.notifyInnerClassCreation(component);
+        if (notifyGraphicView || !(c instanceof GraphicView))
+          c.notifyInnerClassCreation(component);
   }
 
   public void addInterfaceEntity(InterfaceEntity component) {
@@ -149,12 +184,17 @@ public class ClassDiagram extends Observable
       entities.addFirst(component);
     }
   }
-
+  
   public void addMulti(Multi component) {
+    addMulti(component, true);
+  }
+
+  public void addMulti(Multi component, boolean notifyGraphicView) {
     if (components.contains(component)) return;
 
     for (final IComponentsObserver c : observers)
-      c.notifyMultiCreation(component);
+      if (notifyGraphicView || !(c instanceof GraphicView))
+        c.notifyMultiCreation(component);
 
     addComponent(component);
   }
@@ -328,6 +368,9 @@ public class ClassDiagram extends Observable
   }
   
   public void removeComponent(IDiagramComponent component) {
+    if (!components.contains(component))
+      return;
+    
     components.remove(component);
 
     // Optimizes this (create more array for specific elements, not just an

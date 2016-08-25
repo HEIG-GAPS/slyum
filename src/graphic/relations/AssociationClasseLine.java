@@ -94,11 +94,21 @@ public class AssociationClasseLine extends LineView {
     if (PanelClassDiagram.getInstance().isXmlImportation()) {
       super.delete();
     } else {
-      boolean isBlocked = Change.isBlocked();
-      Change.setBlocked(true);
+      
+      boolean record = Change.isRecord();
+      Change.record();
+      
       super.delete();
-      getFirstPoint().getAssociedComponentView().delete();
-      Change.setBlocked(isBlocked);
+      
+      GraphicComponent classView = getFirstPoint().getAssociedComponentView();
+      if (parent.containsComponent(classView))
+        if (getIsLightDelete())
+          classView.lightDelete();
+        else
+          classView.delete();
+      
+      if (!record)
+        Change.stopRecord();
     }
   }
 }

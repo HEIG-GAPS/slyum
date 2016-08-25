@@ -158,7 +158,7 @@ public class DependencyView extends RelationView {
     super.restore();
 
     if (this.getClass().equals(DependencyView.class))
-      parent.getClassDiagram().addDependency((Dependency) getAssociedComponent());
+      parent.getClassDiagram().addDependency((Dependency) getAssociedComponent(), false);
 
     repaint();
   }

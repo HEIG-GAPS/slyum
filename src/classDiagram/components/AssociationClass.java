@@ -3,6 +3,7 @@ package classDiagram.components;
 import classDiagram.relationships.Association.NavigateDirection;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Role;
+import java.awt.datatransfer.DataFlavor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import swing.XMLParser.EntityType;
@@ -147,5 +148,10 @@ public class AssociationClass extends ClassEntity {
     if (binary == null) throw new IllegalArgumentException("binary is null");
 
     association = binary;
+  }
+
+  @Override
+  public DataFlavor[] getTransferDataFlavors() {
+    return new DataFlavor[] {};
   }
 }

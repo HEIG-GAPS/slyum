@@ -71,8 +71,8 @@ public abstract class EntityView extends MovableComponent implements Observer, C
         return new InterfaceView(graphicView, (InterfaceEntity)entity);
      else if (entity.getClass() == EnumEntity.class)
         return new EnumView(graphicView, (EnumEntity)entity);
-     else if (entity.getClass() == AssociationClass.class)
-       return new AssociationClassView(graphicView, (AssociationClass)entity, (BinaryView)graphicView.searchAssociedComponent(((AssociationClass)entity).getAssociation()), new Rectangle());
+     //else if (entity.getClass() == AssociationClass.class)
+       //return new AssociationClassView(graphicView, (AssociationClass)entity, (BinaryView)graphicView.searchAssociedComponent(((AssociationClass)entity).getAssociation()), new Rectangle());
     return null;
   }
 

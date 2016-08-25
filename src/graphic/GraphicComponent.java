@@ -4,6 +4,7 @@ package graphic;
 import change.BufferCreation;
 import change.Change;
 import classDiagram.IDiagramComponent;
+import graphic.relations.LineView;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -74,7 +75,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
   private boolean selected = false;
   private boolean visible = true;
-
+  private boolean isLightDelete;
 
   public GraphicComponent(GraphicView parent) {
     if (parent == null) 
@@ -149,21 +150,42 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
     // Unselect the component.
     setSelected(false);
-
-    Change.push(new BufferCreation(true, this));
-    Change.push(new BufferCreation(false, this));
+    
+    pushBufferDestruction();
 
     parent.removeComponent(this);
 
-    // Search and delete all lines (relations, associations, etc...)
-    // associated with this component.
-    parent.getLinesViewAssociedWith(this).stream().forEach(lv -> lv.lightDelete());
+    parent.getLinesViewAssociedWith(this).stream().forEach((lv) -> {
+      if (isLightDelete)
+        lv.lightDelete();
+      else
+        lv.delete();
+    });
     
     PanelClassDiagram.refreshHierarchicalView();
   }
-  
-  public void lightDelete() {
+
+  public boolean getIsLightDelete() {
+    return isLightDelete;
+  }
+
+  public final void lightDelete() {
+    boolean ld = isLightDelete;
+    isLightDelete = true;
     delete();
+    isLightDelete = ld;
+  }
+  
+  public final void hardDelete() {
+    boolean ld = isLightDelete;
+    isLightDelete = false;
+    delete();
+    isLightDelete = ld;
+  }
+  
+  protected void pushBufferDestruction() {
+    Change.push(new BufferCreation(true, this));
+    Change.push(new BufferCreation(false, this));
   }
 
   /**
@@ -576,6 +598,10 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
   protected boolean displayGeneralMenuItems() {
     return true;
+  }
+
+  public void userDelete() {
+    lightDelete();
   }
 
   /**

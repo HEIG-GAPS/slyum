@@ -198,14 +198,6 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
     super.delete();
     Change.setBlocked(isBlocked);
   }
-  
-  @Override
-  public void lightDelete() {
-    boolean isLigthDelete = ligthDelete;
-    ligthDelete = true;
-    delete();
-    ligthDelete = isLigthDelete;
-  }
 
   @Override
   public IDiagramComponent getAssociedComponent() {

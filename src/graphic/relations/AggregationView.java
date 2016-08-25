@@ -140,8 +140,7 @@ public class AggregationView extends BinaryView {
   @Override
   public void restore() {
     super.restore();
-    parent.getClassDiagram().addAggregation(
-            (Aggregation) getAssociedComponent());
+    parent.getClassDiagram().addAggregation((Aggregation) getAssociedComponent(), false);
 
     repaint();
   }

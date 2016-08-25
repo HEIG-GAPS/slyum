@@ -21,6 +21,7 @@ import java.util.List;
 import utility.Utility;
 import change.BufferBounds;
 import change.BufferCreation;
+import change.BufferDeepCreation;
 import change.Change;
 import classDiagram.IDiagramComponent;
 import java.util.stream.Collectors;
@@ -76,7 +77,6 @@ public abstract class LineView extends GraphicComponent
   private boolean acceptGripCreation = false;
   private BufferBounds[] bb = new BufferBounds[2];
   private Point anchor1MousePressed, anchor2MousePressed;
-  protected boolean ligthDelete;
 
   // More ratio is bigger, more the line near horizontal / vertical degree
   // will be adjusted.
@@ -353,24 +353,29 @@ public abstract class LineView extends GraphicComponent
   }
 
   @Override
+  protected void pushBufferDestruction() {
+    super.pushBufferDestruction();
+    
+    //Change.push(new BufferDeepCreation(true, getAssociedComponent()));
+    //Change.push(new BufferDeepCreation(false, getAssociedComponent()));
+  }
+
+  @Override
   public void delete() {
     if (!parent.containsComponent(this)) return;
     
-   //if (ligthDelete)
-      super.delete();
-    //else
-      //deleteWithoutChanges();
+    super.delete();
     
     final boolean isBlocked = Change.isBlocked();
     Change.setBlocked(true);
 
     tbRoles.stream().forEach(tb -> tb.delete());
     points.stream().forEach(grip -> parent.removeComponent(grip));
-
-    if (!ligthDelete)
-      parent.getClassDiagram().removeComponent(getAssociedComponent());
     
     Change.setBlocked(isBlocked);
+
+    if (!getIsLightDelete())
+      parent.getClassDiagram().removeComponent(getAssociedComponent());
   }
   
   public void deleteWithoutChanges() {
@@ -379,13 +384,10 @@ public abstract class LineView extends GraphicComponent
     super.delete();
     Change.setBlocked(isBlocked);
   }
-  
+
   @Override
-  public void lightDelete() {
-    boolean isLigthDelete = ligthDelete;
-    ligthDelete = true;
-    delete();
-    ligthDelete = isLigthDelete;
+  public void userDelete() {
+    hardDelete();
   }
 
   /**
@@ -885,10 +887,13 @@ public abstract class LineView extends GraphicComponent
 
   @Override
   public void restore() {
+    
     super.restore();
     points.stream().forEach(grip -> parent.addOthersComponents(grip));
     tbRoles.stream().forEach(tb -> tb.restore());
+    
     parent.addLineView(this);
+    
     repaint();
   }
 

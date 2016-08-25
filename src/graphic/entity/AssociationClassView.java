@@ -100,7 +100,7 @@ public class AssociationClassView extends ClassView {
   protected void restoreEntity() {
     if (parent.getClassDiagram().searchComponentById(getAssociedComponent().getId()) == null)
       parent.getClassDiagram().addAssociationClass(
-              (AssociationClass) getAssociedComponent());
+              (AssociationClass) getAssociedComponent(), false);
   }
 
   public AssociationClasseLine getAcl() {
@@ -112,16 +112,28 @@ public class AssociationClassView extends ClassView {
   }
 
   @Override
+  public void userDelete() {
+    hardDelete();
+  }
+
+  @Override
   public void delete() {
     
     if (PanelClassDiagram.getInstance().isXmlImportation()) {
       super.delete();
-    } else {
-      boolean isBlocked = Change.isBlocked();
-      Change.setBlocked(true);
-      super.delete();
-      parent.getClassDiagram().removeComponent(getAssociedComponent());
-      Change.setBlocked(isBlocked);
+    } else {      
+      boolean record = Change.isRecord();
+      Change.record();
+      
+      if (getIsLightDelete()) {
+        super.delete();
+      } else {
+        parent.getClassDiagram().removeComponent(getAssociedComponent());
+        super.delete();
+      }
+      
+      if (!record)
+        Change.stopRecord();
     }
   }
 }

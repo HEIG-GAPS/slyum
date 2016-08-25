@@ -330,7 +330,7 @@ public class InheritanceView extends RelationView {
     super.restore();
 
     if (this.getClass().equals(InheritanceView.class))
-      parent.getClassDiagram().addInheritance((Inheritance) getAssociedComponent());
+      parent.getClassDiagram().addInheritance((Inheritance) getAssociedComponent(), false);
 
     repaint();
   }

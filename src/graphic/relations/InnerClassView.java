@@ -151,8 +151,7 @@ public class InnerClassView extends RelationView {
   @Override
   public void restore() {
     super.restore();
-    parent.getClassDiagram().addInnerClass(
-            (InnerClass) getAssociedComponent());
+    parent.getClassDiagram().addInnerClass((InnerClass) getAssociedComponent(), false);
 
     repaint();
   }

@@ -1,12 +1,8 @@
 package swing.hierarchicalView;
 
-import change.BufferDeepCreation;
-import change.Change;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
-import graphic.GraphicComponent;
-import graphic.entity.EntityView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;

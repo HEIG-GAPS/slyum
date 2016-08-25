@@ -769,7 +769,7 @@ public class XMLParser extends DefaultHandler {
             }
           } else {
             if (g instanceof EntityView)
-              g.delete();
+              g.lightDelete();
           }
         }
       }

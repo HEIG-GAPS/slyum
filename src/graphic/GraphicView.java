@@ -174,7 +174,7 @@ public class GraphicView extends GraphicComponent
     boolean isRecord = Change.isRecord();
     Change.record();
     
-    components.stream().forEach((c) -> { c.delete(); });
+    components.stream().forEach((c) -> { c.userDelete();});
     
     if (!isRecord) Change.stopRecord();
   }
@@ -2314,13 +2314,6 @@ public class GraphicView extends GraphicComponent
   }
 
   @Override
-  public void notifyEnumEntityCreation(EnumEntity component) {
-    if (MultiViewManager.getSelectedGraphicView() == this ||
-        PanelClassDiagram.getInstance().isXmlImportation())
-    addEnumEntity(component);
-  }
-
-  @Override
   public void notifyInheritanceCreation(Inheritance component) {
     addInheritance(component);
   }
@@ -2331,6 +2324,18 @@ public class GraphicView extends GraphicComponent
   }
   
   @Override
+  public void notifyMultiCreation(Multi component) {
+    addMulti(component);
+  }
+
+  @Override
+  public void notifyEnumEntityCreation(EnumEntity component) {
+    if (MultiViewManager.getSelectedGraphicView() == this ||
+        PanelClassDiagram.getInstance().isXmlImportation())
+    addEnumEntity(component);
+  }
+  
+  @Override
   public void notifyInterfaceEntityCreation(InterfaceEntity component) {
     if (MultiViewManager.getSelectedGraphicView() == this ||
         PanelClassDiagram.getInstance().isXmlImportation())
@@ -2338,15 +2343,10 @@ public class GraphicView extends GraphicComponent
   }
   
   @Override
-  public void notifyMultiCreation(Multi component) {
-    addMulti(component);
-  }
-  
-  @Override
   public void notifyRemoveComponent(IDiagramComponent component) {
     final GraphicComponent g = searchAssociedComponent(component);
     if (g != null)
-      g.delete();
+      g.hardDelete();
   }
   
   public void paintBackgroundFirst() {
@@ -2516,7 +2516,8 @@ public class GraphicView extends GraphicComponent
     if (search == null) return null;
 
     for (final GraphicComponent c : getAllComponents())
-      if (c.getAssociedComponent() == search) return c;
+      if (c.getAssociedComponent() == search) 
+        return c;
 
     return null;
   }
@@ -2817,7 +2818,8 @@ public class GraphicView extends GraphicComponent
   
   public boolean addEntityWithRelations(final EntityView entityView, final Point location) {
     
-    if (containsDiagramComponent(entityView.getAssociedComponent()))
+    GraphicComponent component = searchAssociedComponent(entityView.getAssociedComponent());
+    if (component != null)
     {
       SMessageDialog.showErrorMessage(
           "The entity " + ((Entity)entityView.getAssociedComponent()).getName() + 

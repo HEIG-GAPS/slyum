@@ -60,7 +60,7 @@ public class MultiLineView extends LineView {
     final int nbLineAssocied = parent.getLinesViewAssociedWith(mv).size();
 
     if (nbLineAssocied <= 3) {
-      if (ligthDelete)
+      if (getIsLightDelete())
         mv.lightDelete();
       else
         mv.delete();
@@ -68,7 +68,7 @@ public class MultiLineView extends LineView {
 
     super.delete();
     
-    if (!ligthDelete)
+    if (!getIsLightDelete())
       mv.connexionRemoved(this);
   }
 

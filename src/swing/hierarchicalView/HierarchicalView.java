@@ -99,17 +99,20 @@ public class HierarchicalView
   public static void sortAlphabetically(DefaultMutableTreeNode parent, DefaultTreeModel treeModel, STree tree) {
     int count = parent.getChildCount();
     
-    if (count < 2)
-      return;
+    tree.stopFireEvent = true;
+    treeModel.reload(parent);
+    tree.stopFireEvent = false;
     
-    // Sort childs.
-    for (int i = 0; i < count; ++i) {
-      DefaultMutableTreeNode child = (DefaultMutableTreeNode)parent.getChildAt(i);
-      if (!child.isLeaf())
-        sortAlphabetically(child, treeModel, tree);
+    if (count >= 2) {
+      // Sort childs.
+      for (int i = 0; i < count; ++i) {
+        DefaultMutableTreeNode child = (DefaultMutableTreeNode)parent.getChildAt(i);
+        if (!child.isLeaf())
+          sortAlphabetically(child, treeModel, tree);
+      }
+
+      quickSort(parent, 0, count-1);
     }
-    
-    quickSort(parent, 0, count-1);
     
     tree.stopFireEvent = true;
     treeModel.reload(parent);

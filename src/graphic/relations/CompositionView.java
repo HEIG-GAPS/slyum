@@ -91,8 +91,7 @@ public class CompositionView extends BinaryView {
   @Override
   public void restore() {
     super.restore();
-    parent.getClassDiagram().addComposition(
-            (Composition) getAssociedComponent());
+    parent.getClassDiagram().addComposition((Composition) getAssociedComponent(), false);
 
     repaint();
   }

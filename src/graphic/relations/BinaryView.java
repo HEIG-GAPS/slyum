@@ -67,7 +67,7 @@ public class BinaryView extends AssociationView {
     super.restore();
 
     if (this.getClass().equals(BinaryView.class))
-      parent.getClassDiagram().addBinary((Binary) getAssociedComponent());
+      parent.getClassDiagram().addBinary((Binary) getAssociedComponent(), false);
 
     repaint();
   }
