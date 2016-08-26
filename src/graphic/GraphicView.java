@@ -2835,27 +2835,49 @@ public class GraphicView extends GraphicComponent
     HashMap<Relation, Entity> linked = entity1.getLinkedEntities();
     for (Relation relation : linked.keySet()) {
       
-      // Is already in the GraphicView?
-      if (searchAssociedComponent(relation) != null)
-        continue;
-      
-      Entity entity2 = linked.get(relation);
-      if (containsDiagramComponent(entity2) || relation instanceof Multi) {
-        EntityView source = null, target = null, entityView2 = (EntityView)searchAssociedComponent(entity2);
+      if (relation instanceof Multi) {
+        Multi multi = (Multi)relation;
         
-        if (!(relation instanceof Multi))
-          if (relation.getSource() == entity1) {
-            source = entityView;
-            target = entityView2;
-          } else {
-            source = entityView2;
-            target = entityView;
+        MultiView multiView = (MultiView)searchAssociedComponent(multi);
+        boolean needCreation = true;
+        
+        if (multiView == null) {
+          
+          for (Role role : multi.getRoles()) {
+            GraphicComponent gc = searchAssociedComponent(role.getEntity());
+            if (gc == null || !(gc instanceof EntityView)) {
+              needCreation = false;
+              break;
+            }
           }
+          
+          if (needCreation)
+            addMultiView(multiView = new MultiView(parent, multi));
+        }
+      } else {
         
-        GraphicComponent gc = createAndAddRelation(relation, source, target);
-        
-        if (gc!= null && gc instanceof RelationView)
-          createdRelationViews.add((RelationView)gc);
+          // Is already in the GraphicView?
+        if (searchAssociedComponent(relation) != null)
+          continue;
+      
+        Entity entity2 = linked.get(relation);
+        if (containsDiagramComponent(entity2) || relation instanceof Multi) {
+          EntityView source = null, target = null, entityView2 = (EntityView)searchAssociedComponent(entity2);
+
+          if (!(relation instanceof Multi))
+            if (relation.getSource() == entity1) {
+              source = entityView;
+              target = entityView2;
+            } else {
+              source = entityView2;
+              target = entityView;
+            }
+
+          GraphicComponent gc = createAndAddRelation(relation, source, target);
+
+          if (gc!= null && gc instanceof RelationView)
+            createdRelationViews.add((RelationView)gc);
+        }
       }
     }
     

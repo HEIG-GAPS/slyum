@@ -1,5 +1,6 @@
 package graphic.relations;
 
+import change.BufferCreation;
 import change.Change;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
@@ -42,7 +43,6 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
   LinkedList<MultiLineView> mlvs = new LinkedList<>();
 
   private final Multi multi;
-  private boolean ligthDelete;
 
   /**
    * Create a new MultiView associated with the multi UML.
@@ -75,6 +75,9 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 
       final MultiLineView newmlv = new MultiLineView(parent, this, cv, role,
               middle, middleClass, false);
+      
+      Change.push(new BufferCreation(false, newmlv));
+      Change.push(new BufferCreation(true, newmlv));
 
       mlvs.add(newmlv);
       parent.addLineView(newmlv);
@@ -94,8 +97,6 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 
     final JMenuItem menuItem = makeMenuItem("Delete", "Delete", "delete");
     popupMenu.add(menuItem);
-    
-    super.pushBufferCreation();
 
     // Cet élément n'est pas redimensionnable. Suppression des grips.
     boolean isBlocked = Change.isBlocked();
@@ -118,6 +119,13 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 
     mlvs.add(mlv);
     parent.addLineView(mlv);
+  }
+  
+  @Override
+  protected void pushBufferCreation() {
+    
+    Change.push(new BufferCreation(false, this));
+    Change.push(new BufferCreation(true, this));
   }
 
   @Override
@@ -183,13 +191,15 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
   public void delete() {
     if (!parent.containsComponent(this)) return;
     
-    //if (ligthDelete)
-      super.delete();
-    //else
-      //deleteWithoutChanges();
+    super.delete();
 
-    if (!ligthDelete)
+    if (!getIsLightDelete())
       parent.getClassDiagram().removeComponent(getAssociedComponent());
+  }
+
+  @Override
+  public void userDelete() {
+    hardDelete();
   }
   
   public void deleteWithoutChanges() {
@@ -337,7 +347,7 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
     super.restore();
 
     parent.addMultiView(this);
-    //parent.getClassDiagram().addMulti(multi);
+    parent.getClassDiagram().addMulti(multi);
   }
 
   @Override

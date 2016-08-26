@@ -59,12 +59,10 @@ public class MultiLineView extends LineView {
     MultiView mv = (MultiView) getFirstPoint().getAssociedComponentView();
     final int nbLineAssocied = parent.getLinesViewAssociedWith(mv).size();
 
-    if (nbLineAssocied <= 3) {
-      if (getIsLightDelete())
-        mv.lightDelete();
-      else
-        mv.delete();
-    }
+    if (getIsLightDelete())
+      mv.lightDelete();
+    else if (nbLineAssocied <= 3)
+      mv.delete();
 
     super.delete();
     

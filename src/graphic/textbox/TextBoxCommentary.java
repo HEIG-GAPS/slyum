@@ -1,5 +1,7 @@
 package graphic.textbox;
 
+import change.BufferCreation;
+import change.BufferFirstCreation;
 import change.BufferNote;
 import change.Change;
 import classDiagram.IDiagramComponent;
@@ -306,6 +308,15 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
 
     parent.selectOnly(this);
     popupMenu.add(item);
+    
+    pushBufferCreation();
+  }
+
+  @Override
+  protected void pushBufferCreation() {
+    
+    Change.push(new BufferCreation(false, this));
+    Change.push(new BufferCreation(true, this));
   }
 
   @Override
