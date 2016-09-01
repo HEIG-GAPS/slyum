@@ -104,6 +104,9 @@ public class TextBoxRole extends TextBoxLabel {
     super(parent, roleToString(role));
 
     if (grip == null) throw new IllegalArgumentException("grip is null");
+    
+    if (parent.searchAssociedComponent(role) != null)
+      throw new IllegalArgumentException("This role is already present in this view.");
 
     this.role = role;
     role.addObserver(this);
@@ -158,7 +161,7 @@ public class TextBoxRole extends TextBoxLabel {
     super.delete();
 
     parent.removeComponent(this);
-    parent.removeComponent(tbm);
+    tbm.delete();
   }
 
   @Override

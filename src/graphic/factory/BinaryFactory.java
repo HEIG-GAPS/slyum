@@ -1,5 +1,6 @@
 package graphic.factory;
 
+import change.BufferCreation;
 import change.BufferDeepCreation;
 import change.Change;
 import classDiagram.components.ClassEntity;
@@ -87,6 +88,9 @@ public class BinaryFactory extends RelationFactory {
         return null;
       }
 
+      boolean isRecord = Change.isRecord();
+      Change.record();
+      
       final Multi multi = (Multi) multiView.getAssociedComponent();
       final Role role = new Role(multi,
               (ClassEntity) classView.getAssociedComponent(), "");
@@ -97,10 +101,22 @@ public class BinaryFactory extends RelationFactory {
       bounds = classView.getBounds();
       final Point classPos = new Point((int) bounds.getCenterX(),
               (int) bounds.getCenterY());
+      
+      for (MultiLineView mLineView : multiView.getMultiLinesView())
+        if (mLineView.getLastPoint().getAssociedComponentView().equals(classView)) {
+          mLineView.getTextBoxRole().stream().forEach(tbr -> tbr.delete());
+          multiView.removeMultiLineView(mLineView);
+        }
 
       final MultiLineView mlv = new MultiLineView(parent, multiView, classView,
               role, multiPos, classPos, false);
       multiView.addMultiLineView(mlv);
+      
+      Change.push(new BufferCreation(false, mlv));
+      Change.push(new BufferCreation(true, mlv));
+      
+      if (!isRecord)
+        Change.stopRecord();
 
       repaint();
       return mlv;

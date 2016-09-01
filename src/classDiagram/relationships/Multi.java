@@ -83,8 +83,45 @@ public class Multi extends Association {
     if (component == null)
       throw new IllegalArgumentException("component is null");
 
-    if (getRoles().stream().filter(r -> r.getEntity().getId() == component.getId()).count() == 0)
-      new Role(this, component, "");
+    if (getRoles().stream().filter(r -> r.getEntity().getId() == component.getId()).count() == 0) {
+      Role r = new Role(this, component, "");
+      setChanged();
+      notifyObservers(r);
+    }
+  }
+  
+  public void addRole(Role role, boolean notify) {
+    super.addRole(role);
+    
+    if (notify) {
+      setChanged();
+      notifyObservers(role); 
+    }
+  }
+
+  @Override
+  public void addRole(Role role) {
+    addRole(role, true);
+  }
+
+  @Override
+  public boolean removeRole(Role role) {
+    return removeRole(role, true);
+  }
+  
+  public boolean removeRole(Role role, boolean notify) {
+    if (super.removeRole(role)) {
+      if (notify) {
+        setChanged();
+        notifyObservers(role);
+      }
+      return true;
+    }
+    return false;
+  }
+  
+  public boolean containsRole(Role role) {
+    return getRoles().stream().filter(r -> r.equals(role)).count() > 0;
   }
 
   @Override
@@ -105,6 +142,13 @@ public class Multi extends Association {
     if (component == null)
       throw new IllegalArgumentException("component is null");
 
-    return removeRole(searchRoleByEntity(component));
+    Role r = searchRoleByEntity(component);
+    if (removeRole(r)) {
+      setChanged();
+      notifyObservers(r);
+      return true;
+    }
+    
+    return false;
   }
 }

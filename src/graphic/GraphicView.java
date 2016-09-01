@@ -2852,7 +2852,7 @@ public class GraphicView extends GraphicComponent
           }
           
           if (needCreation)
-            addMultiView(multiView = new MultiView(parent, multi));
+            addMultiView(new MultiView(parent, multi));
         }
       } else {
         

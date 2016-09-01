@@ -1,6 +1,7 @@
 package classDiagram.relationships;
 
 import classDiagram.ClassDiagram;
+import classDiagram.IComponentsObserver;
 import classDiagram.components.Entity;
 import graphic.textbox.ILabelTitle;
 import java.util.LinkedList;

@@ -9,6 +9,7 @@ import classDiagram.relationships.Binary;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Role;
 import graphic.ColoredComponent;
+import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.MovableComponent;
 import graphic.entity.ClassView;
@@ -158,8 +159,19 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
    *          the connexion that was removed
    */
   public void connexionRemoved(MultiLineView mlv) {
-    multi.removeRole((Role) mlv.getTextBoxRole().getFirst()
-            .getAssociedComponent());
+    connexionRemoved(mlv, true);
+  }
+
+  public void connexionRemoved(MultiLineView mlv, boolean notify) {
+    removeMultiLineView(mlv);
+    
+    mlv.getTextBoxRole().stream().forEach(
+      tbr -> multi.removeRole((Role)tbr.getAssociedComponent(), notify)
+    );
+  }
+  
+  public void removeMultiLineView(MultiLineView mlv) {
+    parent.removeComponent(mlv);
     mlvs.remove(mlv);
   }
 
@@ -422,20 +434,50 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 
   @Override
   public void update(Observable observable, Object o) {
-    if (o != null && o.getClass() == UpdateMessage.class)
-      switch ((UpdateMessage) o) {
-        case SELECT:
-          setSelected(true);
-          break;
+    if (o != null) {
+      if (o.getClass() == UpdateMessage.class) {
+        switch ((UpdateMessage) o) {
+          case SELECT:
+            setSelected(true);
+            break;
 
-        case UNSELECT:
-          setSelected(false);
-          break;
-        default:
-          break;
+          case UNSELECT:
+            setSelected(false);
+            break;
+          default:
+            break;
+        }
+      } else if (o.getClass() == Role.class) {
+        Role r = (Role)o;
+        if (r.getAssociation() instanceof Multi) {
+          
+          Multi m = (Multi)r.getAssociation();
+          GraphicComponent gc = parent.searchAssociedComponent(r.getEntity());
+          MultiLineView multiLineView = null;
+          
+          for (MultiLineView lineView : getMultiLinesView())
+            if (lineView.getLastPoint().getAssociedComponentView().equals(gc) ||
+                lineView.getFirstPoint().getAssociedComponentView().equals(gc)) {
+              multiLineView = lineView;
+              break;
+            }
+          
+          if (m.containsRole(r)) { // Role added.
+            if (gc != null && gc instanceof EntityView && multiLineView == null) {
+              MultiLineView mlv = new MultiLineView(parent, this, (EntityView)gc, r, middleBounds(), gc.middleBounds(), false);
+              addMultiLineView(mlv);
+              Change.push(new BufferCreation(false, mlv));
+              Change.push(new BufferCreation(true, mlv));
+            }
+            
+          } else { // Role removed.
+            if (multiLineView != null)
+              multiLineView.delete();
+          }
+        }
       }
-    else
-
+    } else {
       repaint();
+    }
   }
 }

@@ -57,30 +57,41 @@ public class MultiLineView extends LineView {
   @Override
   public void delete() {
     MultiView mv = (MultiView) getFirstPoint().getAssociedComponentView();
-    final int nbLineAssocied = parent.getLinesViewAssociedWith(mv).size();
 
     if (getIsLightDelete())
       mv.lightDelete();
-    else if (nbLineAssocied <= 3)
-      mv.delete();
 
     super.delete();
     
     if (!getIsLightDelete())
       mv.connexionRemoved(this);
+    
+    if (parent.getLinesViewAssociedWith(mv).size() < 3)
+      mv.delete();
   }
 
   @Override
   public void restore() {
-    super.restore();
-
+    if (parent.searchAssociedComponent(((TextBoxRole)tbRoles.getFirst()).getRole()) != null)
+      return;
+    
     MultiView mv = (MultiView) getFirstPoint().getAssociedComponentView();
     Multi m = (Multi) mv.getAssociedComponent();
     TextBoxRole tbr = (TextBoxRole) tbRoles.getFirst();
-    m.addRole(tbr.getRole());
-    mv.addMultiLineView(this);
+        
+    super.restore();
 
-    mv.restore();
+    mv.addMultiLineView(this);
+    
+    if (!m.containsRole(tbr.getRole()))
+      m.addRole(tbr.getRole(), false);
+    
+    //mv.restore();
+  }
+
+  @Override
+  public void addLineViewToParent() {
+    
   }
 
   @Override

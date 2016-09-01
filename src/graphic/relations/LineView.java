@@ -892,9 +892,13 @@ public abstract class LineView extends GraphicComponent
     points.stream().forEach(grip -> parent.addOthersComponents(grip));
     tbRoles.stream().forEach(tb -> tb.restore());
     
-    parent.addLineView(this);
+    addLineViewToParent();
     
     repaint();
+  }
+  
+  public void addLineViewToParent() {
+    parent.addLineView(this);
   }
 
   /**
