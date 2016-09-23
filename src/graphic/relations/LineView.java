@@ -1031,7 +1031,7 @@ public abstract class LineView extends GraphicComponent
     return new BasicStroke(LINE_WIDTH);
   }
 
-  private boolean mustPaintIntersection(LineView otherLineView) {
+  protected boolean mustPaintIntersection(LineView otherLineView) {
     return lineStroke.equals(otherLineView.lineStroke);
   }
 }

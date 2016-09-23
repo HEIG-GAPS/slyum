@@ -335,4 +335,10 @@ public class InheritanceView extends RelationView {
     repaint();
   }
 
+  @Override
+  protected boolean mustPaintIntersection(LineView otherLineView) {
+    return super.mustPaintIntersection(otherLineView) &&
+           !(otherLineView instanceof InheritanceView);
+  }
+
 }

@@ -85,8 +85,6 @@ public class MultiLineView extends LineView {
     
     if (!m.containsRole(tbr.getRole()))
       m.addRole(tbr.getRole(), false);
-    
-    //mv.restore();
   }
 
   @Override
