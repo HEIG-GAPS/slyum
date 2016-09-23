@@ -1,15 +1,13 @@
 package classDiagram.components;
 
-import java.util.LinkedList;
-import java.util.Observable;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
 import classDiagram.verifyName.TypeName;
+import java.util.LinkedList;
+import java.util.Observable;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Represent a type in UML structure.

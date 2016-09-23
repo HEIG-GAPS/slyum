@@ -1,19 +1,16 @@
 package graphic.relations;
 
 import change.Change;
+import classDiagram.IDiagramComponent;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
-
 import java.awt.BasicStroke;
 import java.awt.Point;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import utility.Utility;
-import classDiagram.IDiagramComponent;
 import swing.PanelClassDiagram;
+import utility.Utility;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -97,11 +94,21 @@ public class AssociationClasseLine extends LineView {
     if (PanelClassDiagram.getInstance().isXmlImportation()) {
       super.delete();
     } else {
-      boolean isBlocked = Change.isBlocked();
-      Change.setBlocked(true);
+      
+      boolean record = Change.isRecord();
+      Change.record();
+      
       super.delete();
-      getFirstPoint().getAssociedComponentView().delete();
-      Change.setBlocked(isBlocked);
+      
+      GraphicComponent classView = getFirstPoint().getAssociedComponentView();
+      if (parent.containsComponent(classView))
+        if (getIsLightDelete())
+          classView.lightDelete();
+        else
+          classView.delete();
+      
+      if (!record)
+        Change.stopRecord();
     }
   }
 }

@@ -7,9 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-
 import javax.swing.ImageIcon;
-
 import utility.Utility;
 
 public abstract class ButtonCross extends GraphicComponent {

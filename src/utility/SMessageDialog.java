@@ -1,9 +1,7 @@
 package utility;
 
 import java.awt.Component;
-
 import javax.swing.JOptionPane;
-
 import swing.Slyum;
 
 public class SMessageDialog {

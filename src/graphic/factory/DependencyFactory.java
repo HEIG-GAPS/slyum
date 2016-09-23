@@ -1,16 +1,16 @@
 package graphic.factory;
 
+import change.BufferDeepCreation;
+import change.Change;
+import classDiagram.relationships.Dependency;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.relations.DependencyView;
-
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
-
 import swing.SPanelDiagramComponent;
 import utility.SMessageDialog;
-import classDiagram.relationships.Dependency;
 
 /**
  * DependencyFactory allows to create a new dependency view associated with a
@@ -56,6 +56,9 @@ public class DependencyFactory extends RelationFactory {
 
       parent.addLineView(d);
       classDiagram.addDependency(dependency);
+      
+      Change.push(new BufferDeepCreation(false, dependency));
+      Change.push(new BufferDeepCreation(true, dependency));
 
       parent.unselectAll();
       d.setSelected(true);

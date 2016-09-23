@@ -3,13 +3,11 @@ package graphic.textbox;
 import graphic.GraphicView;
 import graphic.relations.LineView;
 import graphic.relations.RelationGrip;
-
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.Observable;
-
 import javax.swing.SwingUtilities;
 
 /**

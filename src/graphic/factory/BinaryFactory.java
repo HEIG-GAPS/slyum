@@ -1,5 +1,13 @@
 package graphic.factory;
 
+import change.BufferCreation;
+import change.BufferDeepCreation;
+import change.Change;
+import classDiagram.components.ClassEntity;
+import classDiagram.relationships.Association.NavigateDirection;
+import classDiagram.relationships.Binary;
+import classDiagram.relationships.Multi;
+import classDiagram.relationships.Role;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.ClassView;
@@ -7,17 +15,10 @@ import graphic.entity.EntityView;
 import graphic.relations.BinaryView;
 import graphic.relations.MultiLineView;
 import graphic.relations.MultiView;
-
 import java.awt.Point;
 import java.awt.Rectangle;
-
 import swing.SPanelDiagramComponent;
 import utility.SMessageDialog;
-import classDiagram.components.ClassEntity;
-import classDiagram.relationships.Binary;
-import classDiagram.relationships.Multi;
-import classDiagram.relationships.Role;
-import classDiagram.relationships.Association.NavigateDirection;
 
 /**
  * BinaryFactory allows to create a new binary view associated with a new
@@ -62,6 +63,9 @@ public class BinaryFactory extends RelationFactory {
 
       parent.addLineView(b);
       classDiagram.addBinary(binary);
+      
+      Change.push(new BufferDeepCreation(false, binary));
+      Change.push(new BufferDeepCreation(true, binary));
 
       parent.unselectAll();
       b.setSelected(true);
@@ -84,6 +88,9 @@ public class BinaryFactory extends RelationFactory {
         return null;
       }
 
+      boolean isRecord = Change.isRecord();
+      Change.record();
+      
       final Multi multi = (Multi) multiView.getAssociedComponent();
       final Role role = new Role(multi,
               (ClassEntity) classView.getAssociedComponent(), "");
@@ -94,10 +101,22 @@ public class BinaryFactory extends RelationFactory {
       bounds = classView.getBounds();
       final Point classPos = new Point((int) bounds.getCenterX(),
               (int) bounds.getCenterY());
+      
+      for (MultiLineView mLineView : multiView.getMultiLinesView())
+        if (mLineView.getLastPoint().getAssociedComponentView().equals(classView)) {
+          mLineView.getTextBoxRole().stream().forEach(tbr -> tbr.delete());
+          multiView.removeMultiLineView(mLineView);
+        }
 
       final MultiLineView mlv = new MultiLineView(parent, multiView, classView,
               role, multiPos, classPos, false);
       multiView.addMultiLineView(mlv);
+      
+      Change.push(new BufferCreation(false, mlv));
+      Change.push(new BufferCreation(true, mlv));
+      
+      if (!isRecord)
+        Change.stopRecord();
 
       repaint();
       return mlv;

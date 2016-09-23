@@ -1,15 +1,13 @@
 package graphic.factory;
 
+import change.Change;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.textbox.TextBoxCommentary;
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-
 import swing.SPanelDiagramComponent;
-import change.Change;
 
 /**
  * NoteFactory allows to create a new note. Give this factory at the graphic

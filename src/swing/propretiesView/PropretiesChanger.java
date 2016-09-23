@@ -1,17 +1,9 @@
 package swing.propretiesView;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-
-import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
-
 import classDiagram.IComponentsObserver;
 import classDiagram.IDiagramComponent;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.ClassEntity;
-import classDiagram.components.Entity;
 import classDiagram.components.EnumEntity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.relationships.Aggregation;
@@ -23,6 +15,11 @@ import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
 import classDiagram.relationships.Role;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 import swing.slyumCustomizedComponents.SScrollPane;
 
 /**

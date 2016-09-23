@@ -1,14 +1,12 @@
 package graphic.relations;
 
+import classDiagram.relationships.Binary;
+import classDiagram.relationships.Role;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.textbox.TextBoxRole;
-
 import java.awt.Point;
 import java.util.LinkedList;
-
-import classDiagram.relationships.Binary;
-import classDiagram.relationships.Role;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -62,5 +60,15 @@ public class BinaryView extends AssociationView {
     tb = new TextBoxRole(parent, roles.getLast(), getLastPoint());
     tbRoles.add(tb);
     parent.addOthersComponents(tb);
+  }
+  
+  @Override
+  public void restore() {
+    super.restore();
+
+    if (this.getClass().equals(BinaryView.class))
+      parent.getClassDiagram().addBinary((Binary) getAssociedComponent(), false);
+
+    repaint();
   }
 }

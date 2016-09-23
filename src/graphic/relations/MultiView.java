@@ -1,12 +1,19 @@
 package graphic.relations;
 
+import change.BufferCreation;
 import change.Change;
+import classDiagram.IDiagramComponent;
+import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.relationships.Association.NavigateDirection;
+import classDiagram.relationships.Binary;
+import classDiagram.relationships.Multi;
+import classDiagram.relationships.Role;
 import graphic.ColoredComponent;
+import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.MovableComponent;
 import graphic.entity.ClassView;
 import graphic.entity.EntityView;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -19,19 +26,10 @@ import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
-
 import javax.swing.JMenuItem;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
 import utility.Utility;
-import classDiagram.IDiagramComponent;
-import classDiagram.IDiagramComponent.UpdateMessage;
-import classDiagram.relationships.Binary;
-import classDiagram.relationships.Multi;
-import classDiagram.relationships.Role;
-import classDiagram.relationships.Association.NavigateDirection;
 
 /**
  * MultiView is represented by a diamond and it represents a multi-association
@@ -46,7 +44,6 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
   LinkedList<MultiLineView> mlvs = new LinkedList<>();
 
   private final Multi multi;
-  private boolean ligthDelete;
 
   /**
    * Create a new MultiView associated with the multi UML.
@@ -79,6 +76,9 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 
       final MultiLineView newmlv = new MultiLineView(parent, this, cv, role,
               middle, middleClass, false);
+      
+      Change.push(new BufferCreation(false, newmlv));
+      Change.push(new BufferCreation(true, newmlv));
 
       mlvs.add(newmlv);
       parent.addLineView(newmlv);
@@ -106,28 +106,7 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
     rightMovableSquare.delete();
     Change.setBlocked(isBlocked);
   }
-
-  @Override
-  public void apply(MouseEvent e) {
-    boolean isBlocked = Change.isBlocked();
-    Change.setBlocked(true);
-    super.apply(e);
-    Change.setBlocked(isBlocked);
-  }
-
-  @Override
-  public void gMouseReleased(MouseEvent e) {
-    boolean isBlocked = Change.isBlocked();
-    Change.setBlocked(true);
-    super.gMouseReleased(e);
-    Change.setBlocked(isBlocked);
-  }
   
-  @Override
-  protected void pushBufferCreation() {
-
-  }
-
   @Override
   public void actionPerformed(ActionEvent e) {
     super.actionPerformed(e);
@@ -141,6 +120,13 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 
     mlvs.add(mlv);
     parent.addLineView(mlv);
+  }
+  
+  @Override
+  protected void pushBufferCreation() {
+    
+    Change.push(new BufferCreation(false, this));
+    Change.push(new BufferCreation(true, this));
   }
 
   @Override
@@ -173,8 +159,19 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
    *          the connexion that was removed
    */
   public void connexionRemoved(MultiLineView mlv) {
-    multi.removeRole((Role) mlv.getTextBoxRole().getFirst()
-            .getAssociedComponent());
+    connexionRemoved(mlv, true);
+  }
+
+  public void connexionRemoved(MultiLineView mlv, boolean notify) {
+    removeMultiLineView(mlv);
+    
+    mlv.getTextBoxRole().stream().forEach(
+      tbr -> multi.removeRole((Role)tbr.getAssociedComponent(), notify)
+    );
+  }
+  
+  public void removeMultiLineView(MultiLineView mlv) {
+    parent.removeComponent(mlv);
     mlvs.remove(mlv);
   }
 
@@ -206,13 +203,15 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
   public void delete() {
     if (!parent.containsComponent(this)) return;
     
-    if (ligthDelete)
-      super.delete();
-    else
-      deleteWithoutChanges();
+    super.delete();
 
-    if (!ligthDelete)
+    if (!getIsLightDelete())
       parent.getClassDiagram().removeComponent(getAssociedComponent());
+  }
+
+  @Override
+  public void userDelete() {
+    hardDelete();
   }
   
   public void deleteWithoutChanges() {
@@ -220,14 +219,6 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
     Change.setBlocked(true);
     super.delete();
     Change.setBlocked(isBlocked);
-  }
-  
-  @Override
-  public void lightDelete() {
-    boolean isLigthDelete = ligthDelete;
-    ligthDelete = true;
-    delete();
-    ligthDelete = isLigthDelete;
   }
 
   @Override
@@ -368,7 +359,7 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
     super.restore();
 
     parent.addMultiView(this);
-    //parent.getClassDiagram().addMulti(multi);
+    parent.getClassDiagram().addMulti(multi);
   }
 
   @Override
@@ -443,20 +434,50 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 
   @Override
   public void update(Observable observable, Object o) {
-    if (o != null && o.getClass() == UpdateMessage.class)
-      switch ((UpdateMessage) o) {
-        case SELECT:
-          setSelected(true);
-          break;
+    if (o != null) {
+      if (o.getClass() == UpdateMessage.class) {
+        switch ((UpdateMessage) o) {
+          case SELECT:
+            setSelected(true);
+            break;
 
-        case UNSELECT:
-          setSelected(false);
-          break;
-        default:
-          break;
+          case UNSELECT:
+            setSelected(false);
+            break;
+          default:
+            break;
+        }
+      } else if (o.getClass() == Role.class) {
+        Role r = (Role)o;
+        if (r.getAssociation() instanceof Multi) {
+          
+          Multi m = (Multi)r.getAssociation();
+          GraphicComponent gc = parent.searchAssociedComponent(r.getEntity());
+          MultiLineView multiLineView = null;
+          
+          for (MultiLineView lineView : getMultiLinesView())
+            if (lineView.getLastPoint().getAssociedComponentView().equals(gc) ||
+                lineView.getFirstPoint().getAssociedComponentView().equals(gc)) {
+              multiLineView = lineView;
+              break;
+            }
+          
+          if (m.containsRole(r)) { // Role added.
+            if (gc != null && gc instanceof EntityView && multiLineView == null) {
+              MultiLineView mlv = new MultiLineView(parent, this, (EntityView)gc, r, middleBounds(), gc.middleBounds(), false);
+              addMultiLineView(mlv);
+              Change.push(new BufferCreation(false, mlv));
+              Change.push(new BufferCreation(true, mlv));
+            }
+            
+          } else { // Role removed.
+            if (multiLineView != null)
+              multiLineView.delete();
+          }
+        }
       }
-    else
-
+    } else {
       repaint();
+    }
   }
 }

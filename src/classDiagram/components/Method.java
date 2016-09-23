@@ -1,15 +1,5 @@
 package classDiagram.components;
 
-import graphic.GraphicView;
-
-import java.util.LinkedList;
-import java.util.Observable;
-import java.util.Observer;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import utility.SMessageDialog;
 import change.BufferMethod;
 import change.Change;
 import classDiagram.ClassDiagram;
@@ -17,10 +7,16 @@ import classDiagram.IDiagramComponent;
 import classDiagram.verifyName.MethodName;
 import classDiagram.verifyName.TypeName;
 import classDiagram.verifyName.VariableName;
+import java.util.LinkedList;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.ImageIcon;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import swing.PanelClassDiagram;
 import swing.Slyum;
 import utility.PersonalizedIcon;
+import utility.SMessageDialog;
 
 /**
  * Represent a method in UML structure.

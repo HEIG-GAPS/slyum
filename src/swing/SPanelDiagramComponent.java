@@ -1,9 +1,5 @@
 package swing;
 
-import swing.slyumCustomizedComponents.SButton;
-import swing.slyumCustomizedComponents.SSeparator;
-import swing.slyumCustomizedComponents.SToolBar;
-import swing.slyumCustomizedComponents.SToolBarButton;
 import graphic.GraphicView;
 import graphic.factory.AggregationFactory;
 import graphic.factory.AssociationClassFactory;
@@ -18,16 +14,17 @@ import graphic.factory.InterfaceFactory;
 import graphic.factory.LineCommentaryFactory;
 import graphic.factory.MultiFactory;
 import graphic.factory.NoteFactory;
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.ImageIcon;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
+import swing.slyumCustomizedComponents.SButton;
+import swing.slyumCustomizedComponents.SSeparator;
+import swing.slyumCustomizedComponents.SToolBar;
+import swing.slyumCustomizedComponents.SToolBarButton;
 import utility.PersonalizedIcon;
 import utility.Utility;
 

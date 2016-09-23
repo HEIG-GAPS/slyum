@@ -3,7 +3,6 @@ package swing.slyumCustomizedComponents;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
-
 import javax.swing.Icon;
 
 public class SToolBarButton extends SButton {

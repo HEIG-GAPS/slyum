@@ -1,10 +1,10 @@
 package graphic.factory;
 
+import change.Change;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.relations.LineView;
 import graphic.relations.RelationGrip;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -14,9 +14,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.swing.SwingUtilities;
-
 import utility.Utility;
 
 /**
@@ -163,6 +161,10 @@ public abstract class RelationFactory extends ComponentFactory {
 
     componentMouseReleased = parent.getComponentAtPosition(mouseReleased);
 
+    boolean isRecord = Change.isRecord();
+    Change.record();
+        
+        
     points.add(mouseLocation);
     if ((createdComponent = view = create()) != null) {
       parent.deleteCurrentFactory();
@@ -171,7 +173,7 @@ public abstract class RelationFactory extends ComponentFactory {
 
       if (view instanceof LineView && points.size() > 2) {
         ((LineView) view).removeAllGrip();
-
+        
         // Middle grip
         for (int i = 1; i < points.size() - 1; i++) {
           grip = new RelationGrip(parent, (LineView) view);
@@ -195,6 +197,9 @@ public abstract class RelationFactory extends ComponentFactory {
         });
       }
     }
+        
+    if (!isRecord)
+      Change.stopRecord();
   }
 
   @Override

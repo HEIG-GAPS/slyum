@@ -1,17 +1,14 @@
 package graphic.entity;
 
+import change.BufferDeepCreation;
+import change.Change;
+import classDiagram.components.AssociationClass;
 import graphic.GraphicView;
 import graphic.relations.AssociationClasseLine;
 import graphic.relations.BinaryView;
-
 import java.awt.Point;
 import java.awt.Rectangle;
-
-import change.BufferCreation;
-import change.Change;
-import classDiagram.components.AssociationClass;
 import swing.PanelClassDiagram;
-import swing.Slyum;
 
 /**
  * Represent the view of an association class in UML structure.
@@ -94,11 +91,6 @@ public class AssociationClassView extends ClassView {
   }
 
   @Override
-  protected void pushBufferCreation() {
-    
-  }
-
-  @Override
   public void restore() {
     super.restore();
     acl.restore();
@@ -106,9 +98,9 @@ public class AssociationClassView extends ClassView {
 
   @Override
   protected void restoreEntity() {
-    if (!componentAlreadyExists())
+    if (parent.getClassDiagram().searchComponentById(getAssociedComponent().getId()) == null)
       parent.getClassDiagram().addAssociationClass(
-              (AssociationClass) getAssociedComponent());
+              (AssociationClass) getAssociedComponent(), false);
   }
 
   public AssociationClasseLine getAcl() {
@@ -120,17 +112,28 @@ public class AssociationClassView extends ClassView {
   }
 
   @Override
+  public void userDelete() {
+    hardDelete();
+  }
+
+  @Override
   public void delete() {
     
     if (PanelClassDiagram.getInstance().isXmlImportation()) {
       super.delete();
-    } else {
-      boolean isBlocked = Change.isBlocked();
-      Change.setBlocked(true);
-      super.delete();
-      parent.getClassDiagram().removeComponent(getAssociedComponent());
-      Change.setBlocked(isBlocked);
-      Change.cleanChangeable(parent, this);
+    } else {      
+      boolean record = Change.isRecord();
+      Change.record();
+      
+      if (getIsLightDelete()) {
+        super.delete();
+      } else {
+        parent.getClassDiagram().removeComponent(getAssociedComponent());
+        super.delete();
+      }
+      
+      if (!record)
+        Change.stopRecord();
     }
   }
 }

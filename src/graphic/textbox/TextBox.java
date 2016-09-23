@@ -2,7 +2,6 @@ package graphic.textbox;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -21,9 +20,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.font.TextAttribute;
 import java.text.AttributedString;
-
 import javax.swing.JTextField;
-
 import swing.PropertyLoader;
 import swing.Slyum;
 import swing.slyumCustomizedComponents.PopupTextField;

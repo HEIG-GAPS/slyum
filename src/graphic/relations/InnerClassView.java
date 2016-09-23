@@ -3,17 +3,15 @@ package graphic.relations;
 import classDiagram.IDiagramComponent;
 import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
+import classDiagram.relationships.InnerClass;
+import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
-
+import graphic.entity.InterfaceView;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-
-import classDiagram.relationships.InnerClass;
-import graphic.GraphicComponent;
-import graphic.entity.InterfaceView;
 import utility.SMessageDialog;
 
 public class InnerClassView extends RelationView {
@@ -153,8 +151,7 @@ public class InnerClassView extends RelationView {
   @Override
   public void restore() {
     super.restore();
-    parent.getClassDiagram().addInnerClass(
-            (InnerClass) getAssociedComponent());
+    parent.getClassDiagram().addInnerClass((InnerClass) getAssociedComponent(), false);
 
     repaint();
   }

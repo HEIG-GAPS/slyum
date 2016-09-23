@@ -1,13 +1,11 @@
 package graphic.entity;
 
+import change.Change;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.SquareGrip;
-
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-
-import change.Change;
 
 /**
  * Represent a grip (gray square) using for resizing entities. A grip entity

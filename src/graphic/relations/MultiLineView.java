@@ -1,18 +1,15 @@
 package graphic.relations;
 
+import classDiagram.relationships.Multi;
+import classDiagram.relationships.Role;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.textbox.TextBoxRole;
-
 import java.awt.Point;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
 import utility.Utility;
-import classDiagram.relationships.Multi;
-import classDiagram.relationships.Role;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -60,32 +57,39 @@ public class MultiLineView extends LineView {
   @Override
   public void delete() {
     MultiView mv = (MultiView) getFirstPoint().getAssociedComponentView();
-    final int nbLineAssocied = parent.getLinesViewAssociedWith(mv).size();
 
-    if (nbLineAssocied <= 3) {
-      if (ligthDelete)
-        mv.lightDelete();
-      else
-        mv.delete();
-    }
+    if (getIsLightDelete())
+      mv.lightDelete();
 
     super.delete();
     
-    if (!ligthDelete)
+    if (!getIsLightDelete())
       mv.connexionRemoved(this);
+    
+    if (parent.getLinesViewAssociedWith(mv).size() < 3)
+      mv.delete();
   }
 
   @Override
   public void restore() {
-    super.restore();
-
+    if (parent.searchAssociedComponent(((TextBoxRole)tbRoles.getFirst()).getRole()) != null)
+      return;
+    
     MultiView mv = (MultiView) getFirstPoint().getAssociedComponentView();
     Multi m = (Multi) mv.getAssociedComponent();
     TextBoxRole tbr = (TextBoxRole) tbRoles.getFirst();
-    m.addRole(tbr.getRole());
-    mv.addMultiLineView(this);
+        
+    super.restore();
 
-    mv.restore();
+    mv.addMultiLineView(this);
+    
+    if (!m.containsRole(tbr.getRole()))
+      m.addRole(tbr.getRole(), false);
+  }
+
+  @Override
+  public void addLineViewToParent() {
+    
   }
 
   @Override

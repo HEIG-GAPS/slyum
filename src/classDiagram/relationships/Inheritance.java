@@ -1,17 +1,15 @@
 package classDiagram.relationships;
 
-import java.util.Observable;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import swing.OverridesAndImplementationsDialog;
-import utility.SMessageDialog;
 import classDiagram.ClassDiagram;
 import classDiagram.components.ClassEntity;
 import classDiagram.components.Entity;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.SimpleEntity;
+import java.util.Observable;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import swing.OverridesAndImplementationsDialog;
+import utility.SMessageDialog;
 
 /**
  * Represent a inheritance in UML structure. This inheritance, depends on the

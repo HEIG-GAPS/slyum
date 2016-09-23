@@ -29,9 +29,9 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -53,8 +53,8 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import swing.MultiViewManager;
 import swing.PanelClassDiagram;
-import swing.slyumCustomizedComponents.SScrollPane;
 import swing.Slyum;
+import swing.slyumCustomizedComponents.SScrollPane;
 import utility.PersonalizedIcon;
 
 /**
@@ -99,17 +99,20 @@ public class HierarchicalView
   public static void sortAlphabetically(DefaultMutableTreeNode parent, DefaultTreeModel treeModel, STree tree) {
     int count = parent.getChildCount();
     
-    if (count < 2)
-      return;
+    tree.stopFireEvent = true;
+    treeModel.reload(parent);
+    tree.stopFireEvent = false;
     
-    // Sort childs.
-    for (int i = 0; i < count; ++i) {
-      DefaultMutableTreeNode child = (DefaultMutableTreeNode)parent.getChildAt(i);
-      if (!child.isLeaf())
-        sortAlphabetically(child, treeModel, tree);
+    if (count >= 2) {
+      // Sort childs.
+      for (int i = 0; i < count; ++i) {
+        DefaultMutableTreeNode child = (DefaultMutableTreeNode)parent.getChildAt(i);
+        if (!child.isLeaf())
+          sortAlphabetically(child, treeModel, tree);
+      }
+
+      quickSort(parent, 0, count-1);
     }
-    
-    quickSort(parent, 0, count-1);
     
     tree.stopFireEvent = true;
     treeModel.reload(parent);

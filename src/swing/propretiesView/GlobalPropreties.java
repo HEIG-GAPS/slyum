@@ -10,9 +10,9 @@ import java.util.Observer;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import swing.slyumCustomizedComponents.FlatButton;
 import swing.PanelClassDiagram;
 import swing.Slyum;
+import swing.slyumCustomizedComponents.FlatButton;
 import utility.PersonalizedIcon;
 
 /**

@@ -1,6 +1,8 @@
 package swing;
 
 import classDiagram.components.Entity;
+import classDiagram.components.Method;
+import classDiagram.components.SimpleEntity;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -12,7 +14,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
-
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -23,11 +24,8 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
-
-import utility.Utility;
-import classDiagram.components.Method;
-import classDiagram.components.SimpleEntity;
 import swing.slyumCustomizedComponents.SList;
+import utility.Utility;
 
 public class OverridesAndImplementationsDialog extends JDialog {
 

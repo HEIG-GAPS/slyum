@@ -1,23 +1,16 @@
 package swing.hierarchicalView;
 
-import java.util.Observable;
-import java.util.Observer;
-
-import javax.swing.ImageIcon;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
-import graphic.GraphicComponent;
-import graphic.GraphicView;
-import graphic.entity.EntityView;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
+import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import swing.MultiViewManager;
 import swing.PanelClassDiagram;
 import swing.Slyum;
@@ -86,16 +79,10 @@ public abstract class NodeEntity extends AbstractNode {
   
   @Override
   protected ActionListener getMenuItemDeleteActionListener() {
-    return (ActionEvent e) -> MultiViewManager.getAllGraphicViews().stream()
-        .forEach(gv -> {
-          GraphicComponent gc = gv.searchAssociedComponent(getAssociedComponent());
-          if (gc != null) {
-            if (gc instanceof EntityView)
-              ((EntityView)gc)._delete();
-            else
-              gc.delete();
-          }
-        });
+    
+    return (ActionEvent e) -> {
+      change.Helper.deepDeleteEntity(entity);
+    };
   }
 
   @Override

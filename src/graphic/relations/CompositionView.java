@@ -1,13 +1,11 @@
 package graphic.relations;
 
+import classDiagram.relationships.Composition;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
-
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-
-import classDiagram.relationships.Composition;
 
 /**
  * The LineView class represent a collection of lines making a link between two
@@ -88,5 +86,13 @@ public class CompositionView extends BinaryView {
       default:
         break;
     }
+  }
+  
+  @Override
+  public void restore() {
+    super.restore();
+    parent.getClassDiagram().addComposition((Composition) getAssociedComponent(), false);
+
+    repaint();
   }
 }

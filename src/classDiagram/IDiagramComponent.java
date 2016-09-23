@@ -1,7 +1,6 @@
 package classDiagram;
 
 import java.util.Observer;
-
 import swing.XmlElement;
 
 /**

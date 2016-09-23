@@ -1,9 +1,11 @@
 package utility;
 
+import classDiagram.components.Visibility;
+import classDiagram.relationships.Multiplicity;
 import graphic.GraphicComponent;
-
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -15,15 +17,16 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import javax.swing.AbstractAction;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -31,18 +34,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import swing.UserInputDialog;
 import swing.PropertyLoader;
-import classDiagram.components.Visibility;
-import classDiagram.relationships.Multiplicity;
-import java.awt.Dimension;
-import java.awt.geom.Line2D;
-import java.util.List;
 import swing.Slyum;
+import swing.UserInputDialog;
 import swing.slyumCustomizedComponents.SComboBox;
 
 /**

@@ -1,21 +1,24 @@
 package change;
 
 import graphic.textbox.TextBoxLabel;
-
 import java.awt.Point;
 import java.awt.Rectangle;
 
-public class BufferDeplacement implements Changeable {
+public class BufferDeplacement extends BufferGraphicView {
   Point deplacement;
   TextBoxLabel tbl;
 
   public BufferDeplacement(TextBoxLabel tbl) {
+    super(tbl.getGraphicView());
+    
     this.tbl = tbl;
     deplacement = tbl.getDeplacement();
   }
 
   @Override
   public void restore() {
+    super.restore();
+    
     Rectangle repaintBounds = tbl.getBounds();
     tbl.setDeplacement(deplacement);
     tbl.repaint();

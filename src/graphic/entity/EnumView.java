@@ -1,9 +1,12 @@
 package graphic.entity;
 
+import classDiagram.IDiagramComponent;
+import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.components.EnumEntity;
+import classDiagram.components.EnumValue;
 import graphic.GraphicView;
 import graphic.textbox.TextBox;
 import graphic.textbox.TextBoxEnumValue;
-
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -12,24 +15,17 @@ import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.SwingUtilities;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import swing.Slyum;
-import utility.PersonalizedIcon;
-import classDiagram.IDiagramComponent;
-import classDiagram.IDiagramComponent.UpdateMessage;
-import classDiagram.components.EnumEntity;
-import classDiagram.components.EnumValue;
 import swing.MultiViewManager;
 import swing.PanelClassDiagram;
+import swing.Slyum;
+import utility.PersonalizedIcon;
 
 public class EnumView extends EntityView {
 
@@ -267,7 +263,7 @@ public class EnumView extends EntityView {
   }
 
   protected void restoreEntity() {
-    if (!componentAlreadyExists())
+    if (parent.getClassDiagram().searchComponentById(getAssociedComponent().getId()) == null)
       parent.getClassDiagram().addEnumEntity((EnumEntity) getAssociedComponent());
   }
 

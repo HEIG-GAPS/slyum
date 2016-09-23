@@ -10,7 +10,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import swing.MultiViewManager;
-import swing.PanelClassDiagram;
 
 /**
  *

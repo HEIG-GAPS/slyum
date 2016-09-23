@@ -1,21 +1,20 @@
 package graphic.factory;
 
-import graphic.GraphicComponent;
-import graphic.GraphicView;
-import graphic.entity.AssociationClassView;
-import graphic.entity.ClassView;
-import graphic.relations.BinaryView;
-
-import java.awt.Point;
-import java.awt.Rectangle;
-
-import swing.SPanelDiagramComponent;
-import utility.SMessageDialog;
+import change.BufferDeepCreation;
 import change.Change;
 import classDiagram.components.AssociationClass;
 import classDiagram.components.Entity;
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Binary;
+import graphic.GraphicComponent;
+import graphic.GraphicView;
+import graphic.entity.AssociationClassView;
+import graphic.entity.ClassView;
+import graphic.relations.BinaryView;
+import java.awt.Point;
+import java.awt.Rectangle;
+import swing.SPanelDiagramComponent;
+import utility.SMessageDialog;
 
 /**
  * AssociationClassFactory allows to create a new association class view
@@ -70,10 +69,17 @@ public class AssociationClassFactory extends RelationFactory {
 
         boolean isRecord = Change.isRecord();
         Change.record();
+        
+        BufferDeepCreation buf1, buf2;
+        Change.push(buf1 = new BufferDeepCreation(false, null));
+        Change.push(buf2 = new BufferDeepCreation(true, null));
 
         acv = new AssociationClassView(parent, ac, source, target,
                 (Point) mousePressed.clone(), (Point) mouseReleased.clone(),
                 bounds);
+        
+        buf1.setComponent(acv.getBinaryView().getAssociedComponent());
+        buf2.setComponent(acv.getBinaryView().getAssociedComponent());    
 
         if (!isRecord) Change.stopRecord();
 

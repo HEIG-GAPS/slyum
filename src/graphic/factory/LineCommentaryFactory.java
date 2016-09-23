@@ -7,9 +7,7 @@ import graphic.relations.LineCommentary;
 import graphic.relations.MultiView;
 import graphic.relations.RelationView;
 import graphic.textbox.TextBoxCommentary;
-
 import java.awt.BasicStroke;
-
 import swing.SPanelDiagramComponent;
 import utility.SMessageDialog;
 

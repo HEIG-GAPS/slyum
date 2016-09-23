@@ -1,15 +1,13 @@
 package classDiagram.relationships;
 
+import classDiagram.ClassDiagram;
+import classDiagram.IComponentsObserver;
+import classDiagram.components.Entity;
 import graphic.textbox.ILabelTitle;
-
 import java.util.LinkedList;
 import java.util.Observable;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import classDiagram.ClassDiagram;
-import classDiagram.components.Entity;
 
 /**
  * This abstract class is the upper-class for all associations in UML structure.

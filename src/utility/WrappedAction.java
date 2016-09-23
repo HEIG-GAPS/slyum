@@ -2,7 +2,6 @@ package utility;
 
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
-
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.InputMap;

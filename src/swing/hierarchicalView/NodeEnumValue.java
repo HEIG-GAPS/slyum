@@ -1,20 +1,18 @@
 package swing.hierarchicalView;
 
+import classDiagram.IDiagramComponent;
+import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.components.EnumValue;
 import java.util.Observable;
 import java.util.Observer;
-
 import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-
-import swing.Slyum;
-import utility.PersonalizedIcon;
-import classDiagram.IDiagramComponent;
-import classDiagram.IDiagramComponent.UpdateMessage;
-import classDiagram.components.EnumValue;
 import swing.PanelClassDiagram;
+import swing.Slyum;
 import swing.hierarchicalView.HierarchicalView.STree;
+import utility.PersonalizedIcon;
 
 public class NodeEnumValue extends DefaultMutableTreeNode implements ICustomizedIconNode, Observer, IClassDiagramNode {
 

@@ -1,12 +1,10 @@
 package classDiagram.relationships;
 
-import java.util.Observable;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
+import java.util.Observable;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Represent a multiplicity in UML structure. A multiplicity is used by role to

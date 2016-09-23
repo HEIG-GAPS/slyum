@@ -1,7 +1,6 @@
 package classDiagram.components;
 
 import java.util.LinkedList;
-
 import swing.XMLParser.EntityType;
 
 /**

@@ -1,9 +1,9 @@
 package graphic.entity;
 
-import graphic.GraphicView;
 import classDiagram.components.Attribute;
 import classDiagram.components.InterfaceEntity;
 import classDiagram.components.Method;
+import graphic.GraphicView;
 
 /**
  * Represent the view of an interface in UML structure.
@@ -47,7 +47,7 @@ public class InterfaceView extends SimpleEntityView {
   }
 
   protected void restoreEntity() {
-    if (!componentAlreadyExists())
+    if (parent.getClassDiagram().searchComponentById(getAssociedComponent().getId()) == null)
       parent.getClassDiagram().addInterfaceEntity((InterfaceEntity) getAssociedComponent());
   }
 }

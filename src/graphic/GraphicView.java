@@ -81,7 +81,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 import javax.print.attribute.Size2DSyntax;
 import javax.print.attribute.standard.MediaSize;
 import javax.swing.JMenuItem;
@@ -95,13 +94,13 @@ import swing.IListenerComponentSelectionChanged;
 import swing.MultiViewManager;
 import swing.PanelClassDiagram;
 import swing.PropertyLoader;
-import swing.slyumCustomizedComponents.SButton;
 import swing.SColorAssigner;
 import swing.SPanelDiagramComponent;
 import swing.SPanelDiagramComponent.Mode;
 import swing.SPanelElement;
-import swing.slyumCustomizedComponents.SScrollPane;
 import swing.Slyum;
+import swing.slyumCustomizedComponents.SButton;
+import swing.slyumCustomizedComponents.SScrollPane;
 import utility.OSValidator;
 import utility.SMessageDialog;
 import utility.Utility;
@@ -175,7 +174,7 @@ public class GraphicView extends GraphicComponent
     boolean isRecord = Change.isRecord();
     Change.record();
     
-    components.stream().forEach((c) -> { c.delete(); });
+    components.stream().forEach((c) -> { c.userDelete();});
     
     if (!isRecord) Change.stopRecord();
   }
@@ -1133,9 +1132,9 @@ public class GraphicView extends GraphicComponent
     for (ColoredComponent c : components) {
       // Set default style before save color.
       c.setDefaultStyle();
-      Change.push(new BufferColor(c));
+      Change.push(new BufferColor(c, parent));
       c.setColor(o.getColor(c));
-      Change.push(new BufferColor(c));
+      Change.push(new BufferColor(c, parent));
     }
     if (!isRecord) Change.stopRecord();
   }
@@ -2315,13 +2314,6 @@ public class GraphicView extends GraphicComponent
   }
 
   @Override
-  public void notifyEnumEntityCreation(EnumEntity component) {
-    if (MultiViewManager.getSelectedGraphicView() == this ||
-        PanelClassDiagram.getInstance().isXmlImportation())
-    addEnumEntity(component);
-  }
-
-  @Override
   public void notifyInheritanceCreation(Inheritance component) {
     addInheritance(component);
   }
@@ -2332,6 +2324,18 @@ public class GraphicView extends GraphicComponent
   }
   
   @Override
+  public void notifyMultiCreation(Multi component) {
+    addMulti(component);
+  }
+
+  @Override
+  public void notifyEnumEntityCreation(EnumEntity component) {
+    if (MultiViewManager.getSelectedGraphicView() == this ||
+        PanelClassDiagram.getInstance().isXmlImportation())
+    addEnumEntity(component);
+  }
+  
+  @Override
   public void notifyInterfaceEntityCreation(InterfaceEntity component) {
     if (MultiViewManager.getSelectedGraphicView() == this ||
         PanelClassDiagram.getInstance().isXmlImportation())
@@ -2339,15 +2343,10 @@ public class GraphicView extends GraphicComponent
   }
   
   @Override
-  public void notifyMultiCreation(Multi component) {
-    addMulti(component);
-  }
-  
-  @Override
   public void notifyRemoveComponent(IDiagramComponent component) {
     final GraphicComponent g = searchAssociedComponent(component);
     if (g != null)
-      g.delete();
+      g.hardDelete();
   }
   
   public void paintBackgroundFirst() {
@@ -2517,7 +2516,8 @@ public class GraphicView extends GraphicComponent
     if (search == null) return null;
 
     for (final GraphicComponent c : getAllComponents())
-      if (c.getAssociedComponent() == search) return c;
+      if (c.getAssociedComponent() == search) 
+        return c;
 
     return null;
   }
@@ -2818,7 +2818,8 @@ public class GraphicView extends GraphicComponent
   
   public boolean addEntityWithRelations(final EntityView entityView, final Point location) {
     
-    if (containsDiagramComponent(entityView.getAssociedComponent()))
+    GraphicComponent component = searchAssociedComponent(entityView.getAssociedComponent());
+    if (component != null)
     {
       SMessageDialog.showErrorMessage(
           "The entity " + ((Entity)entityView.getAssociedComponent()).getName() + 
@@ -2834,27 +2835,49 @@ public class GraphicView extends GraphicComponent
     HashMap<Relation, Entity> linked = entity1.getLinkedEntities();
     for (Relation relation : linked.keySet()) {
       
-      // Is already in the GraphicView?
-      if (searchAssociedComponent(relation) != null)
-        continue;
-      
-      Entity entity2 = linked.get(relation);
-      if (containsDiagramComponent(entity2) || relation instanceof Multi) {
-        EntityView source = null, target = null, entityView2 = (EntityView)searchAssociedComponent(entity2);
+      if (relation instanceof Multi) {
+        Multi multi = (Multi)relation;
         
-        if (!(relation instanceof Multi))
-          if (relation.getSource() == entity1) {
-            source = entityView;
-            target = entityView2;
-          } else {
-            source = entityView2;
-            target = entityView;
+        MultiView multiView = (MultiView)searchAssociedComponent(multi);
+        boolean needCreation = true;
+        
+        if (multiView == null) {
+          
+          for (Role role : multi.getRoles()) {
+            GraphicComponent gc = searchAssociedComponent(role.getEntity());
+            if (gc == null || !(gc instanceof EntityView)) {
+              needCreation = false;
+              break;
+            }
           }
+          
+          if (needCreation)
+            addMultiView(new MultiView(parent, multi));
+        }
+      } else {
         
-        GraphicComponent gc = createAndAddRelation(relation, source, target);
-        
-        if (gc!= null && gc instanceof RelationView)
-          createdRelationViews.add((RelationView)gc);
+          // Is already in the GraphicView?
+        if (searchAssociedComponent(relation) != null)
+          continue;
+      
+        Entity entity2 = linked.get(relation);
+        if (containsDiagramComponent(entity2) || relation instanceof Multi) {
+          EntityView source = null, target = null, entityView2 = (EntityView)searchAssociedComponent(entity2);
+
+          if (!(relation instanceof Multi))
+            if (relation.getSource() == entity1) {
+              source = entityView;
+              target = entityView2;
+            } else {
+              source = entityView2;
+              target = entityView;
+            }
+
+          GraphicComponent gc = createAndAddRelation(relation, source, target);
+
+          if (gc!= null && gc instanceof RelationView)
+            createdRelationViews.add((RelationView)gc);
+        }
       }
     }
     
@@ -2868,7 +2891,6 @@ public class GraphicView extends GraphicComponent
         
         entityView.setLocationRelativeTo(location);
         entityView.regenerateEntity();
-        entityView.adjustWidth();
         
         createdRelationViews.stream().forEach(rv -> rv.center());
         

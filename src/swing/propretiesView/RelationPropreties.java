@@ -1,18 +1,5 @@
 package swing.propretiesView;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-
-import swing.slyumCustomizedComponents.FlatPanel;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.Entity;
 import classDiagram.relationships.Association;
@@ -20,7 +7,18 @@ import classDiagram.relationships.Association.NavigateDirection;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Role;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 import swing.MultiViewManager;
+import swing.slyumCustomizedComponents.FlatPanel;
 import swing.slyumCustomizedComponents.SRadioButton;
 import swing.slyumCustomizedComponents.TextFieldWithPrompt;
 

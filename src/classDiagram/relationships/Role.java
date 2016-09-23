@@ -1,14 +1,12 @@
 package classDiagram.relationships;
 
-import java.util.Observable;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
 import classDiagram.components.Entity;
 import classDiagram.components.Visibility;
+import java.util.Observable;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Represent a Role in UML structure. A role make a link between an association

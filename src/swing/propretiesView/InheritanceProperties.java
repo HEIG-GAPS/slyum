@@ -1,26 +1,23 @@
 package swing.propretiesView;
 
+import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.components.InterfaceEntity;
+import classDiagram.components.SimpleEntity;
+import classDiagram.relationships.Inheritance;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-
+import swing.MultiViewManager;
+import swing.Slyum;
 import swing.slyumCustomizedComponents.FlatButton;
 import swing.slyumCustomizedComponents.FlatPanel;
-import swing.PanelClassDiagram;
-import swing.Slyum;
 import utility.PersonalizedIcon;
-import classDiagram.IDiagramComponent.UpdateMessage;
-import classDiagram.components.InterfaceEntity;
-import classDiagram.components.SimpleEntity;
-import classDiagram.relationships.Inheritance;
-import swing.MultiViewManager;
 
 public class InheritanceProperties extends GlobalPropreties implements ActionListener {
   public static final String ACTION_OI = "O&I";

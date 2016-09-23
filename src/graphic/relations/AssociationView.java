@@ -1,24 +1,21 @@
 package graphic.relations;
 
+import classDiagram.IDiagramComponent;
+import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.relationships.Association;
+import classDiagram.relationships.Association.NavigateDirection;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.textbox.TextBoxLabelTitle;
-
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.Observable;
-
 import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-
-import classDiagram.IDiagramComponent;
-import classDiagram.IDiagramComponent.UpdateMessage;
-import classDiagram.relationships.Association;
-import classDiagram.relationships.Association.NavigateDirection;
 
 /**
  * The LineView class represent a collection of lines making a link between two

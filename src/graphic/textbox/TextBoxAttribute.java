@@ -1,20 +1,17 @@
 package graphic.textbox;
 
+import classDiagram.IDiagramComponent;
+import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.components.Attribute;
 import graphic.GraphicView;
-
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.font.TextAttribute;
 import java.text.AttributedString;
 import java.util.Observable;
 import java.util.Observer;
-
-import utility.Utility;
-import classDiagram.IDiagramComponent;
-import classDiagram.IDiagramComponent.UpdateMessage;
-import classDiagram.components.Attribute;
-import classDiagram.components.Method;
 import swing.PanelClassDiagram;
+import utility.Utility;
 
 /**
  * A TextBox is a graphic component from Slyum containing a String. The

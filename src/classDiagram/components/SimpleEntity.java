@@ -1,19 +1,14 @@
 package classDiagram.components;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.swing.JOptionPane;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import utility.SMessageDialog;
 import change.BufferClass;
 import change.BufferCreationAttribute;
 import change.BufferCreationMethod;
 import change.Change;
-import classDiagram.relationships.IParentChild;
+import java.util.LinkedList;
+import javax.swing.JOptionPane;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import utility.SMessageDialog;
 
 public class SimpleEntity extends Entity {
 

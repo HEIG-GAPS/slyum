@@ -2,9 +2,8 @@
  * the editor. */
 package change;
 
-import java.util.List;
-
 import classDiagram.IDiagramComponent;
+import java.util.List;
 
 /**
  * 

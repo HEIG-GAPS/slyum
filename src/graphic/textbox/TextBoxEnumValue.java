@@ -1,15 +1,14 @@
 package graphic.textbox;
 
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.util.Observable;
-import java.util.Observer;
-
-import utility.Utility;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.components.EnumValue;
 import graphic.GraphicView;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.util.Observable;
+import java.util.Observer;
+import utility.Utility;
 
 public class TextBoxEnumValue extends TextBox implements Observer {
 

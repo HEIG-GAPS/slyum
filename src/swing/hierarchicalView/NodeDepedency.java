@@ -1,18 +1,16 @@
 package swing.hierarchicalView;
 
-import java.util.Observable;
-
-import javax.swing.ImageIcon;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreePath;
-
-import swing.Slyum;
-import utility.PersonalizedIcon;
 import classDiagram.IDiagramComponent;
 import classDiagram.IDiagramComponent.UpdateMessage;
 import classDiagram.relationships.Dependency;
+import java.util.Observable;
+import javax.swing.ImageIcon;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import swing.PanelClassDiagram;
+import swing.Slyum;
 import swing.hierarchicalView.HierarchicalView.STree;
+import utility.PersonalizedIcon;
 
 /**
  * A JTree node associated with a dependency UML.

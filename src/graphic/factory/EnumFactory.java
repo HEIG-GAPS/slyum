@@ -1,11 +1,11 @@
 package graphic.factory;
 
+import classDiagram.components.EnumEntity;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.entity.EnumView;
 import swing.SPanelDiagramComponent;
-import classDiagram.components.EnumEntity;
 public class EnumFactory extends EntityFactory {
 
   public EnumFactory(GraphicView parent) {

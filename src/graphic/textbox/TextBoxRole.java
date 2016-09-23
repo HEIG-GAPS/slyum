@@ -1,21 +1,18 @@
 package graphic.textbox;
 
+import classDiagram.IDiagramComponent;
+import classDiagram.components.Visibility;
+import classDiagram.relationships.Role;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.relations.AssociationView;
+import graphic.relations.LineView;
 import graphic.relations.MagneticGrip;
-
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.Observable;
-
 import javax.swing.SwingUtilities;
-
-import classDiagram.IDiagramComponent;
-import classDiagram.components.Visibility;
-import classDiagram.relationships.Role;
-import graphic.relations.LineView;
 
 /**
  * A TextBox is a graphic component from Slyum containing a String. The
@@ -107,6 +104,9 @@ public class TextBoxRole extends TextBoxLabel {
     super(parent, roleToString(role));
 
     if (grip == null) throw new IllegalArgumentException("grip is null");
+    
+    if (parent.searchAssociedComponent(role) != null)
+      throw new IllegalArgumentException("This role is already present in this view.");
 
     this.role = role;
     role.addObserver(this);
@@ -161,7 +161,7 @@ public class TextBoxRole extends TextBoxLabel {
     super.delete();
 
     parent.removeComponent(this);
-    parent.removeComponent(tbm);
+    tbm.delete();
   }
 
   @Override

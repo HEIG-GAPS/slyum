@@ -1,13 +1,13 @@
 package classDiagram.components;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import swing.XMLParser.EntityType;
-import utility.Utility;
+import classDiagram.relationships.Association.NavigateDirection;
 import classDiagram.relationships.Binary;
 import classDiagram.relationships.Role;
-import classDiagram.relationships.Association.NavigateDirection;
+import java.awt.datatransfer.DataFlavor;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import swing.XMLParser.EntityType;
+import utility.Utility;
 
 /**
  * Represent an association class in UML structure.
@@ -148,5 +148,10 @@ public class AssociationClass extends ClassEntity {
     if (binary == null) throw new IllegalArgumentException("binary is null");
 
     association = binary;
+  }
+
+  @Override
+  public DataFlavor[] getTransferDataFlavors() {
+    return new DataFlavor[] {};
   }
 }

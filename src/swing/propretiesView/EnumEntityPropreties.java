@@ -1,5 +1,8 @@
 package swing.propretiesView;
 
+import classDiagram.IDiagramComponent.UpdateMessage;
+import classDiagram.components.EnumEntity;
+import classDiagram.components.EnumValue;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,7 +12,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Observable;
 import java.util.Observer;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -17,16 +19,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.AbstractTableModel;
-
+import swing.Slyum;
 import swing.slyumCustomizedComponents.FlatPanel;
 import swing.slyumCustomizedComponents.SButton;
 import swing.slyumCustomizedComponents.STable;
-import swing.Slyum;
-import utility.PersonalizedIcon;
-import classDiagram.IDiagramComponent.UpdateMessage;
-import classDiagram.components.EnumEntity;
-import classDiagram.components.EnumValue;
 import swing.slyumCustomizedComponents.TextFieldWithPrompt;
+import utility.PersonalizedIcon;
 
 public class EnumEntityPropreties extends GlobalPropreties {
 

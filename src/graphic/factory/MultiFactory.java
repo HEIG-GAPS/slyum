@@ -1,11 +1,13 @@
 package graphic.factory;
 
+import change.Change;
+import classDiagram.components.ClassEntity;
+import classDiagram.relationships.Multi;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.ClassView;
 import graphic.entity.EntityView;
 import graphic.relations.MultiView;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -22,17 +24,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Area;
 import java.util.LinkedList;
-
 import javax.swing.JButton;
-
-import swing.slyumCustomizedComponents.FlatButton;
 import swing.SPanelDiagramComponent;
 import swing.Slyum;
+import swing.slyumCustomizedComponents.FlatButton;
 import utility.PersonalizedIcon;
 import utility.Utility;
-import change.Change;
-import classDiagram.components.ClassEntity;
-import classDiagram.relationships.Multi;
 
 /**
  * MultiFactory allows to create a new multi-association view associated with a

@@ -4,9 +4,12 @@ package swing;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.util.LinkedList;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -16,16 +19,10 @@ import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import utility.PersonalizedIcon;
-import utility.Utility;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.util.Arrays;
-import java.util.LinkedList;
 import swing.slyumCustomizedComponents.SColorMenuItem;
 import swing.slyumCustomizedComponents.SToolBarButton;
+import utility.PersonalizedIcon;
+import utility.Utility;
 
 /**
  * Show a dialog for choosing a color.

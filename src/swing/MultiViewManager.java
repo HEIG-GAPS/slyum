@@ -146,9 +146,13 @@ public class MultiViewManager {
   }
   
   public static void setSelectedGraphicView(GraphicView graphicView) {
+    
+    if (STab.getInstance().indexOfComponent(graphicView.getScrollPane()) == -1)
+      return;
+    
     if (STab.getInstance().getSelectedComponent() != graphicView.getScrollPane())
       STab.getInstance().setSelectedComponent(graphicView.getScrollPane());
-    
+
     instance.hierarchicalView.setSelectedView(graphicView);
     PanelClassDiagram.refreshHierarchicalView();
   }
@@ -231,8 +235,10 @@ public class MultiViewManager {
   }
   
   public static void cleanGraphicViews() {
-    while (instance.graphicViews.size() > 1) // Do not remove the root graphic view.
+    while (instance.graphicViews.size() > 1) { // Do not remove the root graphic view.
+      instance.classDiagram.removeComponentsObserver(instance.graphicViews.get(1));
       instance.graphicViews.remove(1);
+    }
   }
   
   public static void changeViewStatInFile(GraphicView graphicView, boolean open) {

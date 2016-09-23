@@ -1,18 +1,18 @@
 package graphic.factory;
 
+import change.BufferDeepCreation;
+import change.Change;
+import classDiagram.relationships.InnerClass;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
-import graphic.relations.InnerClassView;
-
-import java.awt.Color;
-import java.awt.Graphics2D;
-
-import swing.SPanelDiagramComponent;
-import utility.SMessageDialog;
-import classDiagram.relationships.InnerClass;
 import graphic.entity.ClassView;
 import graphic.entity.EntityView;
 import graphic.entity.EnumView;
+import graphic.relations.InnerClassView;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import swing.SPanelDiagramComponent;
+import utility.SMessageDialog;
 
 public class InnerClassFactory extends RelationFactory {
   public final String ERROR_CREATION_MESSAGE = "Inner class creation failed.\nYou must make a bond between two classes or class -> interface.";
@@ -39,6 +39,9 @@ public class InnerClassFactory extends RelationFactory {
 
         parent.addLineView(i);
         classDiagram.addInnerClass(innerClass);
+      
+      Change.push(new BufferDeepCreation(false, innerClass));
+      Change.push(new BufferDeepCreation(true, innerClass));
 
         parent.unselectAll();
         i.setSelected(true);

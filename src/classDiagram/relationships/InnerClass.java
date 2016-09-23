@@ -2,10 +2,9 @@ package classDiagram.relationships;
 
 import classDiagram.ClassDiagram;
 import classDiagram.components.Entity;
+import java.util.Observable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import java.util.Observable;
 
 public class InnerClass extends Observable implements Relation, IParentChild {
 
