@@ -4,7 +4,7 @@ Slyum is an UML diagramming application for building class diagrams. Slyum makes
 A lot of diagrams editor exist in industry and open source world. But mainly of them are complicate to use and not very pleasant to see. Moreover adding new elements are difficult for user. That’s why we will develop this project. This application will be easy to use and only useful elements will be integrated in. The purpose of this project is it can be used in UML learning.
 
 # Downloads
-* [latest release (juin. 2014 - v4.1.0)](https://drive.google.com/folderview?id=0B8LiFU0_u3AZdTRPY0JKallDRm8&usp=sharing)
+* [latest release (sept. 2016 - v5.0.0)](https://drive.google.com/folderview?id=0B8LiFU0_u3AZdTRPY0JKallDRm8&usp=sharing)
 * [previous release ](https://drive.google.com/folderview?id=0B8LiFU0_u3AZTTZsd2V4cXNGZkU&usp=sharing )
 
 # Installation
