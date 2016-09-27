@@ -248,7 +248,6 @@ public class Slyum extends JFrame implements ActionListener {
   private static final String ARGUMENT_OPEN_NEW_PROJECT = "-newProject";
   private static final String URL_ISSUES_PAGE = "https://github.com/Slyum/slyum/issues";
   private static final String URL_PROJECT_PAGE = "https://github.com/Slyum/slyum";
-  private static final String URL_UPDATE_PAGE = "https://drive.google.com/folderview?id=0B8LiFU0_u3AZdTRPY0JKallDRm8&usp=sharing";
   private static String[] arguments;
 
   private static Slyum instance;
@@ -1571,7 +1570,7 @@ public class Slyum extends JFrame implements ActionListener {
    * Open the help file.
    */
   private void openHelp() {
-    openURL("https://docs.google.com/file/d/0B8LiFU0_u3AZX2NYSmpwMW9TdGc/edit");
+    openURL("https://github.com/HEIG-GAPS/slyum/blob/master/bin/utils/User_manual_FR.pdf");
   }
 
   /**

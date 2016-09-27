@@ -11,7 +11,7 @@ import java.net.URL;
 public class TagDownload {
   
   private static final String defaultUrl = 
-      "https://googledrive.com/host/0B8LiFU0_u3AZd0M0QlNIcnMtYms/version.html";
+      "https://raw.githubusercontent.com/HEIG-GAPS/slyum/master/bin/utils/version.html";
   
   public static String getContentTag(String tag, String url) throws Exception {
     String data = getData(url);
