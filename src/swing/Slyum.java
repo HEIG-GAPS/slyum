@@ -1151,16 +1151,16 @@ public class Slyum extends JFrame implements ActionListener {
       menuItem = undo = createMenuItem("Undo", "undo", KeyEvent.VK_U, KEY_UNDO,
               ACTION_UNDO, p.getUndoButton());
       menuItem.setEnabled(false);
-      //menu.add(menuItem);
+      menu.add(menuItem);
 
       // Menu item Redo
       menuItem = redo = createMenuItem("Redo", "redo", KeyEvent.VK_R, KEY_REDO,
               ACTION_REDO, p.getRedoButton());
       menuItem.setEnabled(false);
-      //menu.add(menuItem);
+      menu.add(menuItem);
     }
 
-    //menu.addSeparator();
+    menu.addSeparator();
 
     {
       final SPanelElement p = SPanelElement.getInstance();
