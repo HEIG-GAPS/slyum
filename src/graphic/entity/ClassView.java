@@ -34,6 +34,11 @@ public class ClassView extends SimpleEntityView {
   }
 
   @Override
+  public String getFullString() {
+    return ((ClassEntity)component).getName();
+  }
+
+  @Override
   protected void prepareNewAttribute(Attribute attribute) {}
 
   @Override

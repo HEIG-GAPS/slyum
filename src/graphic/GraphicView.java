@@ -2691,6 +2691,11 @@ public class GraphicView extends GraphicComponent
     getScene().setPreferredSize(new Dimension(width, height));
     getScene().revalidate();
   }
+
+  @Override
+  public String getFullString() {
+    return getName();
+  }
   
   protected MouseEvent adapteMouseEvent(MouseEvent e) {
     return new MouseEvent(e.getComponent(), e.getID(), e.getWhen(),

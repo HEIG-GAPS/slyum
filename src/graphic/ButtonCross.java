@@ -127,6 +127,11 @@ public abstract class ButtonCross extends GraphicComponent {
     setMousePressed(true);
   }
 
+  @Override
+  public String getFullString() {
+    return "";
+  }
+
   public abstract void mouseClick();
 
 }

@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.JToolBar;
 import swing.SColorAssigner.RecentColorButton;
 import swing.slyumCustomizedComponents.SButton;
 import swing.slyumCustomizedComponents.SSeparator;
@@ -71,6 +73,8 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
   private SSlider sliderZoom;
 
   private static SPanelElement instance;
+  
+  public JTextField searchField;
 
   public static SPanelElement getInstance() {
     if (instance == null) instance = new SPanelElement();
@@ -175,6 +179,12 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
     add(bottom = createEmptyButton(
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "bottom.png"),
             Slyum.ACTION_MOVE_BOTTOM, Color.MAGENTA, TT_MOVE_BOTTOM));
+    
+    searchField = new JTextField();
+    searchField.setPreferredSize(new Dimension(200, 0));
+    searchField.addActionListener(this);
+    searchField.setActionCommand(Slyum.ACTION_SEARCH);
+    add(searchField);
 
     alignTop.setEnabled(false);
     alignBottom.setEnabled(false);
@@ -282,6 +292,9 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
         break;
       case Slyum.ACTION_DUPLICATE:
         gv.duplicateSelectedEntities();
+        break;
+      case Slyum.ACTION_SEARCH:
+        SearchEngine.searchComponent(searchField.getText());
         break;
     }
 

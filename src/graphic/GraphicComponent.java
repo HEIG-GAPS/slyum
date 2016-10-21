@@ -626,5 +626,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
     menuItem.setVisible(displayGeneralMenuItems());
     popupMenu.add(menuItem);
   }
+  
+  public abstract String getFullString();
 
 }

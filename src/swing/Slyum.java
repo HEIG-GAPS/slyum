@@ -78,6 +78,7 @@ public class Slyum extends JFrame implements ActionListener {
   public final static String ACTION_DELETE = "Delete"; 
   public final static String ACTION_DELETE_VIEW = "deleteView";
   public static final String ACTION_DUPLICATE = "duplicate";
+  public static final String ACTION_SEARCH = "searchComponent";
   public final static String ACTION_EXIT = "Exit";
   public final static String ACTION_EXPORT_EPS = "ExportEps";
   public final static String ACTION_NEW_WINDOW = "NewWindow";

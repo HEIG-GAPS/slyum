@@ -95,4 +95,9 @@ public abstract class SquareGrip extends GraphicComponent {
     parent.getScene().repaint(repaintBounds);
     parent.getScene().repaint(bounds);
   }
+
+  @Override
+  public String getFullString() {
+    return "";
+  }
 }

@@ -138,6 +138,11 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
     return EntityView.searchNearestEgde(getBounds(), first, next);
   }
 
+  @Override
+  public String getFullString() {
+    return 
+  }
+
   /**
    * Compute the width of the note according to it content. If a word is too
    * long for current width, the width is automatically enlarged the size of the

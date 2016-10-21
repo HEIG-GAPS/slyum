@@ -68,6 +68,11 @@ public class AggregationFactory extends RelationFactory {
   }
 
   @Override
+  public String getFullString() {
+    
+  }
+
+  @Override
   protected boolean isFirstComponentValid() {
     return componentMousePressed instanceof EntityView;
   }
