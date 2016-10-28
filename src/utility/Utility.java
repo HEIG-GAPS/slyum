@@ -31,6 +31,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JRootPane;
 import javax.swing.KeyStroke;
@@ -660,4 +661,18 @@ public class Utility {
     g2.drawString(text, (bounds.x + bounds.width - stringWidth) / 2, 
                   bounds.y + (bounds.height > offset ? offset : bounds.height));
   }
+  
+  public static JOptionPane getOptionPane(Component c) {
+        Component parent = c;
+
+        while (parent != null) {
+            if (parent instanceof JOptionPane) {
+                return (JOptionPane) parent;
+            }
+
+            parent = parent.getParent();
+        }
+
+        return null;
+    }
 }

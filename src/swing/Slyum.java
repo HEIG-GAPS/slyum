@@ -164,7 +164,6 @@ public class Slyum extends JFrame implements ActionListener {
   public static final boolean IS_AUTO_ADJUST_INHERITANCE = true;
   public static final String KEY_ADD_VIEW = "INSERT";
 
-
   public final static String KEY_ADJUST_SIZE = "ctrl 1";
   public final static String KEY_AGGREGATION = "G";
   public final static String KEY_ALIGN_DOWN = "ctrl DOWN";
@@ -238,7 +237,7 @@ public class Slyum extends JFrame implements ActionListener {
   public static final Color THEME_COLOR = new Color(0, 122, 204); // 007ACC
   public static final Font UI_FONT;
   // !! Always  X.Y.Z (for update safety), even if it's 0.
-  public static final String VERSION = "5.0.1";
+  public static final String VERSION = "5.0.2";
   public static final boolean VIEW_TITLE_ON_EXPORT_DEFAULT = true;
   public static final boolean DISPLAY_DIAGRAM_INFORMATIONS_ON_EXPERT_DEFAULT = true;
   public static final int WINDOWS_MAXIMIZED = Frame.MAXIMIZED_BOTH;
@@ -246,8 +245,8 @@ public class Slyum extends JFrame implements ActionListener {
   private static final String ARGUMENT_EXIT_WITHOUT_ASK = "-exitWithoutAsk";
   private static final String ARGUMENT_PRINT_CHANGE_STACK_STATE = "-printChanges";
   private static final String ARGUMENT_OPEN_NEW_PROJECT = "-newProject";
-  private static final String URL_ISSUES_PAGE = "https://github.com/Slyum/slyum/issues";
-  private static final String URL_PROJECT_PAGE = "https://github.com/Slyum/slyum";
+  public static final String URL_ISSUES_PAGE = "https://github.com/Slyum/slyum/issues";
+  public static final String URL_PROJECT_PAGE = "https://github.com/Slyum/slyum";
   private static String[] arguments;
 
   private static Slyum instance;

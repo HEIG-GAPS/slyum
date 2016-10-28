@@ -21,6 +21,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -28,11 +29,13 @@ import javax.swing.JEditorPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import swing.PanelClassDiagram;
 import swing.PropertyLoader;
 import swing.Slyum;
+import static swing.Slyum.openURL;
 import swing.slyumCustomizedComponents.FlatButton;
 import swing.slyumCustomizedComponents.SScrollPane;
 import utility.SMessageDialog;
@@ -238,14 +241,42 @@ public class UpdateInfo extends JDialog {
           Slyum.class.getProtectionDomain().getCodeSource()
                .getLocation().toURI().getPath()).getParent();
       
-      String[] run = {"java", "-jar", UPDATER_FILE, applicationPath};
+      // Test if the user has the permission to write in the Slyum directory.
+      // This method is used since Java is shit and the canWrite method of SecurityManager
+      // always return true because there is no fucking SecurityManager.
+      File fileTest = new File(applicationPath + Slyum.FILE_SEPARATOR + "test");
+      if (fileTest.createNewFile())
+        fileTest.delete();
       
+      String[] run = {"java", "-jar", UPDATER_FILE, applicationPath};
       Runtime.getRuntime().exec(run);
       
     } catch (URISyntaxException | IOException ex) {
-      ex.printStackTrace();
-      SMessageDialog.showErrorMessage(
-          "An error occured when trying to update Slyum.");
+      
+      JButton btnClose = new JButton("Close");
+      btnClose.addActionListener((ActionEvent e) -> {
+        Utility.getOptionPane((JComponent)e.getSource()).setValue(btnClose);
+      });
+      
+      JButton btnUpdateManually = new JButton("Update manually");
+      btnUpdateManually.addActionListener((ActionEvent e) -> {
+        openURL(Slyum.URL_PROJECT_PAGE);
+        Utility.getOptionPane((JComponent)e.getSource()).setValue(btnUpdateManually);
+      });
+      
+      String msgError = "An error occured when trying to update Slyum.";
+      if (ex instanceof IOException)
+        msgError += "\nIt seems you don't have write access for the destination directory.";
+      
+      JOptionPane.showOptionDialog(
+          this, 
+          msgError,
+          "Slyum - Updater error",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.ERROR_MESSAGE,
+          null, 
+          new JButton[] {btnUpdateManually, btnClose},
+          btnUpdateManually);
     }
     System.exit(0);
   }
