@@ -119,7 +119,6 @@ public class PanelClassDiagram extends JPanel {
   private WatchFileListener watchFileListener;
   private boolean xmlImportation = false;
 
-
   private PanelClassDiagram() {
     super(new MultiBorderLayout());
 
@@ -778,6 +777,10 @@ public class PanelClassDiagram extends JPanel {
       Logger.getLogger(PanelClassDiagram.class.getName()).log(
           Level.SEVERE, "Unable to register file", ioe);
     }
+  }
+
+  public HierarchicalView getHierarchicalView() {
+    return hierarchicalView;
   }
   
   private void _refresh() {

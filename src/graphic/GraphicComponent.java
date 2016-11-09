@@ -651,22 +651,26 @@ public abstract class GraphicComponent extends Observable implements ActionListe
   
   public void setHighlight(boolean highlight) {
     this.highlight = highlight;
-    repaint();
     
-    if (highlight) {
-      JViewport viewPort = parent.getScrollPane().getViewport();
-      
-      Rectangle viewPortBounds = viewPort.getBounds();
-      Rectangle componentBounds = Utility.scaleRect(getBounds(), parent.getScale());
-      
-      Rectangle centerRect = new Rectangle(new Point(
-          componentBounds.x + (componentBounds.width / 2) - (viewPortBounds.width / 2),
-          componentBounds.y + (componentBounds.height / 2) - (viewPortBounds.height / 2)));
-      
-      Point p = centerRect.getLocation();
-      parent.getScrollPane().getViewport().setViewPosition(
-        new Point(p.x < 0 ? 0 : p.x, p.y < 0 ? 0 : p.y));
-    }
+    if (highlight)
+      centerOnScreen();
+    
+    repaint();
+  }
+  
+  public void centerOnScreen() {
+    JViewport viewPort = parent.getScrollPane().getViewport();
+
+    Rectangle viewPortBounds = viewPort.getBounds();
+    Rectangle componentBounds = Utility.scaleRect(getBounds(), parent.getScale());
+
+    Rectangle centerRect = new Rectangle(new Point(
+        componentBounds.x + (componentBounds.width / 2) - (viewPortBounds.width / 2),
+        componentBounds.y + (componentBounds.height / 2) - (viewPortBounds.height / 2)));
+
+    Point p = centerRect.getLocation();
+    parent.getScrollPane().getViewport().setViewPosition(
+      new Point(p.x < 0 ? 0 : p.x, p.y < 0 ? 0 : p.y));
   }
   
   public boolean isHighlight() {

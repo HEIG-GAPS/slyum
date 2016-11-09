@@ -10,10 +10,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.LinkedList;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
-import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import swing.SColorAssigner.RecentColorButton;
 import swing.slyumCustomizedComponents.SButton;
 import swing.slyumCustomizedComponents.SSeparator;
@@ -64,10 +67,17 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
   private static final String TT_MOVE_BOTTOM = "Bottom"
           + Utility.keystrokeToString(Slyum.KEY_MOVE_BOTTOM);
 
-  private SButton undo, redo, btnColor, btnDuplicate, btnDelete, alignTop, // Alignments top.
-          alignBottom, alignRight, alignLeft, adujst, // Adjust size of entity.
-          top, // z-orders
-          up, down, bottom;
+  private static final String TT_SEARCH_NEXT = "Next"
+          + Utility.keystrokeToString(Slyum.KEY_SEARCH_NEXT);
+
+  private static final String TT_SEARCH_PREVIOUS = "Previous"
+          + Utility.keystrokeToString(Slyum.KEY_SEARCH_PREVIOUS);
+
+  private SButton 
+      undo, redo, btnColor, btnDuplicate, btnDelete, alignTop, // Alignments top.
+      alignBottom, alignRight, alignLeft, adujst, // Adjust size of entity.
+      top, // z-orders
+      up, down, bottom;
   
   private LinkedList<JButton> btnsColor = new LinkedList<>();
 
@@ -181,30 +191,6 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "bottom.png"),
             Slyum.ACTION_MOVE_BOTTOM, Color.MAGENTA, TT_MOVE_BOTTOM));
     
-    searchField = new JTextField();
-    searchField.setPreferredSize(new Dimension(200, 0));
-    searchField.addKeyListener(new KeyAdapter() {
-
-      @Override
-      public void keyReleased(KeyEvent e) {
-        GraphicComponent result = SearchEngine.initialize(searchField.getText());
-        GraphicComponent.removeHighlightForAllComponents();
-        
-        if (result != null)
-          result.setHighlight(true);
-      }
-      
-    });
-    searchField.addActionListener((ActionEvent e) -> {
-      if (SearchEngine.current() != null)
-        SearchEngine.current().setHighlight(false);
-      
-      GraphicComponent next = SearchEngine.next();
-      if (next != null)
-        next.setHighlight(true);
-    });
-    add(searchField);
-
     alignTop.setEnabled(false);
     alignBottom.setEnabled(false);
     alignRight.setEnabled(false);

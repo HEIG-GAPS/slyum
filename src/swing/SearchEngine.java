@@ -51,6 +51,8 @@ public class SearchEngine {
     if (searchResults.isEmpty())
       return null;
     
-    return current = searchResults.get((searchResults.indexOf(current) - 1) % searchResults.size());
+    int currentIndex = searchResults.indexOf(current);
+      
+    return current = searchResults.get(currentIndex == 0 ? searchResults.size() - 1 : currentIndex - 1);
   }
 }

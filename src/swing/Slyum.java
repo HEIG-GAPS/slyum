@@ -2,6 +2,7 @@ package swing;
 
 import swing.slyumCustomizedComponents.SButton;
 import com.apple.java.OSXAdapter;
+import graphic.GraphicComponent;
 import graphic.GraphicView;
 import java.awt.Color;
 import java.awt.Desktop;
@@ -35,6 +36,8 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
@@ -47,6 +50,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import swing.SPanelDiagramComponent.Mode;
+import swing.hierarchicalView.HierarchicalView;
 import update.UpdateInfo;
 import static update.UpdateInfo.isUpdateAvailable;
 import static update.UpdateInfo.UPDATER_FILE;
@@ -141,6 +145,9 @@ public class Slyum extends JFrame implements ActionListener {
   public static final String ACTION_ZOOM_ADAPT = "ZoomAdapt";
   public static final String ACTION_ZOOM_ADAPT_SELECTION = "ZoomAdaptSelection";
   
+  public static final String ACTION_SEARCH_NEXT = "SearchNext";
+  public static final String ACTION_SEARCH_PREVIOUS = "SearchPrevious";
+  
   public static final String ACTION_ZOOM_MINUS = "Zoom -";
   public final static String ACTION_ZOOM_PLUS = "Zoom +";
   public static final String APP_NAME = "Slyum";
@@ -183,7 +190,7 @@ public class Slyum extends JFrame implements ActionListener {
   public static final String KEY_DELETE = "DELETE";
   public final static String KEY_DELETE_VIEW = "ctrl DELETE";
   public final static String KEY_DEPENDENCY = "D";
-  public static final String KEY_DUPLICATE = "ctrl D";
+  public static final String KEY_DUPLICATE = "ctrl B";
   public final static String KEY_DUPLICATE_VIEW = "ctrl INSERT";
 
   public final static String KEY_ENUM = "E";
@@ -191,7 +198,7 @@ public class Slyum extends JFrame implements ActionListener {
   public final static String KEY_EXPORT_EPS = "ctrl G";
   public final static String KEY_EXPORT_IMAGE = "ctrl E";
 
-  public final static String KEY_EXPORT_PDF = "ctrl F";
+  public final static String KEY_EXPORT_PDF = "ctrl D";
   public static final String KEY_EXPORT_SVG = "ctrl V";
   public static final String KEY_FULL_SCREEN = "ctrl ENTER";
   public final static String KEY_GRIPS_MODE = "W";
@@ -225,6 +232,10 @@ public class Slyum extends JFrame implements ActionListener {
   public static final String KEY_ZOOM_MINUS = "ctrl MINUS";
   public static final String KEY_ZOOM_PLUS = "ctrl PLUS";
   public static final String KEY_NEW_WINDOW = "ctrl shit W";
+  
+  public final static String KEY_SEARCH = "ctrl F";
+  public final static String KEY_SEARCH_NEXT = "F3";
+  public final static String KEY_SEARCH_PREVIOUS = "shift F3";
   
   public final static Logger LOGGER = Logger.getLogger(Slyum.class.getName());
   
@@ -696,6 +707,8 @@ public class Slyum extends JFrame implements ActionListener {
   private JMenu menuFile;
   private JMenuItem menuItemLocate;
   private JMenu menuOpenViews;
+  
+  private Action actionSearchNext, actionSearchPrevious;
 
   /**
    * Create a new Slyum :D (slyyy slyy slyyyyy)!
@@ -1005,6 +1018,14 @@ public class Slyum extends JFrame implements ActionListener {
       menuItem.setHistoryPath(Paths.get(s));
       menuFile.add(menuItem, (OSValidator.IS_MAC ? 10 : 15));
     }
+  }
+
+  public Action getActionSearchNext() {
+    return actionSearchNext;
+  }
+
+  public Action getActionSearchPrevious() {
+    return actionSearchPrevious;
   }
   
   private void _exit() {
@@ -1333,7 +1354,7 @@ public class Slyum extends JFrame implements ActionListener {
               null, ACTION_ZOOM_ADAPT_SELECTION);
       subMenu.add(menuItem);
 
-      subMenu.addSeparator();
+      subMenu.addSeparator();      
 
       // Menu item Zoom0.5x
       menuItem = createMenuItem("1:1 (100 %)", "zoom1", 0, KEY_ZOOM_1,
@@ -1353,6 +1374,44 @@ public class Slyum extends JFrame implements ActionListener {
       // Menu item Zoom2x
       menuItem = createMenuItem("2:1 (200 %)", "", 0, null, ACTION_ZOOM_2);
       subMenu.add(menuItem);
+      menu.addSeparator();
+      
+      menu.add(new AbstractAction("Search") { {
+          putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(Slyum.KEY_SEARCH));
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          PanelClassDiagram.getInstance().getHierarchicalView().getTxtFieldSearch().requestFocusInWindow();
+          PanelClassDiagram.getInstance().getHierarchicalView().getTxtFieldSearch().selectAll();
+        }
+      });
+      
+      actionSearchNext = new AbstractAction("Search next") { {
+        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(Slyum.KEY_SEARCH_NEXT));
+        enabled = false;
+      }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          searchNext();
+        }
+      };
+      
+      actionSearchPrevious = new AbstractAction("Search previous") { {
+        putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(Slyum.KEY_SEARCH_PREVIOUS));
+        enabled = false;
+      }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          searchPrevious();
+        }
+      };
+      
+      menu.add(actionSearchNext);
+      menu.add(actionSearchPrevious);
+      
       menu.addSeparator();
       
       menuItem = new JMenuItem("Clean diagram");
@@ -1505,6 +1564,29 @@ public class Slyum extends JFrame implements ActionListener {
       text += " [" + parent + "]";
 
     return text;
+  }
+  
+  public static void enableSearchButtons(boolean enable) {
+    getInstance().actionSearchNext.setEnabled(enable);
+    getInstance().actionSearchPrevious.setEnabled(enable);
+  }
+  
+  public static void searchNext() {
+    if (SearchEngine.current() != null)
+      SearchEngine.current().setHighlight(false);
+
+    GraphicComponent next = SearchEngine.next();
+    if (next != null)
+      next.setHighlight(true);    
+  }
+  
+  public static void searchPrevious() {
+    if (SearchEngine.current() != null)
+      SearchEngine.current().setHighlight(false);
+
+    GraphicComponent previous = SearchEngine.previous();
+    if (previous != null)
+      previous.setHighlight(true);  
   }
   
   private void handleMacOSX() {
