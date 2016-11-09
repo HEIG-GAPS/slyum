@@ -116,11 +116,6 @@ public class EnumView extends EntityView {
   }
 
   @Override
-  public String getFullString() {
-    return ((EnumEntity)component).getName();
-  }
-
-  @Override
   public boolean removeTextBox(TextBox tb) {
 
     if (((EnumEntity) component).removeEnumValue(((EnumValue) tb

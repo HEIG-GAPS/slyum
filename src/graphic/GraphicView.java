@@ -2945,4 +2945,9 @@ public class GraphicView extends GraphicComponent
   public interface ObtainColor {
     public Color getColor(ColoredComponent c);
   }
+
+  @Override
+  public LinkedList<? extends GraphicComponent> getDirectChilds() {
+    return getAllComponents();
+  }
 }

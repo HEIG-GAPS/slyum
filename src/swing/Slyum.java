@@ -78,7 +78,6 @@ public class Slyum extends JFrame implements ActionListener {
   public final static String ACTION_DELETE = "Delete"; 
   public final static String ACTION_DELETE_VIEW = "deleteView";
   public static final String ACTION_DUPLICATE = "duplicate";
-  public static final String ACTION_SEARCH = "searchComponent";
   public final static String ACTION_EXIT = "Exit";
   public final static String ACTION_EXPORT_EPS = "ExportEps";
   public final static String ACTION_NEW_WINDOW = "NewWindow";
@@ -239,7 +238,7 @@ public class Slyum extends JFrame implements ActionListener {
   public static final Color THEME_COLOR = new Color(0, 122, 204); // 007ACC
   public static final Font UI_FONT;
   // !! Always  X.Y.Z (for update safety), even if it's 0.
-  public static final String VERSION = "5.0.0";
+  public static final String VERSION = "5.0.2";
   public static final boolean VIEW_TITLE_ON_EXPORT_DEFAULT = true;
   public static final boolean DISPLAY_DIAGRAM_INFORMATIONS_ON_EXPERT_DEFAULT = true;
   public static final int WINDOWS_MAXIMIZED = Frame.MAXIMIZED_BOTH;

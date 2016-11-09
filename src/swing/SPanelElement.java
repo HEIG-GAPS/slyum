@@ -7,6 +7,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.LinkedList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -62,8 +64,7 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
   private static final String TT_MOVE_BOTTOM = "Bottom"
           + Utility.keystrokeToString(Slyum.KEY_MOVE_BOTTOM);
 
-  private SButton undo, redo, btnColor, btnDuplicate, btnDelete, alignTop, // Alignments
-                                                                           // top.
+  private SButton undo, redo, btnColor, btnDuplicate, btnDelete, alignTop, // Alignments top.
           alignBottom, alignRight, alignLeft, adujst, // Adjust size of entity.
           top, // z-orders
           up, down, bottom;
@@ -182,8 +183,26 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
     
     searchField = new JTextField();
     searchField.setPreferredSize(new Dimension(200, 0));
-    searchField.addActionListener(this);
-    searchField.setActionCommand(Slyum.ACTION_SEARCH);
+    searchField.addKeyListener(new KeyAdapter() {
+
+      @Override
+      public void keyReleased(KeyEvent e) {
+        GraphicComponent result = SearchEngine.initialize(searchField.getText());
+        GraphicComponent.removeHighlightForAllComponents();
+        
+        if (result != null)
+          result.setHighlight(true);
+      }
+      
+    });
+    searchField.addActionListener((ActionEvent e) -> {
+      if (SearchEngine.current() != null)
+        SearchEngine.current().setHighlight(false);
+      
+      GraphicComponent next = SearchEngine.next();
+      if (next != null)
+        next.setHighlight(true);
+    });
     add(searchField);
 
     alignTop.setEnabled(false);
@@ -292,9 +311,6 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
         break;
       case Slyum.ACTION_DUPLICATE:
         gv.duplicateSelectedEntities();
-        break;
-      case Slyum.ACTION_SEARCH:
-        SearchEngine.searchComponent(searchField.getText());
         break;
     }
 

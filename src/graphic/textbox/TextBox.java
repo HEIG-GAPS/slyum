@@ -289,6 +289,9 @@ public abstract class TextBox extends GraphicComponent {
       g2.drawString(ats.getIterator(), location.x, location.y + bounds.height
               - metrics.getDescent());
     }
+    
+    if (isHighlight())
+      paintSelectedStyle(g2);
   }
 
   protected void paintSelectedStyle(Graphics2D g2) {
@@ -381,5 +384,10 @@ public abstract class TextBox extends GraphicComponent {
    */
   protected String truncate(Graphics2D g2, String text, int width) {
     return text;
+  }
+
+  @Override
+  public String getFullString() {
+    return getText();
   }
 }

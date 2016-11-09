@@ -3,18 +3,54 @@ package swing;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
+import utility.Utility;
 
 
 public class SearchEngine {
-  private static LinkedList<GraphicComponent> searchResults;
+  private static List<GraphicComponent> searchResults = new LinkedList<>();
+  private static GraphicComponent current = null;
   
-  
-  public static GraphicComponent searchComponent(String searchQuery) {
-    return searchComponent(searchQuery, MultiViewManager.getSelectedGraphicView());
+  public static GraphicComponent initialize(String searchQuery) {
+    return SearchEngine.initialize(searchQuery, MultiViewManager.getSelectedGraphicView());
   }
   
-  public static GraphicComponent searchComponent(String searchQuery, GraphicView graphicView) {
-    graphicView.getAllComponents().stream().forEach(c -> System.out.println(c.toString()));
-    return null;
+  public static GraphicComponent initialize(String searchQuery, GraphicView graphicView) {
+    if (searchQuery.isEmpty()) {
+      searchResults.clear();
+      return null;
+    }
+    
+    searchResults = graphicView.getChildsRecursively().stream().filter(c -> 
+        Utility.stripAccents(c.getFullString().toLowerCase()).contains(
+            Utility.stripAccents(searchQuery.toLowerCase()))).collect(Collectors.toList());
+    
+    if (!searchResults.isEmpty()) {
+      if (current == null || !searchResults.contains(current))
+        current = searchResults.get(0);
+    } else {
+      current = null;
+    }
+    
+    return current;
+  }
+  
+  public static GraphicComponent current() {
+    return current;
+  }
+  
+  public static GraphicComponent next() {
+    if (searchResults.isEmpty())
+      return null;
+    
+    return current = searchResults.get((searchResults.indexOf(current) + 1) % searchResults.size());
+  }
+  
+  public static GraphicComponent previous() {
+    if (searchResults.isEmpty())
+      return null;
+    
+    return current = searchResults.get((searchResults.indexOf(current) - 1) % searchResults.size());
   }
 }

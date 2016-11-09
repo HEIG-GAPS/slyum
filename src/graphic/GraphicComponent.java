@@ -19,6 +19,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JViewport;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import swing.MultiViewManager;
@@ -29,6 +30,7 @@ import swing.Slyum;
 import swing.XmlElement;
 import swing.slyumCustomizedComponents.SRadioButtonMenuItem;
 import utility.PersonalizedIcon;
+import utility.Utility;
 
 /**
  * Represent a graphic component in Slyum. Graphics components can't be draw
@@ -76,6 +78,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
   private boolean selected = false;
   private boolean visible = true;
   private boolean isLightDelete;
+  private boolean highlight;
 
   public GraphicComponent(GraphicView parent) {
     if (parent == null) 
@@ -627,6 +630,54 @@ public abstract class GraphicComponent extends Observable implements ActionListe
     popupMenu.add(menuItem);
   }
   
-  public abstract String getFullString();
-
+  public String getFullString() {
+    return "";
+  }
+  
+  public LinkedList<? extends GraphicComponent> getDirectChilds() {
+    return new LinkedList<>();
+  }
+  
+  public final LinkedList<GraphicComponent> getChildsRecursively() {
+    
+    LinkedList<GraphicComponent> allChilds = (LinkedList<GraphicComponent>)getDirectChilds();
+    
+    getDirectChilds().stream().forEach((child) -> {
+      allChilds.addAll(child.getChildsRecursively());
+    });
+    
+    return allChilds;
+  }
+  
+  public void setHighlight(boolean highlight) {
+    this.highlight = highlight;
+    repaint();
+    
+    if (highlight) {
+      JViewport viewPort = parent.getScrollPane().getViewport();
+      
+      Rectangle viewPortBounds = viewPort.getBounds();
+      Rectangle componentBounds = Utility.scaleRect(getBounds(), parent.getScale());
+      
+      Rectangle centerRect = new Rectangle(new Point(
+          componentBounds.x + (componentBounds.width / 2) - (viewPortBounds.width / 2),
+          componentBounds.y + (componentBounds.height / 2) - (viewPortBounds.height / 2)));
+      
+      Point p = centerRect.getLocation();
+      parent.getScrollPane().getViewport().setViewPosition(
+        new Point(p.x < 0 ? 0 : p.x, p.y < 0 ? 0 : p.y));
+    }
+  }
+  
+  public boolean isHighlight() {
+    return highlight;
+  }
+  
+  public static void removeHighlightForAllComponents() {
+    MultiViewManager.getAllGraphicViews().stream().forEach((gv) -> {
+      gv.getChildsRecursively().stream().forEach((gc) -> {
+        gc.setHighlight(false);
+      });
+    });
+  }
 }

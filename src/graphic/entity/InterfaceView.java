@@ -29,11 +29,6 @@ public class InterfaceView extends SimpleEntityView {
   }
 
   @Override
-  public String getFullString() {
-    return ((InterfaceEntity)component).getName();
-  }
-
-  @Override
   protected void prepareNewAttribute(Attribute attribute) {
     attribute.setStatic(true);
   }
