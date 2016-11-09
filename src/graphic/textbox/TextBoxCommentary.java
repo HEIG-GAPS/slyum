@@ -352,6 +352,17 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
       g2.drawRect(bounds.x + 2, bounds.y + 2, bounds.width - 4,
               bounds.height - 4);
     }
+    
+    if (!pictureMode && isHighlight()) {
+
+      g2.setStroke(new BasicStroke());
+      
+      g2.setColor(new Color(76, 175, 80, 150));
+      g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+
+      g2.setColor(new Color(76, 175, 80));
+      g2.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+    }
   }
 
   @Override

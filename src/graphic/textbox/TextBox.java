@@ -290,17 +290,21 @@ public abstract class TextBox extends GraphicComponent {
               - metrics.getDescent());
     }
     
-    if (isHighlight())
-      paintSelectedStyle(g2);
+    if (!pictureMode && isHighlight())
+      paintSelectedStyle(g2, new Color(76, 175, 80), new Color(76, 175, 80, 150));
+  }
+  
+  protected void paintSelectedStyle(Graphics2D g2) {
+    paintSelectedStyle(g2, new Color(150, 150, 150), new Color(150, 150, 150, 150));
   }
 
-  protected void paintSelectedStyle(Graphics2D g2) {
+  protected void paintSelectedStyle(Graphics2D g2, Color borderColor, Color fillColor) {
     Rectangle bounds = getBounds();
 
-    g2.setColor(new Color(150, 150, 150, 150));
+    g2.setColor(fillColor);
     g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
-    g2.setColor(new Color(150, 150, 150));
+    g2.setColor(borderColor);
     g2.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
   }
 
