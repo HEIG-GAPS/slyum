@@ -10,6 +10,7 @@ import classDiagram.components.Method.ParametersViewStyle;
 import classDiagram.components.PrimitiveType;
 import classDiagram.components.SimpleEntity;
 import classDiagram.components.Visibility;
+import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.textbox.TextBox;
 import graphic.textbox.TextBoxAttribute;

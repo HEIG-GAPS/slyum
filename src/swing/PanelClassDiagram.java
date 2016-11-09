@@ -3,9 +3,15 @@ package swing;
 import change.Change;
 import classDiagram.ClassDiagram;
 import classDiagram.IDiagramComponent;
+import classDiagram.components.Attribute;
+import classDiagram.components.Method;
+import classDiagram.components.PrimitiveType;
+import classDiagram.components.SimpleEntity;
+import classDiagram.components.Visibility;
 import classDiagram.verifyName.SyntaxeNameException;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
+import graphic.entity.EntityView;
 import graphic.export.ExportViewEps;
 import graphic.export.ExportViewImage;
 import graphic.export.ExportViewPdf;
@@ -16,6 +22,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.io.File;
@@ -23,10 +30,13 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -109,7 +119,6 @@ public class PanelClassDiagram extends JPanel {
   private WatchFileListener watchFileListener;
   private boolean xmlImportation = false;
 
-
   private PanelClassDiagram() {
     super(new MultiBorderLayout());
 
@@ -166,6 +175,48 @@ public class PanelClassDiagram extends JPanel {
       @Override
       public void actionPerformed(ActionEvent e) {
         MultiViewManager.getSelectedGraphicView().deleteCurrentFactory();
+      }
+    });
+    
+    // Add attribute shortkey
+    getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
+        KeyStroke.getKeyStroke('A', InputEvent.ALT_DOWN_MASK), "newAttributePressed");
+    getActionMap().put("newAttributePressed", new AbstractAction() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        List<EntityView> selectedEntities = 
+          MultiViewManager.getSelectedGraphicView().getSelectedEntities()
+            .stream().filter(entity -> entity.getComponent() instanceof SimpleEntity)
+                     .collect(Collectors.toList());
+        
+        if (selectedEntities.size() == 1) {
+          SimpleEntity simpleEntity = ((SimpleEntity)selectedEntities.get(0).getComponent());
+          simpleEntity.addAttribute(new Attribute("attribute", PrimitiveType.VOID_TYPE));
+          simpleEntity.notifyObservers(IDiagramComponent.UpdateMessage.ADD_ATTRIBUTE);
+        }
+          
+      }
+    });
+    
+    // Add method shortkey
+    getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(
+        KeyStroke.getKeyStroke('M', InputEvent.ALT_DOWN_MASK), "newMethodPressed");
+    getActionMap().put("newMethodPressed", new AbstractAction() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        List<EntityView> selectedEntities = 
+          MultiViewManager.getSelectedGraphicView().getSelectedEntities()
+            .stream().filter(entity -> entity.getComponent() instanceof SimpleEntity)
+                     .collect(Collectors.toList());
+        
+        if (selectedEntities.size() == 1) {
+          SimpleEntity simpleEntity = ((SimpleEntity)selectedEntities.get(0).getComponent());
+          simpleEntity.addMethod(new Method("method", PrimitiveType.VOID_TYPE, Visibility.PUBLIC, simpleEntity));
+          simpleEntity.notifyObservers(IDiagramComponent.UpdateMessage.ADD_METHOD);
+        }
+          
       }
     });
     
@@ -726,6 +777,10 @@ public class PanelClassDiagram extends JPanel {
       Logger.getLogger(PanelClassDiagram.class.getName()).log(
           Level.SEVERE, "Unable to register file", ioe);
     }
+  }
+
+  public HierarchicalView getHierarchicalView() {
+    return hierarchicalView;
   }
   
   private void _refresh() {

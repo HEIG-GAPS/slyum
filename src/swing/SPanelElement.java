@@ -7,9 +7,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.LinkedList;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import swing.SColorAssigner.RecentColorButton;
 import swing.slyumCustomizedComponents.SButton;
 import swing.slyumCustomizedComponents.SSeparator;
@@ -60,17 +67,25 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
   private static final String TT_MOVE_BOTTOM = "Bottom"
           + Utility.keystrokeToString(Slyum.KEY_MOVE_BOTTOM);
 
-  private SButton undo, redo, btnColor, btnDuplicate, btnDelete, alignTop, // Alignments
-                                                                           // top.
-          alignBottom, alignRight, alignLeft, adujst, // Adjust size of entity.
-          top, // z-orders
-          up, down, bottom;
+  private static final String TT_SEARCH_NEXT = "Next"
+          + Utility.keystrokeToString(Slyum.KEY_SEARCH_NEXT);
+
+  private static final String TT_SEARCH_PREVIOUS = "Previous"
+          + Utility.keystrokeToString(Slyum.KEY_SEARCH_PREVIOUS);
+
+  private SButton 
+      undo, redo, btnColor, btnDuplicate, btnDelete, alignTop, // Alignments top.
+      alignBottom, alignRight, alignLeft, adujst, // Adjust size of entity.
+      top, // z-orders
+      up, down, bottom;
   
   private LinkedList<JButton> btnsColor = new LinkedList<>();
 
   private SSlider sliderZoom;
 
   private static SPanelElement instance;
+  
+  public JTextField searchField;
 
   public static SPanelElement getInstance() {
     if (instance == null) instance = new SPanelElement();
@@ -175,7 +190,7 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
     add(bottom = createEmptyButton(
             PersonalizedIcon.createImageIcon(Slyum.ICON_PATH + "bottom.png"),
             Slyum.ACTION_MOVE_BOTTOM, Color.MAGENTA, TT_MOVE_BOTTOM));
-
+    
     alignTop.setEnabled(false);
     alignBottom.setEnabled(false);
     alignRight.setEnabled(false);

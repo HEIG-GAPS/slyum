@@ -230,4 +230,9 @@ public class StyleCross extends GraphicComponent {
     btnCross[4].setLocation(new Point(bounds.x + size, bounds.y + size * 2));
   }
 
+  @Override
+  public String getFullString() {
+    return "";
+  }
+
 }

@@ -75,7 +75,8 @@ public class AggregationFactory extends RelationFactory {
   @Override
   protected void drawExtremity(Graphics2D g2) {
     Point p = points.size() < 2 ? mouseLocation : points.get(1);
-    AggregationView.paintExtremity(g2, p, points.get(0), Color.WHITE,
-            Color.DARK_GRAY);
+    AggregationView.paintExtremity(
+        g2, p, points.get(0), Color.WHITE,
+        Color.DARK_GRAY);
   }
 }

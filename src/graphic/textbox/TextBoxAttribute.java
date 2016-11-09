@@ -132,6 +132,11 @@ public class TextBoxAttribute extends TextBox implements Observer {
   }
 
   @Override
+  public String getFullString() {
+    return getStringFromAttribute(attribute);
+  }
+
+  @Override
   protected String truncate(Graphics2D g2, String text, int width) {
     return Utility.truncate(g2, text, width);
   }

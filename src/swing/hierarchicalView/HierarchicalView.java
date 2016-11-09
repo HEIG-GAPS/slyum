@@ -16,16 +16,23 @@ import classDiagram.relationships.Dependency;
 import classDiagram.relationships.Inheritance;
 import classDiagram.relationships.InnerClass;
 import classDiagram.relationships.Multi;
+import graphic.GraphicComponent;
 import graphic.GraphicView;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Insets;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.LinkedList;
@@ -44,6 +51,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.plaf.basic.BasicTextFieldUI;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
@@ -53,6 +61,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import swing.MultiViewManager;
 import swing.PanelClassDiagram;
+import swing.SearchEngine;
 import swing.Slyum;
 import swing.slyumCustomizedComponents.SScrollPane;
 import utility.PersonalizedIcon;
@@ -157,6 +166,7 @@ public class HierarchicalView
   private final DefaultTreeModel treeModel;
   private JTextField txtFieldClassDiagramName;
   private final DefaultMutableTreeNode viewsNode;
+  private JTextField txtFieldSearch;
 
   /**
    * Create a new hierarchical view of the specified class diagram. The new view
@@ -215,6 +225,73 @@ public class HierarchicalView
         new Dimension(Short.MAX_VALUE, 500));
     txtFieldClassDiagramName.setVisible(!Slyum.isViewTitleOnExport());
     add(txtFieldClassDiagramName);
+    
+    txtFieldSearch = new JTextField() { {
+      addMouseListener(new MouseAdapter() {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+          JTextField source = (JTextField)e.getSource();
+          source.setText("");
+          
+          if (e.getPoint().x > source.getWidth() - 30) {
+            
+            GraphicComponent result = SearchEngine.initialize("");
+            GraphicComponent.removeHighlightForAllComponents();
+            Slyum.enableSearchButtons(false);
+          }
+        }
+        
+      });
+    }
+      @Override
+      protected void paintComponent(java.awt.Graphics g) {
+        super.paintComponent(g);
+        
+        Graphics2D g2 = (Graphics2D)g.create();
+        utility.Utility.setRenderQuality(g2);
+        g2.setColor(Color.gray);
+        
+        if(getText().isEmpty()){
+          
+          g2.drawString("Search", 11, 23);
+          
+        } else {
+          
+          g2.drawString("x", getWidth() - 20, 23);
+          
+        }
+        g2.dispose();
+      }
+    };
+    
+    txtFieldSearch.addKeyListener(new KeyAdapter() {
+
+      @Override
+      public void keyReleased(KeyEvent e) {
+        GraphicComponent result = SearchEngine.initialize(txtFieldSearch.getText());
+        GraphicComponent.removeHighlightForAllComponents();
+        
+        if (result != null) {
+          result.setHighlight(true);
+          Slyum.enableSearchButtons(true);
+        } else {
+          Slyum.enableSearchButtons(false);
+        }
+      }
+      
+    });
+    
+    txtFieldSearch.addActionListener(e -> Slyum.searchNext());
+    
+    txtFieldSearch.setFont(Slyum.DEFAULT_FONT.deriveFont(15f));
+    txtFieldSearch.setBorder(
+        BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(0, 0, 1, 0, Slyum.THEME_COLOR),
+            BorderFactory.createEmptyBorder(5, 10, 5, 5)));
+    txtFieldSearch.setMaximumSize(
+        new Dimension(Short.MAX_VALUE, 500));
+    add(txtFieldSearch);
 
     final DefaultMutableTreeNode root = new DefaultMutableTreeNode(
             classDiagram.getName());
@@ -273,6 +350,10 @@ public class HierarchicalView
     add(scrollPane);
     classDiagram.addComponentsObserver(this);
     setMinimumSize(new Dimension(150, 200));
+  }
+
+  public JTextField getTxtFieldSearch() {
+    return txtFieldSearch;
   }
   
   public void addAggregation(Aggregation component) {

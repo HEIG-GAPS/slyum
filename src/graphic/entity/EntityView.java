@@ -479,6 +479,11 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     tb.add(entityName);
     return tb;
   }
+
+  @Override
+  public LinkedList<? extends GraphicComponent> getDirectChilds() {
+    return (LinkedList<? extends GraphicComponent>) getAllTextBox();
+  }
   
   @Override
   public IDiagramComponent getAssociedComponent() {

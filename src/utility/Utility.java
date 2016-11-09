@@ -21,6 +21,7 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
+import java.text.Normalizer;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -675,4 +676,10 @@ public class Utility {
 
         return null;
     }
+ 
+  public static String stripAccents(String s) {
+    s = Normalizer.normalize(s, Normalizer.Form.NFD);
+    s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+    return s;
+  }
 }

@@ -289,15 +289,22 @@ public abstract class TextBox extends GraphicComponent {
       g2.drawString(ats.getIterator(), location.x, location.y + bounds.height
               - metrics.getDescent());
     }
+    
+    if (!pictureMode && isHighlight())
+      paintSelectedStyle(g2, new Color(76, 175, 80), new Color(76, 175, 80, 150));
+  }
+  
+  protected void paintSelectedStyle(Graphics2D g2) {
+    paintSelectedStyle(g2, new Color(150, 150, 150), new Color(150, 150, 150, 150));
   }
 
-  protected void paintSelectedStyle(Graphics2D g2) {
+  protected void paintSelectedStyle(Graphics2D g2, Color borderColor, Color fillColor) {
     Rectangle bounds = getBounds();
 
-    g2.setColor(new Color(150, 150, 150, 150));
+    g2.setColor(fillColor);
     g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
-    g2.setColor(new Color(150, 150, 150));
+    g2.setColor(borderColor);
     g2.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
   }
 
@@ -381,5 +388,10 @@ public abstract class TextBox extends GraphicComponent {
    */
   protected String truncate(Graphics2D g2, String text, int width) {
     return text;
+  }
+
+  @Override
+  public String getFullString() {
+    return getText();
   }
 }
