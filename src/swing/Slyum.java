@@ -59,6 +59,7 @@ import utility.OSValidator;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.TagDownload;
+import utility.Utility;
 
 /**
  * Main class! Create a new Instance of Slyum and display it. Create menu.
@@ -234,7 +235,9 @@ public class Slyum extends JFrame implements ActionListener {
   
   public final static String KEY_SEARCH = "ctrl F";
   public final static String KEY_SEARCH_NEXT = "F3";
+  public final static String KEY_SEARCH_NEXT_OSX = "meta G";
   public final static String KEY_SEARCH_PREVIOUS = "shift F3";
+  public final static String KEY_SEARCH_PREVIOUS_OSX = "shift meta G";
   
   public final static Logger LOGGER = Logger.getLogger(Slyum.class.getName());
   
@@ -248,7 +251,7 @@ public class Slyum extends JFrame implements ActionListener {
   public static final Color THEME_COLOR = new Color(0, 122, 204); // 007ACC
   public static final Font UI_FONT;
   // !! Always  X.Y.Z (for update safety), even if it's 0.
-  public static final String VERSION = "5.0.3";
+  public static final String VERSION = "5.0.4";
   public static final boolean VIEW_TITLE_ON_EXPORT_DEFAULT = true;
   public static final boolean DISPLAY_DIAGRAM_INFORMATIONS_ON_EXPERT_DEFAULT = true;
   public static final int WINDOWS_MAXIMIZED = Frame.MAXIMIZED_BOTH;
@@ -863,12 +866,7 @@ public class Slyum extends JFrame implements ActionListener {
     item = new JMenuItem(text, icon);
     item.setMnemonic(mnemonic);
     item.setActionCommand(actionCommand);
-    if (accelerator != null && accelerator.contains("ctrl")
-        && OSValidator.IS_MAC) {
-      accelerator = accelerator.replace("ctrl", "meta");
-      accelerator = accelerator.replace("control", "meta");
-    }
-    item.setAccelerator(KeyStroke.getKeyStroke(accelerator));
+    item.setAccelerator(KeyStroke.getKeyStroke(Utility.adaptOSKeyStroke(accelerator)));
     item.addActionListener(al);
     
     return item;
@@ -1376,7 +1374,7 @@ public class Slyum extends JFrame implements ActionListener {
       menu.addSeparator();
       
       menu.add(new AbstractAction("Search") { {
-          putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(Slyum.KEY_SEARCH));
+          putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(Utility.adaptOSKeyStroke(Slyum.KEY_SEARCH)));
         }
         
         @Override

@@ -682,4 +682,14 @@ public class Utility {
     s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
     return s;
   }
+  
+  public static String adaptOSKeyStroke(String accelerator) {
+    
+    if (accelerator != null && accelerator.contains("ctrl") && OSValidator.IS_MAC) {      
+      accelerator = accelerator.replace("ctrl", "meta");
+      return accelerator.replace("control", "meta");
+    }
+    
+    return accelerator;
+  }
 }
