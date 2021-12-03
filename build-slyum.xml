@@ -3,25 +3,25 @@
 <project name="Slyum" default="default" basedir=".">
     <description>Builds, tests, and runs the project Slyum.</description>
     <import file="nbproject/build-impl.xml"/>
-    
-  <taskdef name="bundleapp"
-           classname="com.oracle.appbundler.AppBundlerTask"   
-           classpath="tools/appbundler-1.0.jar" />
 
-  <target name="bundle-slyum">
-      <bundleapp outputdirectory="store"
-          name="Slyum"
-          displayname="Slyum"
-          identifier="ch.slyum"
-          mainclassname="swing.Slyum"
-          icon="tools/icns/slyum.icns"
-          shortversion="5.0.0"
-          copyright="GAPS - HEIG-VD">
-          <classpath file="store/Slyum.jar" />
-      </bundleapp>
-  </target>
-    
-  <target name="package-for-store" depends="jar">
+    <taskdef name="bundleapp"
+             classname="com.oracle.appbundler.AppBundlerTask"
+             classpath="tools/appbundler-1.0.jar"/>
+
+    <target name="bundle-slyum">
+        <bundleapp outputdirectory="store"
+                   name="Slyum"
+                   displayname="Slyum"
+                   identifier="ch.slyum"
+                   mainclassname="swing.Slyum"
+                   icon="tools/icns/slyum.icns"
+                   shortversion="5.0.0"
+                   copyright="GAPS - HEIG-VD">
+            <classpath file="store/Slyum.jar"/>
+        </bundleapp>
+    </target>
+
+    <target name="package-for-store" depends="jar">
 
         <!-- Change the value of this property to be the name of your JAR,
              minus the .jar extension. It should not have spaces.
@@ -51,11 +51,11 @@
 
         <zip destfile="${store.jar}">
             <zipfileset src="${store.dir}/temp_final.jar"
-            excludes="META-INF/*.SF, META-INF/*.DSA, META-INF/*.RSA"/>
+                        excludes="META-INF/*.SF, META-INF/*.DSA, META-INF/*.RSA"/>
         </zip>
 
         <delete file="${store.dir}/temp_final.jar"/>
 
     </target>
-    
+
 </project>
