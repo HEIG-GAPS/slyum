@@ -1,0 +1,186 @@
+#include:
+#  - template: Security/SAST.gitlab-ci.yml
+#  - template: Security/Secret-Detection.gitlab-ci.yml
+
+variables:
+  MAVEN_CLI_OPTS: "--batch-mode --settings maven.xml"
+  SONAR_CLI_OPTS: "-Dsonar.gitlab.api_version=v4 -Dsonar.host.url=https://lab.gaps.heig-vd.ch/sonarqube -Dsonar.login=$SONAR_TOKEN -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME -Dsonar.gitlab.project_id=$CI_PROJECT_ID -Dsonar.gitlab.url=https://lab.gaps.heig-vd.ch/gitlab -Dsonar.gitlab.user_token=$GL_TOKEN"
+  DEPLOY_CLI_OPTS: "-DskipTests=true -DGITLAB-NEXUS-USERNAME=$NEXUS_USERNAME -DGITLAB-NEXUS-PASSWORD=$NEXUS_PASSWORD"
+
+stages:
+#  - complience
+  - build
+#  - test
+#  - quality
+  - deployment
+
+# dependencies_check:
+#   stage: complience
+#   tags:
+#     - maven-java17
+#   script: mvn $MAVEN_CLI_OPTS clean dependency:analyze-only dependency:analyze-dep-mgt versions:use-latest-releases versions:update-properties scm:check-local-modification
+
+# checkstyle_check:
+#   stage: complience
+#   tags:
+#   - maven-java17
+#   script: mvn $MAVEN_CLI_OPTS clean checkstyle:check
+
+build:
+  stage: build
+  tags:
+    - maven-java17
+  script: mvn $MAVEN_CLI_OPTS -Dmaven.test.skip=true -Dmaven.repo.local=./.m2/repository clean compile package
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - .m2/
+      - target/
+
+#spotbugs-sast:
+#  dependencies:
+#    - build
+#  variables:
+#    MAVEN_REPO_PATH: ./.m2/repository
+#    COMPILE: "false"
+#  artifacts:
+#    expire_in: 1 day
+#    reports:
+#      sast: gl-sast-report.json
+
+# test:
+#  stage: test
+#  tags:
+#    - maven-java17
+#  script:
+#    - mvn $MAVEN_CLI_OPTS test
+#    - cat target/site/jacoco/index.html
+#  artifacts:
+#    expire_in: 1 day
+#    reports:
+#      junit: target/surefire-reports/TEST-*.xml
+
+#quality_check_master:
+#  stage: quality
+#  tags:
+#    - maven-java17
+#  only:
+#    - master
+#  script: mvn $MAVEN_CLI_OPTS clean test sonar:sonar $SONAR_CLI_OPTS
+
+#quality_check_branches:
+#  stage: quality
+#  tags:
+#    - maven-java17
+#  except:
+#    - master
+#  script:
+#    - git checkout origin/master
+#    - git merge $CI_COMMIT_SHA --no-commit --no-ff
+#    - mvn $MAVEN_CLI_OPTS clean test sonar:sonar $SONAR_CLI_OPTS
+
+#deploy_snapshot:
+#  stage: deployment
+#  tags:
+#    - maven-java17
+#  only:
+#    - master
+#  script: mvn $MAVEN_CLI_OPTS $DEPLOY_CLI_OPTS deploy
+
+#deploy_release:
+#  stage: deployment
+#  tags:
+#    - maven-java17
+#  only:
+#    - tags
+#  script: mvn $MAVEN_CLI_OPTS $DEPLOY_CLI_OPTS deploy
+
+deploy_test_macos_x86_64:
+  stage: deployment
+  tags:
+    - maven-java17-macos-x86_64
+  only:
+    - tags
+  script:
+    - mvn $MAVEN_CLI_OPTS $DEPLOY_CLI_OPTS package
+    - FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+    - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
+    - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
+    - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+    - jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2021" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
+  artifacts:
+    paths:
+      - "*.pkg"
+    expire_in: 7 days
+
+deploy_test_macos_arm64:
+  stage: deployment
+  tags:
+    - maven-java17-macos-arm64
+  only:
+    - tags
+  script:
+    - mvn $MAVEN_CLI_OPTS $DEPLOY_CLI_OPTS package
+    - FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+    - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
+    - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
+    - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+    - jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2021" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
+  artifacts:
+    paths:
+      - "*.pkg"
+    expire_in: 7 days
+
+deploy_test_windows:
+  stage: deployment
+  tags:
+    - maven-java17-windows
+  only:
+    - tags
+  script:
+    - mvn $(MAVEN_CLI_OPTS) $(DEPLOY_CLI_OPTS) package
+    - $FULL_VERSION = mvn help:evaluate -Dexpression="project.version" -q -DforceStdout
+    - $VERSION = mvn help:evaluate -Dexpression="project.version" -q -DforceStdout | %{ $_.Split('-')[0]; }
+    - $DESCRIPTION = mvn help:evaluate -Dexpression="project.description" -q -DforceStdout
+    - $ARTIFACTID = mvn help:evaluate -Dexpression="project.artifactId" -q -DforceStdout
+    - jpackage --name Slyum --type msi --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2021" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target\dist --icon tools\icns\slyum.ico --win-dir-chooser --win-menu --win-menu-group "Slyum" --win-per-user-install
+  artifacts:
+    paths:
+      - "*.msi"
+    expire_in: 7 days
+
+deploy_test_linux_rpm:
+  stage: deployment
+  tags:
+    - maven-java17-linux
+  only:
+    - tags
+  script:
+    - mvn $MAVEN_CLI_OPTS $DEPLOY_CLI_OPTS package
+    - FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+    - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
+    - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
+    - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+    - jpackage --name Slyum --type rpm --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2021" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-package-name Slyum --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
+  artifacts:
+    paths:
+      - "*.rpm"
+    expire_in: 7 days
+
+deploy_test_linux_deb:
+  stage: deployment
+  tags:
+    - maven-java17-linux
+  only:
+    - tags
+  script:
+    - mvn $MAVEN_CLI_OPTS $DEPLOY_CLI_OPTS package
+    - FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+    - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
+    - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
+    - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+    - jpackage --name Slyum --type deb --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2021" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
+  artifacts:
+    paths:
+      - "*.deb"
+    expire_in: 7 days

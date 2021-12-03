@@ -1,7 +1,9 @@
 package slyumupdater;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import tagDownload.TagDownload;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
@@ -20,16 +22,8 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import tagDownload.TagDownload;
 
 /**
- *
  * @author David Miserez
  */
 public class SlyumUpdater extends JFrame {
@@ -39,7 +33,7 @@ public class SlyumUpdater extends JFrame {
   private static final String slyumNameFile = System.getProperty("file.separator") + "Slyum.jar";
   private static final String macOsPath = "/Contents/Java";
   private static final String macOsAppPath = ".app" + macOsPath;
-  
+
   public static final String tagDownload = "[download]";
 
   private JTextArea outText;
@@ -113,12 +107,12 @@ public class SlyumUpdater extends JFrame {
 
   private void launch() {
     String[] run;
-    
+
     if (isAppBundle())
       run = new String[] {"open", getAppBundlePath()};
     else
       run = new String[] {"java", "-jar", slyumPath + slyumNameFile};
-    
+
     try {
       Runtime.getRuntime().exec(run);
     } catch (IOException ex) {
@@ -126,15 +120,15 @@ public class SlyumUpdater extends JFrame {
     }
     System.exit(0);
   }
-  
+
   private String getAppBundlePath() {
     return slyumPath.substring(0, slyumPath.indexOf(macOsPath));
   }
-  
+
   private boolean isAppBundle() {
     return isMac() && slyumPath.contains(macOsAppPath);
   }
-  
+
   private static boolean isMac() {
     final String os = System.getProperty("os.name").toLowerCase();
     return os.contains("mac");
@@ -176,7 +170,7 @@ public class SlyumUpdater extends JFrame {
 
     File f1 = new File(srFile);
     File f2 = new File(dtFile);
-    try (InputStream in = new FileInputStream(f1); 
+    try (InputStream in = new FileInputStream(f1);
          OutputStream out = new FileOutputStream(f2)) {
       byte[] buf = new byte[1024];
       int len;
@@ -200,8 +194,8 @@ public class SlyumUpdater extends JFrame {
         } else {
           File target = new File(root + entry.getName());
           File parent = target.getParentFile();
-          if(!parent.exists() && !parent.mkdirs())
-              throw new IllegalStateException("Couldn't create dir: " + parent);
+          if (!parent.exists() && !parent.mkdirs())
+            throw new IllegalStateException("Couldn't create dir: " + parent);
           target.createNewFile();
           try (BufferedInputStream is = new BufferedInputStream(zipfile.getInputStream(entry))) {
             int count;
@@ -209,7 +203,7 @@ public class SlyumUpdater extends JFrame {
             FileOutputStream fos = new FileOutputStream(root + entry.getName());
             try (BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER)) {
               while ((count = is.read(data, 0, BUFFER))
-                  != -1) {
+                     != -1) {
                 dest.write(data, 0, count);
               }
             }
@@ -220,17 +214,17 @@ public class SlyumUpdater extends JFrame {
   }
 
   private void downloadFile(String link) throws MalformedURLException, IOException {
-    
+
     outText.setText(outText.getText() + "\n" + "Downloading file...");
     URL website = new URL(link);
-    try (ReadableByteChannel rbc = Channels.newChannel(website.openStream()); 
+    try (ReadableByteChannel rbc = Channels.newChannel(website.openStream());
          FileOutputStream fos = new FileOutputStream("update.zip")) {
       fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
     }
     outText.setText(outText.getText() + "\nDownload Complete!");
   }
 
-  private String getDownloadLinkFromHost() 
+  private String getDownloadLinkFromHost()
       throws MalformedURLException, IOException, Exception {
     return TagDownload.getContentTag(tagDownload);
   }
@@ -238,7 +232,7 @@ public class SlyumUpdater extends JFrame {
   public static void main(final String args[]) {
     if (args.length != 1)
       JOptionPane.showMessageDialog(null, "Arguments length probleme!");
-    
+
     java.awt.EventQueue.invokeLater(new Runnable() {
       @Override
       public void run() {
@@ -246,4 +240,5 @@ public class SlyumUpdater extends JFrame {
       }
     });
   }
+
 }

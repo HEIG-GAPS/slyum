@@ -5,41 +5,40 @@
  */
 package utility;
 
-import java.awt.Color;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.geom.Point2D;
-import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.awt.*;
+import java.awt.geom.Point2D;
+import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
 /**
- *
  * @author David
  */
 public class UtilityTest {
-  
+
   public UtilityTest() {
   }
-  
+
   @BeforeClass
   public static void setUpClass() {
   }
-  
+
   @AfterClass
   public static void tearDownClass() {
   }
-  
+
   @Before
   public void setUp() {
   }
-  
+
   @After
   public void tearDown() {
   }
@@ -51,7 +50,7 @@ public class UtilityTest {
   public void testCount() {
     System.out.println("count");
     int expResult = 2;
-    
+
     List<Object> testList = new LinkedList<>();
     testList.add(new Integer(1));
     testList.add(new Integer(1));
@@ -59,7 +58,7 @@ public class UtilityTest {
     testList.add(new Double(1));
     testList.add(new Double(1));
     testList.add(new Long(1));
-    
+
     int result = Utility.count(Integer.class, testList);
     assertEquals(expResult, result);
   }
@@ -126,7 +125,7 @@ public class UtilityTest {
   public void testGrowRectangle() {
     System.out.println("growRectangle");
     Rectangle rect = new Rectangle(2, 2, 2, 2),
-              expResult = new Rectangle(2, 2, 2, 2);
+        expResult = new Rectangle(2, 2, 2, 2);
     int size = 2;
     expResult.grow(size, size);
     Rectangle result = Utility.growRectangle(rect, size);
@@ -157,5 +156,5 @@ public class UtilityTest {
     Color result = Utility.getAlphaColor(color, alpha);
     assertEquals(expResult, result);
   }
-  
+
 }

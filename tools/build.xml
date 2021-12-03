@@ -70,25 +70,25 @@
     nbproject/build-impl.xml file. 
 
     -->
-    
-  <taskdef name="bundleapp"
-           classname="com.oracle.appbundler.AppBundlerTask"   
-           classpath="tools/appbundler-1.0.jar" />
 
-  <target name="bundle-slyum">
-      <bundleapp outputdirectory="dist"
-          name="Slyum"
-          displayname="Slyum"
-          identifier="ch.slyum"
-          mainclassname="swing.Slyum"
-          icon="tools/icns/slyum.icns"
-          shortversion="3.2.2"
-          copyright="GAPS - HEIG-VD">
-          <classpath file="dist/Slyum.jar" />
-      </bundleapp>
-  </target>
+    <taskdef name="bundleapp"
+             classname="com.oracle.appbundler.AppBundlerTask"
+             classpath="tools/appbundler-1.0.jar"/>
 
-	<target name="package-for-store" depends="jar">
+    <target name="bundle-slyum">
+        <bundleapp outputdirectory="dist"
+                   name="Slyum"
+                   displayname="Slyum"
+                   identifier="ch.slyum"
+                   mainclassname="swing.Slyum"
+                   icon="tools/icns/slyum.icns"
+                   shortversion="3.2.2"
+                   copyright="GAPS - HEIG-VD">
+            <classpath file="dist/Slyum.jar"/>
+        </bundleapp>
+    </target>
+
+    <target name="package-for-store" depends="jar">
 
         <!-- Change the value of this property to be the name of your JAR,
              minus the .jar extension. It should not have spaces.
@@ -118,7 +118,7 @@
 
         <zip destfile="${store.jar}">
             <zipfileset src="${store.dir}/temp_final.jar"
-            excludes="META-INF/*.SF, META-INF/*.DSA, META-INF/*.RSA"/>
+                        excludes="META-INF/*.SF, META-INF/*.DSA, META-INF/*.RSA"/>
         </zip>
 
         <delete file="${store.dir}/temp_final.jar"/>

@@ -1,1 +1,7 @@
 *.ini
+.idea
+*.iml
+out
+target
+*.dmg
+*.pkg
