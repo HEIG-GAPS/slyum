@@ -107,7 +107,7 @@ deploy_test_macos_x86_64:
     - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
     - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
     - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
-    - jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2021" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
+    - jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
   artifacts:
     paths:
       - "*.pkg"
@@ -125,7 +125,7 @@ deploy_test_macos_arm64:
     - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
     - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
     - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
-    - jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2021" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
+    - jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
   artifacts:
     paths:
       - "*.pkg"
@@ -143,7 +143,7 @@ deploy_test_windows:
     - $VERSION = mvn help:evaluate -Dexpression="project.version" -q -DforceStdout | %{ $_.Split('-')[0]; }
     - $DESCRIPTION = mvn help:evaluate -Dexpression="project.description" -q -DforceStdout
     - $ARTIFACTID = mvn help:evaluate -Dexpression="project.artifactId" -q -DforceStdout
-    - jpackage --name Slyum --type msi --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2021" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target\dist --icon tools\icns\slyum.ico --win-dir-chooser --win-menu --win-menu-group "Slyum" --win-per-user-install
+    - jpackage --name Slyum --type msi --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target\dist --icon tools\icns\slyum.ico --win-dir-chooser --win-menu --win-menu-group "Slyum" --win-per-user-install
   artifacts:
     paths:
       - "*.msi"
@@ -161,7 +161,7 @@ deploy_test_linux_rpm:
     - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
     - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
     - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
-    - jpackage --name Slyum --type rpm --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2021" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-package-name Slyum --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
+    - jpackage --name Slyum --type rpm --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-package-name Slyum --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
   artifacts:
     paths:
       - "*.rpm"
@@ -179,7 +179,7 @@ deploy_test_linux_deb:
     - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
     - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
     - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
-    - jpackage --name Slyum --type deb --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2021" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
+    - jpackage --name Slyum --type deb --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
   artifacts:
     paths:
       - "*.deb"
