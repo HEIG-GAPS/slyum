@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -183,11 +184,11 @@ public class Slyum extends JFrame
 
   public final static String KEY_ENUM = "E";
   public final static String KEY_EXIT = "alt F4";
-  public final static String KEY_EXPORT_EPS = "ctrl G";
-  public final static String KEY_EXPORT_IMAGE = "ctrl E";
+  public final static String KEY_EXPORT_EPS = "alt shift E";
+  public final static String KEY_EXPORT_IMAGE = "alt shift I";
 
-  public final static String KEY_EXPORT_PDF = "ctrl D";
-  public static final String KEY_EXPORT_SVG = "ctrl V";
+  public final static String KEY_EXPORT_PDF = "alt shift P";
+  public static final String KEY_EXPORT_SVG = "alt shift S";
   public static final String KEY_FULL_SCREEN = "ctrl ENTER";
   public final static String KEY_GRIPS_MODE = "W";
   public final static String KEY_HELP = "F1";
@@ -482,7 +483,7 @@ public class Slyum extends JFrame
       try {
         SColorAssigner.addRecentColor(new Color(Integer.parseInt(color)));
       } catch (NumberFormatException e) {
-
+        /* Do nothing, the color will not be added */
       }
   }
 
@@ -490,9 +491,9 @@ public class Slyum extends JFrame
     if (SColorAssigner.getRecentColors().length == 0) return;
 
     String strColors = String.join(";", Arrays.stream(SColorAssigner.getRecentColors())
-                                              .filter(c -> c != null)
+                                              .filter(Objects::nonNull)
                                               .map(c -> String.valueOf(c.getRGB()))
-                                              .toArray(size -> new String[size]));
+                                              .toArray(String[]::new));
 
     PropertyLoader.getInstance().getProperties().put(PropertyLoader.RECENT_COLORS, strColors);
     PropertyLoader.getInstance().push();
@@ -591,7 +592,8 @@ public class Slyum extends JFrame
 
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+             UnsupportedLookAndFeelException e) {
       final String message = "Unable to load Look and Feel";
       LOGGER.log(Level.SEVERE, message, e);
       SMessageDialog.showErrorMessage(message);
@@ -865,11 +867,11 @@ public class Slyum extends JFrame
    * Invoked when the application is asked to quit.
    * <p>
    * Implementors must call either {@link QuitResponse#cancelQuit()}, {@link QuitResponse#performQuit()}, or ensure the
-   * application terminates. The process (or log-out) requesting this app to quit will be blocked until the {@link
-   * QuitResponse} is handled. Apps that require complex UI to shutdown may call the {@link QuitResponse} from any
-   * thread. Your app may be asked to quit multiple times before you have responded to the initial request. This handler
-   * is called each time a quit is requested, and the same {@link QuitResponse} object is passed until it is handled.
-   * Once used, the {@link QuitResponse} cannot be used again to change the decision.
+   * application terminates. The process (or log-out) requesting this app to quit will be blocked until the
+   * {@link QuitResponse} is handled. Apps that require complex UI to shutdown may call the {@link QuitResponse} from
+   * any thread. Your app may be asked to quit multiple times before you have responded to the initial request. This
+   * handler is called each time a quit is requested, and the same {@link QuitResponse} object is passed until it is
+   * handled. Once used, the {@link QuitResponse} cannot be used again to change the decision.
    *
    * @param e the request to quit this application
    * @param response the one-shot response object used to cancel or proceed
@@ -1053,7 +1055,7 @@ public class Slyum extends JFrame
       menu.add(menuItem);
 
       // Menu item save as...
-      menuItem = createMenuItem("Save As...", "save-as", KeyEvent.VK_A, KEY_SAVE_AS, ACTION_SAVE_AS);
+      menuItem = createMenuItem("Save As...", "save-as", KeyEvent.VK_S, KEY_SAVE_AS, ACTION_SAVE_AS);
       menu.add(menuItem);
 
       menu.addSeparator();
