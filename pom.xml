@@ -31,9 +31,21 @@
     <dependencies>
 
         <dependency>
-            <groupId>de.erichseifert.vectorgraphics2d</groupId>
-            <artifactId>VectorGraphics2D</artifactId>
-            <version>0.9.3</version>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>fop</artifactId>
+            <version>2.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-dom</artifactId>
+            <version>1.16</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-svggen</artifactId>
+            <version>1.16</version>
         </dependency>
 
         <dependency>
@@ -105,15 +117,15 @@
                     <version>3.2.0</version>
                 </plugin>
 
-                <!--<plugin>
+                <plugin>
                     <groupId>com.github.wvengen</groupId>
                     <artifactId>proguard-maven-plugin</artifactId>
                     <version>2.5.1</version>
-                </plugin>-->
+                </plugin>
 
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.4.1</version>
                 </plugin>
 
                 <plugin>
@@ -139,6 +151,12 @@
                 <plugin>
                     <artifactId>maven-help-plugin</artifactId>
                     <version>3.2.0</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.moditect</groupId>
+                    <artifactId>moditect-maven-plugin</artifactId>
+                    <version>1.0.0.RC2</version>
                 </plugin>
 
             </plugins>
@@ -168,7 +186,7 @@
                             <fail>true</fail>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.6.0</version>
+                                    <version>3.8.3</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
                                     <version>${java.version}</version>
@@ -197,7 +215,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>9.1</version>
+                        <version>10.5.0</version>
                     </dependency>
                 </dependencies>
             </plugin>
@@ -236,7 +254,7 @@
                         </configuration>
                     </execution>
 
-                    <execution>
+                    <!--<execution>
                         <id>cp-dependencies</id>
                         <phase>package</phase>
                         <goals>
@@ -245,7 +263,7 @@
                         <configuration>
                             <outputDirectory>${project.build.directory}/dist/lib</outputDirectory>
                         </configuration>
-                    </execution>
+                    </execution>-->
 
                 </executions>
 
@@ -254,9 +272,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
+                <!--<configuration>
                     <outputDirectory>${project.build.directory}/dist</outputDirectory>
-                </configuration>
+                </configuration>-->
             </plugin>
 
             <plugin>
@@ -292,7 +310,7 @@
                 </executions>
             </plugin>
 
-            <!--<plugin>
+            <plugin>
                 <groupId>com.github.wvengen</groupId>
                 <artifactId>proguard-maven-plugin</artifactId>
                 <executions>
@@ -304,12 +322,12 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <proguardInclude>${basedir}/proguard_lib.conf</proguardInclude>
+                    <proguardInclude>${basedir}/proguard_app.conf</proguardInclude>
                     <libs>
                         <lib>${java.home}/jmods</lib>
                     </libs>
                 </configuration>
-            </plugin>-->
+            </plugin>
 
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -344,6 +362,94 @@
                 <configuration>
                     <mainClass>swing.Slyum</mainClass>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.moditect</groupId>
+                <artifactId>moditect-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-module-info</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate-module-info</goal>
+                        </goals>
+                        <configuration>
+                            <!--<outputDirectory>${project.build}/dist/lib</outputDirectory>-->
+                            <modules>
+
+                                <module>
+                                    <artifact>
+                                        <groupId>de.erichseifert.vectorgraphics2d</groupId>
+                                        <artifactId>VectorGraphics2D</artifactId>
+                                        <version>0.13</version>
+                                    </artifact>
+                                </module>
+
+                                <module>
+                                    <artifact>
+                                        <groupId>org.imgscalr</groupId>
+                                        <artifactId>imgscalr-lib</artifactId>
+                                        <version>4.2</version>
+                                    </artifact>
+                                </module>
+                            </modules>
+                            <jdepsExtraArgs>
+                                <arg>--ignore-missing-deps</arg>
+                            </jdepsExtraArgs>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>add-module-infos</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>add-module-info</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/modules</outputDirectory>
+                            <jvmVersion>17</jvmVersion>
+                            <module>
+                                <moduleInfo>
+                                    <name>slyum</name>
+                                </moduleInfo>
+                            </module>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>create-runtime-image</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>create-runtime-image</goal>
+                        </goals>
+                        <configuration>
+                            <modulePath>
+                                <path>${project.build.directory}/modules</path>
+                            </modulePath>
+                            <!--<modulePath>
+                                <path>
+                                    ${project.build.directory}/${project.artifactId}-${project.version}.${project.packaging}
+                                </path>
+                                <path>${project.build.directory}/modules</path>
+                            </modulePath>-->
+                            <modules>
+                                <module>slyum</module>
+                            </modules>
+                            <!--<launcher>
+                                <name>slyum</name>
+                                <module>slyum</module>
+                            </launcher>-->
+                            <launcher>
+                                <name>Slyum</name>
+                                <module>slyum/swing.Slyum</module>
+                            </launcher>
+                            <outputDirectory>
+                                ${project.build.directory}/jlink-image
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>

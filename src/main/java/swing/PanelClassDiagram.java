@@ -55,6 +55,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -272,12 +273,13 @@ public class PanelClassDiagram extends JPanel {
    */
   public void exportAsImage() {
     final JFileChooser fc = new JFileChooser(Slyum.getCurrentDirectoryFileChooser());
+    fc.setDialogTitle("Save as image");
     fc.setAcceptAllFileFilterUsed(false);
 
     fc.addChoosableFileFilter(new FileFilter() {
 
       @Override
-      public boolean accept(File f) {
+      public boolean accept(final File f) {
         if (f.isDirectory()) return true;
 
         final String extension = Utility.getExtension(f);
@@ -306,8 +308,9 @@ public class PanelClassDiagram extends JPanel {
     }
   }
 
-  public void exportAsVectoriel(String selectedExtension, String... extensions) {
+  public void exportAsVectoriel(final String selectedExtension, final String... extensions) {
     final JFileChooser fc = new JFileChooser(Slyum.getCurrentDirectoryFileChooser());
+    fc.setDialogTitle("Save as " + selectedExtension.toUpperCase(Locale.ROOT));
     fc.setAcceptAllFileFilterUsed(false);
 
     for (String extension : extensions) {

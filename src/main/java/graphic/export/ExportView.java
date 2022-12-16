@@ -18,7 +18,7 @@ import java.util.LinkedList;
 import static graphic.GraphicView.DEFAULT_TITLE_BORDER_WIDTH;
 import static graphic.GraphicView.isTitleBorderPainted;
 
-public abstract class ExportView {
+public abstract class ExportView<G extends Graphics2D> {
   protected static final int MARGIN = 20;
 
   protected GraphicView graphicView;
@@ -27,7 +27,7 @@ public abstract class ExportView {
 
   private boolean displayTitle;
 
-  public ExportView(GraphicView graphicView, boolean displayTitle) {
+  public ExportView(final GraphicView graphicView, final boolean displayTitle) {
     this.graphicView = graphicView;
     this.displayTitle = displayTitle;
     initializeBounds();
@@ -47,14 +47,14 @@ public abstract class ExportView {
     final LinkedList<GraphicComponent> components =
         graphicView.getAllDiagramComponents();
 
-    if (components.size() == 0)
+    if (components.isEmpty())
       bounds = new Rectangle();
 
     // Compute the rectangle englobing all graphic components.
-    for (final GraphicComponent c : components) {
-      final Rectangle localBounds = c.getBounds();
-      final Point max = new Point(localBounds.x + localBounds.width, localBounds.y
-                                                                     + localBounds.height);
+    for (final GraphicComponent component : components) {
+      final Rectangle localBounds = component.getBounds();
+      final Point max = new Point(localBounds.x + localBounds.width,
+                                  localBounds.y + localBounds.height);
 
       if (minX > localBounds.x) minX = localBounds.x;
       if (minY > localBounds.y) minY = localBounds.y;
@@ -69,20 +69,16 @@ public abstract class ExportView {
 
   protected Rectangle getOuterBounds() {
     return new Rectangle(
-        bounds.x - MARGIN,
-        bounds.y - marginTop,
+        Math.max(bounds.x - MARGIN, 0),
+        Math.max(bounds.y - marginTop, 0),
         bounds.width + 2 * MARGIN,
         bounds.height + marginTop + MARGIN);
   }
 
-  protected Graphics2D draw(Graphics2D g2d) {
+  protected final G draw(final G g2d) {
     graphicView.setPictureMode(true);
 
     Utility.setRenderQuality(g2d);
-
-    // Paint all components on picture.
-    for (final GraphicComponent c : graphicView.getAllDiagramComponents())
-      c.paintComponent(g2d);
 
     // Paint diagram's name
     if (displayTitle) {
@@ -102,9 +98,14 @@ public abstract class ExportView {
       }
     }
 
-    // Paint diagram's informations
-    String informations = PanelClassDiagram.getInstance().getClassDiagram().getInformations();
-    if (Slyum.isDisplayedDiagramInformationOnExport() && !informations.isEmpty()) {
+    // Paint all components on picture.
+    for (final GraphicComponent graphicComponent : graphicView.getAllDiagramComponents()) {
+      graphicComponent.paintComponent(g2d);
+    }
+
+    // Paint diagram's information
+    String information = PanelClassDiagram.getInstance().getClassDiagram().getInformations();
+    if (Slyum.isDisplayedDiagramInformationOnExport() && !information.isEmpty()) {
 
       final int WIDTH = 250;
       final int INFORMATIONS_PADDING = 5;
@@ -114,21 +115,21 @@ public abstract class ExportView {
       g2d.setStroke(new BasicStroke(DEFAULT_TITLE_BORDER_WIDTH));
 
       FontRenderContext frc = g2d.getFontRenderContext();
-      AttributedString styledText = new AttributedString(informations);
+      AttributedString styledText = new AttributedString(information);
       AttributedCharacterIterator iterator = styledText.getIterator();
       LineBreakMeasurer measurer = new LineBreakMeasurer(iterator, frc);
-      int start = iterator.getBeginIndex(),
-          end = iterator.getEndIndex();
+      int start = iterator.getBeginIndex();
+      int end = iterator.getEndIndex();
 
       measurer.setPosition(start);
 
       int REAL_WIDTH = WIDTH - INFORMATIONS_PADDING * 2;
 
       // Compute height
-      float height = 0,
-          width = 0;
+      float height = 0;
+      float width = 0;
       while (measurer.getPosition() < end) {
-        TextLayout layout = measurer.nextLayout(REAL_WIDTH, getLimitAtReturnChar(measurer, REAL_WIDTH, informations),
+        TextLayout layout = measurer.nextLayout(REAL_WIDTH, getLimitAtReturnChar(measurer, REAL_WIDTH, information),
                                                 true);
 
         if (width < layout.getAdvance())
@@ -167,17 +168,17 @@ public abstract class ExportView {
                         ROUNDED);
 
       // Draw text
-      float y = informationsRectangle.y + INFORMATIONS_PADDING,
-          x = informationsRectangle.x + INFORMATIONS_PADDING;
+      float y = informationsRectangle.y + INFORMATIONS_PADDING;
+      float x = informationsRectangle.x + INFORMATIONS_PADDING;
 
       g2d.setColor(new Color(50, 50, 50));
 
       measurer.setPosition(0);
       while (measurer.getPosition() < end) {
 
-        TextLayout layout = measurer.nextLayout(REAL_WIDTH, getLimitAtReturnChar(measurer, REAL_WIDTH, informations),
+        TextLayout layout = measurer.nextLayout(REAL_WIDTH,
+                                                getLimitAtReturnChar(measurer, REAL_WIDTH, information),
                                                 true);
-
         y += layout.getAscent();
         layout.draw(g2d, x, y);
         y += layout.getDescent() + layout.getLeading();
@@ -188,7 +189,7 @@ public abstract class ExportView {
     return g2d;
   }
 
-  private int getLimitAtReturnChar(LineBreakMeasurer measurer, int width, String text) {
+  private int getLimitAtReturnChar(final LineBreakMeasurer measurer, final int width, final String text) {
 
     int next = measurer.nextOffset(width);
     int limit = next;

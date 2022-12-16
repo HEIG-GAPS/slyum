@@ -4,7 +4,7 @@
 
 variables:
   MAVEN_CLI_OPTS: "--batch-mode --settings maven.xml"
-  SONAR_CLI_OPTS: "-Dsonar.gitlab.api_version=v4 -Dsonar.host.url=https://lab.gaps.heig-vd.ch/sonarqube -Dsonar.login=$SONAR_TOKEN -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME -Dsonar.gitlab.project_id=$CI_PROJECT_ID -Dsonar.gitlab.url=https://lab.gaps.heig-vd.ch/gitlab -Dsonar.gitlab.user_token=$GL_TOKEN"
+  SONAR_CLI_OPTS: "-Dsonar.gitlab.api_version=v4 -Dsonar.host.url=$SONARQUBE_URL -Dsonar.login=$SONAR_TOKEN -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME -Dsonar.gitlab.project_id=$CI_PROJECT_ID -Dsonar.gitlab.url=$GITLAB_URL -Dsonar.gitlab.user_token=$GL_TOKEN"
   DEPLOY_CLI_OPTS: "-DskipTests=true -DGITLAB-NEXUS-USERNAME=$NEXUS_USERNAME -DGITLAB-NEXUS-PASSWORD=$NEXUS_PASSWORD"
 
 stages:
