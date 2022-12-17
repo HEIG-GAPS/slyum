@@ -45,12 +45,12 @@ jobs:
           cache: maven
       - name: Installer for Microsoft Windows
         run:
-          - mvn -B package --file pom.xml
-          - $FULL_VERSION = mvn help:evaluate -Dexpression="project.version" -q -DforceStdout
-          - $VERSION = mvn help:evaluate -Dexpression="project.version" -q -DforceStdout | %{ $_.Split('-')[0]; }
-          - $DESCRIPTION = mvn help:evaluate -Dexpression="project.description" -q -DforceStdout
-          - $ARTIFACTID = mvn help:evaluate -Dexpression="project.artifactId" -q -DforceStdout
-          - jpackage --name Slyum --type msi --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target\dist --icon tools\icns\slyum.ico --win-dir-chooser --win-menu --win-menu-group "Slyum" --win-per-user-install
+          mvn -B package --file pom.xml
+          $FULL_VERSION = mvn help:evaluate -Dexpression="project.version" -q -DforceStdout
+          $VERSION = mvn help:evaluate -Dexpression="project.version" -q -DforceStdout | %{ $_.Split('-')[0]; }
+          $DESCRIPTION = mvn help:evaluate -Dexpression="project.description" -q -DforceStdout
+          $ARTIFACTID = mvn help:evaluate -Dexpression="project.artifactId" -q -DforceStdout
+          jpackage --name Slyum --type msi --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target\dist --icon tools\icns\slyum.ico --win-dir-chooser --win-menu --win-menu-group "Slyum" --win-per-user-install
         with:
           name: slyum_windows_x64
           path: "*.msi"
@@ -69,12 +69,12 @@ jobs:
           cache: maven
       - name: Installer for macOS x64
         run:
-          - mvn -B package --file pom.xml
-          - FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
-          - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
-          - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
-          - jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
+          mvn -B package --file pom.xml
+          FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
+          DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
+          ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+          jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
         with:
           name: slyum_macos_x64
           path: "*.pkg"
@@ -93,12 +93,12 @@ jobs:
           cache: maven
       - name: Installer for macOS aarch64
         run:
-          - mvn -B package --file pom.xml
-          - FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
-          - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
-          - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
-          - jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
+          mvn -B package --file pom.xml
+          FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
+          DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
+          ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+          jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
         with:
           name: slyum_macos_aarch64
           path: "*.pkg"
@@ -117,12 +117,12 @@ jobs:
           cache: maven
       - name: Installer for Linux x64 RPM
         run:
-          - mvn -B package --file pom.xml
-          - FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
-          - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
-          - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
-          - jpackage --name Slyum --type rpm --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-package-name Slyum --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
+          mvn -B package --file pom.xml
+          FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
+          DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
+          ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+          jpackage --name Slyum --type rpm --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-package-name Slyum --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
         with:
           name: slyum_linux_x64_rpm
           path: "*.rpm"
@@ -141,12 +141,12 @@ jobs:
           cache: maven
       - name: Installer for Linux x64 DEB
         run:
-          - mvn -B package --file pom.xml
-          - FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
-          - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
-          - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
-          - jpackage --name Slyum --type deb --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
+          mvn -B package --file pom.xml
+          FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
+          DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
+          ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+          jpackage --name Slyum --type deb --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
         with:
           name: slyum_linux_x64_deb
           path: "*.deb"
@@ -166,10 +166,10 @@ jobs:
           cache: maven
       - name: Creating variables from pom.xml
         run:
-          - FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
-          - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
-          - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+          FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
+          DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
+          ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
