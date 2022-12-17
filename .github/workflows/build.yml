@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI with Maven
+name: Snapshot Binaries
 
 on:
   push:
@@ -16,9 +16,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -33,3 +31,161 @@ jobs:
       # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
       - name: Update dependency graph
         uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
+
+  binaries_windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: action/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          architecture: 'x64'
+          cache: maven
+      - name: Installer for Microsoft Windows
+        run:
+          - mvn -B package --file pom.xml
+          - $FULL_VERSION = mvn help:evaluate -Dexpression="project.version" -q -DforceStdout
+          - $VERSION = mvn help:evaluate -Dexpression="project.version" -q -DforceStdout | %{ $_.Split('-')[0]; }
+          - $DESCRIPTION = mvn help:evaluate -Dexpression="project.description" -q -DforceStdout
+          - $ARTIFACTID = mvn help:evaluate -Dexpression="project.artifactId" -q -DforceStdout
+          - jpackage --name Slyum --type msi --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target\dist --icon tools\icns\slyum.ico --win-dir-chooser --win-menu --win-menu-group "Slyum" --win-per-user-install
+        with:
+          name: slyum_windows_x64
+          path: "*.msi"
+          retention-days: 1
+
+  binaries_macos_x64:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: action/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          architecture: 'x64'
+          cache: maven
+      - name: Installer for macOS x64
+        run:
+          - mvn -B package --file pom.xml
+          - FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
+          - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
+          - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+          - jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
+        with:
+          name: slyum_macos_x64
+          path: "*.pkg"
+          retention-days: 1
+
+  binaries_macos_aarch64:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: action/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          architecture: 'aarch64'
+          cache: maven
+      - name: Installer for macOS aarch64
+        run:
+          - mvn -B package --file pom.xml
+          - FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
+          - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
+          - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+          - jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
+        with:
+          name: slyum_macos_aarch64
+          path: "*.pkg"
+          retention-days: 1
+
+  binaries_linux_x64_rpm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: action/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          architecture: 'x64'
+          cache: maven
+      - name: Installer for Linux x64 RPM
+        run:
+          - mvn -B package --file pom.xml
+          - FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
+          - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
+          - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+          - jpackage --name Slyum --type rpm --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-package-name Slyum --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
+        with:
+          name: slyum_linux_x64_rpm
+          path: "*.rpm"
+          retention-days: 1
+
+  binaries_linux_x64_deb:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: action/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          architecture: 'x64'
+          cache: maven
+      - name: Installer for Linux x64 DEB
+        run:
+          - mvn -B package --file pom.xml
+          - FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
+          - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
+          - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+          - jpackage --name Slyum --type deb --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
+        with:
+          name: slyum_linux_x64_deb
+          path: "*.deb"
+          retention-days: 1
+
+  release_snapshots:
+    name: Releasing Snapshots
+    runs-on: ubuntu-latest
+    steps:
+      - name: Getting sources
+        uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Creating variables from pom.xml
+        run:
+          - FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
+          - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
+          - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ FULL_VERSION }}
+          release_name: Release ${{ FULL_VERSION }}
+          body_path: src/main/resources/versions/${{ $VERSION }}.md
+          draft: true
+          prerelease: false
+#      - name: Uploading Windows artifact
+#        id: upload-release-asset
+#        uses: actions/upload-release-asset@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+
