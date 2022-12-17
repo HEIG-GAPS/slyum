@@ -51,6 +51,8 @@ jobs:
           $DESCRIPTION = mvn help:evaluate -Dexpression="project.description" -q -DforceStdout
           $ARTIFACTID = mvn help:evaluate -Dexpression="project.artifactId" -q -DforceStdout
           jpackage --name Slyum --type msi --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target\dist --icon tools\icns\slyum.ico --win-dir-chooser --win-menu --win-menu-group "Slyum" --win-per-user-install
+      - name: Store artifact
+        uses: actions/upload-artifact@v3
         with:
           name: slyum_windows_x64
           path: "*.msi"
@@ -75,6 +77,8 @@ jobs:
           DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
           ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
           jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
+      - name: Store artifact
+        uses: actions/upload-artifact@v3
         with:
           name: slyum_macos_x64
           path: "*.pkg"
@@ -99,6 +103,8 @@ jobs:
           DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
           ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
           jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
+      - name: Store artifact
+        uses: actions/upload-artifact@v3
         with:
           name: slyum_macos_aarch64
           path: "*.pkg"
@@ -123,6 +129,8 @@ jobs:
           DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
           ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
           jpackage --name Slyum --type rpm --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-package-name Slyum --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
+      - name: Store artifact
+        uses: actions/upload-artifact@v3
         with:
           name: slyum_linux_x64_rpm
           path: "*.rpm"
@@ -147,6 +155,8 @@ jobs:
           DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
           ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
           jpackage --name Slyum --type deb --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
+      - name: Store artifact
+        uses: actions/upload-artifact@v3
         with:
           name: slyum_linux_x64_deb
           path: "*.deb"
