@@ -10,7 +10,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -141,7 +140,7 @@ public class SlyumUpdater extends JFrame {
     new File(root).delete();
   }
 
-  private void remove(File f) {
+  private void remove(final File f) {
     File[] files = f.listFiles();
     for (File ff : files) {
       if (ff.isDirectory()) {
@@ -153,7 +152,7 @@ public class SlyumUpdater extends JFrame {
     }
   }
 
-  private void copyFiles(File f, String dir) throws IOException {
+  private void copyFiles(final File f, final String dir) throws IOException {
     File[] files = f.listFiles();
     for (File ff : files) {
       if (ff.isDirectory()) {
@@ -165,8 +164,7 @@ public class SlyumUpdater extends JFrame {
     }
   }
 
-  public void copy(String srFile, String dtFile)
-      throws FileNotFoundException, IOException {
+  public void copy(final String srFile, final String dtFile) throws IOException {
 
     File f1 = new File(srFile);
     File f2 = new File(dtFile);
@@ -199,7 +197,7 @@ public class SlyumUpdater extends JFrame {
           target.createNewFile();
           try (BufferedInputStream is = new BufferedInputStream(zipfile.getInputStream(entry))) {
             int count;
-            byte data[] = new byte[BUFFER];
+            byte[] data = new byte[BUFFER];
             FileOutputStream fos = new FileOutputStream(root + entry.getName());
             try (BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER)) {
               while ((count = is.read(data, 0, BUFFER))
@@ -213,7 +211,7 @@ public class SlyumUpdater extends JFrame {
     }
   }
 
-  private void downloadFile(String link) throws MalformedURLException, IOException {
+  private void downloadFile(final String link) throws MalformedURLException, IOException {
 
     outText.setText(outText.getText() + "\n" + "Downloading file...");
     URL website = new URL(link);
@@ -224,21 +222,15 @@ public class SlyumUpdater extends JFrame {
     outText.setText(outText.getText() + "\nDownload Complete!");
   }
 
-  private String getDownloadLinkFromHost()
-      throws MalformedURLException, IOException, Exception {
+  private String getDownloadLinkFromHost() throws Exception {
     return TagDownload.getContentTag(tagDownload);
   }
 
-  public static void main(final String args[]) {
+  public static void main(final String... args) {
     if (args.length != 1)
       JOptionPane.showMessageDialog(null, "Arguments length probleme!");
 
-    java.awt.EventQueue.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        new SlyumUpdater(args[0]).setVisible(true);
-      }
-    });
+    java.awt.EventQueue.invokeLater(() -> new SlyumUpdater(args[0]).setVisible(true));
   }
 
 }
