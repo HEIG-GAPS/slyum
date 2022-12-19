@@ -260,6 +260,7 @@ deploy_snapshot_linux_deb:
     - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
     - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
     - jpackage --name Slyum --type deb --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target --icon tools/icns/slyum.ico --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
+    - ls Slyum*
     - mv Slyum*.deb Slyum-$FULL_VERSION-x64.deb
   artifacts:
     paths:
