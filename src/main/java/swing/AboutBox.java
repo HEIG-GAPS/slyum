@@ -94,11 +94,15 @@ public class AboutBox extends JDialog {
         g2.setFont(baseFont.deriveFont(20.5f));
         g2.drawString("ver. " + Slyum.VERSION, 350, 110);
 
+        final String osName = System.getProperty("os.name");
+        final String osVersion = System.getProperty("os.version");
+        final String osArch = System.getProperty("os.arch");
         g2.setFont(baseFont.deriveFont(12.5f));
-        g2.drawString("UML class diagram editor developped at heig-vd.", 20, bounds.height / 2 + 20);
-        g2.drawString("Works with Java and Swing, use UML 1.4 and XML.", 20, bounds.height / 2 + 40);
-        g2.drawString("Developer : Miserez David (david.miserez@heig-vd.ch)", 20, bounds.height / 2 + 70);
-        g2.drawString("Responsable : Donini Pier", 20, bounds.height / 2 + 90);
+        g2.drawString("Slyum is running on " + osName + " " + osVersion + " (" + osArch + ")", 20, bounds.height / 2 + 20);
+        g2.drawString("UML class diagram editor developed at HEIG-VD.", 20, bounds.height / 2 + 40);
+        g2.drawString("Works with Java and Swing, use UML 1.4 and XML.", 20, bounds.height / 2 + 60);
+        g2.drawString("Product owner : P. Donini", 20, bounds.height / 2 + 80);
+        g2.drawString("Developers : D. Miserez, J. Varani", 20, bounds.height / 2 + 100);
         g2.drawString("Copyright © " + LocalDate.now().getYear() + " HEIG-VD", 20, bounds.height / 2 + 120);
 
         g2.drawImage(imgHeigvd, bounds.x + bounds.width - imgHeigvd.getWidth() - 20, bounds.y + bounds.height / 2 + 20,
