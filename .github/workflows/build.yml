@@ -44,13 +44,13 @@ jobs:
           architecture: 'x64'
           cache: maven
       - name: Installer for Microsoft Windows
-        run:
+        run: |
           mvn -B package --file pom.xml
-          $FULL_VERSION = mvn help:evaluate -Dexpression="project.version" -q -DforceStdout
-          $VERSION = mvn help:evaluate -Dexpression="project.version" -q -DforceStdout | %{ $_.Split('-')[0]; }
-          $DESCRIPTION = mvn help:evaluate -Dexpression="project.description" -q -DforceStdout
-          $ARTIFACTID = mvn help:evaluate -Dexpression="project.artifactId" -q -DforceStdout
-          jpackage --name Slyum --type msi --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target\dist --icon tools\icns\slyum.ico --win-dir-chooser --win-menu --win-menu-group "Slyum" --win-per-user-install
+          echo "slyum_full_version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`" >> $GITHUB_ENV
+          echo "slyum_version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }'`" >> $GITHUB_ENV
+          echo "slyum_description=`mvn help:evaluate -Dexpression=project.description -q -DforceStdout`" >> $GITHUB_ENV
+          echo "slyum_artifact_id=`mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout`" >> $GITHUB_ENV
+          jpackage --name Slyum --type msi --main-class swing.Slyum --main-jar ${{ env.slyum_artifact_id }}-${{ env.slyum_full_version }}.jar --app-version "${{ env.slyum_version }}" --copyright "©HEIG-VD // GAPS 2022" --description "${{ env.slyum_description }}" --about-url "https://gaps.heig-vd.ch" --input target\dist --icon tools\icns\slyum.ico --win-dir-chooser --win-menu --win-menu-group "Slyum" --win-per-user-install
       - name: Store artifact
         uses: actions/upload-artifact@v3
         with:
@@ -70,13 +70,13 @@ jobs:
           architecture: 'x64'
           cache: maven
       - name: Installer for macOS x64
-        run:
+        run: |
           mvn -B package --file pom.xml
-          FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
-          DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
-          ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
-          jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
+          echo "slyum_full_version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`" >> $GITHUB_ENV
+          echo "slyum_version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }'`" >> $GITHUB_ENV
+          echo "slyum_description=`mvn help:evaluate -Dexpression=project.description -q -DforceStdout`" >> $GITHUB_ENV
+          echo "slyum_artifact_id=`mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout`" >> $GITHUB_ENV
+          jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar ${{ env.slyum_artifact_id }}-${{ env.slyum_full_version }}.jar --app-version "${{ env.slyum_version }}" --copyright "©HEIG-VD // GAPS 2022" --description "${{ env.slyum_description }}" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
       - name: Store artifact
         uses: actions/upload-artifact@v3
         with:
@@ -96,13 +96,13 @@ jobs:
           architecture: 'aarch64'
           cache: maven
       - name: Installer for macOS aarch64
-        run:
+        run: |
           mvn -B package --file pom.xml
-          FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
-          DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
-          ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
-          jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
+          echo "slyum_full_version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`" >> $GITHUB_ENV
+          echo "slyum_version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }'`" >> $GITHUB_ENV
+          echo "slyum_description=`mvn help:evaluate -Dexpression=project.description -q -DforceStdout`" >> $GITHUB_ENV
+          echo "slyum_artifact_id=`mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout`" >> $GITHUB_ENV
+          jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar ${{ env.slyum_artifact_id }}-${{ env.slyum_full_version }}.jar --app-version "${{ env.slyum_version }}" --copyright "©HEIG-VD // GAPS 2022" --description "${{ env.slyum_description }}" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target/dist --icon tools/icns/slyum.icns
       - name: Store artifact
         uses: actions/upload-artifact@v3
         with:
@@ -122,13 +122,13 @@ jobs:
           architecture: 'x64'
           cache: maven
       - name: Installer for Linux x64 RPM
-        run:
+        run: |
           mvn -B package --file pom.xml
-          FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
-          DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
-          ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
-          jpackage --name Slyum --type rpm --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-package-name Slyum --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
+          echo "slyum_full_version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`" >> $GITHUB_ENV
+          echo "slyum_version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }'`" >> $GITHUB_ENV
+          echo "slyum_description=`mvn help:evaluate -Dexpression=project.description -q -DforceStdout`" >> $GITHUB_ENV
+          echo "slyum_artifact_id=`mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout`" >> $GITHUB_ENV
+          jpackage --name Slyum --type rpm --main-class swing.Slyum --main-jar ${{ env.slyum_artifact_id }}-${{ env.slyum_full_version }}.jar --app-version "${{ env.slyum_version }}" --copyright "©HEIG-VD // GAPS 2022" --description "${{ env.slyum_description }}" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-package-name Slyum --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
       - name: Store artifact
         uses: actions/upload-artifact@v3
         with:
@@ -148,13 +148,13 @@ jobs:
           architecture: 'x64'
           cache: maven
       - name: Installer for Linux x64 DEB
-        run:
+        run: |
           mvn -B package --file pom.xml
-          FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
-          DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
-          ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
-          jpackage --name Slyum --type deb --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
+          echo "slyum_full_version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`" >> $GITHUB_ENV
+          echo "slyum_version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }'`" >> $GITHUB_ENV
+          echo "slyum_description=`mvn help:evaluate -Dexpression=project.description -q -DforceStdout`" >> $GITHUB_ENV
+          echo "slyum_artifact_id=`mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout`" >> $GITHUB_ENV
+          jpackage --name Slyum --type deb --main-class swing.Slyum --main-jar ${{ env.slyum_artifact_id }}-${{ env.slyum_full_version }}.jar --app-version "${{ env.slyum_version }}" --copyright "©HEIG-VD // GAPS 2022" --description "${{ env.slyum_description }}" --about-url "https://gaps.heig-vd.ch" --input target/dist --icon tools/icns/slyum.ico --linux-deb-maintainer gaps@heig-vd.ch --linux-menu-group Slyum
       - name: Store artifact
         uses: actions/upload-artifact@v3
         with:
@@ -175,20 +175,18 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Creating variables from pom.xml
-        run:
-          FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
-          DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
-          ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+        run: |
+          echo "slyum_full_version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`" >> $GITHUB_ENV
+          echo "slyum_version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }'`" >> $GITHUB_ENV
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ FULL_VERSION }}
-          release_name: Release ${{ FULL_VERSION }}
-          body_path: src/main/resources/versions/${{ $VERSION }}.md
+          tag_name: ${{ env.slyum_full_version }}
+          release_name: Release ${{ env.slyum_full_version }}
+          body_path: src/main/resources/versions/${{ env.slyum_version }}.md
           draft: true
           prerelease: false
 #      - name: Uploading Windows artifact
