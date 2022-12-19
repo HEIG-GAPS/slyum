@@ -6,6 +6,7 @@ import swing.SPanelDiagramComponent.Mode;
 import swing.slyumCustomizedComponents.SButton;
 import update.UpdateInfo;
 import utility.OSValidator;
+import utility.POMReader;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 import utility.TagDownload;
@@ -239,7 +240,7 @@ public class Slyum extends JFrame
   public static final Color THEME_COLOR = new Color(0, 122, 204); // 007ACC
   public static final Font UI_FONT;
   // !! Always  X.Y.Z (for update safety), even if it's 0.
-  public static final String VERSION = "5.1.0";
+  public static final String VERSION = POMReader.getInstance().getVersion();
   public static final boolean VIEW_TITLE_ON_EXPORT_DEFAULT = true;
   public static final boolean DISPLAY_DIAGRAM_INFORMATIONS_ON_EXPERT_DEFAULT = true;
   public static final int WINDOWS_MAXIMIZED = Frame.MAXIMIZED_BOTH;
@@ -387,10 +388,15 @@ public class Slyum extends JFrame
   }
 
   public static Mode getModeCursor() {
-    String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.MODE_CURSOR);
     Mode mode = MODE_CURSOR;
 
-    if (prop != null) mode = Mode.valueOf(prop);
+    String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.MODE_CURSOR);
+    try {
+      if (prop != null) mode = Mode.valueOf(prop);
+    } catch (IllegalArgumentException e) {
+      LOGGER.severe("Wrong mode stored in the property: \"" + prop + "\"");
+      mode = MODE_CURSOR;
+    }
 
     return mode;
   }
@@ -919,25 +925,21 @@ public class Slyum extends JFrame
     instance.setVisible(true);
 
     // Locate dividers.
-    SwingUtilities.invokeLater(new Runnable() {
+    SwingUtilities.invokeLater(() -> {
 
-      @Override
-      public void run() {
+      PanelClassDiagram panel = PanelClassDiagram.getInstance();
+      Properties properties = PropertyLoader.getInstance().getProperties();
+      String dividerBottom = properties.getProperty(
+          PropertyLoader.DIVIDER_BOTTOM), dividerLeft = properties.getProperty(PropertyLoader.DIVIDER_LEFT);
 
-        PanelClassDiagram panel = PanelClassDiagram.getInstance();
-        Properties properties = PropertyLoader.getInstance().getProperties();
-        String dividerBottom = properties.getProperty(
-            PropertyLoader.DIVIDER_BOTTOM), dividerLeft = properties.getProperty(PropertyLoader.DIVIDER_LEFT);
+      if (dividerBottom != null) panel.setDividerBottom(Float.parseFloat(dividerBottom));
 
-        if (dividerBottom != null) panel.setDividerBottom(Float.valueOf(dividerBottom));
+      if (dividerLeft != null) panel.setDividerLeft(Float.parseFloat(dividerLeft));
 
-        if (dividerLeft != null) panel.setDividerLeft(Float.valueOf(dividerLeft));
+      if (isFullScreenMode()) panel.setFullScreen(true);
 
-        if (isFullScreenMode()) panel.setFullScreen(true);
-
-        IssuesInformation.mustDisplayMessage();
-        initRecentColors();
-      }
+      IssuesInformation.mustDisplayMessage();
+      initRecentColors();
     });
 
     String file = argumentGetFile();

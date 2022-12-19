@@ -268,8 +268,17 @@ public class UpdateInfo extends JDialog {
     System.exit(0);
   }
 
-  private static int getIntVersion(String version) {
-    return Integer.parseInt(version.replace(".", ""));
+  /**
+   * Transforms the {@link String} version to an {@code int} value. This method simply removes the dots between the
+   * version components. If it is a <em>snapshot</em>, the corresponding identifier is removed.
+   *
+   * @param version the version as a {@link String}.
+   *
+   * @return the version of the app, as an {@code int} value.
+   */
+  private static int getIntVersion(final String version) {
+    final String onlyNumbers = version.split("-")[0];
+    return Integer.parseInt(onlyNumbers.replace(".", ""));
   }
 
   public static boolean isUpdateCheckedAtLaunch() {
@@ -282,7 +291,7 @@ public class UpdateInfo extends JDialog {
     return enable;
   }
 
-  public static void setUpdateCheckedAtLaunch(boolean enable) {
+  public static void setUpdateCheckedAtLaunch(final boolean enable) {
     Properties properties = PropertyLoader.getInstance().getProperties();
     properties.put(
         PropertyLoader.CHECK_UPDATE_AT_LAUNCH,

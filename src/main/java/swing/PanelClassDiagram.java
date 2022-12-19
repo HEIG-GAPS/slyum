@@ -430,7 +430,7 @@ public class PanelClassDiagram extends JPanel {
   }
 
   public void setDividerBottom(float location) {
-    splitInner.setDividerLocation(location);
+    splitInner.setDividerLocation(Math.min(1.0, Math.max(location, 0.0)));
   }
 
   public int getDividerLeft() {
