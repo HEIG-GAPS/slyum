@@ -34,6 +34,7 @@ jobs:
 
   binaries_windows:
     runs-on: windows-latest
+    needs: build
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -60,6 +61,7 @@ jobs:
 
   binaries_macos_x64:
     runs-on: macos-latest
+    needs: build
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -86,6 +88,7 @@ jobs:
 
   binaries_macos_aarch64:
     runs-on: macos-latest
+    needs: build
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -112,6 +115,7 @@ jobs:
 
   binaries_linux_x64_rpm:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -138,6 +142,7 @@ jobs:
 
   binaries_linux_x64_deb:
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -164,6 +169,7 @@ jobs:
 
   release_snapshots:
     name: Releasing Snapshots
+    needs: [binaries_windows, binaries_macos_x64, binaries_macos_aarch64, binaries_linux_x64_rpm, binaries_linux_x64_deb]
     runs-on: ubuntu-latest
     steps:
       - name: Getting sources
