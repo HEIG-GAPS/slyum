@@ -358,6 +358,7 @@
                     <libs>
                         <lib>${java.home}/jmods</lib>
                     </libs>
+                    <obfuscate>false</obfuscate>
                 </configuration>
             </plugin>
 
