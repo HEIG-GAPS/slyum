@@ -306,9 +306,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <!--<configuration>
-                    <outputDirectory>${project.build.directory}/dist</outputDirectory>
-                </configuration>-->
             </plugin>
 
             <plugin>
@@ -321,6 +318,7 @@
                             junit.jupiter.execution.parallel.config.dynamic.factor=2
                         </configurationParameters>
                     </properties>
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
 
