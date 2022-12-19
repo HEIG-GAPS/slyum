@@ -1,4 +1,4 @@
-name: Deployment
+name: Release Binaries
 
 on:
   push:
@@ -7,40 +7,30 @@ on:
 
 jobs:
 
-  binaries_windows:
-    runs-on: windows-latest
+  release_snapshots:
+    name: Releasing Snapshots
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Getting sources
+        uses: actions/checkout@v3
       - name: Set up JDK 17
-        uses: action/setup-java@v3
+        uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
-          architecture: 'x64'
           cache: maven
-      - name: Installer for Microsoft Windows
-        run:
-          - mvn -B package --file pom.xml
-          - $FULL_VERSION = mvn help:evaluate -Dexpression="project.version" -q -DforceStdout
-          - $VERSION = mvn help:evaluate -Dexpression="project.version" -q -DforceStdout | %{ $_.Split('-')[0]; }
-          - $DESCRIPTION = mvn help:evaluate -Dexpression="project.description" -q -DforceStdout
-          - $ARTIFACTID = mvn help:evaluate -Dexpression="project.artifactId" -q -DforceStdout
-          - jpackage --name Slyum --type msi --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --about-url "https://gaps.heig-vd.ch" --input target\dist --icon tools\icns\slyum.ico --win-dir-chooser --win-menu --win-menu-group "Slyum" --win-per-user-install
+      - name: Creating variables from pom.xml
+        run: |
+          echo "slyum_full_version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`" >> $GITHUB_ENV
+          echo "slyum_version=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }'`" >> $GITHUB_ENV
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: slyum-x64-msi
-          path: "*.msi"
-          retention-days: 1
-
-
-#  binaries_deb:
-#    runs-on: ubuntu-latest
-
-#  binaries_rpm:
-#    runs-on: ubuntu-latest
-
-#  binaries_macos_x64:
-#    runs-on: macos-latest
-
-#  binaries_macos_aarch64:
-#    runs-on: macos-latest
-
+          tag_name: ${{ env.slyum_full_version }}
+          release_name: Release ${{ env.slyum_full_version }}
+          body_path: src/main/resources/versions/${{ env.slyum_version }}.md
+          draft: false
+          prerelease: false
