@@ -37,6 +37,7 @@ import java.io.Writer;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -1605,7 +1606,11 @@ public class Slyum extends JFrame
    * Open the help file.
    */
   private void openHelp() {
-    openURL("https://github.com/HEIG-GAPS/slyum/blob/master/bin/utils/User_manual_FR.pdf");
+    final URL userManual = Slyum.class.getResource("/User_manual_FR.pdf");
+    if (userManual != null)
+      openURL(userManual.toString());
+    else
+      openURL("https://github.com/HEIG-GAPS/slyum/tree/master/src/main/resources/User_manual_FR.pdf");
   }
 
   /**
