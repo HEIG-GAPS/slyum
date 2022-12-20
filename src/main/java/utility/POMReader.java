@@ -1,5 +1,6 @@
 package utility;
 
+import com.vdurmont.semver4j.Semver;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
@@ -44,6 +45,6 @@ public final class POMReader {
   }
 
   /** @return the version, as stated in the {@code pom.xml} file. */
-  public String getVersion() { return version; }
+  public Semver getVersion() { return new Semver(version); }
 
 }

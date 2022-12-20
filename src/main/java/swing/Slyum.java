@@ -1,5 +1,6 @@
 package swing;
 
+import com.vdurmont.semver4j.Semver;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import swing.SPanelDiagramComponent.Mode;
@@ -9,7 +10,6 @@ import utility.OSValidator;
 import utility.POMReader;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
-import utility.TagDownload;
 import utility.Utility;
 
 import javax.swing.*;
@@ -49,7 +49,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static update.UpdateInfo.*;
+import static update.UpdateInfo.isUpdateAvailable;
 
 /**
  * Main class! Create a new Instance of Slyum and display it. Create menu.
@@ -241,7 +241,7 @@ public class Slyum extends JFrame
   public static final Color THEME_COLOR = new Color(0, 122, 204); // 007ACC
   public static final Font UI_FONT;
   // !! Always  X.Y.Z (for update safety), even if it's 0.
-  public static final String VERSION = POMReader.getInstance().getVersion();
+  public static final Semver VERSION = POMReader.getInstance().getVersion();
   public static final boolean VIEW_TITLE_ON_EXPORT_DEFAULT = true;
   public static final boolean DISPLAY_DIAGRAM_INFORMATIONS_ON_EXPERT_DEFAULT = true;
   public static final int WINDOWS_MAXIMIZED = Frame.MAXIMIZED_BOTH;
@@ -456,20 +456,6 @@ public class Slyum extends JFrame
     PropertyLoader.getInstance().push();
   }
 
-  public static int getUpdaterVersion() {
-    String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.UPDATER_VERSION);
-    int updaterVersion = 1;
-
-    if (prop != null) updaterVersion = Integer.parseInt(prop);
-
-    return updaterVersion;
-  }
-
-  public static void setUpdaterVersion(int updaterVersion) {
-    PropertyLoader.getInstance().getProperties().put(PropertyLoader.UPDATER_VERSION, String.valueOf(updaterVersion));
-    PropertyLoader.getInstance().push();
-  }
-
   public static int getRecentColorsSize() {
     String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.RECENT_COLORS_SIZE);
     int size = 3;
@@ -615,6 +601,14 @@ public class Slyum extends JFrame
   public static void openURL(final String url) {
     try {
       java.awt.Desktop.getDesktop().browse(new URI(url));
+    } catch (URISyntaxException | IOException e) {
+      SMessageDialog.showErrorMessage("Unable to open " + url + ".");
+    }
+  }
+
+  public static void openURL(final URL url) {
+    try {
+      java.awt.Desktop.getDesktop().browse(url.toURI());
     } catch (URISyntaxException | IOException e) {
       SMessageDialog.showErrorMessage("Unable to open " + url + ".");
     }
@@ -930,8 +924,8 @@ public class Slyum extends JFrame
 
       PanelClassDiagram panel = PanelClassDiagram.getInstance();
       Properties properties = PropertyLoader.getInstance().getProperties();
-      String dividerBottom = properties.getProperty(
-          PropertyLoader.DIVIDER_BOTTOM), dividerLeft = properties.getProperty(PropertyLoader.DIVIDER_LEFT);
+      final String dividerBottom = properties.getProperty(PropertyLoader.DIVIDER_BOTTOM);
+      final String dividerLeft = properties.getProperty(PropertyLoader.DIVIDER_LEFT);
 
       if (dividerBottom != null) panel.setDividerBottom(Float.parseFloat(dividerBottom));
 
@@ -947,16 +941,6 @@ public class Slyum extends JFrame
     if (!argumentOpenWithNewProject() && file == null) file = RecentProjectManager.getMoreRecentFile();
 
     if (file != null) PanelClassDiagram.openSlyFile(file);
-
-    int updaterVersion;
-    try {
-      File f = new File(UPDATER_FILE);
-      updaterVersion = Integer.parseInt(TagDownload.getContentTag(TAG_UPDATER_VERSION));
-      if (f.exists() && Slyum.getUpdaterVersion() < updaterVersion) f.delete();
-
-    } catch (Exception ex) {
-      Logger.getLogger(Slyum.class.getName()).log(Level.SEVERE, null, ex);
-    }
   }
 
   /**
@@ -1610,7 +1594,7 @@ public class Slyum extends JFrame
     if (userManual != null)
       openURL(userManual.toString());
     else
-      openURL("https://github.com/HEIG-GAPS/slyum/tree/master/src/main/resources/User_manual_FR.pdf");
+      openURL("http://raw.githubusercontent.com/HEIG-GAPS/slyum/master/src/main/resources/User_manual_FR.pdf");
   }
 
   /**
