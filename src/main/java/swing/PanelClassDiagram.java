@@ -704,17 +704,24 @@ public class PanelClassDiagram extends JPanel {
     RecentProjectManager.addhistoryEntry(currentFile.getAbsolutePath());
   }
 
-  public static void saveDocumentInCurrentFile(Document document, File currentFile) throws
+  public static void saveDocumentInCurrentFile(final Document document, final File currentFile) throws
       TransformerConfigurationException, TransformerException {
 
     Path currentPath = currentFile.toPath();
 
-    //WatchDir.stopWatchingFile(currentPath, true);
     WatchDir.unregister(currentPath);
 
-    // write the content into xml file
+    /* Uncomment this lines to sort the content according to https://github.com/HEIG-GAPS/slyum/issues/96, but after
+     the resulting XML has a valid form and can be sorted. */
+    /*final File xmlContentSorterXslt = new File(Slyum.class.getResource("/xml/XmlContentSorter.xslt").getFile());
+    StreamSource stylesource = new StreamSource(xmlContentSorterXslt);
+
+    TransformerFactory transformerFactory = TransformerFactory.newInstance();
+    Transformer transformer = transformerFactory.newTransformer(stylesource);*/
+
     TransformerFactory transformerFactory = TransformerFactory.newInstance();
     Transformer transformer = transformerFactory.newTransformer();
+
     transformer.setOutputProperty(OutputKeys.INDENT, "yes");
     transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
     transformer.setOutputProperty(OutputKeys.ENCODING, "iso-8859-15");
@@ -723,7 +730,6 @@ public class PanelClassDiagram extends JPanel {
     StreamResult result = new StreamResult(currentFile);
     transformer.transform(source, result);
 
-    //SwingUtilities.invokeLater(() -> WatchDir.stopWatchingFile(currentPath, false));
     try {
       WatchDir.register(currentPath, getInstance().watchFileListener);
     } catch (IOException ioe) {
