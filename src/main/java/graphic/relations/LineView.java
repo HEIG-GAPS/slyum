@@ -54,8 +54,6 @@ public abstract class LineView extends GraphicComponent
     basicColor = new Color(color.getRGB());
   }
 
-  boolean justSelected = false;
-
   public final static float LINE_WIDTH = 1.f;
 
   protected Stroke lineStroke = getDefaultLineStroke();

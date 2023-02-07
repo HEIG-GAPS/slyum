@@ -140,9 +140,10 @@ public abstract class MovableComponent extends GraphicComponent {
     if (!GraphicView.isAddToSelection(e)) {
       parent.unselectAll();
       setSelected(true);
-    } else // If control is down, inverse the current selected state of this
-      // component.
-      if (!justSelected) setSelected(!isSelected());
+    } else {
+      // If control is down, inverse the current selected state of this component.
+      // if (!justSelected) setSelected(!isSelected());
+    }
 
     // Avoid to unselect a just selected component when gMouseReleased is
     // called.
