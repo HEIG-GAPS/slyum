@@ -4,14 +4,14 @@ Slyum is an UML diagramming application for building class diagrams. Slyum makes
 with an intuitive, clean and easy-to-use interface.
 
 A lot of diagrams editor exist in industry and open source world. But mainly of them are complicate to use and not very
-pleasant to see. Moreover adding new elements are difficult for user. That’s why we will develop this project. This
+pleasant to see. Moreover, adding new elements are difficult for user. That’s why we will develop this project. This
 application will be easy to use and only useful elements will be integrated in. The purpose of this project is it can be
 used in UML learning.
 
 # Downloads
 
-* [latest release (sept. 2016 - v5.0.0)](https://github.com/HEIG-GAPS/slyum/raw/master/bin/latest%20release/Slyum.jar)
-* [previous release ](https://github.com/HEIG-GAPS/slyum/tree/master/bin/previous%20release)
+* [latest release](https://github.com/HEIG-GAPS/slyum/releases/latest)
+* [previous release](https://github.com/HEIG-GAPS/slyum/releases)
 
 # Installation
 
@@ -37,4 +37,4 @@ java -jar "Slyum.jar"
 
 # License
 
-Copyright © 2015, HEIG-VD / MIT License
+Copyright © 2015-2023, HEIG-VD / MIT License
