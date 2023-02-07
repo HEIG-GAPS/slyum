@@ -1,14 +1,15 @@
 package swing;
 
+import com.vdurmont.semver4j.Semver;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import swing.SPanelDiagramComponent.Mode;
 import swing.slyumCustomizedComponents.SButton;
 import update.UpdateInfo;
 import utility.OSValidator;
+import utility.POMReader;
 import utility.PersonalizedIcon;
 import utility.SMessageDialog;
-import utility.TagDownload;
 import utility.Utility;
 
 import javax.swing.*;
@@ -36,17 +37,19 @@ import java.io.Writer;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static update.UpdateInfo.*;
+import static update.UpdateInfo.isUpdateAvailable;
 
 /**
  * Main class! Create a new Instance of Slyum and display it. Create menu.
@@ -183,11 +186,11 @@ public class Slyum extends JFrame
 
   public final static String KEY_ENUM = "E";
   public final static String KEY_EXIT = "alt F4";
-  public final static String KEY_EXPORT_EPS = "ctrl G";
-  public final static String KEY_EXPORT_IMAGE = "ctrl E";
+  public final static String KEY_EXPORT_EPS = "alt shift E";
+  public final static String KEY_EXPORT_IMAGE = "alt shift I";
 
-  public final static String KEY_EXPORT_PDF = "ctrl D";
-  public static final String KEY_EXPORT_SVG = "ctrl V";
+  public final static String KEY_EXPORT_PDF = "alt shift P";
+  public static final String KEY_EXPORT_SVG = "alt shift S";
   public static final String KEY_FULL_SCREEN = "ctrl ENTER";
   public final static String KEY_GRIPS_MODE = "W";
   public final static String KEY_HELP = "F1";
@@ -238,7 +241,7 @@ public class Slyum extends JFrame
   public static final Color THEME_COLOR = new Color(0, 122, 204); // 007ACC
   public static final Font UI_FONT;
   // !! Always  X.Y.Z (for update safety), even if it's 0.
-  public static final String VERSION = "5.1.0";
+  public static final Semver VERSION = POMReader.getInstance().getVersion();
   public static final boolean VIEW_TITLE_ON_EXPORT_DEFAULT = true;
   public static final boolean DISPLAY_DIAGRAM_INFORMATIONS_ON_EXPERT_DEFAULT = true;
   public static final int WINDOWS_MAXIMIZED = Frame.MAXIMIZED_BOTH;
@@ -386,10 +389,15 @@ public class Slyum extends JFrame
   }
 
   public static Mode getModeCursor() {
-    String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.MODE_CURSOR);
     Mode mode = MODE_CURSOR;
 
-    if (prop != null) mode = Mode.valueOf(prop);
+    String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.MODE_CURSOR);
+    try {
+      if (prop != null) mode = Mode.valueOf(prop);
+    } catch (IllegalArgumentException e) {
+      LOGGER.severe("Wrong mode stored in the property: \"" + prop + "\"");
+      mode = MODE_CURSOR;
+    }
 
     return mode;
   }
@@ -448,20 +456,6 @@ public class Slyum extends JFrame
     PropertyLoader.getInstance().push();
   }
 
-  public static int getUpdaterVersion() {
-    String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.UPDATER_VERSION);
-    int updaterVersion = 1;
-
-    if (prop != null) updaterVersion = Integer.parseInt(prop);
-
-    return updaterVersion;
-  }
-
-  public static void setUpdaterVersion(int updaterVersion) {
-    PropertyLoader.getInstance().getProperties().put(PropertyLoader.UPDATER_VERSION, String.valueOf(updaterVersion));
-    PropertyLoader.getInstance().push();
-  }
-
   public static int getRecentColorsSize() {
     String prop = PropertyLoader.getInstance().getProperties().getProperty(PropertyLoader.RECENT_COLORS_SIZE);
     int size = 3;
@@ -482,7 +476,7 @@ public class Slyum extends JFrame
       try {
         SColorAssigner.addRecentColor(new Color(Integer.parseInt(color)));
       } catch (NumberFormatException e) {
-
+        /* Do nothing, the color will not be added */
       }
   }
 
@@ -490,9 +484,9 @@ public class Slyum extends JFrame
     if (SColorAssigner.getRecentColors().length == 0) return;
 
     String strColors = String.join(";", Arrays.stream(SColorAssigner.getRecentColors())
-                                              .filter(c -> c != null)
+                                              .filter(Objects::nonNull)
                                               .map(c -> String.valueOf(c.getRGB()))
-                                              .toArray(size -> new String[size]));
+                                              .toArray(String[]::new));
 
     PropertyLoader.getInstance().getProperties().put(PropertyLoader.RECENT_COLORS, strColors);
     PropertyLoader.getInstance().push();
@@ -591,7 +585,8 @@ public class Slyum extends JFrame
 
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
+    } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+             UnsupportedLookAndFeelException e) {
       final String message = "Unable to load Look and Feel";
       LOGGER.log(Level.SEVERE, message, e);
       SMessageDialog.showErrorMessage(message);
@@ -606,6 +601,14 @@ public class Slyum extends JFrame
   public static void openURL(final String url) {
     try {
       java.awt.Desktop.getDesktop().browse(new URI(url));
+    } catch (URISyntaxException | IOException e) {
+      SMessageDialog.showErrorMessage("Unable to open " + url + ".");
+    }
+  }
+
+  public static void openURL(final URL url) {
+    try {
+      java.awt.Desktop.getDesktop().browse(url.toURI());
     } catch (URISyntaxException | IOException e) {
       SMessageDialog.showErrorMessage("Unable to open " + url + ".");
     }
@@ -865,11 +868,11 @@ public class Slyum extends JFrame
    * Invoked when the application is asked to quit.
    * <p>
    * Implementors must call either {@link QuitResponse#cancelQuit()}, {@link QuitResponse#performQuit()}, or ensure the
-   * application terminates. The process (or log-out) requesting this app to quit will be blocked until the {@link
-   * QuitResponse} is handled. Apps that require complex UI to shutdown may call the {@link QuitResponse} from any
-   * thread. Your app may be asked to quit multiple times before you have responded to the initial request. This handler
-   * is called each time a quit is requested, and the same {@link QuitResponse} object is passed until it is handled.
-   * Once used, the {@link QuitResponse} cannot be used again to change the decision.
+   * application terminates. The process (or log-out) requesting this app to quit will be blocked until the
+   * {@link QuitResponse} is handled. Apps that require complex UI to shutdown may call the {@link QuitResponse} from
+   * any thread. Your app may be asked to quit multiple times before you have responded to the initial request. This
+   * handler is called each time a quit is requested, and the same {@link QuitResponse} object is passed until it is
+   * handled. Once used, the {@link QuitResponse} cannot be used again to change the decision.
    *
    * @param e the request to quit this application
    * @param response the one-shot response object used to cancel or proceed
@@ -917,41 +920,27 @@ public class Slyum extends JFrame
     instance.setVisible(true);
 
     // Locate dividers.
-    SwingUtilities.invokeLater(new Runnable() {
+    SwingUtilities.invokeLater(() -> {
 
-      @Override
-      public void run() {
+      PanelClassDiagram panel = PanelClassDiagram.getInstance();
+      Properties properties = PropertyLoader.getInstance().getProperties();
+      final String dividerBottom = properties.getProperty(PropertyLoader.DIVIDER_BOTTOM);
+      final String dividerLeft = properties.getProperty(PropertyLoader.DIVIDER_LEFT);
 
-        PanelClassDiagram panel = PanelClassDiagram.getInstance();
-        Properties properties = PropertyLoader.getInstance().getProperties();
-        String dividerBottom = properties.getProperty(
-            PropertyLoader.DIVIDER_BOTTOM), dividerLeft = properties.getProperty(PropertyLoader.DIVIDER_LEFT);
+      if (dividerBottom != null) panel.setDividerBottom(Float.parseFloat(dividerBottom));
 
-        if (dividerBottom != null) panel.setDividerBottom(Float.valueOf(dividerBottom));
+      if (dividerLeft != null) panel.setDividerLeft(Float.parseFloat(dividerLeft));
 
-        if (dividerLeft != null) panel.setDividerLeft(Float.valueOf(dividerLeft));
+      if (isFullScreenMode()) panel.setFullScreen(true);
 
-        if (isFullScreenMode()) panel.setFullScreen(true);
-
-        IssuesInformation.mustDisplayMessage();
-        initRecentColors();
-      }
+      IssuesInformation.mustDisplayMessage();
+      initRecentColors();
     });
 
     String file = argumentGetFile();
     if (!argumentOpenWithNewProject() && file == null) file = RecentProjectManager.getMoreRecentFile();
 
     if (file != null) PanelClassDiagram.openSlyFile(file);
-
-    int updaterVersion;
-    try {
-      File f = new File(UPDATER_FILE);
-      updaterVersion = Integer.parseInt(TagDownload.getContentTag(TAG_UPDATER_VERSION));
-      if (f.exists() && Slyum.getUpdaterVersion() < updaterVersion) f.delete();
-
-    } catch (Exception ex) {
-      Logger.getLogger(Slyum.class.getName()).log(Level.SEVERE, null, ex);
-    }
   }
 
   /**
@@ -1053,7 +1042,7 @@ public class Slyum extends JFrame
       menu.add(menuItem);
 
       // Menu item save as...
-      menuItem = createMenuItem("Save As...", "save-as", KeyEvent.VK_A, KEY_SAVE_AS, ACTION_SAVE_AS);
+      menuItem = createMenuItem("Save As...", "save-as", KeyEvent.VK_S, KEY_SAVE_AS, ACTION_SAVE_AS);
       menu.add(menuItem);
 
       menu.addSeparator();
@@ -1601,7 +1590,11 @@ public class Slyum extends JFrame
    * Open the help file.
    */
   private void openHelp() {
-    openURL("https://github.com/HEIG-GAPS/slyum/blob/master/bin/utils/User_manual_FR.pdf");
+    final URL userManual = Slyum.class.getResource("/User_manual_FR.pdf");
+    if (userManual != null)
+      openURL(userManual.toString());
+    else
+      openURL("http://raw.githubusercontent.com/HEIG-GAPS/slyum/master/src/main/resources/User_manual_FR.pdf");
   }
 
   /**

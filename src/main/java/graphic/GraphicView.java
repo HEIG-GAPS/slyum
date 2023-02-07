@@ -1831,7 +1831,7 @@ public class GraphicView extends GraphicComponent
   public ColoredComponent[] getSelectedColoredComponents() {
     List<GraphicComponent> gc = getSelectedComponents();
     List<ColoredComponent> colored = getColoredComponents(gc);
-    return (ColoredComponent[]) colored.toArray(new ColoredComponent[colored.size()]);
+    return colored.toArray(new ColoredComponent[colored.size()]);
   }
 
   /**
@@ -1976,13 +1976,13 @@ public class GraphicView extends GraphicComponent
 
     this.zoom = zoom;
 
-    // The font size can only be compute with a graphic context. We must
+    // The font size can only be computed with a graphic context. We must
     // call a repainting for update the font size before redrawing the
     // scene.
     getScene().paintImmediately(0, 0, 1, 1);
     getScene().repaint();
 
-    // Adjut the width for selected entities.
+    // Adjust the width for selected entities.
     adjustWidthSelectedEntities();
 
     for (final EntityView entity : getEntitiesView())
@@ -2324,7 +2324,7 @@ public class GraphicView extends GraphicComponent
    *
    * @param g2 the graphic context
    */
-  public void paintScene(Graphics2D g2) {
+  public void paintScene(final Graphics2D g2) {
     int gridSize = getGridSize();
 
     // Paint background.
@@ -2694,7 +2694,7 @@ public class GraphicView extends GraphicComponent
 
       g2.setColor(gridColor);
 
-      double gridSizeScale = (double) gridSize * getScale();
+      double gridSizeScale = gridSize * getScale();
 
       for (double x = (int) (vr.x / gridSizeScale) * gridSizeScale; x < vr.x
                                                                         + vr.width + gridSizeScale; x += gridSizeScale)
@@ -2778,8 +2778,7 @@ public class GraphicView extends GraphicComponent
     HashMap<Relation, Entity> linked = entity1.getLinkedEntities();
     for (Relation relation : linked.keySet()) {
 
-      if (relation instanceof Multi) {
-        Multi multi = (Multi) relation;
+      if (relation instanceof Multi multi) {
 
         MultiView multiView = (MultiView) searchAssociedComponent(multi);
         boolean needCreation = true;

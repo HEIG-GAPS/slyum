@@ -6,7 +6,6 @@ import swing.Slyum;
 import swing.slyumCustomizedComponents.FlatButton;
 import swing.slyumCustomizedComponents.SScrollPane;
 import utility.SMessageDialog;
-import utility.TagDownload;
 import utility.Utility;
 
 import javax.imageio.ImageIO;
@@ -15,7 +14,6 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,25 +32,21 @@ import static swing.Slyum.openURL;
 /**
  * @author MiserezDavid
  */
-public class UpdateInfo extends JDialog {
+public final class UpdateInfo extends JDialog {
 
   public static boolean isUpdateAvailable() {
-    try {
-      return getIntVersion(Updater.getLatestVersion()) > getIntVersion(Slyum.VERSION);
-    } catch (Exception ex) {
-      Logger.getLogger(UpdateInfo.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    return false;
+    return Updater.getInstance().couldContactServer() &&
+           Updater.getInstance().getLatestVersion().isGreaterThan(Slyum.VERSION);
   }
 
   public static void getNewUpdate() {
     getNewUpdate(false);
   }
 
-  public static void getNewUpdate(boolean askForDisableCheckingUpdate) {
+  public static void getNewUpdate(final boolean askForDisableCheckingUpdate) {
     try {
       if (isUpdateAvailable())
-        new UpdateInfo(Updater.getWhatsNew(), askForDisableCheckingUpdate);
+        new UpdateInfo(Updater.getInstance().getWhatsNew(), askForDisableCheckingUpdate);
     } catch (Exception ex) {
       Logger.getLogger(UpdateInfo.class.getName()).log(Level.SEVERE, null, ex);
     }
@@ -60,17 +54,11 @@ public class UpdateInfo extends JDialog {
 
   public static void getPatchNote() {
     try {
-      new UpdateInfo(Updater.getWhatsNew());
+      new UpdateInfo(Updater.getInstance().getWhatsNew());
     } catch (Exception ex) {
       Logger.getLogger(UpdateInfo.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
-
-  public static final String updaterDirectory = Slyum.getPathAppDir();
-  public static final String UPDATER_FILE =
-      updaterDirectory + Slyum.FILE_SEPARATOR + "SlyumUpdater.jar";
-  public static final String TAG_UPDATER = "[updater]";
-  public static final String TAG_UPDATER_VERSION = "[updaterVersion]";
 
   private JEditorPane infoPane;
   private JScrollPane scp;
@@ -78,10 +66,10 @@ public class UpdateInfo extends JDialog {
   private JButton cancel;
   private JPanel pan1;
   private JPanel pan2;
-  private Boolean askForDisableCheckingUpdate = false;
-  private Boolean isUpdater = true;
+  private boolean askForDisableCheckingUpdate = false;
+  private boolean isUpdater = true;
 
-  private UpdateInfo(String info) {
+  private UpdateInfo(final String info) {
     super(Slyum.getInstance(), true);
     isUpdater = false;
     initComponents();
@@ -89,7 +77,7 @@ public class UpdateInfo extends JDialog {
     setVisible(true);
   }
 
-  private UpdateInfo(String info, boolean askForDisableCheckingUpdate) {
+  private UpdateInfo(final String info, final boolean askForDisableCheckingUpdate) {
     super(Slyum.getInstance(), true);
     initComponents();
     infoPane.setText(info);
@@ -107,7 +95,7 @@ public class UpdateInfo extends JDialog {
 
     JComponent glassPane = new JComponent() {
       @Override
-      public void paintComponent(Graphics g) {
+      public void paintComponent(final Graphics g) {
         super.paintComponent(g);
         final Graphics2D g2 = (Graphics2D) g;
         final URL imageLogoURL = Slyum.class.getResource(Slyum.ICON_PATH
@@ -121,7 +109,7 @@ public class UpdateInfo extends JDialog {
                                         - imgLogo.getWidth() - 40, bounds.y + 20);
           g2.drawImage(imgLogo, imgLocation.x, imgLocation.y, this);
         } catch (final IOException e) {
-          System.err.println("Unable to get Slyum's logo for updater.");
+          Slyum.LOGGER.log(Level.SEVERE, "Unable to get Slyum's logo for updater.", e);
         }
       }
     };
@@ -150,28 +138,18 @@ public class UpdateInfo extends JDialog {
     scp.setBorder(null);
 
     ok = new FlatButton("Update");
-    ok.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        update();
-      }
-    });
+    ok.addActionListener(e -> update());
 
     cancel = new FlatButton("Close");
-    cancel.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        if (askForDisableCheckingUpdate &&
-            JOptionPane.showConfirmDialog(
-                UpdateInfo.this,
-                "Would you continue to check for updates at launch of Slyum?",
-                "Slyum",
-                JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION)
-          setUpdateCheckedAtLaunch(false);
-        UpdateInfo.this.dispose();
-      }
+    cancel.addActionListener(e -> {
+      if (askForDisableCheckingUpdate &&
+          JOptionPane.showConfirmDialog(
+              UpdateInfo.this,
+              "Would you continue to check for updates at launch of Slyum?",
+              "Slyum",
+              JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION)
+        setUpdateCheckedAtLaunch(false);
+      UpdateInfo.this.dispose();
     });
 
     if (isUpdater)
@@ -183,25 +161,6 @@ public class UpdateInfo extends JDialog {
     pack();
     setSize(750, 600);
     setLocationRelativeTo(Slyum.getInstance());
-  }
-
-  private void initializeUpdater() throws MalformedURLException, Exception {
-    File f = new File(UPDATER_FILE);
-    int updaterVersion = Integer.parseInt(TagDownload.getContentTag(TAG_UPDATER_VERSION));
-
-    if (f.exists() && Slyum.getUpdaterVersion() >= updaterVersion)
-      return;
-
-    if (!new File(updaterDirectory).exists())
-      new File(updaterDirectory).mkdirs();
-
-    URL website = new URL(TagDownload.getContentTag(TAG_UPDATER));
-    try (ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-         FileOutputStream fos = new FileOutputStream(UPDATER_FILE)) {
-      fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-    }
-
-    Slyum.setUpdaterVersion(updaterVersion);
   }
 
   private void update() {
@@ -218,58 +177,13 @@ public class UpdateInfo extends JDialog {
     }
 
     try {
-      initializeUpdater();
+      openURL(Updater.getInstance().getRedirectUrl());
     } catch (Exception ex) {
       Logger.getLogger(UpdateInfo.class.getName()).log(Level.SEVERE, null, ex);
       SMessageDialog.showErrorMessage("Unable to get the updater.");
     }
-    try {
-      String applicationPath = new File(
-          Slyum.class.getProtectionDomain().getCodeSource()
-                     .getLocation().toURI().getPath()).getParent();
 
-      // Test if the user has the permission to write in the Slyum directory.
-      // This method is used since Java is shit and the canWrite method of SecurityManager
-      // always return true because there is no fucking SecurityManager.
-      File fileTest = new File(applicationPath + Slyum.FILE_SEPARATOR + "test");
-      if (fileTest.createNewFile())
-        fileTest.delete();
-
-      String[] run = {"java", "-jar", UPDATER_FILE, applicationPath};
-      Runtime.getRuntime().exec(run);
-
-    } catch (URISyntaxException | IOException ex) {
-
-      JButton btnClose = new JButton("Close");
-      btnClose.addActionListener((ActionEvent e) -> {
-        Utility.getOptionPane((JComponent) e.getSource()).setValue(btnClose);
-      });
-
-      JButton btnUpdateManually = new JButton("Update manually");
-      btnUpdateManually.addActionListener((ActionEvent e) -> {
-        openURL(Slyum.URL_PROJECT_PAGE);
-        Utility.getOptionPane((JComponent) e.getSource()).setValue(btnUpdateManually);
-      });
-
-      String msgError = "An error occured when trying to update Slyum.";
-      if (ex instanceof IOException)
-        msgError += "\nIt seems you don't have write access for the destination directory.";
-
-      JOptionPane.showOptionDialog(
-          this,
-          msgError,
-          "Slyum - Updater error",
-          JOptionPane.OK_CANCEL_OPTION,
-          JOptionPane.ERROR_MESSAGE,
-          null,
-          new JButton[] {btnUpdateManually, btnClose},
-          btnUpdateManually);
-    }
     System.exit(0);
-  }
-
-  private static int getIntVersion(String version) {
-    return Integer.parseInt(version.replace(".", ""));
   }
 
   public static boolean isUpdateCheckedAtLaunch() {
@@ -282,7 +196,7 @@ public class UpdateInfo extends JDialog {
     return enable;
   }
 
-  public static void setUpdateCheckedAtLaunch(boolean enable) {
+  public static void setUpdateCheckedAtLaunch(final boolean enable) {
     Properties properties = PropertyLoader.getInstance().getProperties();
     properties.put(
         PropertyLoader.CHECK_UPDATE_AT_LAUNCH,

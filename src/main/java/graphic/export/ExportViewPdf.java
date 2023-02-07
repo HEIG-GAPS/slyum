@@ -1,30 +1,34 @@
 package graphic.export;
 
-import de.erichseifert.vectorgraphics2d.PDFGraphics2D;
-import de.erichseifert.vectorgraphics2d.VectorGraphics2D;
 import graphic.GraphicView;
+import org.apache.batik.svggen.SVGGraphics2D;
+import org.apache.batik.transcoder.Transcoder;
+import org.apache.batik.transcoder.TranscoderInput;
+import org.apache.batik.transcoder.TranscoderOutput;
+import org.apache.commons.io.input.XmlStreamReader;
+import org.apache.fop.svg.PDFTranscoder;
 
 import java.awt.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
+import java.util.function.Function;
 
-public class ExportViewPdf extends ExportViewVectorFile {
+public final class ExportViewPdf extends ExportViewVectorFile {
 
-  public static ExportViewPdf create(
-      GraphicView graphicView, File file, boolean displayTitle) {
+  public static ExportViewPdf create(final GraphicView graphicView, final File file, final boolean displayTitle) {
     return new ExportViewPdf(graphicView, file, displayTitle);
   }
 
-  public static ExportViewPdf create(
-      GraphicView graphicView, File file) {
-    return create(
-        graphicView,
-        file,
-        graphicView.getTxtBoxDiagramName().isVisible());
+  public static ExportViewPdf create(final GraphicView graphicView, final File file) {
+    return create(graphicView, file, graphicView.getTxtBoxDiagramName().isVisible());
   }
 
-  private ExportViewPdf(
-      GraphicView graphicView, File file, boolean displayTitle) {
-
+  private ExportViewPdf(final GraphicView graphicView, final File file, final boolean displayTitle) {
     super(graphicView, file, displayTitle);
   }
 
@@ -38,10 +42,23 @@ public class ExportViewPdf extends ExportViewVectorFile {
   }
 
   @Override
-  protected VectorGraphics2D getGraphics(
-      double x1, double y1, double x2, double y2) {
+  protected void writeToFile(final FileOutputStream fileOutputStream,
+                             final Function<SVGGraphics2D, SVGGraphics2D> draw) throws Exception {
 
-    return new PDFGraphics2D(x1, y1, x2, y2);
+    try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+         Writer writer = new OutputStreamWriter(byteArrayOutputStream)) {
+      ExportViewSvg.createSVG(this, draw).stream(writer);
+      writer.flush();
+
+      try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+           Reader reader = new XmlStreamReader(byteArrayInputStream)) {
+        TranscoderInput transcoderInput = new TranscoderInput(reader);
+        TranscoderOutput transcoderOutput = new TranscoderOutput(fileOutputStream);
+        Transcoder transcoder = new PDFTranscoder();
+        transcoder.transcode(transcoderInput, transcoderOutput);
+      }
+    }
+
   }
 
 }

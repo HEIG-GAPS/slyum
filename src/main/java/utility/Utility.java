@@ -499,7 +499,7 @@ public class Utility {
    *
    * @param g the graphic context
    */
-  public static void setRenderQuality(Graphics g) {
+  public static void setRenderQuality(final Graphics g) {
     if (getGraphicQualityType().equals(GraphicQualityType.LOW)) return;
 
     final Graphics2D g2 = (Graphics2D) g;
@@ -575,16 +575,17 @@ public class Utility {
     g2.setFont(Slyum.getDefaultFont().deriveFont(16.f));
     g2.setColor(colorText);
     stringWidth = g2.getFontMetrics().stringWidth(text);
-    g2.drawString(text, (bounds.x + bounds.width - stringWidth) / 2,
-                  bounds.y + (bounds.height > offset ? offset : bounds.height));
+    g2.drawString(text,
+                  (bounds.x + bounds.width - stringWidth) / 2,
+                  bounds.y + Math.min(bounds.height, offset));
   }
 
-  public static JOptionPane getOptionPane(Component c) {
-    Component parent = c;
+  public static JOptionPane getOptionPane(final Component component) {
+    Component parent = component;
 
     while (parent != null) {
-      if (parent instanceof JOptionPane) {
-        return (JOptionPane) parent;
+      if (parent instanceof JOptionPane jOptionPane) {
+        return jOptionPane;
       }
 
       parent = parent.getParent();
