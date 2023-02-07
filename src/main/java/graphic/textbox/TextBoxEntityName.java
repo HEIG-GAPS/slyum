@@ -63,14 +63,16 @@ public class TextBoxEntityName extends TextBox {
     classWidth = bounds.width;
   }
 
+  /** {@inheritDoc} */
   @Override
-  public void setText(String text) {
-    if (entity.getName().equals(text) ||
-        !TypeName.getInstance().verifyName(text))
+  public void setText(final String text) {
+    final String newText = text.replace(" ", "_");
+    if (entity.getName().equals(newText) ||
+        !TypeName.getInstance().verifyName(newText))
       return;
 
-    entity.setName(text);
-    super.setText(text);
+    entity.setName(newText);
+    super.setText(newText);
   }
 
   @Override
