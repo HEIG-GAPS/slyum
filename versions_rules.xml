@@ -8,5 +8,12 @@
                 <ignoreVersion type="regex">.*-alpha.*</ignoreVersion>
             </ignoreVersions>
         </rule>
+
+        <rule groupId="com.fasterxml.jackson.core" comparisonMethod="maven">
+            <ignoreVersions>
+                <!-- Ignore Pre-Releases -->
+                <ignoreVersion type="regex">.*-rc.*</ignoreVersion>
+            </ignoreVersions>
+        </rule>
     </rules>
 </ruleset>
