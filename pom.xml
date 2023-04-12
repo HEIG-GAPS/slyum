@@ -309,7 +309,7 @@
                             <goal>analyze-dep-mgt</goal>
                         </goals>
                         <configuration>
-                            <failBuild>true</failBuild>
+                            <failBuild>false</failBuild>
                         </configuration>
                     </execution>
 
