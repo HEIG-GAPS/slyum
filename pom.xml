@@ -303,7 +303,7 @@
                         </configuration>
                     </execution>
 
-                    <execution>
+                    <!--<execution>
                         <id>dep-mgt</id>
                         <goals>
                             <goal>analyze-dep-mgt</goal>
@@ -311,7 +311,7 @@
                         <configuration>
                             <failBuild>false</failBuild>
                         </configuration>
-                    </execution>
+                    </execution>-->
 
                     <execution>
                         <id>cp-dependencies</id>
