@@ -8,13 +8,7 @@ import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.commons.io.input.XmlStreamReader;
 import org.apache.fop.svg.PDFTranscoder;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.util.function.Function;
 
 public final class ExportViewEps extends ExportViewVectorFile {
