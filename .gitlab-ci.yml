@@ -95,10 +95,13 @@ build:
 #    - tags
 #  script: mvn $MAVEN_CLI_OPTS $DEPLOY_CLI_OPTS deploy
 
-deploy_snapshot_macos_x86_64_monterey:
+deploy_snapshot_darwin_amd64:
   stage: deployment
   tags:
-    - maven-java17-macos-x86_64-monterey
+    - darwin
+    - amd64
+    - java21
+    - maven
   only:
     - master
   script:
@@ -114,10 +117,13 @@ deploy_snapshot_macos_x86_64_monterey:
       - "*.pkg"
     expire_in: 1 days
 
-deploy_release_macos_x86_64_monterey:
+deploy_release_darwin_amd64:
   stage: deployment
   tags:
-    - maven-java17-macos-x86_64-monterey
+    - darwin
+    - amd64
+    - java21
+    - maven
   only:
     - tags
   script:
@@ -133,48 +139,13 @@ deploy_release_macos_x86_64_monterey:
       - "*.pkg"
     expire_in: 1 days
 
-deploy_snapshot_macos_x86_64_ventura:
+deploy_snapshot_darwin_aarch64:
   stage: deployment
   tags:
-    - maven-java17-macos-x86_64-ventura
-  only:
-    - master
-  script:
-    - mvn $MAVEN_CLI_OPTS $DEPLOY_CLI_OPTS package
-    - FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-    - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
-    - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
-    - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
-    - jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target --icon tools/icns/slyum.icns
-    - mv Slyum*.pkg Slyum-$FULL_VERSION-x86_64-ventura.pkg
-  artifacts:
-    paths:
-      - "*.pkg"
-    expire_in: 1 days
-
-deploy_release_macos_x86_64_ventura:
-  stage: deployment
-  tags:
-    - maven-java17-macos-x86_64-ventura
-  only:
-    - tags
-  script:
-    - mvn $MAVEN_CLI_OPTS $DEPLOY_CLI_OPTS package
-    - FULL_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-    - VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | awk -F '-' '{ print $1 }')
-    - DESCRIPTION=$(mvn help:evaluate -Dexpression=project.description -q -DforceStdout)
-    - ARTIFACTID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
-    - jpackage --name Slyum --type pkg --main-class swing.Slyum --main-jar $ARTIFACTID-$FULL_VERSION.jar --app-version "$VERSION" --copyright "©HEIG-VD // GAPS 2023" --description "$DESCRIPTION" --mac-package-identifier "ch.heig.gaps.Slyum" --about-url "https://gaps.heig-vd.ch" --mac-package-name Slyum --input target --icon tools/icns/slyum.icns
-    - mv Slyum*.pkg Slyum-$FULL_VERSION-x86_64-ventura.pkg
-  artifacts:
-    paths:
-      - "*.pkg"
-    expire_in: 1 days
-
-deploy_snapshot_macos_aarch64:
-  stage: deployment
-  tags:
-    - maven-java17-macos-aarch64
+    - darwin
+    - aarch64
+    - java21
+    - maven
   only:
     - master
   script:
@@ -190,10 +161,13 @@ deploy_snapshot_macos_aarch64:
       - "*.pkg"
     expire_in: 1 days
 
-deploy_release_macos_aarch64:
+deploy_release_darwin_aarch64:
   stage: deployment
   tags:
-    - maven-java17-macos-aarch64
+    - darwin
+    - aarch64
+    - java21
+    - maven
   only:
     - tags
   script:
@@ -209,10 +183,13 @@ deploy_release_macos_aarch64:
       - "*.pkg"
     expire_in: 1 days
 
-deploy_snapshot_windows:
+deploy_snapshot_windows_amd64:
   stage: deployment
   tags:
-    - maven-java17-windows
+    - windows
+    - amd64
+    - java21
+    - maven
   only:
     - master
   script:
@@ -228,10 +205,13 @@ deploy_snapshot_windows:
       - "*.msi"
     expire_in: 1 days
 
-deploy_release_windows:
+deploy_release_windows_amd64:
   stage: deployment
   tags:
-    - maven-java17-windows
+    - windows
+    - amd64
+    - java21
+    - maven
   only:
     - tags
   script:
@@ -247,10 +227,13 @@ deploy_release_windows:
       - "*.msi"
     expire_in: 1 days
 
-deploy_snapshot_linux_rpm:
+deploy_snapshot_linux_amd64_rpm:
   stage: deployment
   tags:
-    - maven-java17-linux
+    - linux
+    - amd64
+    - java21
+    - maven
   only:
     - master
   script:
@@ -266,10 +249,13 @@ deploy_snapshot_linux_rpm:
       - "*.rpm"
     expire_in: 1 days
 
-deploy_release_linux_rpm:
+deploy_release_linux_amd64_rpm:
   stage: deployment
   tags:
-    - maven-java17-linux
+    - linux
+    - amd64
+    - java21
+    - maven
   only:
     - tags
   script:
@@ -285,10 +271,13 @@ deploy_release_linux_rpm:
       - "*.rpm"
     expire_in: 1 days
 
-deploy_snapshot_linux_deb:
+deploy_snapshot_linux_amd64_deb:
   stage: deployment
   tags:
-    - maven-java17-linux
+    - linux
+    - amd64
+    - java21
+    - maven
   only:
     - master
   script:
@@ -304,10 +293,13 @@ deploy_snapshot_linux_deb:
       - "*.deb"
     expire_in: 1 days
 
-deploy_release_linux_deb:
+deploy_release_linux_amd64_deb:
   stage: deployment
   tags:
-    - maven-java17-linux
+    - linux
+    - amd64
+    - java21
+    - maven
   only:
     - tags
   script:
