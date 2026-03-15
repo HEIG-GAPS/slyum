@@ -1,6 +1,7 @@
 package utility;
 
 import javafx.scene.image.Image;
+import javax.swing.ImageIcon;
 import ui.SlyumApp;
 
 import java.net.URL;
@@ -41,6 +42,20 @@ public class PersonalizedIcon {
 
   public static Image getInfoIcon() {
     return createImageIcon(PATH_INFO_ICON);
+  }
+
+  /**
+   * Create a Swing {@link ImageIcon} from the bundled icon at the given path.
+   * Used by Swing components that have not yet been migrated to JavaFX.
+   *
+   * @param imagePath relative path inside the icon directory
+   *
+   * @return the {@link ImageIcon}, or {@code null} if the resource was not found
+   */
+  public static ImageIcon createSwingImageIcon(final String imagePath) {
+    java.net.URL imageURL = SlyumApp.class.getResource(SlyumApp.ICON_PATH + imagePath);
+    if (imageURL == null) return null;
+    return new ImageIcon(imageURL);
   }
 
   public static Image getLogo() {

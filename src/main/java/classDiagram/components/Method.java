@@ -15,6 +15,7 @@ import utility.PersonalizedIcon;
 import utility.SMessageDialog;
 
 import javax.swing.*;
+import javax.swing.ImageIcon;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
@@ -149,7 +150,7 @@ public class Method extends Observable implements IDiagramComponent, Observer, C
   }
 
   public ImageIcon getImageIcon() {
-    return PersonalizedIcon.createImageIcon("method.png");
+    return PersonalizedIcon.createSwingImageIcon("method.png");
   }
 
   public void setMethod(Method method) {
