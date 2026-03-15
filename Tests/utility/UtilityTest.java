@@ -11,7 +11,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.LinkedList;
@@ -150,10 +151,10 @@ public class UtilityTest {
   @Test
   public void testGetAlphaColor() {
     System.out.println("getAlphaColor");
-    Color color = new Color(100, 100, 100);
+    javafx.scene.paint.Color color = javafx.scene.paint.Color.rgb(100, 100, 100);
     int alpha = 50;
-    Color expResult = new Color(100, 100, 100, alpha);
-    Color result = Utility.getAlphaColor(color, alpha);
+    javafx.scene.paint.Color expResult = javafx.scene.paint.Color.rgb(100, 100, 100, alpha / 255.0);
+    javafx.scene.paint.Color result = Utility.getAlphaColor(color, alpha);
     assertEquals(expResult, result);
   }
 

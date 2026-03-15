@@ -1,52 +1,51 @@
 package utility;
 
-import swing.Slyum;
+import javafx.scene.image.Image;
+import ui.SlyumApp;
 
-import javax.swing.*;
 import java.net.URL;
 
 public class PersonalizedIcon {
-  public final static String PATH_ICON = Slyum.ICON_PATH;
+  public final static String PATH_ICON = SlyumApp.ICON_PATH;
   public final static String PATH_WARNING_ICON = "warning.png";
   public final static String PATH_QUESTION_ICON = "question.png";
   public final static String PATH_INFO_ICON = "information.png";
   public final static String PATH_ERROR_ICON = "error.png";
 
   /**
-   * Create a new ImageIcon with the specified path. If path is invalid a null object is returned.
+   * Create a new Image with the specified path. If the path is invalid, {@code null} is returned.
    *
-   * @param imagePath the path for create a new ImageIcon
+   * @param imagePath the path for creating a new Image
    *
-   * @return the ImageIcon created
+   * @return the Image created, or {@code null} if the resource was not found
    */
-  public static ImageIcon createImageIcon(String imagePath) {
-    URL imageURL = Slyum.class.getResource(Slyum.ICON_PATH + imagePath);
+  public static Image createImageIcon(String imagePath) {
+    URL imageURL = SlyumApp.class.getResource(SlyumApp.ICON_PATH + imagePath);
 
-    ImageIcon icon = null;
+    if (imageURL == null) return null;
 
-    if (imageURL != null) icon = new ImageIcon(imageURL);
-
-    return icon;
+    return new Image(imageURL.toExternalForm());
   }
 
-  public static ImageIcon getWarningIcon() {
+  public static Image getWarningIcon() {
     return createImageIcon(PATH_WARNING_ICON);
   }
 
-  public static ImageIcon getQuestionIcon() {
+  public static Image getQuestionIcon() {
     return createImageIcon(PATH_QUESTION_ICON);
   }
 
-  public static ImageIcon getErrorIcon() {
+  public static Image getErrorIcon() {
     return createImageIcon(PATH_ERROR_ICON);
   }
 
-  public static ImageIcon getInfoIcon() {
+  public static Image getInfoIcon() {
     return createImageIcon(PATH_INFO_ICON);
   }
 
-  public static ImageIcon getLogo() {
+  public static Image getLogo() {
     return createImageIcon("logo32.png");
   }
 
 }
+

@@ -1,9 +1,11 @@
 package utility;
 
-import swing.Slyum;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.stage.Window;
+import ui.SlyumApp;
 
-import javax.swing.*;
-import java.awt.*;
+import java.util.Optional;
 
 public class SMessageDialog {
   /* ------------------------ MESSAGES FOR SLYUM --------------------------- */
@@ -17,62 +19,107 @@ public class SMessageDialog {
       "Error with properties. Cannot load or save properties file.\n" +
       "Try to launch Slyum with administrators rights.";
 
+  /* Return value constants matching JOptionPane for backward compatibility */
+  public static final int YES_OPTION = 0;
+  public static final int NO_OPTION = 1;
+  public static final int CANCEL_OPTION = 2;
+  public static final int OK_OPTION = 0;
+  public static final int CLOSED_OPTION = -1;
+
   /* ----------------------------------------------------------------------- */
 
-  private static final String TITLE_WINDOW = Slyum.getInstance().getName();
-
-  public static void showErrorMessage(String message) {
-    showErrorMessage(message, Slyum.getInstance());
+  private static String getTitle() {
+    SlyumApp app = SlyumApp.getInstance();
+    return app != null ? app.getName() : "Slyum";
   }
 
-  public static void showErrorMessage(String message, Component c) {
-    JOptionPane.showMessageDialog(c, message, TITLE_WINDOW,
-                                  JOptionPane.ERROR_MESSAGE);
+  private static Window ownerOrNull() {
+    SlyumApp app = SlyumApp.getInstance();
+    return (app != null) ? app.getPrimaryStage() : null;
+  }
+
+  public static void showErrorMessage(String message) {
+    showErrorMessage(message, ownerOrNull());
+  }
+
+  public static void showErrorMessage(String message, Window owner) {
+    Alert alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
+    alert.setTitle(getTitle());
+    alert.setHeaderText(null);
+    if (owner != null) alert.initOwner(owner);
+    alert.showAndWait();
   }
 
   public static void showWarningMessage(String message) {
-    showWarningMessage(message, Slyum.getInstance());
+    showWarningMessage(message, ownerOrNull());
   }
 
-  public static void showWarningMessage(String message, Component c) {
-    JOptionPane.showMessageDialog(c, message, TITLE_WINDOW,
-                                  JOptionPane.WARNING_MESSAGE);
+  public static void showWarningMessage(String message, Window owner) {
+    Alert alert = new Alert(Alert.AlertType.WARNING, message, ButtonType.OK);
+    alert.setTitle(getTitle());
+    alert.setHeaderText(null);
+    if (owner != null) alert.initOwner(owner);
+    alert.showAndWait();
   }
 
   public static void showInformationMessage(String message) {
-    showInformationMessage(message, Slyum.getInstance());
+    showInformationMessage(message, ownerOrNull());
   }
 
-  public static void showInformationMessage(String message, Component c) {
-    JOptionPane.showMessageDialog(c, message, TITLE_WINDOW,
-                                  JOptionPane.INFORMATION_MESSAGE);
+  public static void showInformationMessage(String message, Window owner) {
+    Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
+    alert.setTitle(getTitle());
+    alert.setHeaderText(null);
+    if (owner != null) alert.initOwner(owner);
+    alert.showAndWait();
   }
 
   public static int showQuestionMessageYesNo(String message) {
-    return showQuestionMessageYesNo(message, Slyum.getInstance());
+    return showQuestionMessageYesNo(message, ownerOrNull());
   }
 
-  public static int showQuestionMessageYesNo(String message, Component c) {
-    return JOptionPane.showConfirmDialog(c, message, TITLE_WINDOW,
-                                         JOptionPane.YES_NO_OPTION);
+  public static int showQuestionMessageYesNo(String message, Window owner) {
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message,
+                            ButtonType.YES, ButtonType.NO);
+    alert.setTitle(getTitle());
+    alert.setHeaderText(null);
+    if (owner != null) alert.initOwner(owner);
+    Optional<ButtonType> result = alert.showAndWait();
+    if (result.isEmpty()) return CLOSED_OPTION;
+    return result.get() == ButtonType.YES ? YES_OPTION : NO_OPTION;
   }
 
   public static int showQuestionMessageOkCancel(String message) {
-    return showQuestionMessageOkCancel(message, Slyum.getInstance());
+    return showQuestionMessageOkCancel(message, ownerOrNull());
   }
 
-  public static int showQuestionMessageOkCancel(String message, Component c) {
-    return JOptionPane.showConfirmDialog(c, message, TITLE_WINDOW,
-                                         JOptionPane.OK_CANCEL_OPTION);
+  public static int showQuestionMessageOkCancel(String message, Window owner) {
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message,
+                            ButtonType.OK, ButtonType.CANCEL);
+    alert.setTitle(getTitle());
+    alert.setHeaderText(null);
+    if (owner != null) alert.initOwner(owner);
+    Optional<ButtonType> result = alert.showAndWait();
+    if (result.isEmpty()) return CLOSED_OPTION;
+    return result.get() == ButtonType.OK ? OK_OPTION : CANCEL_OPTION;
   }
 
   public static int showQuestionMessageYesNoCancel(String message) {
-    return showQuestionMessageYesNoCancel(message, Slyum.getInstance());
+    return showQuestionMessageYesNoCancel(message, ownerOrNull());
   }
 
-  public static int showQuestionMessageYesNoCancel(String message, Component c) {
-    return JOptionPane.showConfirmDialog(c, message, TITLE_WINDOW,
-                                         JOptionPane.YES_NO_CANCEL_OPTION);
+  public static int showQuestionMessageYesNoCancel(String message, Window owner) {
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, message,
+                            ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+    alert.setTitle(getTitle());
+    alert.setHeaderText(null);
+    if (owner != null) alert.initOwner(owner);
+    Optional<ButtonType> result = alert.showAndWait();
+    if (result.isEmpty()) return CLOSED_OPTION;
+    if (result.get() == ButtonType.YES) return YES_OPTION;
+    if (result.get() == ButtonType.NO) return NO_OPTION;
+    return CANCEL_OPTION;
   }
 
 }
+

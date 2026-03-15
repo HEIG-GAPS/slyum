@@ -24,12 +24,31 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>21</java.version>
+        <java.version>17</java.version>
         <junit.version>5.8.1</junit.version>
         <batik.version>1.18</batik.version>
+        <javafx.version>17.0.2</javafx.version>
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.xmlgraphics</groupId>
@@ -424,7 +443,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.5.0</version>
                 <configuration>
-                    <mainClass>swing.Slyum</mainClass>
+                <mainClass>ui.SlyumApp</mainClass>
                 </configuration>
             </plugin>
 
