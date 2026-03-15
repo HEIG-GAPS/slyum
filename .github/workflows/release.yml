@@ -5,6 +5,9 @@ on:
     tags:
       - slyum-*
 
+permissions:
+  contents: read
+
 jobs:
 
   release_snapshots:

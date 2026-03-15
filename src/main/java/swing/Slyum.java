@@ -598,6 +598,18 @@ public class Slyum extends JFrame
     SwingUtilities.invokeLater(() -> instance.initializationComplete());
   }
 
+  /**
+   * Entry point called from the JavaFX {@code ui.SlyumApp} during the
+   * Swing-to-JavaFX migration. Launches the Swing UI on the Event Dispatch
+   * Thread, reusing the initialisation logic from {@link #main(String[])}.
+   *
+   * @param primaryStage the primary JavaFX stage (currently unused; reserved
+   *                     for when the main window is migrated to JavaFX)
+   */
+  public static void launchSwingUI(final javafx.stage.Stage primaryStage) {
+    main(new String[0]);
+  }
+
   public static void openURL(final String url) {
     try {
       java.awt.Desktop.getDesktop().browse(new URI(url));

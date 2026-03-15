@@ -1,56 +1,65 @@
 package ui;
 
+import javafx.application.Application;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
- * JavaFX migration stub for the main application class.
- * Bridges to {@link swing.Slyum} during the migration period until the full
- * swing package is replaced by a proper JavaFX Application subclass.
+ * JavaFX Application entry point for Slyum.
+ *
+ * <p>This class serves as the main entry point during the Swing-to-JavaFX
+ * migration. It bootstraps the JavaFX runtime and will progressively replace
+ * {@link swing.Slyum} as the primary window is migrated.
  *
  * @author migration
  */
-public class SlyumApp {
+public class SlyumApp extends Application {
 
-  /** Path prefix used for loading bundled icon resources. */
-  public static final String ICON_PATH = swing.Slyum.ICON_PATH;
+    /** Path prefix used for loading bundled icon resources. */
+    public static final String ICON_PATH = swing.Slyum.ICON_PATH;
 
-  private static SlyumApp instance;
-  private Stage primaryStage;
+    private static SlyumApp instance;
 
-  /** Returns the singleton application instance, or {@code null} if not yet initialised. */
-  public static SlyumApp getInstance() {
-    return instance;
-  }
-
-  /** Called by the JavaFX Application start() method to register the singleton. */
-  public static void setInstance(SlyumApp app) {
-    instance = app;
-  }
-
-  /** Human-readable application name used in dialog titles. */
-  public String getName() {
-    return "Slyum";
-  }
-
-  /**
-   * Returns the default font for drawing diagram labels.
-   * Falls back to the system default font when the Swing layer is not available.
-   */
-  public static Font getDefaultFont() {
-    java.awt.Font awtFont = swing.Slyum.getDefaultFont();
-    if (awtFont != null) {
-      return Font.font(awtFont.getFamily(), awtFont.getSize());
+    /** Returns the singleton application instance, or {@code null} if not yet initialised. */
+    public static SlyumApp getInstance() {
+        return instance;
     }
-    return Font.getDefault();
-  }
 
-  public Stage getPrimaryStage() {
-    return primaryStage;
-  }
+    /**
+     * JavaFX entry point. Stores the singleton and delegates to the
+     * Swing-based main window until the full migration is complete.
+     *
+     * @param primaryStage the primary stage provided by the JavaFX runtime
+     */
+    @Override
+    public void start(final Stage primaryStage) {
+        instance = this;
+        primaryStage.setTitle("Slyum");
+        // TODO: replace with a fully JavaFX-based scene once migration is complete.
+        // For now, the Swing main window is launched via the legacy entry point.
+        swing.Slyum.launchSwingUI(primaryStage);
+    }
 
-  public void setPrimaryStage(Stage stage) {
-    this.primaryStage = stage;
-  }
+    /**
+     * Returns the default font for drawing diagram labels.
+     * Falls back to the system default font when the Swing layer is not available.
+     *
+     * @return the default {@link Font}
+     */
+    public static Font getDefaultFont() {
+        java.awt.Font awtFont = swing.Slyum.getDefaultFont();
+        if (awtFont != null) {
+            return Font.font(awtFont.getFamily(), awtFont.getSize());
+        }
+        return Font.getDefault();
+    }
 
+    /**
+     * Application entry point.
+     *
+     * @param args command-line arguments forwarded to the JavaFX runtime
+     */
+    public static void main(final String[] args) {
+        launch(args);
+    }
 }
