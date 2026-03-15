@@ -1,6 +1,6 @@
 package graphic;
 
-import java.awt.*;
+import javafx.scene.paint.Color;
 
 public interface ColoredComponent {
   Color getColor();

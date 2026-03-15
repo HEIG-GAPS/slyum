@@ -3,25 +3,33 @@ package graphic;
 import change.BufferCreation;
 import change.Change;
 import classDiagram.IDiagramComponent;
+import javafx.event.ActionEvent;
+import javafx.geometry.Bounds;
+import javafx.scene.Node;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import swing.MultiViewManager;
 import swing.PanelClassDiagram;
-import swing.SColorAssigner;
-import swing.SPanelDiagramComponent;
 import swing.Slyum;
 import swing.XmlElement;
-import swing.slyumCustomizedComponents.SRadioButtonMenuItem;
 import utility.PersonalizedIcon;
 import utility.Utility;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.LinkedList;
 import java.util.Observable;
+import java.util.logging.Logger;
 
 /**
  * Represent a graphic component in Slyum. Graphics components can't be draw itself, it's not a Swing component. It must
@@ -32,7 +40,9 @@ import java.util.Observable;
  * @author David Miserez
  * @version 1.0 - 25.07.2011
  */
-public abstract class GraphicComponent extends Observable implements ActionListener, XmlElement {
+public abstract class GraphicComponent extends Observable implements XmlElement {
+
+  private static final Logger LOGGER = Logger.getLogger(GraphicComponent.class.getName());
 
   public static void askNewColorForSelectedItems() {
     MultiViewManager.getSelectedGraphicView().changeColorForSelectedItems();
@@ -54,16 +64,16 @@ public abstract class GraphicComponent extends Observable implements ActionListe
   }
 
   protected Point locationContextMenuRequested;
-  protected JMenuItem miNewNote;
-  // Save the location of the mouse uses for computing the movement or the
+  protected MenuItem miNewNote;
+  // Save the location of the mouse used for computing the movement or the
   // resize.
   protected Point mousePressed = new Point();
 
   protected GraphicView parent;
   protected boolean pictureMode = false;
 
-  protected JPopupMenu popupMenu;
-  private Color color = Color.DARK_GRAY;
+  protected ContextMenu popupMenu;
+  private Color color = Color.DARKGRAY;
 
   private boolean selected = false;
   private boolean visible = true;
@@ -86,10 +96,16 @@ public abstract class GraphicComponent extends Observable implements ActionListe
     init();
   }
 
-  @Override
-  public void actionPerformed(
-      ActionEvent e) {
-    switch (e.getActionCommand()) {
+  /**
+   * Handles actions fired by menu items created via {@link #makeMenuItem}. Subclasses may override to extend
+   * or replace behaviour for specific action commands.
+   *
+   * @param e the JavaFX action event from the menu item
+   */
+  public void actionPerformed(ActionEvent e) {
+    if (!(e.getSource() instanceof MenuItem)) return;
+    String actionCommand = ((MenuItem) e.getSource()).getId();
+    switch (actionCommand) {
       case Slyum.ACTION_NEW_NOTE_ASSOCIED:
         parent.linkNewNoteWithSelectedEntities();
         break;
@@ -97,7 +113,9 @@ public abstract class GraphicComponent extends Observable implements ActionListe
         askNewColorForSelectedItems();
         break;
       default:
-        SPanelDiagramComponent.getInstance().actionPerformed(e);
+        // TODO: delegate to SPanelDiagramComponent once it is migrated to JavaFX
+        // (tracked: migrate swing.SPanelDiagramComponent to use JavaFX ActionEvent)
+        LOGGER.warning("Unhandled action command: " + actionCommand);
         break;
     }
   }
@@ -177,9 +195,9 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    * When the user select a component, this method is called. It's used for drawing a selected effect, like an etched
    * border.
    *
-   * @param g2 the graphic context
+   * @param gc the graphic context
    */
-  public void drawSelectedEffect(Graphics2D g2) {
+  public void drawSelectedEffect(GraphicsContext gc) {
 
   }
 
@@ -193,9 +211,9 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
   /**
    * Mouse event - this event is called by the graphic view when the user clicks on it. The graphic view make a link
-   * between swing and slyum events.
+   * between JavaFX and slyum events.
    *
-   * @param e the swing mouse event.
+   * @param e the JavaFX mouse event.
    */
   public void gMouseClicked(MouseEvent e) {
 
@@ -203,41 +221,41 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
   /**
    * Mouse event - this event is called by the graphic view when the user keeps the mouse pressed and move it. The
-   * graphic view make a link between swing and slyum events.
+   * graphic view make a link between JavaFX and slyum events.
    *
-   * @param e the swing mouse event.
+   * @param e the JavaFX mouse event.
    */
   public void gMouseDragged(MouseEvent e) { }
 
   /**
    * Mouse event - this event is called by the graphic view when the user enters in the component with the mouse. The
-   * graphic view make a link between swing and slyum events.
+   * graphic view make a link between JavaFX and slyum events.
    *
-   * @param e the swing mouse event.
+   * @param e the JavaFX mouse event.
    */
   public void gMouseEntered(MouseEvent e) { }
 
   /**
    * Mouse event - this event is called by the graphic view when the user exits from the component with the mouse. The
-   * graphic view make a link between swing and slyum events.
+   * graphic view make a link between JavaFX and slyum events.
    *
-   * @param e the swing mouse event.
+   * @param e the JavaFX mouse event.
    */
   public void gMouseExited(MouseEvent e) { }
 
   /**
    * Mouse event - this event is called by the graphic view when the user moves on the component with the mouse. The
-   * graphic view make a link between swing and slyum events.
+   * graphic view make a link between JavaFX and slyum events.
    *
-   * @param e the swing mouse event.
+   * @param e the JavaFX mouse event.
    */
   public void gMouseMoved(MouseEvent e) { }
 
   /**
    * Mouse event - this event is called by the graphic view when the user presses a mouse button on the component. The
-   * graphic view make a link between swing and slyum events.
+   * graphic view make a link between JavaFX and slyum events.
    *
-   * @param e the swing mouse event.
+   * @param e the JavaFX mouse event.
    */
   public void gMousePressed(MouseEvent e) {
     maybeShowPopup(e, popupMenu);
@@ -245,9 +263,9 @@ public abstract class GraphicComponent extends Observable implements ActionListe
 
   /**
    * Mouse event - this event is called by the graphic view when the user releases a mouse button on the component. The
-   * graphic view make a link between swing and slyum events.
+   * graphic view make a link between JavaFX and slyum events.
    *
-   * @param e the swing mouse event.
+   * @param e the JavaFX mouse event.
    */
   public void gMouseReleased(MouseEvent e) {
     maybeShowPopup(e, popupMenu);
@@ -291,17 +309,17 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    * @return the color of this component.
    */
   public Color getColor() {
-    return new Color(color.getRGB());
+    return color;
   }
 
   /**
    * Set the color for this component. The color can be used by the component during drawing. But it is the
    * responsibility of the subclass to use it or not.
    *
-   * @param rgb the color to apply.
+   * @param rgb the color to apply (packed ARGB int, alpha bits ignored).
    */
   public void setColor(final int rgb) {
-    setColor(new Color(rgb));
+    setColor(Color.rgb((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF));
   }
 
   /**
@@ -311,7 +329,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    * @param color the new color for this component
    */
   public void setColor(final Color color) {
-    this.color = new Color(color.getRGB());
+    this.color = color;
     repaint();
   }
 
@@ -338,7 +356,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    *
    * @return the popup menu.
    */
-  public JPopupMenu getPopupMenu() {
+  public ContextMenu getPopupMenu() {
     return popupMenu;
   }
 
@@ -407,61 +425,57 @@ public abstract class GraphicComponent extends Observable implements ActionListe
   }
 
   /**
-   * Creates a new JMenuItem with this class like action listeners.
+   * Creates a new MenuItem with this class as the action handler.
    *
-   * @param name the name for JMenuItem
-   * @param action the action command for this JMenuItem
-   * @param imgIcon the icon path for the icon of this JMenuItem
+   * @param name the display name for the MenuItem
+   * @param action the action command (stored as the node ID) for this MenuItem
+   * @param imgIcon the icon resource name (without path or extension)
    *
-   * @return the new JMenuItem created
+   * @return the new MenuItem created
    */
-  public JMenuItem makeMenuItem(String name, String action, String imgIcon) {
-    final ImageIcon img = PersonalizedIcon.createImageIcon(imgIcon + ".png");
-
-    final JMenuItem menuItem = new JMenuItem(name, img);
-    menuItem.setActionCommand(action);
-    menuItem.addActionListener(this);
+  public MenuItem makeMenuItem(String name, String action, String imgIcon) {
+    Image img = PersonalizedIcon.createImageIcon(imgIcon + ".png");
+    MenuItem menuItem = new MenuItem(name);
+    menuItem.setId(action);
+    if (img != null) menuItem.setGraphic(new ImageView(img));
+    menuItem.setOnAction(this::actionPerformed);
     return menuItem;
   }
 
   /**
-   * Makes a new JRadioButtonMenuItem with this class like action listeners.
+   * Makes a new RadioMenuItem with this class as the action handler.
    *
-   * @param name the name for JRadioButtonMenuItem
-   * @param action action the action command for this JRadioButtonMenuItem
-   * @param group the group for this JRadioButtonMenuItem
+   * @param name the display name for the RadioMenuItem
+   * @param action the action command (stored as the node ID)
+   * @param group the ToggleGroup for this RadioMenuItem
    *
-   * @return the new JRadioButtonMenuItem created
+   * @return the new RadioMenuItem created
    */
-  public JRadioButtonMenuItem makeRadioButtonMenuItem(String name, String action, ButtonGroup group) {
-    final JRadioButtonMenuItem rbMenuItem = new SRadioButtonMenuItem(name);
-    rbMenuItem.setActionCommand(action);
-    rbMenuItem.addActionListener(this);
-    group.add(rbMenuItem);
-
+  public RadioMenuItem makeRadioButtonMenuItem(String name, String action, ToggleGroup group) {
+    RadioMenuItem rbMenuItem = new RadioMenuItem(name);
+    rbMenuItem.setId(action);
+    rbMenuItem.setOnAction(this::actionPerformed);
+    rbMenuItem.setToggleGroup(group);
     return rbMenuItem;
   }
 
   /**
-   * Displays the popup menu if e.isPopupTrigger is true, hide otherwise.
+   * Displays the popup menu on a secondary (right) mouse button release; does nothing otherwise.
    *
    * @param e the mouse event
-   * @param popupMenu the popupMenu to display or hide.
+   * @param popupMenu the ContextMenu to display.
    */
-  public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
-    GraphicView gv = MultiViewManager.getSelectedGraphicView();
-    locationContextMenuRequested = e.getPoint();
-
-    if (e.isPopupTrigger()) {
-      miNewNote.setEnabled(getAssociatedComponent() != null);
-      popupMenu.show(e.getComponent(),
-                     (int) (e.getX() / gv.getInversedScale()),
-                     (int) (e.getY() / gv.getInversedScale()));
+  public void maybeShowPopup(MouseEvent e, ContextMenu popupMenu) {
+    locationContextMenuRequested = new Point((int) e.getX(), (int) e.getY());
+    if (e.getButton() == MouseButton.SECONDARY
+        && e.getEventType() == MouseEvent.MOUSE_RELEASED) {
+      miNewNote.setDisable(getAssociatedComponent() == null);
+      popupMenu.show((Node) e.getSource(), e.getScreenX(), e.getScreenY());
     }
   }
 
   public void maybeShowPopup(MouseEvent e, GraphicComponent source) {
-    source.locationContextMenuRequested = e.getPoint();
+    source.locationContextMenuRequested = new Point((int) e.getX(), (int) e.getY());
     maybeShowPopup(e, source.getPopupMenu());
   }
 
@@ -486,9 +500,9 @@ public abstract class GraphicComponent extends Observable implements ActionListe
   /**
    * Draw the component on the graphic view.
    *
-   * @param g2 The graphic context
+   * @param gc The graphic context
    */
-  public abstract void paintComponent(Graphics2D g2);
+  public abstract void paintComponent(GraphicsContext gc);
 
   /**
    * Repaint the component on the graphic view. Most of the components call getBounds() method for repaint only its
@@ -522,7 +536,7 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    * @param e the mouse event
    */
   public void saveMouseLocation(MouseEvent e) {
-    mousePressed = new Point(e.getPoint());
+    mousePressed = new Point((int) e.getX(), (int) e.getY());
   }
 
   /**
@@ -552,23 +566,18 @@ public abstract class GraphicComponent extends Observable implements ActionListe
    * Calls by the constructor for initialize components.
    */
   private void init() {
-    // Create context menu.
-    popupMenu = new JPopupMenu();
+    popupMenu = new ContextMenu();
 
-    JMenuItem menuItem;
+    miNewNote = makeMenuItem("New note", Slyum.ACTION_NEW_NOTE_ASSOCIED, "note");
+    miNewNote.setVisible(displayGeneralMenuItems());
+    popupMenu.getItems().add(miNewNote);
 
-    miNewNote = menuItem = makeMenuItem("New note",
-                                        Slyum.ACTION_NEW_NOTE_ASSOCIED, "note");
+    MenuItem menuItem = makeMenuItem("Change color...", "ColorContextMenu", "color");
     menuItem.setVisible(displayGeneralMenuItems());
-    popupMenu.add(menuItem);
+    popupMenu.getItems().add(menuItem);
 
-    menuItem = makeMenuItem("Change color...", "ColorContextMenu", "color");
-    menuItem.setVisible(displayGeneralMenuItems());
-    popupMenu.add(menuItem);
-
-    menuItem = SColorAssigner.createMenuRecentColor();
-    menuItem.setVisible(displayGeneralMenuItems());
-    popupMenu.add(menuItem);
+    // TODO: add SColorAssigner.createMenuRecentColor() once SColorAssigner is migrated to JavaFX.
+    // When migrated, the returned MenuItem should be added here with setVisible(displayGeneralMenuItems()).
   }
 
   public String getFullString() {
@@ -600,18 +609,29 @@ public abstract class GraphicComponent extends Observable implements ActionListe
   }
 
   public void centerOnScreen() {
-    JViewport viewPort = parent.getScrollPane().getViewport();
-
-    Rectangle viewPortBounds = viewPort.getBounds();
+    // Cast via Object: getScrollPane() will return javafx.scene.control.ScrollPane once
+    // GraphicView is migrated from Swing; the cast is intentional and type-safe then.
+    javafx.scene.control.ScrollPane scrollPane =
+        (javafx.scene.control.ScrollPane) (Object) parent.getScrollPane();
+    Bounds viewBounds = scrollPane.getViewportBounds();
     Rectangle componentBounds = Utility.scaleRect(getBounds(), parent.getScale());
 
-    Rectangle centerRect = new Rectangle(new Point(
-        componentBounds.x + (componentBounds.width / 2) - (viewPortBounds.width / 2),
-        componentBounds.y + (componentBounds.height / 2) - (viewPortBounds.height / 2)));
+    double viewW = viewBounds.getWidth();
+    double viewH = viewBounds.getHeight();
+    double contentW = scrollPane.getContent().getBoundsInLocal().getWidth();
+    double contentH = scrollPane.getContent().getBoundsInLocal().getHeight();
 
-    Point p = centerRect.getLocation();
-    parent.getScrollPane().getViewport().setViewPosition(
-        new Point(p.x < 0 ? 0 : p.x, p.y < 0 ? 0 : p.y));
+    double x = componentBounds.x + componentBounds.width / 2.0 - viewW / 2.0;
+    double y = componentBounds.y + componentBounds.height / 2.0 - viewH / 2.0;
+
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+
+    double maxH = contentW - viewW;
+    double maxV = contentH - viewH;
+
+    if (maxH > 0) scrollPane.setHvalue(x / maxH);
+    if (maxV > 0) scrollPane.setVvalue(y / maxV);
   }
 
   public boolean isHighlight() {

@@ -1,19 +1,25 @@
 package graphic;
 
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import utility.Utility;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseEvent;
+import java.awt.Point;
+import java.awt.Rectangle;
 
 public abstract class ButtonCross extends GraphicComponent {
   public static int EDGE_SIZE = 24;
   private Rectangle bounds = new Rectangle(EDGE_SIZE, EDGE_SIZE);
-  private ImageIcon image;
+  private Image image;
   private boolean isMouseHover = false;
   private boolean isMousePressed = false;
 
-  public ButtonCross(GraphicView parent, ImageIcon image) {
+  public ButtonCross(GraphicView parent, Image image) {
     super(parent);
 
     this.image = image;
@@ -30,38 +36,40 @@ public abstract class ButtonCross extends GraphicComponent {
   }
 
   @Override
-  public void paintComponent(Graphics2D g2) {
+  public void paintComponent(GraphicsContext gc) {
     Rectangle bounds = getBounds();
 
-    Utility.setRenderQuality(g2);
-    int width = image.getImage().getWidth(null);
-    int height = image.getImage().getHeight(null);
-    g2.drawImage(image.getImage(), bounds.x + (bounds.width - width) / 2,
-                 bounds.y + (bounds.height - height) / 2, null);
+    Utility.setRenderQuality(gc);
+    int width = (int) image.getWidth();
+    int height = (int) image.getHeight();
+    gc.drawImage(image, bounds.x + (bounds.width - width) / 2,
+                 bounds.y + (bounds.height - height) / 2, width, height);
 
     if (isMouseHover || isMousePressed) {
-      Color color2 = new Color(0, 255, 0, 20);
+      Color color2 = Color.rgb(0, 255, 0, 20 / 255.0);
       Color color1;
 
       if (isMousePressed)
 
-        color1 = new Color(100, 140, 100, 200);
+        color1 = Color.rgb(100, 140, 100, 200 / 255.0);
 
       else
 
-        color1 = new Color(200, 240, 200, 200);
+        color1 = Color.rgb(200, 240, 200, 200 / 255.0);
 
-      final GradientPaint gp = new GradientPaint(bounds.x, bounds.y, color1,
-                                                 bounds.x + bounds.width, bounds.y + bounds.height, color2);
-      g2.setPaint(gp);
+      final LinearGradient gp = new LinearGradient(
+          bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height,
+          false, CycleMethod.NO_CYCLE,
+          new Stop(0, color1), new Stop(1, color2));
+      gc.setFill(gp);
 
-      g2.fillRect(bounds.x - 1, bounds.y - 1, bounds.width + 1,
+      gc.fillRect(bounds.x - 1, bounds.y - 1, bounds.width + 1,
                   bounds.height + 1);
 
-      g2.setColor(Color.DARK_GRAY);
-      g2.setStroke(new BasicStroke(1.3f));
-      g2.drawRect(bounds.x - 1, bounds.y - 1, bounds.width + 1,
-                  bounds.height + 1);
+      gc.setStroke(Color.DARKGRAY);
+      gc.setLineWidth(1.3);
+      gc.strokeRect(bounds.x - 1, bounds.y - 1, bounds.width + 1,
+                    bounds.height + 1);
     }
   }
 

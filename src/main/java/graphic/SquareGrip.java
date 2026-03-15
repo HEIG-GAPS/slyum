@@ -1,7 +1,12 @@
 package graphic;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.Rectangle;
 
 /**
  * The SquareGrip class represent a (little) gray square. By default, he does nothing but show or hide itself then user
@@ -51,27 +56,27 @@ public abstract class SquareGrip extends GraphicComponent {
   }
 
   @Override
-  public void paintComponent(Graphics2D g2) {
+  public void paintComponent(GraphicsContext gc) {
     if (!isVisible()) return;
 
     final Rectangle localBounds = getBounds();
 
-    g2.setStroke(new BasicStroke(DEFAULT_BORDER_WIDTH));
-    g2.setColor(getFillColor());
-    g2.fillRect(
+    gc.setLineWidth(DEFAULT_BORDER_WIDTH);
+    gc.setFill(getFillColor());
+    gc.fillRect(
         localBounds.x, localBounds.y, localBounds.width, localBounds.height);
 
-    g2.setColor(getBorderColor());
-    g2.drawRect(
+    gc.setStroke(getBorderColor());
+    gc.strokeRect(
         localBounds.x, localBounds.y, localBounds.width, localBounds.height);
   }
 
   public Color getFillColor() {
-    return new Color(200, 200, 200);
+    return Color.rgb(200, 200, 200);
   }
 
   public Color getBorderColor() {
-    return new Color(40, 40, 40);
+    return Color.rgb(40, 40, 40);
   }
 
   @Override

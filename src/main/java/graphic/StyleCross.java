@@ -1,13 +1,15 @@
 package graphic;
 
 import change.Change;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 import utility.Utility;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.geom.RoundRectangle2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 
 public class StyleCross extends GraphicComponent {
 
@@ -115,40 +117,40 @@ public class StyleCross extends GraphicComponent {
   }
 
   @Override
-  public void paintComponent(Graphics2D g2) {
+  public void paintComponent(GraphicsContext gc) {
     if (pictureMode) return;
 
-    Utility.setRenderQuality(g2);
+    Utility.setRenderQuality(gc);
 
     Rectangle bounds = getBounds();
-    Color borderColor = new Color(100, 100, 100);
+    Color borderColor = Color.rgb(100, 100, 100);
 
-    RoundRectangle2D rect = new RoundRectangle2D.Float(bounds.x - 1,
-                                                       bounds.y - 1, bounds.width + 1, bounds.height + 1, 9, 9);
-    RoundRectangle2D shadowRect = new RoundRectangle2D.Float(bounds.x - 1,
-                                                             bounds.y - 1, bounds.width + 3, bounds.height + 3, 9, 9);
+    double rx = bounds.x - 1, ry = bounds.y - 1;
+    double rw = bounds.width + 1, rh = bounds.height + 1;
+    double arcSize = 9;
 
-    g2.setColor(new Color(100, 100, 100, 80));
-    g2.fill(rect);
+    // Filled rounded background
+    gc.setFill(Color.rgb(100, 100, 100, 80 / 255.0));
+    gc.fillRoundRect(rx, ry, rw, rh, arcSize, arcSize);
 
-    g2.setStroke(new BasicStroke(4.0f));
+    // Outer shadow stroke
+    gc.setLineWidth(4.0);
+    gc.setStroke(borderColor.darker());
+    gc.strokeRoundRect(bounds.x - 1, bounds.y - 1, bounds.width + 3, bounds.height + 3, arcSize, arcSize);
 
-    g2.setColor(borderColor.darker());
-    g2.draw(shadowRect);
-
-    g2.setStroke(new BasicStroke(1.4f));
-
-    g2.setColor(borderColor);
-    g2.draw(rect);
+    // Inner border stroke
+    gc.setLineWidth(1.4);
+    gc.setStroke(borderColor);
+    gc.strokeRoundRect(rx, ry, rw, rh, arcSize, arcSize);
 
     if (nbrComponentSelected > 1)
 
       for (int i = 0; i < btnCross.length; i++)
 
-        btnCross[i].paintComponent(g2);
+        btnCross[i].paintComponent(gc);
     else
 
-      btnCross[2].paintComponent(g2);
+      btnCross[2].paintComponent(gc);
   }
 
   @Override
@@ -167,9 +169,10 @@ public class StyleCross extends GraphicComponent {
   public void gMouseMoved(MouseEvent e) {
     super.gMouseMoved(e);
 
+    Point pos = new Point((int) e.getX(), (int) e.getY());
     for (int i = 0; i < btnCross.length; i++)
 
-      if (btnCross[i].isAtPosition(e.getPoint()))
+      if (btnCross[i].isAtPosition(pos))
 
         btnCross[i].gMouseEntered(e);
 
@@ -197,9 +200,10 @@ public class StyleCross extends GraphicComponent {
   public void gMouseReleased(MouseEvent e) {
     super.gMouseReleased(e);
 
+    Point pos = new Point((int) e.getX(), (int) e.getY());
     for (int i = 0; i < btnCross.length; i++)
 
-      if (btnCross[i].isAtPosition(e.getPoint())) {
+      if (btnCross[i].isAtPosition(pos)) {
         btnCross[i].gMouseReleased(e);
         break;
       }
@@ -209,9 +213,10 @@ public class StyleCross extends GraphicComponent {
   public void gMousePressed(MouseEvent e) {
     super.gMousePressed(e);
 
+    Point pos = new Point((int) e.getX(), (int) e.getY());
     for (int i = 0; i < btnCross.length; i++)
 
-      if (btnCross[i].isAtPosition(e.getPoint())) {
+      if (btnCross[i].isAtPosition(pos)) {
         btnCross[i].gMousePressed(e);
         break;
       }
