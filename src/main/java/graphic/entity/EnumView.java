@@ -14,10 +14,21 @@ import swing.PanelClassDiagram;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 
+import javafx.event.ActionEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
@@ -35,55 +46,56 @@ public class EnumView extends EntityView {
 
   private List<TextBoxEnumValue> viewValues = new LinkedList<>();
   private TypeEnumDisplay typeEnumDisplay = TypeEnumDisplay.DEFAULT;
-  private ButtonGroup btnGrpEnumValuesVisible;
-  private JRadioButtonMenuItem radBtnDefault, radBtnVisible, radBtnHide;
+  private ToggleGroup btnGrpEnumValuesVisible;
+  private RadioMenuItem radBtnDefault, radBtnVisible, radBtnHide;
 
   public EnumView(GraphicView parent, EnumEntity component) {
     super(parent, component);
   }
 
   @Override
-  protected void initializeMenuItemsAddElements(JPopupMenu popupmenu) {
-    popupmenu.add(makeMenuItem("Add enum value", ACTION_ADD_ENUM_VALUE,
+  protected void initializeMenuItemsAddElements(ContextMenu popupmenu) {
+    popupmenu.getItems().add(makeMenuItem("Add enum value", ACTION_ADD_ENUM_VALUE,
                                "add-enum-value"));
-    popupmenu.addSeparator();
+    popupmenu.getItems().add(new SeparatorMenuItem());
   }
 
   @Override
-  protected void initializeMenuItemsPropertiesElements(JPopupMenu popupMenu) {
+  protected void initializeMenuItemsPropertiesElements(ContextMenu popupMenu) {
     // No properties elements.
   }
 
   @Override
-  protected void initializeMenuViews(JPopupMenu popupMenu) {
-    JMenu subMenu = new JMenu("Values view");
-    subMenu.setIcon(PersonalizedIcon.createImageIcon("eye.png"));
-    btnGrpEnumValuesVisible = new ButtonGroup();
-    subMenu.add(radBtnDefault = makeRadioButtonMenuItem("Default",
+  protected void initializeMenuViews(ContextMenu popupMenu) {
+    Menu subMenu = new Menu("Values view");
+    Image img = PersonalizedIcon.createImageIcon("eye.png");
+    if (img != null) subMenu.setGraphic(new ImageView(img));
+    btnGrpEnumValuesVisible = new ToggleGroup();
+    subMenu.getItems().add(radBtnDefault = makeRadioButtonMenuItem("Default",
                                                         ACTION_ENUM_VALUES_DEFAULT, btnGrpEnumValuesVisible));
-    subMenu.add(radBtnVisible = makeRadioButtonMenuItem("Visible",
+    subMenu.getItems().add(radBtnVisible = makeRadioButtonMenuItem("Visible",
                                                         ACTION_ENUM_VALUES_VISIBLE, btnGrpEnumValuesVisible));
-    subMenu.add(radBtnHide = makeRadioButtonMenuItem("Hide",
+    subMenu.getItems().add(radBtnHide = makeRadioButtonMenuItem("Hide",
                                                      ACTION_ENUM_VALUES_HIDE, btnGrpEnumValuesVisible));
     radBtnDefault.setSelected(true);
-    popupMenu.add(subMenu);
-    popupMenu.addSeparator();
+    popupMenu.getItems().add(subMenu);
+    popupMenu.getItems().add(new SeparatorMenuItem());
   }
 
   @Override
-  protected int paintTextBoxes(Graphics2D g2, Rectangle bounds,
+  protected int paintTextBoxes(GraphicsContext gc, Rectangle bounds,
                                int textboxHeight, int offset) {
     if (isEnumValuesVisible()) {
       offset += 10;
-      g2.setStroke(new BasicStroke(BORDER_WIDTH));
-      g2.setColor(DEFAULT_BORDER_COLOR);
-      g2.drawLine(bounds.x, offset, bounds.x + bounds.width, offset);
+      gc.setLineWidth(BORDER_WIDTH);
+      gc.setStroke(DEFAULT_BORDER_COLOR_FX);
+      gc.strokeLine(bounds.x, offset, bounds.x + bounds.width, offset);
 
       // draw values (enum)
       for (TextBoxEnumValue tb : viewValues) {
         tb.setBounds(new Rectangle(bounds.x + 8, offset + 2, bounds.width - 15,
                                    textboxHeight + 2));
-        tb.paintComponent(g2);
+        // TODO: tb.paintComponent(gc) - TextBox not yet migrated to JavaFX
 
         offset += textboxHeight;
       }
@@ -130,19 +142,19 @@ public class EnumView extends EntityView {
   }
 
   @Override
-  public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
-    if (e.isPopupTrigger()) {
+  public void maybeShowPopup(MouseEvent e, ContextMenu popupMenu) {
+    if (e.getButton() == MouseButton.SECONDARY && e.getEventType() == MouseEvent.MOUSE_RELEASED) {
       updateMenuItemView();
 
       // If context menu is requested on a TextBox, customize popup menu.
       if (pressedTextBox != null) {
 
-        menuItemMoveUp.setEnabled(viewValues.indexOf(pressedTextBox) != 0);
-        menuItemMoveDown.setEnabled((viewValues.size() == 0 || viewValues
+        menuItemMoveUp.setDisable(viewValues.indexOf(pressedTextBox) == 0);
+        menuItemMoveDown.setDisable(!(viewValues.size() == 0 || viewValues
                                                                    .indexOf(pressedTextBox) != viewValues.size() - 1));
       } else {
-        menuItemMoveUp.setEnabled(false);
-        menuItemMoveDown.setEnabled(false);
+        menuItemMoveUp.setDisable(true);
+        menuItemMoveDown.setDisable(true);
       }
     }
     super.maybeShowPopup(e, popupMenu);
@@ -164,15 +176,15 @@ public class EnumView extends EntityView {
   public void actionPerformed(ActionEvent e) {
     super.actionPerformed(e);
 
-    if (ACTION_ADD_ENUM_VALUE.equals(e.getActionCommand())) {
+    if (ACTION_ADD_ENUM_VALUE.equals(((MenuItem)e.getSource()).getId())) {
       ((EnumEntity) component).createEnumValue();
 
       // Action Move up and down
-    } else if (Slyum.ACTION_TEXTBOX_UP.equals(e.getActionCommand())
-               || Slyum.ACTION_TEXTBOX_DOWN.equals(e.getActionCommand())) {
+    } else if (Slyum.ACTION_TEXTBOX_UP.equals(((MenuItem)e.getSource()).getId())
+               || Slyum.ACTION_TEXTBOX_DOWN.equals(((MenuItem)e.getSource()).getId())) {
 
       int offset = 1;
-      if (Slyum.ACTION_TEXTBOX_UP.equals(e.getActionCommand())) offset = -1;
+      if (Slyum.ACTION_TEXTBOX_UP.equals(((MenuItem)e.getSource()).getId())) offset = -1;
 
       if (pressedTextBox.getClass() == TextBoxEnumValue.class) {
         EnumValue value = (EnumValue) ((TextBoxEnumValue) pressedTextBox)
@@ -181,7 +193,7 @@ public class EnumView extends EntityView {
       }
 
       // Action duplicate item
-    } else if (Slyum.ACTION_DUPLICATE.equals(e.getActionCommand())) {
+    } else if (Slyum.ACTION_DUPLICATE.equals(((MenuItem)e.getSource()).getId())) {
       if (pressedTextBox != null) {
         IDiagramComponent component = pressedTextBox.getAssociatedComponent();
         EnumEntity entity = (EnumEntity) getAssociatedComponent();
@@ -195,11 +207,11 @@ public class EnumView extends EntityView {
           entity.notifyObservers();
         }
       }
-    } else if (ACTION_ENUM_VALUES_DEFAULT.equals(e.getActionCommand())) {
+    } else if (ACTION_ENUM_VALUES_DEFAULT.equals(((MenuItem)e.getSource()).getId())) {
       changeViewForSelectedEnums(TypeEnumDisplay.DEFAULT);
-    } else if (ACTION_ENUM_VALUES_VISIBLE.equals(e.getActionCommand())) {
+    } else if (ACTION_ENUM_VALUES_VISIBLE.equals(((MenuItem)e.getSource()).getId())) {
       changeViewForSelectedEnums(TypeEnumDisplay.VISIBLE);
-    } else if (ACTION_ENUM_VALUES_HIDE.equals(e.getActionCommand())) {
+    } else if (ACTION_ENUM_VALUES_HIDE.equals(((MenuItem)e.getSource()).getId())) {
       changeViewForSelectedEnums(TypeEnumDisplay.HIDE);
     }
     component.notifyObservers();
@@ -263,13 +275,13 @@ public class EnumView extends EntityView {
 
   private void updateMenuItemView() {
     List<EnumView> enums = getSelected();
-    JRadioButtonMenuItem itemToSelect;
+    RadioMenuItem itemToSelect;
 
     // Check si toutes les entités sélectionnées ont le même type de vue.
     for (int i = 0; i < enums.size() - 1; i++)
       if (!enums.get(i).getTypeEnumDisplay()
                 .equals(enums.get(i + 1).getTypeEnumDisplay())) {
-        btnGrpEnumValuesVisible.clearSelection();
+        btnGrpEnumValuesVisible.getToggles().forEach(t -> t.setSelected(false));
         return;
       }
 
@@ -286,7 +298,7 @@ public class EnumView extends EntityView {
         break;
     }
 
-    btnGrpEnumValuesVisible.setSelected(itemToSelect.getModel(), true);
+    itemToSelect.setSelected(true);
   }
 
   @Override
