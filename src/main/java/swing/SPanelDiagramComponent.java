@@ -126,24 +126,24 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
 
     add(btnClassAssociation = createSButton(
         PersonalizedIcon
-            .createImageIcon("classAssoc.png"),
+            .createSwingImageIcon("classAssoc.png"),
         Slyum.ACTION_NEW_CLASS_ASSOCIATION, Color.RED, TT_CLASS_ASSOC));
 
     add(new SSeparator());
 
     add(btnGeneralize = createSButton(
         PersonalizedIcon
-            .createImageIcon("generalize.png"),
+            .createSwingImageIcon("generalize.png"),
         Slyum.ACTION_NEW_GENERALIZE, Color.RED, TT_GENERALIZE));
 
     add(btnDependeny = createSButton(
         PersonalizedIcon
-            .createImageIcon("dependency.png"),
+            .createSwingImageIcon("dependency.png"),
         Slyum.ACTION_NEW_DEPENDENCY, Color.RED, TT_DEPENDENCY));
 
     add(btnInnerClass = createSButton(
         PersonalizedIcon
-            .createImageIcon("innerClass.png"),
+            .createSwingImageIcon("innerClass.png"),
         Slyum.ACTION_NEW_INNER_CLASS, Color.RED, TT_INNER_CLASS));
 
     add(new SSeparator());
