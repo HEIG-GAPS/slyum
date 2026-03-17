@@ -195,7 +195,7 @@ public class EnumEntityPropreties extends GlobalPropreties {
     panelButtons.setMaximumSize(new Dimension(30, Short.MAX_VALUE));
 
     panelButtons.add(btnAdd = new SButton(PersonalizedIcon
-                                              .createImageIcon("plus.png"), "Add"));
+                                              .createSwingImageIcon("plus.png"), "Add"));
     btnAdd.addActionListener(new ActionListener() {
 
       @Override
@@ -207,7 +207,7 @@ public class EnumEntityPropreties extends GlobalPropreties {
     });
 
     panelButtons.add(btnUp = new SButton(PersonalizedIcon
-                                             .createImageIcon("arrow-up-24.png"), "Up"));
+                                             .createSwingImageIcon("arrow-up-24.png"), "Up"));
     btnUp.addActionListener(new ActionListener() {
 
       @Override
@@ -224,7 +224,7 @@ public class EnumEntityPropreties extends GlobalPropreties {
     });
 
     panelButtons.add(btnDown = new SButton(PersonalizedIcon
-                                               .createImageIcon("arrow-down-24.png"), "Down"));
+                                               .createSwingImageIcon("arrow-down-24.png"), "Down"));
     btnDown.addActionListener(new ActionListener() {
 
       @Override
@@ -242,7 +242,7 @@ public class EnumEntityPropreties extends GlobalPropreties {
     });
 
     panelButtons.add(btnDelete = new SButton(PersonalizedIcon
-                                                 .createImageIcon("minus.png"), "Delete"));
+                                                 .createSwingImageIcon("minus.png"), "Delete"));
     btnDelete.setEnabled(false);
     btnDelete.addActionListener(new ActionListener() {
 

@@ -189,7 +189,7 @@ public class RelationPropreties extends GlobalPropreties {
         textFieldLabel.setText(dependency.getLabel());
       }
       { graphic.GraphicComponent _gc = MultiViewManager.getSelectedGraphicView().searchAssociedComponent(currentObject);
-        btnChangeOrientation.changeActionListener(ev -> { if (_gc != null) _gc.actionPerformed(new javafx.event.ActionEvent(ev.getSource(), javafx.event.ActionEvent.ACTION_PERFORMED)); }); }
+        btnChangeOrientation.changeActionListener(ev -> { if (_gc != null) _gc.actionPerformed(new javafx.event.ActionEvent()); }); }
       setVisibleNavigationBtn(currentObject instanceof Binary);
       btnChangeOrientation.setVisible(currentObject instanceof Binary
                                       || currentObject instanceof Dependency);

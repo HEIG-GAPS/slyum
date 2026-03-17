@@ -782,12 +782,10 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
     TableColumn visibilityColumn = attributesTable.getColumnModel()
                                                   .getColumn(2);
-    visibilityColumn.setCellEditor(new DefaultCellEditor(Utility
-                                                             .getVisibilityComboBox()));
+    visibilityColumn.setCellEditor(new DefaultCellEditor(Utility.getVisibilityJComboBox()));
 
     visibilityColumn = methodsTable.getColumnModel().getColumn(2);
-    visibilityColumn.setCellEditor(new DefaultCellEditor(Utility
-                                                             .getVisibilityComboBox()));
+    visibilityColumn.setCellEditor(new DefaultCellEditor(Utility.getVisibilityJComboBox()));
 
     TableColumn column = null;
     for (int i = 0; i < attributesTable.getColumnCount(); i++) {

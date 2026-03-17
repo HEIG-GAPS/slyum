@@ -82,7 +82,7 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
       lblName.setText(i.getChild().getName() + " -> " + parent.getName());
       btnOI.setEnabled(!parent.isEveryMethodsStatic());
       { graphic.GraphicComponent _gc = MultiViewManager.getSelectedGraphicView().searchAssociedComponent(currentObject);
-        btnChangeOrientation.changeActionListener(ev -> { if (_gc != null) _gc.actionPerformed(new javafx.event.ActionEvent(ev.getSource(), javafx.event.ActionEvent.ACTION_PERFORMED)); }); }
+        btnChangeOrientation.changeActionListener(ev -> { if (_gc != null) _gc.actionPerformed(new javafx.event.ActionEvent()); }); }
     }
   }
 

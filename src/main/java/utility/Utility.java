@@ -426,7 +426,7 @@ public class Utility {
     cmb.addItem(classDiagram.relationships.Multiplicity.ONE_OR_MORE);
     cmb.addItem(classDiagram.relationships.Multiplicity.ZERO);
     cmb.addItem(classDiagram.relationships.Multiplicity.ZERO_OR_MORE);
-    cmb.addItem(classDiagram.relationships.Multiplicity.UNSPECIFIED);
+    cmb.addItem(classDiagram.relationships.Multiplicity.ZERO_OR_ONE);
     return cmb;
   }
 
