@@ -739,7 +739,7 @@ public class Slyum extends JFrame
         break;
       case ACTION_UPDATE:
         if (isUpdateAvailable()) UpdateInfo.getNewUpdate();
-        else SMessageDialog.showInformationMessage("You have the latest version of Slyum! Hura!", this);
+        else SMessageDialog.showInformationMessage("You have the latest version of Slyum! Hura!");
         break;
       case ACTION_PATCH_NOTE:
         UpdateInfo.getPatchNote();

@@ -357,7 +357,7 @@ public class HierarchicalView
   public void addAssociationClass(AssociationClass component) {
     addNode(new NodeSimpleEntity(component, treeModel, tree,
                                  PersonalizedIcon
-                                     .createImageIcon("classAssoc.png")),
+                                     .createSwingImageIcon("classAssoc.png")),
             entitiesNode);
   }
 
@@ -396,7 +396,7 @@ public class HierarchicalView
 
   public void addInterfaceEntity(InterfaceEntity component) {
     addNode(new NodeSimpleEntity(component, treeModel, tree, PersonalizedIcon
-                .createImageIcon(Slyum.ICON_PATH + "interface.png")),
+                .createSwingImageIcon(Slyum.ICON_PATH + "interface.png")),
             entitiesNode);
   }
 

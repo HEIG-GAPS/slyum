@@ -60,13 +60,13 @@ public class MultiFactory extends CreateComponent {
     final MouseAdapter ma = new MouseAdapter() {
 
       @Override
-      public void mouseEntered(MouseEvent e) {
+      public void mouseEntered(java.awt.event.MouseEvent e) {
         onButton = true;
         parent.getScene().setCursor(getCursor());
       }
 
       @Override
-      public void mouseExited(MouseEvent e) {
+      public void mouseExited(java.awt.event.MouseEvent e) {
         onButton = false;
         parent.getScene().setCursor(getCursor());
       }

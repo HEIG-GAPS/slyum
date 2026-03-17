@@ -709,7 +709,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
       btnRemoveParameters, btnRightParameters, btnLeftParameters,
       btnAddMethodForInterface;
   private JCheckBox checkBoxAbstract = new SCheckBox("Abstract");
-  private JComboBox<String> comboBox = Utility.getVisibilityComboBox();
+  private javax.swing.JComboBox<String> comboBox = Utility.getVisibilityJComboBox();
   private JLabel imgMethodSelected, imgNoParameter;
   private JPanel panelParameters, panelAddMethodForClass;
   private JScrollPane scrollPaneParameters;
@@ -1124,7 +1124,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     add(p);
 
     panel = panelParameters = new FlatPanel();
-    panel.setLayout(new MultiBorderLayout());
+    panel.setLayout(new java.awt.BorderLayout());
     panel.setAlignmentY(TOP_ALIGNMENT);
     scrollPaneParameters = parametersTable.getScrollPane();
     scrollPaneParameters.setVisible(false);

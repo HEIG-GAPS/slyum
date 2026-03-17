@@ -140,7 +140,7 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
 
     add(alignRight = createEmptyButton(
         PersonalizedIcon
-            .createImageIcon("alignRight.png"),
+            .createSwingImageIcon("alignRight.png"),
         Slyum.ACTION_ALIGN_RIGHT, Color.GREEN, TT_ALIGN_RIGTH));
 
     add(alignLeft = createEmptyButton(

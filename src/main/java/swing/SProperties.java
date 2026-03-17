@@ -145,7 +145,7 @@ public class SProperties extends JDialog {
           gbc_btnDefaultClassColor.gridx = 0;
           gbc_btnDefaultClassColor.gridy = 0;
           panel.add(btnDefaultClassColor, gbc_btnDefaultClassColor);
-          { javafx.scene.paint.Color fc = EntityView.getBasicColor(); btnDefaultClassColor.setBackground(new java.awt.Color((float)fc.getRed(),(float)fc.getGreen(),(float)fc.getBlue(),(float)fc.getOpacity())); }
+          { javafx.scene.paint.Color _fc = EntityView.getBasicColor(); btnDefaultClassColor.setBackground(new java.awt.Color((float)_fc.getRed(),(float)_fc.getGreen(),(float)_fc.getBlue(),(float)_fc.getOpacity())); }
           btnBackgroundColor = new ButtonColor("Background-color") {
             @Override
             public Color getDefaultColor() {
@@ -1095,15 +1095,15 @@ public class SProperties extends JDialog {
                                        .getProperty(PropertyLoader.GRID_POINT_OPACITY);
     gripOpacity = gripOpacity == null ? "100" : gripOpacity;
 
-    { javafx.scene.paint.Color fc = GraphicView.getBasicColor(); btnBackgroundColor.setBackground(new java.awt.Color((float)fc.getRed(),(float)fc.getGreen(),(float)fc.getBlue(),(float)fc.getOpacity())); }
-    { javafx.scene.paint.Color fc = EntityView.getBasicColor(); btnDefaultClassColor.setBackground(new java.awt.Color((float)fc.getRed(),(float)fc.getGreen(),(float)fc.getBlue(),(float)fc.getOpacity())); }
+    btnBackgroundColor.setBackground(GraphicView.getBasicColor());
+    { javafx.scene.paint.Color _fc = EntityView.getBasicColor(); btnDefaultClassColor.setBackground(new java.awt.Color((float)_fc.getRed(),(float)_fc.getGreen(),(float)_fc.getBlue(),(float)_fc.getOpacity())); }
     ckbBackgroundGradient.setSelected(GraphicView.isBackgroundGradient());
     ckbEntityGradient.setSelected(GraphicView.isEntityGradient());
     chckbxOpacityGrid.setSelected(GraphicView.isGridOpacityEnable());
     sliderGridPoint.setValue(Integer.parseInt(gripOpacity));
     sliderGridPoint.setEnabled(chckbxOpacityGrid.isSelected());
     sliderGridSize.setValue(GraphicView.getGridSize());
-    { java.awt.Color _gc = GraphicView.getGridColor(); btnColor.setBackground(_gc); }
+    { int _gi = GraphicView.getGridColor(); btnColor.setBackground(new java.awt.Color((_gi >> 16) & 0xFF, (_gi >> 8) & 0xFF, _gi & 0xFF)); }
     listName.setSelectedValue(TextBox.getFontName(), true);
     listSize.setSelectedValue(TextBox.getFontSize(), true);
     chckbxShowGrid.setSelected(GraphicView.isGridVisible());

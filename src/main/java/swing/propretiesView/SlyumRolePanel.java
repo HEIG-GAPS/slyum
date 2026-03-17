@@ -23,8 +23,8 @@ import java.util.Observer;
  */
 public class SlyumRolePanel extends FlatPanel implements Observer {
   private static final long serialVersionUID = -8176389461299256256L;
-  private JComboBox<Multiplicity> comboBoxMultiplicity = Utility.getMultiplicityComboBox();
-  private final JComboBox<String> comboBoxVisibility = Utility.getVisibilityComboBox();
+  private javax.swing.JComboBox<classDiagram.relationships.Multiplicity> comboBoxMultiplicity = Utility.getMultiplicityJComboBox();
+  private final javax.swing.JComboBox<String> comboBoxVisibility = Utility.getVisibilityJComboBox();
   private final JLabel lblRolename;
   private final Role role;
   private final JTextField txtRolename;
@@ -77,7 +77,7 @@ public class SlyumRolePanel extends FlatPanel implements Observer {
       }
     });
 
-    comboBoxMultiplicity = Utility.getMultiplicityComboBox();
+    comboBoxMultiplicity = Utility.getMultiplicityJComboBox();
     comboBoxMultiplicity.setSelectedItem(role.getMultiplicity().toString());
     final GridBagConstraints gbc_comboBoxMultiplicity = new GridBagConstraints();
     gbc_comboBoxMultiplicity.insets = new Insets(0, 0, 5, 0);

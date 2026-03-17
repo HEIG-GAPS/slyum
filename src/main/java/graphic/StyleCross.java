@@ -29,7 +29,7 @@ public class StyleCross extends GraphicComponent {
     if (!Slyum.isShowCrossMenu()) return;
 
     btnCross[0] = new ButtonCross(parent,
-                                  PersonalizedIcon.createSwingImageIcon(paths[0])) {
+                                  PersonalizedIcon.createImageIcon(paths[0])) {
 
       @Override
       public void mouseClick() {
@@ -38,7 +38,7 @@ public class StyleCross extends GraphicComponent {
     };
 
     btnCross[1] = new ButtonCross(parent,
-                                  PersonalizedIcon.createSwingImageIcon(paths[1])) {
+                                  PersonalizedIcon.createImageIcon(paths[1])) {
 
       @Override
       public void mouseClick() {
@@ -47,7 +47,7 @@ public class StyleCross extends GraphicComponent {
     };
 
     btnCross[2] = new ButtonCross(parent,
-                                  PersonalizedIcon.createSwingImageIcon(paths[2])) {
+                                  PersonalizedIcon.createImageIcon(paths[2])) {
 
       @Override
       public void mouseClick() {
@@ -56,7 +56,7 @@ public class StyleCross extends GraphicComponent {
     };
 
     btnCross[3] = new ButtonCross(parent,
-                                  PersonalizedIcon.createSwingImageIcon(paths[3])) {
+                                  PersonalizedIcon.createImageIcon(paths[3])) {
 
       @Override
       public void mouseClick() {
@@ -65,7 +65,7 @@ public class StyleCross extends GraphicComponent {
     };
 
     btnCross[4] = new ButtonCross(parent,
-                                  PersonalizedIcon.createSwingImageIcon(paths[4])) {
+                                  PersonalizedIcon.createImageIcon(paths[4])) {
 
       @Override
       public void mouseClick() {

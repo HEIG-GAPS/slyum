@@ -415,6 +415,21 @@ public class Utility {
    *
    * @return a ComboBox containing all default multiplicities
    */
+
+  /**
+   * Swing version of {@link #getMultiplicityComboBox} for use in Swing components.
+   */
+  public static javax.swing.JComboBox<classDiagram.relationships.Multiplicity> getMultiplicityJComboBox() {
+    javax.swing.JComboBox<classDiagram.relationships.Multiplicity> cmb = new javax.swing.JComboBox<>();
+    cmb.setEditable(true);
+    cmb.addItem(classDiagram.relationships.Multiplicity.ONE_ONLY);
+    cmb.addItem(classDiagram.relationships.Multiplicity.ONE_OR_MORE);
+    cmb.addItem(classDiagram.relationships.Multiplicity.ZERO);
+    cmb.addItem(classDiagram.relationships.Multiplicity.ZERO_OR_MORE);
+    cmb.addItem(classDiagram.relationships.Multiplicity.UNSPECIFIED);
+    return cmb;
+  }
+
   public static ComboBox<Multiplicity> getMultiplicityComboBox() {
     ComboBox<Multiplicity> cmb = new ComboBox<>();
     cmb.setEditable(true);
@@ -436,6 +451,17 @@ public class Utility {
    *
    * @return a ComboBox containing all default visibilities
    */
+
+  /**
+   * Swing version of {@link #getVisibilityComboBox} for use in Swing components.
+   */
+  public static javax.swing.JComboBox<String> getVisibilityJComboBox() {
+    javax.swing.JComboBox<String> cmb = new javax.swing.JComboBox<>();
+    for (classDiagram.components.Visibility v : classDiagram.components.Visibility.values())
+      cmb.addItem(v.getName());
+    return cmb;
+  }
+
   public static ComboBox<String> getVisibilityComboBox() {
     ComboBox<String> cmb = new ComboBox<>();
 
@@ -616,6 +642,19 @@ public class Utility {
 
     protected static Color getAlphaColor(Color color, int alpha) {
     return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha / 255.0);
+  }
+
+
+  /**
+   * AWT overload of {@link #drawInfoRect} for use in Swing components.
+   */
+  public static void drawInfoRect(String text, java.awt.Rectangle bounds, java.awt.Graphics2D g2, int offset) {
+    g2.setColor(new java.awt.Color(100, 100, 100, 50));
+    g2.fillRoundRect(bounds.x + offset, bounds.y + offset, bounds.width - offset * 2,
+                     bounds.height - offset * 2, 10, 10);
+    g2.setColor(new java.awt.Color(20, 20, 20, 150));
+    g2.setFont(new java.awt.Font(java.awt.Font.SANS_SERIF, java.awt.Font.PLAIN, 12));
+    g2.drawString(text, bounds.x + offset + 5, bounds.y + offset + 15);
   }
 
   public static void drawInfoRect(String text, Rectangle bounds, GraphicsContext gc, int offset) {

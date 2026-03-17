@@ -68,7 +68,7 @@ public class STable extends JTable {
 
   public STable(TableModel dm) {
     super(dm);
-    new EditableCellFocusAction(this, KeyStroke.getKeyStroke("TAB"));
+    // EditableCellFocusAction.install is JavaFX-only; TAB navigation not available in Swing JTable
     setDefaultEditor(String.class, new CustomCellEditor());
     setDefaultEditor(Boolean.class, new DefaultCellEditor(new SCheckBox()));
     setDefaultRenderer(Boolean.class, new TableCellRenderer() {
