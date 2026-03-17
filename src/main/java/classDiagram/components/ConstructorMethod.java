@@ -68,7 +68,7 @@ public class ConstructorMethod extends Method {
 
   @Override
   public ImageIcon getImageIcon() {
-    return PersonalizedIcon.createImageIcon("constructor.png");
+    return PersonalizedIcon.createSwingImageIcon("constructor.png");
   }
 
 }

@@ -21,10 +21,17 @@ import swing.PanelClassDiagram;
 import swing.Slyum;
 import utility.PersonalizedIcon;
 
+import javafx.event.ActionEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.MouseEvent;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
@@ -59,19 +66,19 @@ public abstract class SimpleEntityView extends EntityView {
   // Style de vue
   private boolean displayDefault = true;
 
-  private ButtonGroup groupView, groupViewMethods;
-  private JMenuItem menuItemAbstract;
-  private JMenuItem menuItemMethodsAll;
-  private JMenuItem menuItemMethodsDefault;
-  private JMenuItem menuItemMethodsName;
-  private JMenuItem menuItemMethodsNothing;
-  private JMenuItem menuItemMethodsType;
-  private JMenuItem menuItemStatic;
-  private JMenuItem menuItemViewAll;
-  private JMenuItem menuItemViewAttributes;
-  private JMenuItem menuItemViewDefault;
-  private JMenuItem menuItemViewMethods;
-  private JMenuItem menuItemViewNothing;
+  private ToggleGroup groupView, groupViewMethods;
+  private MenuItem menuItemAbstract;
+  private MenuItem menuItemMethodsAll;
+  private MenuItem menuItemMethodsDefault;
+  private MenuItem menuItemMethodsName;
+  private MenuItem menuItemMethodsNothing;
+  private MenuItem menuItemMethodsType;
+  private MenuItem menuItemStatic;
+  private MenuItem menuItemViewAll;
+  private MenuItem menuItemViewAttributes;
+  private MenuItem menuItemViewDefault;
+  private MenuItem menuItemViewMethods;
+  private MenuItem menuItemViewNothing;
 
   public SimpleEntityView(GraphicView parent, SimpleEntity component) {
     super(parent, component);
@@ -82,9 +89,10 @@ public abstract class SimpleEntityView extends EntityView {
   public void actionPerformed(ActionEvent e) {
     super.actionPerformed(e);
 
-    if ("AddMethod".equals(e.getActionCommand())) {
+    String cmd = (e.getSource() instanceof MenuItem) ? ((MenuItem)e.getSource()).getId() : "";
+    if ("AddMethod".equals(cmd)) {
       addMethod();
-    } else if ("AddAttribute".equals(e.getActionCommand())) {
+    } else if ("AddAttribute".equals(cmd)) {
       addAttribute();
     } else if ("ViewDefault".equals(e.getActionCommand())) {
       parent.setDefaultForSelectedEntities(true);
@@ -353,31 +361,30 @@ public abstract class SimpleEntityView extends EntityView {
   }
 
   @Override
-  public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
-    if (e.isPopupTrigger()) {
+  public void maybeShowPopup(MouseEvent e, ContextMenu popupMenu) {
+    if (e.getButton() == javafx.scene.input.MouseButton.SECONDARY) {
       updateMenuItemView();
       updateMenuItemMethodsView();
 
-      menuItemAbstract.setEnabled(false);
+      menuItemAbstract.setDisable(true);
 
       // If context menu is requested on a TextBox, customize popup menu.
       if (pressedTextBox != null) {
         Boolean isConstructor = pressedTextBox.getAssociatedComponent().getClass()
                                               .equals(ConstructorMethod.class);
-        menuItemStatic.setEnabled(!isConstructor);
+        menuItemStatic.setDisable(isConstructor);
 
-        menuItemMoveUp.setEnabled(attributesView.indexOf(pressedTextBox) != 0
-                                  && methodsView.indexOf(pressedTextBox) != 0);
-        menuItemMoveDown
-            .setEnabled((attributesView.size() == 0 || attributesView
+        menuItemMoveUp.setDisable(attributesView.indexOf(pressedTextBox) == 0
+                                  && methodsView.indexOf(pressedTextBox) == 0);
+        menuItemMoveDown.setDisable(!(attributesView.size() == 0 || attributesView
                                                            .indexOf(pressedTextBox) != attributesView.size() - 1)
                         && (methodsView.size() == 0 || methodsView
                                                            .indexOf(pressedTextBox) != methodsView.size() - 1));
         if (pressedTextBox instanceof TextBoxMethod)
-          menuItemAbstract.setEnabled(!isConstructor);
+          menuItemAbstract.setDisable(isConstructor);
 
       } else {
-        menuItemMoveUp.setEnabled(false);
+        menuItemMoveUp.setDisable(!false);
         menuItemMoveDown.setEnabled(false);
         menuItemStatic.setEnabled(false);
         menuItemAbstract.setEnabled(true);
@@ -468,81 +475,74 @@ public abstract class SimpleEntityView extends EntityView {
   }
 
   @Override
-  protected void initializeMenuItemsAddElements(JPopupMenu popupmenu) {
-    popupMenu.add(makeMenuItem("Add attribute", "AddAttribute", "attribute"));
-    popupMenu.add(makeMenuItem("Add method", "AddMethod", "method"));
-    popupMenu.addSeparator();
+  protected void initializeMenuItemsAddElements(ContextMenu popupmenu) {
+    popupMenu.getItems().add(makeMenuItem("Add attribute", "AddAttribute", "attribute"));
+    popupMenu.getItems().add(makeMenuItem("Add method", "AddMethod", "method"));
+    popupMenu.getItems().add(new SeparatorMenuItem());
   }
 
   @Override
-  protected void initializeMenuItemsPropertiesElements(JPopupMenu popupMenu) {
-    popupMenu.add(menuItemAbstract = makeMenuItem("Abstract", "Abstract",
-                                                  "abstract"));
-    popupMenu.add(menuItemStatic = makeMenuItem("Static", "Static", "static"));
-    popupMenu.addSeparator();
+  protected void initializeMenuItemsPropertiesElements(ContextMenu popupMenu) {
+    menuItemAbstract = makeMenuItem("Abstract", "Abstract", "abstract");
+    popupMenu.getItems().add(menuItemAbstract);
+    menuItemStatic = makeMenuItem("Static", "Static", "static");
+    popupMenu.getItems().add(menuItemStatic);
+    popupMenu.getItems().add(new SeparatorMenuItem());
   }
 
   @Override
-  protected void initializeMenuViews(JPopupMenu popupMenu) {
-    JMenu subMenu;
-    subMenu = new JMenu("View");
-    subMenu.setIcon(PersonalizedIcon.createImageIcon("eye.png"));
-    groupView = new ButtonGroup();
+  protected void initializeMenuViews(ContextMenu popupMenu) {
+    Menu subMenu;
+    subMenu = new Menu("View");
+    groupView = new ToggleGroup();
 
     // Item Default
     menuItemViewDefault = makeRadioButtonMenuItem("Default", "ViewDefault",
                                                   groupView);
     menuItemViewDefault.setSelected(true);
-    subMenu.add(menuItemViewDefault);
+    subMenu.getItems().add(menuItemViewDefault);
 
     // Item All
-    subMenu.add(
-        menuItemViewAll = makeRadioButtonMenuItem("All", "ViewAll",
-                                                  groupView), 1);
+    menuItemViewAll = makeRadioButtonMenuItem("All", "ViewAll", groupView);
+    subMenu.getItems().add(1, menuItemViewAll);
 
     // Item Only attributes
-    subMenu.add(
-        menuItemViewAttributes = makeRadioButtonMenuItem("Only attributes",
-                                                         "ViewAttribute", groupView), 2);
+    menuItemViewAttributes = makeRadioButtonMenuItem("Only attributes", "ViewAttribute", groupView);
+    subMenu.getItems().add(2, menuItemViewAttributes);
 
     // Item Only methods
-    subMenu.add(
-        menuItemViewMethods = makeRadioButtonMenuItem("Only Methods",
-                                                      "ViewMethods", groupView), 3);
+    menuItemViewMethods = makeRadioButtonMenuItem("Only Methods", "ViewMethods", groupView);
+    subMenu.getItems().add(3, menuItemViewMethods);
 
     // Item Nothing
-    subMenu.add(menuItemViewNothing = makeRadioButtonMenuItem("Nothing",
-                                                              "ViewNothing", groupView));
+    menuItemViewNothing = makeRadioButtonMenuItem("Nothing", "ViewNothing", groupView);
+    subMenu.getItems().add(menuItemViewNothing);
 
-    popupMenu.add(subMenu);
+    popupMenu.getItems().add(subMenu);
 
     // Menu VIEW METHODS
-    subMenu = new JMenu("Methods View");
-    subMenu.setIcon(PersonalizedIcon.createImageIcon("eye.png"));
-    groupViewMethods = new ButtonGroup();
+    subMenu = new Menu("Methods View");
+    groupViewMethods = new ToggleGroup();
 
     menuItemMethodsDefault = makeRadioButtonMenuItem("Default",
                                                      "ViewMethodsDefault", groupViewMethods);
     menuItemMethodsDefault.setSelected(true);
-    subMenu.add(menuItemMethodsDefault);
+    subMenu.getItems().add(menuItemMethodsDefault);
 
-    subMenu.add(
-        menuItemMethodsAll = makeRadioButtonMenuItem("Type and Name",
-                                                     "ViewTypeAndName", groupViewMethods), 1);
+    menuItemMethodsAll = makeRadioButtonMenuItem("Type and Name", "ViewTypeAndName", groupViewMethods);
+    subMenu.getItems().add(1, menuItemMethodsAll);
 
-    subMenu.add(
-        menuItemMethodsType = makeRadioButtonMenuItem("Type", "ViewType",
-                                                      groupViewMethods), 2);
+    menuItemMethodsType = makeRadioButtonMenuItem("Type", "ViewType", groupViewMethods);
+    subMenu.getItems().add(2, menuItemMethodsType);
 
-    subMenu.add(
-        menuItemMethodsName = makeRadioButtonMenuItem("Name", "ViewName",
-                                                      groupViewMethods), 3);
+    menuItemMethodsName = makeRadioButtonMenuItem("Name", "ViewName", groupViewMethods);
+    subMenu.getItems().add(3, menuItemMethodsName);
 
-    subMenu.add(menuItemMethodsNothing = makeRadioButtonMenuItem("Nothing",
-                                                                 "ViewMethodNothing", groupViewMethods));
+    menuItemMethodsNothing = makeRadioButtonMenuItem("Nothing", "ViewMethodNothing", groupViewMethods);
+    subMenu.getItems().add(menuItemMethodsNothing);
 
-    popupMenu.add(subMenu);
-    popupMenu.addSeparator();
+    popupMenu.getItems().add(subMenu);
+    popupMenu.getItems().add(new SeparatorMenuItem());
   }
 
   @Override
@@ -556,38 +556,26 @@ public abstract class SimpleEntityView extends EntityView {
   }
 
   @Override
-  protected int paintTextBoxes(Graphics2D g2, Rectangle bounds,
-                               int textboxHeight, int offset) {
-
+  protected int paintTextBoxes(GraphicsContext gc, Rectangle bounds, int textboxHeight, int offset) {
     if (displayAttributes) {
-      // draw attributs separator
       offset += 10;
-      g2.setStroke(new BasicStroke(BORDER_WIDTH));
-      g2.setColor(DEFAULT_BORDER_COLOR);
-      g2.drawLine(bounds.x, offset, bounds.x + bounds.width, offset);
-
-      // draw attributes
+      gc.setLineWidth(BORDER_WIDTH);
+      gc.setStroke(DEFAULT_BORDER_COLOR);
+      gc.strokeLine(bounds.x, offset, bounds.x + bounds.width, offset);
       for (TextBoxAttribute tb : attributesView) {
-        tb.setBounds(new Rectangle(bounds.x + 8, offset + 2, bounds.width - 15,
-                                   textboxHeight + 2));
-        tb.paintComponent(g2);
-
+        tb.setBounds(new Rectangle(bounds.x + 8, offset + 2, bounds.width - 15, textboxHeight + 2));
+        tb.paintComponent(gc);
         offset += textboxHeight;
       }
     }
-
     if (displayMethods) {
-      // draw methods separator
       offset += 10;
-      g2.setStroke(new BasicStroke(BORDER_WIDTH));
-      g2.setColor(DEFAULT_BORDER_COLOR);
-      g2.drawLine(bounds.x, offset, bounds.x + bounds.width, offset);
-
-      // draw methods
+      gc.setLineWidth(BORDER_WIDTH);
+      gc.setStroke(DEFAULT_BORDER_COLOR);
+      gc.strokeLine(bounds.x, offset, bounds.x + bounds.width, offset);
       for (final TextBoxMethod tb : methodsView) {
-        tb.setBounds(new Rectangle(bounds.x + 8, offset + 2, bounds.width - 15,
-                                   textboxHeight + 2));
-        tb.paintComponent(g2);
+        tb.setBounds(new Rectangle(bounds.x + 8, offset + 2, bounds.width - 15, textboxHeight + 2));
+        tb.paintComponent(gc);
         offset += textboxHeight;
       }
     }
@@ -623,7 +611,7 @@ public abstract class SimpleEntityView extends EntityView {
   }
 
   private void updateMenuItemMethodsView() {
-    JMenuItem itemToSelect;
+    MenuItem itemToSelect;
     ParametersViewStyle newView = null;
 
     if (pressedTextBox == null) {
@@ -683,7 +671,7 @@ public abstract class SimpleEntityView extends EntityView {
   }
 
   private void updateMenuItemView() {
-    JMenuItem menuItemToSelect;
+    MenuItem menuItemToSelect;
 
     // Check si toutes les entités sélectionnées ont le même type de vue.
     List<SimpleEntityView> selected = getSelectedSimpleEntityView(parent);

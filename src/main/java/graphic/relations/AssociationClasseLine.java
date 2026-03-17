@@ -67,7 +67,7 @@ public class AssociationClasseLine extends LineView {
 
     relationView.setAttribute("relationId",
                               String.valueOf(getAssociatedXmlElement().getId()));
-    relationView.setAttribute("color", String.valueOf(getColor().getRGB()));
+    relationView.setAttribute("color", String.valueOf(utility.Utility.fxColorToRgbInt(getColor())));
 
     for (RelationGrip grip : points) {
       Point pt = grip.getAnchor();

@@ -8,8 +8,12 @@ import graphic.GraphicView;
 import graphic.SquareGrip;
 import utility.Utility;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.Rectangle;
 
 /**
  * The relationGrip is a grip who customize a LineView. The LineView uses RelationGrip for draw segments between each
@@ -63,7 +67,7 @@ public class RelationGrip extends SquareGrip {
 
   @Override
   public void gMouseDragged(MouseEvent e) {
-    Point mouse = e.getPoint();
+    Point mouse = new Point((int)e.getX(), (int)e.getY());
     relation.showGrips(true);
     setAnchor(new Point(mouse.x, mouse.y));
     notifyObservers();
@@ -99,7 +103,7 @@ public class RelationGrip extends SquareGrip {
   public void gMousePressed(MouseEvent e) {
     isMouseDragged = false;
 
-    if (e.getButton() == MouseEvent.BUTTON1) {
+    if (e.getButton() == MouseButton.PRIMARY) {
       Change.record();
       Change.push(new BufferBounds(this));
     }
@@ -135,7 +139,7 @@ public class RelationGrip extends SquareGrip {
     Color c = super.getFillColor();
     if (relation.isSelected())
       return c;
-    return new Color(c.getRed(), c.getGreen(), c.getBlue(), 100);
+    return Color.rgb((int)(c.getRed()*255), (int)(c.getGreen()*255), (int)(c.getBlue()*255), 100.0/255.0);
   }
 
   @Override
@@ -147,7 +151,7 @@ public class RelationGrip extends SquareGrip {
   }
 
   protected void pushBufferChangeMouseReleased(MouseEvent e) {
-    if (e.getButton() == MouseEvent.BUTTON1) if (isMouseDragged) {
+    if (e.getButton() == MouseButton.PRIMARY) if (isMouseDragged) {
       if (Change.getSize() % 2 == 1) Change.push(new BufferBounds(this));
     } else {
       Change.pop();

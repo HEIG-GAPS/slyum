@@ -5,6 +5,7 @@ import classDiagram.verifyName.TypeName;
 import graphic.GraphicView;
 import utility.Utility;
 
+import javafx.scene.canvas.GraphicsContext;
 import java.awt.*;
 
 /**
@@ -83,8 +84,8 @@ public class TextBoxEntityName extends TextBox {
   }
 
   @Override
-  protected String truncate(Graphics2D g2, String text, int width) {
-    return Utility.truncate(g2, text, classWidth);
+  protected String truncate(GraphicsContext gc, String text, int width) {
+    return Utility.truncate(gc.getFont(), text, classWidth);
   }
 
 }

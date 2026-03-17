@@ -23,6 +23,7 @@ import swing.Slyum;
 import utility.Utility;
 
 import javafx.event.ActionEvent;
+import javafx.scene.paint.Color;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -47,10 +48,10 @@ import java.util.Observer;
  */
 public abstract class EntityView extends MovableComponent implements Observer, ColoredComponent, Cloneable {
   public static final float BORDER_WIDTH = 1.2f;
-  public static final Color DEFAULT_BORDER_COLOR = new Color(65, 65, 65);
+  public static final Color DEFAULT_BORDER_COLOR = Color.rgb(65, 65, 65);
   public static final int VERTICAL_SPACEMENT = 10; // margin
-  public static final Color baseColor = new Color(255, 247, 225);
-  private static Color basicColor = new Color(baseColor.getRGB());
+  public static final Color baseColor = Color.rgb(255, 247, 225);
+  private static Color basicColor = baseColor;
 
   private static final Font stereotypeFontBasic = new Font(
       Slyum.getInstance().defaultFont.getFamily(), 0, 11);
@@ -95,7 +96,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
    * @param color the new basic color
    */
   public static void setBasicColor(Color color) {
-    basicColor = new Color(color.getRGB());
+    basicColor = color;
   }
 
   /**
@@ -207,7 +208,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   /* Colors */
   public static final javafx.scene.paint.Color DEFAULT_BORDER_COLOR_FX = javafx.scene.paint.Color.rgb(65, 65, 65);
   public final javafx.scene.paint.Color DEFAULT_TEXT_COLOR_FX = javafx.scene.paint.Color.rgb(40, 40, 40);
-  public final Color DEFAULT_TEXT_COLOR = new Color(40, 40, 40);
+  public final Color DEFAULT_TEXT_COLOR = Color.rgb(40, 40, 40);
   protected Entity component;
   protected MenuItem menuItemDelete, menuItemMoveDown,
       menuItemMoveUp;

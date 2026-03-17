@@ -4,6 +4,14 @@ import classDiagram.relationships.Aggregation;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 
+import javafx.event.ActionEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -34,8 +42,8 @@ public class AggregationView extends BinaryView {
    * @param color the color.
    * @param borderColor the color of the border.
    */
-  public static void paintExtremity(final Graphics2D g2, final Point source, final Point target, final Color color,
-                                    final Color borderColor) {
+  public static void paintExtremity(final GraphicsContext gc, final Point source, final Point target, final javafx.scene.paint.Color color,
+                                    final javafx.scene.paint.Color borderColor) {
     final Line2D.Double line = new Line2D.Double(source, target);
     final double deltaX = target.x - source.x;
     final double deltaY = target.y - source.y;
@@ -62,18 +70,18 @@ public class AggregationView extends BinaryView {
         target.y, (int) ref.getY() + vectorYN1, (int) ref2.getY(),
         (int) ref.getY() + vectorYN2};
 
-    g2.setStroke(new BasicStroke(LINE_WIDTH));
-    g2.setColor(color);
-    g2.fillPolygon(pointsX, pointsY, pointsX.length);
-    g2.setColor(borderColor);
-    g2.drawPolygon(pointsX, pointsY, pointsX.length);
+    gc.setLineWidth(LINE_WIDTH);
+    gc.setFill(color); gc.setStroke(color);
+    gc.fillPolygon(java.util.Arrays.stream(pointsX).asDoubleStream().toArray(), java.util.Arrays.stream(pointsY).asDoubleStream().toArray(), pointsX.length);
+    gc.setFill(borderColor); gc.setStroke(borderColor);
+    gc.strokePolygon(java.util.Arrays.stream(pointsX).asDoubleStream().toArray(), java.util.Arrays.stream(pointsY).asDoubleStream().toArray(), pointsX.length);
   }
 
   @Override
-  protected void paintNavigability(Graphics2D g2) {
+  protected void paintNavigability(GraphicsContext gc) {
     switch (association.getDirected()) {
       case FIRST_TO_SECOND:
-        DependencyView.paintExtremity(g2, points.get(points.size() - 2)
+        DependencyView.paintExtremity(gc, points.get(points.size() - 2)
                                                 .getAnchor(), points.getLast().getAnchor());
         break;
       case SECOND_TO_FIRST:
@@ -91,7 +99,7 @@ public class AggregationView extends BinaryView {
         x = target.x - width;
         y = target.y - height;
 
-        DependencyView.paintExtremity(g2, source, new Point((int) x, (int) y));
+        DependencyView.paintExtremity(gc, source, new Point((int) x, (int) y));
         break;
 
       case BIDIRECTIONAL:
@@ -119,9 +127,9 @@ public class AggregationView extends BinaryView {
   }
 
   @Override
-  protected void drawExtremity(Graphics2D g2, Point source, Point target) {
-    paintExtremity(g2, points.get(1).getAnchor(),
-                   points.getFirst().getAnchor(), Color.WHITE, getColor());
+  protected void drawExtremity(GraphicsContext gc, Point source, Point target) {
+    paintExtremity(gc, points.get(1).getAnchor(),
+                   points.getFirst().getAnchor(), javafx.scene.paint.Color.WHITE, getColor());
   }
 
   @Override

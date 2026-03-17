@@ -5,7 +5,6 @@ import graphic.GraphicView;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static graphic.GraphicView.DEFAULT_TITLE_BORDER_WIDTH;
 
 public class ExportViewImage extends ExportView {
 
@@ -43,33 +42,10 @@ public class ExportViewImage extends ExportView {
 
   @Override
   public BufferedImage export() {
-
-    // Create the buffered image with margin.   
     Rectangle outerBounds = getOuterBounds();
-
-    if (getOuterBounds().width <= 0 || getOuterBounds().height <= 0)
+    if (outerBounds.width <= 0 || outerBounds.height <= 0)
       return new BufferedImage(10, 10, type);
-
-    final BufferedImage img = new BufferedImage(
-        outerBounds.width + DEFAULT_TITLE_BORDER_WIDTH * 2,
-        outerBounds.height + DEFAULT_TITLE_BORDER_WIDTH * 2,
-        type);
-
-    final Graphics2D g2d = img.createGraphics();
-
-    if (type == BufferedImage.TYPE_INT_RGB) {
-      g2d.setColor(Color.WHITE);
-      g2d.fillRect(
-          0, 0,
-          bounds.width + MARGIN * 2, bounds.height + MARGIN + marginTop);
-    }
-
-    // Translate the rectangle containing all graphic components at origin.
-    g2d.translate(-(outerBounds.x - DEFAULT_TITLE_BORDER_WIDTH),
-                  -(outerBounds.y - DEFAULT_TITLE_BORDER_WIDTH));
-
-    draw(g2d);
-    return img;
+    return renderToImage(outerBounds, type);
   }
 
 }

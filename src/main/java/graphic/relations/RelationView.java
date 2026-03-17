@@ -21,9 +21,10 @@ import org.w3c.dom.Element;
 import swing.MultiViewManager;
 import utility.Utility;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import javafx.event.ActionEvent;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Observable;
@@ -120,11 +121,11 @@ public abstract class RelationView extends LineView implements Observer {
     if (component == null)
       throw new IllegalArgumentException("component is null");
 
-    popupMenu.addSeparator();
+    popupMenu.getItems().add(new SeparatorMenuItem());
 
-    JMenuItem menuItem = makeMenuItem("Change orientation",
+    MenuItem menuItem = makeMenuItem("Change orientation",
                                       ACTION_CHANGE_ORIENTATION, "orientation");
-    popupMenu.add(menuItem);
+    popupMenu.getItems().add(menuItem);
 
     relation = component;
     component.addObserver(this);
@@ -133,7 +134,7 @@ public abstract class RelationView extends LineView implements Observer {
   @Override
   public void actionPerformed(
       ActionEvent e) {
-    if (ACTION_CHANGE_ORIENTATION.equals(e.getActionCommand()))
+    if (ACTION_CHANGE_ORIENTATION.equals((e.getSource() instanceof MenuItem ? ((MenuItem)e.getSource()).getId() : "")))
       changeOrientation();
     else
       super.actionPerformed(e);
@@ -247,7 +248,7 @@ public abstract class RelationView extends LineView implements Observer {
         .createElement("line");
 
     relationView.setAttribute("relationId", String.valueOf(relation.getId()));
-    relationView.setAttribute("color", String.valueOf(getColor().getRGB()));
+    relationView.setAttribute("color", String.valueOf(utility.Utility.fxColorToRgbInt(getColor())));
 
     for (RelationGrip grip : points) {
       Point pt = grip.getAnchor();

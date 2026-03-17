@@ -10,6 +10,14 @@ import graphic.entity.EntityView;
 import graphic.entity.InterfaceView;
 import utility.SMessageDialog;
 
+import javafx.event.ActionEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import java.awt.*;
 
 public class InnerClassView extends RelationView {
@@ -22,8 +30,8 @@ public class InnerClassView extends RelationView {
    * @param target this point define the location of the arrow
    * @param borderColor the color border
    */
-  public static void paintExtremity(Graphics2D g2, Point source, Point target,
-                                    Color borderColor) {
+  public static void paintExtremity(GraphicsContext gc, Point source, Point target,
+                                    javafx.scene.paint.Color borderColor) {
     final double deltaX = target.x - source.x;
     final double deltaY = target.y - source.y;
     final double alpha = Math.atan2(deltaY, deltaX);
@@ -48,14 +56,14 @@ public class InnerClassView extends RelationView {
     final int vectorYN2 = -vectorX;
 
     // Circle
-    g2.setStroke(new BasicStroke(LINE_WIDTH));
-    g2.setColor(new Color(255, 246, 219));
-    g2.fillOval((int) x - 10, (int) y - 10, 20, 20);
-    g2.setColor(borderColor);
-    g2.drawOval((int) x - 10, (int) y - 10, 20, 20);
+    gc.setLineWidth(LINE_WIDTH);
+    gc.setFill(javafx.scene.paint.Color.rgb(255, 246, 219)); gc.setStroke(javafx.scene.paint.Color.rgb(255, 246, 219));
+    gc.fillOval((int) x - 10, (int) y - 10, 20, 20);
+    gc.setFill(borderColor); gc.setStroke(borderColor);
+    gc.strokeOval((int) x - 10, (int) y - 10, 20, 20);
 
     // Cross
-    g2.drawLine((int) x2, (int) y2, target.x, target.y);
+    gc.strokeLine((int) x2, (int) y2, target.x, target.y);
     g2.drawLine(ref.x + vectorXN1, ref.y + vectorYN1, ref.x + vectorXN2, ref.y
                                                                          + vectorYN2);
   }
@@ -73,8 +81,8 @@ public class InnerClassView extends RelationView {
   }
 
   @Override
-  protected void drawExtremity(Graphics2D g2, Point source, Point target) {
-    paintExtremity(g2, source, target, getColor());
+  protected void drawExtremity(GraphicsContext gc, Point source, Point target) {
+    paintExtremity(gc, source, target, getColor());
   }
 
   @Override

@@ -98,7 +98,7 @@ public class MultiLineView extends LineView {
         "relationId",
         String.valueOf(getFirstPoint().getAssociedComponentView()
                                       .getAssociatedComponent().getId()));
-    multiLineView.setAttribute("color", String.valueOf(getColor().getRGB()));
+    multiLineView.setAttribute("color", String.valueOf(Utility.fxColorToRgbInt(getColor())));
 
     for (RelationGrip grip : points) {
       Point pt = grip.getAnchor();

@@ -6,7 +6,8 @@ import change.Changeable;
 import graphic.GraphicView;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -77,7 +78,7 @@ public abstract class TextBoxLabel extends TextBox implements Observer {
   @Override
   public void gMouseDragged(MouseEvent e) {
     parent.getScene().setCursor(new Cursor(Cursor.MOVE_CURSOR));
-    Point mouse = e.getPoint();
+    Point mouse = new Point((int)e.getX(), (int)e.getY());
     Rectangle bounds = getBounds();
     Rectangle repainRectangle = getBounds();
     repainRectangle.add(computeAnchor());
@@ -88,7 +89,7 @@ public abstract class TextBoxLabel extends TextBox implements Observer {
     parent.getScene().repaint(repainRectangle);
     repaint();
 
-    mousePosition = e.getPoint();
+    mousePosition = new Point((int)e.getX(), (int)e.getY());
     setChanged();
     notifyObservers();
   }
@@ -96,7 +97,7 @@ public abstract class TextBoxLabel extends TextBox implements Observer {
   @Override
   public void gMousePressed(MouseEvent e) {
     super.gMousePressed(e);
-    mousePosition = e.getPoint();
+    mousePosition = new Point((int)e.getX(), (int)e.getY());
     previousCursor = parent.getScene().getCursor();
     Change.push(new BufferDeplacement(this));
   }
@@ -121,21 +122,19 @@ public abstract class TextBoxLabel extends TextBox implements Observer {
   }
 
   @Override
-  public void paintComponent(Graphics2D g2) {
-    super.paintComponent(g2);
-    if (!pictureMode && (mouseHover || isSelected())) paintLink(g2);
+  public void paintComponent(GraphicsContext gc) {
+    super.paintComponent(gc);
+    if (!pictureMode && (mouseHover || isSelected())) paintLink(gc);
   }
 
-  public void paintLink(Graphics2D g2) {
-
+  public void paintLink(GraphicsContext gc) {
     Rectangle bounds = getBounds();
-    Point middle = new Point(bounds.x + bounds.width / 2, bounds.y
-                                                          + bounds.height / 2);
+    Point middle = new Point(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
     Point middleRelation = computeAnchor();
-
-    g2.setStroke(new BasicStroke(1.2f, BasicStroke.CAP_BUTT,
-                                 BasicStroke.JOIN_MITER, 10.0f, new float[] {4.f}, 0.0f));
-    g2.drawLine(middle.x, middle.y, middleRelation.x, middleRelation.y);
+    gc.setLineWidth(1.2);
+    gc.setLineDashes(4.0);
+    gc.strokeLine(middle.x, middle.y, middleRelation.x, middleRelation.y);
+    gc.setLineDashes((double[]) null);
   }
 
   @Override

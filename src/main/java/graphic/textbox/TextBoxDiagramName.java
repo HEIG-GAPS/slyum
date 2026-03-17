@@ -10,8 +10,9 @@ import graphic.GraphicView;
 import graphic.entity.EntityView;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Path2D;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Paint;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -80,55 +81,40 @@ public class TextBoxDiagramName extends TextBox implements Observer {
   }
 
   @Override
-  public void paintComponent(Graphics2D g2) {
-
+  public void paintComponent(GraphicsContext gc) {
     // Compute text width.
     createEffectivFont();
-    FontMetrics metrics = g2.getFontMetrics(effectivFont);
-    int adv = metrics.stringWidth(getText());
-
-    bounds =
-        new Rectangle(5, 5, (adv < MINIMAL_WIDTH ? MINIMAL_WIDTH : adv), 20);
-
-    paintComponentAt(g2, new Point(0, 0));
+    float scaledSize = (float)(effectivFont.getSize() * parent.getZoom());
+    javafx.scene.text.Font fxFont = javafx.scene.text.Font.font(effectivFont.getFamily(), scaledSize);
+    javafx.scene.text.Text textNode = new javafx.scene.text.Text(getText());
+    textNode.setFont(fxFont);
+    int adv = (int) textNode.getBoundsInLocal().getWidth();
+    bounds = new Rectangle(5, 5, (adv < MINIMAL_WIDTH ? MINIMAL_WIDTH : adv), 20);
+    paintComponentAt(gc, new Point(0, 0));
   }
 
   @Override
-  public void paintComponentAt(Graphics2D g2, Point location) {
-
-    if (!isVisible())
-      return;
-
-    // Compute locations
-    Rectangle bndBackground = new Rectangle(
-        location.x,
-        location.y,
-        bounds.width + 10 + DEPLACEMENT_CURVE / 2,
-        bounds.height + 10);
-
-    Point origin = location,
-        deplacement = new Point(bndBackground.x + bndBackground.width,
-                                bndBackground.y + bndBackground.height);
-
-    // Compute the shape of the background.
-    Path2D background = new Path2D.Float();
-    background.moveTo(origin.x, origin.y);
-    background.lineTo(origin.x, deplacement.y);
-    background.lineTo(deplacement.x - DEPLACEMENT_CURVE, deplacement.y);
-    background.quadTo(deplacement.x, deplacement.y,
-                      deplacement.x, origin.y);
-    background.lineTo(origin.x, origin.y);
-
-    // Draw background and border.
-    g2.setColor(EntityView.getBasicColor());
-    g2.fill(background);
-
-    g2.setStroke(new BasicStroke(EntityView.BORDER_WIDTH));
-    g2.setColor(EntityView.DEFAULT_BORDER_COLOR);
-    g2.draw(background);
-
-    super.paintComponentAt(g2,
-                           new Point(origin.x + bounds.x, origin.y + bounds.y));
+  public void paintComponentAt(GraphicsContext gc, Point location) {
+    if (!isVisible()) return;
+    Rectangle bndBackground = new Rectangle(location.x, location.y,
+        bounds.width + 10 + DEPLACEMENT_CURVE / 2, bounds.height + 10);
+    Point origin = location;
+    Point deplacement = new Point(bndBackground.x + bndBackground.width,
+                                  bndBackground.y + bndBackground.height);
+    // Draw background and border using JavaFX Path.
+    gc.setFill(EntityView.getBasicColor());
+    gc.beginPath();
+    gc.moveTo(origin.x, origin.y);
+    gc.lineTo(origin.x, deplacement.y);
+    gc.lineTo(deplacement.x - DEPLACEMENT_CURVE, deplacement.y);
+    gc.quadraticCurveTo(deplacement.x, deplacement.y, deplacement.x, origin.y);
+    gc.lineTo(origin.x, origin.y);
+    gc.closePath();
+    gc.fill();
+    gc.setStroke(EntityView.DEFAULT_BORDER_COLOR);
+    gc.setLineWidth(EntityView.BORDER_WIDTH);
+    gc.stroke();
+    super.paintComponentAt(gc, new Point(origin.x + bounds.x, origin.y + bounds.y));
   }
 
   @Override

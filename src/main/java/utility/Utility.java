@@ -562,7 +562,20 @@ public class Utility {
    *
    * @return a new {@link Color} with the same RGB values and the specified opacity
    */
-  protected static Color getAlphaColor(Color color, int alpha) {
+  /**
+   * Converts a JavaFX {@link Color} to a 24-bit RGB integer (same as {@code java.awt.Color.getRGB()} masked to RGB).
+   *
+   * @param color the JavaFX color
+   *
+   * @return the RGB integer value
+   */
+  public static int fxColorToRgbInt(Color color) {
+    return ((int) (color.getRed() * 255) << 16)
+           | ((int) (color.getGreen() * 255) << 8)
+           | (int) (color.getBlue() * 255);
+  }
+
+    protected static Color getAlphaColor(Color color, int alpha) {
     return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha / 255.0);
   }
 

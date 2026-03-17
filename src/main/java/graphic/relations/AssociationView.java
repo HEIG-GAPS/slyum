@@ -8,10 +8,15 @@ import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.textbox.TextBoxLabelTitle;
 
-import javax.swing.*;
+import javafx.event.ActionEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 import java.util.Observable;
 
 /**
@@ -30,15 +35,15 @@ import java.util.Observable;
  */
 public abstract class AssociationView extends RelationView {
   protected Association association;
-  private ButtonGroup btnGrpNavigation;
-  private JMenuItem navBidirectional, navFirstToSecond, navSecondToFirst;
+  private ToggleGroup btnGrpNavigation;
+  private RadioMenuItem navBidirectional, navFirstToSecond, navSecondToFirst;
 
   public AssociationView(GraphicView parent, EntityView source,
                          EntityView target, Association association, Point posSource,
                          Point posTarget, boolean checkRecursivity) {
     super(parent, source, target, association, posSource, posTarget,
           checkRecursivity);
-    JMenu menuNavigation;
+    Menu menuNavigation;
     TextBoxLabelTitle tb = new TextBoxLabelTitle(parent, association, this);
 
     this.association = association;
@@ -47,31 +52,27 @@ public abstract class AssociationView extends RelationView {
 
     // Gestion du menu contextuel
     popupMenu.addSeparator();
-    popupMenu.add(menuNavigation = new JMenu("Navigability"));
-    btnGrpNavigation = new ButtonGroup();
-    menuNavigation.add(navBidirectional = makeRadioButtonMenuItem("",
-                                                                  NavigateDirection.BIDIRECTIONAL.toString(),
-                                                                  btnGrpNavigation));
-    menuNavigation.add(navFirstToSecond = makeRadioButtonMenuItem("",
-                                                                  NavigateDirection.FIRST_TO_SECOND.toString(),
-                                                                  btnGrpNavigation));
-    menuNavigation.add(navSecondToFirst = makeRadioButtonMenuItem("",
-                                                                  NavigateDirection.SECOND_TO_FIRST.toString(),
-                                                                  btnGrpNavigation));
+    menuNavigation = new Menu("Navigability");
+    popupMenu.getItems().add(menuNavigation);
+    btnGrpNavigation = new ToggleGroup();
+    navBidirectional = makeRadioButtonMenuItem("", NavigateDirection.BIDIRECTIONAL.toString(), btnGrpNavigation);
+    navFirstToSecond = makeRadioButtonMenuItem("", NavigateDirection.FIRST_TO_SECOND.toString(), btnGrpNavigation);
+    navSecondToFirst = makeRadioButtonMenuItem("", NavigateDirection.SECOND_TO_FIRST.toString(), btnGrpNavigation);
+    menuNavigation.getItems().add(navBidirectional);
+    menuNavigation.getItems().add(navFirstToSecond);
+    menuNavigation.getItems().add(navSecondToFirst);
 
     setMenuItemText();
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
-
-    if (e.getActionCommand().equals(NavigateDirection.BIDIRECTIONAL.toString()))
+    String cmd = (e.getSource() instanceof MenuItem) ? ((MenuItem)e.getSource()).getId() : "";
+    if (cmd.equals(NavigateDirection.BIDIRECTIONAL.toString()))
       association.setDirected(NavigateDirection.BIDIRECTIONAL);
-    else if (e.getActionCommand().equals(
-        NavigateDirection.FIRST_TO_SECOND.toString()))
+    else if (cmd.equals(NavigateDirection.FIRST_TO_SECOND.toString()))
       association.setDirected(NavigateDirection.FIRST_TO_SECOND);
-    else if (e.getActionCommand().equals(
-        NavigateDirection.SECOND_TO_FIRST.toString()))
+    else if (cmd.equals(NavigateDirection.SECOND_TO_FIRST.toString()))
       association.setDirected(NavigateDirection.SECOND_TO_FIRST);
     else
       super.actionPerformed(e);
@@ -80,7 +81,7 @@ public abstract class AssociationView extends RelationView {
   }
 
   @Override
-  public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
+  public void maybeShowPopup(javafx.scene.input.MouseEvent e, javafx.scene.control.ContextMenu popupMenu) {
     setMenuItemText();
     checkMenuItemSelected();
     super.maybeShowPopup(e, popupMenu);
@@ -97,13 +98,13 @@ public abstract class AssociationView extends RelationView {
   private void checkMenuItemSelected() {
     switch (association.getDirected()) {
       case FIRST_TO_SECOND:
-        btnGrpNavigation.setSelected(navFirstToSecond.getModel(), true);
+        navFirstToSecond.setSelected(true);
         break;
       case SECOND_TO_FIRST:
-        btnGrpNavigation.setSelected(navSecondToFirst.getModel(), true);
+        navSecondToFirst.setSelected(true);
         break;
       case BIDIRECTIONAL:
-        btnGrpNavigation.setSelected(navBidirectional.getModel(), true);
+        navBidirectional.setSelected(true);
         break;
       default:
         break;
@@ -121,19 +122,19 @@ public abstract class AssociationView extends RelationView {
   }
 
   @Override
-  public void paintComponent(Graphics2D g2) {
-    super.paintComponent(g2);
-    paintNavigability(g2);
+  public void paintComponent(GraphicsContext gc) {
+    super.paintComponent(gc);
+    paintNavigability(gc);
   }
 
-  protected void paintNavigability(Graphics2D g2) {
+  protected void paintNavigability(GraphicsContext gc) {
     switch (association.getDirected()) {
       case FIRST_TO_SECOND:
-        DependencyView.paintExtremity(g2, points.get(points.size() - 2)
+        DependencyView.paintExtremity(gc, points.get(points.size() - 2)
                                                 .getAnchor(), points.getLast().getAnchor());
         break;
       case SECOND_TO_FIRST:
-        DependencyView.paintExtremity(g2, points.get(1).getAnchor(), points
+        DependencyView.paintExtremity(gc, points.get(1).getAnchor(), points
             .getFirst().getAnchor());
         break;
       case BIDIRECTIONAL:
