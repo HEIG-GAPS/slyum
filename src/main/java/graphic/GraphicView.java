@@ -70,9 +70,12 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import javafx.event.ActionEvent;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import java.awt.geom.Line2D;
@@ -458,6 +461,8 @@ public class GraphicView extends GraphicComponent
   // last component mouse hovered
   private GraphicComponent saveComponentMouseHover;
   private final JPanel scene;
+  /** Off-screen JavaFX canvas used to render the diagram into the Swing panel. */
+  private Canvas offscreenCanvas;
 
   private final JScrollPane scrollPane;
   private boolean stopRepaint = false;
@@ -518,7 +523,20 @@ public class GraphicView extends GraphicComponent
       public void paintComponent(Graphics g) {
         updatePreferredSize(); // for scrolling
         super.paintComponent(g);
-        // TODO: paintScene now requires GraphicsContext; wire up once fully migrated to JavaFX canvas
+        int w = Math.max(getWidth(), 1);
+        int h = Math.max(getHeight(), 1);
+        if (offscreenCanvas == null
+            || (int) offscreenCanvas.getWidth() != w
+            || (int) offscreenCanvas.getHeight() != h) {
+          offscreenCanvas = new Canvas(w, h);
+        }
+        GraphicsContext gc = offscreenCanvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, w, h);
+        paintScene(gc);
+        WritableImage fxImage = new WritableImage(w, h);
+        offscreenCanvas.snapshot(null, fxImage);
+        BufferedImage bimg = SwingFXUtils.fromFXImage(fxImage, null);
+        g.drawImage(bimg, 0, 0, null);
       }
 
       @Override

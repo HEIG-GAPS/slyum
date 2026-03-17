@@ -2,6 +2,7 @@ package graphic.export;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import swing.PanelClassDiagram;
@@ -104,13 +105,13 @@ public abstract class ExportView<G> {
 
     javafx.scene.image.WritableImage fxImage = new javafx.scene.image.WritableImage(w, h);
     canvas.snapshot(null, fxImage);
-    // Convert WritableImage to BufferedImage manually
-    int imgW = (int)fxImage.getWidth(), imgH = (int)fxImage.getHeight();
-    BufferedImage bimg = new BufferedImage(imgW, imgH, type);
-    javafx.scene.image.PixelReader pr = fxImage.getPixelReader();
-    for (int y = 0; y < imgH; y++)
-      for (int x = 0; x < imgW; x++)
-        bimg.setRGB(x, y, pr.getArgb(x, y));
+    BufferedImage bimg = SwingFXUtils.fromFXImage(fxImage, null);
+    if (type != BufferedImage.TYPE_4BYTE_ABGR_PRE && type != BufferedImage.TYPE_INT_ARGB) {
+      // Re-encode into the requested type when SwingFXUtils gives us ARGB
+      BufferedImage typed = new BufferedImage(w, h, type);
+      typed.getGraphics().drawImage(bimg, 0, 0, null);
+      return typed;
+    }
     return bimg;
   }
 
