@@ -59,9 +59,9 @@ public class InnerClassFactory extends RelationFactory {
   }
 
   @Override
-  protected void drawExtremity(Graphics2D g2) {
-    InnerClassView.paintExtremity(g2, points.get(points.size() - 1),
-                                  mouseLocation, Color.DARK_GRAY);
+  protected void drawExtremity(javafx.scene.canvas.GraphicsContext gc) {
+    InnerClassView.paintExtremity(gc, points.get(points.size() - 1),
+                                  mouseLocation, javafx.scene.paint.Color.DARKGRAY);
   }
 
   @Override

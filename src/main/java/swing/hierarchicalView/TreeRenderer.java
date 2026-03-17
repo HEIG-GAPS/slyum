@@ -12,9 +12,9 @@ import java.awt.*;
 
 public class TreeRenderer extends DefaultTreeCellRenderer {
   public TreeRenderer() {
-    setLeafIcon(PersonalizedIcon.createImageIcon("boxClose.png"));
-    setClosedIcon(PersonalizedIcon.createImageIcon("boxClose.png"));
-    setOpenIcon(PersonalizedIcon.createImageIcon("boxOpen.png"));
+    setLeafIcon(PersonalizedIcon.createSwingImageIcon("boxClose.png"));
+    setClosedIcon(PersonalizedIcon.createSwingImageIcon("boxClose.png"));
+    setOpenIcon(PersonalizedIcon.createSwingImageIcon("boxOpen.png"));
   }
 
   @Override
@@ -26,12 +26,12 @@ public class TreeRenderer extends DefaultTreeCellRenderer {
         tree, value, sel, expanded, leaf, row, hasFocus);
 
     if (row == 0) { // root
-      setIcon(PersonalizedIcon.createImageIcon("diagramIcon.png"));
+      setIcon(PersonalizedIcon.createSwingImageIcon("diagramIcon.png"));
     } else if (row == 1) {
       if (expanded)
-        setIcon(PersonalizedIcon.createImageIcon("boxOpenView.png"));
+        setIcon(PersonalizedIcon.createSwingImageIcon("boxOpenView.png"));
       else
-        setIcon(PersonalizedIcon.createImageIcon("boxCloseView.png"));
+        setIcon(PersonalizedIcon.createSwingImageIcon("boxCloseView.png"));
     } else if (value instanceof ICustomizedIconNode) {
       setIcon(((ICustomizedIconNode) value).getCustomizedIcon());
     }

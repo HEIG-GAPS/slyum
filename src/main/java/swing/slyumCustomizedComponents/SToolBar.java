@@ -21,7 +21,7 @@ public class SToolBar extends JToolBar {
             12,
             0,
             0,
-            PersonalizedIcon.createImageIcon("toolbat-grip.png")));
+            PersonalizedIcon.createSwingImageIcon("toolbat-grip.png")));
 
     borderVertical = BorderFactory.createCompoundBorder(
         BorderFactory.createEmptyBorder(0, 5, 0, 5),
@@ -30,7 +30,7 @@ public class SToolBar extends JToolBar {
             0,
             0,
             0,
-            PersonalizedIcon.createImageIcon("toolbat-grip-vertical.png")));
+            PersonalizedIcon.createSwingImageIcon("toolbat-grip-vertical.png")));
 
     setBackground(null);
     setForeground(Color.GRAY);

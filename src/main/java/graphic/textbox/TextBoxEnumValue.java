@@ -6,6 +6,7 @@ import classDiagram.components.EnumValue;
 import graphic.GraphicView;
 import utility.Utility;
 
+import javafx.scene.canvas.GraphicsContext;
 import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
@@ -21,8 +22,8 @@ public class TextBoxEnumValue extends TextBox implements Observer {
   }
 
   @Override
-  protected String truncate(Graphics2D g2, String text, int width) {
-    return Utility.truncate(g2, text, width);
+  protected String truncate(GraphicsContext gc, String text, int width) {
+    return Utility.truncate(gc.getFont(), text, width);
   }
 
   @Override

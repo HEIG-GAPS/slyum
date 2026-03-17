@@ -21,11 +21,14 @@ import swing.propretiesView.NoteProperties;
 import utility.PersonalizedIcon;
 import utility.Utility;
 
-import javax.swing.*;
+import javafx.event.ActionEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 
 /**
  * A TextBoxCommentary is not a subclass of TextBox becauseit is not on signle line. A TextBoxCommentary display a note
@@ -47,7 +50,7 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
    * @param cornerSize the size of the corner
    * @param color the color of the note
    */
-  public static void drawNote(Graphics2D g2, Rectangle bounds, int cornerSize,
+  public static void drawNote(GraphicsContext gc, Rectangle bounds, int cornerSize,
                               Color color) {
     final int cornerX = bounds.x + bounds.width - cornerSize;
     final int cornerY = bounds.y + cornerSize;
@@ -58,16 +61,13 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
     final int[] pointsX = new int[] {bounds.x, cornerX, x2, x2, bounds.x};
     final int[] pointsY = new int[] {bounds.y, bounds.y, cornerY, y2, y2};
 
-    g2.setStroke(new BasicStroke(1.2f));
-
-    g2.setColor(color);
-    g2.fillPolygon(pointsX, pointsY, pointsX.length);
-
-    g2.setColor(Color.DARK_GRAY);
-    g2.drawPolygon(pointsX, pointsY, pointsX.length);
-
-    g2.drawLine(cornerX, bounds.y, cornerX, cornerY);
-    g2.drawLine(cornerX, cornerY, x2, cornerY);
+    gc.setLineWidth(1.2);
+    gc.setFill(color);
+    gc.fillPolygon(java.util.Arrays.stream(pointsX).asDoubleStream().toArray(), java.util.Arrays.stream(pointsY).asDoubleStream().toArray(), pointsX.length);
+    gc.setStroke(Color.DARKGRAY);
+    gc.strokePolygon(java.util.Arrays.stream(pointsX).asDoubleStream().toArray(), java.util.Arrays.stream(pointsY).asDoubleStream().toArray(), pointsX.length);
+    gc.strokeLine(cornerX, bounds.y, cornerX, cornerY);
+    gc.strokeLine(cornerX, cornerY, x2, cornerY);
   }
 
   private Rectangle bounds;
@@ -126,25 +126,23 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
    *
    * @param g2
    */
-  private void computeWidth(Graphics2D g2) {
+  private void computeWidth(GraphicsContext gc) {
     final int PADDING = 5;
     final Rectangle bounds = getBounds();
     final String[] texts = getText().split("\\ ");
 
-    final Font effectiveFont = font.deriveFont(font.getSize()
-                                               * parent.getZoom());
-
-    final FontMetrics metrics = g2.getFontMetrics(effectiveFont);
-
-    final int hgt = metrics.getHeight();
+    final float scaledSize = (float)(font.getSize() * parent.getZoom());
+    final javafx.scene.text.Font fxFont = javafx.scene.text.Font.font(font.getFamily(), scaledSize);
+    final javafx.scene.text.Text measurer = new javafx.scene.text.Text();
+    measurer.setFont(fxFont);
+    final int hgt = (int)measurer.getBoundsInLocal().getHeight() + (int)scaledSize;
     int adv, offsetY = bounds.y + PADDING + hgt, offsetX = PADDING;
     int nbLines = 1;
-
     int newWidth = bounds.width;
-
     for (final String text2 : texts) {
       final String currentText = text2 + " ";
-      adv = metrics.stringWidth(currentText);
+      measurer.setText(currentText);
+      adv = (int)measurer.getBoundsInLocal().getWidth();
 
       if (offsetX + adv > bounds.width - PADDING * 2) {
         offsetY += hgt; // new line
@@ -180,24 +178,19 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
   }
 
   @Override
-  public void drawSelectedEffect(Graphics2D g2) {
+  public void drawSelectedEffect(GraphicsContext gc) {
     if (pictureMode) return;
-
     Color backColor = parent.getColor();
     Color fill = getColor();
-    fill = new Color(fill.getRed(), fill.getGreen(), fill.getBlue(), 100);
-
-    final Color border = backColor.darker();
-    final BasicStroke borderStroke = new BasicStroke(1.0f,
-                                                     BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
-                                                     new float[] {2.0f}, 0.0f);
-
-    g2.setColor(fill);
-    g2.fillRect(ghost.x, ghost.y, ghost.width, ghost.height);
-
-    g2.setColor(border);
-    g2.setStroke(borderStroke);
-    g2.drawRect(ghost.x, ghost.y, ghost.width - 1, ghost.height - 1);
+    fill = Color.rgb((int)(fill.getRed()*255), (int)(fill.getGreen()*255), (int)(fill.getBlue()*255), 100.0/255);
+    Color border = backColor.darker();
+    gc.setFill(fill);
+    gc.fillRect(ghost.x, ghost.y, ghost.width, ghost.height);
+    gc.setStroke(border);
+    gc.setLineWidth(1.0);
+    gc.setLineDashes(2.0);
+    gc.strokeRect(ghost.x, ghost.y, ghost.width - 1, ghost.height - 1);
+    gc.setLineDashes((double[]) null);
   }
 
   /**
@@ -206,29 +199,29 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
    *
    * @param g2 the graphic context
    */
-  private void drawText(Graphics2D g2) {
+  private void drawText(GraphicsContext gc) {
     final int PADDING = 5;
     final Rectangle bounds = getBounds();
     final String[] texts = getText().split("\\ ");
 
-    final Font effectiveFont = font.deriveFont(font.getSize()
-                                               * parent.getZoom());
-
-    final FontMetrics metrics = g2.getFontMetrics(effectiveFont);
-
-    final int hgt = metrics.getHeight();
+    final float scaledSize = (float)(font.getSize() * parent.getZoom());
+    final javafx.scene.text.Font fxFont = javafx.scene.text.Font.font(font.getFamily(), scaledSize);
+    gc.setFont(fxFont);
+    final javafx.scene.text.Text measurer = new javafx.scene.text.Text();
+    measurer.setFont(fxFont);
+    final int hgt = (int)scaledSize + 2;
     int adv, offsetY = bounds.y + PADDING + hgt, offsetX = PADDING;
-    g2.setFont(effectiveFont);
-
+    gc.setFill(Color.DARKGRAY);
     for (final String text2 : texts) {
       final String currentText = text2 + " ";
-      adv = metrics.stringWidth(currentText);
+      measurer.setText(currentText);
+      adv = (int)measurer.getBoundsInLocal().getWidth();
 
       if (offsetX + adv > bounds.width - PADDING * 2) {
         offsetY += hgt; // new line
         offsetX = PADDING;
       }
-      g2.drawString(currentText, bounds.x + offsetX, offsetY);
+      gc.fillText(currentText, bounds.x + offsetX, offsetY);
       offsetX += adv;
     }
   }
@@ -278,19 +271,13 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
     this.text = text;
 
     setColor(EntityView.getBasicColor());
-    popupMenu.addSeparator();
-    final JMenuItem item = new JMenuItem("Delete commentary",
-                                         PersonalizedIcon.createImageIcon("delete.png"));
-    item.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        delete();
-      }
-    });
+    popupMenu.getItems().add(new SeparatorMenuItem());
+    final MenuItem item = new MenuItem("Delete commentary");
+    item.setId("DeleteCommentary");
+    item.setOnAction(e -> delete());
 
     parent.selectOnly(this);
-    popupMenu.add(item);
+    popupMenu.getItems().add(item);
 
     pushBufferCreation();
   }
@@ -308,38 +295,26 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
   }
 
   @Override
-  public void paintComponent(Graphics2D g2) {
-    if (ghost.isEmpty()) computeWidth(g2);
-
-    drawNote(g2, getBounds(), 15, getColor());
-    drawText(g2);
-    drawSelectedEffect(g2);
-
+  public void paintComponent(GraphicsContext gc) {
+    if (ghost.isEmpty()) computeWidth(gc);
+    drawNote(gc, getBounds(), 15, getColor());
+    drawText(gc);
+    drawSelectedEffect(gc);
     final Rectangle bounds = getBounds();
-
     if (!pictureMode && isSelected()) {
-      final BasicStroke borderStroke = new BasicStroke(1.0f,
-                                                       BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
-                                                       new float[] {2.0f}, 0.0f);
-
-      g2.setColor(Color.DARK_GRAY);
-      g2.setStroke(borderStroke);
-
-      g2.drawRect(bounds.x - 2, bounds.y - 2, bounds.width + 4,
-                  bounds.height + 4);
-      g2.drawRect(bounds.x + 2, bounds.y + 2, bounds.width - 4,
-                  bounds.height - 4);
+      gc.setStroke(Color.DARKGRAY);
+      gc.setLineWidth(1.0);
+      gc.setLineDashes(2.0);
+      gc.strokeRect(bounds.x - 2, bounds.y - 2, bounds.width + 4, bounds.height + 4);
+      gc.strokeRect(bounds.x + 2, bounds.y + 2, bounds.width - 4, bounds.height - 4);
+      gc.setLineDashes((double[]) null);
     }
-
     if (!pictureMode && isHighlight()) {
-
-      g2.setStroke(new BasicStroke());
-
-      g2.setColor(new Color(76, 175, 80, 150));
-      g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-
-      g2.setColor(new Color(76, 175, 80));
-      g2.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+      gc.setLineWidth(1.0);
+      gc.setFill(Color.rgb(76, 175, 80, 150.0/255));
+      gc.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+      gc.setStroke(Color.rgb(76, 175, 80));
+      gc.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
     }
   }
 
@@ -399,7 +374,7 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
   public Element getXmlElement(Document doc) {
     Element note = doc.createElement(getXmlTagName());
     note.setAttribute("content", text);
-    note.setAttribute("color", String.valueOf(getColor().getRGB()));
+    note.setAttribute("color", String.valueOf(utility.Utility.fxColorToRgbInt(getColor())));
     note.appendChild(Utility.boundsToXmlElement(doc, getBounds(),
                                                 "noteGeometry"));
 
@@ -420,7 +395,7 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
 
       noteLine = doc.createElement("noteLine");
       noteLine.setAttribute("relationId", String.valueOf(id));
-      noteLine.setAttribute("color", String.valueOf(lv.getColor().getRGB()));
+      noteLine.setAttribute("color", String.valueOf(utility.Utility.fxColorToRgbInt(lv.getColor())));
 
       for (RelationGrip grip : lv.getPoints()) {
         Point pt = grip.getAnchor();

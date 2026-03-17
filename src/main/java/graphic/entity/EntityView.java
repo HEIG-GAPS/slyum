@@ -22,10 +22,17 @@ import swing.SPanelElement;
 import swing.Slyum;
 import utility.Utility;
 
+import javafx.event.ActionEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
@@ -41,10 +48,10 @@ import java.util.Observer;
  */
 public abstract class EntityView extends MovableComponent implements Observer, ColoredComponent, Cloneable {
   public static final float BORDER_WIDTH = 1.2f;
-  public static final Color DEFAULT_BORDER_COLOR = new Color(65, 65, 65);
+  public static final Color DEFAULT_BORDER_COLOR = Color.rgb(65, 65, 65);
   public static final int VERTICAL_SPACEMENT = 10; // margin
-  public static final Color baseColor = new Color(255, 247, 225);
-  private static Color basicColor = new Color(baseColor.getRGB());
+  public static final Color baseColor = Color.rgb(255, 247, 225);
+  private static Color basicColor = baseColor;
 
   private static final Font stereotypeFontBasic = new Font(
       Slyum.getInstance().defaultFont.getFamily(), 0, 11);
@@ -76,7 +83,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     if (colorEntities == null)
       color = basicColor;
     else
-      color = new Color(Integer.parseInt(colorEntities));
+      { int rgb = Integer.parseInt(colorEntities); color = Color.rgb((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF); }
 
     return color;
   }
@@ -89,7 +96,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
    * @param color the new basic color
    */
   public static void setBasicColor(Color color) {
-    basicColor = new Color(color.getRGB());
+    basicColor = color;
   }
 
   /**
@@ -199,16 +206,18 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   }
 
   /* Colors */
-  public final Color DEFAULT_TEXT_COLOR = new Color(40, 40, 40);
+  public static final javafx.scene.paint.Color DEFAULT_BORDER_COLOR_FX = javafx.scene.paint.Color.rgb(65, 65, 65);
+  public final javafx.scene.paint.Color DEFAULT_TEXT_COLOR_FX = javafx.scene.paint.Color.rgb(40, 40, 40);
+  public final Color DEFAULT_TEXT_COLOR = Color.rgb(40, 40, 40);
   protected Entity component;
-  protected JMenuItem menuItemDelete, menuItemMoveDown,
+  protected MenuItem menuItemDelete, menuItemMoveDown,
       menuItemMoveUp;
 
   protected TextBox pressedTextBox;
   protected GraphicComponent saveTextBoxMouseHover;
 
   private Rectangle bounds = new Rectangle();
-  private Color defaultColor;
+  private javafx.scene.paint.Color defaultColor;
   private int fullWidthStereotype = 0;
 
   private final TextBoxEntityName entityName;
@@ -239,23 +248,25 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
   @Override
   public void actionPerformed(ActionEvent e) {
+    String actionCommand = (e.getSource() instanceof MenuItem)
+        ? ((MenuItem) e.getSource()).getId() : null;
 
     // TODO fix degueulasse en attendant la refacto des menus.
-    if (!Slyum.ACTION_NEW_NOTE_ASSOCIED.equals(e.getActionCommand()))
+    if (!Slyum.ACTION_NEW_NOTE_ASSOCIED.equals(actionCommand))
       super.actionPerformed(e);
 
-    if ("Delete".equals(e.getActionCommand())) {
+    if ("Delete".equals(actionCommand)) {
       if (pressedTextBox != null)
         removeTextBox(pressedTextBox);
       else {
         _delete();
       }
-    } else if ("DeepDelete".equals(e.getActionCommand())) {
+    } else if ("DeepDelete".equals(actionCommand)) {
       change.Helper.deepDeleteEntityView(this);
-    } else if (Slyum.ACTION_DUPLICATE.equals(e.getActionCommand())) {
+    } else if (Slyum.ACTION_DUPLICATE.equals(actionCommand)) {
       if (pressedTextBox == null) parent.duplicateSelectedEntities();
     } else {
-      SPanelElement.getInstance().actionPerformed(e);
+      // TODO: delegate to SPanelElement once SPanelElement.actionPerformed is migrated to javafx.event.ActionEvent
     }
   }
 
@@ -337,37 +348,31 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   }
 
   @Override
-  public void drawSelectedEffect(Graphics2D g2) {
+  public void drawSelectedEffect(GraphicsContext gc) {
     if (pictureMode) return;
 
-    final Color backColor = getColor();
-    final Color fill = new Color(backColor.getRed(), backColor.getGreen(),
-                                 backColor.getBlue(), 100);
+    final javafx.scene.paint.Color backColor = getColor();
+    final javafx.scene.paint.Color fill = backColor.deriveColor(0, 1, 1, 100.0 / 255.0);
+    final javafx.scene.paint.Color border = backColor.darker();
 
-    final Color border = backColor.darker();
-    final BasicStroke borderStroke = new BasicStroke(1.0f,
-                                                     BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
-                                                     new float[] {2.0f}, 0.0f);
+    gc.setFill(fill);
+    gc.fillRect(ghost.x, ghost.y, ghost.width, ghost.height);
 
-    g2.setColor(fill);
-    g2.fillRect(ghost.x, ghost.y, ghost.width, ghost.height);
-
-    g2.setColor(border);
-    g2.setStroke(borderStroke);
-    g2.drawRect(ghost.x, ghost.y, ghost.width - 1, ghost.height - 1);
+    gc.setStroke(border);
+    gc.setLineWidth(1.0);
+    gc.setLineDashes(2.0);
+    gc.strokeRect(ghost.x, ghost.y, ghost.width - 1, ghost.height - 1);
+    gc.setLineDashes(0);
   }
 
   /**
    * Draw a border representing a selection.
    *
-   * @param g2 the graphic context
+   * @param gc the graphic context
    */
-  public void drawSelectedStyle(Graphics2D g2) {
+  public void drawSelectedStyle(GraphicsContext gc) {
     final int PADDING = 2;
-    final Color selectColor = new Color(100, 100, 100);
-
-    final BasicStroke dashed = new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
-                                               BasicStroke.JOIN_MITER, 10.0f, new float[] {2f}, 0.0f);
+    final javafx.scene.paint.Color selectColor = javafx.scene.paint.Color.rgb(100, 100, 100);
 
     final Rectangle inRectangle = new Rectangle(bounds.x + PADDING, bounds.y
                                                                     + PADDING, bounds.width - 2 * PADDING,
@@ -377,13 +382,13 @@ public abstract class EntityView extends MovableComponent implements Observer, C
                                                                      - PADDING, bounds.width + 2 * PADDING,
                                                  bounds.height + 2 * PADDING);
 
-    g2.setStroke(dashed);
-    g2.setColor(selectColor);
+    gc.setLineWidth(1.0);
+    gc.setLineDashes(2.0);
+    gc.setStroke(selectColor);
 
-    g2.drawRect(inRectangle.x, inRectangle.y, inRectangle.width,
-                inRectangle.height);
-    g2.drawRect(outRectangle.x, outRectangle.y, outRectangle.width,
-                outRectangle.height);
+    gc.strokeRect(inRectangle.x, inRectangle.y, inRectangle.width, inRectangle.height);
+    gc.strokeRect(outRectangle.x, outRectangle.y, outRectangle.width, outRectangle.height);
+    gc.setLineDashes(0);
   }
 
   public void editingName() {
@@ -394,7 +399,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   public void gMouseClicked(MouseEvent e) {
     super.gMouseClicked(e);
     TextBox textBox = GraphicView.searchComponentWithPosition(getAllTextBox(),
-                                                              e.getPoint());
+                                                              new Point((int) e.getX(), (int) e.getY()));
 
     if (textBox != null) {
       IDiagramComponent idc = textBox.getAssociatedComponent();
@@ -435,7 +440,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   @Override
   public void gMouseMoved(MouseEvent e) {
     final GraphicComponent textBoxMouseHover = GraphicView
-        .searchComponentWithPosition(getAllTextBox(), e.getPoint());
+        .searchComponentWithPosition(getAllTextBox(), new Point((int) e.getX(), (int) e.getY()));
     GraphicView.computeComponentEventEnter(textBoxMouseHover,
                                            saveTextBoxMouseHover, e);
 
@@ -444,7 +449,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
   @Override
   public void gMousePressed(MouseEvent e) {
-    pressedTextBox = searchTextBoxAtLocation(e.getPoint());
+    pressedTextBox = searchTextBoxAtLocation(new Point((int) e.getX(), (int) e.getY()));
     super.gMousePressed(e);
   }
 
@@ -503,13 +508,13 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   }
 
   @Override
-  public Color getColor() {
+  public javafx.scene.paint.Color getColor() {
     if (pictureMode) return defaultColor;
     return super.getColor();
   }
 
   @Override
-  public void setColor(Color color) {
+  public void setColor(javafx.scene.paint.Color color) {
     setCurrentColor(color);
     defaultColor = color;
   }
@@ -528,13 +533,14 @@ public abstract class EntityView extends MovableComponent implements Observer, C
    *
    * @param color the current color.
    */
-  public void setCurrentColor(Color color) {
+  public void setCurrentColor(javafx.scene.paint.Color color) {
     super.setColor(color);
   }
 
   @Override
-  public Color getDefaultColor() {
-    return getBasicColor();
+  public javafx.scene.paint.Color getDefaultColor() {
+    Color c = getBasicColor();
+    return Color.color(c.getRed(), c.getGreen(), c.getBlue(), c.getOpacity());
   }
 
   public void setLocationRelativeTo(Point dropPoint) {
@@ -564,7 +570,8 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     Element entityView = doc.createElement(getXmlTagName());
     entityView.setAttribute("componentID",
                             String.valueOf(getAssociatedComponent().getId()));
-    entityView.setAttribute("color", String.valueOf(defaultColor.getRGB()));
+    entityView.setAttribute("color", String.valueOf(
+utility.Utility.fxColorToRgbInt(defaultColor)));
     entityView.appendChild(Utility.boundsToXmlElement(doc, getBounds(),
                                                       "geometry"));
     return entityView;
@@ -581,17 +588,19 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   }
 
   @Override
-  public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
-    if (e.isPopupTrigger()) {
+  public void maybeShowPopup(MouseEvent e, ContextMenu popupMenu) {
+    if (e.getButton() == MouseButton.SECONDARY && e.getEventType() == MouseEvent.MOUSE_RELEASED) {
       String text = "Delete ";
 
       // If context menu is requested on a TextBox, customize popup menu.
       if (pressedTextBox == null) {
         text += "from this view";
-        menuItemMoveUp.setEnabled(false);
-        menuItemMoveDown.setEnabled(false);
+        menuItemMoveUp.setDisable(true);
+        menuItemMoveDown.setDisable(true);
       } else {
         text += pressedTextBox.getText();
+        menuItemMoveUp.setDisable(false);
+        menuItemMoveDown.setDisable(false);
       }
       menuItemDelete.setText(text);
     }
@@ -599,90 +608,87 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   }
 
   @Override
-  public void paintComponent(Graphics2D g2) {
+  public void paintComponent(GraphicsContext gc) {
     if (!isVisible()) return;
 
-    Paint background;
-    if (GraphicView.isEntityGradient())
-      background = new GradientPaint(bounds.x, bounds.y, getColor(), bounds.x
-                                                                     + bounds.width, bounds.y + bounds.height,
-                                     getColor().darker());
-    else
-      background = getColor();
+    // Use JavaFX font for metrics and rendering
+    javafx.scene.text.Font jfxEntityFont = javafx.scene.text.Font.font(
+        entityName.getEffectivFont().getFamily(),
+        entityName.getEffectivFont().getSize() * parent.getZoom());
 
     String className = component.getName();
-
-    FontMetrics classNameMetrics = g2.getFontMetrics(entityName
-                                                         .getEffectivFont());
-    int classNameWidth = classNameMetrics.stringWidth(className);
-    int classNameHeight = classNameMetrics.getHeight();
-
+    javafx.scene.text.Text classNameNode = new javafx.scene.text.Text(className);
+    classNameNode.setFont(jfxEntityFont);
+    int classNameWidth = (int) classNameNode.getBoundsInLocal().getWidth();
+    int classNameHeight = (int) classNameNode.getBoundsInLocal().getHeight();
     Dimension classNameSize = new Dimension(classNameWidth, classNameHeight);
 
-    stereotypeFont = stereotypeFont.deriveFont(stereotypeFontBasic.getSize()
-                                               * parent.getZoom());
+    double stereoSize = stereotypeFontBasic.getSize() * parent.getZoom();
+    javafx.scene.text.Font jfxStereotypeFont = javafx.scene.text.Font.font(
+        stereotypeFontBasic.getFamily(), stereoSize);
 
-    g2.setFont(stereotypeFont);
     final String fullStereotype = "<< " + component.getStereotype() + " >>";
-    final String truncatStereotype = Utility.truncate(g2, fullStereotype, bounds.width - 15);
-    final FontMetrics stereotypeMetrics = g2.getFontMetrics(stereotypeFont);
+    final String truncatStereotype = Utility.truncate(jfxStereotypeFont, fullStereotype, bounds.width - 15);
 
-    fullWidthStereotype = stereotypeMetrics.stringWidth(fullStereotype);
-    int stereotypeWidth = stereotypeMetrics.stringWidth(truncatStereotype);
-    int stereotypeHeight = stereotypeMetrics.getHeight();
+    javafx.scene.text.Text fullStNode = new javafx.scene.text.Text(fullStereotype);
+    fullStNode.setFont(jfxStereotypeFont);
+    javafx.scene.text.Text truncStNode = new javafx.scene.text.Text(truncatStereotype);
+    truncStNode.setFont(jfxStereotypeFont);
 
+    fullWidthStereotype = (int) fullStNode.getBoundsInLocal().getWidth();
+    int stereotypeWidth = (int) truncStNode.getBoundsInLocal().getWidth();
+    int stereotypeHeight = (int) truncStNode.getBoundsInLocal().getHeight();
     Dimension stereotypeSize = new Dimension(stereotypeWidth, stereotypeHeight);
 
-    FontMetrics metrics = g2.getFontMetrics(entityName.getEffectivFont());
-    int textBoxHeight = metrics.getHeight();
+    int textBoxHeight = classNameHeight;
 
-    bounds.height = computeHeight(classNameSize.height, stereotypeHeight,
-                                  textBoxHeight);
+    bounds.height = computeHeight(classNameSize.height, stereotypeHeight, textBoxHeight);
 
     Rectangle bounds = getBounds();
 
     int offset = bounds.y + VERTICAL_SPACEMENT / 2;
-    int stereotypeLocationWidth = bounds.x
-                                  + (bounds.width - stereotypeSize.width) / 2;
+    int stereotypeLocationWidth = bounds.x + (bounds.width - stereotypeSize.width) / 2;
 
-    entityName.setBounds(new Rectangle(1, 1, bounds.width - 15,
-                                       textBoxHeight + 2));
+    entityName.setBounds(new Rectangle(1, 1, bounds.width - 15, textBoxHeight + 2));
     Rectangle entityNameBounds = entityName.getBounds();
-    int classNameLocationX = bounds.x + (bounds.width - entityNameBounds.width)
-                                        / 2;
+    int classNameLocationX = bounds.x + (bounds.width - entityNameBounds.width) / 2;
 
     // draw background
-    g2.setPaint(background);
-    g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+    if (GraphicView.isEntityGradient()) {
+      gc.setFill(new javafx.scene.paint.LinearGradient(
+          0, 0, 0, 1, true, javafx.scene.paint.CycleMethod.NO_CYCLE,
+          new javafx.scene.paint.Stop(0, getColor()),
+          new javafx.scene.paint.Stop(1, getColor().darker())));
+    } else {
+      gc.setFill(getColor());
+    }
+    gc.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
     // draw border
-    g2.setStroke(new BasicStroke(BORDER_WIDTH));
-    g2.setColor(DEFAULT_BORDER_COLOR);
-    g2.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+    gc.setLineWidth(BORDER_WIDTH);
+    gc.setStroke(DEFAULT_BORDER_COLOR_FX);
+    gc.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
     // draw stereotype
     if (!component.getStereotype().isEmpty()) {
       offset += stereotypeSize.height;
-
-      g2.setFont(stereotypeFont);
-      g2.setColor(DEFAULT_TEXT_COLOR);
-      g2.drawString(truncatStereotype, stereotypeLocationWidth, offset);
+      gc.setFont(jfxStereotypeFont);
+      gc.setFill(DEFAULT_TEXT_COLOR_FX);
+      gc.fillText(truncatStereotype, stereotypeLocationWidth, offset);
     }
 
     // draw class name
-    offset += /* classNameSize.height + */VERTICAL_SPACEMENT / 2;
-
-    entityName.setBounds(new Rectangle(classNameLocationX, offset,
-                                       bounds.width - 15, textBoxHeight + 2));
-    entityName.paintComponent(g2);
-
+    offset += VERTICAL_SPACEMENT / 2;
+    entityName.setBounds(new Rectangle(classNameLocationX, offset, bounds.width - 15, textBoxHeight + 2));
+    // TODO: entityName.paintComponent(gc) once TextBox is migrated to JavaFX GraphicsContext
+    entityNameBounds = entityName.getBounds();
     offset += entityNameBounds.height;
 
-    offset += paintTextBoxes(g2, bounds, textBoxHeight, offset);
+    offset += paintTextBoxes(gc, bounds, textBoxHeight, offset);
 
     // is component selected? -> draw selected style
     if (!pictureMode && parent.getSelectedComponents().contains(this))
-      drawSelectedStyle(g2);
+      drawSelectedStyle(gc);
   }
 
   /**
@@ -782,62 +788,63 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
   protected final void initializeComponents() {
 
-    JMenuItem menuItem;
+    MenuItem menuItem;
 
     // Create the popup menu.
-    popupMenu.addSeparator();
+    popupMenu.getItems().add(new SeparatorMenuItem());
     initializeMenuItemsAddElements(popupMenu);
     initializeMenuItemsPropertiesElements(popupMenu);
 
     menuItemMoveUp = makeMenuItem("Move up", Slyum.ACTION_TEXTBOX_UP,
                                   "arrow-up");
-    menuItemMoveUp.setEnabled(false);
-    popupMenu.add(menuItemMoveUp);
+    menuItemMoveUp.setDisable(true);
+    popupMenu.getItems().add(menuItemMoveUp);
 
     menuItemMoveDown = makeMenuItem("Move down", Slyum.ACTION_TEXTBOX_DOWN,
                                     "arrow-down");
-    menuItemMoveDown.setEnabled(false);
-    popupMenu.add(menuItemMoveDown);
+    menuItemMoveDown.setDisable(true);
+    popupMenu.getItems().add(menuItemMoveDown);
 
-    popupMenu.addSeparator();
+    popupMenu.getItems().add(new SeparatorMenuItem());
 
-    popupMenu.add(makeMenuItem("Duplicate", Slyum.ACTION_DUPLICATE, "duplicate"));
-    popupMenu.add(menuItemDelete = makeMenuItem("Delete from this view", "Delete", "delete"));
-    popupMenu.add(makeMenuItem("Delete", "DeepDelete", "delete"));
+    popupMenu.getItems().add(makeMenuItem("Duplicate", Slyum.ACTION_DUPLICATE, "duplicate"));
+    popupMenu.getItems().add(menuItemDelete = makeMenuItem("Delete from this view", "Delete", "delete"));
+    popupMenu.getItems().add(makeMenuItem("Delete", "DeepDelete", "delete"));
 
-    popupMenu.addSeparator();
+    popupMenu.getItems().add(new SeparatorMenuItem());
     initializeMenuViews(popupMenu);
 
     SPanelElement p = SPanelElement.getInstance();
     menuItem = makeMenuItem("Move top", Slyum.ACTION_MOVE_TOP, "top");
-    p.getBtnTop().linkComponent(menuItem);
-    popupMenu.add(menuItem);
+    // TODO: p.getBtnTop().linkComponent(menuItem) once SButton.linkComponent is migrated to accept MenuItem
+    popupMenu.getItems().add(menuItem);
 
     menuItem = makeMenuItem("Up", Slyum.ACTION_MOVE_UP, "up");
-    p.getBtnUp().linkComponent(menuItem);
-    popupMenu.add(menuItem);
+    // TODO: p.getBtnUp().linkComponent(menuItem) once SButton.linkComponent is migrated
+    popupMenu.getItems().add(menuItem);
 
     menuItem = makeMenuItem("Down", Slyum.ACTION_MOVE_DOWN, "down");
-    p.getBtnDown().linkComponent(menuItem);
-    popupMenu.add(menuItem);
+    // TODO: p.getBtnDown().linkComponent(menuItem) once SButton.linkComponent is migrated
+    popupMenu.getItems().add(menuItem);
 
     menuItem = makeMenuItem("Move bottom", Slyum.ACTION_MOVE_BOTTOM, "bottom");
-    p.getBtnBottom().linkComponent(menuItem);
-    popupMenu.add(menuItem);
+    // TODO: p.getBtnBottom().linkComponent(menuItem) once SButton.linkComponent is migrated
+    popupMenu.getItems().add(menuItem);
 
     component.addObserver(this);
-    setColor(getBasicColor());
+    Color c = getBasicColor();
+    setColor(Color.color(c.getRed(), c.getGreen(), c.getBlue(), c.getOpacity()));
   }
 
-  protected abstract void initializeMenuItemsAddElements(JPopupMenu popupmenu);
+  protected abstract void initializeMenuItemsAddElements(ContextMenu popupmenu);
 
-  protected abstract void initializeMenuItemsPropertiesElements(JPopupMenu popupMenu);
+  protected abstract void initializeMenuItemsPropertiesElements(ContextMenu popupMenu);
 
-  protected abstract void initializeMenuViews(JPopupMenu popupMenu);
+  protected abstract void initializeMenuViews(ContextMenu popupMenu);
 
   protected abstract void innerRegenerate();
 
-  protected abstract int paintTextBoxes(Graphics2D g2, Rectangle bounds, int textboxHeight, int offset);
+  protected abstract int paintTextBoxes(GraphicsContext gc, Rectangle bounds, int textboxHeight, int offset);
 
   /**
    * Search and return the Textbox (methods and attributes) at the given location.

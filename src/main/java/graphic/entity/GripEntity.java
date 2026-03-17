@@ -4,9 +4,9 @@ import change.Change;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.SquareGrip;
+import javafx.scene.input.MouseEvent;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
+import java.awt.Rectangle;
 
 /**
  * Represent a grip (gray square) using for resizing entities. A grip entity move with mouse cursor when user click on

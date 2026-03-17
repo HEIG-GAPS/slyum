@@ -26,7 +26,7 @@ public abstract class GlobalPropreties extends JPanel implements Observer {
 
     public ButtonChangeOrientation() {
       super("Change orientation", PersonalizedIcon
-          .createImageIcon("orientation.png"));
+          .createSwingImageIcon("orientation.png"));
       setActionCommand(RelationView.ACTION_CHANGE_ORIENTATION);
       setMaximumSize(new Dimension(250, 100));
       setHorizontalAlignment(SwingUtilities.LEFT);

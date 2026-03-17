@@ -213,7 +213,7 @@ public class STab extends JTabbedPane {
   private void addPlusTab() {
     super.addTab(
         "",
-        PersonalizedIcon.createImageIcon("plus-16.png"),
+        PersonalizedIcon.createSwingImageIcon("plus-16.png"),
         null);
   }
 

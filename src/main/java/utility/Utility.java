@@ -3,29 +3,37 @@ package utility;
 import classDiagram.components.Visibility;
 import classDiagram.relationships.Multiplicity;
 import graphic.GraphicComponent;
+import javafx.geometry.Dimension2D;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import swing.PropertyLoader;
-import swing.Slyum;
-import swing.UserInputDialog;
-import swing.slyumCustomizedComponents.SComboBox;
+import ui.PropertyLoader;
+import ui.SlyumApp;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.KeyEvent;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.io.File;
-import java.io.IOException;
 import java.text.Normalizer;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -42,12 +50,26 @@ public class Utility {
    * Set the given size for preferredSize, maximumSize and minimumSize to the given component.
    *
    * @param component the component to resize
+   * @param width the desired width
+   * @param height the desired height
+   */
+  public static void setAllSize(final Region component, final double width, final double height) {
+    component.setMinWidth(width);
+    component.setPrefWidth(width);
+    component.setMaxWidth(width);
+    component.setMinHeight(height);
+    component.setPrefHeight(height);
+    component.setMaxHeight(height);
+  }
+
+  /**
+   * Set the given size for preferredSize, maximumSize and minimumSize to the given component.
+   *
+   * @param component the component to resize
    * @param size the size
    */
-  public static void setAllSize(final JComponent component, final Dimension size) {
-    component.setPreferredSize(size);
-    component.setMaximumSize(size);
-    component.setMinimumSize(size);
+  public static void setAllSize(final Region component, final Dimension2D size) {
+    setAllSize(component, size.getWidth(), size.getHeight());
   }
 
   public enum GraphicQualityType {
@@ -55,10 +77,12 @@ public class Utility {
   }
 
   public static String proposeNewName(final String message) {
-    UserInputDialog ecd = new UserInputDialog("", "Slyum - Change name", message);
-    ecd.setVisible(true);
-
-    return ecd.isAccepted() ? ecd.getText() : "-1";
+    TextInputDialog dialog = new TextInputDialog();
+    dialog.setTitle("Slyum - Change name");
+    dialog.setHeaderText(null);
+    dialog.setContentText(message);
+    Optional<String> result = dialog.showAndWait();
+    return result.orElse("-1");
   }
 
   public static <T> int count(Class<?> type, List<T> list) {
@@ -89,34 +113,14 @@ public class Utility {
   }
 
   /**
-   * http://www.exampledepot.com/egs/java.awt.datatransfer/ToClipImg.html
+   * Copy the given JavaFX Image to the system clipboard.
+   *
+   * @param image the image to copy
    */
-  public static class ImageSelection implements Transferable {
-    private final Image image;
-
-    public ImageSelection(Image image) {
-      this.image = image;
-    }
-
-    // Returns image
-    @Override
-    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-      if (!DataFlavor.imageFlavor.equals(flavor)) throw new UnsupportedFlavorException(flavor);
-      return image;
-    }
-
-    // Returns supported flavors
-    @Override
-    public DataFlavor[] getTransferDataFlavors() {
-      return new DataFlavor[] {DataFlavor.imageFlavor};
-    }
-
-    // Returns true if flavor is supported
-    @Override
-    public boolean isDataFlavorSupported(DataFlavor flavor) {
-      return DataFlavor.imageFlavor.equals(flavor);
-    }
-
+  public static void copyImageToClipboard(javafx.scene.image.Image image) {
+    ClipboardContent content = new ClipboardContent();
+    content.putImage(image);
+    Clipboard.getSystemClipboard().setContent(content);
   }
 
   public static String keystrokeToString(final String a) {
@@ -245,22 +249,19 @@ public class Utility {
   }
 
   /**
-   * Find a JMenuItem in the JPopupMenu given that correspond to the given text. Return null if no JMenuItem is found.
-   * The given text must not be the exact title of the JMenuItem, string compare use startsWith() method.
+   * Find a MenuItem in the ContextMenu given that corresponds to the given text. Returns null if
+   * no MenuItem is found. The given text does not need to be the exact title; the comparison uses
+   * startsWith().
    *
-   * @param menu the popup menu where find the JMenuItem
-   * @param text the title of the JMenuItem to find.
+   * @param menu the context menu where to search for the MenuItem
+   * @param text the title prefix of the MenuItem to find
    *
-   * @return the JMenuItem find; or null if no JMenuItem has this title.
+   * @return the MenuItem found; or null if none matches.
    */
-  public static JMenuItem findMenuItem(JPopupMenu menu, String text) {
-    for (final Component component : menu.getComponents())
-
-      if (component instanceof JMenuItem)
-
-        if (((JMenuItem) component).getText().startsWith(text))
-
-          return (JMenuItem) component;
+  public static MenuItem findMenuItem(ContextMenu menu, String text) {
+    for (MenuItem item : menu.getItems())
+      if (item.getText() != null && item.getText().startsWith(text))
+        return item;
 
     return null;
   }
@@ -282,28 +283,32 @@ public class Utility {
   }
 
   /**
-   * Return the complementary color. The complementary color is calculated in the way define here :
-   * http://help.adobe.com/fr_FR/Illustrator/13.0/help.html ?content=WS714a382cdf7d304e7e07d0100196cbc5f-6288.html
+   * Return the complementary color. The complementary color is calculated in the way defined here:
+   * http://help.adobe.com/fr_FR/Illustrator/13.0/help.html?content=WS714a382cdf7d304e7e07d0100196cbc5f-6288.html
    *
    * @param color the color to compute its complementary
    *
    * @return the complementary color
    */
   public static Color getComplementaryColor(Color color) {
-    final int r = color.getRed();
-    final int g = color.getGreen();
-    final int b = color.getBlue();
+    final double r = color.getRed();
+    final double g = color.getGreen();
+    final double b = color.getBlue();
 
-    final int min = Math.min(Math.min(r, g), b);
-    final int max = Math.max(Math.max(r, g), b);
+    final double min = Math.min(Math.min(r, g), b);
+    final double max = Math.max(Math.max(r, g), b);
 
-    final int add = min + max;
+    final double add = min + max;
 
-    final int newR = add - r;
-    final int newG = add - g;
-    final int newB = add - b;
+    return new Color(
+        clamp(add - r),
+        clamp(add - g),
+        clamp(add - b),
+        color.getOpacity());
+  }
 
-    return new Color(newR, newG, newB);
+  private static double clamp(double value) {
+    return Math.max(0.0, Math.min(1.0, value));
   }
 
   /**
@@ -332,24 +337,25 @@ public class Utility {
   }
 
   /**
-   * Compute the gray level of a color. The gray level is calculated by adding the highest RGB component with the lowest
-   * and divided by 2. The gray level is a float value between 0.0 and 1.0f. This method return a color with RGB equals
-   * 100 if the gray level is less than 0.5f, 200 otherwise. It permits to find a gray color who are visible on the
-   * given color (except if the color is a gray near of 127 RGB).
+   * Compute the gray level of a color. The gray level is calculated by adding the highest RGB
+   * component with the lowest and divided by 2. The gray level is a float value between 0.0 and
+   * 1.0f. This method returns 100 if the gray level is less than 0.5, 200 otherwise. It permits
+   * finding a gray color that is visible on the given color (except if the color is a gray near
+   * 127 in 0-255 terms).
    *
    * @param color the {@link Color}.
    *
-   * @return the gray level.
+   * @return 100 for a light background, 200 for a dark background.
    */
   public static int getColorGrayLevel(final Color color) {
-    final float rp = color.getRed() / 255.0f;
-    final float gp = color.getGreen() / 255.0f;
-    final float bp = color.getBlue() / 255.0f;
+    final double rp = color.getRed();
+    final double gp = color.getGreen();
+    final double bp = color.getBlue();
 
-    final float max = Math.max(Math.max(rp, gp), bp);
-    final float min = Math.min(Math.min(rp, gp), bp);
+    final double max = Math.max(Math.max(rp, gp), bp);
+    final double min = Math.min(Math.min(rp, gp), bp);
 
-    return (max + min) / 2.0f > 0.5f ? 100 : 200;
+    return (max + min) / 2.0 > 0.5 ? 100 : 200;
   }
 
   /**
@@ -405,37 +411,64 @@ public class Utility {
   }
 
   /**
-   * Return a JComboBox containing all default multiplicities.
+   * Return a ComboBox containing all default multiplicities.
    *
-   * @return a JComboBox containing all default multiplicities
+   * @return a ComboBox containing all default multiplicities
    */
-  public static JComboBox<Multiplicity> getMultiplicityComboBox() {
-    final JComboBox<Multiplicity> cmb = new SComboBox<Multiplicity>();
+
+  /**
+   * Swing version of {@link #getMultiplicityComboBox} for use in Swing components.
+   */
+  public static javax.swing.JComboBox<classDiagram.relationships.Multiplicity> getMultiplicityJComboBox() {
+    javax.swing.JComboBox<classDiagram.relationships.Multiplicity> cmb = new javax.swing.JComboBox<>();
+    cmb.setEditable(true);
+    cmb.addItem(classDiagram.relationships.Multiplicity.ONE_ONLY);
+    cmb.addItem(classDiagram.relationships.Multiplicity.ONE_OR_MORE);
+    cmb.addItem(classDiagram.relationships.Multiplicity.ZERO);
+    cmb.addItem(classDiagram.relationships.Multiplicity.ZERO_OR_MORE);
+    cmb.addItem(classDiagram.relationships.Multiplicity.ZERO_OR_ONE);
+    return cmb;
+  }
+
+  public static ComboBox<Multiplicity> getMultiplicityComboBox() {
+    ComboBox<Multiplicity> cmb = new ComboBox<>();
     cmb.setEditable(true);
 
-    cmb.addItem(Multiplicity.ONE_ONLY);
-    cmb.addItem(Multiplicity.ONE_OR_MORE);
-    cmb.addItem(Multiplicity.ZERO);
-    cmb.addItem(Multiplicity.ZERO_OR_MORE);
-    cmb.addItem(Multiplicity.ZERO_OR_ONE);
+    cmb.getItems().addAll(
+        Multiplicity.ONE_ONLY,
+        Multiplicity.ONE_OR_MORE,
+        Multiplicity.ZERO,
+        Multiplicity.ZERO_OR_MORE,
+        Multiplicity.ZERO_OR_ONE);
 
-    cmb.setSelectedIndex(0);
+    cmb.getSelectionModel().selectFirst();
 
     return cmb;
   }
 
   /**
-   * Return a JComboBox containing all default visibilities.
+   * Return a ComboBox containing all default visibilities.
    *
-   * @return a JComboBox containing all default visibilities
+   * @return a ComboBox containing all default visibilities
    */
-  public static JComboBox<String> getVisibilityComboBox() {
-    final String[] list = new String[Visibility.values().length];
 
-    for (int i = 0; i < list.length; i++)
-      list[i] = Visibility.values()[i].getName();
+  /**
+   * Swing version of {@link #getVisibilityComboBox} for use in Swing components.
+   */
+  public static javax.swing.JComboBox<String> getVisibilityJComboBox() {
+    javax.swing.JComboBox<String> cmb = new javax.swing.JComboBox<>();
+    for (classDiagram.components.Visibility v : classDiagram.components.Visibility.values())
+      cmb.addItem(v.getName());
+    return cmb;
+  }
 
-    return new SComboBox<String>(list);
+  public static ComboBox<String> getVisibilityComboBox() {
+    ComboBox<String> cmb = new ComboBox<>();
+
+    for (Visibility v : Visibility.values())
+      cmb.getItems().add(v.getName());
+
+    return cmb;
   }
 
   /**
@@ -473,20 +506,24 @@ public class Utility {
   }
 
   /**
-   * Put the default render hints to the given graphic.
+   * Put the default render quality settings on the given GraphicsContext.
    *
-   * @param g the graphic context
+   * @param gc the JavaFX GraphicsContext
    */
-  public static void setDefaultRenderQuality(Graphics g) {
-    final Graphics2D g2 = (Graphics2D) g;
+  public static void setDefaultRenderQuality(final java.awt.Graphics2D g2) {
+    g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING,
+                        java.awt.RenderingHints.VALUE_ANTIALIAS_DEFAULT);
+    g2.setRenderingHint(java.awt.RenderingHints.KEY_RENDERING,
+                        java.awt.RenderingHints.VALUE_RENDER_DEFAULT);
+  }
 
-    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT);
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
+  public static void setDefaultRenderQuality(final java.awt.Graphics g) {
+    if (g instanceof java.awt.Graphics2D) setDefaultRenderQuality((java.awt.Graphics2D) g);
+  }
 
-    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_DEFAULT);
-    g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_DEFAULT);
-    g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_DEFAULT);
-
+  public static void setDefaultRenderQuality(GraphicsContext gc) {
+    // Disable image smoothing for default (unenhanced) quality
+    gc.setImageSmoothing(false);
   }
 
   public static void setGraphicQualityType(GraphicQualityType type) {
@@ -495,103 +532,150 @@ public class Utility {
   }
 
   /**
-   * Enable RenderingHint used in Slyum for the graphic context.
+   * Apply the Slyum render quality settings to the given GraphicsContext.
    *
-   * @param g the graphic context
+   * @param gc the JavaFX GraphicsContext
    */
-  public static void setRenderQuality(final Graphics g) {
-    if (getGraphicQualityType().equals(GraphicQualityType.LOW)) return;
 
-    final Graphics2D g2 = (Graphics2D) g;
-
-    g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-    if (getGraphicQualityType().equals(GraphicQualityType.MEDIUM)) return;
-
-    g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-    g2.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-    g2.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-
+  /**
+   * Set render quality hints on an AWT {@link java.awt.Graphics2D} (used by Swing components).
+   */
+  public static void setRenderQuality(final java.awt.Graphics2D g2) {
+    g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING,
+                        java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+    g2.setRenderingHint(java.awt.RenderingHints.KEY_RENDERING,
+                        java.awt.RenderingHints.VALUE_RENDER_QUALITY);
   }
 
   /**
-   * Set the AbstractAction for the RootPane when ESC key is pressed.
-   *
-   * @param rp the RootPane
-   * @param ac the AbstractAction
+   * Set render quality hints on an AWT {@link java.awt.Graphics} (used by Swing components).
    */
-  public static void setRootPaneActionOnEsc(JRootPane rp, AbstractAction ac) {
-    rp.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESC");
+  public static void setRenderQuality(final java.awt.Graphics g) {
+    if (g instanceof java.awt.Graphics2D) setRenderQuality((java.awt.Graphics2D) g);
+  }
 
-    rp.getActionMap().put("ESC", ac);
+
+  /**
+   * Install an action on a Swing root pane that triggers when the Escape key is pressed.
+   */
+  public static void setRootPaneActionOnEsc(javax.swing.JRootPane rootPane, javax.swing.Action action) {
+    javax.swing.InputMap im = rootPane.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW);
+    im.put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0), "escAction");
+    rootPane.getActionMap().put("escAction", action);
+  }
+
+  public static void setRenderQuality(final GraphicsContext gc) {
+    if (getGraphicQualityType().equals(GraphicQualityType.LOW)) {
+      gc.setImageSmoothing(false);
+      return;
+    }
+
+    // MEDIUM and MAX quality: enable image smoothing
+    gc.setImageSmoothing(true);
   }
 
   /**
-   * Truncate the given text that its width is equals to the given width. The graphic context is used to compute text
-   * size. If text must be resized, '...' will be add at its end.
+   * Install an ESC-key handler on the given JavaFX {@link javafx.scene.Scene}.
    *
-   * @param g2 the graphi context
-   * @param text the text to truncate
-   * @param width the width of the text
-   *
-   * @return the text truncate if too long; return empty text if text can't be truncate in specified width.
+   * @param scene   the Scene that should respond to the ESC key
+   * @param handler the handler invoked when ESC is pressed
    */
-  public static String truncate(Graphics2D g2, String text, int width) {
+  public static void setSceneActionOnEsc(javafx.scene.Scene scene,
+      javafx.event.EventHandler<KeyEvent> handler) {
+    scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+      if (event.getCode() == KeyCode.ESCAPE) {
+        handler.handle(event);
+      }
+    });
+  }
+
+  /**
+   * Truncate the given text so its rendered width does not exceed the specified width. Uses a
+   * JavaFX {@link Text} node to measure text size. If truncation is necessary {@code "..."} is
+   * appended at the end.
+   *
+   * @param font  the font used to measure the text
+   * @param text  the text to truncate
+   * @param width the maximum allowed width in pixels
+   *
+   * @return the (possibly truncated) text; or an empty string if even {@code "..."} does not fit.
+   */
+  public static String truncate(Font font, String text, double width) {
     final String carTrunc = "...";
+    final Text textNode = new Text(text);
+    textNode.setFont(font);
 
-    final FontMetrics metrics = g2.getFontMetrics(g2.getFont());
-
-    int adv = metrics.stringWidth(text);
-
-    if (adv < width) return text;
+    if (textNode.getBoundsInLocal().getWidth() < width) return text;
 
     text += carTrunc;
 
     do {
-      if (text.length() <= 3) return ""; // If text can't be truncate (the
-      // '...' is longer than the
-      // specified width).
+      if (text.length() <= 3) return ""; // "..." alone is wider than the allowed width
 
       text = text.substring(0, text.length() - carTrunc.length() - 1) + carTrunc;
-      adv = metrics.stringWidth(text);
-    } while (adv > width);
+      textNode.setText(text);
+    } while (textNode.getBoundsInLocal().getWidth() > width);
 
     return text;
   }
 
-  protected static Color getAlphaColor(Color color, int alpha) {
-    return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+  /**
+   * Return a copy of {@code color} with the given alpha value applied as opacity.
+   *
+   * @param color the base color (RGB components are preserved)
+   * @param alpha opacity in the 0–255 range (0 = fully transparent, 255 = fully opaque)
+   *
+   * @return a new {@link Color} with the same RGB values and the specified opacity
+   */
+  /**
+   * Converts a JavaFX {@link Color} to a 24-bit RGB integer (same as {@code java.awt.Color.getRGB()} masked to RGB).
+   *
+   * @param color the JavaFX color
+   *
+   * @return the RGB integer value
+   */
+  public static int fxColorToRgbInt(Color color) {
+    return ((int) (color.getRed() * 255) << 16)
+           | ((int) (color.getGreen() * 255) << 8)
+           | (int) (color.getBlue() * 255);
   }
 
-  public static void drawInfoRect(String text, Rectangle bounds, Graphics2D g2, int offset) {
-    setRenderQuality(g2);
-    Color color = new Color(100, 100, 100, 50), colorText = new Color(20, 20, 20, 150);
-    int stringWidth;
-
-    g2.setColor(color);
-    g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-
-    g2.setFont(Slyum.getDefaultFont().deriveFont(16.f));
-    g2.setColor(colorText);
-    stringWidth = g2.getFontMetrics().stringWidth(text);
-    g2.drawString(text,
-                  (bounds.x + bounds.width - stringWidth) / 2,
-                  bounds.y + Math.min(bounds.height, offset));
+    protected static Color getAlphaColor(Color color, int alpha) {
+    return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha / 255.0);
   }
 
-  public static JOptionPane getOptionPane(final Component component) {
-    Component parent = component;
 
-    while (parent != null) {
-      if (parent instanceof JOptionPane jOptionPane) {
-        return jOptionPane;
-      }
+  /**
+   * AWT overload of {@link #drawInfoRect} for use in Swing components.
+   */
+  public static void drawInfoRect(String text, java.awt.Rectangle bounds, java.awt.Graphics2D g2, int offset) {
+    g2.setColor(new java.awt.Color(100, 100, 100, 50));
+    g2.fillRoundRect(bounds.x + offset, bounds.y + offset, bounds.width - offset * 2,
+                     bounds.height - offset * 2, 10, 10);
+    g2.setColor(new java.awt.Color(20, 20, 20, 150));
+    g2.setFont(new java.awt.Font(java.awt.Font.SANS_SERIF, java.awt.Font.PLAIN, 12));
+    g2.drawString(text, bounds.x + offset + 5, bounds.y + offset + 15);
+  }
 
-      parent = parent.getParent();
-    }
+  public static void drawInfoRect(String text, Rectangle bounds, GraphicsContext gc, int offset) {
+    setRenderQuality(gc);
+    Color color = Color.rgb(100, 100, 100, 50.0 / 255.0);
+    Color colorText = Color.rgb(20, 20, 20, 150.0 / 255.0);
 
-    return null;
+    gc.setFill(color);
+    gc.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+
+    Font font = Font.font(SlyumApp.getDefaultFont().getFamily(), 16);
+    gc.setFont(font);
+    gc.setFill(colorText);
+
+    Text textNode = new Text(text);
+    textNode.setFont(font);
+    double stringWidth = textNode.getBoundsInLocal().getWidth();
+
+    gc.fillText(text,
+                (bounds.x + bounds.width - stringWidth) / 2,
+                bounds.y + Math.min(bounds.height, offset));
   }
 
   public static String stripAccents(String s) {

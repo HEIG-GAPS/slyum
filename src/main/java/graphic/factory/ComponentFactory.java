@@ -5,7 +5,7 @@ import graphic.GraphicView;
 import swing.Slyum;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
+import javafx.scene.input.MouseEvent;
 
 /**
  * ComponentFactory allows to create a new component view associated with a new component UML. Give this factory at the
@@ -28,7 +28,7 @@ public abstract class ComponentFactory extends CreateComponent {
 
   @Override
   public void gMousePressed(MouseEvent e) {
-    mousePressed = e.getPoint();
+    mousePressed = new Point((int)e.getX(), (int)e.getY());
 
     if (componentMousePressed == null)
       componentMousePressed = parent.getComponentAtPosition(mousePressed);
@@ -36,7 +36,7 @@ public abstract class ComponentFactory extends CreateComponent {
 
   @Override
   public void gMouseReleased(MouseEvent e) {
-    mouseReleased = e.getPoint();
+    mouseReleased = new Point((int)e.getX(), (int)e.getY());
 
     componentMouseReleased = parent.getComponentAtPosition(mouseReleased);
 

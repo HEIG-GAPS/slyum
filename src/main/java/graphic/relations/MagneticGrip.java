@@ -4,8 +4,9 @@ import change.Change;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
+import javafx.scene.input.MouseEvent;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -79,7 +80,7 @@ public class MagneticGrip extends RelationGrip implements Observer {
   public void gMouseReleased(MouseEvent e) {
     // Récupération de l'élément sur lequel l'utilisateur a "lâché" le grip.
     GraphicComponent onMouseComponent = parent.getDiagramElementAtPosition(
-        e.getPoint(), relation);
+        new Point((int)e.getX(), (int)e.getY()), relation);
 
     magnetism = true;
 
@@ -90,7 +91,7 @@ public class MagneticGrip extends RelationGrip implements Observer {
     if (!component.equals(onMouseComponent))
       relation.relationChanged(this, onMouseComponent);
 
-    setAnchor(e.getPoint());
+    setAnchor(new Point((int)e.getX(), (int)e.getY()));
     relation.smoothLines();
     relation.searchUselessAnchor(this);
     pushBufferChangeMouseReleased(e);

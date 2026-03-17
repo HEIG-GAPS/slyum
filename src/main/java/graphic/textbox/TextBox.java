@@ -13,7 +13,9 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Font;
 import java.awt.font.TextAttribute;
 import java.text.AttributedString;
 
@@ -29,7 +31,7 @@ public abstract class TextBox extends GraphicComponent {
   public final static int FONT_SIZE = 12;
 
   public static Font getFont() {
-    return new Font(getFontName(), Font.PLAIN, getFontSize());
+    return javafx.scene.text.Font.font(getFontName(), getFontSize());
   }
 
   public static String getFontName() {
@@ -54,7 +56,7 @@ public abstract class TextBox extends GraphicComponent {
 
   public static void setFont(Font newFont) {
     setFontName(newFont.getFamily());
-    setFontSize(newFont.getSize());
+    setFontSize((int) newFont.getSize());
   }
 
   public static void setFontName(String name) {
@@ -115,7 +117,6 @@ public abstract class TextBox extends GraphicComponent {
 
       @Override
       public void paintComponent(Graphics g) {
-        Utility.setRenderQuality(g);
         // Bug with TextField
         ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
                                           RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
@@ -124,8 +125,7 @@ public abstract class TextBox extends GraphicComponent {
     };
 
     textField.setBackground(new Color(255, 255, 255));
-    textField.setFont(effectivFont.deriveFont((float) parent.getScale()
-                                              * (float) getFont().getSize()));
+    textField.setFont(new java.awt.Font(effectivFont.getFamily(), java.awt.Font.PLAIN, (int)(parent.getScale() * getFont().getSize())));
     double scale = parent.getScale();
     textField.setBounds(new Rectangle((int) (bounds.x * scale),
                                       (int) (bounds.y * scale), (int) (bounds.width * scale),
@@ -240,57 +240,60 @@ public abstract class TextBox extends GraphicComponent {
   }
 
   @Override
-  public void paintComponent(Graphics2D g2) {
-    paintComponentAt(g2, new Point(bounds.x, bounds.y));
+  public void paintComponent(GraphicsContext gc) {
+    paintComponentAt(gc, new Point(bounds.x, bounds.y));
   }
 
-  public void paintComponentAt(Graphics2D g2, Point location) {
+  public void paintComponentAt(GraphicsContext gc, Point location) {
     if (!isVisible()) return;
 
     final String name = getText();
 
     createEffectivFont();
-    effectivFont = effectivFont.deriveFont(effectivFont.getSize()
-                                           * parent.getZoom());
-    final FontMetrics metrics = g2.getFontMetrics(effectivFont);
-    textDim.width = metrics.stringWidth(name);
-    textDim.height = metrics.getHeight();
+    // Convert AWT Font to JavaFX Font
+    float scaledSize = (float)(effectivFont.getSize() * parent.getZoom());
+    Font fxFont = Font.font(effectivFont.getFamily(), scaledSize);
+    gc.setFont(fxFont);
 
-    g2.setStroke(new BasicStroke());
+    // Measure text using JavaFX Text node
+    javafx.scene.text.Text textNode = new javafx.scene.text.Text(name.isEmpty() ? "X" : name);
+    textNode.setFont(fxFont);
+    javafx.geometry.Bounds tb = textNode.getBoundsInLocal();
+    textDim.width = (int) tb.getWidth();
+    textDim.height = (int) tb.getHeight();
+    double descent = tb.getMinY() + tb.getHeight(); // approximate descent
+
+    gc.setLineWidth(1.0);
+    gc.setLineDashes((double[]) null);
     // Draw mouseHover style (same as selected style)
-    if (!pictureMode && mustPaintSelectedStyle()) paintSelectedStyle(g2);
+    if (!pictureMode && mustPaintSelectedStyle()) paintSelectedStyle(gc);
 
-    g2.setColor(Color.DARK_GRAY);
-    g2.setFont(effectivFont);
+    gc.setFill(javafx.scene.paint.Color.DARKGRAY);
+    gc.setStroke(javafx.scene.paint.Color.DARKGRAY);
 
-    final AttributedString ats = new AttributedString(truncate(g2, getText(),
-                                                               bounds.width));
+    final String drawText = truncate(gc, getText(), bounds.width);
 
     // Draw String
-    if (ats.getIterator().getEndIndex() != 0) {
-      ats.addAttribute(TextAttribute.FONT, effectivFont);
-      initAttributeString(ats);
-
-      g2.drawString(ats.getIterator(), location.x, location.y + bounds.height
-                                                   - metrics.getDescent());
+    if (!drawText.isEmpty()) {
+      gc.fillText(drawText, location.x, location.y + bounds.height - descent);
     }
 
     if (!pictureMode && isHighlight())
-      paintSelectedStyle(g2, new Color(76, 175, 80), new Color(76, 175, 80, 150));
+      paintSelectedStyle(gc, javafx.scene.paint.Color.rgb(76, 175, 80, 150.0/255), javafx.scene.paint.Color.rgb(76, 175, 80, 150.0/255));
   }
 
-  protected void paintSelectedStyle(Graphics2D g2) {
-    paintSelectedStyle(g2, new Color(150, 150, 150), new Color(150, 150, 150, 150));
+  protected void paintSelectedStyle(GraphicsContext gc) {
+    paintSelectedStyle(gc, javafx.scene.paint.Color.rgb(150, 150, 150, 150.0/255), javafx.scene.paint.Color.rgb(150, 150, 150, 150.0/255));
   }
 
-  protected void paintSelectedStyle(Graphics2D g2, Color borderColor, Color fillColor) {
+  protected void paintSelectedStyle(GraphicsContext gc, javafx.scene.paint.Color borderColor, javafx.scene.paint.Color fillColor) {
     Rectangle bounds = getBounds();
 
-    g2.setColor(fillColor);
-    g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+    gc.setFill(fillColor);
+    gc.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
-    g2.setColor(borderColor);
-    g2.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+    gc.setStroke(borderColor);
+    gc.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
   }
 
   protected boolean mustPaintSelectedStyle() {
@@ -369,7 +372,7 @@ public abstract class TextBox extends GraphicComponent {
    *
    * @return the truncated string.
    */
-  protected String truncate(final Graphics2D g2, final String text, final int width) {
+  protected String truncate(final GraphicsContext gc, final String text, final int width) {
     return text;
   }
 

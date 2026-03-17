@@ -9,8 +9,9 @@ import classDiagram.components.SimpleEntity;
 import classDiagram.components.Visibility;
 import graphic.GraphicView;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
+import javafx.event.ActionEvent;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 
 /**
  * Represent the view of a class in UML structure.
@@ -53,8 +54,8 @@ public class ClassView extends SimpleEntityView {
   }
 
   @Override
-  protected void initializeMenuItemsAddElements(JPopupMenu popupmenu) {
-    popupMenu.add(makeMenuItem("Add constructor", ACTION_ADD_CONSTRUCTOR, "constructor"));
+  protected void initializeMenuItemsAddElements(ContextMenu popupmenu) {
+    popupMenu.getItems().add(makeMenuItem("Add constructor", ACTION_ADD_CONSTRUCTOR, "constructor"));
     super.initializeMenuItemsAddElements(popupmenu);
   }
 
@@ -72,7 +73,8 @@ public class ClassView extends SimpleEntityView {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (e.getActionCommand().equals(ACTION_ADD_CONSTRUCTOR))
+    String cmd = (e.getSource() instanceof MenuItem) ? ((MenuItem)e.getSource()).getId() : "";
+    if (cmd.equals(ACTION_ADD_CONSTRUCTOR))
       addConstructor();
     else
       super.actionPerformed(e);

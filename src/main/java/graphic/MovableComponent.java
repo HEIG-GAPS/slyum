@@ -6,9 +6,12 @@ import change.BufferFirstCreation;
 import change.Change;
 import graphic.entity.GripEntity;
 import graphic.relations.LineView;
+import javafx.scene.input.MouseEvent;
+import utility.OSValidator;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.Rectangle;
 
 /**
  * This graphic class represant all movable and resizable component with a ghost representation. A ghost representation
@@ -20,6 +23,11 @@ import java.awt.event.MouseEvent;
  */
 public abstract class MovableComponent extends GraphicComponent {
   public static final Point MINIMUM_SIZE = new Point(50, 50);
+
+  /** Replicates {@code GraphicView.isAddToSelection} for JavaFX MouseEvent. */
+  private static boolean isAddToSelection(MouseEvent e) {
+    return OSValidator.IS_MAC ? e.isMetaDown() : e.isControlDown() || e.isShiftDown();
+  }
 
   protected Rectangle ghost = new Rectangle();
   private boolean justSelected = false;
@@ -137,7 +145,7 @@ public abstract class MovableComponent extends GraphicComponent {
   public void gMouseClicked(MouseEvent e) {
     super.gMouseClicked(e);
 
-    if (!GraphicView.isAddToSelection(e)) {
+    if (!isAddToSelection(e)) {
       parent.unselectAll();
       setSelected(true);
     } else {
@@ -151,7 +159,7 @@ public abstract class MovableComponent extends GraphicComponent {
 
     int selectedComponentSize = parent.countSelectedEntities();
     if (e.isControlDown() && selectedComponentSize > 0)
-      new StyleCross(parent, e.getPoint(), selectedComponentSize);
+      new StyleCross(parent, new Point((int) e.getX(), (int) e.getY()), selectedComponentSize);
   }
 
   @Override
@@ -183,7 +191,7 @@ public abstract class MovableComponent extends GraphicComponent {
     super.gMousePressed(e);
 
     if (!parent.getSelectedComponents().contains(this)
-        && !GraphicView.isAddToSelection(e)) parent.unselectAll();
+        && !isAddToSelection(e)) parent.unselectAll();
 
     if (!isSelected()) { // Select the component, see doc for know how component
       // are selected.
@@ -224,8 +232,8 @@ public abstract class MovableComponent extends GraphicComponent {
 
     // Compute the ghost position from the buffered mouse location and the
     // current mouse location.
-    ghost.x = ajustOnGrid(e.getX() - mousePressed.x) + ghost.x;
-    ghost.y = ajustOnGrid(e.getY() - mousePressed.y) + ghost.y;
+    ghost.x = ajustOnGrid((int) e.getX() - mousePressed.x) + ghost.x;
+    ghost.y = ajustOnGrid((int) e.getY() - mousePressed.y) + ghost.y;
 
     // Can't go out of scene bounds.
     if (ghost.x < 0) ghost.x = 0;
@@ -248,7 +256,7 @@ public abstract class MovableComponent extends GraphicComponent {
     ghost = new Rectangle(getBounds());
     final Rectangle boundsResizer = leftMovableSquare.getBounds();
 
-    boundsResizer.x += e.getX() - leftMovableSquare.getMousePressed().x;
+    boundsResizer.x += (int) e.getX() - leftMovableSquare.getMousePressed().x;
     leftMovableSquare.saveMouseLocation(e);
     leftMovableSquare.setBounds(boundsResizer);
 
@@ -281,7 +289,7 @@ public abstract class MovableComponent extends GraphicComponent {
     ghost = new Rectangle(getBounds());
     final Rectangle boundsResizer = rightMovableSquare.getBounds();
 
-    boundsResizer.x += e.getX() - rightMovableSquare.getMousePressed().x;
+    boundsResizer.x += (int) e.getX() - rightMovableSquare.getMousePressed().x;
     rightMovableSquare.saveMouseLocation(e);
     rightMovableSquare.setBounds(boundsResizer);
 

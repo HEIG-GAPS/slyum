@@ -351,13 +351,13 @@ public class HierarchicalView
    */
   public void addAssociation(Association component, String imgPath) {
     addNode(new NodeAssociation(component, treeModel,
-                                PersonalizedIcon.createImageIcon(imgPath), tree), associationsNode);
+                                PersonalizedIcon.createSwingImageIcon(imgPath), tree), associationsNode);
   }
 
   public void addAssociationClass(AssociationClass component) {
     addNode(new NodeSimpleEntity(component, treeModel, tree,
                                  PersonalizedIcon
-                                     .createImageIcon("classAssoc.png")),
+                                     .createSwingImageIcon("classAssoc.png")),
             entitiesNode);
   }
 
@@ -367,7 +367,7 @@ public class HierarchicalView
 
   public void addClassEntity(ClassEntity component) {
     addNode(new NodeSimpleEntity(component, treeModel, tree,
-                                 PersonalizedIcon.createImageIcon("class.png")),
+                                 PersonalizedIcon.createSwingImageIcon("class.png")),
             entitiesNode);
   }
 
@@ -381,7 +381,7 @@ public class HierarchicalView
 
   public void addEnumEntity(EnumEntity component) {
     addNode(new NodeEnumEntity(component, treeModel, tree,
-                               PersonalizedIcon.createImageIcon("enum.png")),
+                               PersonalizedIcon.createSwingImageIcon("enum.png")),
             entitiesNode);
   }
 
@@ -396,7 +396,7 @@ public class HierarchicalView
 
   public void addInterfaceEntity(InterfaceEntity component) {
     addNode(new NodeSimpleEntity(component, treeModel, tree, PersonalizedIcon
-                .createImageIcon(Slyum.ICON_PATH + "interface.png")),
+                .createSwingImageIcon(Slyum.ICON_PATH + "interface.png")),
             entitiesNode);
   }
 

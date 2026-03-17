@@ -22,7 +22,6 @@ import swing.hierarchicalView.HierarchicalView;
 import swing.propretiesView.DiagramPropreties;
 import swing.propretiesView.PropretiesChanger;
 import swing.slyumCustomizedComponents.SSplitPane;
-import utility.MultiBorderLayout;
 import utility.SMessageDialog;
 import utility.Utility;
 import utility.WatchDir;
@@ -109,7 +108,7 @@ public class PanelClassDiagram extends JPanel {
   private boolean xmlImportation = false;
 
   private PanelClassDiagram() {
-    super(new MultiBorderLayout());
+    super(new java.awt.BorderLayout());
 
     // Customize style.
     setBackground(Slyum.DEFAULT_BACKGROUND);
@@ -738,11 +737,11 @@ public class PanelClassDiagram extends JPanel {
   private void _refresh() {
     if (fileChanged == StandardWatchEventKinds.ENTRY_MODIFY) {
       if (SMessageDialog.showQuestionMessageYesNo(
-          "The file has been modified by another program.\n" + "Do you want to reload it?", PanelClassDiagram.this) ==
+          "The file has been modified by another program.\n" + "Do you want to reload it?") ==
           JOptionPane.YES_OPTION) openFromXML(currentFile);
     } else if (fileChanged == StandardWatchEventKinds.ENTRY_DELETE) {
       if (SMessageDialog.showQuestionMessageYesNo(
-          "The file has been deleted by another program.\n" + "Do you want to close it?", PanelClassDiagram.this) ==
+          "The file has been deleted by another program.\n" + "Do you want to close it?") ==
           JOptionPane.YES_OPTION) newProject();
     }
 

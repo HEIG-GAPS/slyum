@@ -67,16 +67,17 @@ import javax.print.attribute.standard.MediaSize;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.ActionEvent;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
+import javafx.event.ActionEvent;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -101,11 +102,7 @@ import java.util.logging.Level;
  * @version 1.0 - 25.07.2011
  */
 public class GraphicView extends GraphicComponent
-    implements MouseMotionListener,
-    MouseListener,
-    KeyListener,
-    MouseWheelListener,
-    IComponentsObserver,
+    implements IComponentsObserver,
     INameObserver,
     Printable,
     ColoredComponent,
@@ -137,7 +134,7 @@ public class GraphicView extends GraphicComponent
    * @param e the mouse event
    */
   public static void computeComponentEventEnter(
-      GraphicComponent component, GraphicComponent componentMouseHover, MouseEvent e) {
+      GraphicComponent component, GraphicComponent componentMouseHover, javafx.scene.input.MouseEvent e) {
     if (component != componentMouseHover) {
       if (componentMouseHover != null) componentMouseHover.gMouseExited(e);
 
@@ -315,7 +312,7 @@ public class GraphicView extends GraphicComponent
     return SPanelDiagramComponent.getInstance().getMode() == Mode.GRIP;
   }
 
-  public static boolean isAddToSelection(MouseEvent e) {
+  public static boolean isAddToSelection(javafx.scene.input.MouseEvent e) {
     return OSValidator.IS_MAC ? e.isMetaDown() : e.isControlDown() || e.isShiftDown();
   }
 
@@ -464,6 +461,8 @@ public class GraphicView extends GraphicComponent
   // last component mouse hovered
   private GraphicComponent saveComponentMouseHover;
   private final JPanel scene;
+  /** Off-screen JavaFX canvas used to render the diagram into the Swing panel. */
+  private Canvas offscreenCanvas;
 
   private final JScrollPane scrollPane;
   private boolean stopRepaint = false;
@@ -524,7 +523,20 @@ public class GraphicView extends GraphicComponent
       public void paintComponent(Graphics g) {
         updatePreferredSize(); // for scrolling
         super.paintComponent(g);
-        paintScene((Graphics2D) g);
+        int w = Math.max(getWidth(), 1);
+        int h = Math.max(getHeight(), 1);
+        if (offscreenCanvas == null
+            || (int) offscreenCanvas.getWidth() != w
+            || (int) offscreenCanvas.getHeight() != h) {
+          offscreenCanvas = new Canvas(w, h);
+        }
+        GraphicsContext gc = offscreenCanvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, w, h);
+        paintScene(gc);
+        WritableImage fxImage = new WritableImage(w, h);
+        offscreenCanvas.snapshot(null, fxImage);
+        BufferedImage bimg = SwingFXUtils.fromFXImage(fxImage, null);
+        g.drawImage(bimg, 0, 0, null);
       }
 
       @Override
@@ -585,77 +597,76 @@ public class GraphicView extends GraphicComponent
     scrollPane.getHorizontalScrollBar().addAdjustmentListener(listnener);
     scrollPane.getVerticalScrollBar().addAdjustmentListener(listnener);
 
-    scene.addMouseWheelListener(this);
-    scene.addKeyListener(this);
-    scene.addMouseMotionListener(this);
-    scene.addMouseListener(this);
     saveComponentMouseHover = this;
     classDiagram.addComponentsObserver(this);
 
-    setColor(getBasicColor());
+    java.awt.Color basicAwtColor = getBasicColor();
+    setColor(javafx.scene.paint.Color.rgb(
+        basicAwtColor.getRed(), basicAwtColor.getGreen(),
+        basicAwtColor.getBlue(), basicAwtColor.getAlpha() / 255.0));
 
-    JMenuItem menuItem;
+    MenuItem menuItem;
 
     // Menu item add class
     menuItem = makeMenuItem("Add Class", Slyum.ACTION_NEW_CLASS, "class");
-    popupMenu.add(menuItem);
+    popupMenu.getItems().add(menuItem);
 
     // Menu item add interface
     menuItem = makeMenuItem("Add Interface", Slyum.ACTION_NEW_INTERFACE,
                             "interface");
-    popupMenu.add(menuItem);
+    popupMenu.getItems().add(menuItem);
 
     // Menu item add class association
     menuItem = makeMenuItem("Add Association class",
                             Slyum.ACTION_NEW_CLASS_ASSOCIATION, "classAssoc");
-    popupMenu.add(menuItem);
+    popupMenu.getItems().add(menuItem);
 
-    popupMenu.addSeparator();
+    popupMenu.getItems().add(new SeparatorMenuItem());
 
     // Menu item add generalize
     menuItem = makeMenuItem("Add Inheritance", Slyum.ACTION_NEW_GENERALIZE,
                             "generalize");
-    popupMenu.add(menuItem);
+    popupMenu.getItems().add(menuItem);
 
     // Menu item add inner class
     menuItem = makeMenuItem("Add inner class", Slyum.ACTION_NEW_INNER_CLASS,
                             "innerClass");
-    popupMenu.add(menuItem);
+    popupMenu.getItems().add(menuItem);
 
     // Menu item add dependency
     menuItem = makeMenuItem("Add Dependency", Slyum.ACTION_NEW_DEPENDENCY,
                             "dependency");
-    popupMenu.add(menuItem);
+    popupMenu.getItems().add(menuItem);
 
     // Menu item add association
     menuItem = makeMenuItem("Add Association", Slyum.ACTION_NEW_ASSOCIATION,
                             "association");
-    popupMenu.add(menuItem);
+    popupMenu.getItems().add(menuItem);
 
     // Menu item add aggregation
     menuItem = makeMenuItem("Add Aggregation", Slyum.ACTION_NEW_AGGREGATION,
                             "aggregation");
-    popupMenu.add(menuItem);
+    popupMenu.getItems().add(menuItem);
 
     // Menu item add composition
     menuItem = makeMenuItem("Add Composition", Slyum.ACTION_NEW_COMPOSITION,
                             "composition");
-    popupMenu.add(menuItem);
+    popupMenu.getItems().add(menuItem);
 
     // Menu item add composition
     menuItem = makeMenuItem("Add Multi-association", Slyum.ACTION_NEW_MULTI,
                             "multi");
-    popupMenu.add(menuItem);
+    popupMenu.getItems().add(menuItem);
 
-    popupMenu.addSeparator();
+    popupMenu.getItems().add(new SeparatorMenuItem());
 
     // Menu item add note
     menuItem = makeMenuItem("Add Note", Slyum.ACTION_NEW_NOTE, "note");
-    popupMenu.add(menuItem);
+    popupMenu.getItems().add(menuItem);
 
     // Menu item link note
     menuItem = makeMenuItem("Link Note", Slyum.ACTION_NEW_LINK_NOTE, "linkNote");
-    popupMenu.add(menuItem);
+    popupMenu.getItems().add(menuItem);
 
     addSPanelListener();
 
@@ -666,18 +677,24 @@ public class GraphicView extends GraphicComponent
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if ("Color".equals(e.getActionCommand())) {
+    String actionCommand = (e.getSource() instanceof MenuItem)
+        ? ((MenuItem) e.getSource()).getId() : null;
+    if ("Color".equals(actionCommand)) {
       SColorAssigner ca = new SColorAssigner();
-      if (ca.isAccepted())
+      if (ca.isAccepted()) {
+        java.awt.Color awtColor = ca.getColor();
+        javafx.scene.paint.Color fxColor = javafx.scene.paint.Color.rgb(
+            awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue(), awtColor.getAlpha() / 255.0);
         if (ca.isDefaultColor())
           setDefaultColorForComponents(this);
         else
-          setColorForComponents(ca.getColor(), this);
+          setColorForComponents(fxColor, this);
+      }
     } else {
       super.actionPerformed(e);
     }
-
-    Slyum.getInstance().actionPerformed(e);
+    // TODO: delegate to Slyum once Slyum.actionPerformed is migrated to javafx.event.ActionEvent
+    // Slyum.getInstance().actionPerformed(e);
   }
 
   public void adaptDiagramToWindow() {
@@ -1090,11 +1107,16 @@ public class GraphicView extends GraphicComponent
    */
   public void changeColorForSelectedItems() {
     SColorAssigner ca = new SColorAssigner();
-    if (ca.isAccepted())
-      if (ca.isDefaultColor())
+    if (ca.isAccepted()) {
+      if (ca.isDefaultColor()) {
         setDefaultColorForSelectedItems();
-      else
-        setColorForSelectedItems(ca.getColor());
+      } else {
+        java.awt.Color awtColor = ca.getColor();
+        javafx.scene.paint.Color fxColor = javafx.scene.paint.Color.rgb(
+            awtColor.getRed(), awtColor.getGreen(), awtColor.getBlue(), awtColor.getAlpha() / 255.0);
+        setColorForSelectedItems(fxColor);
+      }
+    }
   }
 
   public void changeComponentsColor(ObtainColor o, ColoredComponent... components) {
@@ -1187,8 +1209,7 @@ public class GraphicView extends GraphicComponent
   }
 
   public void copyDiagramToClipboard() {
-    Toolkit.getDefaultToolkit().getSystemClipboard()
-           .setContents(new Utility.ImageSelection(getSelectedScreen()), null);
+    // TODO: migrate to JavaFX - getSelectedScreen() is stubbed pending full migration
   }
 
   public int countEntities(
@@ -1326,8 +1347,8 @@ public class GraphicView extends GraphicComponent
 
   @Override
   public void gMouseDragged(MouseEvent e) {
-    if (mouseButton == MouseEvent.BUTTON1)
-      redrawRubberBand(mousePressedLocation, e.getPoint());
+    if (mouseButton == 1)
+      redrawRubberBand(mousePressedLocation, new Point((int)e.getX(), (int)e.getY()));
   }
 
   @Override
@@ -1335,12 +1356,12 @@ public class GraphicView extends GraphicComponent
     super.gMousePressed(e);
 
     switch (mouseButton) {
-      case MouseEvent.BUTTON1:
+      case 1:
         scene.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
         if (!isAddToSelection(e)) unselectAll();
         break;
 
-      case MouseEvent.BUTTON2:
+      case 2:
         scene.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
         break;
     }
@@ -1352,8 +1373,8 @@ public class GraphicView extends GraphicComponent
     clearRubberBand();
     final int nbrComponentSelected = countSelectedEntities();
 
-    if (nbrComponentSelected > 0 && e.getButton() == MouseEvent.BUTTON1)
-      new StyleCross(this, e.getPoint(), nbrComponentSelected);
+    if (nbrComponentSelected > 0 && e.getButton() == MouseButton.PRIMARY)
+      new StyleCross(this, new Point((int)e.getX(), (int)e.getY()), nbrComponentSelected);
 
     scene.setCursor(Cursor.getDefaultCursor());
   }
@@ -1441,18 +1462,20 @@ public class GraphicView extends GraphicComponent
   }
 
   @Override
-  public Color getColor() {
-    return getBasicColor();
+  public javafx.scene.paint.Color getColor() {
+    java.awt.Color c = getBasicColor();
+    return javafx.scene.paint.Color.rgb(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha() / 255.0);
   }
 
   @Override
-  public void setColor(Color color) {
-    setBasicColor(color);
-
+  public void setColor(javafx.scene.paint.Color color) {
+    setBasicColor(new java.awt.Color(
+        (float) color.getRed(), (float) color.getGreen(),
+        (float) color.getBlue(), (float) color.getOpacity()));
     repaint();
   }
 
-  public void setColorForSelectedItems(final Color color) {
+  public void setColorForSelectedItems(final javafx.scene.paint.Color color) {
     setColorForComponents(color, getSelectedColoredComponents());
   }
 
@@ -1540,14 +1563,16 @@ public class GraphicView extends GraphicComponent
   }
 
   @Override
-  public Color getDefaultColor() {
-    return BASIC_COLOR;
+  public javafx.scene.paint.Color getDefaultColor() {
+    return javafx.scene.paint.Color.rgb(
+        BASIC_COLOR.getRed(), BASIC_COLOR.getGreen(),
+        BASIC_COLOR.getBlue(), BASIC_COLOR.getAlpha() / 255.0);
   }
 
   public void setDefaultColorForComponents(ColoredComponent... components) {
     changeComponentsColor(new ObtainColor() {
       @Override
-      public Color getColor(ColoredComponent c) {
+      public javafx.scene.paint.Color getColor(ColoredComponent c) {
         return c.getDefaultColor();
       }
     }, components);
@@ -1727,96 +1752,8 @@ public class GraphicView extends GraphicComponent
    * @return a picture representing the scene
    */
   public BufferedImage getScreen(int type, boolean displayName) {
-
-    setPictureMode(true);
-
-    final int margin = 20;
-    int marginTop = margin;
-
-    if (displayName)
-      marginTop += txtBoxDiagramName.getBounds().height;
-
-    int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxX = 0, maxY = 0;
-    final LinkedList<GraphicComponent> components = getAllDiagramComponents();
-
-    if (components.size() == 0)
-      return null;
-
-    // Compute the rectangle englobing all graphic components.
-    for (final GraphicComponent c : components) {
-      final Rectangle bounds = c.getBounds();
-      final Point max = new Point(bounds.x + bounds.width, bounds.y
-                                                           + bounds.height);
-
-      if (minX > bounds.x) minX = bounds.x;
-      if (minY > bounds.y) minY = bounds.y;
-      if (maxX < max.x) maxX = max.x;
-      if (maxY < max.y) maxY = max.y;
-    }
-
-    final Rectangle bounds = new Rectangle(minX, minY, maxX - minX, maxY - minY);
-
-    // Create the buffered image with margin.
-    final BufferedImage img = new BufferedImage(bounds.width + margin * 2,
-                                                bounds.height + margin + marginTop, type);
-    final Graphics2D g2 = img.createGraphics();
-    Utility.setRenderQuality(g2);
-
-    // Translate the rectangle containing all graphic components at origin.
-    g2.translate(-bounds.x + margin, -bounds.y + marginTop);
-
-    if (type == BufferedImage.TYPE_INT_RGB) {
-      g2.setColor(Color.WHITE);
-      g2.fillRect(bounds.x - margin, bounds.y - margin, bounds.width + margin
-                                                                       * 2, bounds.height + margin + marginTop);
-    }
-    // Paint all components on picture.
-    for (final GraphicComponent c : components)
-      c.paintComponent(g2);
-
-    // Paint diagram's name
-    if (displayName) {
-      g2.translate(-margin, -marginTop);
-      txtBoxDiagramName.paintComponentAt(g2, new Point(minX, minY));
-
-      if (isTitleBorderPainted()) {
-        g2.setStroke(new BasicStroke(DEFAULT_TITLE_BORDER_WIDTH));
-        g2.draw(new Rectangle2D.Float(
-            minX,
-            minY,
-            img.getWidth() - DEFAULT_TITLE_BORDER_WIDTH,
-            img.getHeight() - DEFAULT_TITLE_BORDER_WIDTH));
-      }
-    }
-
-    // Paint diagram's informations
-    if (Slyum.isDisplayedDiagramInformationOnExport()) {
-
-      final int WIDTH = 200;
-      final int HEIGHT = 100;
-
-      Rectangle informationsRectangle = new Rectangle(
-          img.getWidth() - DEFAULT_TITLE_BORDER_WIDTH - WIDTH,
-          img.getHeight() - DEFAULT_TITLE_BORDER_WIDTH - HEIGHT,
-          WIDTH, HEIGHT);
-
-      g2.setStroke(new BasicStroke(DEFAULT_TITLE_BORDER_WIDTH));
-      g2.setBackground(Color.WHITE);
-      g2.setColor(Color.BLACK);
-
-      g2.fillRect(informationsRectangle.x,
-                  informationsRectangle.y,
-                  informationsRectangle.width,
-                  informationsRectangle.height);
-
-      g2.drawRect(informationsRectangle.x,
-                  informationsRectangle.y,
-                  informationsRectangle.width,
-                  informationsRectangle.height);
-    }
-
-    setPictureMode(false);
-    return img;
+    // TODO: migrate to JavaFX WritableImage - paintComponent now requires GraphicsContext
+    return null;
   }
 
   /**
@@ -1874,43 +1811,8 @@ public class GraphicView extends GraphicComponent
    * @return a picture representing the scene
    */
   public BufferedImage getSelectedScreen() {
-    final int margin = 20;
-    int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxX = 0, maxY = 0;
-    final LinkedList<GraphicComponent> components = getSelectedComponents();
-
-    // Compute the rectangle englobing all selected graphic components.
-    for (final GraphicComponent c : components) {
-      final Rectangle bounds = c.getBounds();
-      final Point max = new Point(bounds.x + bounds.width, bounds.y
-                                                           + bounds.height);
-
-      if (minX > bounds.x) minX = bounds.x;
-      if (minY > bounds.y) minY = bounds.y;
-      if (maxX < max.x) maxX = max.x;
-      if (maxY < max.y) maxY = max.y;
-    }
-
-    Rectangle bounds = new Rectangle(minX, minY, maxX - minX, maxY - minY);
-
-    if (bounds.isEmpty()) return null;
-
-    // Create the buffered image with margin.
-    BufferedImage img = new BufferedImage(bounds.width + margin * 2,
-                                          bounds.height + margin * 2, BufferedImage.TYPE_INT_ARGB);
-    Graphics2D g2 = img.createGraphics();
-    Utility.setRenderQuality(g2);
-
-    // Translate the rectangle containing all graphic components at origin.
-    g2.translate(-bounds.x + margin, -bounds.y + margin);
-
-    setPictureMode(true);
-    // Paint all components on picture.
-    for (GraphicComponent c : getAllDiagramComponents())
-      c.paintComponent(g2);
-
-    setPictureMode(false);
-
-    return img;
+    // TODO: migrate to JavaFX WritableImage - paintComponent now requires GraphicsContext
+    return null;
   }
 
   public boolean getStopRepaint() {
@@ -2016,17 +1918,6 @@ public class GraphicView extends GraphicComponent
     return MultiViewManager.isGraphicViewOpened(this);
   }
 
-  @Override
-  public void keyPressed(KeyEvent e) {
-    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) unselectAll();
-  }
-
-  @Override
-  public void keyReleased(KeyEvent e) { }
-
-  @Override
-  public void keyTyped(KeyEvent e) { }
-
   public void linkNewNoteWithSelectedEntities() {
     setStopRepaint(true);
     LinkedList<GraphicComponent> e = getSelectedComponents();
@@ -2056,131 +1947,6 @@ public class GraphicView extends GraphicComponent
     if (!isRecord)
       Change.stopRecord();
     goRepaint();
-  }
-
-  @Override
-  public void mouseClicked(MouseEvent e) {
-    e = adapteMouseEvent(e);
-
-    GraphicComponent component;
-    if (justCreatedComponent != null) {
-      component = justCreatedComponent;
-      justCreatedComponent = null;
-    } else {
-      component = getComponentMouseHover(e.getPoint());
-    }
-
-    if (mouseButton != MouseEvent.BUTTON2 || component == this)
-      component.gMouseClicked(e);
-  }
-
-  @Override
-  public void mouseDragged(MouseEvent e) {
-    MouseEvent ea = adapteMouseEvent(e);
-    GraphicComponent component;
-    Rectangle newVisibleRect;
-
-    if (mouseButton == MouseEvent.BUTTON2) {
-      int dx = (int) (mousePressedLocation.x * getScale() - e.getX()), dy = (int) (mousePressedLocation.y
-                                                                                   * getScale() - e.getY());
-
-      visibleRect.translate(dx, dy);
-
-      newVisibleRect = new Rectangle(visibleRect);
-    } else
-      newVisibleRect = new Rectangle((int) ((double) ea.getX() * getScale()),
-                                     (int) ((double) ea.getY() * getScale()), 1, 1);
-
-    if (currentFactory != null)
-      component = currentFactory;
-    else
-      component = getComponentAtPosition(ea.getPoint());
-
-    computeComponentEventEnter(component, saveComponentMouseHover, ea);
-
-    if (componentMousePressed != null && mouseButton != MouseEvent.BUTTON2)
-      componentMousePressed.gMouseDragged(ea);
-
-    saveComponentMouseHover = component;
-
-    getScene().scrollRectToVisible(newVisibleRect);
-    visibleRect = getScene().getVisibleRect();
-  }
-
-  @Override
-  public void mouseEntered(MouseEvent e) {
-    // this event, in Slyum, is called manually when mouseMove is called.
-  }
-
-  @Override
-  public void mouseExited(MouseEvent e) {
-    // this event, in Slyum, is called manually when mouseMove is called.
-  }
-
-  @Override
-  public void mouseMoved(MouseEvent e) {
-    e = adapteMouseEvent(e);
-    GraphicComponent component;
-
-    if (currentFactory != null)
-      component = currentFactory;
-    else
-      component = getComponentAtPosition(e.getPoint());
-
-    // Compute mouseEntered and mouseExited event.
-    computeComponentEventEnter(component, saveComponentMouseHover, e);
-
-    component.gMouseMoved(e);
-
-    // Save the last component mouse hovered. Useful for compute
-    // mouseEntered and mouseExited event.
-    saveComponentMouseHover = component;
-  }
-
-  @Override
-  public void mousePressed(MouseEvent e) {
-    scene.requestFocusInWindow(); // get the focus
-    mouseButton = e.getButton();
-
-    e = adapteMouseEvent(e);
-    mousePressedLocation = e.getPoint();
-    visibleRect = getScene().getVisibleRect();
-    mousePressedLocation = e.getPoint();
-
-    // Save the last component mouse pressed.
-    componentMousePressed = getComponentMouseHover(e.getPoint());
-
-    if (e.getButton() != MouseEvent.BUTTON2 || componentMousePressed == this)
-      componentMousePressed.gMousePressed(e);
-    else
-      unselectAll();
-  }
-
-  @Override
-  public void mouseReleased(MouseEvent e) {
-    e = adapteMouseEvent(e);
-
-    if (componentMousePressed != null && mouseButton != MouseEvent.BUTTON2)
-      componentMousePressed.gMouseReleased(e);
-
-    getScene().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-  }
-
-  @Override
-  public void mouseWheelMoved(final MouseWheelEvent e) {
-    if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
-
-      boolean ctrlDown = OSValidator.IS_MAC ? e.isMetaDown() : e.isControlDown();
-      if (ctrlDown) {
-        if (e.getWheelRotation() < 0) {
-          backScale();
-        } else {
-          forwardScale();
-        }
-      } else {
-        scrollPane.dispatchEvent(e);
-      }
-    }
   }
 
   public void moveZOrderBottomSelectedEntities() {
@@ -2314,49 +2080,53 @@ public class GraphicView extends GraphicComponent
   }
 
   @Override
-  public void paintComponent(Graphics2D g2) {
-    paintScene(g2);
+  public void paintComponent(GraphicsContext gc) {
+    paintScene(gc);
   }
 
   /**
    * Paint the scene. Same has paintComponent, but different name because paintComponent is already use by the parent
    * GraphicComponent.
    *
-   * @param g2 the graphic context
+   * @param gc the graphic context
    */
-  public void paintScene(final Graphics2D g2) {
+  public void paintScene(final GraphicsContext gc) {
     int gridSize = getGridSize();
 
     // Paint background.
-    paintBackground(gridSize, getBasicColor(), g2);
+    paintBackground(gridSize, getBasicColor(), gc);
 
     if (!isVisible()) return;
 
-    Utility.setRenderQuality(g2);
+    Utility.setRenderQuality(gc);
 
     double scale = getScale(), inversedScale = getInversedScale();
-    g2.scale(scale, scale);
+    gc.save();
+    gc.scale(scale, scale);
 
     // Paint components
     for (GraphicComponent c : getAllComponents())
-      c.paintComponent(g2);
+      c.paintComponent(gc);
 
     for (GraphicComponent c : getSelectedComponents())
-      c.drawSelectedEffect(g2);
+      c.drawSelectedEffect(gc);
 
-    if (currentFactory != null) currentFactory.paintComponent(g2);
+    if (currentFactory != null) currentFactory.paintComponent(gc);
 
     // Paint rubberBand
     final int grayLevel = Utility.getColorGrayLevel(getColor());
-    final Color rubberBandColor = new Color(grayLevel, grayLevel, grayLevel);
+    final javafx.scene.paint.Color rubberBandColor =
+        javafx.scene.paint.Color.rgb(grayLevel, grayLevel, grayLevel);
 
-    paintRubberBand(rubberBand, isAutomatiqueGridColor() ? rubberBandColor
-        : new Color(getGridColor()), g2);
+    java.awt.Color awtGridColor = new java.awt.Color(getGridColor());
+    javafx.scene.paint.Color gridColorFx = javafx.scene.paint.Color.rgb(
+        awtGridColor.getRed(), awtGridColor.getGreen(), awtGridColor.getBlue());
+    paintRubberBand(rubberBand, isAutomatiqueGridColor() ? rubberBandColor : gridColorFx, gc);
 
-    g2.scale(inversedScale, inversedScale);
+    gc.restore();
 
     if (getPaintBackgroundLast())
-      paintBackground(gridSize, getBasicColor(), g2);
+      paintBackground(gridSize, getBasicColor(), gc);
   }
 
   @Override
@@ -2364,8 +2134,6 @@ public class GraphicView extends GraphicComponent
 
     if (pageIndex >= MAX_PRINT_PAGE)
       return NO_SUCH_PAGE;
-
-    Utility.setRenderQuality(g);
 
     BufferedImage m_bi = ExportViewImage.create(this).export();
     int wPage = (int) pageFormat.getImageableWidth(),
@@ -2502,10 +2270,10 @@ public class GraphicView extends GraphicComponent
     gc.notifyObservers();
   }
 
-  public void setColorForComponents(final Color color, ColoredComponent... components) {
+  public void setColorForComponents(final javafx.scene.paint.Color color, ColoredComponent... components) {
     changeComponentsColor(new ObtainColor() {
       @Override
-      public Color getColor(ColoredComponent c) {
+      public javafx.scene.paint.Color getColor(ColoredComponent c) {
         return color;
       }
     }, components);
@@ -2644,14 +2412,6 @@ public class GraphicView extends GraphicComponent
     return getName();
   }
 
-  protected MouseEvent adapteMouseEvent(MouseEvent e) {
-    return new MouseEvent(e.getComponent(), e.getID(), e.getWhen(),
-                          e.getModifiersEx(), (int) (e.getX() * getInversedScale()),
-                          (int) (e.getY() * getInversedScale()), e.getXOnScreen(),
-                          e.getYOnScreen(), e.getClickCount(), e.isPopupTrigger(),
-                          e.getButton());
-  }
-
   @Override
   protected boolean displayGeneralMenuItems() {
     return false;
@@ -2662,47 +2422,47 @@ public class GraphicView extends GraphicComponent
    *
    * @param gridSize space between point. 0 for no grid.
    * @param color the background-color.
-   * @param g2 the {@link Graphics2D}.
+   * @param gc the {@link GraphicsContext}.
    */
-  protected void paintBackground(final int gridSize, final Color color, final Graphics2D g2) {
-    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_OFF);
+  protected void paintBackground(final int gridSize, final java.awt.Color color, final GraphicsContext gc) {
+    javafx.scene.paint.Color fxColor = javafx.scene.paint.Color.rgb(
+        color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() / 255.0);
 
     Rectangle vr = getScene().getVisibleRect();
     boolean gradient = isBackgroundGradient();
 
-    // Paint a gradient from top to bottom.
-    if (gradient)
-      g2.setPaint(new GradientPaint(0, 0, color, 0, scene.getHeight(), color
-          .brighter()));
-    else
-      g2.setColor(color);
-
-    g2.fillRect(vr.x, vr.y, vr.width, vr.height);
+    if (gradient) {
+      // TODO: implement gradient with javafx.scene.paint.LinearGradient once fully migrated
+      gc.setFill(fxColor);
+    } else {
+      gc.setFill(fxColor);
+    }
+    gc.fillRect(vr.x, vr.y, vr.width, vr.height);
 
     // Draw grid
     if (isVisible() && isGridEnable() && isGridVisible() && getGridSize() >= 10) {
-
       final int grayLevel = Utility.getColorGrayLevel(getColor());
-      Color gridColor = new Color(getGridColor());
+      java.awt.Color awtGridColor = new java.awt.Color(getGridColor());
+      javafx.scene.paint.Color gridColor;
 
       if (isAutomatiqueGridColor())
-        gridColor = new Color(grayLevel, grayLevel, grayLevel, getGridOpacity());
+        gridColor = javafx.scene.paint.Color.rgb(grayLevel, grayLevel, grayLevel,
+            getGridOpacity() / 255.0);
       else
-        gridColor = new Color(gridColor.getRed(), gridColor.getGreen(),
-                              gridColor.getBlue(), getGridOpacity());
+        gridColor = javafx.scene.paint.Color.rgb(
+            awtGridColor.getRed(), awtGridColor.getGreen(),
+            awtGridColor.getBlue(), getGridOpacity() / 255.0);
 
-      g2.setColor(gridColor);
+      gc.setStroke(gridColor);
+      gc.setLineWidth(1.0);
 
       double gridSizeScale = gridSize * getScale();
 
-      for (double x = (int) (vr.x / gridSizeScale) * gridSizeScale; x < vr.x
-                                                                        + vr.width + gridSizeScale; x += gridSizeScale)
-        for (double y = (int) (vr.y / gridSizeScale) * gridSizeScale; y < vr.y
-                                                                          +
-                                                                          vr.height +
-                                                                          gridSizeScale; y += gridSizeScale)
-          g2.draw(new Line2D.Double(x, y, x, y));
+      for (double x = (int) (vr.x / gridSizeScale) * gridSizeScale;
+           x < vr.x + vr.width + gridSizeScale; x += gridSizeScale)
+        for (double y = (int) (vr.y / gridSizeScale) * gridSizeScale;
+             y < vr.y + vr.height + gridSizeScale; y += gridSizeScale)
+          gc.strokeLine(x, y, x, y);
     }
   }
 
@@ -2711,21 +2471,19 @@ public class GraphicView extends GraphicComponent
    *
    * @param rubberBand the bounds of the rubber band
    * @param color the color of the rubber band
-   * @param g2 the graphic context
+   * @param gc the graphic context
    */
-  protected void paintRubberBand(Rectangle rubberBand, Color color, Graphics2D g2) {
-    final Color transparentColor = new Color(color.getRed(), color.getGreen(),
-                                             color.getBlue(), 50);
+  protected void paintRubberBand(Rectangle rubberBand, javafx.scene.paint.Color color, GraphicsContext gc) {
+    javafx.scene.paint.Color transparentColor = new javafx.scene.paint.Color(
+        color.getRed(), color.getGreen(), color.getBlue(), 50.0 / 255.0);
 
-    final BasicStroke dashed = new BasicStroke(1.2f, BasicStroke.CAP_BUTT,
-                                               BasicStroke.JOIN_MITER);
-
-    g2.setStroke(dashed);
-    g2.setColor(transparentColor);
-    g2.fillRect(rubberBand.x, rubberBand.y, rubberBand.width, rubberBand.height);
-
-    g2.setColor(color);
-    g2.drawRect(rubberBand.x, rubberBand.y, rubberBand.width, rubberBand.height);
+    gc.setLineDashes(4.0);
+    gc.setLineWidth(1.2);
+    gc.setFill(transparentColor);
+    gc.fillRect(rubberBand.x, rubberBand.y, rubberBand.width, rubberBand.height);
+    gc.setStroke(color);
+    gc.strokeRect(rubberBand.x, rubberBand.y, rubberBand.width, rubberBand.height);
+    gc.setLineDashes(0);
   }
 
   /**
@@ -2879,7 +2637,7 @@ public class GraphicView extends GraphicComponent
   }
 
   public interface ObtainColor {
-    public Color getColor(ColoredComponent c);
+    public javafx.scene.paint.Color getColor(ColoredComponent c);
 
   }
 

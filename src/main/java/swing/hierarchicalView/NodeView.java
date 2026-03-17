@@ -33,7 +33,7 @@ public class NodeView
     // Menu item open
     JMenuItem item = new JMenuItem(
         "Open",
-        PersonalizedIcon.createImageIcon("element-view-open.png"));
+        PersonalizedIcon.createSwingImageIcon("element-view-open.png"));
 
     item.setEnabled(graphicView != MultiViewManager.getRootGraphicView());
     item.addActionListener(new ActionListener() {
@@ -48,7 +48,7 @@ public class NodeView
     // Menu item rename
     item = new JMenuItem(
         "Rename",
-        PersonalizedIcon.createImageIcon("element-view-open.png"));
+        PersonalizedIcon.createSwingImageIcon("element-view-open.png"));
 
     item.addActionListener(new ActionListener() {
 
@@ -73,7 +73,7 @@ public class NodeView
     // Menu item delete
     item = new JMenuItem(
         "Delete",
-        PersonalizedIcon.createImageIcon("delete.png"));
+        PersonalizedIcon.createSwingImageIcon("delete.png"));
 
     item.setEnabled(graphicView != MultiViewManager.getRootGraphicView());
     item.addActionListener(new ActionListener() {
@@ -88,7 +88,7 @@ public class NodeView
 
   @Override
   public ImageIcon getCustomizedIcon() {
-    return PersonalizedIcon.createImageIcon("element-view.png");
+    return PersonalizedIcon.createSwingImageIcon("element-view.png");
   }
 
   public GraphicView getGraphicView() {

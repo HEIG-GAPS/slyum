@@ -709,7 +709,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
       btnRemoveParameters, btnRightParameters, btnLeftParameters,
       btnAddMethodForInterface;
   private JCheckBox checkBoxAbstract = new SCheckBox("Abstract");
-  private JComboBox<String> comboBox = Utility.getVisibilityComboBox();
+  private javax.swing.JComboBox<String> comboBox = Utility.getVisibilityJComboBox();
   private JLabel imgMethodSelected, imgNoParameter;
   private JPanel panelParameters, panelAddMethodForClass;
   private JScrollPane scrollPaneParameters;
@@ -719,37 +719,37 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
     // Buttons for attributes.
     btnUpAttribute = new SButton(
-        PersonalizedIcon.createImageIcon("arrow-up-24.png"), "Up");
+        PersonalizedIcon.createSwingImageIcon("arrow-up-24.png"), "Up");
     btnDownAttribute = new SButton(
-        PersonalizedIcon.createImageIcon("arrow-down-24.png"), "Down");
+        PersonalizedIcon.createSwingImageIcon("arrow-down-24.png"), "Down");
     btnRemoveAttribute = new SButton(
-        PersonalizedIcon.createImageIcon("minus.png"), "Remove");
+        PersonalizedIcon.createSwingImageIcon("minus.png"), "Remove");
 
     // Buttons fo methods.
     btnUpMethod = new SButton(
-        PersonalizedIcon.createImageIcon("arrow-up-24.png"), "Up");
+        PersonalizedIcon.createSwingImageIcon("arrow-up-24.png"), "Up");
     btnDownMethod = new SButton(
-        PersonalizedIcon.createImageIcon("arrow-down-24.png"), "Down");
+        PersonalizedIcon.createSwingImageIcon("arrow-down-24.png"), "Down");
     btnRemoveMethod = new SButton(
-        PersonalizedIcon.createImageIcon("minus.png"), "Remove");
+        PersonalizedIcon.createSwingImageIcon("minus.png"), "Remove");
 
     // Buttons for parameters. 
     btnAddParameters = new SButton(
-        PersonalizedIcon.createImageIcon("plus.png"), "Add");
+        PersonalizedIcon.createSwingImageIcon("plus.png"), "Add");
     btnLeftParameters = new SButton(
-        PersonalizedIcon.createImageIcon("arrow-left-24.png"), "Left");
+        PersonalizedIcon.createSwingImageIcon("arrow-left-24.png"), "Left");
     btnRightParameters = new SButton(
-        PersonalizedIcon.createImageIcon("arrow-right-24.png"), "Rigth");
+        PersonalizedIcon.createSwingImageIcon("arrow-right-24.png"), "Rigth");
     btnRemoveParameters = new SButton(
-        PersonalizedIcon.createImageIcon("minus.png"), "Remove");
+        PersonalizedIcon.createSwingImageIcon("minus.png"), "Remove");
 
     // Others components
     imgMethodSelected = new JLabel(
-        PersonalizedIcon.createImageIcon("select_method.png"));
+        PersonalizedIcon.createSwingImageIcon("select_method.png"));
     imgMethodSelected.setAlignmentX(CENTER_ALIGNMENT);
 
     imgNoParameter = new JLabel(
-        PersonalizedIcon.createImageIcon("empty_parameter.png"));
+        PersonalizedIcon.createSwingImageIcon("empty_parameter.png"));
     imgNoParameter.setAlignmentX(CENTER_ALIGNMENT);
     imgNoParameter.setVisible(false);
 
@@ -782,12 +782,10 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
     TableColumn visibilityColumn = attributesTable.getColumnModel()
                                                   .getColumn(2);
-    visibilityColumn.setCellEditor(new DefaultCellEditor(Utility
-                                                             .getVisibilityComboBox()));
+    visibilityColumn.setCellEditor(new DefaultCellEditor(Utility.getVisibilityJComboBox()));
 
     visibilityColumn = methodsTable.getColumnModel().getColumn(2);
-    visibilityColumn.setCellEditor(new DefaultCellEditor(Utility
-                                                             .getVisibilityComboBox()));
+    visibilityColumn.setCellEditor(new DefaultCellEditor(Utility.getVisibilityJComboBox()));
 
     TableColumn column = null;
     for (int i = 0; i < attributesTable.getColumnCount(); i++) {
@@ -846,7 +844,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
     {
       final JButton button = new SButton(
-          PersonalizedIcon.createImageIcon("plus.png"),
+          PersonalizedIcon.createSwingImageIcon("plus.png"),
           "Add");
       button.setAlignmentX(CENTER_ALIGNMENT);
       button.addActionListener(new ActionListener() {
@@ -980,7 +978,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
       // Button add method.
       JButton button = new SButton(
-          PersonalizedIcon.createImageIcon("plus16.png"),
+          PersonalizedIcon.createSwingImageIcon("plus16.png"),
           "Add method");
       button.setAlignmentX(CENTER_ALIGNMENT);
       button.addActionListener(new ActionListener() {
@@ -995,7 +993,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
       // Button add constructor.
       button = new SButton(
-          PersonalizedIcon.createImageIcon("add-constructor16.png"),
+          PersonalizedIcon.createSwingImageIcon("add-constructor16.png"),
           "Add constructor");
       button.addActionListener(new ActionListener() {
 
@@ -1016,7 +1014,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
 
       // Button add methods for interfaces.
       btnAddMethodForInterface = new SButton(
-          PersonalizedIcon.createImageIcon("plus.png"),
+          PersonalizedIcon.createSwingImageIcon("plus.png"),
           "Add method");
       btnAddMethodForInterface.setAlignmentX(CENTER_ALIGNMENT);
       btnAddMethodForInterface.addActionListener(new ActionListener() {
@@ -1124,7 +1122,7 @@ public class SimpleEntityPropreties extends GlobalPropreties {
     add(p);
 
     panel = panelParameters = new FlatPanel();
-    panel.setLayout(new MultiBorderLayout());
+    panel.setLayout(new java.awt.BorderLayout());
     panel.setAlignmentY(TOP_ALIGNMENT);
     scrollPaneParameters = parametersTable.getScrollPane();
     scrollPaneParameters.setVisible(false);

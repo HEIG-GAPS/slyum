@@ -66,7 +66,7 @@ public class NodeInheritance extends AbstractNode {
 
   @Override
   public ImageIcon getCustomizedIcon() {
-    return PersonalizedIcon.createImageIcon("generalize.png");
+    return PersonalizedIcon.createSwingImageIcon("generalize.png");
   }
 
   @Override

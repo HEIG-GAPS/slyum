@@ -87,11 +87,11 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
 
   private SPanelElement() {
     undo = new SToolBarButton(
-        PersonalizedIcon.createImageIcon("undo.png"),
+        PersonalizedIcon.createSwingImageIcon("undo.png"),
         Slyum.ACTION_UNDO, Color.ORANGE, TT_UNDO, this);
 
     redo = new SToolBarButton(
-        PersonalizedIcon.createImageIcon("redo.png"),
+        PersonalizedIcon.createSwingImageIcon("redo.png"),
         Slyum.ACTION_REDO, Color.ORANGE, TT_REDO, this);
 
     add(undo);
@@ -99,19 +99,19 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
     add(new SSeparator());
 
     add(createSButton(
-        PersonalizedIcon.createImageIcon("multiNote.png"),
+        PersonalizedIcon.createSwingImageIcon("multiNote.png"),
         Slyum.ACTION_NEW_NOTE_ASSOCIED, Color.CYAN, TT_ADD_NOTE, true));
 
     add(btnDuplicate = createSButton(
-        PersonalizedIcon.createImageIcon("duplicate.png"),
+        PersonalizedIcon.createSwingImageIcon("duplicate.png"),
         "duplicate", Color.CYAN, TT_DUPLICATE, false));
 
     add(btnDelete = createSButton(
-        PersonalizedIcon.createImageIcon("delete.png"),
+        PersonalizedIcon.createSwingImageIcon("delete.png"),
         "Delete", Color.CYAN, TT_DELETE, false));
 
     add(btnColor = createSButton(
-        PersonalizedIcon.createImageIcon("color.png"),
+        PersonalizedIcon.createSwingImageIcon("color.png"),
         "Color", Color.CYAN, TT_CHANGE_COLOR, true));
 
     for (final RecentColorButton btn : SColorAssigner.createButtonsRecentColor()) {
@@ -121,8 +121,9 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
 
         @Override
         public void actionPerformed(ActionEvent e) {
+          java.awt.Color awtC = btn.getColor();
           MultiViewManager.getSelectedGraphicView()
-                          .setColorForSelectedItems(btn.getColor());
+                          .setColorForSelectedItems(new javafx.scene.paint.Color(awtC.getRed()/255.0, awtC.getGreen()/255.0, awtC.getBlue()/255.0, awtC.getAlpha()/255.0));
         }
       });
     }
@@ -130,24 +131,24 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
     add(new SSeparator());
 
     add(alignTop = createEmptyButton(
-        PersonalizedIcon.createImageIcon("alignTop.png"),
+        PersonalizedIcon.createSwingImageIcon("alignTop.png"),
         Slyum.ACTION_ALIGN_TOP, Color.GREEN, TT_ALIGN_TOP));
 
     add(alignBottom = createEmptyButton(
-        PersonalizedIcon.createImageIcon("alignBottom.png"), Slyum.ACTION_ALIGN_BOTTOM,
+        PersonalizedIcon.createSwingImageIcon("alignBottom.png"), Slyum.ACTION_ALIGN_BOTTOM,
         Color.GREEN, TT_ALIGN_BOTTOM));
 
     add(alignRight = createEmptyButton(
         PersonalizedIcon
-            .createImageIcon("alignRight.png"),
+            .createSwingImageIcon("alignRight.png"),
         Slyum.ACTION_ALIGN_RIGHT, Color.GREEN, TT_ALIGN_RIGTH));
 
     add(alignLeft = createEmptyButton(
-        PersonalizedIcon.createImageIcon("alignLeft.png"),
+        PersonalizedIcon.createSwingImageIcon("alignLeft.png"),
         Slyum.ACTION_ALIGN_LEFT, Color.GREEN, TT_ALIGN_LEFT));
 
     add(adujst = createEmptyButton(
-        PersonalizedIcon.createImageIcon("adjustWidth.png"), Slyum.ACTION_ADJUST_WIDTH,
+        PersonalizedIcon.createSwingImageIcon("adjustWidth.png"), Slyum.ACTION_ADJUST_WIDTH,
         Color.GREEN, TT_ADJUST_WIDTH));
 
     add(new SSeparator());
@@ -166,19 +167,19 @@ public class SPanelElement extends SToolBar implements ActionListener, IListener
     add(new SSeparator());
 
     add(top = createEmptyButton(
-        PersonalizedIcon.createImageIcon("top.png"),
+        PersonalizedIcon.createSwingImageIcon("top.png"),
         Slyum.ACTION_MOVE_TOP, Color.MAGENTA, TT_MOVE_TOP));
 
     add(up = createEmptyButton(
-        PersonalizedIcon.createImageIcon("up.png"),
+        PersonalizedIcon.createSwingImageIcon("up.png"),
         Slyum.ACTION_MOVE_UP, Color.MAGENTA, TT_MOVE_UP));
 
     add(down = createEmptyButton(
-        PersonalizedIcon.createImageIcon("down.png"),
+        PersonalizedIcon.createSwingImageIcon("down.png"),
         Slyum.ACTION_MOVE_DOWN, Color.MAGENTA, TT_MOVE_DOWN));
 
     add(bottom = createEmptyButton(
-        PersonalizedIcon.createImageIcon("bottom.png"),
+        PersonalizedIcon.createSwingImageIcon("bottom.png"),
         Slyum.ACTION_MOVE_BOTTOM, Color.MAGENTA, TT_MOVE_BOTTOM));
 
     alignTop.setEnabled(false);

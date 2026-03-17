@@ -13,10 +13,16 @@ import graphic.entity.SimpleEntityView;
 import swing.Slyum;
 import utility.SMessageDialog;
 
-import javax.swing.*;
+import javafx.event.ActionEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 
 /**
  * The LineView class represent a collection of lines making a link between two GraphicComponent. When it creates, the
@@ -41,8 +47,8 @@ public class InheritanceView extends RelationView {
    * @param target this point define the location of the arrow
    * @param borderColor the color border
    */
-  public static void paintExtremity(Graphics2D g2, Point source, Point target,
-                                    Color borderColor) {
+  public static void paintExtremity(GraphicsContext gc, Point source, Point target,
+                                    javafx.scene.paint.Color borderColor) {
     final double deltaX = target.x - source.x;
     final double deltaY = target.y - source.y;
     final double alpha = Math.atan2(deltaY, deltaX);
@@ -70,15 +76,15 @@ public class InheritanceView extends RelationView {
         target.y, ref.y + vectorYN1,
         ref.y + vectorYN2};
 
-    g2.setStroke(new BasicStroke(LINE_WIDTH));
-    g2.setColor(Color.WHITE);
-    g2.fillPolygon(pointsX, pointsY, pointsX.length);
-    g2.setColor(borderColor);
-    g2.drawPolygon(pointsX, pointsY, pointsX.length);
+    gc.setLineWidth(LINE_WIDTH);
+    gc.setFill(javafx.scene.paint.Color.WHITE); gc.setStroke(javafx.scene.paint.Color.WHITE);
+    gc.fillPolygon(java.util.Arrays.stream(pointsX).asDoubleStream().toArray(), java.util.Arrays.stream(pointsY).asDoubleStream().toArray(), pointsX.length);
+    gc.setFill(borderColor); gc.setStroke(borderColor);
+    gc.strokePolygon(java.util.Arrays.stream(pointsX).asDoubleStream().toArray(), java.util.Arrays.stream(pointsY).asDoubleStream().toArray(), pointsX.length);
   }
 
   private final Inheritance inheritance;
-  private JMenuItem menuItemOI;
+  private MenuItem menuItemOI;
 
   /**
    * Create a new InheritanceView between source and target.
@@ -99,11 +105,10 @@ public class InheritanceView extends RelationView {
 
     this.inheritance = inheritance;
 
-    popupMenu.addSeparator();
-    popupMenu.add(menuItemOI = makeMenuItem("Overrides & Implementations...",
-                                            "O&I", "method"));
-    popupMenu.add(makeMenuItem("Autopath", Slyum.ACTION_ADJUST_INHERITANCE,
-                               "adjust-inheritance"));
+    popupMenu.getItems().add(new SeparatorMenuItem());
+    menuItemOI = makeMenuItem("Overrides & Implementations...", "O&I", "method");
+    popupMenu.getItems().add(menuItemOI);
+    popupMenu.getItems().add(makeMenuItem("Autopath", Slyum.ACTION_ADJUST_INHERITANCE, "adjust-inheritance"));
 
     if (inheritance.getParent().getClass() == InterfaceEntity.class)
       lineStroke = getInterfaceLineStroke();
@@ -116,17 +121,18 @@ public class InheritanceView extends RelationView {
   }
 
   @Override
-  public void maybeShowPopup(MouseEvent e, JPopupMenu popupMenu) {
+  public void maybeShowPopup(javafx.scene.input.MouseEvent e, javafx.scene.control.ContextMenu popupMenu) {
     if (menuItemOI != null)
-      menuItemOI.setEnabled(!inheritance.getParent().isEveryMethodsStatic());
+      menuItemOI.setDisable(inheritance.getParent().isEveryMethodsStatic());
     super.maybeShowPopup(e, popupMenu);
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
     super.actionPerformed(e);
-    if (null != e.getActionCommand())
-      switch (e.getActionCommand()) {
+    String cmd = (e.getSource() instanceof MenuItem) ? ((MenuItem)e.getSource()).getId() : null;
+    if (null != cmd)
+      switch (cmd) {
         case "O&I":
           inheritance.showOverridesAndImplementations();
           break;
@@ -148,8 +154,8 @@ public class InheritanceView extends RelationView {
   }
 
   @Override
-  protected void drawExtremity(Graphics2D g2, Point source, Point target) {
-    paintExtremity(g2, source, target, getColor());
+  protected void drawExtremity(GraphicsContext gc, Point source, Point target) {
+    paintExtremity(gc, source, target, getColor());
   }
 
   @Override

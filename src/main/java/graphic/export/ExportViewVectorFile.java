@@ -22,13 +22,8 @@ public abstract class ExportViewVectorFile extends ExportView<SVGGraphics2D> {
 
   @Override
   public final Object export() {
-
-    try (FileOutputStream fileStream = new FileOutputStream(file)) {
-      writeToFile(fileStream, this::draw);
-    } catch (Exception ex) {
-      Logger.getLogger(ExportViewPdf.class.getName()).log(Level.SEVERE, null, ex);
-      SMessageDialog.showErrorMessage(ex.getMessage());
-    }
+    // TODO: Re-implement vector export with JavaFX rendering pipeline.
+    SMessageDialog.showErrorMessage("Vector export (SVG/PDF) is not yet supported in this version.");
     return null;
   }
 

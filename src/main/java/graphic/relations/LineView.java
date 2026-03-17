@@ -11,10 +11,17 @@ import graphic.textbox.TextBoxLabel;
 import swing.Slyum;
 import utility.Utility;
 
-import javax.swing.*;
+import javafx.application.Platform;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.shape.ArcType;
+import javafx.event.ActionEvent;
+import javafx.scene.control.MenuItem;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.LinkedList;
@@ -34,14 +41,14 @@ import java.util.stream.Collectors;
 public abstract class LineView extends GraphicComponent
     implements ColoredComponent {
 
-  private static Color basicColor = Color.DARK_GRAY;
+  private static javafx.scene.paint.Color basicColor = javafx.scene.paint.Color.DARKGRAY;
 
   /**
    * Get the basic color. The basic color is the color given by default at the LineView.
    *
    * @return the basic color.
    */
-  public static Color getBasicColor() {
+  public static javafx.scene.paint.Color getBasicColor() {
     return basicColor;
   }
 
@@ -50,8 +57,8 @@ public abstract class LineView extends GraphicComponent
    *
    * @param color the new basic color.
    */
-  public static void setBasicColor(Color color) {
-    basicColor = new Color(color.getRGB());
+  public static void setBasicColor(javafx.scene.paint.Color color) {
+    basicColor = color;
   }
 
   public final static float LINE_WIDTH = 1.f;
@@ -104,11 +111,11 @@ public abstract class LineView extends GraphicComponent
 
     if (checkRecursivity) reinitGrips();
 
-    popupMenu.addSeparator();
-    popupMenu.add(makeMenuItem("Add grip", "AddGrip", "pointer-grip"));
-    popupMenu.add(makeMenuItem("Delete grip", "DeleteGrip", "delete-grip"));
-    popupMenu.addSeparator();
-    popupMenu.add(makeMenuItem("Delete relation", "Delete", "delete"));
+    popupMenu.getItems().add(new SeparatorMenuItem());
+    popupMenu.getItems().add(makeMenuItem("Add grip", "AddGrip", "pointer-grip"));
+    popupMenu.getItems().add(makeMenuItem("Delete grip", "DeleteGrip", "delete-grip"));
+    popupMenu.getItems().add(new SeparatorMenuItem());
+    popupMenu.getItems().add(makeMenuItem("Delete relation", "Delete", "delete"));
 
     setColor(getBasicColor());
   }
@@ -116,7 +123,8 @@ public abstract class LineView extends GraphicComponent
   @Override
   public void actionPerformed(ActionEvent e) {
     super.actionPerformed(e);
-    switch (e.getActionCommand()) {
+    String actionCmd = (e.getSource() instanceof MenuItem) ? ((MenuItem)e.getSource()).getId() : "";
+    switch (actionCmd) {
       case "Delete":
         GraphicView.deleteComponent(this);
         break;
@@ -314,10 +322,7 @@ public abstract class LineView extends GraphicComponent
 
   public void center() {
 
-    SwingUtilities.invokeLater(new Runnable() {
-
-      @Override
-      public void run() {
+    Platform.runLater(() -> {
 
         GraphicComponent gSource = getFirstPoint().getAssociedComponentView(),
             gTarget = getLastPoint().getAssociedComponentView();
@@ -328,9 +333,8 @@ public abstract class LineView extends GraphicComponent
                                       (int) gTarget.getBounds().getCenterY());
 
         getFirstPoint().setAnchor(pSourceCenter);
-        getLastPoint().setAnchor(pTargetCenter);
-        reinitializeTextBoxesLocation();
-      }
+      getLastPoint().setAnchor(pTargetCenter);
+      reinitializeTextBoxesLocation();
     });
   }
 
@@ -379,7 +383,7 @@ public abstract class LineView extends GraphicComponent
    * @param source the source for compute the orientation of the extremity
    * @param target the target where extremity is drawed.
    */
-  protected void drawExtremity(Graphics2D g2, Point source, Point target) {
+  protected void drawExtremity(GraphicsContext gc, Point source, Point target) {
     // no extremity
   }
 
@@ -398,7 +402,7 @@ public abstract class LineView extends GraphicComponent
   }
 
   @Override
-  public Color getDefaultColor() {
+  public javafx.scene.paint.Color getDefaultColor() {
     return getBasicColor();
   }
 
@@ -511,7 +515,7 @@ public abstract class LineView extends GraphicComponent
 
   @Override
   public void gMouseDragged(MouseEvent e) {
-    Point mouse = e.getPoint();
+    Point mouse = new Point((int)e.getX(), (int)e.getY());
 
     if (acceptGripCreation) {
       createNewGrip(mousePressed);
@@ -555,7 +559,7 @@ public abstract class LineView extends GraphicComponent
 
     // save mouse location and current line segment clicked by user.
     saveMouseLocation(e);
-    saveGrip = getGripBeforeLocation(e.getPoint());
+    saveGrip = getGripBeforeLocation(new Point((int)e.getX(), (int)e.getY()));
 
     // save anchor location
     anchor1MousePressed = points.get(saveGrip).getAnchor();
@@ -563,7 +567,7 @@ public abstract class LineView extends GraphicComponent
 
     if (GraphicView.isAddGripMode()) acceptGripCreation = true;
 
-    if (e.getButton() == MouseEvent.BUTTON1) {
+    if (e.getButton() == MouseButton.PRIMARY) {
       bb[0] = new BufferBounds(points.get(saveGrip));
       bb[1] = new BufferBounds(points.get(saveGrip + 1));
     }
@@ -576,7 +580,7 @@ public abstract class LineView extends GraphicComponent
     super.gMouseReleased(e);
     smoothLines();
 
-    if (e.getButton() == MouseEvent.BUTTON1) {
+    if (e.getButton() == MouseButton.PRIMARY) {
       BufferBounds bb2 = new BufferBounds(points.get(saveGrip)),
           bb3 = new BufferBounds(points.get(saveGrip + 1));
 
@@ -667,12 +671,34 @@ public abstract class LineView extends GraphicComponent
     return points.get(points.indexOf(grip) + 1);
   }
 
+
+  /**
+   * Applies a {@link BasicStroke}'s properties (line width, dash pattern) to a JavaFX
+   * {@link javafx.scene.canvas.GraphicsContext}.
+   */
+  protected static void applyStrokeToContext(javafx.scene.canvas.GraphicsContext gc, Stroke stroke) {
+    if (stroke instanceof BasicStroke bs) {
+      gc.setLineWidth(bs.getLineWidth());
+      float[] dashes = bs.getDashArray();
+      if (dashes != null && dashes.length > 0) {
+        double[] dd = new double[dashes.length];
+        for (int i = 0; i < dashes.length; i++) dd[i] = dashes[i];
+        gc.setLineDashes(dd);
+      } else {
+        gc.setLineDashes((double[]) null);
+      }
+    } else {
+      gc.setLineWidth(LINE_WIDTH);
+      gc.setLineDashes((double[]) null);
+    }
+  }
+
   @Override
-  public void paintComponent(Graphics2D g2) {
+  public void paintComponent(javafx.scene.canvas.GraphicsContext gc) {
     if (!isVisible() || points.size() < 2) return;
 
-    g2.setStroke(lineStroke);
-    g2.setColor(getColor());
+    applyStrokeToContext(gc, lineStroke);
+    gc.setStroke(getColor());
 
     LinkedList<GraphicComponent> components = parent.getAllComponents();
     int index = components.indexOf(this);
@@ -713,28 +739,28 @@ public abstract class LineView extends GraphicComponent
             if (rect.contains(currentPoint) || rect.contains(previousPoint))
               continue;
 
-            g2.drawArc(rect.x, rect.y, rect.width, rect.height, -(int) Utility.getLineAngleDegree(currentLine), 180);
+            gc.strokeArc(rect.x, rect.y, rect.width, rect.height, -(int) Utility.getLineAngleDegree(currentLine), 180, ArcType.OPEN);
 
             Point2D pt1 = Utility.getPointOnLineByDistance(
                 new Line2D.Double(currentLine.getP1(), pt), -LENGTH_ARC),
                 pt2 = Utility.getPointOnLineByDistance(
                     new Line2D.Double(currentLine.getP2(), pt), -LENGTH_ARC);
 
-            g2.drawLine((int) previousPoint.x, (int) previousPoint.y,
+            gc.strokeLine((int) previousPoint.x, (int) previousPoint.y,
                         (int) pt1.getX(), (int) pt1.getY());
 
             previousPoint = new Point2D.Double(pt2.getX(), pt2.getY());
           }
         }
 
-        g2.drawLine((int) previousPoint.x, (int) previousPoint.y,
+        gc.strokeLine((int) previousPoint.x, (int) previousPoint.y,
                     (int) currentPoint.x, (int) currentPoint.y);
       }
 
       previousPoint = currentPoint;
     }
 
-    drawExtremity(g2, points.get(points.size() - 2).getAnchor(), points
+    drawExtremity(gc, points.get(points.size() - 2).getAnchor(), points
         .getLast().getAnchor());
   }
 

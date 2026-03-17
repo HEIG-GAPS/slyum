@@ -4,7 +4,7 @@ import graphic.ColoredComponent;
 import graphic.GraphicComponent;
 import graphic.GraphicView;
 
-import java.awt.*;
+import javafx.scene.paint.Color;
 
 public class BufferColor extends BufferGraphicView {
   private ColoredComponent gc;

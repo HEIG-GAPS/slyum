@@ -33,7 +33,7 @@ public abstract class AbstractNode
     // Menu item delete
     JMenuItem item = new JMenuItem(
         "Delete",
-        PersonalizedIcon.createImageIcon("delete.png"));
+        PersonalizedIcon.createSwingImageIcon("delete.png"));
 
     item.addActionListener(getMenuItemDeleteActionListener());
     popupMenu.add(item);

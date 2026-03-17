@@ -2,23 +2,25 @@ package graphic.export;
 
 import graphic.GraphicComponent;
 import graphic.GraphicView;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import swing.PanelClassDiagram;
 import swing.Slyum;
 import utility.Utility;
 
 import java.awt.*;
-import java.awt.font.FontRenderContext;
-import java.awt.font.LineBreakMeasurer;
-import java.awt.font.TextLayout;
-import java.awt.geom.Rectangle2D;
-import java.text.AttributedCharacterIterator;
-import java.text.AttributedString;
+import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 import static graphic.GraphicView.DEFAULT_TITLE_BORDER_WIDTH;
 import static graphic.GraphicView.isTitleBorderPainted;
 
-public abstract class ExportView<G extends Graphics2D> {
+/**
+ * Base class for exporting the diagram view. Subclasses provide the final output format.
+ * The rendering is performed on a JavaFX {@link Canvas}.
+ */
+public abstract class ExportView<G> {
   protected static final int MARGIN = 20;
 
   protected GraphicView graphicView;
@@ -47,8 +49,10 @@ public abstract class ExportView<G extends Graphics2D> {
     final LinkedList<GraphicComponent> components =
         graphicView.getAllDiagramComponents();
 
-    if (components.isEmpty())
+    if (components.isEmpty()) {
       bounds = new Rectangle();
+      return;
+    }
 
     // Compute the rectangle englobing all graphic components.
     for (final GraphicComponent component : components) {
@@ -75,133 +79,72 @@ public abstract class ExportView<G extends Graphics2D> {
         bounds.height + marginTop + MARGIN);
   }
 
-  protected final G draw(final G g2d) {
-    graphicView.setPictureMode(true);
+  /**
+   * Renders the diagram onto a JavaFX {@link Canvas} of the given size and returns a {@link BufferedImage}.
+   *
+   * @param outerBounds the dimensions of the exported area
+   * @param type        {@link BufferedImage} type constant
+   *
+   * @return the rendered {@link BufferedImage}
+   */
+  protected BufferedImage renderToImage(Rectangle outerBounds, int type) {
+    int w = Math.max(outerBounds.width + DEFAULT_TITLE_BORDER_WIDTH * 2, 1);
+    int h = Math.max(outerBounds.height + DEFAULT_TITLE_BORDER_WIDTH * 2, 1);
+    Canvas canvas = new Canvas(w, h);
+    GraphicsContext gc = canvas.getGraphicsContext2D();
 
-    Utility.setRenderQuality(g2d);
+    if (type == BufferedImage.TYPE_INT_RGB) {
+      gc.setFill(javafx.scene.paint.Color.WHITE);
+      gc.fillRect(0, 0, w, h);
+    }
+
+    gc.translate(-(outerBounds.x - DEFAULT_TITLE_BORDER_WIDTH),
+                 -(outerBounds.y - DEFAULT_TITLE_BORDER_WIDTH));
+
+    drawToContext(gc);
+
+    javafx.scene.image.WritableImage fxImage = new javafx.scene.image.WritableImage(w, h);
+    canvas.snapshot(null, fxImage);
+    BufferedImage bimg = SwingFXUtils.fromFXImage(fxImage, null);
+    if (type != BufferedImage.TYPE_4BYTE_ABGR_PRE && type != BufferedImage.TYPE_INT_ARGB) {
+      // Re-encode into the requested type when SwingFXUtils gives us ARGB
+      BufferedImage typed = new BufferedImage(w, h, type);
+      typed.getGraphics().drawImage(bimg, 0, 0, null);
+      return typed;
+    }
+    return bimg;
+  }
+
+  /**
+   * Draws all diagram components onto the given {@link GraphicsContext}.
+   *
+   * @param gc the JavaFX graphics context
+   */
+  protected void drawToContext(GraphicsContext gc) {
+    graphicView.setPictureMode(true);
+    Utility.setRenderQuality(gc);
 
     // Paint diagram's name
     if (displayTitle) {
       Rectangle outerBounds = getOuterBounds();
-
       graphicView.getTxtBoxDiagramName().paintComponentAt(
-          g2d, new Point(outerBounds.x, outerBounds.y));
+          gc, new Point(outerBounds.x, outerBounds.y));
 
-      // Paint border
       if (isTitleBorderPainted()) {
-        g2d.setStroke(new BasicStroke(DEFAULT_TITLE_BORDER_WIDTH));
-        g2d.draw(new Rectangle2D.Float(
-            outerBounds.x,
-            outerBounds.y,
-            outerBounds.width - DEFAULT_TITLE_BORDER_WIDTH,
-            outerBounds.height - DEFAULT_TITLE_BORDER_WIDTH));
+        gc.setLineWidth(DEFAULT_TITLE_BORDER_WIDTH);
+        gc.setStroke(javafx.scene.paint.Color.BLACK);
+        gc.strokeRect(outerBounds.x, outerBounds.y,
+                      outerBounds.width - DEFAULT_TITLE_BORDER_WIDTH,
+                      outerBounds.height - DEFAULT_TITLE_BORDER_WIDTH);
       }
     }
 
-    // Paint all components on picture.
+    // Paint all components.
     for (final GraphicComponent graphicComponent : graphicView.getAllDiagramComponents()) {
-      graphicComponent.paintComponent(g2d);
-    }
-
-    // Paint diagram's information
-    String information = PanelClassDiagram.getInstance().getClassDiagram().getInformations();
-    if (Slyum.isDisplayedDiagramInformationOnExport() && !information.isEmpty()) {
-
-      final int WIDTH = 250;
-      final int INFORMATIONS_PADDING = 5;
-      final int INFORMATION_MARGIN = 10;
-      final int ROUNDED = 10;
-
-      g2d.setStroke(new BasicStroke(DEFAULT_TITLE_BORDER_WIDTH));
-
-      FontRenderContext frc = g2d.getFontRenderContext();
-      AttributedString styledText = new AttributedString(information);
-      AttributedCharacterIterator iterator = styledText.getIterator();
-      LineBreakMeasurer measurer = new LineBreakMeasurer(iterator, frc);
-      int start = iterator.getBeginIndex();
-      int end = iterator.getEndIndex();
-
-      measurer.setPosition(start);
-
-      int REAL_WIDTH = WIDTH - INFORMATIONS_PADDING * 2;
-
-      // Compute height
-      float height = 0;
-      float width = 0;
-      while (measurer.getPosition() < end) {
-        TextLayout layout = measurer.nextLayout(REAL_WIDTH, getLimitAtReturnChar(measurer, REAL_WIDTH, information),
-                                                true);
-
-        if (width < layout.getAdvance())
-          width = layout.getAdvance();
-
-        height += layout.getAscent() + layout.getDescent() + layout.getLeading();
-      }
-
-      width = Math.min(width, REAL_WIDTH);
-
-      width += INFORMATIONS_PADDING * 2;
-      height += INFORMATIONS_PADDING * 2;
-
-      Rectangle outerBounds = getOuterBounds();
-
-      Rectangle informationsRectangle = new Rectangle(
-          outerBounds.x + outerBounds.width - (int) width - DEFAULT_TITLE_BORDER_WIDTH - INFORMATION_MARGIN,
-          outerBounds.y + outerBounds.height - (int) height - DEFAULT_TITLE_BORDER_WIDTH - INFORMATION_MARGIN,
-          (int) width, (int) height);
-
-      // Draw border and background
-      g2d.setColor(new Color(250, 250, 250));
-      g2d.fillRoundRect(informationsRectangle.x,
-                        informationsRectangle.y,
-                        informationsRectangle.width,
-                        informationsRectangle.height,
-                        ROUNDED,
-                        ROUNDED);
-
-      g2d.setColor(Color.BLACK);
-      g2d.drawRoundRect(informationsRectangle.x,
-                        informationsRectangle.y,
-                        informationsRectangle.width,
-                        informationsRectangle.height,
-                        ROUNDED,
-                        ROUNDED);
-
-      // Draw text
-      float y = informationsRectangle.y + INFORMATIONS_PADDING;
-      float x = informationsRectangle.x + INFORMATIONS_PADDING;
-
-      g2d.setColor(new Color(50, 50, 50));
-
-      measurer.setPosition(0);
-      while (measurer.getPosition() < end) {
-
-        TextLayout layout = measurer.nextLayout(REAL_WIDTH,
-                                                getLimitAtReturnChar(measurer, REAL_WIDTH, information),
-                                                true);
-        y += layout.getAscent();
-        layout.draw(g2d, x, y);
-        y += layout.getDescent() + layout.getLeading();
-      }
+      graphicComponent.paintComponent(gc);
     }
 
     graphicView.setPictureMode(false);
-    return g2d;
-  }
-
-  private int getLimitAtReturnChar(final LineBreakMeasurer measurer, final int width, final String text) {
-
-    int next = measurer.nextOffset(width);
-    int limit = next;
-
-    if (limit <= text.length())
-      for (int i = measurer.getPosition(); i < next; ++i)
-        if (text.charAt(i) == '\n') {
-          limit = i + 1;
-          break;
-        }
-
-    return limit;
   }
 
 }

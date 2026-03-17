@@ -1,0 +1,112 @@
+name: Multi-Platform Distribution
+
+on:
+  push:
+    tags:
+      - slyum-*
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+
+  package:
+    name: "Package – ${{ matrix.os }} (${{ matrix.arch }})"
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Windows – amd64
+          - os: windows
+            arch: amd64
+            runner: windows-latest
+            jpackage_type: exe
+            artifact_suffix: windows-amd64
+          # Windows – aarch64
+          - os: windows
+            arch: aarch64
+            runner: windows-11-arm
+            jpackage_type: exe
+            artifact_suffix: windows-aarch64
+          # macOS – amd64 (Intel)
+          - os: macos
+            arch: amd64
+            runner: macos-13
+            jpackage_type: dmg
+            artifact_suffix: macos-amd64
+          # macOS – aarch64 (Apple Silicon)
+          - os: macos
+            arch: aarch64
+            runner: macos-latest
+            jpackage_type: dmg
+            artifact_suffix: macos-aarch64
+          # Linux – amd64 (deb)
+          - os: linux
+            arch: amd64
+            runner: ubuntu-latest
+            jpackage_type: deb
+            artifact_suffix: linux-amd64-deb
+          # Linux – amd64 (rpm)
+          - os: linux
+            arch: amd64
+            runner: ubuntu-latest
+            jpackage_type: rpm
+            artifact_suffix: linux-amd64-rpm
+          # Linux – aarch64 (deb)
+          - os: linux
+            arch: aarch64
+            runner: ubuntu-24.04-arm
+            jpackage_type: deb
+            artifact_suffix: linux-aarch64-deb
+          # Linux – aarch64 (rpm)
+          - os: linux
+            arch: aarch64
+            runner: ubuntu-24.04-arm
+            jpackage_type: rpm
+            artifact_suffix: linux-aarch64-rpm
+
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Install rpm tools (Linux rpm builds only)
+        if: matrix.jpackage_type == 'rpm'
+        run: sudo apt-get update && sudo apt-get install -y rpm
+
+      - name: Build JAR and copy dependencies
+        run: mvn -B -DskipTests -Dmaven.javadoc.skip=true package --file pom.xml
+
+      - name: Read project version
+        shell: bash
+        run: echo "PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+
+      - name: Package with jpackage
+        shell: bash
+        run: |
+          jpackage \
+            --type ${{ matrix.jpackage_type }} \
+            --name Slyum \
+            --app-version "$PROJECT_VERSION" \
+            --input target/lib \
+            --main-jar ../slyum-${PROJECT_VERSION}.jar \
+            --main-class ui.SlyumApp \
+            --dest target/dist \
+            --vendor "HEIG-VD GAPS" \
+            --description "UML Class Diagram Editor" \
+            --java-options "--module-path . --add-modules javafx.controls,javafx.graphics"
+
+      - name: Upload distribution artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: slyum-${{ env.PROJECT_VERSION }}-${{ matrix.artifact_suffix }}
+          path: target/dist/*
+          if-no-files-found: error

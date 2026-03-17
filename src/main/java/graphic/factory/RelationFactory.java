@@ -7,9 +7,10 @@ import graphic.relations.LineView;
 import graphic.relations.RelationGrip;
 import utility.Utility;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
+import javafx.application.Platform;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,8 +40,7 @@ public abstract class RelationFactory extends ComponentFactory {
    * @param e mouse event
    */
   private void drawComponentMouseHoverStyle(MouseEvent e) {
-    final GraphicComponent currentComponent = parent.getComponentAtPosition(e
-                                                                                .getPoint());
+    final GraphicComponent currentComponent = parent.getComponentAtPosition(new Point((int)e.getX(), (int)e.getY()));
 
     if (componentMouseHover != currentComponent) {
       currentComponent.setMouseHoverStyle();
@@ -57,7 +57,7 @@ public abstract class RelationFactory extends ComponentFactory {
    *
    * @param g2 the graphic context
    */
-  protected void drawExtremity(Graphics2D g2) {
+  protected void drawExtremity(GraphicsContext gc) {
     // no extremity
   }
 
@@ -66,25 +66,19 @@ public abstract class RelationFactory extends ComponentFactory {
    *
    * @param g2 the graphic context
    */
-  private void drawLine(Graphics2D g2) {
+  private void drawLine(GraphicsContext gc) {
     if (points.isEmpty()) return;
-
-    // Draw last line between mouse location and last point.
     int gray = Utility.getColorGrayLevel(parent.getColor());
     Point p, p1, p2;
-
-    g2.setStroke(stroke);
-    g2.setColor(new Color(gray, gray, gray, 200));
-
-    // Draw lines between points.
+    gc.setLineWidth(stroke.getLineWidth());
+    gc.setStroke(javafx.scene.paint.Color.rgb(gray, gray, gray, 200.0/255));
     for (int i = 0; i < points.size() - 1; i++) {
       p1 = points.get(i);
       p2 = points.get(i + 1);
-      g2.drawLine(p1.x, p1.y, p2.x, p2.y);
+      gc.strokeLine(p1.x, p1.y, p2.x, p2.y);
     }
-
     p = points.get(points.size() - 1);
-    g2.drawLine(p.x, p.y, mouseLocation.x, mouseLocation.y);
+    gc.strokeLine(p.x, p.y, mouseLocation.x, mouseLocation.y);
   }
 
   @Override
@@ -118,7 +112,7 @@ public abstract class RelationFactory extends ComponentFactory {
 
   @Override
   public void gMouseMoved(MouseEvent e) {
-    mouseLocation = e.getPoint();
+    mouseLocation = new Point((int)e.getX(), (int)e.getY());
     mouseLocation = new Point(RelationGrip.adjust(mouseLocation.x),
                               RelationGrip.adjust(mouseLocation.y));
     drawComponentMouseHoverStyle(e);
@@ -128,7 +122,7 @@ public abstract class RelationFactory extends ComponentFactory {
   @Override
   public void gMousePressed(MouseEvent e) {
     super.gMousePressed(e);
-    mousePressed = e.getPoint();
+    mousePressed = new Point((int)e.getX(), (int)e.getY());
 
     componentMouseHover.setStyleClicked();
 
@@ -176,14 +170,10 @@ public abstract class RelationFactory extends ComponentFactory {
         ((LineView) view).getLastPoint().setAnchor(
             points.get(points.size() - 1));
 
-        SwingUtilities.invokeLater(new Runnable() {
-
-          @Override
-          public void run() {
-            ((LineView) view).reinitializeTextBoxesLocation();
-            ((LineView) view).setSelected(true);
-            ((LineView) view).notifyObservers();
-          }
+        Platform.runLater(() -> {
+          ((LineView) view).reinitializeTextBoxesLocation();
+          ((LineView) view).setSelected(true);
+          ((LineView) view).notifyObservers();
         });
       }
     }
@@ -193,9 +183,9 @@ public abstract class RelationFactory extends ComponentFactory {
   }
 
   @Override
-  public void paintComponent(Graphics2D g2) {
-    drawLine(g2);
-    if (componentMousePressed != null) drawExtremity(g2);
+  public void paintComponent(GraphicsContext gc) {
+    drawLine(gc);
+    if (componentMousePressed != null) drawExtremity(gc);
   }
 
   @Override

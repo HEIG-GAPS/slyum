@@ -8,6 +8,14 @@ import graphic.GraphicView;
 import graphic.entity.EntityView;
 import graphic.textbox.TextBoxLabelTitle;
 
+import javafx.event.ActionEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import java.awt.*;
 
 /**
@@ -32,7 +40,7 @@ public class DependencyView extends RelationView {
    * @param source this point define the direction of the arrow
    * @param target this point define the location of the arrow
    */
-  public static void paintExtremity(final Graphics2D g2, final Point source, final Point target) {
+  public static void paintExtremity(final GraphicsContext gc, final Point source, final Point target) {
     final double deltaX = target.x - source.x;
     final double deltaY = target.y - source.y;
     final double alpha = Math.atan2(deltaY, deltaX);
@@ -60,8 +68,8 @@ public class DependencyView extends RelationView {
         ref.y + vectorYN1, target.y,
         ref.y + vectorYN2};
 
-    g2.setStroke(new BasicStroke(LINE_WIDTH));
-    g2.drawPolyline(pointsX, pointsY, pointsX.length);
+    gc.setLineWidth(LINE_WIDTH);
+    { gc.beginPath(); gc.moveTo(pointsX[0], pointsY[0]); for (int _i = 1; _i < pointsX.length; _i++) gc.lineTo(pointsX[_i], pointsY[_i]); gc.stroke(); };
   }
 
   private final Dependency dependency;
@@ -94,9 +102,9 @@ public class DependencyView extends RelationView {
   }
 
   @Override
-  protected void drawExtremity(Graphics2D g2, Point source, Point target) {
-    g2.setColor(getColor());
-    paintExtremity(g2, source, target);
+  protected void drawExtremity(GraphicsContext gc, Point source, Point target) {
+    gc.setFill(getColor()); gc.setStroke(getColor());
+    paintExtremity(gc, source, target);
   }
 
   @Override

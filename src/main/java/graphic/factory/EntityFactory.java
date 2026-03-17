@@ -4,9 +4,10 @@ import graphic.GraphicComponent;
 import graphic.GraphicView;
 import graphic.entity.EntityView;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
+import javafx.application.Platform;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 
 /**
  * EntityFactory allows to create a new entity view associated with a new entity UML. Give this factory at the graphic
@@ -43,8 +44,7 @@ public abstract class EntityFactory extends ComponentFactory {
     Rectangle repaintBounds = new Rectangle(bounds);
     repaintBounds.grow(20, 20);
 
-    final Point middle = new Point(e.getX() - DEFAULT_SIZE.width / 2, e.getY()
-                                                                      - DEFAULT_SIZE.height / 2);
+    final Point middle = new Point((int)e.getX() - DEFAULT_SIZE.width / 2, (int)e.getY() - DEFAULT_SIZE.height / 2);
 
     int gs = GraphicView.getGridSize();
     int x = (middle.x / gs) * gs;
@@ -66,23 +66,15 @@ public abstract class EntityFactory extends ComponentFactory {
   }
 
   @Override
-  public void paintComponent(Graphics2D g2) {
-    final Color basicColor = EntityView.getBasicColor();
-    final Color fillColor = new Color(basicColor.getRed(),
-                                      basicColor.getGreen(), basicColor.getBlue(), 100);
+  public void paintComponent(GraphicsContext gc) {
+    final javafx.scene.paint.Color basicColor = EntityView.getBasicColor();
+    final javafx.scene.paint.Color fillColor = javafx.scene.paint.Color.rgb((int)(basicColor.getRed()*255), (int)(basicColor.getGreen()*255), (int)(basicColor.getBlue()*255), 100.0/255);
 
-    if (GraphicView.isEntityGradient())
-      g2.setPaint(new GradientPaint(bounds.x, bounds.y,
-                                    fillColor, bounds.x + bounds.width, bounds.y + bounds.height,
-                                    fillColor.darker()));
-    else
-      g2.setColor(fillColor);
-
-    g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-
-    g2.setColor(fillColor.darker().darker().darker().darker().darker());
-    g2.setStroke(new BasicStroke(EntityView.BORDER_WIDTH));
-    g2.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+    gc.setFill(fillColor);
+    gc.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+    gc.setStroke(fillColor.darker().darker().darker());
+    gc.setLineWidth(EntityView.BORDER_WIDTH);
+    gc.strokeRect(bounds.x, bounds.y, bounds.width, bounds.height);
   }
 
   @Override
@@ -95,23 +87,11 @@ public abstract class EntityFactory extends ComponentFactory {
 
   protected void initializeBounds(final EntityView view) {
 
-    SwingUtilities.invokeLater(new Runnable() {
-
-      @Override
-      public void run() {
-        view.setBounds(new Rectangle(mouseReleased.x - DEFAULT_SIZE.width / 2,
-                                     mouseReleased.y - DEFAULT_SIZE.height / 2, DEFAULT_SIZE.width,
-                                     DEFAULT_SIZE.height));
-
-        SwingUtilities.invokeLater(new Runnable() {
-
-          @Override
-          public void run() {
-            view.editingName();
-          }
-        });
-
-      }
+    Platform.runLater(() -> {
+      view.setBounds(new Rectangle(mouseReleased.x - DEFAULT_SIZE.width / 2,
+                                   mouseReleased.y - DEFAULT_SIZE.height / 2, DEFAULT_SIZE.width,
+                                   DEFAULT_SIZE.height));
+      Platform.runLater(view::editingName);
     });
   }
 

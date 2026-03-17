@@ -57,7 +57,7 @@ public abstract class NodeEntity extends AbstractNode {
     // Menu item open
     JMenuItem item = new JMenuItem(
         "Add to current view",
-        PersonalizedIcon.createImageIcon("plus-16.png"));
+        PersonalizedIcon.createSwingImageIcon("plus-16.png"));
 
     item.addActionListener(new ActionListener() {
 

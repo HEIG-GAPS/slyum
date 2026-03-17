@@ -103,75 +103,75 @@ public class SPanelDiagramComponent extends SToolBar implements ActionListener {
   private SPanelDiagramComponent() {
 
     add(btnCursorMode = createSButton(
-        PersonalizedIcon.createImageIcon("pointer-arrow.png"), Slyum.ACTION_MODE_CURSOR,
+        PersonalizedIcon.createSwingImageIcon("pointer-arrow.png"), Slyum.ACTION_MODE_CURSOR,
         Color.RED, TT_MODE_CURSOR));
 
     add(btnGripMode = createSButton(
-        PersonalizedIcon.createImageIcon("pointer-grip.png"), Slyum.ACTION_MODE_GRIP, Color.RED,
+        PersonalizedIcon.createSwingImageIcon("pointer-grip.png"), Slyum.ACTION_MODE_GRIP, Color.RED,
         TT_MODE_GRIP));
 
     add(new SSeparator());
 
     add(btnClass = createSButton(
-        PersonalizedIcon.createImageIcon("class.png"),
+        PersonalizedIcon.createSwingImageIcon("class.png"),
         Slyum.ACTION_NEW_CLASS, Color.RED, TT_CLASS));
 
     add(btnInterface = createSButton(
-        PersonalizedIcon.createImageIcon("interface.png"),
+        PersonalizedIcon.createSwingImageIcon("interface.png"),
         Slyum.ACTION_NEW_INTERFACE, Color.RED, TT_INTERFACE));
 
     add(btnEnum = createSButton(
-        PersonalizedIcon.createImageIcon("enum.png"),
+        PersonalizedIcon.createSwingImageIcon("enum.png"),
         Slyum.ACTION_NEW_ENUM, Color.RED, TT_ENUM));
 
     add(btnClassAssociation = createSButton(
         PersonalizedIcon
-            .createImageIcon("classAssoc.png"),
+            .createSwingImageIcon("classAssoc.png"),
         Slyum.ACTION_NEW_CLASS_ASSOCIATION, Color.RED, TT_CLASS_ASSOC));
 
     add(new SSeparator());
 
     add(btnGeneralize = createSButton(
         PersonalizedIcon
-            .createImageIcon("generalize.png"),
+            .createSwingImageIcon("generalize.png"),
         Slyum.ACTION_NEW_GENERALIZE, Color.RED, TT_GENERALIZE));
 
     add(btnDependeny = createSButton(
         PersonalizedIcon
-            .createImageIcon("dependency.png"),
+            .createSwingImageIcon("dependency.png"),
         Slyum.ACTION_NEW_DEPENDENCY, Color.RED, TT_DEPENDENCY));
 
     add(btnInnerClass = createSButton(
         PersonalizedIcon
-            .createImageIcon("innerClass.png"),
+            .createSwingImageIcon("innerClass.png"),
         Slyum.ACTION_NEW_INNER_CLASS, Color.RED, TT_INNER_CLASS));
 
     add(new SSeparator());
 
     add(btnAssociation = createSButton(
-        PersonalizedIcon.createImageIcon("association.png"), Slyum.ACTION_NEW_ASSOCIATION,
+        PersonalizedIcon.createSwingImageIcon("association.png"), Slyum.ACTION_NEW_ASSOCIATION,
         Color.RED, TT_ASSOCIATION));
 
     add(btnAggregation = createSButton(
-        PersonalizedIcon.createImageIcon("aggregation.png"), Slyum.ACTION_NEW_AGGREGATION,
+        PersonalizedIcon.createSwingImageIcon("aggregation.png"), Slyum.ACTION_NEW_AGGREGATION,
         Color.RED, TT_AGGREGATION));
 
     add(btnComposition = createSButton(
-        PersonalizedIcon.createImageIcon("composition.png"), Slyum.ACTION_NEW_COMPOSITION,
+        PersonalizedIcon.createSwingImageIcon("composition.png"), Slyum.ACTION_NEW_COMPOSITION,
         Color.RED, TT_COMPOSITION));
 
     add(btnMulti = createSButton(
-        PersonalizedIcon.createImageIcon("multi.png"),
+        PersonalizedIcon.createSwingImageIcon("multi.png"),
         Slyum.ACTION_NEW_MULTI, Color.RED, TT_MULTI));
 
     add(new SSeparator());
 
     add(btnNote = createSButton(
-        PersonalizedIcon.createImageIcon("note.png"),
+        PersonalizedIcon.createSwingImageIcon("note.png"),
         Slyum.ACTION_NEW_NOTE, Color.RED, TT_NOTE));
 
     add(btnLinkNote = createSButton(
-        PersonalizedIcon.createImageIcon("linkNote.png"),
+        PersonalizedIcon.createSwingImageIcon("linkNote.png"),
         Slyum.ACTION_NEW_LINK_NOTE, Color.RED, TT_LINK_NOTE));
   }
 

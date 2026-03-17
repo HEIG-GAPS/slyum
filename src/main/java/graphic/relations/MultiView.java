@@ -18,10 +18,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import utility.Utility;
 
-import javax.swing.*;
+import javafx.event.ActionEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
@@ -86,10 +90,10 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
     setBounds(new Rectangle(xMoy, yMoy, bounds.width, bounds.height));
     setColor(EntityView.getBasicColor());
 
-    popupMenu.addSeparator();
+    popupMenu.getItems().add(new SeparatorMenuItem());
 
-    final JMenuItem menuItem = makeMenuItem("Delete", "Delete", "delete");
-    popupMenu.add(menuItem);
+    final MenuItem menuItem = makeMenuItem("Delete", "Delete", "delete");
+    popupMenu.getItems().add(menuItem);
 
     // Cet élément n'est pas redimensionnable. Suppression des grips.
     boolean isBlocked = Change.isBlocked();
@@ -102,8 +106,8 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
   @Override
   public void actionPerformed(ActionEvent e) {
     super.actionPerformed(e);
-
-    if ("Delete".equals(e.getActionCommand()))
+    String cmd = (e.getSource() instanceof MenuItem) ? ((MenuItem)e.getSource()).getId() : "";
+    if ("Delete".equals(cmd))
       GraphicView.deleteComponent(this);
   }
 
@@ -171,22 +175,17 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
    *
    * @param g2 the graphic context
    */
-  public void drawGhost(Graphics2D g2) {
+  public void drawGhost(GraphicsContext gc) {
     if (pictureMode) return;
 
     final Polygon polygon = getPolygonFromBounds(ghost);
-    final Color color = getColor();
-    final BasicStroke borderStroke = new BasicStroke(1.0f,
-                                                     BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
-                                                     new float[] {2.0f}, 0.0f);
-
-    g2.setColor(new Color(color.getRed(), color.getGreen(), color.getBlue(),
-                          100));
-    g2.fillPolygon(polygon);
-
-    g2.setStroke(borderStroke);
-    g2.setColor(color);
-    g2.drawPolygon(polygon);
+    final javafx.scene.paint.Color color = getColor();
+    gc.setFill(Color.rgb((int)(color.getRed()*255), (int)(color.getGreen()*255), (int)(color.getBlue()*255), 100.0/255));
+    gc.fillPolygon(Arrays.stream(polygon.xpoints).asDoubleStream().toArray(), Arrays.stream(polygon.ypoints).asDoubleStream().toArray(), polygon.npoints);
+    gc.setStroke(color);
+    gc.setLineWidth(1.0);
+    gc.setLineDashes(2.0);
+    gc.strokePolygon(Arrays.stream(polygon.xpoints).asDoubleStream().toArray(), Arrays.stream(polygon.ypoints).asDoubleStream().toArray(), polygon.npoints);
   }
 
   @Override
@@ -283,26 +282,26 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
   }
 
   @Override
-  public void paintComponent(Graphics2D g2) {
+  public void paintComponent(GraphicsContext gc) {
     final Polygon polygon = getPolygon();
 
     // Draw Polygon
-    g2.setStroke(new BasicStroke(1.3f));
+    gc.setLineWidth(1.3);
 
-    g2.setColor(getColor());
-    g2.fillPolygon(polygon);
+    gc.setFill(getColor());
+    gc.fillPolygon(java.util.Arrays.stream(polygon.xpoints).asDoubleStream().toArray(), java.util.Arrays.stream(polygon.ypoints).asDoubleStream().toArray(), polygon.npoints);
 
-    g2.setColor(Color.DARK_GRAY);
-    g2.drawPolygon(polygon);
+    gc.setStroke(Color.DARKGRAY);
+    gc.strokePolygon(java.util.Arrays.stream(polygon.xpoints).asDoubleStream().toArray(), java.util.Arrays.stream(polygon.ypoints).asDoubleStream().toArray(), polygon.npoints);
 
-    if (!ghost.isEmpty()) drawGhost(g2);
+    if (!ghost.isEmpty()) drawGhost(gc);
 
     if (!pictureMode && isSelected()) {
       final int PADDING = 3;
 
-      g2.setColor(Color.DARK_GRAY);
-      g2.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
-                                   BasicStroke.JOIN_MITER, 10.0f, new float[] {2f}, 0.0f));
+      gc.setStroke(javafx.scene.paint.Color.DARKGRAY);
+      gc.setLineWidth(1.0);
+      gc.setLineDashes(2.0);
 
       final int[] xPoints = new int[4];
       final int[] yPoints = new int[4];
@@ -327,8 +326,8 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
       xPoints2[2] = polygon.xpoints[3];
       yPoints2[2] = polygon.ypoints[3] - PADDING;
 
-      g2.drawPolygon(xPoints, yPoints, xPoints.length);
-      g2.drawPolygon(xPoints2, yPoints2, xPoints2.length);
+      gc.strokePolygon(Arrays.stream(xPoints).asDoubleStream().toArray(), Arrays.stream(yPoints).asDoubleStream().toArray(), xPoints.length);
+      gc.strokePolygon(Arrays.stream(xPoints2).asDoubleStream().toArray(), Arrays.stream(yPoints2).asDoubleStream().toArray(), xPoints2.length);
     }
   }
 
@@ -338,12 +337,12 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
   }
 
   @Override
-  public void resizeLeft(MouseEvent e) {
+  public void resizeLeft(javafx.scene.input.MouseEvent e) {
     // resizing impossible
   }
 
   @Override
-  public void resizeRight(MouseEvent e) {
+  public void resizeRight(javafx.scene.input.MouseEvent e) {
     // resizing impossible
   }
 
@@ -400,7 +399,7 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
     Element multiView = doc.createElement(getXmlTagName());
     multiView.setAttribute("relationId",
                            String.valueOf(getAssociatedComponent().getId()));
-    multiView.setAttribute("color", String.valueOf(getColor().getRGB()));
+    multiView.setAttribute("color", String.valueOf(Utility.fxColorToRgbInt(getColor())));
     multiView.appendChild(Utility.boundsToXmlElement(doc, getBounds(),
                                                      "multiViewBounds"));
 

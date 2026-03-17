@@ -71,7 +71,7 @@ public class NoteProperties extends GlobalPropreties {
     panel.add(list.getScrollPane());
     panel.add(Box.createHorizontalStrut(10));
 
-    btnDelete = new SButton(PersonalizedIcon.createImageIcon("minus.png"), "Remove link");
+    btnDelete = new SButton(PersonalizedIcon.createSwingImageIcon("minus.png"), "Remove link");
     btnDelete.addActionListener(new ActionListener() {
 
       @Override

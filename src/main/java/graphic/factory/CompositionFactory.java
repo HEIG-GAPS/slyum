@@ -67,10 +67,10 @@ public class CompositionFactory extends RelationFactory {
   }
 
   @Override
-  protected void drawExtremity(Graphics2D g2) {
+  protected void drawExtremity(javafx.scene.canvas.GraphicsContext gc) {
     Point p = points.size() < 2 ? mouseLocation : points.get(1);
-    AggregationView.paintExtremity(g2, p, points.get(0), Color.BLACK,
-                                   Color.DARK_GRAY);
+    AggregationView.paintExtremity(gc, p, points.get(0), javafx.scene.paint.Color.BLACK,
+                                   javafx.scene.paint.Color.DARKGRAY);
   }
 
 }

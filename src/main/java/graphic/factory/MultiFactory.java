@@ -23,7 +23,8 @@ import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import java.awt.geom.Area;
 import java.util.LinkedList;
 
@@ -59,13 +60,13 @@ public class MultiFactory extends CreateComponent {
     final MouseAdapter ma = new MouseAdapter() {
 
       @Override
-      public void mouseEntered(MouseEvent e) {
+      public void mouseEntered(java.awt.event.MouseEvent e) {
         onButton = true;
         parent.getScene().setCursor(getCursor());
       }
 
       @Override
-      public void mouseExited(MouseEvent e) {
+      public void mouseExited(java.awt.event.MouseEvent e) {
         onButton = false;
         parent.getScene().setCursor(getCursor());
       }
@@ -73,7 +74,7 @@ public class MultiFactory extends CreateComponent {
 
     buttons[0] = new FlatButton(
         PersonalizedIcon
-            .createImageIcon("check-mark.png"));
+            .createSwingImageIcon("check-mark.png"));
     buttons[0].addMouseListener(ma);
     buttons[0].setEnabled(false);
     buttons[0].addActionListener(new ActionListener() {
@@ -85,7 +86,7 @@ public class MultiFactory extends CreateComponent {
     });
     parent.getScene().add(buttons[0]);
     buttons[1] = new FlatButton(
-        PersonalizedIcon.createImageIcon("delete-24.png"));
+        PersonalizedIcon.createSwingImageIcon("delete-24.png"));
     buttons[1].addMouseListener(ma);
     buttons[1].addActionListener(new ActionListener() {
 
@@ -227,7 +228,7 @@ public class MultiFactory extends CreateComponent {
 
   @Override
   public void gMouseMoved(MouseEvent e) {
-    final EntityView ev = parent.getEntityAtPosition(e.getPoint());
+    final EntityView ev = parent.getEntityAtPosition(new Point((int)e.getX(), (int)e.getY()));
 
     if (ev != null && ev.getClass() == ClassView.class) {
       if (classMouseHover != null)
@@ -247,7 +248,7 @@ public class MultiFactory extends CreateComponent {
 
   @Override
   public void gMousePressed(MouseEvent e) {
-    final EntityView ev = parent.getEntityAtPosition(e.getPoint());
+    final EntityView ev = parent.getEntityAtPosition(new Point((int)e.getX(), (int)e.getY()));
 
     if (ev != null && ev.getClass() == ClassView.class) {
       if (!classSelected.remove(ev))
@@ -266,7 +267,7 @@ public class MultiFactory extends CreateComponent {
   }
 
   @Override
-  public void paintComponent(Graphics2D g2) {
+  public void paintComponent(GraphicsContext gc) {
     Rectangle bounds = Utility.scaleRect(parent.getScene().getVisibleRect(),
                                          parent.getInversedScale());
 
@@ -278,15 +279,14 @@ public class MultiFactory extends CreateComponent {
     for (ClassView cv : classSelected) {
       Rectangle cvBounds = cv.getBounds();
       addClassClipped(cv.getBounds(), subArea);
-      g2.setColor(Color.RED.darker());
-      g2.setStroke(new BasicStroke(2.6f));
-      g2.drawRect(cvBounds.x, cvBounds.y, cvBounds.width + 1,
-                  cvBounds.height + 1);
+      gc.setStroke(javafx.scene.paint.Color.RED.darker());
+      gc.setLineWidth(2.6);
+      gc.strokeRect(cvBounds.x, cvBounds.y, cvBounds.width + 1, cvBounds.height + 1);
     }
 
-    g2.setColor(new Color(150, 150, 150, 120));
-    g2.setClip(subArea);
-    g2.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+    gc.setFill(javafx.scene.paint.Color.rgb(150, 150, 150, 120.0/255));
+    // Note: JavaFX clip is set differently; skipping clip for now
+    gc.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 
     // Find another way for avoid clipping with buttons.
     parent.getScrollPane().getViewport().repaint();

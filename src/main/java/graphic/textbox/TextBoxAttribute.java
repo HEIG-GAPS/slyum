@@ -7,6 +7,7 @@ import graphic.GraphicView;
 import swing.PanelClassDiagram;
 import utility.Utility;
 
+import javafx.scene.canvas.GraphicsContext;
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.text.AttributedString;
@@ -133,8 +134,8 @@ public class TextBoxAttribute extends TextBox implements Observer {
   }
 
   @Override
-  protected String truncate(Graphics2D g2, String text, int width) {
-    return Utility.truncate(g2, text, width);
+  protected String truncate(GraphicsContext gc, String text, int width) {
+    return Utility.truncate(gc.getFont(), text, width);
   }
 
   @Override
