@@ -83,7 +83,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     if (colorEntities == null)
       color = basicColor;
     else
-      color = new Color(Integer.parseInt(colorEntities));
+      { int rgb = Integer.parseInt(colorEntities); color = Color.rgb((rgb >> 16) & 0xFF, (rgb >> 8) & 0xFF, rgb & 0xFF); }
 
     return color;
   }
@@ -540,7 +540,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
   @Override
   public javafx.scene.paint.Color getDefaultColor() {
     Color c = getBasicColor();
-    return javafx.scene.paint.Color.rgb(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha() / 255.0);
+    return Color.color(c.getRed(), c.getGreen(), c.getBlue(), c.getOpacity());
   }
 
   public void setLocationRelativeTo(Point dropPoint) {
@@ -571,8 +571,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     entityView.setAttribute("componentID",
                             String.valueOf(getAssociatedComponent().getId()));
     entityView.setAttribute("color", String.valueOf(
-        new Color((float) defaultColor.getRed(), (float) defaultColor.getGreen(),
-                  (float) defaultColor.getBlue()).getRGB()));
+utility.Utility.fxColorToRgbInt(defaultColor)));
     entityView.appendChild(Utility.boundsToXmlElement(doc, getBounds(),
                                                       "geometry"));
     return entityView;
@@ -615,7 +614,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
     // Use JavaFX font for metrics and rendering
     javafx.scene.text.Font jfxEntityFont = javafx.scene.text.Font.font(
         entityName.getEffectivFont().getFamily(),
-        entityName.getEffectivFont().getSize2D() * parent.getZoom());
+        entityName.getEffectivFont().getSize() * parent.getZoom());
 
     String className = component.getName();
     javafx.scene.text.Text classNameNode = new javafx.scene.text.Text(className);
@@ -834,7 +833,7 @@ public abstract class EntityView extends MovableComponent implements Observer, C
 
     component.addObserver(this);
     Color c = getBasicColor();
-    setColor(javafx.scene.paint.Color.rgb(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha() / 255.0));
+    setColor(Color.color(c.getRed(), c.getGreen(), c.getBlue(), c.getOpacity()));
   }
 
   protected abstract void initializeMenuItemsAddElements(ContextMenu popupmenu);

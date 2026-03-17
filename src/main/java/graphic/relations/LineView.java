@@ -671,8 +671,30 @@ public abstract class LineView extends GraphicComponent
     return points.get(points.indexOf(grip) + 1);
   }
 
+
+  /**
+   * Applies a {@link BasicStroke}'s properties (line width, dash pattern) to a JavaFX
+   * {@link javafx.scene.canvas.GraphicsContext}.
+   */
+  protected static void applyStrokeToContext(javafx.scene.canvas.GraphicsContext gc, Stroke stroke) {
+    if (stroke instanceof BasicStroke bs) {
+      gc.setLineWidth(bs.getLineWidth());
+      float[] dashes = bs.getDashArray();
+      if (dashes != null && dashes.length > 0) {
+        double[] dd = new double[dashes.length];
+        for (int i = 0; i < dashes.length; i++) dd[i] = dashes[i];
+        gc.setLineDashes(dd);
+      } else {
+        gc.setLineDashes((double[]) null);
+      }
+    } else {
+      gc.setLineWidth(LINE_WIDTH);
+      gc.setLineDashes((double[]) null);
+    }
+  }
+
   @Override
-  public void paintComponent(GraphicsContext gc) {
+  public void paintComponent(javafx.scene.canvas.GraphicsContext gc) {
     if (!isVisible() || points.size() < 2) return;
 
     applyStrokeToContext(gc, lineStroke);

@@ -79,7 +79,7 @@ public class SColorMenuItem extends JMenu {
         @Override
         public void actionPerformed(ActionEvent e) {
           MultiViewManager.getSelectedGraphicView()
-                          .setColorForSelectedItems(color);
+                          .setColorForSelectedItems(new javafx.scene.paint.Color(color.getRed()/255.0, color.getGreen()/255.0, color.getBlue()/255.0, color.getAlpha()/255.0));
         }
       });
     }

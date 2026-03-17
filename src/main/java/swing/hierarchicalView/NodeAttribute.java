@@ -58,7 +58,7 @@ public class NodeAttribute
 
   @Override
   public ImageIcon getCustomizedIcon() {
-    return PersonalizedIcon.createImageIcon("attribute.png");
+    return PersonalizedIcon.createSwingImageIcon("attribute.png");
   }
 
   @Override

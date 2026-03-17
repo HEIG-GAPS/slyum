@@ -42,7 +42,7 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
     panel.add(lblName);
 
     btnOI = new FlatButton("Overrides & Implementations...",
-                           PersonalizedIcon.createImageIcon("method.png"));
+                           PersonalizedIcon.createSwingImageIcon("method.png"));
     btnOI.setToolTipText("Open Overrides & Implementations");
     btnOI.setActionCommand(ACTION_OI);
     btnOI.addActionListener(this);
@@ -50,7 +50,7 @@ public class InheritanceProperties extends GlobalPropreties implements ActionLis
     btnOI.setHorizontalAlignment(SwingUtilities.LEFT);
 
     btnAdjustInheritance = new FlatButton("Autopath",
-                                          PersonalizedIcon.createImageIcon("adjust-inheritance.png"));
+                                          PersonalizedIcon.createSwingImageIcon("adjust-inheritance.png"));
     btnAdjustInheritance.setActionCommand(Slyum.ACTION_ADJUST_INHERITANCE);
     btnAdjustInheritance.addActionListener(this);
     btnAdjustInheritance.setMaximumSize(new Dimension(250, 100));

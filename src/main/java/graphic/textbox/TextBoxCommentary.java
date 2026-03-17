@@ -24,6 +24,7 @@ import utility.Utility;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -181,7 +182,7 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
     if (pictureMode) return;
     Color backColor = parent.getColor();
     Color fill = getColor();
-    fill = Color.rgb(fill.getRed(), fill.getGreen(), fill.getBlue(), 100.0/255);
+    fill = Color.rgb((int)(fill.getRed()*255), (int)(fill.getGreen()*255), (int)(fill.getBlue()*255), 100.0/255);
     Color border = backColor.darker();
     gc.setFill(fill);
     gc.fillRect(ghost.x, ghost.y, ghost.width, ghost.height);
@@ -270,7 +271,7 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
     this.text = text;
 
     setColor(EntityView.getBasicColor());
-    popupMenu.addSeparator();
+    popupMenu.getItems().add(new SeparatorMenuItem());
     final MenuItem item = new MenuItem("Delete commentary");
     item.setId("DeleteCommentary");
     item.setOnAction(e -> delete());
@@ -394,7 +395,7 @@ public class TextBoxCommentary extends MovableComponent implements ColoredCompon
 
       noteLine = doc.createElement("noteLine");
       noteLine.setAttribute("relationId", String.valueOf(id));
-      noteLine.setAttribute("color", String.valueOf(lv.getColor().getRGB()));
+      noteLine.setAttribute("color", String.valueOf(utility.Utility.fxColorToRgbInt(lv.getColor())));
 
       for (RelationGrip grip : lv.getPoints()) {
         Point pt = grip.getAnchor();

@@ -65,22 +65,22 @@ public class SPanelFileComponent extends SToolBar implements ActionListener {
 
   private SPanelFileComponent() {
     add(newProject = createSButton(
-        PersonalizedIcon.createImageIcon("new.png"),
+        PersonalizedIcon.createSwingImageIcon("new.png"),
         Slyum.ACTION_NEW_PROJECT, Color.BLUE, TT_NEW_PROJECT));
     add(open = createSButton(
-        PersonalizedIcon.createImageIcon("open.png"),
+        PersonalizedIcon.createSwingImageIcon("open.png"),
         Slyum.ACTION_OPEN, Color.BLUE, TT_OPEN));
     add(save = createSButton(
-        PersonalizedIcon.createImageIcon("save.png"),
+        PersonalizedIcon.createSwingImageIcon("save.png"),
         Slyum.ACTION_SAVE, Color.BLUE, TT_SAVE));
     add(new SSeparator());
-    add(export = createSButton(PersonalizedIcon.createImageIcon("export.png"),
+    add(export = createSButton(PersonalizedIcon.createSwingImageIcon("export.png"),
                                Slyum.ACTION_EXPORT_IMAGE, Color.BLUE, TT_EXPORT));
     add(klipper = createSButton(
-        PersonalizedIcon.createImageIcon("klipper.png"),
+        PersonalizedIcon.createSwingImageIcon("klipper.png"),
         Slyum.ACTION_KLIPPER, Color.BLUE, TT_CLIPBOARD));
     add(print = createSButton(
-        PersonalizedIcon.createImageIcon("print.png"),
+        PersonalizedIcon.createSwingImageIcon("print.png"),
         Slyum.ACTION_PRINT, Color.BLUE, TT_PRINT));
   }
 

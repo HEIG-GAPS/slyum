@@ -17,6 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseButton;
@@ -104,7 +105,7 @@ public class InheritanceView extends RelationView {
 
     this.inheritance = inheritance;
 
-    popupMenu.addSeparator();
+    popupMenu.getItems().add(new SeparatorMenuItem());
     menuItemOI = makeMenuItem("Overrides & Implementations...", "O&I", "method");
     popupMenu.getItems().add(menuItemOI);
     popupMenu.getItems().add(makeMenuItem("Autopath", Slyum.ACTION_ADJUST_INHERITANCE, "adjust-inheritance"));

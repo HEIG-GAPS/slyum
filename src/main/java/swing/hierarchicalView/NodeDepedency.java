@@ -66,7 +66,7 @@ public class NodeDepedency extends AbstractNode {
 
   @Override
   public ImageIcon getCustomizedIcon() {
-    return PersonalizedIcon.createImageIcon("dependency.png");
+    return PersonalizedIcon.createSwingImageIcon("dependency.png");
   }
 
   @Override

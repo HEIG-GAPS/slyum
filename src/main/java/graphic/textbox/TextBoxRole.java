@@ -11,7 +11,7 @@ import graphic.relations.MagneticGrip;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
+import javafx.scene.input.MouseEvent;
 import java.util.Observable;
 
 /**

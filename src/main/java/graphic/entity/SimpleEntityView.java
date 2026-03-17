@@ -68,17 +68,17 @@ public abstract class SimpleEntityView extends EntityView {
 
   private ToggleGroup groupView, groupViewMethods;
   private MenuItem menuItemAbstract;
-  private MenuItem menuItemMethodsAll;
-  private MenuItem menuItemMethodsDefault;
-  private MenuItem menuItemMethodsName;
-  private MenuItem menuItemMethodsNothing;
-  private MenuItem menuItemMethodsType;
+  private RadioMenuItem menuItemMethodsAll;
+  private RadioMenuItem menuItemMethodsDefault;
+  private RadioMenuItem menuItemMethodsName;
+  private RadioMenuItem menuItemMethodsNothing;
+  private RadioMenuItem menuItemMethodsType;
   private MenuItem menuItemStatic;
-  private MenuItem menuItemViewAll;
-  private MenuItem menuItemViewAttributes;
-  private MenuItem menuItemViewDefault;
-  private MenuItem menuItemViewMethods;
-  private MenuItem menuItemViewNothing;
+  private RadioMenuItem menuItemViewAll;
+  private RadioMenuItem menuItemViewAttributes;
+  private RadioMenuItem menuItemViewDefault;
+  private RadioMenuItem menuItemViewMethods;
+  private RadioMenuItem menuItemViewNothing;
 
   public SimpleEntityView(GraphicView parent, SimpleEntity component) {
     super(parent, component);
@@ -94,31 +94,31 @@ public abstract class SimpleEntityView extends EntityView {
       addMethod();
     } else if ("AddAttribute".equals(cmd)) {
       addAttribute();
-    } else if ("ViewDefault".equals(e.getActionCommand())) {
+    } else if ("ViewDefault".equals(cmd)) {
       parent.setDefaultForSelectedEntities(true);
-    } else if ("ViewAttribute".equals(e.getActionCommand())) {
+    } else if ("ViewAttribute".equals(cmd)) {
       parent.showAttributsForSelectedEntity(true);
       parent.showMethodsForSelectedEntity(false);
-    } else if ("ViewMethods".equals(e.getActionCommand())) {
+    } else if ("ViewMethods".equals(cmd)) {
       parent.showAttributsForSelectedEntity(false);
       parent.showMethodsForSelectedEntity(true);
-    } else if ("ViewAll".equals(e.getActionCommand())) {
+    } else if ("ViewAll".equals(cmd)) {
       parent.showAttributsForSelectedEntity(true);
       parent.showMethodsForSelectedEntity(true);
-    } else if ("ViewNothing".equals(e.getActionCommand())) {
+    } else if ("ViewNothing".equals(cmd)) {
       parent.showAttributsForSelectedEntity(false);
       parent.showMethodsForSelectedEntity(false);
-    } else if ("ViewMethodsDefault".equals(e.getActionCommand()))
+    } else if ("ViewMethodsDefault".equals(cmd))
       methodViewChangeClicked(ParametersViewStyle.DEFAULT);
-    else if ("ViewTypeAndName".equals(e.getActionCommand()))
+    else if ("ViewTypeAndName".equals(cmd))
       methodViewChangeClicked(ParametersViewStyle.TYPE_AND_NAME);
-    else if ("ViewType".equals(e.getActionCommand()))
+    else if ("ViewType".equals(cmd))
       methodViewChangeClicked(ParametersViewStyle.TYPE);
-    else if ("ViewName".equals(e.getActionCommand()))
+    else if ("ViewName".equals(cmd))
       methodViewChangeClicked(ParametersViewStyle.NAME);
-    else if ("ViewMethodNothing".equals(e.getActionCommand()))
+    else if ("ViewMethodNothing".equals(cmd))
       methodViewChangeClicked(ParametersViewStyle.NOTHING);
-    else if ("Abstract".equals(e.getActionCommand())) {
+    else if ("Abstract".equals(cmd)) {
       IDiagramComponent component;
       if (pressedTextBox == null) {
         component = getAssociatedComponent();
@@ -129,17 +129,17 @@ public abstract class SimpleEntityView extends EntityView {
         ((Method) component).setAbstract(!((Method) component).isAbstract());
       }
       component.notifyObservers();
-    } else if ("Static".equals(e.getActionCommand())) {
+    } else if ("Static".equals(cmd)) {
       IDiagramComponent component = pressedTextBox.getAssociatedComponent();
       if (component instanceof Attribute)
         ((Attribute) component).setStatic(!((Attribute) component).isStatic());
       else
         ((Method) component).setStatic(!((Method) component).isStatic());
       component.notifyObservers();
-    } else if (Slyum.ACTION_TEXTBOX_UP.equals(e.getActionCommand())
-               || Slyum.ACTION_TEXTBOX_DOWN.equals(e.getActionCommand())) {
+    } else if (Slyum.ACTION_TEXTBOX_UP.equals(cmd)
+               || Slyum.ACTION_TEXTBOX_DOWN.equals(cmd)) {
       int offset = 1;
-      if (Slyum.ACTION_TEXTBOX_UP.equals(e.getActionCommand())) offset = -1;
+      if (Slyum.ACTION_TEXTBOX_UP.equals(cmd)) offset = -1;
       if (pressedTextBox.getClass() == TextBoxAttribute.class) {
         final Attribute attribute = (Attribute) ((TextBoxAttribute) pressedTextBox)
             .getAssociatedComponent();
@@ -148,7 +148,7 @@ public abstract class SimpleEntityView extends EntityView {
         final Method method = (Method) ((TextBoxMethod) pressedTextBox)
             .getAssociatedComponent();
         ((SimpleEntity) component).moveMethodPosition(method, offset);
-      } else if (Slyum.ACTION_DUPLICATE.equals(e.getActionCommand())) {
+      } else if (Slyum.ACTION_DUPLICATE.equals(cmd)) {
         if (pressedTextBox != null) {
           IDiagramComponent component = pressedTextBox.getAssociatedComponent();
           SimpleEntity entity = (SimpleEntity) getAssociatedComponent();
@@ -385,9 +385,9 @@ public abstract class SimpleEntityView extends EntityView {
 
       } else {
         menuItemMoveUp.setDisable(!false);
-        menuItemMoveDown.setEnabled(false);
-        menuItemStatic.setEnabled(false);
-        menuItemAbstract.setEnabled(true);
+        menuItemMoveDown.setDisable(true);
+        menuItemStatic.setDisable(true);
+        menuItemAbstract.setDisable(false);
       }
     }
     super.maybeShowPopup(e, popupMenu);
@@ -611,7 +611,7 @@ public abstract class SimpleEntityView extends EntityView {
   }
 
   private void updateMenuItemMethodsView() {
-    MenuItem itemToSelect;
+    RadioMenuItem itemToSelect;
     ParametersViewStyle newView = null;
 
     if (pressedTextBox == null) {
@@ -627,7 +627,7 @@ public abstract class SimpleEntityView extends EntityView {
             .get(i + 1).getAssociatedComponent();
         if (!current.getConcretParametersViewStyle().equals(
             next.getConcretParametersViewStyle())) {
-          groupViewMethods.clearSelection();
+          groupViewMethods.selectToggle(null);
           return;
         }
       }
@@ -666,12 +666,12 @@ public abstract class SimpleEntityView extends EntityView {
           break;
       }
 
-      groupViewMethods.setSelected(itemToSelect.getModel(), true);
+      itemToSelect.setSelected(true);
     }
   }
 
   private void updateMenuItemView() {
-    MenuItem menuItemToSelect;
+    RadioMenuItem menuItemToSelect;
 
     // Check si toutes les entités sélectionnées ont le même type de vue.
     List<SimpleEntityView> selected = getSelectedSimpleEntityView(parent);
@@ -680,7 +680,7 @@ public abstract class SimpleEntityView extends EntityView {
       if (view.displayDefault != next.displayDefault
           || view.displayAttributes != next.displayAttributes
           || view.displayMethods != next.displayMethods) {
-        groupView.clearSelection();
+        groupView.selectToggle(null);
         return;
       }
     }
@@ -696,7 +696,7 @@ public abstract class SimpleEntityView extends EntityView {
     else
       menuItemToSelect = menuItemViewNothing;
 
-    groupView.setSelected(menuItemToSelect.getModel(), true);
+    menuItemToSelect.setSelected(true);
   }
 
 }

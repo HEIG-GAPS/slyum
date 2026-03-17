@@ -53,9 +53,9 @@ public class NoteFactory extends RelationFactory {
   }
 
   @Override
-  protected void drawExtremity(Graphics2D g2) {
-    TextBoxCommentary.drawNote(g2, new Rectangle(mouseLocation.x,
-                                                 mouseLocation.y, 30, 30), 8, new Color(254, 250, 220));
+  protected void drawExtremity(javafx.scene.canvas.GraphicsContext gc) {
+    TextBoxCommentary.drawNote(gc, new Rectangle(mouseLocation.x,
+                                                 mouseLocation.y, 30, 30), 8, javafx.scene.paint.Color.rgb(254, 250, 220));
   }
 
 }

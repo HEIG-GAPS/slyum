@@ -484,6 +484,17 @@ public class Utility {
    *
    * @param gc the JavaFX GraphicsContext
    */
+  public static void setDefaultRenderQuality(final java.awt.Graphics2D g2) {
+    g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING,
+                        java.awt.RenderingHints.VALUE_ANTIALIAS_DEFAULT);
+    g2.setRenderingHint(java.awt.RenderingHints.KEY_RENDERING,
+                        java.awt.RenderingHints.VALUE_RENDER_DEFAULT);
+  }
+
+  public static void setDefaultRenderQuality(final java.awt.Graphics g) {
+    if (g instanceof java.awt.Graphics2D) setDefaultRenderQuality((java.awt.Graphics2D) g);
+  }
+
   public static void setDefaultRenderQuality(GraphicsContext gc) {
     // Disable image smoothing for default (unenhanced) quality
     gc.setImageSmoothing(false);
@@ -499,6 +510,34 @@ public class Utility {
    *
    * @param gc the JavaFX GraphicsContext
    */
+
+  /**
+   * Set render quality hints on an AWT {@link java.awt.Graphics2D} (used by Swing components).
+   */
+  public static void setRenderQuality(final java.awt.Graphics2D g2) {
+    g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING,
+                        java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+    g2.setRenderingHint(java.awt.RenderingHints.KEY_RENDERING,
+                        java.awt.RenderingHints.VALUE_RENDER_QUALITY);
+  }
+
+  /**
+   * Set render quality hints on an AWT {@link java.awt.Graphics} (used by Swing components).
+   */
+  public static void setRenderQuality(final java.awt.Graphics g) {
+    if (g instanceof java.awt.Graphics2D) setRenderQuality((java.awt.Graphics2D) g);
+  }
+
+
+  /**
+   * Install an action on a Swing root pane that triggers when the Escape key is pressed.
+   */
+  public static void setRootPaneActionOnEsc(javax.swing.JRootPane rootPane, javax.swing.Action action) {
+    javax.swing.InputMap im = rootPane.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW);
+    im.put(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0), "escAction");
+    rootPane.getActionMap().put("escAction", action);
+  }
+
   public static void setRenderQuality(final GraphicsContext gc) {
     if (getGraphicQualityType().equals(GraphicQualityType.LOW)) {
       gc.setImageSmoothing(false);

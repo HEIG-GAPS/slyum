@@ -29,13 +29,11 @@ public class SMessageDialog {
   /* ----------------------------------------------------------------------- */
 
   private static String getTitle() {
-    SlyumApp app = SlyumApp.getInstance();
-    return app != null ? app.getName() : "Slyum";
+    return "Slyum";
   }
 
   private static Window ownerOrNull() {
-    SlyumApp app = SlyumApp.getInstance();
-    return (app != null) ? app.getPrimaryStage() : null;
+    return null;
   }
 
   public static void showErrorMessage(String message) {

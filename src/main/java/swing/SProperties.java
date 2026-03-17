@@ -27,6 +27,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javafx.scene.paint.Color;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -86,7 +87,7 @@ public class SProperties extends JDialog {
     });
 
     setTitle("Slyum - Properties");
-    setIconImage(PersonalizedIcon.getLogo().getImage());
+    setIconImage(PersonalizedIcon.createSwingImageIcon("logo32.png").getImage());
     setMinimumSize(new Dimension(600, 665));
     setModalityType(ModalityType.APPLICATION_MODAL);
     setFocusable(true);
@@ -144,11 +145,11 @@ public class SProperties extends JDialog {
           gbc_btnDefaultClassColor.gridx = 0;
           gbc_btnDefaultClassColor.gridy = 0;
           panel.add(btnDefaultClassColor, gbc_btnDefaultClassColor);
-          btnDefaultClassColor.setBackground(EntityView.getBasicColor());
+          { javafx.scene.paint.Color fc = EntityView.getBasicColor(); btnDefaultClassColor.setBackground(new java.awt.Color((float)fc.getRed(),(float)fc.getGreen(),(float)fc.getBlue(),(float)fc.getOpacity())); }
           btnBackgroundColor = new ButtonColor("Background-color") {
             @Override
             public Color getDefaultColor() {
-              return GraphicView.BASIC_COLOR;
+              { java.awt.Color _ac = GraphicView.BASIC_COLOR; return javafx.scene.paint.Color.rgb(_ac.getRed(), _ac.getGreen(), _ac.getBlue(), _ac.getAlpha()/255.0); }
             }
           };
           final GridBagConstraints gbc_btnBackgroundColor = new GridBagConstraints();
@@ -166,7 +167,7 @@ public class SProperties extends JDialog {
                 if (ca.isDefaultColor())
                   btnBackgroundColor.setColor(btnBackgroundColor.getDefaultColor());
                 else
-                  btnBackgroundColor.setColor(ca.getColor());
+                  { java.awt.Color _ac = ca.getColor(); btnBackgroundColor.setColor(javafx.scene.paint.Color.rgb(_ac.getRed(), _ac.getGreen(), _ac.getBlue(), _ac.getAlpha()/255.0)); }
             }
           });
           {
@@ -350,9 +351,9 @@ public class SProperties extends JDialog {
               {
                 panel_grid_color = new JPanel();
                 panel_grid_color.setBorder(new TitledBorder(new LineBorder(
-                    new Color(184, 207, 229)), "Color",
+                    new java.awt.Color(184, 207, 229)), "Color",
                                                             TitledBorder.LEADING, TitledBorder.TOP, null,
-                                                            new Color(51, 51, 51)));
+                                                            new java.awt.Color(51, 51, 51)));
                 final GridBagConstraints gbc_panel_2 = new GridBagConstraints();
                 gbc_panel_2.fill = GridBagConstraints.BOTH;
                 gbc_panel_2.gridx = 0;
@@ -414,7 +415,7 @@ public class SProperties extends JDialog {
 
                       @Override
                       public Color getDefaultColor() {
-                        return new Color(GraphicView.GRID_COLOR);
+                        { int _rgb = GraphicView.GRID_COLOR; return javafx.scene.paint.Color.rgb((_rgb >> 16) & 0xFF, (_rgb >> 8) & 0xFF, _rgb & 0xFF); }
                       }
 
                       @Override
@@ -431,7 +432,7 @@ public class SProperties extends JDialog {
                           if (ca.isDefaultColor())
                             btnColor.setColor(btnColor.getDefaultColor());
                           else
-                            btnColor.setColor(ca.getColor());
+                            { java.awt.Color _ac = ca.getColor(); btnColor.setColor(javafx.scene.paint.Color.rgb(_ac.getRed(), _ac.getGreen(), _ac.getBlue(), _ac.getAlpha()/255.0)); }
                       }
                     });
                   }
@@ -447,7 +448,7 @@ public class SProperties extends JDialog {
                 if (ca.isDefaultColor())
                   btnDefaultClassColor.setColor(btnDefaultClassColor.getDefaultColor());
                 else
-                  btnDefaultClassColor.setColor(ca.getColor());
+                  { java.awt.Color _ac = ca.getColor(); btnDefaultClassColor.setColor(javafx.scene.paint.Color.rgb(_ac.getRed(), _ac.getGreen(), _ac.getBlue(), _ac.getAlpha()/255.0)); }
             }
           });
         }
@@ -471,7 +472,7 @@ public class SProperties extends JDialog {
             panelLabelAlert.setVisible(false);
             panelLabelAlert.setMinimumSize(new Dimension(200, 40));
             panelLabelAlert.setMaximumSize(new Dimension(200, 40));
-            panelLabelAlert.setBorder(new LineBorder(Color.RED));
+            panelLabelAlert.setBorder(new LineBorder(java.awt.Color.RED));
             final GridBagConstraints gbc_panel_1 = new GridBagConstraints();
             gbc_panel_1.gridwidth = 2;
             gbc_panel_1.insets = new Insets(0, 0, 5, 0);
@@ -482,7 +483,7 @@ public class SProperties extends JDialog {
             {
               JLabel lblAlert = new JLabel("Some fonts cause zoom problems");
               lblAlert.setFont(new Font("Tahoma", Font.PLAIN, 12));
-              lblAlert.setForeground(Color.RED);
+              lblAlert.setForeground(java.awt.Color.RED);
               panelLabelAlert.add(lblAlert);
             }
           }
@@ -668,7 +669,7 @@ public class SProperties extends JDialog {
                 @Override
                 public void actionPerformed(ActionEvent arg0) {
                   SMessageDialog.showInformationMessage(
-                      "This will be implemented in a futur update.", link);
+                      "This will be implemented in a futur update.");
                 }
               });
               final GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
@@ -693,18 +694,18 @@ public class SProperties extends JDialog {
               new CompoundBorder(
                   new EmptyBorder(10, 10, 10, 10),
                   new TitledBorder(
-                      new LineBorder(new Color(184, 207, 229)),
+                      new LineBorder(new java.awt.Color(184, 207, 229)),
                       "Diagram editor", TitledBorder.LEADING, TitledBorder.TOP,
-                      null, new Color(51, 51, 51))));
+                      null, new java.awt.Color(51, 51, 51))));
 
           panelUpdate.setLayout(new BoxLayout(panelUpdate, BoxLayout.Y_AXIS));
           panelUpdate.setBorder(new CompoundBorder(
               new CompoundBorder(
                   new EmptyBorder(10, 10, 10, 10),
                   new TitledBorder(
-                      new LineBorder(new Color(184, 207, 229)),
+                      new LineBorder(new java.awt.Color(184, 207, 229)),
                       "Update", TitledBorder.LEADING, TitledBorder.TOP,
-                      null, new Color(51, 51, 51))),
+                      null, new java.awt.Color(51, 51, 51))),
               new EmptyBorder(10, 10, 10, 10)));
 
           panelUpdate.add(chckbxCheckUpdateAtLaunch =
@@ -1004,7 +1005,7 @@ public class SProperties extends JDialog {
             });
 
             if (needRestart)
-              SMessageDialog.showWarningMessage("You must restart Slyum to apply these changes.", SProperties.this);
+              SMessageDialog.showWarningMessage("You must restart Slyum to apply these changes.");
 
             setVisible(false);
             MultiViewManager.getSelectedGraphicView().repaint();
@@ -1094,15 +1095,15 @@ public class SProperties extends JDialog {
                                        .getProperty(PropertyLoader.GRID_POINT_OPACITY);
     gripOpacity = gripOpacity == null ? "100" : gripOpacity;
 
-    btnBackgroundColor.setBackground(GraphicView.getBasicColor());
-    btnDefaultClassColor.setBackground(EntityView.getBasicColor());
+    { javafx.scene.paint.Color fc = GraphicView.getBasicColor(); btnBackgroundColor.setBackground(new java.awt.Color((float)fc.getRed(),(float)fc.getGreen(),(float)fc.getBlue(),(float)fc.getOpacity())); }
+    { javafx.scene.paint.Color fc = EntityView.getBasicColor(); btnDefaultClassColor.setBackground(new java.awt.Color((float)fc.getRed(),(float)fc.getGreen(),(float)fc.getBlue(),(float)fc.getOpacity())); }
     ckbBackgroundGradient.setSelected(GraphicView.isBackgroundGradient());
     ckbEntityGradient.setSelected(GraphicView.isEntityGradient());
     chckbxOpacityGrid.setSelected(GraphicView.isGridOpacityEnable());
     sliderGridPoint.setValue(Integer.parseInt(gripOpacity));
     sliderGridPoint.setEnabled(chckbxOpacityGrid.isSelected());
     sliderGridSize.setValue(GraphicView.getGridSize());
-    btnColor.setBackground(new Color(GraphicView.getGridColor()));
+    { java.awt.Color _gc = GraphicView.getGridColor(); btnColor.setBackground(_gc); }
     listName.setSelectedValue(TextBox.getFontName(), true);
     listSize.setSelectedValue(TextBox.getFontSize(), true);
     chckbxShowGrid.setSelected(GraphicView.isGridVisible());
@@ -1157,7 +1158,7 @@ public class SProperties extends JDialog {
 
   private void showOpacityWarning() {
     SMessageDialog.showWarningMessage(
-        SMessageDialog.WARNING_OPTION_DECREASE_PERF, this);
+        SMessageDialog.WARNING_OPTION_DECREASE_PERF);
   }
 
   public static enum IntersectionLineSize {
@@ -1192,17 +1193,22 @@ public class SProperties extends JDialog {
 
     @Override
     public Color getColor() {
-      return getBackground();
+      java.awt.Color awtC = getBackground();
+      if (awtC == null) return Color.WHITE;
+      return Color.rgb(awtC.getRed(), awtC.getGreen(), awtC.getBlue(), awtC.getAlpha() / 255.0);
     }
 
     @Override
     public void setColor(Color color) {
-      setBackground(color);
+      setBackground(new java.awt.Color((float)color.getRed(), (float)color.getGreen(),
+                                       (float)color.getBlue(), (float)color.getOpacity()));
     }
 
     @Override
     public void setDefaultStyle() {
-      setBackground(getDefaultColor());
+      Color jfxC = getDefaultColor();
+      setBackground(new java.awt.Color((float)jfxC.getRed(), (float)jfxC.getGreen(),
+                                       (float)jfxC.getBlue(), (float)jfxC.getOpacity()));
     }
 
   }

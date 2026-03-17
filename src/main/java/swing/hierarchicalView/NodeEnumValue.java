@@ -68,7 +68,7 @@ public class NodeEnumValue extends DefaultMutableTreeNode implements ICustomized
 
   @Override
   public ImageIcon getCustomizedIcon() {
-    return PersonalizedIcon.createImageIcon("enum.png");
+    return PersonalizedIcon.createSwingImageIcon("enum.png");
   }
 
 }

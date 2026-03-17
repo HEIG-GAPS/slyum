@@ -6,6 +6,8 @@ import graphic.GraphicView;
 import utility.Utility;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import java.awt.*;
 
 /**
@@ -41,7 +43,9 @@ public class TextBoxEntityName extends TextBox {
 
     if (entity.isNameItalic()) style |= Font.ITALIC;
 
-    effectivFont = getFont().deriveFont(style);
+    javafx.scene.text.FontWeight fw = ((style & java.awt.Font.BOLD) != 0) ? FontWeight.BOLD : FontWeight.NORMAL;
+    javafx.scene.text.FontPosture fp = ((style & java.awt.Font.ITALIC) != 0) ? FontPosture.ITALIC : FontPosture.REGULAR;
+    effectivFont = javafx.scene.text.Font.font(getFont().getFamily(), fw, fp, getFont().getSize());
   }
 
   @Override

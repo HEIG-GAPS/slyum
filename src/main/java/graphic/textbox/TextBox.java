@@ -31,7 +31,7 @@ public abstract class TextBox extends GraphicComponent {
   public final static int FONT_SIZE = 12;
 
   public static Font getFont() {
-    return new Font(getFontName(), Font.PLAIN, getFontSize());
+    return javafx.scene.text.Font.font(getFontName(), getFontSize());
   }
 
   public static String getFontName() {
@@ -56,7 +56,7 @@ public abstract class TextBox extends GraphicComponent {
 
   public static void setFont(Font newFont) {
     setFontName(newFont.getFamily());
-    setFontSize(newFont.getSize());
+    setFontSize((int) newFont.getSize());
   }
 
   public static void setFontName(String name) {
@@ -125,8 +125,7 @@ public abstract class TextBox extends GraphicComponent {
     };
 
     textField.setBackground(new Color(255, 255, 255));
-    textField.setFont(effectivFont.deriveFont((float) parent.getScale()
-                                              * (float) getFont().getSize()));
+    textField.setFont(new java.awt.Font(effectivFont.getFamily(), java.awt.Font.PLAIN, (int)(parent.getScale() * getFont().getSize())));
     double scale = parent.getScale();
     textField.setBounds(new Rectangle((int) (bounds.x * scale),
                                       (int) (bounds.y * scale), (int) (bounds.width * scale),

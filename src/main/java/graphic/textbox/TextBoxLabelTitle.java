@@ -6,7 +6,7 @@ import graphic.relations.RelationGrip;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
+import javafx.scene.input.MouseEvent;
 import java.util.LinkedList;
 import java.util.Observable;
 

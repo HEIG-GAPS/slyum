@@ -72,7 +72,7 @@ public class TextBoxDiagramName extends TextBox implements Observer {
   @Override
   protected void createEffectivFont() {
     super.createEffectivFont();
-    effectivFont = effectivFont.deriveFont(16f);
+    effectivFont = javafx.scene.text.Font.font(effectivFont.getFamily(), 16.0);
   }
 
   @Override

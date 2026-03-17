@@ -42,7 +42,7 @@ public class NodeInnerClass extends AbstractNode {
 
   @Override
   public ImageIcon getCustomizedIcon() {
-    return PersonalizedIcon.createImageIcon("innerClass.png");
+    return PersonalizedIcon.createSwingImageIcon("innerClass.png");
   }
 
   @Override

@@ -434,7 +434,7 @@ public abstract class GraphicComponent extends Observable implements XmlElement 
    * @return the new MenuItem created
    */
   public MenuItem makeMenuItem(String name, String action, String imgIcon) {
-    Image img = PersonalizedIcon.createImageIcon(imgIcon + ".png");
+    Image img = PersonalizedIcon.createSwingImageIcon(imgIcon + ".png");
     MenuItem menuItem = new MenuItem(name);
     menuItem.setId(action);
     if (img != null) menuItem.setGraphic(new ImageView(img));

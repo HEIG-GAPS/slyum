@@ -9,6 +9,7 @@ import swing.PanelClassDiagram;
 import utility.Utility;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.text.FontPosture;
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.text.AttributedString;
@@ -44,7 +45,7 @@ public class TextBoxMethod extends TextBox implements Observer {
   @Override
   public void createEffectivFont() {
     if (method.isAbstract())
-      effectivFont = getFont().deriveFont(Font.ITALIC);
+      effectivFont = javafx.scene.text.Font.font(getFont().getFamily(), FontPosture.ITALIC, getFont().getSize());
     else
       effectivFont = getFont();
   }

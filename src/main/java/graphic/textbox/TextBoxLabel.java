@@ -62,7 +62,7 @@ public abstract class TextBoxLabel extends TextBox implements Observer {
 
   @Override
   public void createEffectivFont() {
-    effectivFont = getFont().deriveFont(14.0f);
+    effectivFont = javafx.scene.text.Font.font(getFont().getFamily(), 14.0);
   }
 
   @Override

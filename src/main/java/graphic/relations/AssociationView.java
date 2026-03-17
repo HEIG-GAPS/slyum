@@ -12,6 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseButton;
@@ -51,7 +52,7 @@ public abstract class AssociationView extends RelationView {
     parent.addOthersComponents(tb);
 
     // Gestion du menu contextuel
-    popupMenu.addSeparator();
+    popupMenu.getItems().add(new SeparatorMenuItem());
     menuNavigation = new Menu("Navigability");
     popupMenu.getItems().add(menuNavigation);
     btnGrpNavigation = new ToggleGroup();

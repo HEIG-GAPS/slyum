@@ -68,7 +68,7 @@ public class EnumView extends EntityView {
   @Override
   protected void initializeMenuViews(ContextMenu popupMenu) {
     Menu subMenu = new Menu("Values view");
-    Image img = PersonalizedIcon.createImageIcon("eye.png");
+    Image img = PersonalizedIcon.createSwingImageIcon("eye.png");
     if (img != null) subMenu.setGraphic(new ImageView(img));
     btnGrpEnumValuesVisible = new ToggleGroup();
     subMenu.getItems().add(radBtnDefault = makeRadioButtonMenuItem("Default",

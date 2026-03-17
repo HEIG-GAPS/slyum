@@ -62,7 +62,7 @@ public class SColorAssigner extends JDialog {
     setModalityType(ModalityType.APPLICATION_MODAL);
     setResizable(false);
     setTitle("Slyum - Choose a color...");
-    setIconImage(PersonalizedIcon.getLogo().getImage());
+    setIconImage(PersonalizedIcon.createSwingImageIcon("logo32.png").getImage());
     setBounds(100, 100, 635, 421);
     setLocationRelativeTo(Slyum.getInstance());
     getContentPane().setLayout(new BorderLayout());

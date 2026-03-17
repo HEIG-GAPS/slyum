@@ -72,8 +72,8 @@ public class DependencyFactory extends RelationFactory {
   }
 
   @Override
-  protected void drawExtremity(Graphics2D g2) {
-    DependencyView.paintExtremity(g2, points.get(points.size() - 1),
+  protected void drawExtremity(javafx.scene.canvas.GraphicsContext gc) {
+    DependencyView.paintExtremity(gc, points.get(points.size() - 1),
                                   mouseLocation);
   }
 

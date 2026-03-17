@@ -709,7 +709,7 @@ public class Slyum extends JFrame
         try {
           openNewApplicationInstance();
         } catch (IOException | URISyntaxException ex) {
-          SMessageDialog.showErrorMessage("An error has occurred while opening a new window.", this);
+          SMessageDialog.showErrorMessage("An error has occurred while opening a new window.");
         }
         break;
       case Slyum.ACTION_SAVE_AS:
@@ -827,7 +827,7 @@ public class Slyum extends JFrame
     JMenuItem item;
     final String imgLocation = iconName + ".png";
 
-    final ImageIcon icon = PersonalizedIcon.createImageIcon(imgLocation);
+    final ImageIcon icon = PersonalizedIcon.createSwingImageIcon(imgLocation);
 
     item = new JMenuItem(text, icon);
     item.setMnemonic(mnemonic);
@@ -1250,7 +1250,7 @@ public class Slyum extends JFrame
 
       // Sub Menu Open view
       menuOpenViews = new JMenu("Open View");
-      menuOpenViews.setIcon(PersonalizedIcon.createImageIcon("element-view-open.png"));
+      menuOpenViews.setIcon(PersonalizedIcon.createSwingImageIcon("element-view-open.png"));
       menuOpenViews.setMnemonic(KeyEvent.VK_O);
       menuOpenViews.setEnabled(false);
       menu.add(menuOpenViews);
@@ -1615,7 +1615,7 @@ public class Slyum extends JFrame
   private void setFrameProperties() {
     setName(APP_NAME);
     setTitle(getName());
-    setIconImage(PersonalizedIcon.getLogo().getImage());
+    setIconImage(PersonalizedIcon.createSwingImageIcon("logo32.png").getImage());
     setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     setMinimumSize(new Dimension(400, 400));
     setSize(WINDOWS_SIZE);

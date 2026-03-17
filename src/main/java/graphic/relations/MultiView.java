@@ -180,7 +180,7 @@ public class MultiView extends MovableComponent implements Observer, ColoredComp
 
     final Polygon polygon = getPolygonFromBounds(ghost);
     final javafx.scene.paint.Color color = getColor();
-    gc.setFill(Color.rgb(color.getRed() * 255.0, color.getGreen() * 255.0, color.getBlue() * 255.0, 100.0/255));
+    gc.setFill(Color.rgb((int)(color.getRed()*255), (int)(color.getGreen()*255), (int)(color.getBlue()*255), 100.0/255));
     gc.fillPolygon(Arrays.stream(polygon.xpoints).asDoubleStream().toArray(), Arrays.stream(polygon.ypoints).asDoubleStream().toArray(), polygon.npoints);
     gc.setStroke(color);
     gc.setLineWidth(1.0);

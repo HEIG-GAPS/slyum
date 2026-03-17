@@ -64,8 +64,7 @@ public class InnerClassView extends RelationView {
 
     // Cross
     gc.strokeLine((int) x2, (int) y2, target.x, target.y);
-    g2.drawLine(ref.x + vectorXN1, ref.y + vectorYN1, ref.x + vectorXN2, ref.y
-                                                                         + vectorYN2);
+    gc.strokeLine(ref.x + vectorXN1, ref.y + vectorYN1, ref.x + vectorXN2, ref.y + vectorYN2);
   }
 
   private InnerClass innerClass;
